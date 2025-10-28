@@ -604,8 +604,7 @@ The following props are passed to the `FallbackFieldTemplate`:
 - `schema`: The schema for the field
 - `uiSchema`: The uiSchema for the field
 - `registry`: The `Registry` object
-- `typeSelector`: A ReactNode that allows the selecting a different type for the field
-- `schemaField`: A ReactNode that renders the field with the present formData and matches the selected type
+  1
 
 ## FieldErrorTemplate
 

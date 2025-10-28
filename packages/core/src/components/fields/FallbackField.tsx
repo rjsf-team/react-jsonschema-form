@@ -63,8 +63,6 @@ function castToNewType<T = any>(formData: T, newType: JSONSchema7TypeName): T {
 /**
  * The `FallbackField` component is used to render a field for unsupported or unknown schema types. If
  * `useFallbackUiForUnsupportedType` is enabled in the `globalUiOptions`, it provides a type selector
- * @param props
- * @constructor
  */
 export default function FallbackField<
   T = any,
@@ -78,7 +76,6 @@ export default function FallbackField<
     schema,
     name,
     uiSchema,
-    idSchema,
     required,
     disabled = false,
     readonly = false,
@@ -95,15 +92,17 @@ export default function FallbackField<
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
 
   const typeSelectorInnerFieldPathId = useDeepCompareMemo<FieldPathId>(
-    toFieldPathId('__internal_type_selector', globalFormOptions, fieldPathId.path),
+    toFieldPathId('__internal_type_selector', globalFormOptions, fieldPathId),
   );
 
   const schemaTitle = translateString(TranslatableString.Type);
   const typesOptionSchema = useMemo(() => getFallbackTypeSelectionSchema(schemaTitle), [schemaTitle]);
 
-  const onTypeChange = (newType: JSONSchema7TypeName) => {
-    setType(newType as JSONSchema7TypeName);
-    onChange(castToNewType<T>(formData as T, newType as JSONSchema7TypeName), fieldPathId.path, errorSchema, id);
+  const onTypeChange = (newType: T | undefined) => {
+    if (newType != null) {
+      setType(newType as JSONSchema7TypeName);
+      onChange(castToNewType<T>(formData as T, newType as JSONSchema7TypeName), fieldPathId.path, errorSchema, id);
+    }
   };
 
   if (!globalFormOptions.useFallbackUiForUnsupportedType) {
@@ -138,17 +137,11 @@ export default function FallbackField<
       typeSelector={
         <SchemaField
           key={formData ? hashObject(formData) : '__empty__'}
-          id={`${id}-type-widget`}
           fieldPathId={typeSelectorInnerFieldPathId}
-          idSchema={idSchema}
           name={`${name}__fallback_type`}
           schema={typesOptionSchema as S}
           formData={type as T}
-          onChange={(newType) => {
-            if (newType != null) {
-              onTypeChange(newType as JSONSchema7TypeName);
-            }
-          }}
+          onChange={onTypeChange}
           onBlur={onBlur}
           onFocus={onFocus}
           registry={registry}

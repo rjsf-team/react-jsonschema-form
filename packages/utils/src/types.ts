@@ -593,7 +593,9 @@ export type FallbackFieldTemplateProps<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 > = RJSFBaseProps<T, S, F> & {
+  /** A ReactNode that allows the selecting a different type for the field */
   typeSelector: ReactNode;
+  /** A ReactNode that renders the field with the present formData and matches the selected type */
   schemaField: ReactNode;
 };
 
