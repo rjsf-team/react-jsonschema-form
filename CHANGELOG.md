@@ -21,11 +21,20 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `FormProps` to add new `onChange`/`onBlur` values for the `liveValidate` and `liveOmit` props, deprecating the `boolean` aspect of them
 - Updated `Form` to support the new feature to do `onBlur` handling of `liveValidate` and `liveOmit`
+- Updated `FormProps` to add the new `initialFormData` prop
+- Updated `Form` so that is behaves as a "controlled" form when `formData` is passed and uncontrolled when `initialFormData` is passed, fixing [#391](https://github.com/rjsf-team/react-jsonschema-form/issues/391)
+  - Also fixed an issue where live validation was called on the initial form render, causing errors to show immediately, partially fixing [#512](https://github.com/rjsf-team/react-jsonschema-form/issues/512)
+- Updated `Form` to add a new programmatic function, `setFieldValue(fieldPath: string | FieldPathList, newValue?: T): void`, fixing [#2099](https://github.com/rjsf-team/react-jsonschema-form/issues/2099)
 - Added new `FallbackField` to add opt-in functionality to control form data that is of an unsupported or unknown type ([#4736](https://github.com/rjsf-team/react-jsonschema-form/issues/4736)).
 
+## @rjsf/mantine
+
+- Updated `FieldHelpTemplate` to avoid issue when `help` `and `fieldPathId` are undefined
+
 ## Dev / docs / playground
+
 - Updated the playground to switch `liveValidate` and `liveOmit` from checkboxes to radio buttons for the new options
-- Updated `form-props.md` and `v6x upgrade guide.md` to document the new features and deprecation
+- Updated `internals.md`, `form-props.md` and `v6x upgrade guide.md` to document the new features, potential breaking changes and deprecations
 
 # 6.0.0-beta.22
 
@@ -128,6 +137,7 @@ should change the heading of the (upcoming) version to include a major version b
 - BREAKING CHANGE: Renamed `ArrayFieldItemButtonsTemplateType` to `ArrayFieldItemButtonsTemplateProps` and updated it to replace the `onAddIndexClick()`, `onCopyIndexClick()`, `onDropIndexClick()` and `onReorderClick()` callback-generator props with the `onAddItem()`, `onCopyItem()`, `onMoveUpItem()`, `onMoveDownItem()` and `onRemoveItem()` callback props
 
 ## Dev / docs / playground
+
 - Updated the `formTests.tsx` snapshots to add an `anyOf` of all arrays with different item types and removed the disabling of the optional data controls feature for the optional object with oneOfs
   - Updated the snapshots in all of the themes accordingly
 - Updated the playground to make the same changes as `formTests.tsx` in the `optionalDataControls.ts` sample, moving the `experimental_defaultFormStateBehavior` inside of a `liveSettings` block

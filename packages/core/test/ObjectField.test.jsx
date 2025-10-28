@@ -306,6 +306,9 @@ describe('ObjectField', () => {
         liveValidate: true,
       });
 
+      // trigger the errors by submitting the form since initial render no longer shows them
+      submitForm(node);
+
       const errorMessages = node.querySelectorAll('#root_emailConfirm__error');
       expect(errorMessages).to.have.length(1);
 
@@ -329,6 +332,9 @@ describe('ObjectField', () => {
         },
         liveValidate: true,
       });
+
+      // trigger the errors by submitting the form since initial render no longer shows them
+      submitForm(node);
 
       const errorMessages = node.querySelectorAll('#root_foo__error');
       expect(errorMessages).to.have.length(1);

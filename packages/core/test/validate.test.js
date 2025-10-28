@@ -421,6 +421,9 @@ describe('Validation', () => {
           templates: { ErrorListTemplate: CustomErrorList },
           formContext: { className: 'foo' },
         });
+
+        // trigger the errors by submitting the form since initial render no longer shows them
+        submitForm(node);
         expect(node.querySelectorAll('.CustomErrorList')).to.have.length.of(1);
         expect(node.querySelector('.CustomErrorList').textContent).eql('1 custom');
         expect(node.querySelectorAll('.ErrorSchema')).to.have.length.of(1);

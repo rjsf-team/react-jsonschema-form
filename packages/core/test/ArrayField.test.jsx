@@ -380,6 +380,9 @@ describe('ArrayField', () => {
         liveValidate: true,
       });
 
+      // trigger the errors by submitting the form
+      submitForm(node);
+
       const matches = node.querySelectorAll('#custom');
       expect(matches).to.have.length.of(1);
       expect(matches[0].textContent).to.eql('must NOT have fewer than 2 items');
@@ -1302,6 +1305,8 @@ describe('ArrayField', () => {
           formData: ['foo', 'foo'],
           liveValidate: true,
         });
+        // trigger the errors by submitting the form since initial render no longer shows them
+        submitForm(node);
 
         const matches = node.querySelectorAll('#custom');
         expect(matches).to.have.length.of(1);
@@ -1451,6 +1456,9 @@ describe('ArrayField', () => {
           formData: [],
           liveValidate: true,
         });
+
+        // trigger the errors by submitting the form since initial render no longer shows them
+        submitForm(node);
 
         const matches = node.querySelectorAll('#custom');
         expect(matches).to.have.length.of(1);
@@ -1660,6 +1668,9 @@ describe('ArrayField', () => {
         liveValidate: true,
       });
 
+      // trigger the errors by submitting the form since initial render no longer shows them
+      submitForm(node);
+
       const matches = node.querySelectorAll('#custom');
       expect(matches).to.have.length.of(1);
       expect(matches[0].textContent).to.eql('must NOT have fewer than 5 items');
@@ -1732,6 +1743,9 @@ describe('ArrayField', () => {
         formData: [[]],
         liveValidate: true,
       });
+
+      // trigger the errors by submitting the form since initial render no longer shows them
+      submitForm(node);
 
       const matches = node.querySelectorAll('#custom-error');
       expect(matches).to.have.length.of(2);
@@ -3136,18 +3150,17 @@ describe('ArrayField', () => {
     it('Check that when formData changes, the form should re-validate', () => {
       const { node, rerender } = createFormComponent({
         schema,
-        formData: [
-          {
-            text: null,
-          },
-        ],
+        formData: [{}],
         liveValidate: true,
       });
+
+      // trigger the errors by submitting the form since initial render no longer shows them
+      submitForm(node);
 
       const errorMessages = node.querySelectorAll('#root_0_text__error');
       expect(errorMessages).to.have.length(1);
       const errorMessageContent = node.querySelector('#root_0_text__error .text-danger').textContent;
-      expect(errorMessageContent).to.contain('must be string');
+      expect(errorMessageContent).to.contain("must have required property 'text'");
 
       rerender({ schema, formData: [{ text: 'test' }], liveValidate: true });
 

@@ -391,7 +391,7 @@ See [Semantic UI Customization](themes/semantic-ui/uiSchema.md#formcontext) for 
 
 ## formData
 
-Often you'll want to prefill a form with existing data; this is done by passing a `formData` prop object matching the schema.
+The data for the form, used to load a "controlled" form with its current data. If you want an "uncontrolled" form with initial data, then use `initialFormData` instead.
 
 ## id
 
@@ -438,6 +438,10 @@ render(<Form schema={schema} validator={validator} idSeparator={'/'} />, documen
 
 This will render `<input id="root/first">` instead of `<input
 id="root_first">` when rendering `first`.
+
+## initialFormData
+
+The initial data for the form, used to fill an "uncontrolled" form with existing data on the initial render and when `reset()` is called programmatically.
 
 ## nameGenerator
 

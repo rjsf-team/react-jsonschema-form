@@ -54,6 +54,9 @@ import _toPath from 'lodash/toPath';
 
 import getDefaultRegistry from '../getDefaultRegistry';
 
+/** Internal only symbol used by the `reset()` function to indicate that a reset operation is happening */
+const IS_RESET = Symbol('reset');
+
 /** The properties that are passed to the `Form` */
 export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
   /** The JSON schema object for the form */
@@ -64,8 +67,14 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   children?: ReactNode;
   /** The uiSchema for the form */
   uiSchema?: UiSchema<T, S, F>;
-  /** The data for the form, used to prefill a form with existing data */
+  /** The data for the form, used to load a "controlled" form with its current data. If you want an "uncontrolled" form
+   * with initial data, then use `initialFormData` instead.
+   */
   formData?: T;
+  /** The initial data for the form, used to fill an "uncontrolled" form with existing data on the initial render and
+   * when `reset()` is called programmatically.
+   */
+  initialFormData?: T;
   // Form presentation and behavior modifiers
   /** You can provide a `formContext` object to the form, which is passed down to all fields and widgets. Useful for
    * implementing context aware fields and widgets.
@@ -365,9 +374,11 @@ export default class Form<
       throw new Error('A validator is required for Form functionality to work');
     }
 
-    this.state = this.getStateFromProps(props, props.formData);
-    if (this.props.onChange && !deepEquals(this.state.formData, this.props.formData)) {
-      this.props.onChange(toIChangeEvent(this.state));
+    const { formData: propsFormData, initialFormData, onChange } = props;
+    const formData = propsFormData ?? initialFormData;
+    this.state = this.getStateFromProps(props, formData, undefined, undefined, undefined, true);
+    if (onChange && !deepEquals(this.state.formData, formData)) {
+      onChange(toIChangeEvent(this.state));
     }
     this.formElement = createRef();
   }
@@ -444,7 +455,6 @@ export default class Form<
   ) {
     if (snapshot.shouldUpdate) {
       const { nextState } = snapshot;
-
       if (
         !deepEquals(nextState.formData, this.props.formData) &&
         !deepEquals(nextState.formData, prevState.formData) &&
@@ -480,6 +490,7 @@ export default class Form<
     const schema = 'schema' in props ? props.schema : this.props.schema;
     const validator = 'validator' in props ? props.validator : this.props.validator;
     const uiSchema: UiSchema<T, S, F> = ('uiSchema' in props ? props.uiSchema! : this.props.uiSchema!) || {};
+    const isUncontrolled = props.formData === undefined && this.props.formData === undefined;
     const edit = typeof inputFormData !== 'undefined';
     const liveValidate = 'liveValidate' in props ? props.liveValidate : this.props.liveValidate;
     const mustValidate = edit && !props.noValidate && liveValidate;
@@ -510,9 +521,17 @@ export default class Form<
     }
 
     const rootSchema = schemaUtils.getRootSchema();
+
+    // Compute the formData for getDefaultFormState() function based on the inputFormData, isUncontrolled and state
+    let defaultsFormData = inputFormData;
+    if (inputFormData === IS_RESET) {
+      defaultsFormData = undefined;
+    } else if (inputFormData === undefined && isUncontrolled) {
+      defaultsFormData = state.formData;
+    }
     const formData: T = schemaUtils.getDefaultFormState(
       rootSchema,
-      inputFormData,
+      defaultsFormData,
       false,
       state.initialDefaultsGenerated,
     ) as T;
@@ -803,6 +822,20 @@ export default class Form<
     return this.getUsedFormData(formData, fieldNames);
   };
 
+  /** Allows a user to set a value for the provided `fieldPath`, which must be either a dotted path to the field OR a
+   * `FieldPathList`. To set the root element, used either `''` or `[]` for the path. Passing undefined will clear the
+   * value in the field.
+   *
+   * @param fieldPath - Either a dotted path to the field or the `FieldPathList` to the field
+   * @param [newValue] - The new value for the field
+   */
+  setFieldValue = (fieldPath: string | FieldPathList, newValue?: T) => {
+    const { registry } = this.state;
+    const path = Array.isArray(fieldPath) ? fieldPath : fieldPath.split('.');
+    const fieldPathId = toFieldPathId('', registry.globalFormOptions, path);
+    this.onChange(newValue, path, undefined, fieldPathId[ID_KEY]);
+  };
+
   /** Pushes the given change information into the `pendingChanges` array and then calls `processPendingChanges()` if
    * the array only contains a single pending change.
    *
@@ -945,8 +978,16 @@ export default class Form<
    *
    */
   reset = () => {
-    const { onChange } = this.props;
-    const newState = this.getStateFromProps(this.props, undefined);
+    // Cast the IS_RESET symbol to T to avoid type issues, we use this symbol to detect reset mode
+    const { formData: propsFormData, initialFormData = IS_RESET as T, onChange } = this.props;
+    const newState = this.getStateFromProps(
+      this.props,
+      propsFormData ?? initialFormData,
+      undefined,
+      undefined,
+      undefined,
+      true,
+    );
     const newFormData = newState.formData;
     const state = {
       formData: newFormData,
