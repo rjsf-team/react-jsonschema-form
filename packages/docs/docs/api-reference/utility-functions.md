@@ -1034,9 +1034,7 @@ Unwraps the `errorHandler` structure into the associated `ErrorSchema`, strippin
 
 - ErrorSchema&lt;T>: The `ErrorSchema` resulting from the stripping of the `addError()` function
 
-### useAltDateWidgetProps&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema,
-
-F extends FormContextType = any>()
+### useAltDateWidgetProps&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = any&gt;`()
 
 Hook which encapsulates the logic needed to render an `AltDateWidget` with optional `time` elements. It contains
 the `state` of the current date(/time) selections in the widget. It returns a `UseAltDateWidgetResult` object
