@@ -13852,16 +13852,40 @@ exports[`single fields string field format data-url 1`] = `
           className="label-text font-medium"
         />
       </label>
-      <input
-        className="file-input w-full"
-        disabled={false}
-        id="root"
-        multiple={false}
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        type="file"
-      />
+      <div>
+        <div
+          className="form-control"
+        >
+          <label
+            className="label hidden"
+            htmlFor="root"
+            style={
+              {
+                "display": "none",
+              }
+            }
+          >
+            <span
+              className="label-text"
+            />
+          </label>
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            className="file-input w-full"
+            disabled={false}
+            id="root"
+            multiple={false}
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            type="file"
+            value=""
+          />
+        </div>
+      </div>
       <div
         className="rjsf-field-error-template text-red-600"
       >

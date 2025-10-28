@@ -68,6 +68,7 @@ import toErrorSchema from './toErrorSchema';
 import toFieldPathId from './toFieldPathId';
 import unwrapErrorHandler from './unwrapErrorHandler';
 import useDeepCompareMemo from './useDeepCompareMemo';
+import useFileWidgetProps from './useFileWidgetProps';
 import utcToLocal from './utcToLocal';
 import validationDataMerge from './validationDataMerge';
 import withIdRefPrefix from './withIdRefPrefix';
@@ -79,6 +80,9 @@ export * from './enums';
 export * from './constants';
 export * from './parser';
 export * from './schema';
+
+export type { ComponentUpdateStrategy } from './shouldRender';
+export type { FileInfoType, UseFileWidgetPropsResult } from './useFileWidgetProps';
 
 export {
   allowAdditionalItems,
@@ -153,11 +157,10 @@ export {
   toFieldPathId,
   unwrapErrorHandler,
   useDeepCompareMemo,
+  useFileWidgetProps,
   utcToLocal,
   validationDataMerge,
   withIdRefPrefix,
   bracketNameGenerator,
   dotNotationNameGenerator,
 };
-
-export type { ComponentUpdateStrategy } from './shouldRender';

@@ -23,18 +23,28 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `Form` to support the new feature to do `onBlur` handling of `liveValidate` and `liveOmit`
 - Updated `FormProps` to add the new `initialFormData` prop
 - Updated `Form` so that is behaves as a "controlled" form when `formData` is passed and uncontrolled when `initialFormData` is passed, fixing [#391](https://github.com/rjsf-team/react-jsonschema-form/issues/391)
-  - Also fixed an issue where live validation was called on the initial form render, causing errors to show immediately, partially fixing [#512](https://github.com/rjsf-team/react-jsonschema-form/issues/512)
+    - Also fixed an issue where live validation was called on the initial form render, causing errors to show immediately, partially fixing [#512](https://github.com/rjsf-team/react-jsonschema-form/issues/512)
 - Updated `Form` to add a new programmatic function, `setFieldValue(fieldPath: string | FieldPathList, newValue?: T): void`, fixing [#2099](https://github.com/rjsf-team/react-jsonschema-form/issues/2099)
 - Added new `FallbackField` to add opt-in functionality to control form data that is of an unsupported or unknown type ([#4736](https://github.com/rjsf-team/react-jsonschema-form/issues/4736)).
+- Refactored much of the `FileWidget` implementation into a new `useFileWidgetProps()` hook, fixing [#3146](https://github.com/rjsf-team/react-jsonschema-form/issues/3146)
+
+## @rjsf/daisyui
+
+- Deleted the `FileWidget` component, moving the className and isMulti logic directly into the `BaseInputTemplate` so that the `@rjsf/core`'s `FileWidget` works properly for the theme, fixing [#4803](https://github.com/rjsf-team/react-jsonschema-form/issues/4803)
 
 ## @rjsf/mantine
 
 - Updated `FieldHelpTemplate` to avoid issue when `help` `and `fieldPathId` are undefined
+- Updated `FileWidget` to use the `useFileWidgetProps()` hook
+
+## @rjsf/utils
+
+- Added the `useFileWidgetProps()` hook implementation, refactored from `@rjsf/core`
 
 ## Dev / docs / playground
 
 - Updated the playground to switch `liveValidate` and `liveOmit` from checkboxes to radio buttons for the new options
-- Updated `internals.md`, `form-props.md` and `v6x upgrade guide.md` to document the new features, potential breaking changes and deprecations
+- Updated `internals.md`, `form-props.md`, `utility-functions.md` and `v6x upgrade guide.md` to document the new features, potential breaking changes and deprecations
 
 # 6.0.0-beta.22
 

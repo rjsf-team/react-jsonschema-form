@@ -1047,6 +1047,22 @@ avoid having a component rerender due it being a different object. Otherwise, th
 
 - T: The latest stored `T` value
 
+### useFileWidgetProps()
+
+Hook which encapsulates the logic needed to read and convert a `value` of `File` or `File[]` into the
+`filesInfo: FileInfoType[]` and the two callback implementations needed to change the list or to remove a
+`File` from the list. To be used by theme specific `FileWidget` implementations.
+
+#### Parameters
+
+- value: string | string[] | undefined | null - The current value of the `FileWidget`
+- onChange: (value: string | null | (string | null)[]) => void - The onChange handler for the `FileWidget`
+- [multiple=false] - Flag indicating whether the control supports multiple selections
+
+#### Returns
+
+- UseFileWidgetPropsResult: The `UseFileWidgetPropsResult` to be used within a `FileWidget` implementation
+
 ### utcToLocal()
 
 Converts a UTC date string into a local Date format
