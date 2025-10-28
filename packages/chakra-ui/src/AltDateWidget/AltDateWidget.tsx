@@ -1,6 +1,7 @@
 import { Box, Button, FieldsetRoot } from '@chakra-ui/react';
 import {
   DateElement,
+  DateElementProp,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -22,23 +23,23 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
   return (
     <FieldsetRoot {...(chakraProps as any)}>
       <Box display='flex' flexWrap='wrap' alignItems='center'>
-        {elements.map((elemProps: any, i) => {
-          const elemId = id + '_' + elemProps.type;
+        {elements.map((elemProps: DateElementProp, i) => {
+          const elemId = `${id}_${elemProps.type}`;
           return (
-            <Box key={elemId} mr='2' mb='2'>
+            <Box key={elemId} mr='2' mb='2' width='20'>
               <DateElement<T, S, F>
                 {...props}
                 {...elemProps}
                 autofocus={autofocus && i === 0}
                 disabled={disabled}
-                id={elemId}
+                rootId={id}
                 name={id}
                 onBlur={onBlur}
                 onFocus={onFocus}
                 readonly={readonly}
                 registry={registry}
                 select={handleChange}
-                value={elemProps.value < 0 ? '' : elemProps.value}
+                value={elemProps.value && elemProps.value < 0 ? '' : elemProps.value}
               />
             </Box>
           );

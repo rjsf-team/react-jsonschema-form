@@ -51,7 +51,7 @@ export default function AltDateWidget<
             <DateElement
               rootId={id}
               name={name}
-              className='select select-bordered select-sm w-full'
+              className='select select-bordered select-sm'
               select={handleChange}
               type={elemProps.type}
               range={elemProps.range}

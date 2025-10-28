@@ -23,7 +23,7 @@ export default function AltDateWidget<
   return (
     <Row gutter={[Math.floor(rowGutter / 2), Math.floor(rowGutter / 2)]}>
       {elements.map((elemProps, i) => {
-        const elemId = id + '_' + elemProps.type;
+        const elemId = `${id}_${elemProps.type}`;
         return (
           <Col flex='88px' key={elemId}>
             <DateElement
