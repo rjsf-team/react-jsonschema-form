@@ -111,35 +111,44 @@ function extractFileInfo(dataURLs: string[]): FileInfoType[] {
  * @returns - The `UseFileWidgetPropsResult` to be used within a `FileWidget` implementation
  */
 export default function useFileWidgetProps(
-  value: any,
-  onChange: (value: any) => void,
+  value: string | string[] | undefined | null,
+  onChange: (value?: string | null | (string | null)[]) => void,
   multiple = false,
 ): UseFileWidgetPropsResult {
-  const filesInfo = useMemo(() => (Array.isArray(value) ? extractFileInfo(value) : extractFileInfo([value])), [value]);
+  const values: (string | null)[] = useMemo(() => {
+    if (multiple && value) {
+      return Array.isArray(value) ? value : [value];
+    }
+    return [];
+  }, [value, multiple]);
+  const filesInfo = useMemo(
+    () => (Array.isArray(value) ? extractFileInfo(value) : extractFileInfo([value || ''])),
+    [value],
+  );
 
   const handleChange = useCallback(
     (files: FileList) => {
       processFiles(files).then((filesInfoEvent) => {
-        const newValue = filesInfoEvent.map((fileInfo) => fileInfo.dataURL);
+        const newValue = filesInfoEvent.map((fileInfo) => fileInfo.dataURL || null);
         if (multiple) {
-          onChange(value.concat(newValue));
+          onChange(values.concat(...newValue));
         } else {
           onChange(newValue[0]);
         }
       });
     },
-    [value, multiple, onChange],
+    [values, multiple, onChange],
   );
   const handleRemove = useCallback(
     (index: number) => {
       if (multiple) {
-        const newValue = value.filter((_: any, i: number) => i !== index);
+        const newValue = values.filter((_, i: number) => i !== index);
         onChange(newValue);
       } else {
         onChange(undefined);
       }
     },
-    [value, multiple, onChange],
+    [values, multiple, onChange],
   );
 
   return { filesInfo, handleChange, handleRemove };

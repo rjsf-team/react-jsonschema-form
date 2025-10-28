@@ -124,8 +124,21 @@ describe('useFileWidgetProps()', () => {
       expect(onChange).toHaveBeenCalledWith([FILE_1_STR, FILE_3_STR]);
     });
   });
+  test('undefined initial value, multiple, handleChange', async () => {
+    const { result } = renderHook(() => useFileWidgetProps(null, onChange, true));
+    const { filesInfo, handleChange, handleRemove } = result.current;
+    expect(filesInfo).toEqual([]);
+    expect(handleChange).toBeInstanceOf(Function);
+    expect(handleRemove).toBeInstanceOf(Function);
+    // Now call handleChange to add a file
+    handleChange(toFileList([FILE_1, FILE_3]));
+    await waitFor(() => {
+      // Expect the onChange handler was called with the converted file
+      expect(onChange).toHaveBeenCalledWith([FILE_1_STR, FILE_3_STR]);
+    });
+  });
   test('File initial value, multiple, handleChange', async () => {
-    const { result } = renderHook(() => useFileWidgetProps([FILE_2_STR], onChange, true));
+    const { result } = renderHook(() => useFileWidgetProps(FILE_2_STR, onChange, true));
     const { filesInfo, handleChange, handleRemove } = result.current;
     expect(filesInfo).toEqual([FILE_2_INFO]);
     expect(handleChange).toBeInstanceOf(Function);
@@ -163,9 +176,9 @@ describe('useFileWidgetProps()', () => {
       expect(onChange).toHaveBeenCalledWith(FILE_3_STR);
     });
   });
-  test('undefined, single, handleChange, NO dataURL', async () => {
+  test('null, single, handleChange, NO dataURL', async () => {
     FN_RESULT = { target: null };
-    const { result } = renderHook(() => useFileWidgetProps(undefined, onChange));
+    const { result } = renderHook(() => useFileWidgetProps(null, onChange));
     const { filesInfo, handleChange, handleRemove } = result.current;
     expect(filesInfo).toEqual([]);
     expect(handleChange).toBeInstanceOf(Function);

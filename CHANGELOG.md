@@ -30,7 +30,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/daisyui
 
-= Deleted the `FileWidget` component, moving the className and isMulti logic directly into the `BaseInputTemplate` so that the `@rjsf/core`'s `FileWidget` works properly for the theme, fixing [#4803](https://github.com/rjsf-team/react-jsonschema-form/issues/4803)
+- Deleted the `FileWidget` component, moving the className and isMulti logic directly into the `BaseInputTemplate` so that the `@rjsf/core`'s `FileWidget` works properly for the theme, fixing [#4803](https://github.com/rjsf-team/react-jsonschema-form/issues/4803)
 
 ## @rjsf/mantine
 
