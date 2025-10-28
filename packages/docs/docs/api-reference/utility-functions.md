@@ -1055,8 +1055,8 @@ Hook which encapsulates the logic needed to read and convert a `value` of `File`
 
 #### Parameters
 
-- value: any - The current value of the `FileWidget`
-- onChange: (value: any) => void - The onChange handler for the `FileWidget`
+- value: string | string[] | undefined | null - The current value of the `FileWidget`
+- onChange: (value: string | null | (string | null)[]) => void - The onChange handler for the `FileWidget`
 - [multiple=false] - Flag indicating whether the control supports multiple selections
 
 #### Returns
