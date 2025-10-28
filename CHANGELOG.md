@@ -17,6 +17,16 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 6.0.0-beta.23
 
+## @rjsf/antd
+
+- Updated `AltDateWidget` to use the new `useAltDateWidgetProps()` hook, renaming `showTime` to `time`
+- Potentially BREAKING CHANGE: Updated `AltDateTimeWidget` to rename `showTime` prop to `time`
+
+## @rjsf/chakra-ui
+
+- Updated `AltDateWidget` to use the new `useAltDateWidgetProps()` hook, renaming `showTime` to `time`
+- Potentially BREAKING CHANGE: Updated `AltDateTimeWidget` to rename `showTime` prop to `time`
+
 ## @rjsf/core
 
 - Updated `FormProps` to add new `onChange`/`onBlur` values for the `liveValidate` and `liveOmit` props, deprecating the `boolean` aspect of them
@@ -27,19 +37,24 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `Form` to add a new programmatic function, `setFieldValue(fieldPath: string | FieldPathList, newValue?: T): void`, fixing [#2099](https://github.com/rjsf-team/react-jsonschema-form/issues/2099)
 - Added new `FallbackField` to add opt-in functionality to control form data that is of an unsupported or unknown type ([#4736](https://github.com/rjsf-team/react-jsonschema-form/issues/4736)).
 - Refactored much of the `FileWidget` implementation into a new `useFileWidgetProps()` hook, fixing [#3146](https://github.com/rjsf-team/react-jsonschema-form/issues/3146)
+- Refactored much of the `AltDateWidget` implementation into a new `useAltDateWidgetProps()` hook, fixing [#3352](http://github.com/rjsf-team/react-jsonschema-form/issues/3352)
 
 ## @rjsf/daisyui
 
 - Deleted the `FileWidget` component, moving the className and isMulti logic directly into the `BaseInputTemplate` so that the `@rjsf/core`'s `FileWidget` works properly for the theme, fixing [#4803](https://github.com/rjsf-team/react-jsonschema-form/issues/4803)
+- Updated `AltDateWidget` to use the new `useAltDateWidgetProps()` hook
 
 ## @rjsf/mantine
 
 - Updated `FieldHelpTemplate` to avoid issue when `help` `and `fieldPathId` are undefined
+- Updated `AltDateWidget` to use the new `useAltDateWidgetProps()` hook, renaming `showTime` to `time`
+- Potentially BREAKING CHANGE: Updated `AltDateTimeWidget` to rename `showTime` prop to `time`
 - Updated `FileWidget` to use the `useFileWidgetProps()` hook
 
 ## @rjsf/utils
 
 - Added the `useFileWidgetProps()` hook implementation, refactored from `@rjsf/core`
+- Added the `useAltDateWidgetProps()` hook implementation, refactored from `@rjsf/core`
 
 ## Dev / docs / playground
 

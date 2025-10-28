@@ -1,142 +1,26 @@
-import { MouseEvent, useCallback, useEffect, useState } from 'react';
 import {
-  ariaDescribedByIds,
-  dateRangeOptions,
-  parseDateString,
-  toDateString,
-  DateObject,
-  type DateElementFormat,
+  DateElement,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
   WidgetProps,
-  getDateElementProps,
+  useAltDateWidgetProps,
 } from '@rjsf/utils';
-
-function readyForChange(state: DateObject) {
-  return Object.values(state).every((value) => value !== -1);
-}
-
-type DateElementProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = Pick<
-  WidgetProps<T, S, F>,
-  'value' | 'name' | 'disabled' | 'readonly' | 'autofocus' | 'registry' | 'onBlur' | 'onFocus'
-> & {
-  rootId: string;
-  select: (property: keyof DateObject, value: any) => void;
-  type: string;
-  range: [number, number];
-};
-
-function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  type,
-  range,
-  value,
-  select,
-  rootId,
-  name,
-  disabled,
-  readonly,
-  autofocus,
-  registry,
-  onBlur,
-  onFocus,
-}: DateElementProps<T, S, F>) {
-  const id = rootId + '_' + type;
-  const { SelectWidget } = registry.widgets;
-  return (
-    <SelectWidget
-      schema={{ type: 'integer' } as S}
-      id={id}
-      name={name}
-      className='form-control'
-      options={{ enumOptions: dateRangeOptions<S>(range[0], range[1]) }}
-      placeholder={type}
-      value={value}
-      disabled={disabled}
-      readonly={readonly}
-      autofocus={autofocus}
-      onChange={(value: any) => select(type as keyof DateObject, value)}
-      onBlur={onBlur}
-      onFocus={onFocus}
-      registry={registry}
-      label=''
-      aria-describedby={ariaDescribedByIds(rootId)}
-    />
-  );
-}
 
 /** The `AltDateWidget` is an alternative widget for rendering date properties.
  * @param props - The `WidgetProps` for this component
  */
-function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  time = false,
-  disabled = false,
-  readonly = false,
-  autofocus = false,
-  options,
-  id,
-  name,
-  registry,
-  onBlur,
-  onFocus,
-  onChange,
-  value,
-}: WidgetProps<T, S, F>) {
+function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: WidgetProps<T, S, F>,
+) {
+  const { disabled = false, readonly = false, autofocus = false, options, id, name, registry, onBlur, onFocus } = props;
   const { translateString } = registry;
-  const [state, setState] = useState(parseDateString(value, time));
-
-  useEffect(() => {
-    setState(parseDateString(value, time));
-  }, [time, value]);
-
-  const handleChange = useCallback(
-    (property: keyof DateObject, value: string) => {
-      const nextState = {
-        ...state,
-        [property]: typeof value === 'undefined' ? -1 : value,
-      };
-
-      if (readyForChange(nextState)) {
-        onChange(toDateString(nextState, time));
-      } else {
-        setState(nextState);
-      }
-    },
-    [state, onChange, time],
-  );
-
-  const handleSetNow = useCallback(
-    (event: MouseEvent<HTMLAnchorElement>) => {
-      event.preventDefault();
-      if (disabled || readonly) {
-        return;
-      }
-      const nextState = parseDateString(new Date().toJSON(), time);
-      onChange(toDateString(nextState, time));
-    },
-    [disabled, readonly, time, onChange],
-  );
-
-  const handleClear = useCallback(
-    (event: MouseEvent<HTMLAnchorElement>) => {
-      event.preventDefault();
-      if (disabled || readonly) {
-        return;
-      }
-      onChange(undefined);
-    },
-    [disabled, readonly, onChange],
-  );
+  const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
 
   return (
     <ul className='list-inline'>
-      {getDateElementProps(
-        state,
-        time,
-        options.yearsRange as [number, number] | undefined,
-        options.format as DateElementFormat | undefined,
-      ).map((elemProps, i) => (
+      {elements.map((elemProps, i) => (
         <li className='list-inline-item' key={i}>
           <DateElement
             rootId={id}

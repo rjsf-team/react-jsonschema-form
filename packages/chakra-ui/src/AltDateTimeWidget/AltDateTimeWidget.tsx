@@ -5,12 +5,12 @@ function AltDateTimeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   props: WidgetProps<T, S, F>,
 ) {
   const { AltDateWidget } = props.registry.widgets;
-  return <AltDateWidget {...props} showTime />;
+  return <AltDateWidget {...props} time />;
 }
 
 AltDateTimeWidget.defaultProps = {
   ..._AltDateWidget.defaultProps,
-  showTime: true,
+  time: true,
 };
 
 export default AltDateTimeWidget;

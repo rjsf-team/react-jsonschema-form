@@ -8,10 +8,10 @@ export default function AltDateTimeWidget<
   F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
   const { AltDateWidget } = props.registry.widgets;
-  return <AltDateWidget showTime {...props} />;
+  return <AltDateWidget time {...props} />;
 }
 
 AltDateTimeWidget.defaultProps = {
   ..._AltDateWidget.defaultProps,
-  showTime: true,
+  time: true,
 };
