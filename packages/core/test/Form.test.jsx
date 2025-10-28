@@ -98,6 +98,54 @@ describeRepeated('Form common', (createFormComponent) => {
       const node = findDOMNode(container).firstElementChild;
       expect(node.querySelector('.unsupported-field').textContent).to.contain('Unknown field type undefined');
     });
+
+    it('will render fallback ui when useFallbackUiForUnsupportedType is true', () => {
+      const schema = {
+        type: 'object',
+        title: 'object',
+        properties: {
+          unknownProperty: {
+            type: 'someUnsupportedType',
+          },
+        },
+      };
+      const props = {
+        useFallbackUiForUnsupportedType: true,
+        schema,
+        formData: {
+          unknownProperty: '123456',
+        },
+      };
+
+      const { node, onChange } = createFormComponent({ ...props });
+
+      expect(node.querySelectorAll('.unsupported-field')).to.have.length.of(0);
+      expect(node.querySelector('select')).to.exist;
+      let optionValue = node.querySelector('select').value;
+      let optionText = node.querySelector(`select option[value="${optionValue}"]`).textContent;
+      expect(optionText).to.equal('string');
+      expect(node.querySelector('input[type=text]').value).to.equal('123456');
+
+      // Change the fallback type to 'number'
+      fireEvent.change(node.querySelector('select'), { target: { value: 1 } });
+      optionValue = node.querySelector('select').value;
+      optionText = node.querySelector(`select option[value="${optionValue}"]`).textContent;
+      expect(optionText).to.equal('number');
+      expect(node.querySelector('input[type=number]')).to.exist;
+      expect(node.querySelector('input[type=number]').value).to.equal('123456');
+
+      // Verify formData was casted to number
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: {
+            unknownProperty: 123456,
+          },
+          schema,
+        },
+        'root_unknownProperty',
+      );
+    });
   });
 
   describe('on component creation', () => {

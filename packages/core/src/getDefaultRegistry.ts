@@ -28,6 +28,10 @@ export default function getDefaultRegistry<
     rootSchema: {} as S,
     formContext: {} as F,
     translateString: englishStringTranslator,
-    globalFormOptions: { idPrefix: DEFAULT_ID_PREFIX, idSeparator: DEFAULT_ID_SEPARATOR },
+    globalFormOptions: {
+      idPrefix: DEFAULT_ID_PREFIX,
+      idSeparator: DEFAULT_ID_SEPARATOR,
+      useFallbackUiForUnsupportedType: false,
+    },
   };
 }

@@ -14,7 +14,11 @@ import {
   RJSFValidationError,
 } from '../../src';
 
-export const GLOBAL_FORM_OPTIONS = { idPrefix: DEFAULT_ID_PREFIX, idSeparator: DEFAULT_ID_SEPARATOR };
+export const GLOBAL_FORM_OPTIONS = {
+  idPrefix: DEFAULT_ID_PREFIX,
+  idSeparator: DEFAULT_ID_SEPARATOR,
+  useFallbackUiForUnsupportedType: false,
+};
 
 export const oneOfData = {
   name: 'second_option',

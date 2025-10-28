@@ -74,6 +74,7 @@ The default fields you can override are:
 - `StringField`
 - `TitleField`
 - `UnsupportedField`
+- `FallbackField`
 
 The default widgets you can override are:
 

@@ -5,7 +5,6 @@ import {
   descriptionId,
   ErrorSchema,
   Field,
-  FieldPathId,
   FieldPathList,
   FieldProps,
   FieldTemplateProps,
@@ -21,7 +20,6 @@ import {
   shouldRender,
   shouldRenderOptionalField,
   StrictRJSFSchema,
-  TranslatableString,
   UI_OPTIONS_KEY,
   UIOptionsType,
 } from '@rjsf/utils';
@@ -45,18 +43,16 @@ const COMPONENT_TYPES: { [key: string]: string } = {
  *
  * @param schema - The schema from which to obtain the type
  * @param uiOptions - The UI Options that may affect the component decision
- * @param fieldPathId - The id that is passed to the `UnsupportedFieldTemplate`
  * @param registry - The registry from which fields and templates are obtained
  * @returns - The `Field` component that is used to render the actual field data
  */
 function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   schema: S,
   uiOptions: UIOptionsType<T, S, F>,
-  fieldPathId: FieldPathId,
   registry: Registry<T, S, F>,
 ): ComponentType<FieldProps<T, S, F>> {
   const field = uiOptions.field;
-  const { fields, translateString } = registry;
+  const { fields } = registry;
   if (typeof field === 'function') {
     return field;
   }
@@ -80,24 +76,7 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     return () => null;
   }
 
-  return componentName in fields
-    ? fields[componentName]
-    : () => {
-        const UnsupportedFieldTemplate = getTemplate<'UnsupportedFieldTemplate', T, S, F>(
-          'UnsupportedFieldTemplate',
-          registry,
-          uiOptions,
-        );
-
-        return (
-          <UnsupportedFieldTemplate
-            schema={schema}
-            fieldPathId={fieldPathId}
-            reason={translateString(TranslatableString.UnknownFieldType, [String(schema.type)])}
-            registry={registry}
-          />
-        );
-      };
+  return componentName in fields ? fields[componentName] : fields['FallbackField'];
 }
 
 /** The `SchemaFieldRender` component is the work-horse of react-jsonschema-form, determining what kind of real field to
@@ -149,7 +128,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     [fieldId, onChange],
   );
 
-  const FieldComponent = getFieldComponent<T, S, F>(schema, uiOptions, fieldPathId, registry);
+  const FieldComponent = getFieldComponent<T, S, F>(schema, uiOptions, registry);
   const disabled = Boolean(uiOptions.disabled ?? props.disabled);
   const readonly = Boolean(uiOptions.readonly ?? (props.readonly || props.schema.readOnly || schema.readOnly));
   const uiSchemaHideError = uiOptions.hideError;

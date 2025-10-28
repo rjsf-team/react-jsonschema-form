@@ -51,6 +51,10 @@ export enum TranslatableString {
   OptionalObjectRemove = 'Remove data for optional field',
   /** The label for when displaying a non-editable form with missing optional field data */
   OptionalObjectEmptyMsg = 'No data for optional field',
+  /** Label for the schema type selector, used by FallbackField */
+  Type = 'Type',
+  /** Label for the 'value' field, used by FallbackField */
+  Value = 'Value',
   // Strings with replaceable parameters
   /** Unknown field type reason, where %1 will be replaced with the type as provided by SchemaField */
   UnknownFieldType = 'Unknown field type %1',

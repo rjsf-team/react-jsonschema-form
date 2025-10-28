@@ -25,6 +25,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `Form` so that is behaves as a "controlled" form when `formData` is passed and uncontrolled when `initialFormData` is passed, fixing [#391](https://github.com/rjsf-team/react-jsonschema-form/issues/391)
   - Also fixed an issue where live validation was called on the initial form render, causing errors to show immediately, partially fixing [#512](https://github.com/rjsf-team/react-jsonschema-form/issues/512)
 - Updated `Form` to add a new programmatic function, `setFieldValue(fieldPath: string | FieldPathList, newValue?: T): void`, fixing [#2099](https://github.com/rjsf-team/react-jsonschema-form/issues/2099)
+- Added new `FallbackField` to add opt-in functionality to control form data that is of an unsupported or unknown type ([#4736](https://github.com/rjsf-team/react-jsonschema-form/issues/4736)).
 
 ## @rjsf/mantine
 

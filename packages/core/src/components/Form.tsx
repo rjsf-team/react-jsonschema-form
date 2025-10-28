@@ -223,6 +223,10 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   /** Optional function to generate custom HTML `name` attributes for form fields.
    */
   nameGenerator?: NameGeneratorFunction;
+  /** Optional flag that, when set to true, will cause the `FallbackField` to render a type selector for unsupported
+   * fields instead of the default UnsupportedField error UI.
+   */
+  useFallbackUiForUnsupportedType?: boolean;
   /** Optional configuration object with flags, if provided, allows users to override default form state behavior
    * Currently only affecting minItems on array fields and handling of setting defaults based on the value of
    * `emptyObjectFields`
@@ -1118,12 +1122,14 @@ export default class Form<
       idSeparator = DEFAULT_ID_SEPARATOR,
       idPrefix = DEFAULT_ID_PREFIX,
       nameGenerator,
+      useFallbackUiForUnsupportedType = false,
     } = props;
     const rootFieldId = uiSchema['ui:rootFieldId'];
     // Omit any options that are undefined or null
     return {
       idPrefix: rootFieldId || idPrefix,
       idSeparator,
+      useFallbackUiForUnsupportedType,
       ...(experimental_componentUpdateStrategy !== undefined && { experimental_componentUpdateStrategy }),
       ...(nameGenerator !== undefined && { nameGenerator }),
     };

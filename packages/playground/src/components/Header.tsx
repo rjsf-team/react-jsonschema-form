@@ -82,6 +82,7 @@ const liveSettingsBooleanSchema: RJSFSchema = {
       default: 'customDeep',
       enum: ['customDeep', 'shallow', 'always'],
     },
+    useFallbackUiForUnsupportedType: { type: 'boolean', title: 'Use Fallback UI', default: false },
   },
 };
 
