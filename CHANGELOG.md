@@ -20,12 +20,12 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/antd
 
 - Updated `AltDateWidget` to use the new `useAltDateWidgetProps()` hook, renaming `showTime` to `time`
-- Updated `AltDateTimeWidget` to rename `showTime` prop to `time`
+- Potentially BREAKING CHANGE: Updated `AltDateTimeWidget` to rename `showTime` prop to `time`
 
 ## @rjsf/chakra-ui
 
 - Updated `AltDateWidget` to use the new `useAltDateWidgetProps()` hook, renaming `showTime` to `time`
-- Updated `AltDateTimeWidget` to rename `showTime` prop to `time`
+- Potentially BREAKING CHANGE: Updated `AltDateTimeWidget` to rename `showTime` prop to `time`
 
 ## @rjsf/core
 
@@ -47,14 +47,13 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/mantine
 
 - Updated `FieldHelpTemplate` to avoid issue when `help` `and `fieldPathId` are undefined
+- Updated `AltDateWidget` to use the new `useAltDateWidgetProps()` hook, renaming `showTime` to `time`
+- Potentially BREAKING CHANGE: Updated `AltDateTimeWidget` to rename `showTime` prop to `time`
 - Updated `FileWidget` to use the `useFileWidgetProps()` hook
 
 ## @rjsf/utils
 
 - Added the `useFileWidgetProps()` hook implementation, refactored from `@rjsf/core`
-
-## @rjsf/utils
-
 - Added the `useAltDateWidgetProps()` hook implementation, refactored from `@rjsf/core`
 
 ## Dev / docs / playground

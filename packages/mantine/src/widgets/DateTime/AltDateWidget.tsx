@@ -1,24 +1,16 @@
-import { useCallback, useEffect, useState } from 'react';
 import {
   ariaDescribedByIds,
   dateRangeOptions,
-  parseDateString,
-  toDateString,
-  getDateElementProps,
   titleId,
   DateObject,
-  type DateElementFormat,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
+  useAltDateWidgetProps,
   WidgetProps,
 } from '@rjsf/utils';
 import { Flex, Box, Group, Button, Select, Input } from '@mantine/core';
-
-function readyForChange(state: DateObject) {
-  return Object.values(state).every((value) => value !== -1);
-}
 
 /** The `AltDateWidget` is an alternative widget for rendering date properties.
  * @param props - The `WidgetProps` for this component
@@ -28,57 +20,9 @@ export default function AltDateWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
-  const {
-    id,
-    value,
-    required,
-    disabled,
-    readonly,
-    label,
-    hideLabel,
-    rawErrors,
-    options,
-    onChange,
-    showTime = false,
-    registry,
-  } = props;
-
+  const { id, required, disabled, readonly, label, hideLabel, rawErrors, options, registry } = props;
   const { translateString } = registry;
-  const [state, setState] = useState(parseDateString(value, showTime));
-
-  useEffect(() => {
-    setState(parseDateString(value, showTime));
-  }, [showTime, value]);
-
-  const handleChange = useCallback(
-    (property: keyof DateObject, nextValue: any) => {
-      const nextState = {
-        ...state,
-        [property]: typeof nextValue === 'undefined' ? -1 : nextValue,
-      };
-
-      if (readyForChange(nextState)) {
-        onChange(toDateString(nextState, showTime));
-      } else {
-        setState(nextState);
-      }
-    },
-    [state, onChange, showTime],
-  );
-
-  const handleSetNow = useCallback(() => {
-    if (!disabled && !readonly) {
-      const nextState = parseDateString(new Date().toJSON(), showTime);
-      onChange(toDateString(nextState, showTime));
-    }
-  }, [disabled, readonly, showTime, onChange]);
-
-  const handleClear = useCallback(() => {
-    if (!disabled && !readonly) {
-      onChange('');
-    }
-  }, [disabled, readonly, onChange]);
-
+  const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
   return (
     <>
       {!hideLabel && !!label && (
@@ -87,13 +31,8 @@ export default function AltDateWidget<
         </Input.Label>
       )}
       <Flex gap='xs' align='center' wrap='nowrap'>
-        {getDateElementProps(
-          state,
-          showTime,
-          options.yearsRange as [number, number] | undefined,
-          options.format as DateElementFormat | undefined,
-        ).map((elemProps, i) => {
-          const elemId = id + '_' + elemProps.type;
+        {elements.map((elemProps, i) => {
+          const elemId = `${id}_${elemProps.type}`;
           return (
             <Box key={i}>
               <Select
@@ -103,7 +42,7 @@ export default function AltDateWidget<
                 disabled={disabled || readonly}
                 data={dateRangeOptions<S>(elemProps.range[0], elemProps.range[1]).map((item) => item.value.toString())}
                 value={!elemProps.value || elemProps.value < 0 ? null : elemProps.value.toString()}
-                onChange={(v) => handleChange(elemProps.type as keyof DateObject, v)}
+                onChange={(v) => handleChange(elemProps.type as keyof DateObject, v || undefined)}
                 searchable={false}
                 allowDeselect={false}
                 comboboxProps={{ withinPortal: false }}
@@ -133,7 +72,3 @@ export default function AltDateWidget<
     </>
   );
 }
-
-AltDateWidget.defaultProps = {
-  showTime: false,
-};
