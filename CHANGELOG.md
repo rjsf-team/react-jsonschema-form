@@ -15,6 +15,12 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 6.0.0
+
+## Dev / docs / playground
+
+- Updated the libraries to the latest ones that aren't problematic
+
 # 6.0.0-beta.23
 
 ## @rjsf/antd
