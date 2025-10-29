@@ -17,6 +17,11 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 6.0.0
 
+## @rjsf/core
+
+- Updated `SchemaField` to add a new optional property `childFieldPathId` to the `FieldComponent` render to prevent duplicate ids, fixing (#4819)[https://github.com/rjsf-team/react-jsonschema-form/issues/4819]
+    - Also updated `ObjectField` and `ArrayField` to make children use the `childFieldPathId` if present, falling back to the `fieldPathId` if not
+
 ## Dev / docs / playground
 
 - Updated the libraries to the latest ones that aren't problematic
