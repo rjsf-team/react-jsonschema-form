@@ -221,6 +221,8 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const { properties: schemaProperties = {} } = schema;
   const formDataHash = hashObject(formData || {});
+  // All the children will use childFieldPathId if present in the props, falling back to the fieldPathId
+  const childFieldPathId = props.childFieldPathId ?? fieldPathId;
 
   const templateTitle = uiOptions.title ?? schema.title ?? title ?? name;
   const description = uiOptions.description ?? schema.description;
@@ -288,8 +290,8 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       set(newFormData as GenericObjectType, newKey, newValue);
     }
 
-    onChange(newFormData, fieldPathId.path);
-  }, [formData, onChange, registry, fieldPathId, getAvailableKey, schema]);
+    onChange(newFormData, childFieldPathId.path);
+  }, [formData, onChange, registry, childFieldPathId, getAvailableKey, schema]);
 
   /** Returns a callback function that deals with the rename of a key for an additional property for a schema. That
    * callback will attempt to rename the key and move the existing data to that key, calling `onChange` when it does.
@@ -312,10 +314,10 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
         });
         const renamedObj = Object.assign({}, ...keyValues);
 
-        onChange(renamedObj, fieldPathId.path);
+        onChange(renamedObj, childFieldPathId.path);
       }
     },
-    [formData, onChange, fieldPathId, getAvailableKey],
+    [formData, onChange, childFieldPathId, getAvailableKey],
   );
 
   /** Handles the remove click which removes the old `key` data and calls the `onChange` callback with it
@@ -324,9 +326,9 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     (key: string) => {
       const copiedFormData = { ...formData } as T;
       unset(copiedFormData, key);
-      onChange(copiedFormData, fieldPathId.path);
+      onChange(copiedFormData, childFieldPathId.path);
     },
-    [onChange, fieldPathId, formData],
+    [onChange, childFieldPathId, formData],
   );
 
   if (!renderOptionalField || hasFormData) {
@@ -349,7 +351,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
 
   const Template = getTemplate<'ObjectFieldTemplate', T, S, F>('ObjectFieldTemplate', registry, uiOptions);
   const optionalDataControl = renderOptionalField ? (
-    <OptionalDataControlsField {...props} schema={schema} />
+    <OptionalDataControlsField {...props} fieldPathId={childFieldPathId} schema={schema} />
   ) : undefined;
 
   const templateProps = {
@@ -371,7 +373,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
           schema={get(schema, [PROPERTIES_KEY, name], {}) as S}
           uiSchema={fieldUiSchema}
           errorSchema={get(errorSchema, name)}
-          fieldPathId={fieldPathId}
+          fieldPathId={childFieldPathId}
           formData={get(formData, name)}
           handleKeyRename={handleKeyRename}
           handleRemoveProperty={handleRemoveProperty}

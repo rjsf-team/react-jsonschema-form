@@ -5,6 +5,7 @@ import {
   descriptionId,
   ErrorSchema,
   Field,
+  FieldPathId,
   FieldPathList,
   FieldProps,
   FieldTemplateProps,
@@ -20,6 +21,7 @@ import {
   shouldRender,
   shouldRenderOptionalField,
   StrictRJSFSchema,
+  toFieldPathId,
   UI_OPTIONS_KEY,
   UIOptionsType,
 } from '@rjsf/utils';
@@ -103,7 +105,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     registry,
     wasPropertyKeyModified = false,
   } = props;
-  const { schemaUtils, globalUiOptions, fields } = registry;
+  const { schemaUtils, globalFormOptions, globalUiOptions, fields } = registry;
   const { AnyOfField: _AnyOfField, OneOfField: _OneOfField } = fields;
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const FieldTemplate = getTemplate<'FieldTemplate', T, S, F>('FieldTemplate', registry, uiOptions);
@@ -147,6 +149,9 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   const isReplacingAnyOrOneOf = uiOptions.field && uiOptions.fieldReplacesAnyOrOneOf === true;
   let XxxOfField: Field<T, S, F> | undefined;
   let XxxOfOptions: S[] | undefined;
+  // When rendering the `XxxOfField` we'll need to change the fieldPathId of the main component, remembering the
+  // fieldPathId of the children for the ObjectField and ArrayField
+  let fieldPathIdProps: { fieldPathId: FieldPathId; childFieldPathId?: FieldPathId } = { fieldPathId };
   if ((ANY_OF_KEY in schema || ONE_OF_KEY in schema) && !isReplacingAnyOrOneOf && !schemaUtils.isSelect(schema)) {
     if (schema[ANY_OF_KEY]) {
       XxxOfField = _AnyOfField;
@@ -163,6 +168,12 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     const isOptionalRender = shouldRenderOptionalField<T, S, F>(registry, schema, required, uiSchema);
     const hasFormData = isFormDataAvailable<T>(formData);
     displayLabel = displayLabel && (!isOptionalRender || hasFormData);
+    fieldPathIdProps = {
+      childFieldPathId: fieldPathId,
+      // The main FieldComponent will add `XxxOf` onto the fieldPathId to avoid duplication with the rendering of the
+      // same FieldComponent by the `XxxOfField`
+      fieldPathId: toFieldPathId('XxxOf', globalFormOptions, fieldPathId),
+    };
   }
 
   const { __errors, ...fieldErrorSchema } = errorSchema || {};
@@ -176,7 +187,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     <FieldComponent
       {...props}
       onChange={handleFieldComponentChange}
-      fieldPathId={fieldPathId}
+      {...fieldPathIdProps}
       schema={schema}
       uiSchema={fieldUiSchema}
       disabled={disabled}

@@ -567,7 +567,11 @@ function NormalArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   const canAdd = canAddItem<T, S, F>(registry, schema, formData, uiSchema) && (!renderOptionalField || hasFormData);
   const actualFormData = hasFormData ? keyedFormData : [];
   const extraClass = renderOptionalField ? ' rjsf-optional-array-field' : '';
-  const optionalDataControl = renderOptionalField ? <OptionalDataControlsField {...props} /> : undefined;
+  // All the children will use childFieldPathId if present in the props, falling back to the fieldPathId
+  const childFieldPathId = props.childFieldPathId ?? fieldPathId;
+  const optionalDataControl = renderOptionalField ? (
+    <OptionalDataControlsField {...props} fieldPathId={childFieldPathId} />
+  ) : undefined;
   const arrayProps: ArrayFieldTemplateProps<T[], S, F> = {
     canAdd,
     items: actualFormData.map((keyedItem, index: number) => {
@@ -576,7 +580,7 @@ function NormalArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       const itemCast = item as unknown as T[];
       const itemSchema = schemaUtils.retrieveSchema(_schemaItems, itemCast);
       const itemErrorSchema = errorSchema ? (errorSchema[index] as ErrorSchema<T[]>) : undefined;
-      const itemFieldPathId = toFieldPathId(index, globalFormOptions, fieldPathId);
+      const itemFieldPathId = toFieldPathId(index, globalFormOptions, childFieldPathId);
 
       // Compute the item UI schema using the helper method
       const itemUiSchema = computeItemUiSchema<T, S, F>(uiSchema, item, index, formContext);
@@ -675,6 +679,8 @@ function FixedArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
   const additionalSchema = isObject(schema.additionalItems)
     ? schemaUtils.retrieveSchema(schema.additionalItems as S, formData)
     : null;
+  // All the children will use childFieldPathId if present in the props, falling back to the fieldPathId
+  const childFieldPathId = props.childFieldPathId ?? fieldPathId;
 
   if (items.length < itemSchemas.length) {
     // to make sure at least all fixed items are generated
@@ -682,7 +688,9 @@ function FixedArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
   }
   const actualFormData = hasFormData ? keyedFormData : [];
   const extraClass = renderOptionalField ? ' rjsf-optional-array-field' : '';
-  const optionalDataControl = renderOptionalField ? <OptionalDataControlsField {...props} /> : undefined;
+  const optionalDataControl = renderOptionalField ? (
+    <OptionalDataControlsField {...props} fieldPathId={childFieldPathId} />
+  ) : undefined;
 
   // These are the props passed into the render function
   const canAdd =
@@ -704,7 +712,7 @@ function FixedArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         (additional && isObject(schema.additionalItems)
           ? schemaUtils.retrieveSchema(schema.additionalItems as S, itemCast)
           : itemSchemas[index]) || {};
-      const itemFieldPathId = toFieldPathId(index, globalFormOptions, fieldPathId);
+      const itemFieldPathId = toFieldPathId(index, globalFormOptions, childFieldPathId);
       // Compute the item UI schema - handle both static and dynamic cases
       let itemUiSchema: UiSchema<T[], S, F> | undefined;
       if (additional) {
@@ -834,6 +842,8 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
   const { schema, uiSchema, errorSchema, fieldPathId, registry, formData, onChange } = props;
   const { schemaUtils, translateString } = registry;
   const { keyedFormData, updateKeyedFormData } = useKeyedFormData<T>(formData);
+  // All the children will use childFieldPathId if present in the props, falling back to the fieldPathId
+  const childFieldPathId = props.childFieldPathId ?? fieldPathId;
 
   /** Callback handler for when the user clicks on the add or add at index buttons. Creates a new row of keyed form data
    * either at the end of the list (when index is not specified) or inserted at the `index` when it is, adding it into
@@ -871,9 +881,9 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
       } else {
         newKeyedFormData.push(newKeyedFormDataRow);
       }
-      onChange(updateKeyedFormData(newKeyedFormData), fieldPathId.path, newErrorSchema as ErrorSchema<T[]>);
+      onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema as ErrorSchema<T[]>);
     },
-    [keyedFormData, registry, schema, onChange, updateKeyedFormData, errorSchema, fieldPathId],
+    [keyedFormData, registry, schema, onChange, updateKeyedFormData, errorSchema, childFieldPathId],
   );
 
   /** Callback handler for when the user clicks on the copy button on an existing array element. Clones the row of
@@ -911,9 +921,9 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
       } else {
         newKeyedFormData.push(newKeyedFormDataRow);
       }
-      onChange(updateKeyedFormData(newKeyedFormData), fieldPathId.path, newErrorSchema as ErrorSchema<T[]>);
+      onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema as ErrorSchema<T[]>);
     },
-    [keyedFormData, onChange, updateKeyedFormData, errorSchema, fieldPathId],
+    [keyedFormData, onChange, updateKeyedFormData, errorSchema, childFieldPathId],
   );
 
   /** Callback handler for when the user clicks on the remove button on an existing array element. Removes the row of
@@ -941,9 +951,9 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         }
       }
       const newKeyedFormData = keyedFormData.filter((_, i) => i !== index);
-      onChange(updateKeyedFormData(newKeyedFormData), fieldPathId.path, newErrorSchema as ErrorSchema<T[]>);
+      onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema as ErrorSchema<T[]>);
     },
-    [keyedFormData, onChange, updateKeyedFormData, errorSchema, fieldPathId],
+    [keyedFormData, onChange, updateKeyedFormData, errorSchema, childFieldPathId],
   );
 
   /** Callback handler for when the user clicks on one of the move item buttons on an existing array element. Moves the
@@ -985,9 +995,9 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         return _newKeyedFormData;
       }
       const newKeyedFormData = reOrderArray();
-      onChange(updateKeyedFormData(newKeyedFormData), fieldPathId.path, newErrorSchema as ErrorSchema<T[]>);
+      onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema as ErrorSchema<T[]>);
     },
-    [keyedFormData, onChange, updateKeyedFormData, errorSchema, fieldPathId],
+    [keyedFormData, onChange, updateKeyedFormData, errorSchema, childFieldPathId],
   );
 
   /** Callback handler used to deal with changing the value of the data in the array at the `index`. Calls the
@@ -1012,9 +1022,9 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
   /** Callback handler used to change the value for a checkbox */
   const onSelectChange = useCallback(
     (value: any) => {
-      onChange(value, fieldPathId.path, undefined, fieldPathId?.[ID_KEY]);
+      onChange(value, childFieldPathId.path, undefined, childFieldPathId?.[ID_KEY]);
     },
-    [onChange, fieldPathId],
+    [onChange, childFieldPathId],
   );
 
   if (!(ITEMS_KEY in schema)) {
@@ -1044,16 +1054,16 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
   };
   if (schemaUtils.isMultiSelect(schema)) {
     // If array has enum or uniqueItems set to true, call renderMultiSelect() to render the default multiselect widget or a custom widget, if specified.
-    return <ArrayAsMultiSelect<T, S, F> {...props} onSelectChange={onSelectChange} />;
+    return <ArrayAsMultiSelect<T, S, F> {...props} fieldPathId={childFieldPathId} onSelectChange={onSelectChange} />;
   }
   if (isCustomWidget<T[], S, F>(uiSchema)) {
-    return <ArrayAsCustomWidget<T, S, F> {...props} onSelectChange={onSelectChange} />;
+    return <ArrayAsCustomWidget<T, S, F> {...props} fieldPathId={childFieldPathId} onSelectChange={onSelectChange} />;
   }
   if (isFixedItems(schema)) {
     return <FixedArray<T, S, F> {...props} {...arrayProps} />;
   }
   if (schemaUtils.isFilesArray(schema, uiSchema)) {
-    return <ArrayAsFiles {...props} onSelectChange={onSelectChange} />;
+    return <ArrayAsFiles {...props} fieldPathId={childFieldPathId} onSelectChange={onSelectChange} />;
   }
   return <NormalArray<T, S, F> {...props} {...arrayProps} />;
 }

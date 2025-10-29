@@ -63,7 +63,7 @@ describe('anyOf', () => {
     expect(node.querySelectorAll('select')).to.have.length.of(1);
     expect(node.querySelector('select').id).eql('root__anyof_select');
     expect(node.querySelectorAll('span.required')).to.have.length.of(1);
-    expect(node.querySelectorAll('#root__description')).to.have.length.of(1);
+    expect(node.querySelectorAll('#root_XxxOf__description')).to.have.length.of(1);
     expect(node.querySelectorAll('#root_baz')).to.have.length.of(1);
   });
 
