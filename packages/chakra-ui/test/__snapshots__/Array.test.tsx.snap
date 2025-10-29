@@ -1575,6 +1575,7 @@ exports[`array fields checkboxes 1`] = `
                   aria-haspopup="listbox"
                   aria-invalid={false}
                   aria-labelledby="field:::r7:::label"
+                  aria-required={false}
                   className="chakra-select__trigger emotion-6"
                   data-part="trigger"
                   data-placeholder-shown=""
@@ -5534,6 +5535,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes with nameGenerator 1`] = 
                   aria-haspopup="listbox"
                   aria-invalid={false}
                   aria-labelledby="field:::r3j:::label"
+                  aria-required={false}
                   className="chakra-select__trigger emotion-6"
                   data-part="trigger"
                   data-placeholder-shown=""
@@ -10121,7 +10123,7 @@ exports[`with title and description array icons 1`] = `
                       data-scope="fieldset"
                       disabled={false}
                     >
-                      <div
+                      <legend
                         className="fieldset__legend emotion-10"
                         data-part="legend"
                         data-scope="fieldset"
@@ -10133,7 +10135,7 @@ exports[`with title and description array icons 1`] = `
                         >
                           a test item description
                         </sup>
-                      </div>
+                      </legend>
                       <div
                         className="fieldset__content emotion-1"
                       >
@@ -10335,7 +10337,7 @@ exports[`with title and description array icons 1`] = `
                       data-scope="fieldset"
                       disabled={false}
                     >
-                      <div
+                      <legend
                         className="fieldset__legend emotion-10"
                         data-part="legend"
                         data-scope="fieldset"
@@ -10347,7 +10349,7 @@ exports[`with title and description array icons 1`] = `
                         >
                           a test item description
                         </sup>
-                      </div>
+                      </legend>
                       <div
                         className="fieldset__content emotion-1"
                       >
@@ -11094,7 +11096,7 @@ exports[`with title and description checkboxes 1`] = `
       data-scope="fieldset"
       disabled={false}
     >
-      <div
+      <legend
         className="fieldset__legend emotion-1"
         data-part="legend"
         data-scope="fieldset"
@@ -11106,7 +11108,7 @@ exports[`with title and description checkboxes 1`] = `
         >
           a test description
         </sup>
-      </div>
+      </legend>
       <div
         className="fieldset__content emotion-3"
       >
@@ -11207,6 +11209,7 @@ exports[`with title and description checkboxes 1`] = `
                   aria-haspopup="listbox"
                   aria-invalid={false}
                   aria-labelledby="field:::ru:::label"
+                  aria-required={false}
                   className="chakra-select__trigger emotion-9"
                   data-part="trigger"
                   data-placeholder-shown=""
@@ -11760,7 +11763,7 @@ exports[`with title and description fixed array 1`] = `
                       data-scope="fieldset"
                       disabled={false}
                     >
-                      <div
+                      <legend
                         className="fieldset__legend emotion-10"
                         data-part="legend"
                         data-scope="fieldset"
@@ -11772,7 +11775,7 @@ exports[`with title and description fixed array 1`] = `
                         >
                           a test item description
                         </sup>
-                      </div>
+                      </legend>
                       <div
                         className="fieldset__content emotion-1"
                       >
@@ -11840,7 +11843,7 @@ exports[`with title and description fixed array 1`] = `
                       data-scope="fieldset"
                       disabled={false}
                     >
-                      <div
+                      <legend
                         className="fieldset__legend emotion-10"
                         data-part="legend"
                         data-scope="fieldset"
@@ -11852,7 +11855,7 @@ exports[`with title and description fixed array 1`] = `
                         >
                           a test item description
                         </sup>
-                      </div>
+                      </legend>
                       <div
                         className="fieldset__content emotion-1"
                       >
@@ -12689,7 +12692,7 @@ exports[`with title and description from both array icons 1`] = `
                       data-scope="fieldset"
                       disabled={false}
                     >
-                      <div
+                      <legend
                         className="fieldset__legend emotion-10"
                         data-part="legend"
                         data-scope="fieldset"
@@ -12701,7 +12704,7 @@ exports[`with title and description from both array icons 1`] = `
                         >
                           a fancier item description
                         </sup>
-                      </div>
+                      </legend>
                       <div
                         className="fieldset__content emotion-1"
                       >
@@ -12903,7 +12906,7 @@ exports[`with title and description from both array icons 1`] = `
                       data-scope="fieldset"
                       disabled={false}
                     >
-                      <div
+                      <legend
                         className="fieldset__legend emotion-10"
                         data-part="legend"
                         data-scope="fieldset"
@@ -12915,7 +12918,7 @@ exports[`with title and description from both array icons 1`] = `
                         >
                           a fancier item description
                         </sup>
-                      </div>
+                      </legend>
                       <div
                         className="fieldset__content emotion-1"
                       >
@@ -13662,7 +13665,7 @@ exports[`with title and description from both checkboxes 1`] = `
       data-scope="fieldset"
       disabled={false}
     >
-      <div
+      <legend
         className="fieldset__legend emotion-1"
         data-part="legend"
         data-scope="fieldset"
@@ -13674,7 +13677,7 @@ exports[`with title and description from both checkboxes 1`] = `
         >
           a fancier description
         </sup>
-      </div>
+      </legend>
       <div
         className="fieldset__content emotion-3"
       >
@@ -13775,6 +13778,7 @@ exports[`with title and description from both checkboxes 1`] = `
                   aria-haspopup="listbox"
                   aria-invalid={false}
                   aria-labelledby="field:::r1q:::label"
+                  aria-required={false}
                   className="chakra-select__trigger emotion-9"
                   data-part="trigger"
                   data-placeholder-shown=""
@@ -14328,7 +14332,7 @@ exports[`with title and description from both fixed array 1`] = `
                       data-scope="fieldset"
                       disabled={false}
                     >
-                      <div
+                      <legend
                         className="fieldset__legend emotion-10"
                         data-part="legend"
                         data-scope="fieldset"
@@ -14340,7 +14344,7 @@ exports[`with title and description from both fixed array 1`] = `
                         >
                           a fancier item description
                         </sup>
-                      </div>
+                      </legend>
                       <div
                         className="fieldset__content emotion-1"
                       >
@@ -14408,7 +14412,7 @@ exports[`with title and description from both fixed array 1`] = `
                       data-scope="fieldset"
                       disabled={false}
                     >
-                      <div
+                      <legend
                         className="fieldset__legend emotion-10"
                         data-part="legend"
                         data-scope="fieldset"
@@ -14420,7 +14424,7 @@ exports[`with title and description from both fixed array 1`] = `
                         >
                           a fancier item description
                         </sup>
-                      </div>
+                      </legend>
                       <div
                         className="fieldset__content emotion-1"
                       >
@@ -15257,7 +15261,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                       data-scope="fieldset"
                       disabled={false}
                     >
-                      <div
+                      <legend
                         className="fieldset__legend emotion-10"
                         data-part="legend"
                         data-scope="fieldset"
@@ -15269,7 +15273,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         >
                           a fancier item description
                         </sup>
-                      </div>
+                      </legend>
                       <div
                         className="fieldset__content emotion-1"
                       >
@@ -15471,7 +15475,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                       data-scope="fieldset"
                       disabled={false}
                     >
-                      <div
+                      <legend
                         className="fieldset__legend emotion-10"
                         data-part="legend"
                         data-scope="fieldset"
@@ -15483,7 +15487,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         >
                           a fancier item description
                         </sup>
-                      </div>
+                      </legend>
                       <div
                         className="fieldset__content emotion-1"
                       >
@@ -16230,7 +16234,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
       data-scope="fieldset"
       disabled={false}
     >
-      <div
+      <legend
         className="fieldset__legend emotion-1"
         data-part="legend"
         data-scope="fieldset"
@@ -16242,7 +16246,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
         >
           a fancier description
         </sup>
-      </div>
+      </legend>
       <div
         className="fieldset__content emotion-3"
       >
@@ -16343,6 +16347,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
                   aria-haspopup="listbox"
                   aria-invalid={false}
                   aria-labelledby="field:::r1c:::label"
+                  aria-required={false}
                   className="chakra-select__trigger emotion-9"
                   data-part="trigger"
                   data-placeholder-shown=""
@@ -16896,7 +16901,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                       data-scope="fieldset"
                       disabled={false}
                     >
-                      <div
+                      <legend
                         className="fieldset__legend emotion-10"
                         data-part="legend"
                         data-scope="fieldset"
@@ -16908,7 +16913,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                         >
                           a fancier item description
                         </sup>
-                      </div>
+                      </legend>
                       <div
                         className="fieldset__content emotion-1"
                       >
@@ -16976,7 +16981,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                       data-scope="fieldset"
                       disabled={false}
                     >
-                      <div
+                      <legend
                         className="fieldset__legend emotion-10"
                         data-part="legend"
                         data-scope="fieldset"
@@ -16988,7 +16993,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                         >
                           a fancier item description
                         </sup>
-                      </div>
+                      </legend>
                       <div
                         className="fieldset__content emotion-1"
                       >
@@ -18592,7 +18597,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
       data-scope="fieldset"
       disabled={false}
     >
-      <div
+      <legend
         className="fieldset__legend emotion-1"
         data-part="legend"
         data-scope="fieldset"
@@ -18604,7 +18609,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
         >
           a test description
         </sup>
-      </div>
+      </legend>
       <div
         className="fieldset__content emotion-3"
       >
@@ -18705,6 +18710,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
                   aria-haspopup="listbox"
                   aria-invalid={false}
                   aria-labelledby="field:::r28:::label"
+                  aria-required={false}
                   className="chakra-select__trigger emotion-9"
                   data-part="trigger"
                   data-placeholder-shown=""

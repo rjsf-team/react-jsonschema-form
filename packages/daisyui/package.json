@@ -63,11 +63,11 @@
     ]
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^7.0.1",
-    "@fortawesome/free-solid-svg-icons": "^7.0.1",
-    "@fortawesome/react-fontawesome": "^3.0.2",
+    "@fortawesome/fontawesome-svg-core": "^7.1.0",
+    "@fortawesome/free-solid-svg-icons": "^7.1.0",
+    "@fortawesome/react-fontawesome": "^3.1.0",
     "date-fns": "^4.1.0",
-    "react-day-picker": "^9.9.0",
+    "react-day-picker": "^9.11.1",
     "tailwindcss": "^4.1.12"
   },
   "peerDependencies": {
@@ -84,7 +84,7 @@
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
-    "daisyui": "^5.1.26"
+    "daisyui": "^5.3.10"
   },
   "repository": {
     "type": "git",

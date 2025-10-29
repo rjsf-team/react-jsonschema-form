@@ -27,16 +27,14 @@
   },
   "dependencies": {
     "@docusaurus/core": "^3.8.1",
-    "@docusaurus/preset-classic": "^3.8.1",
+    "@docusaurus/preset-classic": "^3.9.2",
     "@mdx-js/react": "^3.1.1",
     "ajv": "^8.17.1",
-    "prism-react-renderer": "^2.4.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "prism-react-renderer": "^2.4.1"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "^3.8.1",
-    "@tsconfig/docusaurus": "^2.0.3"
+    "@tsconfig/docusaurus": "^2.0.4"
   },
   "browserslist": {
     "production": [

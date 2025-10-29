@@ -6869,7 +6869,7 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
                                       "data-checked": true,
                                       "data-label-position": "right",
                                       "data-size": undefined,
-                                      "data-variant": undefined,
+                                      "data-variant": "filled",
                                       "size": undefined,
                                       "style": {
                                         "--checkbox-color": "var(--mantine-color-blue-filled)",

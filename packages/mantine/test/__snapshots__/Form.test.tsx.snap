@@ -337,7 +337,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                                                       "data-checked": undefined,
                                                                       "data-label-position": "right",
                                                                       "data-size": undefined,
-                                                                      "data-variant": undefined,
+                                                                      "data-variant": "filled",
                                                                       "size": undefined,
                                                                       "style": {
                                                                         "--checkbox-color": "var(--mantine-color-blue-filled)",
@@ -957,7 +957,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                                                       "data-checked": true,
                                                                       "data-label-position": "right",
                                                                       "data-size": undefined,
-                                                                      "data-variant": undefined,
+                                                                      "data-variant": "filled",
                                                                       "size": undefined,
                                                                       "style": {
                                                                         "--checkbox-color": "var(--mantine-color-blue-filled)",
@@ -2869,7 +2869,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
                                           "data-checked": undefined,
                                           "data-label-position": "right",
                                           "data-size": undefined,
-                                          "data-variant": undefined,
+                                          "data-variant": "filled",
                                           "size": undefined,
                                           "style": {
                                             "--checkbox-color": "var(--mantine-color-blue-filled)",
@@ -2990,7 +2990,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
                                           "data-checked": undefined,
                                           "data-label-position": "right",
                                           "data-size": undefined,
-                                          "data-variant": undefined,
+                                          "data-variant": "filled",
                                           "size": undefined,
                                           "style": {
                                             "--checkbox-color": "var(--mantine-color-blue-filled)",
@@ -3111,7 +3111,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
                                           "data-checked": undefined,
                                           "data-label-position": "right",
                                           "data-size": undefined,
-                                          "data-variant": undefined,
+                                          "data-variant": "filled",
                                           "size": undefined,
                                           "style": {
                                             "--checkbox-color": "var(--mantine-color-blue-filled)",
@@ -5483,7 +5483,7 @@ exports[`nameGenerator bracketNameGenerator simple fields 1`] = `
                               "data-checked": undefined,
                               "data-label-position": "right",
                               "data-size": undefined,
-                              "data-variant": undefined,
+                              "data-variant": "filled",
                               "size": undefined,
                               "style": {
                                 "--checkbox-color": "var(--mantine-color-blue-filled)",
@@ -6190,7 +6190,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                                                       "data-checked": undefined,
                                                                       "data-label-position": "right",
                                                                       "data-size": undefined,
-                                                                      "data-variant": undefined,
+                                                                      "data-variant": "filled",
                                                                       "size": undefined,
                                                                       "style": {
                                                                         "--checkbox-color": "var(--mantine-color-blue-filled)",
@@ -6810,7 +6810,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                                                       "data-checked": true,
                                                                       "data-label-position": "right",
                                                                       "data-size": undefined,
-                                                                      "data-variant": undefined,
+                                                                      "data-variant": "filled",
                                                                       "size": undefined,
                                                                       "style": {
                                                                         "--checkbox-color": "var(--mantine-color-blue-filled)",
@@ -10275,7 +10275,7 @@ exports[`nameGenerator dotNotationNameGenerator simple fields 1`] = `
                               "data-checked": undefined,
                               "data-label-position": "right",
                               "data-size": undefined,
-                              "data-variant": undefined,
+                              "data-variant": "filled",
                               "size": undefined,
                               "style": {
                                 "--checkbox-color": "var(--mantine-color-blue-filled)",
@@ -10524,7 +10524,7 @@ exports[`single fields checkbox field 1`] = `
               "data-checked": undefined,
               "data-label-position": "right",
               "data-size": undefined,
-              "data-variant": undefined,
+              "data-variant": "filled",
               "size": undefined,
               "style": {
                 "--checkbox-color": "var(--mantine-color-blue-filled)",
@@ -10743,7 +10743,7 @@ exports[`single fields checkbox field with label 1`] = `
               "data-checked": undefined,
               "data-label-position": "right",
               "data-size": undefined,
-              "data-variant": undefined,
+              "data-variant": "filled",
               "size": undefined,
               "style": {
                 "--checkbox-color": "var(--mantine-color-blue-filled)",
@@ -10980,7 +10980,7 @@ exports[`single fields checkbox field with label and description 1`] = `
               "data-checked": undefined,
               "data-label-position": "right",
               "data-size": undefined,
-              "data-variant": undefined,
+              "data-variant": "filled",
               "size": undefined,
               "style": {
                 "--checkbox-color": "var(--mantine-color-blue-filled)",
@@ -11246,7 +11246,7 @@ exports[`single fields checkbox field with label and rich text description 1`] =
               "data-checked": undefined,
               "data-label-position": "right",
               "data-size": undefined,
-              "data-variant": undefined,
+              "data-variant": "filled",
               "size": undefined,
               "style": {
                 "--checkbox-color": "var(--mantine-color-blue-filled)",
@@ -11488,7 +11488,7 @@ exports[`single fields checkboxes field 1`] = `
                           "data-checked": undefined,
                           "data-label-position": "right",
                           "data-size": undefined,
-                          "data-variant": undefined,
+                          "data-variant": "filled",
                           "size": undefined,
                           "style": {
                             "--checkbox-color": "var(--mantine-color-blue-filled)",
@@ -11609,7 +11609,7 @@ exports[`single fields checkboxes field 1`] = `
                           "data-checked": undefined,
                           "data-label-position": "right",
                           "data-size": undefined,
-                          "data-variant": undefined,
+                          "data-variant": "filled",
                           "size": undefined,
                           "style": {
                             "--checkbox-color": "var(--mantine-color-blue-filled)",
@@ -11730,7 +11730,7 @@ exports[`single fields checkboxes field 1`] = `
                           "data-checked": undefined,
                           "data-label-position": "right",
                           "data-size": undefined,
-                          "data-variant": undefined,
+                          "data-variant": "filled",
                           "size": undefined,
                           "style": {
                             "--checkbox-color": "var(--mantine-color-blue-filled)",
@@ -11851,7 +11851,7 @@ exports[`single fields checkboxes field 1`] = `
                           "data-checked": undefined,
                           "data-label-position": "right",
                           "data-size": undefined,
-                          "data-variant": undefined,
+                          "data-variant": "filled",
                           "size": undefined,
                           "style": {
                             "--checkbox-color": "var(--mantine-color-blue-filled)",
@@ -30638,7 +30638,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                           "data-checked": undefined,
                           "data-label-position": "right",
                           "data-size": undefined,
-                          "data-variant": undefined,
+                          "data-variant": "filled",
                           "size": undefined,
                           "style": {
                             "--checkbox-color": "var(--mantine-color-blue-filled)",
@@ -30759,7 +30759,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                           "data-checked": undefined,
                           "data-label-position": "right",
                           "data-size": undefined,
-                          "data-variant": undefined,
+                          "data-variant": "filled",
                           "size": undefined,
                           "style": {
                             "--checkbox-color": "var(--mantine-color-blue-filled)",
@@ -30880,7 +30880,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                           "data-checked": undefined,
                           "data-label-position": "right",
                           "data-size": undefined,
-                          "data-variant": undefined,
+                          "data-variant": "filled",
                           "size": undefined,
                           "style": {
                             "--checkbox-color": "var(--mantine-color-blue-filled)",
@@ -31001,7 +31001,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                           "data-checked": undefined,
                           "data-label-position": "right",
                           "data-size": undefined,
-                          "data-variant": undefined,
+                          "data-variant": "filled",
                           "size": undefined,
                           "style": {
                             "--checkbox-color": "var(--mantine-color-blue-filled)",

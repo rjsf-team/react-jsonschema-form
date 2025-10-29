@@ -72,7 +72,7 @@
   "dependencies": {
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
-    "markdown-to-jsx": "^7.7.13",
+    "markdown-to-jsx": "^8.0.0",
     "prop-types": "^15.8.1"
   },
   "devDependencies": {
@@ -87,7 +87,7 @@
     "chai": "^3.5.0",
     "eslint": "^8.57.1",
     "html": "^1.0.0",
-    "jsdom": "^20.0.3",
+    "jsdom": "^27.0.1",
     "mocha": "^10.8.2",
     "react-portal": "^4.3.0",
     "sinon": "^9.2.4"

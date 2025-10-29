@@ -1205,7 +1205,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   data-scope="fieldset"
                   disabled={false}
                 >
-                  <div
+                  <legend
                     className="fieldset__legend emotion-36"
                     data-part="legend"
                     data-scope="fieldset"
@@ -1217,7 +1217,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     >
                       (Check all that apply)
                     </sup>
-                  </div>
+                  </legend>
                   <div
                     className="fieldset__content emotion-1"
                   >
@@ -1255,6 +1255,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             onPointerMove={[Function]}
                           >
                             <input
+                              aria-invalid={false}
                               aria-labelledby="checkbox:root_person_race-0:label"
                               defaultChecked={false}
                               disabled={false}
@@ -1323,6 +1324,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             onPointerMove={[Function]}
                           >
                             <input
+                              aria-invalid={false}
                               aria-labelledby="checkbox:root_person_race-1:label"
                               defaultChecked={false}
                               disabled={false}
@@ -1391,6 +1393,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             onPointerMove={[Function]}
                           >
                             <input
+                              aria-invalid={false}
                               aria-labelledby="checkbox:root_person_race-2:label"
                               defaultChecked={false}
                               disabled={false}
@@ -1459,6 +1462,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             onPointerMove={[Function]}
                           >
                             <input
+                              aria-invalid={false}
                               aria-labelledby="checkbox:root_person_race-3:label"
                               defaultChecked={false}
                               disabled={false}
@@ -1527,6 +1531,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             onPointerMove={[Function]}
                           >
                             <input
+                              aria-invalid={false}
                               aria-labelledby="checkbox:root_person_race-4:label"
                               defaultChecked={false}
                               disabled={false}
@@ -2226,6 +2231,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                         aria-haspopup="listbox"
                                         aria-invalid={false}
                                         aria-labelledby="field:::r3m:::label"
+                                        aria-required={true}
                                         className="chakra-select__trigger emotion-94"
                                         data-part="trigger"
                                         data-placeholder-shown=""
@@ -4311,7 +4317,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <input
                                   data-ownedby="radio-group::r3s:"
                                   defaultChecked={true}
-                                  disabled={false}
                                   id="radio-group::r3s::radio:input:0"
                                   name="root_employment"
                                   onBlur={[Function]}
@@ -4384,7 +4389,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <input
                                   data-ownedby="radio-group::r3s:"
                                   defaultChecked={false}
-                                  disabled={false}
                                   id="radio-group::r3s::radio:input:1"
                                   name="root_employment"
                                   onBlur={[Function]}
@@ -4452,7 +4456,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <input
                                   data-ownedby="radio-group::r3s:"
                                   defaultChecked={false}
-                                  disabled={false}
                                   id="radio-group::r3s::radio:input:2"
                                   name="root_employment"
                                   onBlur={[Function]}
@@ -5124,6 +5127,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   aria-haspopup="listbox"
                                   aria-invalid={false}
                                   aria-labelledby="field:::r44:::label"
+                                  aria-required={true}
                                   className="chakra-select__trigger emotion-94"
                                   data-part="trigger"
                                   data-placeholder-shown=""
@@ -8286,7 +8290,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   data-scope="fieldset"
                   disabled={false}
                 >
-                  <div
+                  <legend
                     className="fieldset__legend emotion-36"
                     data-part="legend"
                     data-scope="fieldset"
@@ -8298,7 +8302,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     >
                       (Check all that apply)
                     </sup>
-                  </div>
+                  </legend>
                   <div
                     className="fieldset__content emotion-1"
                   >
@@ -8336,6 +8340,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             onPointerMove={[Function]}
                           >
                             <input
+                              aria-invalid={false}
                               aria-labelledby="checkbox:root_person_race-0:label"
                               defaultChecked={false}
                               disabled={false}
@@ -8404,6 +8409,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             onPointerMove={[Function]}
                           >
                             <input
+                              aria-invalid={false}
                               aria-labelledby="checkbox:root_person_race-1:label"
                               defaultChecked={false}
                               disabled={false}
@@ -8472,6 +8478,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             onPointerMove={[Function]}
                           >
                             <input
+                              aria-invalid={false}
                               aria-labelledby="checkbox:root_person_race-2:label"
                               defaultChecked={false}
                               disabled={false}
@@ -8540,6 +8547,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             onPointerMove={[Function]}
                           >
                             <input
+                              aria-invalid={false}
                               aria-labelledby="checkbox:root_person_race-3:label"
                               defaultChecked={false}
                               disabled={false}
@@ -8608,6 +8616,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             onPointerMove={[Function]}
                           >
                             <input
+                              aria-invalid={false}
                               aria-labelledby="checkbox:root_person_race-4:label"
                               defaultChecked={false}
                               disabled={false}
@@ -9307,6 +9316,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                         aria-haspopup="listbox"
                                         aria-invalid={false}
                                         aria-labelledby="field:::r4v:::label"
+                                        aria-required={true}
                                         className="chakra-select__trigger emotion-94"
                                         data-part="trigger"
                                         data-placeholder-shown=""
@@ -11392,7 +11402,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <input
                                   data-ownedby="radio-group::r55:"
                                   defaultChecked={false}
-                                  disabled={false}
                                   id="radio-group::r55::radio:input:0"
                                   name="root_employment"
                                   onBlur={[Function]}
@@ -11460,7 +11469,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <input
                                   data-ownedby="radio-group::r55:"
                                   defaultChecked={true}
-                                  disabled={false}
                                   id="radio-group::r55::radio:input:1"
                                   name="root_employment"
                                   onBlur={[Function]}
@@ -11533,7 +11541,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <input
                                   data-ownedby="radio-group::r55:"
                                   defaultChecked={false}
-                                  disabled={false}
                                   id="radio-group::r55::radio:input:2"
                                   name="root_employment"
                                   onBlur={[Function]}
@@ -12260,6 +12267,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   aria-haspopup="listbox"
                                   aria-invalid={false}
                                   aria-labelledby="field:::r5f:::label"
+                                  aria-required={true}
                                   className="chakra-select__trigger emotion-94"
                                   data-part="trigger"
                                   data-placeholder-shown=""
@@ -15467,7 +15475,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   data-scope="fieldset"
                   disabled={false}
                 >
-                  <div
+                  <legend
                     className="fieldset__legend emotion-36"
                     data-part="legend"
                     data-scope="fieldset"
@@ -15479,7 +15487,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     >
                       (Check all that apply)
                     </sup>
-                  </div>
+                  </legend>
                   <div
                     className="fieldset__content emotion-1"
                   >
@@ -15517,6 +15525,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             onPointerMove={[Function]}
                           >
                             <input
+                              aria-invalid={false}
                               aria-labelledby="checkbox:root_person_race-0:label"
                               defaultChecked={false}
                               disabled={false}
@@ -15585,6 +15594,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             onPointerMove={[Function]}
                           >
                             <input
+                              aria-invalid={false}
                               aria-labelledby="checkbox:root_person_race-1:label"
                               defaultChecked={false}
                               disabled={false}
@@ -15653,6 +15663,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             onPointerMove={[Function]}
                           >
                             <input
+                              aria-invalid={false}
                               aria-labelledby="checkbox:root_person_race-2:label"
                               defaultChecked={false}
                               disabled={false}
@@ -15721,6 +15732,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             onPointerMove={[Function]}
                           >
                             <input
+                              aria-invalid={false}
                               aria-labelledby="checkbox:root_person_race-3:label"
                               defaultChecked={false}
                               disabled={false}
@@ -15789,6 +15801,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             onPointerMove={[Function]}
                           >
                             <input
+                              aria-invalid={false}
                               aria-labelledby="checkbox:root_person_race-4:label"
                               defaultChecked={false}
                               disabled={false}
@@ -16488,6 +16501,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                         aria-haspopup="listbox"
                                         aria-invalid={false}
                                         aria-labelledby="field:::r6a:::label"
+                                        aria-required={true}
                                         className="chakra-select__trigger emotion-94"
                                         data-part="trigger"
                                         data-placeholder-shown=""
@@ -18573,7 +18587,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <input
                                   data-ownedby="radio-group::r6g:"
                                   defaultChecked={false}
-                                  disabled={false}
                                   id="radio-group::r6g::radio:input:0"
                                   name="root_employment"
                                   onBlur={[Function]}
@@ -18641,7 +18654,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <input
                                   data-ownedby="radio-group::r6g:"
                                   defaultChecked={false}
-                                  disabled={false}
                                   id="radio-group::r6g::radio:input:1"
                                   name="root_employment"
                                   onBlur={[Function]}
@@ -18709,7 +18721,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <input
                                   data-ownedby="radio-group::r6g:"
                                   defaultChecked={true}
-                                  disabled={false}
                                   id="radio-group::r6g::radio:input:2"
                                   name="root_employment"
                                   onBlur={[Function]}
@@ -20064,7 +20075,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   data-scope="fieldset"
                   disabled={false}
                 >
-                  <div
+                  <legend
                     className="fieldset__legend emotion-36"
                     data-part="legend"
                     data-scope="fieldset"
@@ -20076,7 +20087,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     >
                       (Check all that apply)
                     </sup>
-                  </div>
+                  </legend>
                   <div
                     className="fieldset__content emotion-1"
                   >
@@ -20114,6 +20125,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             onPointerMove={[Function]}
                           >
                             <input
+                              aria-invalid={false}
                               aria-labelledby="checkbox:root_person_race-0:label"
                               defaultChecked={false}
                               disabled={false}
@@ -20182,6 +20194,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             onPointerMove={[Function]}
                           >
                             <input
+                              aria-invalid={false}
                               aria-labelledby="checkbox:root_person_race-1:label"
                               defaultChecked={false}
                               disabled={false}
@@ -20250,6 +20263,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             onPointerMove={[Function]}
                           >
                             <input
+                              aria-invalid={false}
                               aria-labelledby="checkbox:root_person_race-2:label"
                               defaultChecked={false}
                               disabled={false}
@@ -20318,6 +20332,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             onPointerMove={[Function]}
                           >
                             <input
+                              aria-invalid={false}
                               aria-labelledby="checkbox:root_person_race-3:label"
                               defaultChecked={false}
                               disabled={false}
@@ -20386,6 +20401,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             onPointerMove={[Function]}
                           >
                             <input
+                              aria-invalid={false}
                               aria-labelledby="checkbox:root_person_race-4:label"
                               defaultChecked={false}
                               disabled={false}
@@ -21085,6 +21101,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                         aria-haspopup="listbox"
                                         aria-invalid={false}
                                         aria-labelledby="field:::r2d:::label"
+                                        aria-required={true}
                                         className="chakra-select__trigger emotion-94"
                                         data-part="trigger"
                                         data-placeholder-shown=""
@@ -23170,7 +23187,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <input
                                   data-ownedby="radio-group::r2j:"
                                   defaultChecked={true}
-                                  disabled={false}
                                   id="radio-group::r2j::radio:input:0"
                                   name="root_employment"
                                   onBlur={[Function]}
@@ -23243,7 +23259,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <input
                                   data-ownedby="radio-group::r2j:"
                                   defaultChecked={false}
-                                  disabled={false}
                                   id="radio-group::r2j::radio:input:1"
                                   name="root_employment"
                                   onBlur={[Function]}
@@ -23311,7 +23326,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <input
                                   data-ownedby="radio-group::r2j:"
                                   defaultChecked={false}
-                                  disabled={false}
                                   id="radio-group::r2j::radio:input:2"
                                   name="root_employment"
                                   onBlur={[Function]}
@@ -23983,6 +23997,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   aria-haspopup="listbox"
                                   aria-invalid={false}
                                   aria-labelledby="field:::r2r:::label"
+                                  aria-required={true}
                                   className="chakra-select__trigger emotion-94"
                                   data-part="trigger"
                                   data-placeholder-shown=""
@@ -26996,7 +27011,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                 data-scope="fieldset"
                 disabled={false}
               >
-                <div
+                <legend
                   className="fieldset__legend emotion-32"
                   data-part="legend"
                   data-scope="fieldset"
@@ -27008,7 +27023,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                   >
                     (Check all that apply)
                   </sup>
-                </div>
+                </legend>
                 <div
                   className="fieldset__content emotion-1"
                 >
@@ -27046,6 +27061,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                           onPointerMove={[Function]}
                         >
                           <input
+                            aria-invalid={false}
                             aria-labelledby="checkbox:root_person_race-0:label"
                             defaultChecked={false}
                             disabled={false}
@@ -27114,6 +27130,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                           onPointerMove={[Function]}
                         >
                           <input
+                            aria-invalid={false}
                             aria-labelledby="checkbox:root_person_race-1:label"
                             defaultChecked={false}
                             disabled={false}
@@ -27182,6 +27199,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                           onPointerMove={[Function]}
                         >
                           <input
+                            aria-invalid={false}
                             aria-labelledby="checkbox:root_person_race-2:label"
                             defaultChecked={false}
                             disabled={false}
@@ -27250,6 +27268,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                           onPointerMove={[Function]}
                         >
                           <input
+                            aria-invalid={false}
                             aria-labelledby="checkbox:root_person_race-3:label"
                             defaultChecked={false}
                             disabled={false}
@@ -27318,6 +27337,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                           onPointerMove={[Function]}
                         >
                           <input
+                            aria-invalid={false}
                             aria-labelledby="checkbox:root_person_race-4:label"
                             defaultChecked={false}
                             disabled={false}
@@ -27988,6 +28008,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                             aria-haspopup="listbox"
                             aria-invalid={false}
                             aria-labelledby="field:::r1i:::label"
+                            aria-required={true}
                             className="chakra-select__trigger emotion-83"
                             data-part="trigger"
                             data-placeholder-shown=""
@@ -30999,7 +31020,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                 data-scope="fieldset"
                 disabled={false}
               >
-                <div
+                <legend
                   className="fieldset__legend emotion-32"
                   data-part="legend"
                   data-scope="fieldset"
@@ -31011,7 +31032,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   >
                     (Check all that apply)
                   </sup>
-                </div>
+                </legend>
                 <div
                   className="fieldset__content emotion-1"
                 >
@@ -31049,6 +31070,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                           onPointerMove={[Function]}
                         >
                           <input
+                            aria-invalid={false}
                             aria-labelledby="checkbox:root_person_race-0:label"
                             defaultChecked={false}
                             disabled={false}
@@ -31117,6 +31139,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                           onPointerMove={[Function]}
                         >
                           <input
+                            aria-invalid={false}
                             aria-labelledby="checkbox:root_person_race-1:label"
                             defaultChecked={false}
                             disabled={false}
@@ -31185,6 +31208,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                           onPointerMove={[Function]}
                         >
                           <input
+                            aria-invalid={false}
                             aria-labelledby="checkbox:root_person_race-2:label"
                             defaultChecked={false}
                             disabled={false}
@@ -31253,6 +31277,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                           onPointerMove={[Function]}
                         >
                           <input
+                            aria-invalid={false}
                             aria-labelledby="checkbox:root_person_race-3:label"
                             defaultChecked={false}
                             disabled={false}
@@ -31321,6 +31346,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                           onPointerMove={[Function]}
                         >
                           <input
+                            aria-invalid={false}
                             aria-labelledby="checkbox:root_person_race-4:label"
                             defaultChecked={false}
                             disabled={false}
@@ -31991,6 +32017,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                             aria-haspopup="listbox"
                             aria-invalid={false}
                             aria-labelledby="field:::ro:::label"
+                            aria-required={true}
                             className="chakra-select__trigger emotion-83"
                             data-part="trigger"
                             data-placeholder-shown=""
