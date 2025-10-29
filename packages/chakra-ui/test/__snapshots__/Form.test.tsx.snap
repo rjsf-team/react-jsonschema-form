@@ -2475,6 +2475,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
                           onPointerMove={[Function]}
                         >
                           <input
+                            aria-invalid={false}
                             aria-labelledby="checkbox:root_choices-0:label"
                             defaultChecked={false}
                             disabled={false}
@@ -2543,6 +2544,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
                           onPointerMove={[Function]}
                         >
                           <input
+                            aria-invalid={false}
                             aria-labelledby="checkbox:root_choices-1:label"
                             defaultChecked={false}
                             disabled={false}
@@ -2611,6 +2613,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
                           onPointerMove={[Function]}
                         >
                           <input
+                            aria-invalid={false}
                             aria-labelledby="checkbox:root_choices-2:label"
                             defaultChecked={false}
                             disabled={false}
@@ -3640,7 +3643,6 @@ exports[`nameGenerator bracketNameGenerator radio field 1`] = `
                           <input
                             data-ownedby="radio-group::r8r:"
                             defaultChecked={false}
-                            disabled={false}
                             id="radio-group::r8r::radio:input:0"
                             name="root[option]"
                             onBlur={[Function]}
@@ -3708,7 +3710,6 @@ exports[`nameGenerator bracketNameGenerator radio field 1`] = `
                           <input
                             data-ownedby="radio-group::r8r:"
                             defaultChecked={false}
-                            disabled={false}
                             id="radio-group::r8r::radio:input:1"
                             name="root[option]"
                             onBlur={[Function]}
@@ -4387,6 +4388,7 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
                             aria-haspopup="listbox"
                             aria-invalid={false}
                             aria-labelledby="field:::r8m:::label"
+                            aria-required={false}
                             className="chakra-select__trigger emotion-10"
                             data-part="trigger"
                             data-placeholder-shown=""
@@ -8782,6 +8784,7 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
                             aria-haspopup="listbox"
                             aria-invalid={false}
                             aria-labelledby="field:::rae:::label"
+                            aria-required={false}
                             className="chakra-select__trigger emotion-10"
                             data-part="trigger"
                             data-placeholder-shown=""
@@ -11399,6 +11402,7 @@ exports[`single fields checkboxes field 1`] = `
                 onPointerMove={[Function]}
               >
                 <input
+                  aria-invalid={false}
                   aria-labelledby="checkbox:root-0:label"
                   defaultChecked={false}
                   disabled={false}
@@ -11467,6 +11471,7 @@ exports[`single fields checkboxes field 1`] = `
                 onPointerMove={[Function]}
               >
                 <input
+                  aria-invalid={false}
                   aria-labelledby="checkbox:root-1:label"
                   defaultChecked={false}
                   disabled={false}
@@ -11535,6 +11540,7 @@ exports[`single fields checkboxes field 1`] = `
                 onPointerMove={[Function]}
               >
                 <input
+                  aria-invalid={false}
                   aria-labelledby="checkbox:root-2:label"
                   defaultChecked={false}
                   disabled={false}
@@ -11603,6 +11609,7 @@ exports[`single fields checkboxes field 1`] = `
                 onPointerMove={[Function]}
               >
                 <input
+                  aria-invalid={false}
                   aria-labelledby="checkbox:root-3:label"
                   defaultChecked={false}
                   disabled={false}
@@ -11951,7 +11958,7 @@ exports[`single fields field with description 1`] = `
                 data-scope="fieldset"
                 disabled={false}
               >
-                <div
+                <legend
                   className="fieldset__legend emotion-4"
                   data-part="legend"
                   data-scope="fieldset"
@@ -11963,7 +11970,7 @@ exports[`single fields field with description 1`] = `
                   >
                     some description
                   </sup>
-                </div>
+                </legend>
                 <div
                   className="fieldset__content emotion-1"
                 >
@@ -12299,7 +12306,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                 data-scope="fieldset"
                 disabled={false}
               >
-                <div
+                <legend
                   className="fieldset__legend emotion-4"
                   data-part="legend"
                   data-scope="fieldset"
@@ -12311,7 +12318,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                   >
                     some other description
                   </sup>
-                </div>
+                </legend>
                 <div
                   className="fieldset__content emotion-1"
                 >
@@ -12647,7 +12654,7 @@ exports[`single fields field with markdown description 1`] = `
                 data-scope="fieldset"
                 disabled={false}
               >
-                <div
+                <legend
                   className="fieldset__legend emotion-4"
                   data-part="legend"
                   data-scope="fieldset"
@@ -12665,7 +12672,7 @@ exports[`single fields field with markdown description 1`] = `
                        description
                     </span>
                   </sup>
-                </div>
+                </legend>
                 <div
                   className="fieldset__content emotion-1"
                 >
@@ -13001,7 +13008,7 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
                 data-scope="fieldset"
                 disabled={false}
               >
-                <div
+                <legend
                   className="fieldset__legend emotion-4"
                   data-part="legend"
                   data-scope="fieldset"
@@ -13015,7 +13022,7 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
                       some other description
                     </span>
                   </sup>
-                </div>
+                </legend>
                 <div
                   className="fieldset__content emotion-1"
                 >
@@ -17173,6 +17180,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                   aria-haspopup="listbox"
                                   aria-invalid={false}
                                   aria-labelledby="field:::r46:::label"
+                                  aria-required={false}
                                   className="chakra-select__trigger emotion-105"
                                   data-part="trigger"
                                   data-scope="select"
@@ -17573,6 +17581,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                   aria-haspopup="listbox"
                                   aria-invalid={false}
                                   aria-labelledby="field:::r4c:::label"
+                                  aria-required={false}
                                   className="chakra-select__trigger emotion-105"
                                   data-part="trigger"
                                   data-scope="select"
@@ -19415,6 +19424,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                   aria-haspopup="listbox"
                                   aria-invalid={false}
                                   aria-labelledby="field:::r63:::label"
+                                  aria-required={false}
                                   className="chakra-select__trigger emotion-105"
                                   data-disabled=""
                                   data-part="trigger"
@@ -19834,6 +19844,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                   aria-haspopup="listbox"
                                   aria-invalid={false}
                                   aria-labelledby="field:::r69:::label"
+                                  aria-required={false}
                                   className="chakra-select__trigger emotion-105"
                                   data-disabled=""
                                   data-part="trigger"
@@ -25700,7 +25711,6 @@ exports[`single fields radio field 1`] = `
                 <input
                   data-ownedby="radio-group::r2n:"
                   defaultChecked={false}
-                  disabled={false}
                   id="radio-group::r2n::radio:input:0"
                   name="root"
                   onBlur={[Function]}
@@ -25768,7 +25778,6 @@ exports[`single fields radio field 1`] = `
                 <input
                   data-ownedby="radio-group::r2n:"
                   defaultChecked={false}
-                  disabled={false}
                   id="radio-group::r2n::radio:input:1"
                   name="root"
                   onBlur={[Function]}
@@ -26649,6 +26658,7 @@ exports[`single fields select field 1`] = `
                   aria-haspopup="listbox"
                   aria-invalid={false}
                   aria-labelledby="field:::r10:::label"
+                  aria-required={false}
                   className="chakra-select__trigger emotion-6"
                   data-part="trigger"
                   data-placeholder-shown=""
@@ -27370,6 +27380,7 @@ exports[`single fields select field multiple choice 1`] = `
                   aria-haspopup="listbox"
                   aria-invalid={false}
                   aria-labelledby="field:::r13:::label"
+                  aria-required={false}
                   className="chakra-select__trigger emotion-6"
                   data-part="trigger"
                   data-placeholder-shown=""
@@ -28158,6 +28169,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
                   aria-haspopup="listbox"
                   aria-invalid={false}
                   aria-labelledby="field:::r1l:::label"
+                  aria-required={false}
                   className="chakra-select__trigger emotion-6"
                   data-part="trigger"
                   data-placeholder-shown=""
@@ -28729,6 +28741,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                 onPointerMove={[Function]}
               >
                 <input
+                  aria-invalid={false}
                   aria-labelledby="checkbox:root-0:label"
                   defaultChecked={false}
                   disabled={false}
@@ -28798,6 +28811,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                 onPointerMove={[Function]}
               >
                 <input
+                  aria-invalid={false}
                   aria-labelledby="checkbox:root-1:label"
                   defaultChecked={false}
                   disabled={true}
@@ -28869,6 +28883,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                 onPointerMove={[Function]}
               >
                 <input
+                  aria-invalid={false}
                   aria-labelledby="checkbox:root-2:label"
                   defaultChecked={false}
                   disabled={false}
@@ -28937,6 +28952,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                 onPointerMove={[Function]}
               >
                 <input
+                  aria-invalid={false}
                   aria-labelledby="checkbox:root-3:label"
                   defaultChecked={false}
                   disabled={false}
@@ -29566,6 +29582,7 @@ exports[`single fields select field multiple choice formData 1`] = `
                   aria-haspopup="listbox"
                   aria-invalid={false}
                   aria-labelledby="field:::r21:::label"
+                  aria-required={false}
                   className="chakra-select__trigger emotion-6"
                   data-part="trigger"
                   data-scope="select"
@@ -30349,6 +30366,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
                   aria-haspopup="listbox"
                   aria-invalid={false}
                   aria-labelledby="field:::r16:::label"
+                  aria-required={false}
                   className="chakra-select__trigger emotion-6"
                   data-part="trigger"
                   data-placeholder-shown=""
@@ -31091,6 +31109,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
                   aria-haspopup="listbox"
                   aria-invalid={false}
                   aria-labelledby="field:::r19:::label"
+                  aria-required={false}
                   className="chakra-select__trigger emotion-6"
                   data-part="trigger"
                   data-placeholder-shown=""
@@ -31582,7 +31601,6 @@ exports[`single fields select field single choice enumDisabled using radio widge
                 <input
                   data-ownedby="radio-group::r1d:"
                   defaultChecked={false}
-                  disabled={false}
                   id="radio-group::r1d::radio:input:0"
                   name="root"
                   onBlur={[Function]}
@@ -32728,6 +32746,7 @@ exports[`single fields select field single choice formData 1`] = `
                   aria-haspopup="listbox"
                   aria-invalid={false}
                   aria-labelledby="field:::r1u:::label"
+                  aria-required={false}
                   className="chakra-select__trigger emotion-6"
                   data-part="trigger"
                   data-scope="select"
@@ -33752,6 +33771,7 @@ exports[`single fields slider field 1`] = `
                     "position": "absolute",
                     "transform": "var(--slider-thumb-transform)",
                     "visibility": "visible",
+                    "zIndex": undefined,
                   }
                 }
                 tabIndex={0}

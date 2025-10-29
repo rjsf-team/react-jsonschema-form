@@ -76,9 +76,9 @@
     "@rjsf/snapshot-tests": "^6.0.0-beta.23",
     "@rjsf/utils": "^6.0.0-beta.23",
     "@rjsf/validator-ajv8": "^6.0.0-beta.23",
-    "@tailwindcss/cli": "^4.1.13",
+    "@tailwindcss/cli": "^4.1.16",
     "eslint": "^8.57.1",
-    "jsdom": "^26.1.0",
+    "jsdom": "^27.0.1",
     "tailwindcss": "^4.1.12"
   },
   "dependencies": {
@@ -98,10 +98,10 @@
     "cmdk": "^1.1.1",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
-    "lucide-react": "^0.542.0",
+    "lucide-react": "^0.548.0",
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
-    "uuid": "^11.1.0"
+    "uuid": "^13.0.0"
   },
   "publishConfig": {
     "access": "public"

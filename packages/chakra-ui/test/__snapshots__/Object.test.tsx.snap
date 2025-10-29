@@ -7902,7 +7902,7 @@ exports[`object fields with title and description from both object 1`] = `
                 data-scope="fieldset"
                 disabled={false}
               >
-                <div
+                <legend
                   className="fieldset__legend emotion-8"
                   data-part="legend"
                   data-scope="fieldset"
@@ -7914,7 +7914,7 @@ exports[`object fields with title and description from both object 1`] = `
                   >
                     a fancier item A description
                   </sup>
-                </div>
+                </legend>
                 <div
                   className="fieldset__content emotion-1"
                 >
@@ -7968,7 +7968,7 @@ exports[`object fields with title and description from both object 1`] = `
                 data-scope="fieldset"
                 disabled={false}
               >
-                <div
+                <legend
                   className="fieldset__legend emotion-8"
                   data-part="legend"
                   data-scope="fieldset"
@@ -7980,7 +7980,7 @@ exports[`object fields with title and description from both object 1`] = `
                   >
                     a fancier item B description
                   </sup>
-                </div>
+                </legend>
                 <div
                   className="fieldset__content emotion-1"
                 >
@@ -9001,7 +9001,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                 data-scope="fieldset"
                 disabled={false}
               >
-                <div
+                <legend
                   className="fieldset__legend emotion-8"
                   data-part="legend"
                   data-scope="fieldset"
@@ -9013,7 +9013,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                   >
                     a fancier item A description
                   </sup>
-                </div>
+                </legend>
                 <div
                   className="fieldset__content emotion-1"
                 >
@@ -9067,7 +9067,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                 data-scope="fieldset"
                 disabled={false}
               >
-                <div
+                <legend
                   className="fieldset__legend emotion-8"
                   data-part="legend"
                   data-scope="fieldset"
@@ -9079,7 +9079,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                   >
                     a fancier item B description
                   </sup>
-                </div>
+                </legend>
                 <div
                   className="fieldset__content emotion-1"
                 >
@@ -10100,7 +10100,7 @@ exports[`object fields with title and description object 1`] = `
                 data-scope="fieldset"
                 disabled={false}
               >
-                <div
+                <legend
                   className="fieldset__legend emotion-8"
                   data-part="legend"
                   data-scope="fieldset"
@@ -10112,7 +10112,7 @@ exports[`object fields with title and description object 1`] = `
                   >
                     A description
                   </sup>
-                </div>
+                </legend>
                 <div
                   className="fieldset__content emotion-1"
                 >
@@ -10166,7 +10166,7 @@ exports[`object fields with title and description object 1`] = `
                 data-scope="fieldset"
                 disabled={false}
               >
-                <div
+                <legend
                   className="fieldset__legend emotion-8"
                   data-part="legend"
                   data-scope="fieldset"
@@ -10178,7 +10178,7 @@ exports[`object fields with title and description object 1`] = `
                   >
                     B description
                   </sup>
-                </div>
+                </legend>
                 <div
                   className="fieldset__content emotion-1"
                 >
