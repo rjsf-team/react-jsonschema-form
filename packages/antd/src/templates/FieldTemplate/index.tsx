@@ -56,6 +56,7 @@ export default function FieldTemplate<
   } = formContext as GenericObjectType;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
+
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
     registry,
@@ -79,7 +80,7 @@ export default function FieldTemplate<
       descriptionProps.extra = descriptionNode;
       break;
   }
-
+  const isCheckbox = uiOptions.widget === 'checkbox';
   return (
     <WrapIfAdditionalTemplate
       classNames={classNames}
@@ -101,7 +102,7 @@ export default function FieldTemplate<
         hasFeedback={schema.type !== 'array' && schema.type !== 'object'}
         help={(!!rawHelp && help) || (rawErrors?.length ? errors : undefined)}
         htmlFor={id}
-        label={displayLabel && label}
+        label={displayLabel && !isCheckbox && label}
         labelCol={labelCol}
         required={required}
         style={wrapperStyle}

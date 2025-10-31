@@ -9,6 +9,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
+  getUiOptions,
 } from '@rjsf/utils';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
@@ -57,11 +58,13 @@ function CheckboxWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
     (event: FocusEvent<HTMLInputElement>) => onFocus(id, event.target.checked),
     [onFocus, id],
   );
-  const description = options.description ?? schema.description;
 
+  const uiOptions = getUiOptions(uiSchema);
+  const isCheckboxWidget = uiOptions.widget === 'checkbox';
+  const description = isCheckboxWidget ? undefined : (options.description ?? schema.description);
   return (
     <div className={`checkbox ${disabled || readonly ? 'disabled' : ''}`}>
-      {!hideLabel && description && (
+      {!hideLabel && description && !isCheckboxWidget && (
         <DescriptionFieldTemplate
           id={descriptionId(id)}
           description={description}

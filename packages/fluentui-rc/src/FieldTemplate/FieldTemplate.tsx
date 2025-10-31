@@ -51,6 +51,7 @@ export default function FieldTemplate<
   if (hidden) {
     return <div style={{ display: 'none' }}>{children}</div>;
   }
+  const isCheckbox = uiOptions.widget === 'checkbox';
   return (
     <WrapIfAdditionalTemplate
       classNames={classNames}
@@ -69,7 +70,7 @@ export default function FieldTemplate<
     >
       <Field validationState={rawErrors.length ? 'error' : undefined} required={required}>
         {children}
-        {displayLabel && rawDescription ? (
+        {displayLabel && rawDescription && !isCheckbox ? (
           <Text as='p' block style={{ marginTop: 0, marginBottom: 0 }}>
             {description}
           </Text>

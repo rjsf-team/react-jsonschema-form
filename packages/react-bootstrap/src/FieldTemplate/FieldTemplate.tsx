@@ -44,6 +44,8 @@ export default function FieldTemplate<
   if (hidden) {
     return <div className='hidden'>{children}</div>;
   }
+  const isCheckbox = uiOptions.widget === 'checkbox';
+
   return (
     <WrapIfAdditionalTemplate
       classNames={classNames}
@@ -61,14 +63,14 @@ export default function FieldTemplate<
       registry={registry}
     >
       <Form.Group>
-        {displayLabel && (
+        {displayLabel && !isCheckbox && (
           <Form.Label htmlFor={id} className={rawErrors.length > 0 ? 'text-danger' : ''}>
             {label}
             {required ? '*' : null}
           </Form.Label>
         )}
         {children}
-        {displayLabel && rawDescription && (
+        {displayLabel && rawDescription && !isCheckbox && (
           <Form.Text className={rawErrors.length > 0 ? 'text-danger' : 'text-muted'}>{description}</Form.Text>
         )}
         {errors}
