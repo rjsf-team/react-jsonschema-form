@@ -75,6 +75,7 @@ const liveSettingsBooleanSchema: RJSFSchema = {
     noValidate: { type: 'boolean', title: 'Disable validation' },
     noHtml5Validate: { type: 'boolean', title: 'Disable HTML 5 validation' },
     focusOnFirstError: { type: 'boolean', title: 'Focus on 1st Error' },
+    useFallbackUiForUnsupportedType: { type: 'boolean', title: 'Use Fallback UI', default: false },
     omitExtraData: { type: 'boolean', title: 'Omit extra data' },
     liveOmit: { type: 'string', title: 'Live omit', default: false, enum: [false, 'onChange', 'onBlur'] },
     liveValidate: { type: 'string', title: 'Live validation', default: false, enum: [false, 'onChange', 'onBlur'] },
