@@ -45,11 +45,11 @@
   "scripts": {
     "build:css": "tsx build-css.ts",
     "compileReplacer": "tsc -p tsconfig.replacer.json && move-file lodashReplacer.js lodashReplacer.cjs",
-    "build:ts": "npm run compileReplacer && rimraf ./lib && tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+    "build:ts": "pnpm compileReplacer && rimraf ./lib && tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/rjsf-shadcn.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/rjsf-shadcn.esm.js --format=umd --file=dist/rjsf-shadcn.umd.js --name=@rjsf/rjsf-shadcn",
-    "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd && npm run build:css",
+    "build": "pnpm build:ts && pnpm build:cjs && pnpm build:esm && pnpm build:umd && pnpm build:css",
     "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
     "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
     "lint": "eslint src test",
@@ -63,8 +63,8 @@
     ]
   },
   "peerDependencies": {
-    "@rjsf/core": "^6.x",
-    "@rjsf/utils": "^6.x",
+    "@rjsf/core": "workspace:*",
+    "@rjsf/utils": "workspace:*",
     "react": ">=18"
   },
   "engineStrict": false,
@@ -72,10 +72,10 @@
     "node": ">=20"
   },
   "devDependencies": {
-    "@rjsf/core": "^6.x",
-    "@rjsf/snapshot-tests": "^6.x",
-    "@rjsf/utils": "^6.x",
-    "@rjsf/validator-ajv8": "^6.x",
+    "@rjsf/core": "workspace:*",
+    "@rjsf/snapshot-tests": "workspace:*",
+    "@rjsf/utils": "workspace:*",
+    "@rjsf/validator-ajv8": "workspace:*",
     "@tailwindcss/cli": "^4.1.16",
     "eslint": "^8.57.1",
     "jsdom": "^27.0.1",

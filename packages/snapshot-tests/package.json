@@ -8,7 +8,7 @@
     "cs-format": "prettier \"src/**/*.[jt]s?(x)\" --write",
     "lint": "eslint src",
     "precommit": "lint-staged",
-    "publish-to-npm": "npm run build && npm publish",
+    "publish-to-npm": "pnpm build && pnpm publish",
     "test": "echo 'OK'",
     "test-coverage": "echo 'OK'"
   },
@@ -28,15 +28,15 @@
     "node": ">=20"
   },
   "peerDependencies": {
-    "@rjsf/core": "^6.x",
-    "@rjsf/utils": "^6.x",
+    "@rjsf/core": "workspace:*",
+    "@rjsf/utils": "workspace:*",
     "react": ">=18",
     "react-test-renderer": "^18.2.0"
   },
   "devDependencies": {
-    "@rjsf/core": "^6.x",
-    "@rjsf/utils": "^6.x",
-    "@rjsf/validator-ajv8": "^6.x"
+    "@rjsf/core": "workspace:*",
+    "@rjsf/utils": "workspace:*",
+    "@rjsf/validator-ajv8": "workspace:*"
   },
   "repository": {
     "type": "git",

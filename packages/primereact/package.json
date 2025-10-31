@@ -38,7 +38,7 @@
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/primereact.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/primereact.esm.js --format=umd --file=dist/primereact.umd.js --name=@rjsf/primereact",
-    "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
+    "build": "pnpm build:ts && pnpm build:cjs && pnpm build:esm && pnpm build:umd",
     "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
     "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
     "lint": "eslint src test",
@@ -61,17 +61,17 @@
     "node": ">=20"
   },
   "peerDependencies": {
-    "@rjsf/core": "^6.x",
-    "@rjsf/utils": "^6.x",
+    "@rjsf/core": "workspace:*",
+    "@rjsf/utils": "workspace:*",
     "primeicons": ">=6.0.0",
     "primereact": ">=8.0.0",
     "react": ">=18"
   },
   "devDependencies": {
-    "@rjsf/core": "^6.x",
-    "@rjsf/snapshot-tests": "^6.x",
-    "@rjsf/utils": "^6.x",
-    "@rjsf/validator-ajv8": "^6.x",
+    "@rjsf/core": "workspace:*",
+    "@rjsf/snapshot-tests": "workspace:*",
+    "@rjsf/utils": "workspace:*",
+    "@rjsf/validator-ajv8": "workspace:*",
     "@rollup/plugin-replace": "^6.0.3",
     "eslint": "^8.57.1",
     "primeflex": "^4.0.0",

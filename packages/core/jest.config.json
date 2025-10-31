@@ -3,5 +3,5 @@
   "testEnvironment": "jsdom",
   "setupFilesAfterEnv": ["./test/setup-jest-env.js"],
   "testMatch": ["**/test/**/*.test.[jt]s?(x)"],
-  "transformIgnorePatterns": ["/node_modules/(?!deep-freeze-es6)"]
+  "transformIgnorePatterns": ["/node_modules/(?!(\\.pnpm|deep-freeze-es6))"]
 }

@@ -15,34 +15,35 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
+      - run: corepack enable
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v5
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-          cache-dependency-path: 'package-lock.json'
-      - run: npm ci
-      - run: npm run lint
+          cache: 'pnpm'
+          cache-dependency-path: 'pnpm-lock.yaml'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
 
       - name: Build with Netlify badge
-        run: npm run build-serial
+        run: pnpm build-serial
         env:
           VITE_SHOW_NETLIFY_BADGE: true
           NODE_OPTIONS: --max_old_space_size=4096
 
       - name: Build
-        run: npm run build-serial
+        run: pnpm build-serial
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
       # Docusaurus doesn't support Node 14. These tasks can be removed once Node 14 is EOL (May 2023)
       - name: Build with Netlify badge (no docs)
-        run: npx nx run-many --target=build --exclude=@rjsf/docs --parallel=false
+        run: pnpm nx run-many --target=build --exclude=@rjsf/docs --parallel=false
         env:
           VITE_SHOW_NETLIFY_BADGE: true
           NODE_OPTIONS: --max_old_space_size=4096
       - name: Build (no docs)
-        run: npx nx run-many --target=build --exclude=@rjsf/docs --parallel=false
+        run: pnpm nx run-many --target=build --exclude=@rjsf/docs --parallel=false
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
@@ -56,7 +57,7 @@ jobs:
         with:
           name: docs
           path: packages/docs/build
-      - run: npm test
+      - run: pnpm test
   deploy_playground_and_docs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'

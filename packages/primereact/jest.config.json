@@ -3,11 +3,9 @@
   "transform": {
     "^.+\\.(ts|tsx|js|jsx)$": ["babel-jest", { "configFile": "./babel.config.json" }]
   },
-  "transformIgnorePatterns": ["/node_modules/(?!deep-freeze-es6)"],
+  "transformIgnorePatterns": ["/node_modules/(?!(\\.pnpm|deep-freeze-es6))"],
   "moduleNameMapper": {
     "^@/(.*)$": "<rootDir>/src/$1"
   },
-  "setupFilesAfterEnv": [
-    "<rootDir>/test/setup.ts"
-  ]
+  "setupFilesAfterEnv": ["<rootDir>/test/setup.ts"]
 }

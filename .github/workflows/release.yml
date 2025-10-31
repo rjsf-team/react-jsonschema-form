@@ -9,19 +9,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+      - run: corepack enable
       - name: Use Node.js 22.x
         uses: actions/setup-node@v5
         with:
           node-version: 22.x
-          cache: 'npm'
-          cache-dependency-path: 'package-lock.json'
-      - run: npm i -g npm@9
-      - run: npm ci
-      - run: npm run build-serial
+          cache: 'pnpm'
+          cache-dependency-path: 'pnpm-lock.yaml'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build-serial
         env:
           NODE_OPTIONS: --max_old_space_size=4096
-      - run: npm test
-      - run: npm run lint
+      - run: pnpm test
+      - run: pnpm lint
       - run: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -38,6 +38,6 @@ jobs:
           
           echo "NPM_TAG=${NPM_TAG_VALUE}" >> $GITHUB_ENV
           echo "Determined NPM_TAG: ${NPM_TAG_VALUE}"
-      - run: npx nx release publish --tag=$NPM_TAG
+      - run: pnpm nx release publish --tag=$NPM_TAG
       - if: always()
         run: rm .npmrc
