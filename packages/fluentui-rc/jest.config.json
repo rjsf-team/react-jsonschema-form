@@ -4,5 +4,5 @@
   "testEnvironmentOptions": {
     "browsers": ["chrome", "firefox", "safari"]
   },
-  "transformIgnorePatterns": ["/node_modules/(?!deep-freeze-es6)"]
+  "transformIgnorePatterns": ["/node_modules/(?!(\\.pnpm|deep-freeze-es6))"]
 }

@@ -47,7 +47,7 @@
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/chakra-ui.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/chakra-ui.esm.js --format=umd --file=dist/chakra-ui.umd.js --name=@rjsf/chakra-ui",
-    "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
+    "build": "pnpm build:ts && pnpm build:cjs && pnpm build:esm && pnpm build:umd",
     "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
     "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
     "lint": "eslint src test",
@@ -71,16 +71,16 @@
     "tailwindcss": "^4.1.12"
   },
   "peerDependencies": {
-    "@rjsf/core": "^6.x",
-    "@rjsf/utils": "^6.x",
+    "@rjsf/core": "workspace:*",
+    "@rjsf/utils": "workspace:*",
     "daisyui": "^5.0.29",
     "react": ">=18"
   },
   "devDependencies": {
-    "@rjsf/core": "^6.x",
-    "@rjsf/snapshot-tests": "^6.x",
-    "@rjsf/utils": "^6.x",
-    "@rjsf/validator-ajv8": "^6.x",
+    "@rjsf/core": "workspace:*",
+    "@rjsf/snapshot-tests": "workspace:*",
+    "@rjsf/utils": "workspace:*",
+    "@rjsf/validator-ajv8": "workspace:*",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",

@@ -4,16 +4,16 @@
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
     "compileReplacer": "tsc -p tsconfig.replacer.json && move-file lodashReplacer.js lodashReplacer.cjs",
-    "build:ts": "npm run compileReplacer && rimraf ./lib && tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+    "build:ts": "pnpm compileReplacer && rimraf ./lib && tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/index.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/index.esm.js --format=umd --file=dist/core.umd.js --name=JSONSchemaForm",
-    "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
+    "build": "pnpm build:ts && pnpm build:cjs && pnpm build:esm && pnpm build:umd",
     "cs-check": "prettier -l \"{src,test}/**/*.[jt]s?(x)\"",
     "cs-format": "prettier \"{src,test}/**/*.[jt]s?(x)\" --write",
     "lint": "eslint src test",
     "precommit": "lint-staged",
-    "publish-to-npm": "npm run build && npm publish",
+    "publish-to-npm": "pnpm build && pnpm publish",
     "test": "jest",
     "test:debug": "node --inspect-brk ../../node_modules/.bin/jest",
     "test:update": "jest --u",
@@ -66,7 +66,7 @@
     "node": ">=20"
   },
   "peerDependencies": {
-    "@rjsf/utils": "^6.x",
+    "@rjsf/utils": "workspace:*",
     "react": ">=18"
   },
   "dependencies": {
@@ -76,9 +76,9 @@
     "prop-types": "^15.8.1"
   },
   "devDependencies": {
-    "@rjsf/snapshot-tests": "^6.x",
-    "@rjsf/utils": "^6.x",
-    "@rjsf/validator-ajv8": "^6.x",
+    "@rjsf/snapshot-tests": "workspace:*",
+    "@rjsf/utils": "workspace:*",
+    "@rjsf/validator-ajv8": "workspace:*",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",

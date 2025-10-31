@@ -144,7 +144,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                 className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                               >
                                 <span
-                                  className="fui-Checkbox r1q22k1j ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
+                                  className="fui-Checkbox r1nzur1d ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
                                 >
                                   <input
                                     aria-describedby="root_tasks_0_done__error root_tasks_0_done__description root_tasks_0_done__help"
@@ -361,7 +361,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                 className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                               >
                                 <span
-                                  className="fui-Checkbox r1q22k1j ___13877ya_6gg83z0 f19n0e5 f35ds98 f12mnkne fei9a8h fix56y3 f1bcv2js f7dr4go f1r5cpua"
+                                  className="fui-Checkbox r1nzur1d ___13877ya_6gg83z0 f19n0e5 f35ds98 f12mnkne fei9a8h fix56y3 f1bcv2js f7dr4go f1r5cpua"
                                 >
                                   <input
                                     aria-describedby="root_tasks_1_done__error root_tasks_1_done__description root_tasks_1_done__help"
@@ -972,7 +972,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
                 className="fui-Flex ___1ccp5kb_1s932w9 f22iagw f1vx9l62"
               >
                 <span
-                  className="fui-Checkbox r1q22k1j ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
+                  className="fui-Checkbox r1nzur1d ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
                 >
                   <input
                     aria-describedby="root_choices__error root_choices__description root_choices__help"
@@ -999,7 +999,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
                   </label>
                 </span>
                 <span
-                  className="fui-Checkbox r1q22k1j ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
+                  className="fui-Checkbox r1nzur1d ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
                 >
                   <input
                     aria-describedby="root_choices__error root_choices__description root_choices__help"
@@ -1026,7 +1026,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
                   </label>
                 </span>
                 <span
-                  className="fui-Checkbox r1q22k1j ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
+                  className="fui-Checkbox r1nzur1d ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
                 >
                   <input
                     aria-describedby="root_choices__error root_choices__description root_choices__help"
@@ -1709,7 +1709,7 @@ exports[`nameGenerator bracketNameGenerator simple fields 1`] = `
               className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
             >
               <span
-                className="fui-Checkbox r1q22k1j ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
+                className="fui-Checkbox r1nzur1d ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
               >
                 <input
                   aria-describedby="root_active__error root_active__description root_active__help"
@@ -1976,7 +1976,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                 className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                               >
                                 <span
-                                  className="fui-Checkbox r1q22k1j ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
+                                  className="fui-Checkbox r1nzur1d ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
                                 >
                                   <input
                                     aria-describedby="root_tasks_0_done__error root_tasks_0_done__description root_tasks_0_done__help"
@@ -2193,7 +2193,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                 className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                               >
                                 <span
-                                  className="fui-Checkbox r1q22k1j ___13877ya_6gg83z0 f19n0e5 f35ds98 f12mnkne fei9a8h fix56y3 f1bcv2js f7dr4go f1r5cpua"
+                                  className="fui-Checkbox r1nzur1d ___13877ya_6gg83z0 f19n0e5 f35ds98 f12mnkne fei9a8h fix56y3 f1bcv2js f7dr4go f1r5cpua"
                                 >
                                   <input
                                     aria-describedby="root_tasks_1_done__error root_tasks_1_done__description root_tasks_1_done__help"
@@ -3286,7 +3286,7 @@ exports[`nameGenerator dotNotationNameGenerator simple fields 1`] = `
               className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
             >
               <span
-                className="fui-Checkbox r1q22k1j ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
+                className="fui-Checkbox r1nzur1d ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
               >
                 <input
                   aria-describedby="root_active__error root_active__description root_active__help"
@@ -3347,7 +3347,7 @@ exports[`single fields checkbox field 1`] = `
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
     >
       <span
-        className="fui-Checkbox r1q22k1j ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
+        className="fui-Checkbox r1nzur1d ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
       >
         <input
           aria-describedby="root__error root__description root__help"
@@ -3402,7 +3402,7 @@ exports[`single fields checkbox field with label 1`] = `
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
     >
       <span
-        className="fui-Checkbox r1q22k1j ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
+        className="fui-Checkbox r1nzur1d ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
       >
         <input
           aria-describedby="root__error root__description root__help"
@@ -3465,7 +3465,7 @@ exports[`single fields checkbox field with label and description 1`] = `
         test description
       </span>
       <span
-        className="fui-Checkbox r1q22k1j ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
+        className="fui-Checkbox r1nzur1d ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
       >
         <input
           aria-describedby="root__error root__description root__help"
@@ -3536,7 +3536,7 @@ exports[`single fields checkbox field with label and rich text description 1`] =
         </span>
       </span>
       <span
-        className="fui-Checkbox r1q22k1j ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
+        className="fui-Checkbox r1nzur1d ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
       >
         <input
           aria-describedby="root__error root__description root__help"
@@ -3602,7 +3602,7 @@ exports[`single fields checkboxes field 1`] = `
         className="fui-Flex ___1ccp5kb_1s932w9 f22iagw f1vx9l62"
       >
         <span
-          className="fui-Checkbox r1q22k1j ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
+          className="fui-Checkbox r1nzur1d ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
         >
           <input
             aria-describedby="root__error root__description root__help"
@@ -3629,7 +3629,7 @@ exports[`single fields checkboxes field 1`] = `
           </label>
         </span>
         <span
-          className="fui-Checkbox r1q22k1j ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
+          className="fui-Checkbox r1nzur1d ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
         >
           <input
             aria-describedby="root__error root__description root__help"
@@ -3656,7 +3656,7 @@ exports[`single fields checkboxes field 1`] = `
           </label>
         </span>
         <span
-          className="fui-Checkbox r1q22k1j ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
+          className="fui-Checkbox r1nzur1d ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
         >
           <input
             aria-describedby="root__error root__description root__help"
@@ -3683,7 +3683,7 @@ exports[`single fields checkboxes field 1`] = `
           </label>
         </span>
         <span
-          className="fui-Checkbox r1q22k1j ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
+          className="fui-Checkbox r1nzur1d ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
         >
           <input
             aria-describedby="root__error root__description root__help"
@@ -10191,7 +10191,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
         className="fui-Flex ___1ccp5kb_1s932w9 f22iagw f1vx9l62"
       >
         <span
-          className="fui-Checkbox r1q22k1j ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
+          className="fui-Checkbox r1nzur1d ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
         >
           <input
             aria-describedby="root__error root__description root__help"
@@ -10218,7 +10218,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
           </label>
         </span>
         <span
-          className="fui-Checkbox r1q22k1j ___8i7d4u0_1q3ajh0 f158kwzp f1s2aq7o f1w7mfl5 fcoafq6 f1dcs8yz fxb3eh3"
+          className="fui-Checkbox r1nzur1d ___8i7d4u0_1q3ajh0 f158kwzp f1s2aq7o f1w7mfl5 fcoafq6 f1dcs8yz fxb3eh3"
         >
           <input
             aria-describedby="root__error root__description root__help"
@@ -10245,7 +10245,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
           </label>
         </span>
         <span
-          className="fui-Checkbox r1q22k1j ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
+          className="fui-Checkbox r1nzur1d ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
         >
           <input
             aria-describedby="root__error root__description root__help"
@@ -10272,7 +10272,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
           </label>
         </span>
         <span
-          className="fui-Checkbox r1q22k1j ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
+          className="fui-Checkbox r1nzur1d ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
         >
           <input
             aria-describedby="root__error root__description root__help"
