@@ -64,8 +64,8 @@
   },
   "peerDependencies": {
     "@chakra-ui/react": ">=3.16.1",
-    "@rjsf/core": "6.x",
-    "@rjsf/utils": "6.x",
+    "@rjsf/core": "^6.x",
+    "@rjsf/utils": "^6.x",
     "chakra-react-select": ">=6",
     "react": ">=18"
   },
@@ -86,10 +86,10 @@
     "@emotion/eslint-plugin": "^11.12.0",
     "@emotion/jest": "^11.13.0",
     "@emotion/react": "^11.14.0",
-    "@rjsf/core": "6.x",
-    "@rjsf/snapshot-tests": "6.x",
-    "@rjsf/utils": "6.x",
-    "@rjsf/validator-ajv8": "6.x",
+    "@rjsf/core": "^6.x",
+    "@rjsf/snapshot-tests": "^6.x",
+    "@rjsf/utils": "^6.x",
+    "@rjsf/validator-ajv8": "^6.x",
     "chakra-react-select": "^6.1.0",
     "eslint": "^8.57.1"
   },

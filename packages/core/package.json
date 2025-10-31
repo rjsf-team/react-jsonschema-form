@@ -66,7 +66,7 @@
     "node": ">=20"
   },
   "peerDependencies": {
-    "@rjsf/utils": "6.x",
+    "@rjsf/utils": "^6.x",
     "react": ">=18"
   },
   "dependencies": {
@@ -76,9 +76,9 @@
     "prop-types": "^15.8.1"
   },
   "devDependencies": {
-    "@rjsf/snapshot-tests": "6.x",
-    "@rjsf/utils": "6.x",
-    "@rjsf/validator-ajv8": "6.x",
+    "@rjsf/snapshot-tests": "^6.x",
+    "@rjsf/utils": "^6.x",
+    "@rjsf/validator-ajv8": "^6.x",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",

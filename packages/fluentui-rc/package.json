@@ -68,18 +68,18 @@
     "@fluentui/react-components": "^9.63.0",
     "@fluentui/react-icons": "^2.0.298",
     "@fluentui/react-migration-v0-v9": "^9.3.10",
-    "@rjsf/core": "6.x",
-    "@rjsf/utils": "6.x",
+    "@rjsf/core": "^6.x",
+    "@rjsf/utils": "^6.x",
     "react": ">=18"
   },
   "devDependencies": {
     "@fluentui/react-components": "^9.72.3",
     "@fluentui/react-icons": "^2.0.313",
     "@fluentui/react-migration-v0-v9": "^9.6.11",
-    "@rjsf/core": "6.x",
-    "@rjsf/snapshot-tests": "6.x",
-    "@rjsf/utils": "6.x",
-    "@rjsf/validator-ajv8": "6.x",
+    "@rjsf/core": "^6.x",
+    "@rjsf/snapshot-tests": "^6.x",
+    "@rjsf/utils": "^6.x",
+    "@rjsf/validator-ajv8": "^6.x",
     "eslint": "^8.57.1"
   },
   "directories": {

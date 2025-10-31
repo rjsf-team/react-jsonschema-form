@@ -63,8 +63,8 @@
     ]
   },
   "peerDependencies": {
-    "@rjsf/core": "6.x",
-    "@rjsf/utils": "6.x",
+    "@rjsf/core": "^6.x",
+    "@rjsf/utils": "^6.x",
     "react": ">=18"
   },
   "engineStrict": false,
@@ -72,10 +72,10 @@
     "node": ">=20"
   },
   "devDependencies": {
-    "@rjsf/core": "6.x",
-    "@rjsf/snapshot-tests": "6.x",
-    "@rjsf/utils": "6.x",
-    "@rjsf/validator-ajv8": "6.x",
+    "@rjsf/core": "^6.x",
+    "@rjsf/snapshot-tests": "^6.x",
+    "@rjsf/utils": "^6.x",
+    "@rjsf/validator-ajv8": "^6.x",
     "@tailwindcss/cli": "^4.1.16",
     "eslint": "^8.57.1",
     "jsdom": "^27.0.1",
