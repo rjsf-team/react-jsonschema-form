@@ -47,9 +47,9 @@
 
 ## About The Project
 
-[![@rjsf/mui Screen Shot][product-screenshot]](https://rjsf-team.github.io/@rjsf/mui)
-
 Exports `MUI` version 5 theme, fields, and widgets for `react-jsonschema-form`.
+
+[<img src="./screenshot.png" alt="product-screenshot" width="800" />](https://rjsf-team.github.io/@rjsf/mui)
 
 ### Built With
 

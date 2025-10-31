@@ -1,13 +1,16 @@
 import { ComponentType, FormEvent, useCallback, useEffect, useRef, useState } from 'react';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
 import { FormProps, IChangeEvent, withTheme } from '@rjsf/core';
 import { ErrorSchema, RJSFSchema, RJSFValidationError, UiSchema, ValidatorType } from '@rjsf/utils';
 import { isFunction } from 'lodash';
 
 import { samples } from '../samples';
-import Header, { LiveSettings } from './Header';
 import DemoFrame from './DemoFrame';
 import ErrorBoundary from './ErrorBoundary';
 import GeoPosition from './GeoPosition';
+import OptionsDrawer, { LiveSettings } from './OptionsDrawer';
+import SampleSelector from './SampleSelector';
 import { ThemesType } from './ThemeSelector';
 import Editors from './Editors';
 import SpecialInput from './SpecialInput';
@@ -178,41 +181,28 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   }, []);
 
   return (
-    <>
-      <Header
-        schema={schema}
-        uiSchema={uiSchema}
-        formData={formData}
-        shareURL={shareURL}
-        themes={themes}
-        theme={theme}
-        subtheme={subtheme}
-        validators={validators}
-        validator={validator}
-        liveSettings={liveSettings}
-        sampleName={sampleName}
-        playGroundFormRef={playGroundFormRef}
-        onSampleSelected={onSampleSelected}
-        onThemeSelected={onThemeSelected}
-        setSubtheme={setSubtheme}
-        setStylesheet={setStylesheet}
-        setValidator={setValidator}
-        setLiveSettings={setLiveSettings}
-        setShareURL={setShareURL}
-      />
-      <Editors
-        formData={formData}
-        setFormData={setFormData}
-        schema={schema}
-        setSchema={setSchema}
-        uiSchema={uiSchema}
-        setUiSchema={setUiSchema}
-        extraErrors={extraErrors}
-        setExtraErrors={setExtraErrors}
-        setShareURL={setShareURL}
-        hasUiSchemaGenerator={!!uiSchemaGenerator}
-      />
-      <div className='col-sm-5'>
+    <Box sx={{ display: 'flex', width: '100%' }}>
+      <SampleSelector onSelected={onSampleSelected} selectedSample={sampleName} />
+      <Box sx={{ width: '100%' }}>
+        <Editors
+          themes={themes}
+          theme={theme}
+          subtheme={subtheme}
+          onThemeSelected={onThemeSelected}
+          setSubtheme={setSubtheme}
+          setStylesheet={setStylesheet}
+          formData={formData}
+          setFormData={setFormData}
+          schema={schema}
+          setSchema={setSchema}
+          uiSchema={uiSchema}
+          setUiSchema={setUiSchema}
+          extraErrors={extraErrors}
+          setExtraErrors={setExtraErrors}
+          setShareURL={setShareURL}
+          hasUiSchemaGenerator={!!uiSchemaGenerator}
+        />
+        <Divider variant='fullWidth' sx={{ my: 1 }} />
         <ErrorBoundary>
           {showForm && (
             <DemoFrame
@@ -252,7 +242,22 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
             </DemoFrame>
           )}
         </ErrorBoundary>
-      </div>
-    </>
+      </Box>
+      <OptionsDrawer
+        schema={schema}
+        uiSchema={uiSchema}
+        formData={formData}
+        shareURL={shareURL}
+        theme={theme}
+        validators={validators}
+        validator={validator}
+        liveSettings={liveSettings}
+        sampleName={sampleName}
+        playGroundFormRef={playGroundFormRef}
+        setValidator={setValidator}
+        setLiveSettings={setLiveSettings}
+        setShareURL={setShareURL}
+      />
+    </Box>
   );
 }

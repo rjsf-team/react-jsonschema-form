@@ -13,16 +13,17 @@ export default function CopyLink({ shareURL, onShare }: CopyLinkProps) {
     navigator.clipboard.writeText(input.current?.value ?? '');
   }
 
+  const style = { maxWidth: '21.525rem', margin: '5px 0' };
   if (!shareURL) {
     return (
-      <button className='btn btn-default' type='button' onClick={onShare}>
-        Share
+      <button className='btn btn-default' type='button' onClick={onShare} style={style}>
+        Share Playground
       </button>
     );
   }
 
   return (
-    <div className='input-group'>
+    <div className='input-group' style={style}>
       <input type='text' ref={input} className='form-control' defaultValue={shareURL} />
       <span className='input-group-btn'>
         <button className='btn btn-default' type='button' onClick={onCopyClick}>

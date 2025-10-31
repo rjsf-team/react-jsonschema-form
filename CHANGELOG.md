@@ -15,7 +15,15 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
-# 6.0.0
+# 6.0.0-beta.24
+
+## @rjsf/antd
+
+- Updated the `README.md` to show the theme snapshot with the latest theme UI from the playground, making it a link to the theme
+
+## @rjsf/chakra-ui
+
+- Updated the `README.md` to show the theme snapshot with the latest theme UI from the playground, making it a link to the theme
 
 ## @rjsf/core
 
@@ -25,6 +33,9 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Updated the libraries to the latest ones that aren't problematic
+  Updated the playground to modernize the UI using MUI components
+- Updated the documentation to switch to using an animated gif based on the latest modernized playground UI
+- Updated the `README.md` in all themes to show the theme snapshot with the latest theme UI from the playground, making it a link to the theme
 
 # 6.0.0-beta.23
 

@@ -20,11 +20,6 @@
     <a href="https://github.com/rjsf-team/react-jsonschema-form/issues">Request Feature</a>
   </p>
 
-
-<p align="center">
-<img src="https://github.com/tuanphung2308/rjsf-shadcn-css/blob/main/shadcn-demo.png?raw=true" alt="Logo" width="720" height="240">
-</p>
-
 <!-- TABLE OF CONTENTS -->
 
 ## Table of Contents
@@ -44,6 +39,8 @@
 ## About The Project
 
 Exports `shadcn` theme, fields and widgets for `react-jsonschema-form`.
+
+[![product-screenshot](./screenshot.png)](https://rjsf-team.github.io/@rjsf/shadcn)
 
 [Live demo](https://react-jsonschema-form-shadcn-boilerplate.vercel.app/)
 

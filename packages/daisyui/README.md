@@ -12,8 +12,7 @@ This package integrates [DaisyUI](https://daisyui.com/), [Tailwind CSS](https://
 
 ## Screenshots
 
-![DaisyUI Form Example 1](daisy-screenshot1.png)
-![DaisyUI Form Example 2](daisy-screenshot2.png)
+[<img src="./screenshot.png" alt="product-screenshot" width="800" />](https://rjsf-team.github.io/@rjsf/daisyui)
 
 ## Features
 

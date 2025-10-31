@@ -48,7 +48,7 @@
 
 ## About The Project
 
-[![@rjsf/chakra-ui Screen Shot][product-screenshot]](https://rjsf-team.github.io/@rjsf/chakra-ui)
+[<img src="./screenshot.png" alt="product-screenshot" width="800" />](https://rjsf-team.github.io/@rjsf/chakra-ui)
 
 Exports `chakra-ui` theme, fields and widgets for `react-jsonschema-form`.
 

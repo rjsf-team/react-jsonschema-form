@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { SyntheticEvent, useCallback } from 'react';
 import Form, { IChangeEvent } from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
@@ -36,18 +36,24 @@ export default function ThemeSelector({ theme, themes, select }: ThemeSelectorPr
     },
     [select, themes],
   );
+  const cancelBubble = (event: SyntheticEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
 
   return (
-    <Form
-      className='form_rjsf_themeSelector'
-      idPrefix='rjsf_themeSelector'
-      schema={schema}
-      uiSchema={uiSchema}
-      formData={theme}
-      validator={localValidator}
-      onChange={onChange}
-    >
-      <div />
-    </Form>
+    <div onClick={cancelBubble}>
+      <Form
+        className='form_rjsf_themeSelector'
+        idPrefix='rjsf_themeSelector'
+        schema={schema}
+        uiSchema={uiSchema}
+        formData={theme}
+        validator={localValidator}
+        onChange={onChange}
+      >
+        <div />
+      </Form>
+    </div>
   );
 }
