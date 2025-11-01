@@ -73,7 +73,7 @@ export default function FieldTemplate<
     >
       <FormControl fullWidth={true} error={rawErrors.length ? true : false} required={required}>
         {children}
-        {!isCheckbox && displayLabel && rawDescription ? (
+        {displayLabel && !isCheckbox && rawDescription ? (
           <Typography variant='caption' color='textSecondary'>
             {description}
           </Typography>
