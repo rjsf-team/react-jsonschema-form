@@ -11,7 +11,6 @@ import {
   StrictRJSFSchema,
   UiSchema,
   canExpand,
-  descriptionId,
   getTemplate,
   getUiOptions,
   titleId,
@@ -19,10 +18,6 @@ import {
 } from '@rjsf/utils';
 import { Col, Row, ConfigProvider } from 'antd';
 import { useContext } from 'react';
-
-const DESCRIPTION_COL_STYLE = {
-  paddingBottom: '8px',
-};
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
@@ -36,7 +31,6 @@ export default function ObjectFieldTemplate<
   F extends FormContextType = any,
 >(props: ObjectFieldTemplateProps<T, S, F>) {
   const {
-    description,
     disabled,
     formData,
     fieldPathId,
@@ -52,11 +46,6 @@ export default function ObjectFieldTemplate<
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, uiOptions);
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    uiOptions,
-  );
   const { formContext } = registry;
   const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
@@ -129,17 +118,6 @@ export default function ObjectFieldTemplate<
               uiSchema={uiSchema}
               registry={registry}
               optionalDataControl={showOptionalDataControlInTitle ? optionalDataControl : undefined}
-            />
-          </Col>
-        )}
-        {description && (
-          <Col span={24} style={DESCRIPTION_COL_STYLE}>
-            <DescriptionFieldTemplate
-              id={descriptionId(fieldPathId)}
-              description={description}
-              schema={schema}
-              uiSchema={uiSchema}
-              registry={registry}
             />
           </Col>
         )}
