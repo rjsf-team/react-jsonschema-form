@@ -3322,6 +3322,67 @@ exports[`single fields checkbox field 1`] = `
 </form>
 `;
 
+exports[`single fields checkbox field with description in schema and FieldTemplate 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div>
+      <div
+        aria-describedby="root__error root__description root__help"
+        className=""
+      >
+        <div>
+          <div
+            className="mb-3"
+            id="root__description"
+          >
+            This is a field template description
+          </div>
+        </div>
+        <div
+          className="form-check"
+        >
+          <input
+            autoFocus={false}
+            checked={false}
+            className="form-check-input"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="checkbox"
+          />
+          <label
+            className="form-check-label"
+            htmlFor="root"
+            title=""
+          >
+            test
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields checkbox field with label 1`] = `
 <form
   className="rjsf"
@@ -10460,6 +10521,100 @@ exports[`single fields radio field 1`] = `
 </form>
 `;
 
+exports[`single fields radio widget with description in schema and FieldTemplate 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div>
+      <label
+        className="form-label"
+        htmlFor="root"
+      >
+        test
+      </label>
+      <div
+        className="mb-0"
+      >
+        <div
+          className="form-check"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            checked={false}
+            className="form-check-input"
+            disabled={false}
+            id="root-0"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            type="radio"
+            value="0"
+          />
+          <label
+            className="form-check-label"
+            htmlFor="root-0"
+            title=""
+          >
+            Yes
+          </label>
+        </div>
+        <div
+          className="form-check"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            checked={false}
+            className="form-check-input"
+            disabled={false}
+            id="root-1"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            type="radio"
+            value="1"
+          />
+          <label
+            className="form-check-label"
+            htmlFor="root-1"
+            title=""
+          >
+            No
+          </label>
+        </div>
+      </div>
+      <small
+        className="text-muted form-text"
+      >
+        <div>
+          <div
+            className="mb-3"
+            id="root__description"
+          >
+            This is a field template description
+          </div>
+        </div>
+      </small>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields schema examples 1`] = `
 <form
   className="rjsf"
@@ -11335,6 +11490,78 @@ exports[`single fields select field single choice uiSchema disabled using radio 
           </label>
         </div>
       </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select widget with description in schema and FieldTemplate 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div>
+      <label
+        className="form-label"
+        htmlFor="root"
+      >
+        test
+      </label>
+      <select
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        className="form-select"
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        value=""
+      >
+        <option
+          value=""
+        />
+        <option
+          disabled={false}
+          id="Yes"
+          value="0"
+        >
+          Yes
+        </option>
+        <option
+          disabled={false}
+          id="No"
+          value="1"
+        >
+          No
+        </option>
+      </select>
+      <small
+        className="text-muted form-text"
+      >
+        <div>
+          <div
+            className="mb-3"
+            id="root__description"
+          >
+            This is a field template description
+          </div>
+        </div>
+      </small>
     </div>
   </div>
   <div>

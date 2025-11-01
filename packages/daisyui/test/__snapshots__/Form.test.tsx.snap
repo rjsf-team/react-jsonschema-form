@@ -4178,6 +4178,82 @@ exports[`single fields checkbox field 1`] = `
 </form>
 `;
 
+exports[`single fields checkbox field with description in schema and FieldTemplate 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div
+      className="field-template mb-3 rjsf-field rjsf-field-boolean"
+      disabled={false}
+    >
+      <div
+        className="form-control"
+      >
+        <div
+          className="description-field my-4"
+          id="root__description"
+        >
+          <div
+            className="text-sm text-base-content/80"
+          >
+            This is a field template description
+          </div>
+        </div>
+        <label
+          className="label cursor-pointer justify-start"
+        >
+          <div
+            className="mr-2"
+          >
+            <input
+              className="checkbox"
+              disabled={false}
+              id="root"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              type="checkbox"
+            />
+          </div>
+          <span
+            className="label-text"
+          >
+            test
+          </span>
+        </label>
+      </div>
+      <div
+        className="rjsf-field-error-template text-red-600"
+      >
+        <ul
+          className="list-disc list-inside"
+        />
+      </div>
+      <div
+        className="rjsf-field-help-template text-gray-500 text-sm"
+      >
+        <div />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary btn-primary-content "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields checkbox field with label 1`] = `
 <form
   className="rjsf"
@@ -12280,6 +12356,97 @@ exports[`single fields radio field 1`] = `
 </form>
 `;
 
+exports[`single fields radio widget with description in schema and FieldTemplate 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div
+      className="field-template mb-3 rjsf-field rjsf-field-boolean"
+      disabled={false}
+    >
+      <div
+        className="form-control"
+      >
+        <div
+          className="flex flex-col gap-2 mt-1"
+        >
+          <label
+            className="flex items-center cursor-pointer gap-2"
+          >
+            <input
+              checked={false}
+              className="radio"
+              data-index={0}
+              disabled={false}
+              id="root-true"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              type="radio"
+              value={true}
+            />
+            <span
+              className="label-text"
+            >
+              Yes
+            </span>
+          </label>
+          <label
+            className="flex items-center cursor-pointer gap-2"
+          >
+            <input
+              checked={false}
+              className="radio"
+              data-index={1}
+              disabled={false}
+              id="root-false"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              type="radio"
+              value={false}
+            />
+            <span
+              className="label-text"
+            >
+              No
+            </span>
+          </label>
+        </div>
+      </div>
+      <div
+        className="rjsf-field-error-template text-red-600"
+      >
+        <ul
+          className="list-disc list-inside"
+        />
+      </div>
+      <div
+        className="rjsf-field-help-template text-gray-500 text-sm"
+      >
+        <div />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary btn-primary-content "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields schema examples 1`] = `
 <form
   className="rjsf"
@@ -13730,6 +13897,103 @@ exports[`single fields select field single choice uiSchema disabled using radio 
               bar
             </span>
           </label>
+        </div>
+      </div>
+      <div
+        className="rjsf-field-error-template text-red-600"
+      >
+        <ul
+          className="list-disc list-inside"
+        />
+      </div>
+      <div
+        className="rjsf-field-help-template text-gray-500 text-sm"
+      >
+        <div />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary btn-primary-content "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select widget with description in schema and FieldTemplate 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div
+      className="field-template mb-3 rjsf-field rjsf-field-boolean"
+      disabled={false}
+    >
+      <div
+        className="form-control w-full"
+      >
+        <div
+          className="dropdown w-full"
+        >
+          <div
+            className="btn btn-outline w-full text-left flex justify-between items-center "
+            onBlur={[Function]}
+            onFocus={[Function]}
+            role="button"
+            tabIndex={0}
+          >
+            <span
+              className="truncate"
+            />
+            <span
+              className="ml-2"
+            >
+              ▼
+            </span>
+          </div>
+          <ul
+            className="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+          >
+            <li
+              className="px-4 py-2 hover:bg-base-200 cursor-pointer "
+              data-value={0}
+              onClick={[Function]}
+              role="button"
+              tabIndex={0}
+            >
+              <div
+                className="flex items-center gap-2"
+              >
+                <span>
+                  Yes
+                </span>
+              </div>
+            </li>
+            <li
+              className="px-4 py-2 hover:bg-base-200 cursor-pointer "
+              data-value={1}
+              onClick={[Function]}
+              role="button"
+              tabIndex={0}
+            >
+              <div
+                className="flex items-center gap-2"
+              >
+                <span>
+                  No
+                </span>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
       <div
