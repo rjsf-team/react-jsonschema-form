@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
@@ -47,12 +47,12 @@ jobs:
           NODE_OPTIONS: --max_old_space_size=4096
 
       - if: matrix.node-version == '22.x'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: playground
           path: packages/playground/dist
       - if: matrix.node-version == '22.x'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: docs
           path: packages/docs/build
@@ -64,12 +64,12 @@ jobs:
     needs: [build]
     steps:
       - name: Download built playground
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: playground
           path: dist
       - name: Download built docs
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: docs
           path: dist/docs
