@@ -1791,8 +1791,8 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
                   >
                     <label
                       cmdk-label=""
-                      htmlFor="radix-:r1b:"
-                      id="radix-:r1a:"
+                      htmlFor="radix-:r1g:"
+                      id="radix-:r1f:"
                       style={
                         {
                           "borderWidth": "0",
@@ -3532,8 +3532,8 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
                   >
                     <label
                       cmdk-label=""
-                      htmlFor="radix-:r1g:"
-                      id="radix-:r1f:"
+                      htmlFor="radix-:r1l:"
+                      id="radix-:r1k:"
                       style={
                         {
                           "borderWidth": "0",
@@ -3846,6 +3846,94 @@ exports[`single fields checkbox field 1`] = `
             htmlFor="root"
             onMouseDown={[Function]}
           />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
+      data-slot="button"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields checkbox field with description in schema and FieldTemplate 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div
+        aria-describedby="root__error root__description root__help"
+        className="relative "
+      >
+        <div>
+          <div
+            className="text-sm text-muted-foreground"
+            id="root__description"
+          >
+            This is a checkbox description
+          </div>
+        </div>
+        <div
+          className="flex items-center gap-2 my-2"
+        >
+          <button
+            aria-checked={false}
+            aria-required={false}
+            autoFocus={false}
+            className="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+            data-slot="checkbox"
+            data-state="unchecked"
+            disabled={false}
+            id="root"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            role="checkbox"
+            type="button"
+            value="on"
+          />
+          <input
+            aria-hidden={true}
+            defaultChecked={false}
+            disabled={false}
+            name="root"
+            required={false}
+            style={
+              {
+                "margin": 0,
+                "opacity": 0,
+                "pointerEvents": "none",
+                "position": "absolute",
+                "transform": "translateX(-100%)",
+              }
+            }
+            tabIndex={-1}
+            type="checkbox"
+            value="on"
+          />
+          <label
+            className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
+            data-slot="label"
+            htmlFor="root"
+            onMouseDown={[Function]}
+          >
+            test
+          </label>
         </div>
       </div>
     </div>
@@ -6144,8 +6232,8 @@ exports[`single fields optional data controls does not show optional controls wh
                       >
                         <label
                           cmdk-label=""
-                          htmlFor="radix-:rv:"
-                          id="radix-:ru:"
+                          htmlFor="radix-:r14:"
+                          id="radix-:r13:"
                           style={
                             {
                               "borderWidth": "0",
@@ -6314,8 +6402,8 @@ exports[`single fields optional data controls does not show optional controls wh
                       >
                         <label
                           cmdk-label=""
-                          htmlFor="radix-:r12:"
-                          id="radix-:r11:"
+                          htmlFor="radix-:r17:"
+                          id="radix-:r16:"
                           style={
                             {
                               "borderWidth": "0",
@@ -7348,8 +7436,8 @@ exports[`single fields optional data controls does not show optional controls wh
                       >
                         <label
                           cmdk-label=""
-                          htmlFor="radix-:r15:"
-                          id="radix-:r14:"
+                          htmlFor="radix-:r1a:"
+                          id="radix-:r19:"
                           style={
                             {
                               "borderWidth": "0",
@@ -7518,8 +7606,8 @@ exports[`single fields optional data controls does not show optional controls wh
                       >
                         <label
                           cmdk-label=""
-                          htmlFor="radix-:r18:"
-                          id="radix-:r17:"
+                          htmlFor="radix-:r1d:"
+                          id="radix-:r1c:"
                           style={
                             {
                               "borderWidth": "0",
@@ -11210,6 +11298,171 @@ exports[`single fields radio field 1`] = `
 </form>
 `;
 
+exports[`single fields radio widget with description in schema and FieldTemplate 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      >
+        test
+      </label>
+      <div
+        className="mb-0"
+      >
+        <div
+          aria-describedby="root__error root__description root__help"
+          aria-orientation="vertical"
+          aria-required={false}
+          className="gap-3 flex flex-wrap flex-col"
+          data-orientation="vertical"
+          data-slot="radio-group"
+          dir="ltr"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onMouseDown={[Function]}
+          role="radiogroup"
+          style={
+            {
+              "outline": "none",
+            }
+          }
+          tabIndex={0}
+        >
+          <div
+            className="flex items-center gap-2"
+          >
+            <button
+              aria-checked={false}
+              className="border-input text-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 aspect-square size-4 shrink-0 rounded-full border shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+              data-orientation="vertical"
+              data-radix-collection-item=""
+              data-slot="radio-group-item"
+              data-state="unchecked"
+              disabled={false}
+              id="root-0"
+              onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onMouseDown={[Function]}
+              role="radio"
+              tabIndex={-1}
+              type="button"
+              value="0"
+            />
+            <input
+              aria-hidden={true}
+              defaultChecked={false}
+              disabled={false}
+              required={false}
+              style={
+                {
+                  "margin": 0,
+                  "opacity": 0,
+                  "pointerEvents": "none",
+                  "position": "absolute",
+                  "transform": "translateX(-100%)",
+                }
+              }
+              tabIndex={-1}
+              type="radio"
+              value="0"
+            />
+            <label
+              className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
+              data-slot="label"
+              htmlFor="root-0"
+              onMouseDown={[Function]}
+            >
+              Yes
+            </label>
+          </div>
+          <div
+            className="flex items-center gap-2"
+          >
+            <button
+              aria-checked={false}
+              className="border-input text-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 aspect-square size-4 shrink-0 rounded-full border shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+              data-orientation="vertical"
+              data-radix-collection-item=""
+              data-slot="radio-group-item"
+              data-state="unchecked"
+              disabled={false}
+              id="root-1"
+              onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onMouseDown={[Function]}
+              role="radio"
+              tabIndex={-1}
+              type="button"
+              value="1"
+            />
+            <input
+              aria-hidden={true}
+              defaultChecked={false}
+              disabled={false}
+              required={false}
+              style={
+                {
+                  "margin": 0,
+                  "opacity": 0,
+                  "pointerEvents": "none",
+                  "position": "absolute",
+                  "transform": "translateX(-100%)",
+                }
+              }
+              tabIndex={-1}
+              type="radio"
+              value="1"
+            />
+            <label
+              className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
+              data-slot="label"
+              htmlFor="root-1"
+              onMouseDown={[Function]}
+            >
+              No
+            </label>
+          </div>
+        </div>
+      </div>
+      <span
+        className="text-xs font-medium text-muted-foreground"
+      >
+        <div>
+          <div
+            className="text-sm text-muted-foreground"
+            id="root__description"
+          >
+            This is a radio description
+          </div>
+        </div>
+      </span>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
+      data-slot="button"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields schema examples 1`] = `
 <form
   className="rjsf"
@@ -12684,6 +12937,116 @@ exports[`single fields select field single choice uiSchema disabled using radio 
           </div>
         </div>
       </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
+      data-slot="button"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select widget with description in schema and FieldTemplate 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      >
+        test
+      </label>
+      <div
+        className="p-0.5"
+      >
+        <div
+          aria-describedby="root__error root__description root__help"
+          aria-disabled={false}
+          autoFocus={false}
+          className="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
+          cmdk-root=""
+          data-slot="command"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          tabIndex={-1}
+        >
+          <label
+            cmdk-label=""
+            htmlFor="radix-:rv:"
+            id="radix-:ru:"
+            style={
+              {
+                "borderWidth": "0",
+                "clip": "rect(0, 0, 0, 0)",
+                "height": "1px",
+                "margin": "-1px",
+                "overflow": "hidden",
+                "padding": "0",
+                "position": "absolute",
+                "whiteSpace": "nowrap",
+                "width": "1px",
+              }
+            }
+          />
+          <div
+            className="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            onClick={[Function]}
+          >
+            <span
+              className="flex-1 line-clamp-1 text-muted-foreground"
+            >
+              Select...
+            </span>
+            <svg
+              aria-hidden="true"
+              className="lucide lucide-chevron-down h-4 w-4 opacity-50"
+              fill="none"
+              height={24}
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+              width={24}
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m6 9 6 6 6-6"
+              />
+            </svg>
+          </div>
+          <div
+            className="relative"
+          />
+        </div>
+      </div>
+      <span
+        className="text-xs font-medium text-muted-foreground"
+      >
+        <div>
+          <div
+            className="text-sm text-muted-foreground"
+            id="root__description"
+          >
+            This is a select description
+          </div>
+        </div>
+      </span>
     </div>
   </div>
   <div>

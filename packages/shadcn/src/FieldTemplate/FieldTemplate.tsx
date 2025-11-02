@@ -50,6 +50,7 @@ export default function FieldTemplate<
   if (hidden) {
     return <div className='hidden'>{children}</div>;
   }
+  const isCheckbox = uiOptions.widget === 'checkbox';
   return (
     <WrapIfAdditionalTemplate
       classNames={classNames}
@@ -67,7 +68,7 @@ export default function FieldTemplate<
       registry={registry}
     >
       <div className='flex flex-col gap-2'>
-        {displayLabel && (
+        {displayLabel && !isCheckbox && (
           <label
             className={cn(
               'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
@@ -80,7 +81,7 @@ export default function FieldTemplate<
           </label>
         )}
         {children}
-        {displayLabel && rawDescription && (
+        {displayLabel && rawDescription && !isCheckbox && (
           <span
             className={cn('text-xs font-medium text-muted-foreground', { ' text-destructive': rawErrors.length > 0 })}
           >

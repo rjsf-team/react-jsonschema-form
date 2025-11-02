@@ -355,6 +355,45 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
       const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
+
+    test('checkbox field with description in schema and FieldTemplate', () => {
+      const schema: RJSFSchema = {
+        type: 'boolean',
+        title: 'test',
+        description: 'This is a checkbox description',
+      };
+      const uiSchema: UiSchema = {
+        'ui:widget': 'checkbox',
+      };
+      const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
+      expect(tree).toMatchSnapshot();
+    });
+
+    test('radio widget with description in schema and FieldTemplate', () => {
+      const schema: RJSFSchema = {
+        type: 'boolean',
+        title: 'test',
+        description: 'This is a radio description',
+      };
+      const uiSchema: UiSchema = {
+        'ui:widget': 'radio',
+      };
+      const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
+      expect(tree).toMatchSnapshot();
+    });
+
+    test('select widget with description in schema and FieldTemplate', () => {
+      const schema: RJSFSchema = {
+        type: 'boolean',
+        title: 'test',
+        description: 'This is a select description',
+      };
+      const uiSchema: UiSchema = {
+        'ui:widget': 'select',
+      };
+      const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
+      expect(tree).toMatchSnapshot();
+    });
     test('checkboxes field', () => {
       const schema: RJSFSchema = {
         type: 'array',

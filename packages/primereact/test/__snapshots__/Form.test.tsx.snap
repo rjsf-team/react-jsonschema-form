@@ -3904,6 +3904,105 @@ exports[`single fields checkbox field 1`] = `
 </form>
 `;
 
+exports[`single fields checkbox field with description in schema and FieldTemplate 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <span
+        id="root__description"
+      >
+        This is a checkbox description
+      </span>
+      <div
+        style={
+          {
+            "alignItems": "center",
+            "display": "flex",
+            "flexDirection": "row",
+            "gap": "0.5rem",
+          }
+        }
+      >
+        <div
+          aria-describedby="root__error root__description root__help"
+          className="p-checkbox p-component"
+          data-p-disabled={false}
+          data-p-highlight={false}
+          data-pc-name="checkbox"
+          data-pc-section="root"
+          id={null}
+          onBlur={[Function]}
+          onContextMenu={null}
+          onFocus={[Function]}
+          onMouseDown={null}
+          style={{}}
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            aria-invalid={false}
+            checked={false}
+            className="p-checkbox-input"
+            data-pc-section="input"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            readOnly={false}
+            required={false}
+            tabIndex={null}
+            type="checkbox"
+          />
+          <div
+            className="p-checkbox-box"
+            data-p-disabled={false}
+            data-p-highlight={false}
+            data-pc-section="box"
+          />
+        </div>
+        <label
+          htmlFor="root"
+        >
+          test
+           
+        </label>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
 exports[`single fields checkbox field with label 1`] = `
 <form
   className="rjsf"
@@ -6404,15 +6503,15 @@ exports[`single fields optional data controls does not show optional controls wh
             className="p-fieldset p-component"
             data-pc-name="fieldset"
             data-pc-section="root"
-            id={null}
+            id="pr_id_16"
             onClick={null}
             style={{}}
           >
             <div
-              aria-labelledby="null_header"
+              aria-labelledby="pr_id_16_header"
               className="p-toggleable-content"
               data-pc-section="toggleablecontent"
-              id="null_content"
+              id="pr_id_16_content"
               role="region"
             >
               <div
@@ -6575,15 +6674,15 @@ exports[`single fields optional data controls does not show optional controls wh
             className="p-fieldset p-component"
             data-pc-name="fieldset"
             data-pc-section="root"
-            id={null}
+            id="pr_id_17"
             onClick={null}
             style={{}}
           >
             <div
-              aria-labelledby="null_header"
+              aria-labelledby="pr_id_17_header"
               className="p-toggleable-content"
               data-pc-section="toggleablecontent"
-              id="null_content"
+              id="pr_id_17_content"
               role="region"
             >
               <div
@@ -7600,15 +7699,15 @@ exports[`single fields optional data controls does not show optional controls wh
             className="p-fieldset p-component"
             data-pc-name="fieldset"
             data-pc-section="root"
-            id="pr_id_56"
+            id={null}
             onClick={null}
             style={{}}
           >
             <div
-              aria-labelledby="pr_id_56_header"
+              aria-labelledby="null_header"
               className="p-toggleable-content"
               data-pc-section="toggleablecontent"
-              id="pr_id_56_content"
+              id="null_content"
               role="region"
             >
               <div
@@ -7771,15 +7870,15 @@ exports[`single fields optional data controls does not show optional controls wh
             className="p-fieldset p-component"
             data-pc-name="fieldset"
             data-pc-section="root"
-            id="pr_id_57"
+            id={null}
             onClick={null}
             style={{}}
           >
             <div
-              aria-labelledby="pr_id_57_header"
+              aria-labelledby="null_header"
               className="p-toggleable-content"
               data-pc-section="toggleablecontent"
-              id="pr_id_57_content"
+              id="null_content"
               role="region"
             >
               <div
@@ -9015,15 +9114,15 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
             className="p-fieldset p-component"
             data-pc-name="fieldset"
             data-pc-section="root"
-            id={null}
+            id="pr_id_43"
             onClick={null}
             style={{}}
           >
             <div
-              aria-labelledby="null_header"
+              aria-labelledby="pr_id_43_header"
               className="p-toggleable-content"
               data-pc-section="toggleablecontent"
-              id="null_content"
+              id="pr_id_43_content"
               role="region"
             >
               <div
@@ -9161,15 +9260,15 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
             className="p-fieldset p-component"
             data-pc-name="fieldset"
             data-pc-section="root"
-            id={null}
+            id="pr_id_44"
             onClick={null}
             style={{}}
           >
             <div
-              aria-labelledby="null_header"
+              aria-labelledby="pr_id_44_header"
               className="p-toggleable-content"
               data-pc-section="toggleablecontent"
-              id="null_content"
+              id="pr_id_44_content"
               role="region"
             >
               <div
@@ -10203,15 +10302,15 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
             className="p-fieldset p-component"
             data-pc-name="fieldset"
             data-pc-section="root"
-            id="pr_id_83"
+            id={null}
             onClick={null}
             style={{}}
           >
             <div
-              aria-labelledby="pr_id_83_header"
+              aria-labelledby="null_header"
               className="p-toggleable-content"
               data-pc-section="toggleablecontent"
-              id="pr_id_83_content"
+              id="null_content"
               role="region"
             >
               <div
@@ -10301,15 +10400,15 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
             className="p-fieldset p-component"
             data-pc-name="fieldset"
             data-pc-section="root"
-            id="pr_id_84"
+            id={null}
             onClick={null}
             style={{}}
           >
             <div
-              aria-labelledby="pr_id_84_header"
+              aria-labelledby="null_header"
               className="p-toggleable-content"
               data-pc-section="toggleablecontent"
-              id="pr_id_84_content"
+              id="null_content"
               role="region"
             >
               <div
@@ -10858,15 +10957,15 @@ exports[`single fields optional data controls shows "add" optional controls when
             className="p-fieldset p-component"
             data-pc-name="fieldset"
             data-pc-section="root"
-            id="pr_id_24"
+            id={null}
             onClick={null}
             style={{}}
           >
             <div
-              aria-labelledby="pr_id_24_header"
+              aria-labelledby="null_header"
               className="p-toggleable-content"
               data-pc-section="toggleablecontent"
-              id="pr_id_24_content"
+              id="null_content"
               role="region"
             >
               <div
@@ -11004,15 +11103,15 @@ exports[`single fields optional data controls shows "add" optional controls when
             className="p-fieldset p-component"
             data-pc-name="fieldset"
             data-pc-section="root"
-            id="pr_id_25"
+            id={null}
             onClick={null}
             style={{}}
           >
             <div
-              aria-labelledby="pr_id_25_header"
+              aria-labelledby="null_header"
               className="p-toggleable-content"
               data-pc-section="toggleablecontent"
-              id="pr_id_25_content"
+              id="null_content"
               role="region"
             >
               <div
@@ -11513,15 +11612,15 @@ exports[`single fields optional data controls shows "add" optional controls when
             className="p-fieldset p-component"
             data-pc-name="fieldset"
             data-pc-section="root"
-            id={null}
+            id="pr_id_70"
             onClick={null}
             style={{}}
           >
             <div
-              aria-labelledby="null_header"
+              aria-labelledby="pr_id_70_header"
               className="p-toggleable-content"
               data-pc-section="toggleablecontent"
-              id="null_content"
+              id="pr_id_70_content"
               role="region"
             >
               <div
@@ -11611,15 +11710,15 @@ exports[`single fields optional data controls shows "add" optional controls when
             className="p-fieldset p-component"
             data-pc-name="fieldset"
             data-pc-section="root"
-            id={null}
+            id="pr_id_71"
             onClick={null}
             style={{}}
           >
             <div
-              aria-labelledby="null_header"
+              aria-labelledby="pr_id_71_header"
               className="p-toggleable-content"
               data-pc-section="toggleablecontent"
-              id="null_content"
+              id="pr_id_71_content"
               role="region"
             >
               <div
@@ -11932,6 +12031,178 @@ exports[`single fields radio field 1`] = `
           </label>
         </div>
       </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields radio widget with description in schema and FieldTemplate 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <label
+        htmlFor="root"
+      >
+        test
+         
+      </label>
+      <div
+        style={
+          {
+            "display": "flex",
+            "flexDirection": "row",
+            "gap": "1rem",
+          }
+        }
+      >
+        <div
+          style={
+            {
+              "alignItems": "center",
+              "display": "flex",
+            }
+          }
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            className="p-radiobutton p-component"
+            data-p-checked={false}
+            data-pc-name="radiobutton"
+            data-pc-section="root"
+            id={null}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            style={{}}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              className="p-radiobutton-input"
+              data-pc-section="input"
+              defaultChecked={false}
+              disabled={false}
+              id="root-0"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              tabIndex={null}
+              type="radio"
+            />
+            <div
+              className="p-radiobutton-box"
+              data-pc-section="box"
+            >
+              <div
+                className="p-radiobutton-icon"
+                data-pc-section="icon"
+              />
+            </div>
+          </div>
+          <label
+            htmlFor="root-0"
+            style={
+              {
+                "marginLeft": "8px",
+              }
+            }
+          >
+            Yes
+          </label>
+        </div>
+        <div
+          style={
+            {
+              "alignItems": "center",
+              "display": "flex",
+            }
+          }
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            className="p-radiobutton p-component"
+            data-p-checked={false}
+            data-pc-name="radiobutton"
+            data-pc-section="root"
+            id={null}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            style={{}}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              className="p-radiobutton-input"
+              data-pc-section="input"
+              defaultChecked={false}
+              disabled={false}
+              id="root-1"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              tabIndex={null}
+              type="radio"
+            />
+            <div
+              className="p-radiobutton-box"
+              data-pc-section="box"
+            >
+              <div
+                className="p-radiobutton-icon"
+                data-pc-section="icon"
+              />
+            </div>
+          </div>
+          <label
+            htmlFor="root-1"
+            style={
+              {
+                "marginLeft": "8px",
+              }
+            }
+          >
+            No
+          </label>
+        </div>
+      </div>
+      <small>
+        <span
+          id="root__description"
+        >
+          This is a radio description
+        </span>
+      </small>
     </div>
   </div>
   <button
@@ -13335,6 +13606,83 @@ exports[`single fields select field single choice uiSchema disabled using radio 
           </label>
         </div>
       </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields select widget with description in schema and FieldTemplate 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <label
+        htmlFor="root"
+      >
+        test
+         
+      </label>
+      <select
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        options={
+          [
+            {
+              "disabled": false,
+              "label": "Yes",
+              "value": "0",
+            },
+            {
+              "disabled": false,
+              "label": "No",
+              "value": "1",
+            },
+          ]
+        }
+        value=""
+      />
+      <small>
+        <span
+          id="root__description"
+        >
+          This is a select description
+        </span>
+      </small>
     </div>
   </div>
   <button

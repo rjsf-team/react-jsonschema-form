@@ -29,9 +29,10 @@ export default function FieldTemplate<
   if (hidden) {
     return <div className='hidden'>{children}</div>;
   }
+  const isCheckbox = uiOptions.widget === 'checkbox';
   return (
     <WrapIfAdditionalTemplate {...props}>
-      {displayLabel && <Label label={label} required={required} id={id} />}
+      {displayLabel && !isCheckbox && <Label label={label} required={required} id={id} />}
       {displayLabel && description ? description : null}
       {children}
       {errors}

@@ -26,12 +26,13 @@ export default function FieldTemplate<
     return <div style={{ display: 'none' }}>{children}</div>;
   }
 
+  const isCheckbox = uiOptions.widget === 'checkbox';
   return (
     <WrapIfAdditionalTemplate {...props}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1rem' }}>
-        {displayLabel && <Label id={props.id} text={props.label} required={props.required} />}
+        {displayLabel && !isCheckbox && <Label id={props.id} text={props.label} required={props.required} />}
         {children}
-        {displayLabel && rawDescription && <small>{description}</small>}
+        {displayLabel && rawDescription && !isCheckbox && <small>{description}</small>}
         {errors}
         {help}
       </div>

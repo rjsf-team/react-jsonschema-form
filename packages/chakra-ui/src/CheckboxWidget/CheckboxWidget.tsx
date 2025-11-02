@@ -10,6 +10,7 @@ import {
   StrictRJSFSchema,
   RJSFSchema,
   FormContextType,
+  getUiOptions,
 } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field';
@@ -46,7 +47,9 @@ export default function CheckboxWidget<
     registry,
     options,
   );
-  const description = options.description || schema.description;
+  const uiOptions = getUiOptions(uiSchema);
+  const isCheckbox = uiOptions.widget === 'checkbox';
+  const description = isCheckbox ? undefined : (options.description ?? schema.description);
 
   const _onChange = ({ checked }: CheckboxCheckedChangeDetails) => onChange(checked);
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement | any>) => onBlur(id, target && target.checked);

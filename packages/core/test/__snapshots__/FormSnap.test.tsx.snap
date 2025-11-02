@@ -2104,6 +2104,56 @@ exports[`single fields checkbox field 1`] = `
 </form>
 `;
 
+exports[`single fields checkbox field with description in schema and FieldTemplate 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group rjsf-field rjsf-field-boolean"
+  >
+    <div
+      className="field-description"
+      id="root__description"
+    >
+      This is a checkbox description
+    </div>
+    <div
+      className="checkbox "
+    >
+      <label>
+        <input
+          aria-describedby="root__error root__description root__help"
+          autoFocus={false}
+          checked={false}
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          required={false}
+          type="checkbox"
+        />
+        <span>
+          test
+        </span>
+      </label>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields checkbox field with label 1`] = `
 <form
   className="rjsf"
@@ -5870,6 +5920,94 @@ exports[`single fields radio field 1`] = `
 </form>
 `;
 
+exports[`single fields radio widget with description in schema and FieldTemplate 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group rjsf-field rjsf-field-boolean"
+  >
+    <label
+      className="control-label"
+      htmlFor="root"
+    >
+      test
+    </label>
+    <div
+      className="field-description"
+      id="root__description"
+    >
+      This is a radio description
+    </div>
+    <div
+      className="field-radio-group"
+      id="root"
+      role="radiogroup"
+    >
+      <div
+        className="radio "
+      >
+        <label>
+          <span>
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              disabled={false}
+              id="root-0"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              type="radio"
+              value="0"
+            />
+            <span>
+              Yes
+            </span>
+          </span>
+        </label>
+      </div>
+      <div
+        className="radio "
+      >
+        <label>
+          <span>
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              disabled={false}
+              id="root-1"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              type="radio"
+              value="1"
+            />
+            <span>
+              No
+            </span>
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields schema examples 1`] = `
 <form
   className="rjsf"
@@ -6654,6 +6792,68 @@ exports[`single fields select field single choice uiSchema disabled using radio 
         </label>
       </div>
     </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select widget with description in schema and FieldTemplate 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group rjsf-field rjsf-field-boolean"
+  >
+    <label
+      className="control-label"
+      htmlFor="root"
+    >
+      test
+    </label>
+    <div
+      className="field-description"
+      id="root__description"
+    >
+      This is a select description
+    </div>
+    <select
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      multiple={false}
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      role="combobox"
+      value=""
+    >
+      <option
+        value=""
+      />
+      <option
+        value="0"
+      >
+        Yes
+      </option>
+      <option
+        value="1"
+      >
+        No
+      </option>
+    </select>
   </div>
   <div>
     <button

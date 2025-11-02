@@ -11,8 +11,6 @@ import {
 } from '@rjsf/utils';
 import { Checkbox } from '@mantine/core';
 
-import { cleanupOptions } from '../utils';
-
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
  *
@@ -43,8 +41,6 @@ export default function CheckboxWidget<
     registry,
     uiSchema,
   } = props;
-
-  const themeProps = cleanupOptions(options);
 
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
     'DescriptionFieldTemplate',
@@ -104,7 +100,6 @@ export default function CheckboxWidget<
         onFocus={handleFocus}
         error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
         aria-describedby={ariaDescribedByIds(id)}
-        {...themeProps}
       />
     </>
   );

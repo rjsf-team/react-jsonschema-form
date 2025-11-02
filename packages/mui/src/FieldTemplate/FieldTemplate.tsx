@@ -52,6 +52,9 @@ export default function FieldTemplate<
   if (hidden) {
     return <div style={{ display: 'none' }}>{children}</div>;
   }
+
+  const isCheckbox = uiOptions.widget === 'checkbox';
+
   return (
     <WrapIfAdditionalTemplate
       classNames={classNames}
@@ -70,7 +73,7 @@ export default function FieldTemplate<
     >
       <FormControl fullWidth={true} error={rawErrors.length ? true : false} required={required}>
         {children}
-        {displayLabel && rawDescription ? (
+        {displayLabel && !isCheckbox && rawDescription ? (
           <Typography variant='caption' color='textSecondary'>
             {description}
           </Typography>

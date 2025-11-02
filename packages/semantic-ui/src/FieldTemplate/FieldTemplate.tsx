@@ -52,6 +52,8 @@ export default function FieldTemplate<
     return <div style={{ display: 'none' }}>{children}</div>;
   }
 
+  const isCheckbox = uiOptions.widget === 'checkbox';
+
   return (
     <WrapIfAdditionalTemplate
       classNames={classNames}
@@ -66,7 +68,7 @@ export default function FieldTemplate<
       <Form.Group key={id} widths='equal' grouped>
         <MaybeWrap wrap={wrapContent} className='sui-field-content'>
           {children}
-          {displayLabel && rawDescription && (
+          {displayLabel && rawDescription && !isCheckbox && (
             <MaybeWrap wrap={wrapLabel} className='sui-field-label'>
               {description}
             </MaybeWrap>
