@@ -364,7 +364,6 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
       };
       const uiSchema: UiSchema = {
         'ui:widget': 'checkbox',
-        'ui:description': 'This is a field template description',
       };
       const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
       expect(tree).toMatchSnapshot();
