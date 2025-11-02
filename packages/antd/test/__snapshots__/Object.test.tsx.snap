@@ -5309,22 +5309,6 @@ exports[`object fields with title and description additionalProperties 1`] = `
                     className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
                     style={
                       {
-                        "paddingBottom": "8px",
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
-                      }
-                    }
-                  >
-                    <span
-                      id="root__description"
-                    >
-                      a test description
-                    </span>
-                  </div>
-                  <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
-                    style={
-                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -5728,22 +5712,6 @@ exports[`object fields with title and description from both additionalProperties
                         }
                       }
                     />
-                  </div>
-                  <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
-                    style={
-                      {
-                        "paddingBottom": "8px",
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
-                      }
-                    }
-                  >
-                    <span
-                      id="root__description"
-                    >
-                      a fancier description
-                    </span>
                   </div>
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
@@ -6157,22 +6125,6 @@ exports[`object fields with title and description from both object 1`] = `
                     className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
                     style={
                       {
-                        "paddingBottom": "8px",
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
-                      }
-                    }
-                  >
-                    <span
-                      id="root__description"
-                    >
-                      a fancier description
-                    </span>
-                  </div>
-                  <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
-                    style={
-                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -6545,22 +6497,6 @@ exports[`object fields with title and description from uiSchema additionalProper
                         }
                       }
                     />
-                  </div>
-                  <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
-                    style={
-                      {
-                        "paddingBottom": "8px",
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
-                      }
-                    }
-                  >
-                    <span
-                      id="root__description"
-                    >
-                      a fancier description
-                    </span>
                   </div>
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
@@ -6974,22 +6910,6 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                     className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
                     style={
                       {
-                        "paddingBottom": "8px",
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
-                      }
-                    }
-                  >
-                    <span
-                      id="root__description"
-                    >
-                      a fancier description
-                    </span>
-                  </div>
-                  <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
-                    style={
-                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -7362,22 +7282,6 @@ exports[`object fields with title and description from uiSchema show add button 
                         }
                       }
                     />
-                  </div>
-                  <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
-                    style={
-                      {
-                        "paddingBottom": "8px",
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
-                      }
-                    }
-                  >
-                    <span
-                      id="root__description"
-                    >
-                      a fancier description
-                    </span>
                   </div>
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
@@ -7791,22 +7695,6 @@ exports[`object fields with title and description object 1`] = `
                     className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
                     style={
                       {
-                        "paddingBottom": "8px",
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
-                      }
-                    }
-                  >
-                    <span
-                      id="root__description"
-                    >
-                      a test description
-                    </span>
-                  </div>
-                  <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
-                    style={
-                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -8179,22 +8067,6 @@ exports[`object fields with title and description show add button and fields if 
                         }
                       }
                     />
-                  </div>
-                  <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
-                    style={
-                      {
-                        "paddingBottom": "8px",
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
-                      }
-                    }
-                  >
-                    <span
-                      id="root__description"
-                    >
-                      a test description
-                    </span>
                   </div>
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"

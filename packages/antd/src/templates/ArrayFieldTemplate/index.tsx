@@ -12,10 +12,6 @@ import classNames from 'classnames';
 import { Col, Row, ConfigProvider } from 'antd';
 import { useContext } from 'react';
 
-const DESCRIPTION_COL_STYLE = {
-  paddingBottom: '8px',
-};
-
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
  * @param props - The `ArrayFieldTemplateProps` props for the component
@@ -41,11 +37,6 @@ export default function ArrayFieldTemplate<
     uiSchema,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
-    'ArrayFieldDescriptionTemplate',
-    registry,
-    uiOptions,
-  );
   const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
     'ArrayFieldTitleTemplate',
     registry,
@@ -81,17 +72,6 @@ export default function ArrayFieldTemplate<
               uiSchema={uiSchema}
               registry={registry}
               optionalDataControl={showOptionalDataControlInTitle ? optionalDataControl : undefined}
-            />
-          </Col>
-        )}
-        {(uiOptions.description || schema.description) && (
-          <Col span={24} style={DESCRIPTION_COL_STYLE}>
-            <ArrayFieldDescriptionTemplate
-              description={uiOptions.description || schema.description}
-              fieldPathId={fieldPathId}
-              schema={schema}
-              uiSchema={uiSchema}
-              registry={registry}
             />
           </Col>
         )}

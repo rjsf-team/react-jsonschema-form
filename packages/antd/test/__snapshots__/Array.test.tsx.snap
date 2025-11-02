@@ -7307,22 +7307,6 @@ exports[`with title and description array 1`] = `
                     />
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
-                    style={
-                      {
-                        "paddingBottom": "8px",
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
-                      }
-                    }
-                  >
-                    <span
-                      id="root__description"
-                    >
-                      a test description
-                    </span>
-                  </div>
-                  <div
                     className="ant-col ant-col-24 row array-item-list css-dev-only-do-not-override-ac2jek"
                     style={
                       {
@@ -7510,22 +7494,6 @@ exports[`with title and description array icons 1`] = `
                         }
                       }
                     />
-                  </div>
-                  <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
-                    style={
-                      {
-                        "paddingBottom": "8px",
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
-                      }
-                    }
-                  >
-                    <span
-                      id="root__description"
-                    >
-                      a test description
-                    </span>
                   </div>
                   <div
                     className="ant-col ant-col-24 row array-item-list css-dev-only-do-not-override-ac2jek"
@@ -8480,22 +8448,6 @@ exports[`with title and description fixed array 1`] = `
                     />
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
-                    style={
-                      {
-                        "paddingBottom": "8px",
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
-                      }
-                    }
-                  >
-                    <span
-                      id="root__description"
-                    >
-                      a test description
-                    </span>
-                  </div>
-                  <div
                     className="ant-col ant-col-24 row array-item-list css-dev-only-do-not-override-ac2jek"
                     style={
                       {
@@ -8908,22 +8860,6 @@ exports[`with title and description from both array 1`] = `
                     />
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
-                    style={
-                      {
-                        "paddingBottom": "8px",
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
-                      }
-                    }
-                  >
-                    <span
-                      id="root__description"
-                    >
-                      a fancier description
-                    </span>
-                  </div>
-                  <div
                     className="ant-col ant-col-24 row array-item-list css-dev-only-do-not-override-ac2jek"
                     style={
                       {
@@ -9111,22 +9047,6 @@ exports[`with title and description from both array icons 1`] = `
                         }
                       }
                     />
-                  </div>
-                  <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
-                    style={
-                      {
-                        "paddingBottom": "8px",
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
-                      }
-                    }
-                  >
-                    <span
-                      id="root__description"
-                    >
-                      a fancier description
-                    </span>
                   </div>
                   <div
                     className="ant-col ant-col-24 row array-item-list css-dev-only-do-not-override-ac2jek"
@@ -10081,22 +10001,6 @@ exports[`with title and description from both fixed array 1`] = `
                     />
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
-                    style={
-                      {
-                        "paddingBottom": "8px",
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
-                      }
-                    }
-                  >
-                    <span
-                      id="root__description"
-                    >
-                      a fancier description
-                    </span>
-                  </div>
-                  <div
                     className="ant-col ant-col-24 row array-item-list css-dev-only-do-not-override-ac2jek"
                     style={
                       {
@@ -10509,22 +10413,6 @@ exports[`with title and description from uiSchema array 1`] = `
                     />
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
-                    style={
-                      {
-                        "paddingBottom": "8px",
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
-                      }
-                    }
-                  >
-                    <span
-                      id="root__description"
-                    >
-                      a fancier description
-                    </span>
-                  </div>
-                  <div
                     className="ant-col ant-col-24 row array-item-list css-dev-only-do-not-override-ac2jek"
                     style={
                       {
@@ -10712,22 +10600,6 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         }
                       }
                     />
-                  </div>
-                  <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
-                    style={
-                      {
-                        "paddingBottom": "8px",
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
-                      }
-                    }
-                  >
-                    <span
-                      id="root__description"
-                    >
-                      a fancier description
-                    </span>
                   </div>
                   <div
                     className="ant-col ant-col-24 row array-item-list css-dev-only-do-not-override-ac2jek"
@@ -11682,22 +11554,6 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                     />
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
-                    style={
-                      {
-                        "paddingBottom": "8px",
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
-                      }
-                    }
-                  >
-                    <span
-                      id="root__description"
-                    >
-                      a fancier description
-                    </span>
-                  </div>
-                  <div
                     className="ant-col ant-col-24 row array-item-list css-dev-only-do-not-override-ac2jek"
                     style={
                       {
@@ -12092,16 +11948,6 @@ exports[`with title and description with global label off array 1`] = `
                     }
                   />
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
-                    style={
-                      {
-                        "paddingBottom": "8px",
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
-                      }
-                    }
-                  />
-                  <div
                     className="ant-col ant-col-24 row array-item-list css-dev-only-do-not-override-ac2jek"
                     style={
                       {
@@ -12267,16 +12113,6 @@ exports[`with title and description with global label off array icons 1`] = `
                     className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ac2jek"
                     style={
                       {
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
-                      }
-                    }
-                  />
-                  <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
-                    style={
-                      {
-                        "paddingBottom": "8px",
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -13187,16 +13023,6 @@ exports[`with title and description with global label off fixed array 1`] = `
                     className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ac2jek"
                     style={
                       {
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
-                      }
-                    }
-                  />
-                  <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
-                    style={
-                      {
-                        "paddingBottom": "8px",
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }

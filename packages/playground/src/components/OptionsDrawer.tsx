@@ -8,7 +8,7 @@ import {
 } from 'react';
 import Drawer from '@mui/material/Drawer';
 import Form, { IChangeEvent } from '@rjsf/core';
-import { RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
+import { RJSFSchema, UiSchema, ValidatorType, DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
 
 import base64 from '../utils/base64';
@@ -208,6 +208,8 @@ const liveSettingsBooleanSchema: RJSFSchema = {
         },
       },
     },
+    idPrefix: { type: 'string', title: 'ID prefix', default: DEFAULT_ID_PREFIX },
+    idSeparator: { type: 'string', title: 'ID separator', default: DEFAULT_ID_SEPARATOR, maximum: 2 },
   },
 };
 
@@ -238,6 +240,16 @@ const liveSettingsBooleanUiSchema: UiSchema = {
       'ui:options': {
         label: false,
       },
+    },
+  },
+  idPrefix: {
+    'ui:options': {
+      emptyValue: DEFAULT_ID_PREFIX,
+    },
+  },
+  idSeparator: {
+    'ui:options': {
+      emptyValue: DEFAULT_ID_SEPARATOR,
     },
   },
 };
