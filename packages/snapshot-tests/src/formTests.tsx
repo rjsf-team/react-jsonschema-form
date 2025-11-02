@@ -297,6 +297,53 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
         .toJSON();
       expect(tree).toMatchSnapshot();
     });
+    test('checkboxes widget with custom options and labels', () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        title: 'Checkbox Group',
+        description: 'A group of checkboxes',
+        items: {
+          type: 'string',
+          enum: ['option1', 'option2', 'option3'],
+        },
+        uniqueItems: true,
+      };
+      const uiSchema = {
+        'ui:widget': 'checkboxes',
+        'ui:options': {
+          inline: true,
+          help: 'Select all that apply',
+        },
+      };
+      const formData = ['option1'];
+
+      const tree = renderer
+        .create(
+          <Form schema={schema} uiSchema={uiSchema} formData={formData} validator={validator} />,
+          customOptions[SELECT_CUSTOMIZE],
+        )
+        .toJSON();
+      expect(tree).toMatchSnapshot();
+    });
+    test('checkboxes widget with required field', () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        title: 'Required Checkbox Group',
+        description: 'At least one option must be selected',
+        items: {
+          type: 'string',
+          enum: ['red', 'green', 'blue'],
+        },
+        minItems: 1,
+        uniqueItems: true,
+      };
+      const uiSchema = {
+        'ui:widget': 'checkboxes',
+      };
+
+      const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
+      expect(tree).toMatchSnapshot();
+    });
     test('select field single choice formData', () => {
       const schema: RJSFSchema = {
         type: 'string',
