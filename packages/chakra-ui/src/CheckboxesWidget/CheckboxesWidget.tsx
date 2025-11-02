@@ -8,6 +8,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
+  labelValue,
 } from '@rjsf/utils';
 import { FocusEvent } from 'react';
 
@@ -32,6 +33,7 @@ export default function CheckboxesWidget<
     required,
     label,
     rawErrors = [],
+    hideLabel,
     uiSchema,
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
@@ -53,7 +55,7 @@ export default function CheckboxesWidget<
       invalid={rawErrors && rawErrors.length > 0}
       {...(chakraProps as any)}
     >
-      <FieldsetLegend>{label}</FieldsetLegend>
+      {!hideLabel && label && <FieldsetLegend>{labelValue(label)}</FieldsetLegend>}
       <CheckboxGroup
         onValueChange={(option) => onChange(enumOptionsValueForIndex<S>(option, enumOptions, emptyValue))}
         value={selectedIndexes}

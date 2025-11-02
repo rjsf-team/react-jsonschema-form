@@ -29439,19 +29439,6 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
 
 @layer recipes {
   .emotion-3 {
-    color: var(--chakra-colors-fg);
-    font-weight: var(--chakra-font-weights-medium);
-    font-size: var(--chakra-font-sizes-sm);
-    line-height: 1.25rem;
-  }
-
-  .emotion-3:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
-    opacity: 0.5;
-  }
-}
-
-@layer recipes {
-  .emotion-4 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -29463,7 +29450,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
   }
 }
 
-.emotion-5 {
+.emotion-4 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -29475,7 +29462,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
 }
 
 @layer recipes {
-  .emotion-6 {
+  .emotion-5 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -29491,7 +29478,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
 }
 
 @layer recipes {
-  .emotion-7 {
+  .emotion-6 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -29518,19 +29505,19 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
     padding: var(--chakra-spacing-0\\.5);
   }
 
-  .emotion-7:is(:focus-visible, [data-focus-visible]) {
+  .emotion-6:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-7 :where(svg) {
+  .emotion-6 :where(svg) {
     width: var(--chakra-sizes-full);
     height: var(--chakra-sizes-full);
   }
 
-  .emotion-7:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-6:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --chakra-colors-color-palette-50: var(--chakra-colors-red-50);
     --chakra-colors-color-palette-100: var(--chakra-colors-red-100);
     --chakra-colors-color-palette-200: var(--chakra-colors-red-200);
@@ -29552,12 +29539,12 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
     border-color: var(--chakra-colors-border-error);
   }
 
-  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-7:is([data-state=checked], [data-state=indeterminate]) {
+  .emotion-6:is([data-state=checked], [data-state=indeterminate]) {
     background: var(--chakra-colors-color-palette-solid);
     --bg-currentcolor: var(--chakra-colors-color-palette-solid);
     color: var(--chakra-colors-color-palette-contrast);
@@ -29565,7 +29552,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
   }
 }
 
-.emotion-8 {
+.emotion-7 {
   fill: none;
   stroke: currentColor;
   stroke-width: 3px;
@@ -29574,7 +29561,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
 }
 
 @layer recipes {
-  .emotion-9 {
+  .emotion-8 {
     font-weight: var(--chakra-font-weights-medium);
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -29584,17 +29571,17 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
     line-height: 1.25rem;
   }
 
-  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 }
 
-.emotion-22 {
+.emotion-21 {
   margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-23 {
+  .emotion-22 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -29642,19 +29629,19 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-23:is(:focus-visible, [data-focus-visible]) {
+  .emotion-22:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-23:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-22:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-23 :where(svg) {
+  .emotion-22 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -29662,14 +29649,14 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-23:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-22:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-23:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-22:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -29702,25 +29689,19 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
           data-scope="fieldset"
           disabled={false}
         >
-          <legend
-            className="fieldset__legend emotion-3"
-            data-part="legend"
-            data-scope="fieldset"
-            id="fieldset:::r1o:::legend"
-          />
           <div
             aria-describedby="root__error root__description root__help"
-            className="emotion-4"
+            className="emotion-3"
             data-part="group"
             data-scope="checkbox"
             required={false}
             role="group"
           >
             <div
-              className="chakra-stack emotion-5"
+              className="chakra-stack emotion-4"
             >
               <label
-                className="chakra-checkbox__root emotion-6"
+                className="chakra-checkbox__root emotion-5"
                 data-part="root"
                 data-scope="checkbox"
                 data-state="unchecked"
@@ -29762,7 +29743,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                 />
                 <div
                   aria-hidden={true}
-                  className="chakra-checkbox__control emotion-7"
+                  className="chakra-checkbox__control emotion-6"
                   data-part="control"
                   data-scope="checkbox"
                   data-state="unchecked"
@@ -29770,13 +29751,13 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                   id="checkbox:root-0:control"
                 >
                   <svg
-                    className="emotion-8"
+                    className="emotion-7"
                     data-state="unchecked"
                     viewBox="0 0 24 24"
                   />
                 </div>
                 <span
-                  className="chakra-checkbox__label emotion-9"
+                  className="chakra-checkbox__label emotion-8"
                   data-part="label"
                   data-scope="checkbox"
                   data-state="unchecked"
@@ -29789,7 +29770,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                 </span>
               </label>
               <label
-                className="chakra-checkbox__root emotion-6"
+                className="chakra-checkbox__root emotion-5"
                 data-disabled=""
                 data-part="root"
                 data-scope="checkbox"
@@ -29832,7 +29813,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                 />
                 <div
                   aria-hidden={true}
-                  className="chakra-checkbox__control emotion-7"
+                  className="chakra-checkbox__control emotion-6"
                   data-disabled=""
                   data-part="control"
                   data-scope="checkbox"
@@ -29841,14 +29822,14 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                   id="checkbox:root-1:control"
                 >
                   <svg
-                    className="emotion-8"
+                    className="emotion-7"
                     data-disabled=""
                     data-state="unchecked"
                     viewBox="0 0 24 24"
                   />
                 </div>
                 <span
-                  className="chakra-checkbox__label emotion-9"
+                  className="chakra-checkbox__label emotion-8"
                   data-disabled=""
                   data-part="label"
                   data-scope="checkbox"
@@ -29862,7 +29843,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                 </span>
               </label>
               <label
-                className="chakra-checkbox__root emotion-6"
+                className="chakra-checkbox__root emotion-5"
                 data-part="root"
                 data-scope="checkbox"
                 data-state="unchecked"
@@ -29904,7 +29885,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                 />
                 <div
                   aria-hidden={true}
-                  className="chakra-checkbox__control emotion-7"
+                  className="chakra-checkbox__control emotion-6"
                   data-part="control"
                   data-scope="checkbox"
                   data-state="unchecked"
@@ -29912,13 +29893,13 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                   id="checkbox:root-2:control"
                 >
                   <svg
-                    className="emotion-8"
+                    className="emotion-7"
                     data-state="unchecked"
                     viewBox="0 0 24 24"
                   />
                 </div>
                 <span
-                  className="chakra-checkbox__label emotion-9"
+                  className="chakra-checkbox__label emotion-8"
                   data-part="label"
                   data-scope="checkbox"
                   data-state="unchecked"
@@ -29931,7 +29912,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                 </span>
               </label>
               <label
-                className="chakra-checkbox__root emotion-6"
+                className="chakra-checkbox__root emotion-5"
                 data-part="root"
                 data-scope="checkbox"
                 data-state="unchecked"
@@ -29973,7 +29954,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                 />
                 <div
                   aria-hidden={true}
-                  className="chakra-checkbox__control emotion-7"
+                  className="chakra-checkbox__control emotion-6"
                   data-part="control"
                   data-scope="checkbox"
                   data-state="unchecked"
@@ -29981,13 +29962,13 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                   id="checkbox:root-3:control"
                 >
                   <svg
-                    className="emotion-8"
+                    className="emotion-7"
                     data-state="unchecked"
                     viewBox="0 0 24 24"
                   />
                 </div>
                 <span
-                  className="chakra-checkbox__label emotion-9"
+                  className="chakra-checkbox__label emotion-8"
                   data-part="label"
                   data-scope="checkbox"
                   data-state="unchecked"
@@ -30006,10 +29987,10 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
     </fieldset>
   </div>
   <div
-    className="emotion-22"
+    className="emotion-21"
   >
     <button
-      className="chakra-button emotion-23"
+      className="chakra-button emotion-22"
       disabled={false}
       type="submit"
     >
