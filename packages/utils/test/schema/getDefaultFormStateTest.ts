@@ -376,6 +376,53 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
       });
 
+      describe("an object with an null-type property and includeUndefinedValues is 'excludeObjectChildren'", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            optionalNullProperty: {
+              type: 'null',
+            },
+            requiredProperty: {
+              type: 'string',
+              default: 'foo',
+            },
+          },
+          required: ['requiredProperty'],
+        };
+        const includeUndefinedValues = 'excludeObjectChildren';
+        const expected = {
+          requiredProperty: 'foo',
+        };
+
+        test('getDefaultFormState', () => {
+          expect(getDefaultFormState(testValidator, schema, undefined, schema, includeUndefinedValues)).toEqual(
+            expected,
+          );
+        });
+
+        test('computeDefaults', () => {
+          expect(
+            computeDefaults(testValidator, schema, {
+              rootSchema: schema,
+              includeUndefinedValues,
+            }),
+          ).toEqual(expected);
+        });
+
+        test('getDefaultBasedOnSchemaType', () => {
+          expect(
+            getDefaultBasedOnSchemaType(testValidator, schema, { rootSchema: schema, includeUndefinedValues }),
+          ).toEqual(expected);
+        });
+
+        test('getObjectDefaults', () => {
+          expect(getObjectDefaults(testValidator, schema, { rootSchema: schema, includeUndefinedValues })).toEqual(
+            expected,
+          );
+        });
+      });
+
       describe('an object with an additionalProperties', () => {
         const schema: RJSFSchema = {
           type: 'object',
