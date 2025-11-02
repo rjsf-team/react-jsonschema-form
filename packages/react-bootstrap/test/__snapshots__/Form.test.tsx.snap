@@ -3698,6 +3698,250 @@ exports[`single fields checkboxes field 1`] = `
 </form>
 `;
 
+exports[`single fields checkboxes widget with custom options and labels 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div>
+      <label
+        className="form-label"
+        htmlFor="root"
+      >
+        Checkbox Group
+      </label>
+      <div>
+        <div
+          className="bg-transparent border-0 form-check form-check-inline"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            checked={true}
+            className="form-check-input"
+            disabled={false}
+            id="root-0"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="checkbox"
+          />
+          <label
+            className="form-check-label"
+            htmlFor="root-0"
+            title=""
+          >
+            option1
+          </label>
+        </div>
+        <div
+          className="bg-transparent border-0 form-check form-check-inline"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            checked={false}
+            className="form-check-input"
+            disabled={false}
+            id="root-1"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="checkbox"
+          />
+          <label
+            className="form-check-label"
+            htmlFor="root-1"
+            title=""
+          >
+            option2
+          </label>
+        </div>
+        <div
+          className="bg-transparent border-0 form-check form-check-inline"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            checked={false}
+            className="form-check-input"
+            disabled={false}
+            id="root-2"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="checkbox"
+          />
+          <label
+            className="form-check-label"
+            htmlFor="root-2"
+            title=""
+          >
+            option3
+          </label>
+        </div>
+      </div>
+      <small
+        className="text-muted form-text"
+      >
+        <div>
+          <div
+            className="mb-3"
+            id="root__description"
+          >
+            A group of checkboxes
+          </div>
+        </div>
+      </small>
+      <small
+        className="text-muted form-text"
+        id="root__help"
+      >
+        Select all that apply
+      </small>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields checkboxes widget with required field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div>
+      <label
+        className="form-label"
+        htmlFor="root"
+      >
+        Required Checkbox Group
+      </label>
+      <div>
+        <div
+          className="bg-transparent border-0 form-check"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            checked={false}
+            className="form-check-input"
+            disabled={false}
+            id="root-0"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="checkbox"
+          />
+          <label
+            className="form-check-label"
+            htmlFor="root-0"
+            title=""
+          >
+            red
+          </label>
+        </div>
+        <div
+          className="bg-transparent border-0 form-check"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            checked={false}
+            className="form-check-input"
+            disabled={false}
+            id="root-1"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="checkbox"
+          />
+          <label
+            className="form-check-label"
+            htmlFor="root-1"
+            title=""
+          >
+            green
+          </label>
+        </div>
+        <div
+          className="bg-transparent border-0 form-check"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            checked={false}
+            className="form-check-input"
+            disabled={false}
+            id="root-2"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="checkbox"
+          />
+          <label
+            className="form-check-label"
+            htmlFor="root-2"
+            title=""
+          >
+            blue
+          </label>
+        </div>
+      </div>
+      <small
+        className="text-muted form-text"
+      >
+        <div>
+          <div
+            className="mb-3"
+            id="root__description"
+          >
+            At least one option must be selected
+          </div>
+        </div>
+      </small>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields field with description 1`] = `
 <form
   className="rjsf"
