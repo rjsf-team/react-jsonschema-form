@@ -380,7 +380,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
-            optionalNumberProperty: {
+            optionalNullProperty: {
               type: 'null',
             },
             requiredProperty: {
