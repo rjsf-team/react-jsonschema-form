@@ -2181,6 +2181,19 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
 
 @layer recipes {
   .emotion-6 {
+    color: var(--chakra-colors-fg);
+    font-weight: var(--chakra-font-weights-medium);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+  }
+
+  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
+@layer recipes {
+  .emotion-7 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -2192,7 +2205,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
   }
 }
 
-.emotion-7 {
+.emotion-8 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -2204,7 +2217,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
 }
 
 @layer recipes {
-  .emotion-8 {
+  .emotion-9 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -2220,7 +2233,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
 }
 
 @layer recipes {
-  .emotion-9 {
+  .emotion-10 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -2247,19 +2260,19 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
     padding: var(--chakra-spacing-0\\.5);
   }
 
-  .emotion-9:is(:focus-visible, [data-focus-visible]) {
+  .emotion-10:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-9 :where(svg) {
+  .emotion-10 :where(svg) {
     width: var(--chakra-sizes-full);
     height: var(--chakra-sizes-full);
   }
 
-  .emotion-9:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-10:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --chakra-colors-color-palette-50: var(--chakra-colors-red-50);
     --chakra-colors-color-palette-100: var(--chakra-colors-red-100);
     --chakra-colors-color-palette-200: var(--chakra-colors-red-200);
@@ -2281,12 +2294,12 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
     border-color: var(--chakra-colors-border-error);
   }
 
-  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-9:is([data-state=checked], [data-state=indeterminate]) {
+  .emotion-10:is([data-state=checked], [data-state=indeterminate]) {
     background: var(--chakra-colors-color-palette-solid);
     --bg-currentcolor: var(--chakra-colors-color-palette-solid);
     color: var(--chakra-colors-color-palette-contrast);
@@ -2294,7 +2307,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
   }
 }
 
-.emotion-10 {
+.emotion-11 {
   fill: none;
   stroke: currentColor;
   stroke-width: 3px;
@@ -2303,7 +2316,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
 }
 
 @layer recipes {
-  .emotion-11 {
+  .emotion-12 {
     font-weight: var(--chakra-font-weights-medium);
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -2313,17 +2326,17 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
     line-height: 1.25rem;
   }
 
-  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 }
 
-.emotion-20 {
+.emotion-21 {
   margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-21 {
+  .emotion-22 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -2371,19 +2384,19 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-21:is(:focus-visible, [data-focus-visible]) {
+  .emotion-22:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-21:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-22:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-21 :where(svg) {
+  .emotion-22 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -2391,14 +2404,14 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-21:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-22:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-21:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-22:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -2448,20 +2461,27 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
                     data-scope="fieldset"
                     disabled={false}
                   >
+                    <legend
+                      className="fieldset__legend emotion-6"
+                      data-part="legend"
+                      data-scope="fieldset"
+                      id="fieldset:::r97:::legend"
+                    >
+                      choices
+                    </legend>
                     <div
                       aria-describedby="root_choices__error root_choices__description root_choices__help"
-                      className="emotion-6"
+                      className="emotion-7"
                       data-part="group"
                       data-scope="checkbox"
-                      label="choices"
                       required={false}
                       role="group"
                     >
                       <div
-                        className="chakra-stack emotion-7"
+                        className="chakra-stack emotion-8"
                       >
                         <label
-                          className="chakra-checkbox__root emotion-8"
+                          className="chakra-checkbox__root emotion-9"
                           data-part="root"
                           data-scope="checkbox"
                           data-state="unchecked"
@@ -2503,7 +2523,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
                           />
                           <div
                             aria-hidden={true}
-                            className="chakra-checkbox__control emotion-9"
+                            className="chakra-checkbox__control emotion-10"
                             data-part="control"
                             data-scope="checkbox"
                             data-state="unchecked"
@@ -2511,13 +2531,13 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
                             id="checkbox:root_choices-0:control"
                           >
                             <svg
-                              className="emotion-10"
+                              className="emotion-11"
                               data-state="unchecked"
                               viewBox="0 0 24 24"
                             />
                           </div>
                           <span
-                            className="chakra-checkbox__label emotion-11"
+                            className="chakra-checkbox__label emotion-12"
                             data-part="label"
                             data-scope="checkbox"
                             data-state="unchecked"
@@ -2530,7 +2550,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
                           </span>
                         </label>
                         <label
-                          className="chakra-checkbox__root emotion-8"
+                          className="chakra-checkbox__root emotion-9"
                           data-part="root"
                           data-scope="checkbox"
                           data-state="unchecked"
@@ -2572,7 +2592,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
                           />
                           <div
                             aria-hidden={true}
-                            className="chakra-checkbox__control emotion-9"
+                            className="chakra-checkbox__control emotion-10"
                             data-part="control"
                             data-scope="checkbox"
                             data-state="unchecked"
@@ -2580,13 +2600,13 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
                             id="checkbox:root_choices-1:control"
                           >
                             <svg
-                              className="emotion-10"
+                              className="emotion-11"
                               data-state="unchecked"
                               viewBox="0 0 24 24"
                             />
                           </div>
                           <span
-                            className="chakra-checkbox__label emotion-11"
+                            className="chakra-checkbox__label emotion-12"
                             data-part="label"
                             data-scope="checkbox"
                             data-state="unchecked"
@@ -2599,7 +2619,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
                           </span>
                         </label>
                         <label
-                          className="chakra-checkbox__root emotion-8"
+                          className="chakra-checkbox__root emotion-9"
                           data-part="root"
                           data-scope="checkbox"
                           data-state="unchecked"
@@ -2641,7 +2661,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
                           />
                           <div
                             aria-hidden={true}
-                            className="chakra-checkbox__control emotion-9"
+                            className="chakra-checkbox__control emotion-10"
                             data-part="control"
                             data-scope="checkbox"
                             data-state="unchecked"
@@ -2649,13 +2669,13 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
                             id="checkbox:root_choices-2:control"
                           >
                             <svg
-                              className="emotion-10"
+                              className="emotion-11"
                               data-state="unchecked"
                               viewBox="0 0 24 24"
                             />
                           </div>
                           <span
-                            className="chakra-checkbox__label emotion-11"
+                            className="chakra-checkbox__label emotion-12"
                             data-part="label"
                             data-scope="checkbox"
                             data-state="unchecked"
@@ -2679,10 +2699,10 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
     </fieldset>
   </div>
   <div
-    className="emotion-20"
+    className="emotion-21"
   >
     <button
-      className="chakra-button emotion-21"
+      className="chakra-button emotion-22"
       disabled={false}
       type="submit"
     >
@@ -11533,6 +11553,19 @@ exports[`single fields checkboxes field 1`] = `
 
 @layer recipes {
   .emotion-3 {
+    color: var(--chakra-colors-fg);
+    font-weight: var(--chakra-font-weights-medium);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+  }
+
+  .emotion-3:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
+@layer recipes {
+  .emotion-4 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -11544,7 +11577,7 @@ exports[`single fields checkboxes field 1`] = `
   }
 }
 
-.emotion-4 {
+.emotion-5 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -11556,7 +11589,7 @@ exports[`single fields checkboxes field 1`] = `
 }
 
 @layer recipes {
-  .emotion-5 {
+  .emotion-6 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -11572,7 +11605,7 @@ exports[`single fields checkboxes field 1`] = `
 }
 
 @layer recipes {
-  .emotion-6 {
+  .emotion-7 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -11599,19 +11632,19 @@ exports[`single fields checkboxes field 1`] = `
     padding: var(--chakra-spacing-0\\.5);
   }
 
-  .emotion-6:is(:focus-visible, [data-focus-visible]) {
+  .emotion-7:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-6 :where(svg) {
+  .emotion-7 :where(svg) {
     width: var(--chakra-sizes-full);
     height: var(--chakra-sizes-full);
   }
 
-  .emotion-6:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-7:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --chakra-colors-color-palette-50: var(--chakra-colors-red-50);
     --chakra-colors-color-palette-100: var(--chakra-colors-red-100);
     --chakra-colors-color-palette-200: var(--chakra-colors-red-200);
@@ -11633,12 +11666,12 @@ exports[`single fields checkboxes field 1`] = `
     border-color: var(--chakra-colors-border-error);
   }
 
-  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-6:is([data-state=checked], [data-state=indeterminate]) {
+  .emotion-7:is([data-state=checked], [data-state=indeterminate]) {
     background: var(--chakra-colors-color-palette-solid);
     --bg-currentcolor: var(--chakra-colors-color-palette-solid);
     color: var(--chakra-colors-color-palette-contrast);
@@ -11646,7 +11679,7 @@ exports[`single fields checkboxes field 1`] = `
   }
 }
 
-.emotion-7 {
+.emotion-8 {
   fill: none;
   stroke: currentColor;
   stroke-width: 3px;
@@ -11655,7 +11688,7 @@ exports[`single fields checkboxes field 1`] = `
 }
 
 @layer recipes {
-  .emotion-8 {
+  .emotion-9 {
     font-weight: var(--chakra-font-weights-medium);
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -11665,17 +11698,17 @@ exports[`single fields checkboxes field 1`] = `
     line-height: 1.25rem;
   }
 
-  .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 }
 
-.emotion-21 {
+.emotion-22 {
   margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-22 {
+  .emotion-23 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -11723,19 +11756,19 @@ exports[`single fields checkboxes field 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-22:is(:focus-visible, [data-focus-visible]) {
+  .emotion-23:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-22:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-23:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-22 :where(svg) {
+  .emotion-23 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -11743,14 +11776,14 @@ exports[`single fields checkboxes field 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-22:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-23:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-22:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-23:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -11783,20 +11816,27 @@ exports[`single fields checkboxes field 1`] = `
           data-scope="fieldset"
           disabled={false}
         >
+          <legend
+            className="fieldset__legend emotion-3"
+            data-part="legend"
+            data-scope="fieldset"
+            id="fieldset:::r2p:::legend"
+          >
+            An enum list rendered as checkboxes
+          </legend>
           <div
             aria-describedby="root__error root__description root__help"
-            className="emotion-3"
+            className="emotion-4"
             data-part="group"
             data-scope="checkbox"
-            label="An enum list rendered as checkboxes"
             required={false}
             role="group"
           >
             <div
-              className="chakra-stack emotion-4"
+              className="chakra-stack emotion-5"
             >
               <label
-                className="chakra-checkbox__root emotion-5"
+                className="chakra-checkbox__root emotion-6"
                 data-part="root"
                 data-scope="checkbox"
                 data-state="unchecked"
@@ -11838,7 +11878,7 @@ exports[`single fields checkboxes field 1`] = `
                 />
                 <div
                   aria-hidden={true}
-                  className="chakra-checkbox__control emotion-6"
+                  className="chakra-checkbox__control emotion-7"
                   data-part="control"
                   data-scope="checkbox"
                   data-state="unchecked"
@@ -11846,13 +11886,13 @@ exports[`single fields checkboxes field 1`] = `
                   id="checkbox:root-0:control"
                 >
                   <svg
-                    className="emotion-7"
+                    className="emotion-8"
                     data-state="unchecked"
                     viewBox="0 0 24 24"
                   />
                 </div>
                 <span
-                  className="chakra-checkbox__label emotion-8"
+                  className="chakra-checkbox__label emotion-9"
                   data-part="label"
                   data-scope="checkbox"
                   data-state="unchecked"
@@ -11865,7 +11905,7 @@ exports[`single fields checkboxes field 1`] = `
                 </span>
               </label>
               <label
-                className="chakra-checkbox__root emotion-5"
+                className="chakra-checkbox__root emotion-6"
                 data-part="root"
                 data-scope="checkbox"
                 data-state="unchecked"
@@ -11907,7 +11947,7 @@ exports[`single fields checkboxes field 1`] = `
                 />
                 <div
                   aria-hidden={true}
-                  className="chakra-checkbox__control emotion-6"
+                  className="chakra-checkbox__control emotion-7"
                   data-part="control"
                   data-scope="checkbox"
                   data-state="unchecked"
@@ -11915,13 +11955,13 @@ exports[`single fields checkboxes field 1`] = `
                   id="checkbox:root-1:control"
                 >
                   <svg
-                    className="emotion-7"
+                    className="emotion-8"
                     data-state="unchecked"
                     viewBox="0 0 24 24"
                   />
                 </div>
                 <span
-                  className="chakra-checkbox__label emotion-8"
+                  className="chakra-checkbox__label emotion-9"
                   data-part="label"
                   data-scope="checkbox"
                   data-state="unchecked"
@@ -11934,7 +11974,7 @@ exports[`single fields checkboxes field 1`] = `
                 </span>
               </label>
               <label
-                className="chakra-checkbox__root emotion-5"
+                className="chakra-checkbox__root emotion-6"
                 data-part="root"
                 data-scope="checkbox"
                 data-state="unchecked"
@@ -11976,7 +12016,7 @@ exports[`single fields checkboxes field 1`] = `
                 />
                 <div
                   aria-hidden={true}
-                  className="chakra-checkbox__control emotion-6"
+                  className="chakra-checkbox__control emotion-7"
                   data-part="control"
                   data-scope="checkbox"
                   data-state="unchecked"
@@ -11984,13 +12024,13 @@ exports[`single fields checkboxes field 1`] = `
                   id="checkbox:root-2:control"
                 >
                   <svg
-                    className="emotion-7"
+                    className="emotion-8"
                     data-state="unchecked"
                     viewBox="0 0 24 24"
                   />
                 </div>
                 <span
-                  className="chakra-checkbox__label emotion-8"
+                  className="chakra-checkbox__label emotion-9"
                   data-part="label"
                   data-scope="checkbox"
                   data-state="unchecked"
@@ -12003,7 +12043,7 @@ exports[`single fields checkboxes field 1`] = `
                 </span>
               </label>
               <label
-                className="chakra-checkbox__root emotion-5"
+                className="chakra-checkbox__root emotion-6"
                 data-part="root"
                 data-scope="checkbox"
                 data-state="unchecked"
@@ -12045,7 +12085,7 @@ exports[`single fields checkboxes field 1`] = `
                 />
                 <div
                   aria-hidden={true}
-                  className="chakra-checkbox__control emotion-6"
+                  className="chakra-checkbox__control emotion-7"
                   data-part="control"
                   data-scope="checkbox"
                   data-state="unchecked"
@@ -12053,13 +12093,13 @@ exports[`single fields checkboxes field 1`] = `
                   id="checkbox:root-3:control"
                 >
                   <svg
-                    className="emotion-7"
+                    className="emotion-8"
                     data-state="unchecked"
                     viewBox="0 0 24 24"
                   />
                 </div>
                 <span
-                  className="chakra-checkbox__label emotion-8"
+                  className="chakra-checkbox__label emotion-9"
                   data-part="label"
                   data-scope="checkbox"
                   data-state="unchecked"
@@ -12078,10 +12118,10 @@ exports[`single fields checkboxes field 1`] = `
     </fieldset>
   </div>
   <div
-    className="emotion-21"
+    className="emotion-22"
   >
     <button
-      className="chakra-button emotion-22"
+      className="chakra-button emotion-23"
       disabled={false}
       type="submit"
     >
@@ -29399,6 +29439,19 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
 
 @layer recipes {
   .emotion-3 {
+    color: var(--chakra-colors-fg);
+    font-weight: var(--chakra-font-weights-medium);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+  }
+
+  .emotion-3:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
+@layer recipes {
+  .emotion-4 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -29410,7 +29463,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
   }
 }
 
-.emotion-4 {
+.emotion-5 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -29422,7 +29475,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
 }
 
 @layer recipes {
-  .emotion-5 {
+  .emotion-6 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -29438,7 +29491,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
 }
 
 @layer recipes {
-  .emotion-6 {
+  .emotion-7 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -29465,19 +29518,19 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
     padding: var(--chakra-spacing-0\\.5);
   }
 
-  .emotion-6:is(:focus-visible, [data-focus-visible]) {
+  .emotion-7:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-6 :where(svg) {
+  .emotion-7 :where(svg) {
     width: var(--chakra-sizes-full);
     height: var(--chakra-sizes-full);
   }
 
-  .emotion-6:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-7:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --chakra-colors-color-palette-50: var(--chakra-colors-red-50);
     --chakra-colors-color-palette-100: var(--chakra-colors-red-100);
     --chakra-colors-color-palette-200: var(--chakra-colors-red-200);
@@ -29499,12 +29552,12 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
     border-color: var(--chakra-colors-border-error);
   }
 
-  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-6:is([data-state=checked], [data-state=indeterminate]) {
+  .emotion-7:is([data-state=checked], [data-state=indeterminate]) {
     background: var(--chakra-colors-color-palette-solid);
     --bg-currentcolor: var(--chakra-colors-color-palette-solid);
     color: var(--chakra-colors-color-palette-contrast);
@@ -29512,7 +29565,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
   }
 }
 
-.emotion-7 {
+.emotion-8 {
   fill: none;
   stroke: currentColor;
   stroke-width: 3px;
@@ -29521,7 +29574,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
 }
 
 @layer recipes {
-  .emotion-8 {
+  .emotion-9 {
     font-weight: var(--chakra-font-weights-medium);
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -29531,17 +29584,17 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
     line-height: 1.25rem;
   }
 
-  .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 }
 
-.emotion-21 {
+.emotion-22 {
   margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-22 {
+  .emotion-23 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -29589,19 +29642,19 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-22:is(:focus-visible, [data-focus-visible]) {
+  .emotion-23:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-22:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-23:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-22 :where(svg) {
+  .emotion-23 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -29609,14 +29662,14 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-22:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-23:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-22:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-23:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -29649,19 +29702,25 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
           data-scope="fieldset"
           disabled={false}
         >
+          <legend
+            className="fieldset__legend emotion-3"
+            data-part="legend"
+            data-scope="fieldset"
+            id="fieldset:::r1o:::legend"
+          />
           <div
             aria-describedby="root__error root__description root__help"
-            className="emotion-3"
+            className="emotion-4"
             data-part="group"
             data-scope="checkbox"
             required={false}
             role="group"
           >
             <div
-              className="chakra-stack emotion-4"
+              className="chakra-stack emotion-5"
             >
               <label
-                className="chakra-checkbox__root emotion-5"
+                className="chakra-checkbox__root emotion-6"
                 data-part="root"
                 data-scope="checkbox"
                 data-state="unchecked"
@@ -29703,7 +29762,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                 />
                 <div
                   aria-hidden={true}
-                  className="chakra-checkbox__control emotion-6"
+                  className="chakra-checkbox__control emotion-7"
                   data-part="control"
                   data-scope="checkbox"
                   data-state="unchecked"
@@ -29711,13 +29770,13 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                   id="checkbox:root-0:control"
                 >
                   <svg
-                    className="emotion-7"
+                    className="emotion-8"
                     data-state="unchecked"
                     viewBox="0 0 24 24"
                   />
                 </div>
                 <span
-                  className="chakra-checkbox__label emotion-8"
+                  className="chakra-checkbox__label emotion-9"
                   data-part="label"
                   data-scope="checkbox"
                   data-state="unchecked"
@@ -29730,7 +29789,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                 </span>
               </label>
               <label
-                className="chakra-checkbox__root emotion-5"
+                className="chakra-checkbox__root emotion-6"
                 data-disabled=""
                 data-part="root"
                 data-scope="checkbox"
@@ -29773,7 +29832,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                 />
                 <div
                   aria-hidden={true}
-                  className="chakra-checkbox__control emotion-6"
+                  className="chakra-checkbox__control emotion-7"
                   data-disabled=""
                   data-part="control"
                   data-scope="checkbox"
@@ -29782,14 +29841,14 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                   id="checkbox:root-1:control"
                 >
                   <svg
-                    className="emotion-7"
+                    className="emotion-8"
                     data-disabled=""
                     data-state="unchecked"
                     viewBox="0 0 24 24"
                   />
                 </div>
                 <span
-                  className="chakra-checkbox__label emotion-8"
+                  className="chakra-checkbox__label emotion-9"
                   data-disabled=""
                   data-part="label"
                   data-scope="checkbox"
@@ -29803,7 +29862,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                 </span>
               </label>
               <label
-                className="chakra-checkbox__root emotion-5"
+                className="chakra-checkbox__root emotion-6"
                 data-part="root"
                 data-scope="checkbox"
                 data-state="unchecked"
@@ -29845,7 +29904,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                 />
                 <div
                   aria-hidden={true}
-                  className="chakra-checkbox__control emotion-6"
+                  className="chakra-checkbox__control emotion-7"
                   data-part="control"
                   data-scope="checkbox"
                   data-state="unchecked"
@@ -29853,13 +29912,13 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                   id="checkbox:root-2:control"
                 >
                   <svg
-                    className="emotion-7"
+                    className="emotion-8"
                     data-state="unchecked"
                     viewBox="0 0 24 24"
                   />
                 </div>
                 <span
-                  className="chakra-checkbox__label emotion-8"
+                  className="chakra-checkbox__label emotion-9"
                   data-part="label"
                   data-scope="checkbox"
                   data-state="unchecked"
@@ -29872,7 +29931,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                 </span>
               </label>
               <label
-                className="chakra-checkbox__root emotion-5"
+                className="chakra-checkbox__root emotion-6"
                 data-part="root"
                 data-scope="checkbox"
                 data-state="unchecked"
@@ -29914,7 +29973,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                 />
                 <div
                   aria-hidden={true}
-                  className="chakra-checkbox__control emotion-6"
+                  className="chakra-checkbox__control emotion-7"
                   data-part="control"
                   data-scope="checkbox"
                   data-state="unchecked"
@@ -29922,13 +29981,13 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                   id="checkbox:root-3:control"
                 >
                   <svg
-                    className="emotion-7"
+                    className="emotion-8"
                     data-state="unchecked"
                     viewBox="0 0 24 24"
                   />
                 </div>
                 <span
-                  className="chakra-checkbox__label emotion-8"
+                  className="chakra-checkbox__label emotion-9"
                   data-part="label"
                   data-scope="checkbox"
                   data-state="unchecked"
@@ -29947,10 +30006,10 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
     </fieldset>
   </div>
   <div
-    className="emotion-21"
+    className="emotion-22"
   >
     <button
-      className="chakra-button emotion-22"
+      className="chakra-button emotion-23"
       disabled={false}
       type="submit"
     >
