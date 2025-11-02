@@ -3926,7 +3926,7 @@ exports[`single fields checkbox field with description in schema and FieldTempla
       <span
         id="root__description"
       >
-        This is a field template description
+        This is a checkbox description
       </span>
       <div
         style={
@@ -12200,7 +12200,7 @@ exports[`single fields radio widget with description in schema and FieldTemplate
         <span
           id="root__description"
         >
-          This is a field template description
+          This is a radio description
         </span>
       </small>
     </div>
@@ -13680,7 +13680,7 @@ exports[`single fields select widget with description in schema and FieldTemplat
         <span
           id="root__description"
         >
-          This is a field template description
+          This is a select description
         </span>
       </small>
     </div>

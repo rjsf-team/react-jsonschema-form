@@ -3405,7 +3405,7 @@ exports[`single fields checkbox field with description in schema and FieldTempla
         className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
         id="root__description"
       >
-        This is a field template description
+        This is a checkbox description
       </span>
       <span
         className="fui-Checkbox r1q22k1j ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
@@ -9994,7 +9994,7 @@ exports[`single fields radio widget with description in schema and FieldTemplate
           className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
           id="root__description"
         >
-          This is a field template description
+          This is a radio description
         </span>
       </p>
     </div>
@@ -11219,7 +11219,7 @@ exports[`single fields select widget with description in schema and FieldTemplat
           className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
           id="root__description"
         >
-          This is a field template description
+          This is a select description
         </span>
       </p>
     </div>

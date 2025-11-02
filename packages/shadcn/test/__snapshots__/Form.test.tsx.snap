@@ -3884,7 +3884,7 @@ exports[`single fields checkbox field with description in schema and FieldTempla
             className="text-sm text-muted-foreground"
             id="root__description"
           >
-            This is a field template description
+            This is a checkbox description
           </div>
         </div>
         <div
@@ -11444,7 +11444,7 @@ exports[`single fields radio widget with description in schema and FieldTemplate
             className="text-sm text-muted-foreground"
             id="root__description"
           >
-            This is a field template description
+            This is a radio description
           </div>
         </div>
       </span>
@@ -13043,7 +13043,7 @@ exports[`single fields select widget with description in schema and FieldTemplat
             className="text-sm text-muted-foreground"
             id="root__description"
           >
-            This is a field template description
+            This is a select description
           </div>
         </div>
       </span>

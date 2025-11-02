@@ -13304,7 +13304,7 @@ exports[`single fields checkbox field with description in schema and FieldTempla
           }
         }
       >
-        This is a field template description
+        This is a checkbox description
       </h6>
       <label
         className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-2"
@@ -34109,7 +34109,7 @@ exports[`single fields radio widget with description in schema and FieldTemplate
             }
           }
         >
-          This is a field template description
+          This is a radio description
         </h6>
       </span>
     </div>
@@ -41009,7 +41009,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
             }
           }
         >
-          This is a field template description
+          This is a select description
         </h6>
       </span>
     </div>

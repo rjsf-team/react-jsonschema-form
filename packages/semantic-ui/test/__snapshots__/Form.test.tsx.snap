@@ -2793,7 +2793,7 @@ exports[`single fields checkbox field with description in schema and FieldTempla
         className="sui-description"
         id="root__description"
       >
-        This is a field template description
+        This is a checkbox description
       </p>
       <div
         className="field"
@@ -7587,7 +7587,7 @@ exports[`single fields radio widget with description in schema and FieldTemplate
         className="sui-description"
         id="root__description"
       >
-        This is a field template description
+        This is a radio description
       </p>
     </div>
   </div>
@@ -9080,7 +9080,7 @@ exports[`single fields select widget with description in schema and FieldTemplat
         className="sui-description"
         id="root__description"
       >
-        This is a field template description
+        This is a select description
       </p>
     </div>
   </div>

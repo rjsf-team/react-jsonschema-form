@@ -4201,7 +4201,7 @@ exports[`single fields checkbox field with description in schema and FieldTempla
           <div
             className="text-sm text-base-content/80"
           >
-            This is a field template description
+            This is a checkbox description
           </div>
         </div>
         <label
