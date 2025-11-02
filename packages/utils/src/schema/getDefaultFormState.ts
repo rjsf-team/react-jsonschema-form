@@ -121,6 +121,7 @@ export function computeDefaultBasedOnSchemaTypeAndDefaults<T = any, S extends St
  * @param experimental_defaultFormStateBehavior - Optional configuration object, if provided, allows users to override
  *        default form state behavior
  * @param isConst - Optional flag, if true, indicates that the schema has a const property defined, thus we should always return the computedDefault since it's coming from the const.
+ * @param isNullType - The type of the schema is null
  */
 function maybeAddDefaultToObject<T = any>(
   obj: GenericObjectType,
@@ -131,6 +132,7 @@ function maybeAddDefaultToObject<T = any>(
   requiredFields: string[] = [],
   experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {},
   isConst = false,
+  isNullType = false,
 ) {
   const { emptyObjectFields = 'populateAllDefaults' } = experimental_defaultFormStateBehavior;
 
@@ -141,7 +143,7 @@ function maybeAddDefaultToObject<T = any>(
   } else if (includeUndefinedValues === 'excludeObjectChildren') {
     // Fix for Issue #4709: When in 'excludeObjectChildren' mode, don't set primitive fields to empty objects
     // Only add the computed default if it's not an empty object placeholder for a primitive field
-    if (!isObject(computedDefault) || !isEmpty(computedDefault)) {
+    if ((isNullType && computedDefault !== undefined) || !isObject(computedDefault) || !isEmpty(computedDefault)) {
       obj[key] = computedDefault;
     }
     // If computedDefault is an empty object {}, don't add it - let the field stay undefined
@@ -517,6 +519,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
           retrievedSchema.required,
           experimental_defaultFormStateBehavior,
           hasConst,
+          propertySchema?.type === 'null',
         );
 
         return acc;
