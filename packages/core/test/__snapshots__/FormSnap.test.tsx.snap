@@ -2435,6 +2435,228 @@ exports[`single fields checkboxes field 1`] = `
 </form>
 `;
 
+exports[`single fields checkboxes widget with custom options and labels 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group rjsf-field rjsf-field-array"
+  >
+    <label
+      className="control-label"
+      htmlFor="root"
+    >
+      Checkbox Group
+    </label>
+    <div
+      className="field-description"
+      id="root__description"
+    >
+      A group of checkboxes
+    </div>
+    <div
+      className="checkboxes"
+      id="root"
+    >
+      <label
+        className="checkbox-inline "
+      >
+        <span>
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            checked={true}
+            disabled={false}
+            id="root-0"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            type="checkbox"
+            value="0"
+          />
+          <span>
+            option1
+          </span>
+        </span>
+      </label>
+      <label
+        className="checkbox-inline "
+      >
+        <span>
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            checked={false}
+            disabled={false}
+            id="root-1"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            type="checkbox"
+            value="1"
+          />
+          <span>
+            option2
+          </span>
+        </span>
+      </label>
+      <label
+        className="checkbox-inline "
+      >
+        <span>
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            checked={false}
+            disabled={false}
+            id="root-2"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            type="checkbox"
+            value="2"
+          />
+          <span>
+            option3
+          </span>
+        </span>
+      </label>
+    </div>
+    <p
+      className="help-block"
+      id="root__help"
+    >
+      Select all that apply
+    </p>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields checkboxes widget with required field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group rjsf-field rjsf-field-array"
+  >
+    <label
+      className="control-label"
+      htmlFor="root"
+    >
+      Required Checkbox Group
+    </label>
+    <div
+      className="field-description"
+      id="root__description"
+    >
+      At least one option must be selected
+    </div>
+    <div
+      className="checkboxes"
+      id="root"
+    >
+      <div
+        className="checkbox "
+      >
+        <label>
+          <span>
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              disabled={false}
+              id="root-0"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              type="checkbox"
+              value="0"
+            />
+            <span>
+              red
+            </span>
+          </span>
+        </label>
+      </div>
+      <div
+        className="checkbox "
+      >
+        <label>
+          <span>
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              disabled={false}
+              id="root-1"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              type="checkbox"
+              value="1"
+            />
+            <span>
+              green
+            </span>
+          </span>
+        </label>
+      </div>
+      <div
+        className="checkbox "
+      >
+        <label>
+          <span>
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              disabled={false}
+              id="root-2"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              type="checkbox"
+              value="2"
+            />
+            <span>
+              blue
+            </span>
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields field with description 1`] = `
 <form
   className="rjsf"

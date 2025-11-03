@@ -24,6 +24,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/chakra-ui
 
+- Modified `CheckboxesWidget` to render the Title, fixing ([#4840](https://github.com/rjsf-team/react-jsonschema-form/issues/4840))
 - Updated `CheckboxWidget` to handle label and description rendering consistently, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
 
 ## @rjsf/core

@@ -7067,6 +7067,371 @@ exports[`single fields checkboxes field 1`] = `
 </form>
 `;
 
+exports[`single fields checkboxes widget with custom options and labels 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      className="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+    >
+      <div
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
+        style={
+          {
+            "rowGap": undefined,
+          }
+        }
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ac2jek"
+          style={{}}
+        >
+          <label
+            className=""
+            htmlFor="root"
+            title="Checkbox Group"
+          >
+            Checkbox Group
+          </label>
+        </div>
+        <div
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ac2jek"
+          style={{}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <div
+                aria-describedby="root__error root__description root__help"
+                className="ant-checkbox-group css-dev-only-do-not-override-ac2jek"
+                id="root"
+                name="root"
+                onBlur={[Function]}
+                onFocus={[Function]}
+              >
+                <span>
+                  <label
+                    className="ant-checkbox-wrapper ant-checkbox-wrapper-checked ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-ac2jek"
+                    onClick={[Function]}
+                    style={{}}
+                  >
+                    <span
+                      className="ant-checkbox ant-wave-target css-dev-only-do-not-override-ac2jek ant-checkbox-checked"
+                    >
+                      <input
+                        autoFocus={false}
+                        checked={true}
+                        className="ant-checkbox-input"
+                        disabled={false}
+                        id="root-0"
+                        name="root"
+                        onChange={[Function]}
+                        onClick={[Function]}
+                        type="checkbox"
+                        value="0"
+                      />
+                      <span
+                        className="ant-checkbox-inner"
+                      />
+                    </span>
+                    <span
+                      className="ant-checkbox-label"
+                    >
+                      option1
+                    </span>
+                  </label>
+                </span>
+                <span>
+                  <label
+                    className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-ac2jek"
+                    onClick={[Function]}
+                    style={{}}
+                  >
+                    <span
+                      className="ant-checkbox ant-wave-target css-dev-only-do-not-override-ac2jek"
+                    >
+                      <input
+                        autoFocus={false}
+                        checked={false}
+                        className="ant-checkbox-input"
+                        disabled={false}
+                        id="root-1"
+                        name="root"
+                        onChange={[Function]}
+                        onClick={[Function]}
+                        type="checkbox"
+                        value="1"
+                      />
+                      <span
+                        className="ant-checkbox-inner"
+                      />
+                    </span>
+                    <span
+                      className="ant-checkbox-label"
+                    >
+                      option2
+                    </span>
+                  </label>
+                </span>
+                <span>
+                  <label
+                    className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-ac2jek"
+                    onClick={[Function]}
+                    style={{}}
+                  >
+                    <span
+                      className="ant-checkbox ant-wave-target css-dev-only-do-not-override-ac2jek"
+                    >
+                      <input
+                        autoFocus={false}
+                        checked={false}
+                        className="ant-checkbox-input"
+                        disabled={false}
+                        id="root-2"
+                        name="root"
+                        onChange={[Function]}
+                        onClick={[Function]}
+                        type="checkbox"
+                        value="2"
+                      />
+                      <span
+                        className="ant-checkbox-inner"
+                      />
+                    </span>
+                    <span
+                      className="ant-checkbox-label"
+                    >
+                      option3
+                    </span>
+                  </label>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div
+            className="ant-form-item-additional"
+            style={{}}
+          >
+            <div
+              className="ant-form-item-extra"
+            >
+              <span
+                id="root__description"
+              >
+                A group of checkboxes
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    style={{}}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields checkboxes widget with required field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      className="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
+    >
+      <div
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
+        style={
+          {
+            "rowGap": undefined,
+          }
+        }
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ac2jek"
+          style={{}}
+        >
+          <label
+            className=""
+            htmlFor="root"
+            title="Required Checkbox Group"
+          >
+            Required Checkbox Group
+          </label>
+        </div>
+        <div
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ac2jek"
+          style={{}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <div
+                aria-describedby="root__error root__description root__help"
+                className="ant-checkbox-group css-dev-only-do-not-override-ac2jek"
+                id="root"
+                name="root"
+                onBlur={[Function]}
+                onFocus={[Function]}
+              >
+                <span>
+                  <label
+                    className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-ac2jek"
+                    onClick={[Function]}
+                    style={{}}
+                  >
+                    <span
+                      className="ant-checkbox ant-wave-target css-dev-only-do-not-override-ac2jek"
+                    >
+                      <input
+                        autoFocus={false}
+                        checked={false}
+                        className="ant-checkbox-input"
+                        disabled={false}
+                        id="root-0"
+                        name="root"
+                        onChange={[Function]}
+                        onClick={[Function]}
+                        type="checkbox"
+                        value="0"
+                      />
+                      <span
+                        className="ant-checkbox-inner"
+                      />
+                    </span>
+                    <span
+                      className="ant-checkbox-label"
+                    >
+                      red
+                    </span>
+                  </label>
+                  <br />
+                </span>
+                <span>
+                  <label
+                    className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-ac2jek"
+                    onClick={[Function]}
+                    style={{}}
+                  >
+                    <span
+                      className="ant-checkbox ant-wave-target css-dev-only-do-not-override-ac2jek"
+                    >
+                      <input
+                        autoFocus={false}
+                        checked={false}
+                        className="ant-checkbox-input"
+                        disabled={false}
+                        id="root-1"
+                        name="root"
+                        onChange={[Function]}
+                        onClick={[Function]}
+                        type="checkbox"
+                        value="1"
+                      />
+                      <span
+                        className="ant-checkbox-inner"
+                      />
+                    </span>
+                    <span
+                      className="ant-checkbox-label"
+                    >
+                      green
+                    </span>
+                  </label>
+                  <br />
+                </span>
+                <span>
+                  <label
+                    className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-ac2jek"
+                    onClick={[Function]}
+                    style={{}}
+                  >
+                    <span
+                      className="ant-checkbox ant-wave-target css-dev-only-do-not-override-ac2jek"
+                    >
+                      <input
+                        autoFocus={false}
+                        checked={false}
+                        className="ant-checkbox-input"
+                        disabled={false}
+                        id="root-2"
+                        name="root"
+                        onChange={[Function]}
+                        onClick={[Function]}
+                        type="checkbox"
+                        value="2"
+                      />
+                      <span
+                        className="ant-checkbox-inner"
+                      />
+                    </span>
+                    <span
+                      className="ant-checkbox-label"
+                    >
+                      blue
+                    </span>
+                  </label>
+                  <br />
+                </span>
+              </div>
+            </div>
+          </div>
+          <div
+            className="ant-form-item-additional"
+            style={{}}
+          >
+            <div
+              className="ant-form-item-extra"
+            >
+              <span
+                id="root__description"
+              >
+                At least one option must be selected
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    style={{}}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
 exports[`single fields field with description 1`] = `
 <form
   className="rjsf"

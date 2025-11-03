@@ -1,14 +1,14 @@
-import { CheckboxGroup, FieldsetRoot, Stack, Text } from '@chakra-ui/react';
+import { CheckboxGroup, FieldsetRoot, Stack, Text, FieldsetLegend } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
   enumOptionsValueForIndex,
   FormContextType,
-  labelValue,
   optionId,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
+  labelValue,
 } from '@rjsf/utils';
 import { FocusEvent } from 'react';
 
@@ -32,8 +32,8 @@ export default function CheckboxesWidget<
     onFocus,
     required,
     label,
-    hideLabel,
     rawErrors = [],
+    hideLabel,
     uiSchema,
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
@@ -55,13 +55,13 @@ export default function CheckboxesWidget<
       invalid={rawErrors && rawErrors.length > 0}
       {...(chakraProps as any)}
     >
+      {!hideLabel && label && <FieldsetLegend>{labelValue(label)}</FieldsetLegend>}
       <CheckboxGroup
         onValueChange={(option) => onChange(enumOptionsValueForIndex<S>(option, enumOptions, emptyValue))}
         value={selectedIndexes}
         aria-describedby={ariaDescribedByIds(id)}
         readOnly={readonly}
         required={required}
-        label={labelValue(label, hideLabel || !label)}
       >
         <Stack direction={row ? 'row' : 'column'}>
           {Array.isArray(enumOptions) &&

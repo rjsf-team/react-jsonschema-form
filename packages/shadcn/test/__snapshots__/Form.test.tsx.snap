@@ -4448,6 +4448,431 @@ exports[`single fields checkboxes field 1`] = `
 </form>
 `;
 
+exports[`single fields checkboxes widget with custom options and labels 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      >
+        Checkbox Group
+      </label>
+      <div
+        className="flex flex-row gap-4 flex-wrap"
+      >
+        <div
+          className="flex items-center gap-2"
+        >
+          <button
+            aria-checked={true}
+            aria-describedby="root__error root__description root__help"
+            aria-required={false}
+            autoFocus={false}
+            className="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+            data-slot="checkbox"
+            data-state="checked"
+            disabled={false}
+            id="root-0"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            role="checkbox"
+            type="button"
+            value="on"
+          >
+            <span
+              className="flex items-center justify-center text-current transition-none"
+              data-slot="checkbox-indicator"
+              data-state="checked"
+              style={
+                {
+                  "pointerEvents": "none",
+                }
+              }
+            >
+              <svg
+                className="size-3.5"
+                fill="none"
+                height="15"
+                viewBox="0 0 15 15"
+                width="15"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clipRule="evenodd"
+                  d="M11.4669 3.72684C11.7558 3.91574 11.8369 4.30308 11.648 4.59198L7.39799 11.092C7.29783 11.2452 7.13556 11.3467 6.95402 11.3699C6.77247 11.3931 6.58989 11.3355 6.45446 11.2124L3.70446 8.71241C3.44905 8.48022 3.43023 8.08494 3.66242 7.82953C3.89461 7.57412 4.28989 7.55529 4.5453 7.78749L6.75292 9.79441L10.6018 3.90792C10.7907 3.61902 11.178 3.53795 11.4669 3.72684Z"
+                  fill="currentColor"
+                  fillRule="evenodd"
+                />
+              </svg>
+            </span>
+          </button>
+          <input
+            aria-hidden={true}
+            defaultChecked={true}
+            disabled={false}
+            name="root"
+            required={false}
+            style={
+              {
+                "margin": 0,
+                "opacity": 0,
+                "pointerEvents": "none",
+                "position": "absolute",
+                "transform": "translateX(-100%)",
+              }
+            }
+            tabIndex={-1}
+            type="checkbox"
+            value="on"
+          />
+          <label
+            className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
+            data-slot="label"
+            htmlFor="root-0"
+            onMouseDown={[Function]}
+          >
+            option1
+          </label>
+        </div>
+        <div
+          className="flex items-center gap-2"
+        >
+          <button
+            aria-checked={false}
+            aria-describedby="root__error root__description root__help"
+            aria-required={false}
+            autoFocus={false}
+            className="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+            data-slot="checkbox"
+            data-state="unchecked"
+            disabled={false}
+            id="root-1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            role="checkbox"
+            type="button"
+            value="on"
+          />
+          <input
+            aria-hidden={true}
+            defaultChecked={false}
+            disabled={false}
+            name="root"
+            required={false}
+            style={
+              {
+                "margin": 0,
+                "opacity": 0,
+                "pointerEvents": "none",
+                "position": "absolute",
+                "transform": "translateX(-100%)",
+              }
+            }
+            tabIndex={-1}
+            type="checkbox"
+            value="on"
+          />
+          <label
+            className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
+            data-slot="label"
+            htmlFor="root-1"
+            onMouseDown={[Function]}
+          >
+            option2
+          </label>
+        </div>
+        <div
+          className="flex items-center gap-2"
+        >
+          <button
+            aria-checked={false}
+            aria-describedby="root__error root__description root__help"
+            aria-required={false}
+            autoFocus={false}
+            className="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+            data-slot="checkbox"
+            data-state="unchecked"
+            disabled={false}
+            id="root-2"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            role="checkbox"
+            type="button"
+            value="on"
+          />
+          <input
+            aria-hidden={true}
+            defaultChecked={false}
+            disabled={false}
+            name="root"
+            required={false}
+            style={
+              {
+                "margin": 0,
+                "opacity": 0,
+                "pointerEvents": "none",
+                "position": "absolute",
+                "transform": "translateX(-100%)",
+              }
+            }
+            tabIndex={-1}
+            type="checkbox"
+            value="on"
+          />
+          <label
+            className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
+            data-slot="label"
+            htmlFor="root-2"
+            onMouseDown={[Function]}
+          >
+            option3
+          </label>
+        </div>
+      </div>
+      <span
+        className="text-xs font-medium text-muted-foreground"
+      >
+        <div>
+          <div
+            className="text-sm text-muted-foreground"
+            id="root__description"
+          >
+            A group of checkboxes
+          </div>
+        </div>
+      </span>
+      <span
+        className="text-xs font-medium text-muted-foreground"
+        id="root__help"
+      >
+        Select all that apply
+      </span>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
+      data-slot="button"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields checkboxes widget with required field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      >
+        Required Checkbox Group
+      </label>
+      <div
+        className="flex flex-col gap-2"
+      >
+        <div
+          className="flex items-center gap-2"
+        >
+          <button
+            aria-checked={false}
+            aria-describedby="root__error root__description root__help"
+            aria-required={false}
+            autoFocus={false}
+            className="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+            data-slot="checkbox"
+            data-state="unchecked"
+            disabled={false}
+            id="root-0"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            role="checkbox"
+            type="button"
+            value="on"
+          />
+          <input
+            aria-hidden={true}
+            defaultChecked={false}
+            disabled={false}
+            name="root"
+            required={false}
+            style={
+              {
+                "margin": 0,
+                "opacity": 0,
+                "pointerEvents": "none",
+                "position": "absolute",
+                "transform": "translateX(-100%)",
+              }
+            }
+            tabIndex={-1}
+            type="checkbox"
+            value="on"
+          />
+          <label
+            className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
+            data-slot="label"
+            htmlFor="root-0"
+            onMouseDown={[Function]}
+          >
+            red
+          </label>
+        </div>
+        <div
+          className="flex items-center gap-2"
+        >
+          <button
+            aria-checked={false}
+            aria-describedby="root__error root__description root__help"
+            aria-required={false}
+            autoFocus={false}
+            className="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+            data-slot="checkbox"
+            data-state="unchecked"
+            disabled={false}
+            id="root-1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            role="checkbox"
+            type="button"
+            value="on"
+          />
+          <input
+            aria-hidden={true}
+            defaultChecked={false}
+            disabled={false}
+            name="root"
+            required={false}
+            style={
+              {
+                "margin": 0,
+                "opacity": 0,
+                "pointerEvents": "none",
+                "position": "absolute",
+                "transform": "translateX(-100%)",
+              }
+            }
+            tabIndex={-1}
+            type="checkbox"
+            value="on"
+          />
+          <label
+            className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
+            data-slot="label"
+            htmlFor="root-1"
+            onMouseDown={[Function]}
+          >
+            green
+          </label>
+        </div>
+        <div
+          className="flex items-center gap-2"
+        >
+          <button
+            aria-checked={false}
+            aria-describedby="root__error root__description root__help"
+            aria-required={false}
+            autoFocus={false}
+            className="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+            data-slot="checkbox"
+            data-state="unchecked"
+            disabled={false}
+            id="root-2"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            role="checkbox"
+            type="button"
+            value="on"
+          />
+          <input
+            aria-hidden={true}
+            defaultChecked={false}
+            disabled={false}
+            name="root"
+            required={false}
+            style={
+              {
+                "margin": 0,
+                "opacity": 0,
+                "pointerEvents": "none",
+                "position": "absolute",
+                "transform": "translateX(-100%)",
+              }
+            }
+            tabIndex={-1}
+            type="checkbox"
+            value="on"
+          />
+          <label
+            className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
+            data-slot="label"
+            htmlFor="root-2"
+            onMouseDown={[Function]}
+          >
+            blue
+          </label>
+        </div>
+      </div>
+      <span
+        className="text-xs font-medium text-muted-foreground"
+      >
+        <div>
+          <div
+            className="text-sm text-muted-foreground"
+            id="root__description"
+          >
+            At least one option must be selected
+          </div>
+        </div>
+      </span>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
+      data-slot="button"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields field with description 1`] = `
 <form
   className="rjsf"

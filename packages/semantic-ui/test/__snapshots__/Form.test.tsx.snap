@@ -3195,6 +3195,294 @@ exports[`single fields checkboxes field 1`] = `
 </form>
 `;
 
+exports[`single fields checkboxes widget with custom options and labels 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <h5
+        className="ui dividing header"
+        id="root__title"
+      >
+        Checkbox Group
+      </h5>
+      <div
+        className="inline fields"
+        id="root"
+        name="root"
+      >
+        <div
+          className="field"
+        >
+          <div
+            className="ui checked checkbox"
+            inverted="false"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={true}
+              className="hidden"
+              disabled={false}
+              id="root-0"
+              name="root"
+              readOnly={true}
+              tabIndex={0}
+              type="checkbox"
+            />
+            <label
+              htmlFor="root-0"
+            >
+              option1
+            </label>
+          </div>
+        </div>
+        <div
+          className="field"
+        >
+          <div
+            className="ui checkbox"
+            inverted="false"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              className="hidden"
+              disabled={false}
+              id="root-1"
+              name="root"
+              readOnly={true}
+              tabIndex={0}
+              type="checkbox"
+            />
+            <label
+              htmlFor="root-1"
+            >
+              option2
+            </label>
+          </div>
+        </div>
+        <div
+          className="field"
+        >
+          <div
+            className="ui checkbox"
+            inverted="false"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              className="hidden"
+              disabled={false}
+              id="root-2"
+              name="root"
+              readOnly={true}
+              tabIndex={0}
+              type="checkbox"
+            />
+            <label
+              htmlFor="root-2"
+            >
+              option3
+            </label>
+          </div>
+        </div>
+      </div>
+      <p
+        className="sui-description"
+        id="root__description"
+      >
+        A group of checkboxes
+      </p>
+      <div
+        className="ui mini info message"
+        id="root__help"
+      >
+        <div
+          className="content"
+        >
+          <p>
+            Select all that apply
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`single fields checkboxes widget with required field 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <h5
+        className="ui dividing header"
+        id="root__title"
+      >
+        Required Checkbox Group
+      </h5>
+      <div
+        className="grouped fields"
+        id="root"
+        name="root"
+      >
+        <div
+          className="field"
+        >
+          <div
+            className="ui checkbox"
+            inverted="false"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              className="hidden"
+              disabled={false}
+              id="root-0"
+              name="root"
+              readOnly={true}
+              tabIndex={0}
+              type="checkbox"
+            />
+            <label
+              htmlFor="root-0"
+            >
+              red
+            </label>
+          </div>
+        </div>
+        <div
+          className="field"
+        >
+          <div
+            className="ui checkbox"
+            inverted="false"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              className="hidden"
+              disabled={false}
+              id="root-1"
+              name="root"
+              readOnly={true}
+              tabIndex={0}
+              type="checkbox"
+            />
+            <label
+              htmlFor="root-1"
+            >
+              green
+            </label>
+          </div>
+        </div>
+        <div
+          className="field"
+        >
+          <div
+            className="ui checkbox"
+            inverted="false"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              className="hidden"
+              disabled={false}
+              id="root-2"
+              name="root"
+              readOnly={true}
+              tabIndex={0}
+              type="checkbox"
+            />
+            <label
+              htmlFor="root-2"
+            >
+              blue
+            </label>
+          </div>
+        </div>
+      </div>
+      <p
+        className="sui-description"
+        id="root__description"
+      >
+        At least one option must be selected
+      </p>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
 exports[`single fields field with description 1`] = `
 <form
   className="ui form rjsf"

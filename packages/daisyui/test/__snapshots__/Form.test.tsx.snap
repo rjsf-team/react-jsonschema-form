@@ -4625,6 +4625,254 @@ exports[`single fields checkboxes field 1`] = `
 </form>
 `;
 
+exports[`single fields checkboxes widget with custom options and labels 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      className="field-template mb-3 rjsf-field rjsf-field-array"
+      disabled={false}
+    >
+      <label
+        className="label"
+        htmlFor="root"
+      >
+        <span
+          className="label-text font-medium"
+        >
+          Checkbox Group
+        </span>
+      </label>
+      <div
+        className="form-control"
+      >
+        <div
+          className="flex flex-col gap-2 mt-1"
+        >
+          <label
+            className="flex items-center cursor-pointer gap-2"
+          >
+            <input
+              checked={true}
+              className="checkbox"
+              data-index={0}
+              disabled={false}
+              id="root-option1"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              type="checkbox"
+            />
+            <span
+              className="label-text"
+            >
+              option1
+            </span>
+          </label>
+          <label
+            className="flex items-center cursor-pointer gap-2"
+          >
+            <input
+              checked={false}
+              className="checkbox"
+              data-index={1}
+              disabled={false}
+              id="root-option2"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              type="checkbox"
+            />
+            <span
+              className="label-text"
+            >
+              option2
+            </span>
+          </label>
+          <label
+            className="flex items-center cursor-pointer gap-2"
+          >
+            <input
+              checked={false}
+              className="checkbox"
+              data-index={2}
+              disabled={false}
+              id="root-option3"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              type="checkbox"
+            />
+            <span
+              className="label-text"
+            >
+              option3
+            </span>
+          </label>
+        </div>
+      </div>
+      <div
+        className="rjsf-field-error-template text-red-600"
+      >
+        <ul
+          className="list-disc list-inside"
+        />
+      </div>
+      <div
+        className="rjsf-field-help-template text-gray-500 text-sm"
+      >
+        <div>
+          Select all that apply
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary btn-primary-content "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields checkboxes widget with required field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      className="field-template mb-3 rjsf-field rjsf-field-array"
+      disabled={false}
+    >
+      <label
+        className="label"
+        htmlFor="root"
+      >
+        <span
+          className="label-text font-medium"
+        >
+          Required Checkbox Group
+        </span>
+      </label>
+      <div
+        className="form-control"
+      >
+        <div
+          className="flex flex-col gap-2 mt-1"
+        >
+          <label
+            className="flex items-center cursor-pointer gap-2"
+          >
+            <input
+              checked={false}
+              className="checkbox"
+              data-index={0}
+              disabled={false}
+              id="root-red"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              type="checkbox"
+            />
+            <span
+              className="label-text"
+            >
+              red
+            </span>
+          </label>
+          <label
+            className="flex items-center cursor-pointer gap-2"
+          >
+            <input
+              checked={false}
+              className="checkbox"
+              data-index={1}
+              disabled={false}
+              id="root-green"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              type="checkbox"
+            />
+            <span
+              className="label-text"
+            >
+              green
+            </span>
+          </label>
+          <label
+            className="flex items-center cursor-pointer gap-2"
+          >
+            <input
+              checked={false}
+              className="checkbox"
+              data-index={2}
+              disabled={false}
+              id="root-blue"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              type="checkbox"
+            />
+            <span
+              className="label-text"
+            >
+              blue
+            </span>
+          </label>
+        </div>
+      </div>
+      <div
+        className="rjsf-field-error-template text-red-600"
+      >
+        <ul
+          className="list-disc list-inside"
+        />
+      </div>
+      <div
+        className="rjsf-field-help-template text-gray-500 text-sm"
+      >
+        <div />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary btn-primary-content "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields field with description 1`] = `
 <form
   className="rjsf"
