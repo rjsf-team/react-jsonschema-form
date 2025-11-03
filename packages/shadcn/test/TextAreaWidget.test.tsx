@@ -1,21 +1,22 @@
+import { render } from '@testing-library/react';
+
 import TextareaWidget from '../src/TextareaWidget';
 import { makeWidgetMockProps } from './helpers/createMocks';
-import renderer from 'react-test-renderer';
 
 describe('TextareaWidget', () => {
   test('simple without errors', () => {
-    const tree = renderer.create(<TextareaWidget {...makeWidgetMockProps({})} />).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { asFragment } = render(<TextareaWidget {...makeWidgetMockProps({})} />);
+    expect(asFragment()).toMatchSnapshot();
   });
   test('simple with errors', () => {
-    const tree = renderer
-      .create(<TextareaWidget {...makeWidgetMockProps({ rawErrors: ['Invalid 1', 'Invalid 2'] })} />)
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const { asFragment } = render(
+      <TextareaWidget {...makeWidgetMockProps({ rawErrors: ['Invalid 1', 'Invalid 2'] })} />,
+    );
+    expect(asFragment()).toMatchSnapshot();
   });
 
   test('simple without required', () => {
-    const tree = renderer.create(<TextareaWidget {...makeWidgetMockProps({ required: false })} />).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { asFragment } = render(<TextareaWidget {...makeWidgetMockProps({ required: false })} />);
+    expect(asFragment()).toMatchSnapshot();
   });
 });

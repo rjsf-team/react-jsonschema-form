@@ -1,4 +1,3 @@
-import '@testing-library/jest-dom';
 import html from 'html';
 import { setImmediate } from 'timers';
 

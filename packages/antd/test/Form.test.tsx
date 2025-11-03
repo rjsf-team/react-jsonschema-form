@@ -1,7 +1,7 @@
-import renderer from 'react-test-renderer';
 import validator from '@rjsf/validator-ajv8';
 import { RJSFSchema } from '@rjsf/utils';
 import { formTests } from '@rjsf/snapshot-tests';
+import { render } from '@testing-library/react';
 
 import '../__mocks__/matchMedia.mock';
 import Form from '../src';
@@ -21,7 +21,7 @@ describe('antd specific tests', () => {
       },
     };
     const formContext = { descriptionLocation: 'tooltip' };
-    const tree = renderer.create(<Form schema={schema} validator={validator} formContext={formContext} />).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { asFragment } = render(<Form schema={schema} validator={validator} formContext={formContext} />);
+    expect(asFragment()).toMatchSnapshot();
   });
 });

@@ -1,406 +1,280 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`RatingWidget renders in disabled state 1`] = `
-<div
-  className="form-control w-full"
->
+<DocumentFragment>
   <div
-    className="rating gap-1 "
+    class="form-control w-full"
   >
-    <input
-      aria-label="0 stars"
-      autoFocus={true}
-      checked={false}
-      className="mask mask-star-2 bg-orange-400"
-      disabled={true}
-      name="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="radio"
-      value={0}
-    />
-    <input
-      aria-label="1 star"
-      autoFocus={false}
-      checked={false}
-      className="mask mask-star-2 bg-orange-400"
-      disabled={true}
-      name="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="radio"
-      value={1}
-    />
-    <input
-      aria-label="2 stars"
-      autoFocus={false}
-      checked={false}
-      className="mask mask-star-2 bg-orange-400"
-      disabled={true}
-      name="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="radio"
-      value={2}
-    />
-    <input
-      aria-label="3 stars"
-      autoFocus={false}
-      checked={true}
-      className="mask mask-star-2 bg-orange-400"
-      disabled={true}
-      name="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="radio"
-      value={3}
-    />
-    <input
-      aria-label="4 stars"
-      autoFocus={false}
-      checked={false}
-      className="mask mask-star-2 bg-orange-400"
-      disabled={true}
-      name="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="radio"
-      value={4}
-    />
+    <div
+      class="rating gap-1 "
+    >
+      <input
+        aria-label="0 stars"
+        class="mask mask-star-2 bg-orange-400"
+        disabled=""
+        name="test-id"
+        required=""
+        type="radio"
+        value="0"
+      />
+      <input
+        aria-label="1 star"
+        class="mask mask-star-2 bg-orange-400"
+        disabled=""
+        name="test-id"
+        required=""
+        type="radio"
+        value="1"
+      />
+      <input
+        aria-label="2 stars"
+        class="mask mask-star-2 bg-orange-400"
+        disabled=""
+        name="test-id"
+        required=""
+        type="radio"
+        value="2"
+      />
+      <input
+        aria-label="3 stars"
+        checked=""
+        class="mask mask-star-2 bg-orange-400"
+        disabled=""
+        name="test-id"
+        required=""
+        type="radio"
+        value="3"
+      />
+      <input
+        aria-label="4 stars"
+        class="mask mask-star-2 bg-orange-400"
+        disabled=""
+        name="test-id"
+        required=""
+        type="radio"
+        value="4"
+      />
+    </div>
   </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`RatingWidget renders in readonly state 1`] = `
-<div
-  className="form-control w-full"
->
+<DocumentFragment>
   <div
-    className="rating gap-1 "
+    class="form-control w-full"
   >
-    <input
-      aria-label="0 stars"
-      autoFocus={true}
-      checked={false}
-      className="mask mask-star-2 bg-orange-400"
-      disabled={true}
-      name="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="radio"
-      value={0}
-    />
-    <input
-      aria-label="1 star"
-      autoFocus={false}
-      checked={false}
-      className="mask mask-star-2 bg-orange-400"
-      disabled={true}
-      name="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="radio"
-      value={1}
-    />
-    <input
-      aria-label="2 stars"
-      autoFocus={false}
-      checked={false}
-      className="mask mask-star-2 bg-orange-400"
-      disabled={true}
-      name="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="radio"
-      value={2}
-    />
-    <input
-      aria-label="3 stars"
-      autoFocus={false}
-      checked={true}
-      className="mask mask-star-2 bg-orange-400"
-      disabled={true}
-      name="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="radio"
-      value={3}
-    />
-    <input
-      aria-label="4 stars"
-      autoFocus={false}
-      checked={false}
-      className="mask mask-star-2 bg-orange-400"
-      disabled={true}
-      name="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="radio"
-      value={4}
-    />
+    <div
+      class="rating gap-1 "
+    >
+      <input
+        aria-label="0 stars"
+        class="mask mask-star-2 bg-orange-400"
+        disabled=""
+        name="test-id"
+        required=""
+        type="radio"
+        value="0"
+      />
+      <input
+        aria-label="1 star"
+        class="mask mask-star-2 bg-orange-400"
+        disabled=""
+        name="test-id"
+        required=""
+        type="radio"
+        value="1"
+      />
+      <input
+        aria-label="2 stars"
+        class="mask mask-star-2 bg-orange-400"
+        disabled=""
+        name="test-id"
+        required=""
+        type="radio"
+        value="2"
+      />
+      <input
+        aria-label="3 stars"
+        checked=""
+        class="mask mask-star-2 bg-orange-400"
+        disabled=""
+        name="test-id"
+        required=""
+        type="radio"
+        value="3"
+      />
+      <input
+        aria-label="4 stars"
+        class="mask mask-star-2 bg-orange-400"
+        disabled=""
+        name="test-id"
+        required=""
+        type="radio"
+        value="4"
+      />
+    </div>
   </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`RatingWidget renders with default props (value=0) 1`] = `
-<div
-  className="form-control w-full"
->
+<DocumentFragment>
   <div
-    className="rating gap-1 "
+    class="form-control w-full"
   >
-    <input
-      aria-label="0 stars"
-      autoFocus={true}
-      checked={true}
-      className="mask mask-star-2 bg-orange-400"
-      disabled={false}
-      name="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="radio"
-      value={0}
-    />
-    <input
-      aria-label="1 star"
-      autoFocus={false}
-      checked={false}
-      className="mask mask-star-2 bg-orange-400"
-      disabled={false}
-      name="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="radio"
-      value={1}
-    />
-    <input
-      aria-label="2 stars"
-      autoFocus={false}
-      checked={false}
-      className="mask mask-star-2 bg-orange-400"
-      disabled={false}
-      name="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="radio"
-      value={2}
-    />
-    <input
-      aria-label="3 stars"
-      autoFocus={false}
-      checked={false}
-      className="mask mask-star-2 bg-orange-400"
-      disabled={false}
-      name="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="radio"
-      value={3}
-    />
-    <input
-      aria-label="4 stars"
-      autoFocus={false}
-      checked={false}
-      className="mask mask-star-2 bg-orange-400"
-      disabled={false}
-      name="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="radio"
-      value={4}
-    />
+    <div
+      class="rating gap-1 "
+    >
+      <input
+        aria-label="0 stars"
+        checked=""
+        class="mask mask-star-2 bg-orange-400"
+        name="test-id"
+        required=""
+        type="radio"
+        value="0"
+      />
+      <input
+        aria-label="1 star"
+        class="mask mask-star-2 bg-orange-400"
+        name="test-id"
+        required=""
+        type="radio"
+        value="1"
+      />
+      <input
+        aria-label="2 stars"
+        class="mask mask-star-2 bg-orange-400"
+        name="test-id"
+        required=""
+        type="radio"
+        value="2"
+      />
+      <input
+        aria-label="3 stars"
+        class="mask mask-star-2 bg-orange-400"
+        name="test-id"
+        required=""
+        type="radio"
+        value="3"
+      />
+      <input
+        aria-label="4 stars"
+        class="mask mask-star-2 bg-orange-400"
+        name="test-id"
+        required=""
+        type="radio"
+        value="4"
+      />
+    </div>
   </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`RatingWidget renders with maximum stars from schema 1`] = `
-<div
-  className="form-control w-full"
->
+<DocumentFragment>
   <div
-    className="rating gap-1 "
+    class="form-control w-full"
   >
-    <input
-      aria-label="0 stars"
-      autoFocus={true}
-      checked={false}
-      className="mask mask-star-2 bg-orange-400"
-      disabled={false}
-      name="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="radio"
-      value={0}
-    />
-    <input
-      aria-label="1 star"
-      autoFocus={false}
-      checked={false}
-      className="mask mask-star-2 bg-orange-400"
-      disabled={false}
-      name="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="radio"
-      value={1}
-    />
-    <input
-      aria-label="2 stars"
-      autoFocus={false}
-      checked={false}
-      className="mask mask-star-2 bg-orange-400"
-      disabled={false}
-      name="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="radio"
-      value={2}
-    />
-    <input
-      aria-label="3 stars"
-      autoFocus={false}
-      checked={false}
-      className="mask mask-star-2 bg-orange-400"
-      disabled={false}
-      name="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="radio"
-      value={3}
-    />
-    <input
-      aria-label="4 stars"
-      autoFocus={false}
-      checked={false}
-      className="mask mask-star-2 bg-orange-400"
-      disabled={false}
-      name="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="radio"
-      value={4}
-    />
+    <div
+      class="rating gap-1 "
+    >
+      <input
+        aria-label="0 stars"
+        class="mask mask-star-2 bg-orange-400"
+        name="test-id"
+        required=""
+        type="radio"
+        value="0"
+      />
+      <input
+        aria-label="1 star"
+        class="mask mask-star-2 bg-orange-400"
+        name="test-id"
+        required=""
+        type="radio"
+        value="1"
+      />
+      <input
+        aria-label="2 stars"
+        class="mask mask-star-2 bg-orange-400"
+        name="test-id"
+        required=""
+        type="radio"
+        value="2"
+      />
+      <input
+        aria-label="3 stars"
+        class="mask mask-star-2 bg-orange-400"
+        name="test-id"
+        required=""
+        type="radio"
+        value="3"
+      />
+      <input
+        aria-label="4 stars"
+        class="mask mask-star-2 bg-orange-400"
+        name="test-id"
+        required=""
+        type="radio"
+        value="4"
+      />
+    </div>
   </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`RatingWidget renders with value=3 1`] = `
-<div
-  className="form-control w-full"
->
+<DocumentFragment>
   <div
-    className="rating gap-1 "
+    class="form-control w-full"
   >
-    <input
-      aria-label="0 stars"
-      autoFocus={true}
-      checked={false}
-      className="mask mask-star-2 bg-orange-400"
-      disabled={false}
-      name="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="radio"
-      value={0}
-    />
-    <input
-      aria-label="1 star"
-      autoFocus={false}
-      checked={false}
-      className="mask mask-star-2 bg-orange-400"
-      disabled={false}
-      name="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="radio"
-      value={1}
-    />
-    <input
-      aria-label="2 stars"
-      autoFocus={false}
-      checked={false}
-      className="mask mask-star-2 bg-orange-400"
-      disabled={false}
-      name="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="radio"
-      value={2}
-    />
-    <input
-      aria-label="3 stars"
-      autoFocus={false}
-      checked={true}
-      className="mask mask-star-2 bg-orange-400"
-      disabled={false}
-      name="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="radio"
-      value={3}
-    />
-    <input
-      aria-label="4 stars"
-      autoFocus={false}
-      checked={false}
-      className="mask mask-star-2 bg-orange-400"
-      disabled={false}
-      name="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="radio"
-      value={4}
-    />
+    <div
+      class="rating gap-1 "
+    >
+      <input
+        aria-label="0 stars"
+        class="mask mask-star-2 bg-orange-400"
+        name="test-id"
+        required=""
+        type="radio"
+        value="0"
+      />
+      <input
+        aria-label="1 star"
+        class="mask mask-star-2 bg-orange-400"
+        name="test-id"
+        required=""
+        type="radio"
+        value="1"
+      />
+      <input
+        aria-label="2 stars"
+        class="mask mask-star-2 bg-orange-400"
+        name="test-id"
+        required=""
+        type="radio"
+        value="2"
+      />
+      <input
+        aria-label="3 stars"
+        checked=""
+        class="mask mask-star-2 bg-orange-400"
+        name="test-id"
+        required=""
+        type="radio"
+        value="3"
+      />
+      <input
+        aria-label="4 stars"
+        class="mask mask-star-2 bg-orange-400"
+        name="test-id"
+        required=""
+        type="radio"
+        value="4"
+      />
+    </div>
   </div>
-</div>
+</DocumentFragment>
 `;

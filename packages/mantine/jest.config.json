@@ -1,5 +1,6 @@
 {
   "rootDir": "./",
+  "setupFilesAfterEnv": ["../../testing/testSetup.ts"],
   "snapshotSerializers": ["<rootDir>/test/cleanSnapshotSerializer.ts"],
   "verbose": true,
   "testEnvironment": "jsdom",

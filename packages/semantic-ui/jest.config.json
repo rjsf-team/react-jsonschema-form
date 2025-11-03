@@ -1,5 +1,6 @@
 {
   "verbose": true,
+  "setupFilesAfterEnv": ["../../testing/testSetup.ts"],
   "testEnvironment": "jsdom",
   "transformIgnorePatterns": ["/node_modules/(?!deep-freeze-es6)"]
 }

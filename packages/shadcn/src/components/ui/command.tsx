@@ -12,18 +12,21 @@ import { cn } from '../../lib/utils';
  * @returns A command menu component
  */
 
-function Command({ className, ...props }: ComponentProps<typeof CommandPrimitive>) {
-  return (
-    <CommandPrimitive
-      data-slot='command'
-      className={cn(
-        'bg-popover text-popover-foreground flex h-full w-full flex-col overflow-hidden rounded-md',
-        className,
-      )}
-      {...props}
-    />
-  );
-}
+const Command = forwardRef<ElementRef<typeof CommandPrimitive>, ComponentPropsWithoutRef<typeof CommandPrimitive>>(
+  ({ className, ...props }, ref) => {
+    return (
+      <CommandPrimitive
+        ref={ref}
+        data-slot='command'
+        className={cn(
+          'bg-popover text-popover-foreground flex h-full w-full flex-col overflow-hidden rounded-md',
+          className,
+        )}
+        {...props}
+      />
+    );
+  },
+);
 
 /**
  * A dialog wrapper for the Command component to display it in a modal

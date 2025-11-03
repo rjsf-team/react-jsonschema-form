@@ -1,5 +1,5 @@
 import { forwardRef, memo, ForwardedRef } from 'react';
-import TestRenderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 
 import { FieldPathId, Registry, RJSFSchema, WidgetProps, getWidget, Widget } from '../src';
 
@@ -111,52 +111,32 @@ describe('getWidget()', () => {
   it('should return widget if in registered widgets', () => {
     const registry = { blabla: TestWidget };
     const TheWidget = getWidget(schema, 'blabla', registry);
-    const rendered = TestRenderer.create(<TheWidget {...widgetProps} />);
-    expect(rendered.toJSON()).toEqual({
-      children: ['test'],
-      props: {},
-      type: 'div',
-    });
+    const { asFragment } = render(<TheWidget {...widgetProps} />);
+    expect(asFragment()).toMatchSnapshot();
   });
 
   it('should return `SelectWidget` for boolean type', () => {
     const registry = { SelectWidget: TestWidgetDefaults };
     const TheWidget = getWidget(subschema, 'select', registry);
-    const rendered = TestRenderer.create(<TheWidget {...widgetProps} options={{ color: 'green' }} />);
-    expect(rendered.toJSON()).toEqual({
-      children: ['test'],
-      props: { color: 'green' },
-      type: 'div',
-    });
+    const { asFragment } = render(<TheWidget {...widgetProps} options={{ color: 'green' }} />);
+    expect(asFragment()).toMatchSnapshot();
   });
 
   it('should not fail on correct component', () => {
     const TheWidget = getWidget(schema, TestWidgetDefaults);
-    const rendered = TestRenderer.create(<TheWidget {...widgetProps} />);
-    expect(rendered.toJSON()).toEqual({
-      children: ['test'],
-      props: { color: 'yellow' },
-      type: 'div',
-    });
+    const { asFragment } = render(<TheWidget {...widgetProps} />);
+    expect(asFragment()).toMatchSnapshot();
   });
 
   it('should not fail on forwarded ref component', () => {
     const TheWidget = getWidget(schema, TestRefWidget);
-    const rendered = TestRenderer.create(<TheWidget {...widgetProps} />);
-    expect(rendered.toJSON()).toEqual({
-      children: ['test'],
-      props: { id: 'test-id' },
-      type: 'span',
-    });
+    const { asFragment } = render(<TheWidget {...widgetProps} />);
+    expect(asFragment()).toMatchSnapshot();
   });
 
   it('should not fail on memo component', () => {
     const TheWidget = memo(TestWidget);
-    const rendered = TestRenderer.create(<TheWidget {...widgetProps} />);
-    expect(rendered.toJSON()).toEqual({
-      children: ['test'],
-      props: {},
-      type: 'div',
-    });
+    const { asFragment } = render(<TheWidget {...widgetProps} />);
+    expect(asFragment()).toMatchSnapshot();
   });
 });

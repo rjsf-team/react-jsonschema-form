@@ -2560,150 +2560,121 @@ exports[`nameGenerator dotNotationNameGenerator simple fields 1`] = `
 `;
 
 exports[`semantic-ui specific tests field with special semantic options 1`] = `
-<form
-  className="ui form rjsf"
-  noValidate={false}
-  onSubmit={[Function]}
->
-  <div
-    className="rjsf-field rjsf-field-object"
+<DocumentFragment>
+  <form
+    class="ui form rjsf"
   >
     <div
-      className="grouped equal width fields"
+      class="rjsf-field rjsf-field-object"
     >
-      <h5
-        className="ui dividing header"
-        id="root__title"
-      >
-        A registration form
-      </h5>
-      <p
-        className="sui-description"
-        id="root__description"
-      >
-        A simple test theme form example.
-      </p>
       <div
-        className="rjsf-field rjsf-field-string"
+        class="grouped equal width fields"
       >
+        <h5
+          class="ui dividing header"
+          id="root__title"
+        >
+          A registration form
+        </h5>
+        <p
+          class="sui-description"
+          id="root__description"
+        >
+          A simple test theme form example.
+        </p>
         <div
-          className="grouped equal width fields"
+          class="rjsf-field rjsf-field-string"
         >
           <div
-            className="required field"
+            class="grouped equal width fields"
           >
-            <label
-              htmlFor="root_test"
-            >
-              test
-            </label>
             <div
-              aria-describedby="root_test__error root_test__description root_test__help"
-              aria-disabled={false}
-              aria-expanded={false}
-              aria-multiselectable={false}
-              autoFocus={false}
-              className="ui fluid selection scrolling dropdown"
-              id="root_test"
-              inverted="false"
-              name="root_test"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onClick={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onMouseDown={[Function]}
-              readOnly={false}
-              required={true}
-              role="listbox"
-              tabIndex={0}
+              class="required field"
             >
+              <label
+                for="root_test"
+              >
+                test
+              </label>
               <div
-                aria-atomic={true}
-                aria-live="polite"
-                className="divider text"
-                role="alert"
-              />
-              <i
-                aria-hidden="true"
-                className="dropdown icon"
-                onClick={[Function]}
-              />
-              <div
-                className="menu transition"
+                aria-describedby="root_test__error root_test__description root_test__help"
+                aria-disabled="false"
+                aria-expanded="false"
+                aria-multiselectable="false"
+                class="ui fluid selection scrolling dropdown"
+                id="root_test"
+                inverted="false"
+                name="root_test"
+                required=""
+                role="listbox"
+                tabindex="0"
               >
                 <div
-                  aria-checked={true}
-                  aria-selected={true}
-                  className="active selected item"
-                  onClick={[Function]}
-                  role="option"
-                  style={
-                    {
-                      "pointerEvents": "all",
-                    }
-                  }
-                >
-                  <span
-                    className="text"
-                  />
-                </div>
+                  aria-atomic="true"
+                  aria-live="polite"
+                  class="divider text"
+                  role="alert"
+                />
+                <i
+                  aria-hidden="true"
+                  class="dropdown icon"
+                />
                 <div
-                  aria-checked={false}
-                  aria-disabled={false}
-                  aria-selected={false}
-                  className="item"
-                  onClick={[Function]}
-                  role="option"
-                  style={
-                    {
-                      "pointerEvents": "all",
-                    }
-                  }
+                  class="menu transition"
                 >
-                  <span
-                    className="text"
+                  <div
+                    aria-checked="true"
+                    aria-selected="true"
+                    class="active selected item"
+                    role="option"
+                    style="pointer-events: all;"
                   >
-                    1
-                  </span>
-                </div>
-                <div
-                  aria-checked={false}
-                  aria-disabled={false}
-                  aria-selected={false}
-                  className="item"
-                  onClick={[Function]}
-                  role="option"
-                  style={
-                    {
-                      "pointerEvents": "all",
-                    }
-                  }
-                >
-                  <span
-                    className="text"
+                    <span
+                      class="text"
+                    />
+                  </div>
+                  <div
+                    aria-checked="false"
+                    aria-disabled="false"
+                    aria-selected="false"
+                    class="item"
+                    role="option"
+                    style="pointer-events: all;"
                   >
-                    2
-                  </span>
-                </div>
-                <div
-                  aria-checked={false}
-                  aria-disabled={false}
-                  aria-selected={false}
-                  className="item"
-                  onClick={[Function]}
-                  role="option"
-                  style={
-                    {
-                      "pointerEvents": "all",
-                    }
-                  }
-                >
-                  <span
-                    className="text"
+                    <span
+                      class="text"
+                    >
+                      1
+                    </span>
+                  </div>
+                  <div
+                    aria-checked="false"
+                    aria-disabled="false"
+                    aria-selected="false"
+                    class="item"
+                    role="option"
+                    style="pointer-events: all;"
                   >
-                    3
-                  </span>
+                    <span
+                      class="text"
+                    >
+                      2
+                    </span>
+                  </div>
+                  <div
+                    aria-checked="false"
+                    aria-disabled="false"
+                    aria-selected="false"
+                    class="item"
+                    role="option"
+                    style="pointer-events: all;"
+                  >
+                    <span
+                      class="text"
+                    >
+                      3
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2711,15 +2682,14 @@ exports[`semantic-ui specific tests field with special semantic options 1`] = `
         </div>
       </div>
     </div>
-  </div>
-  <button
-    className="ui primary button"
-    onClick={[Function]}
-    type="submit"
-  >
-    Submit
-  </button>
-</form>
+    <button
+      class="ui primary button"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</DocumentFragment>
 `;
 
 exports[`single fields checkbox field 1`] = `

@@ -60,6 +60,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/shadcn
 
 - Updated `FieldTemplate` to skip label and description rendering for checkbox widgets, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
+- Updated the `Command` component to properly handle `forwardRef`
 
 ## @rjsf/utils
 
@@ -68,6 +69,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Updated the `OptionsDrawer` of the playground to add `idPrefix` and `idSeparator` fields
+- Updated test files to switch to using the React Testing library instead of `react-test-renderer`, updating all snapshots accordingly
 
 # 6.0.1
 

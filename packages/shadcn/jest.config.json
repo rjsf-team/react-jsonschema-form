@@ -1,5 +1,6 @@
 {
   "testEnvironment": "jsdom",
+  "setupFilesAfterEnv": ["../../testing/testSetup.ts"],
   "transform": {
     "^.+\\.(ts|tsx|js|jsx)$": ["babel-jest", { "configFile": "./babel.config.json" }]
   },
