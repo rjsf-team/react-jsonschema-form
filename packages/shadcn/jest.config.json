@@ -1,6 +1,6 @@
 {
   "testEnvironment": "jsdom",
-  "setupFilesAfterEnv": ["../../testing/testSetup.ts"],
+  "setupFilesAfterEnv": ["../../testing/testSetup.ts", "<rootDir>/test/setup-jest-env.ts"],
   "transform": {
     "^.+\\.(ts|tsx|js|jsx)$": ["babel-jest", { "configFile": "./babel.config.json" }]
   },
