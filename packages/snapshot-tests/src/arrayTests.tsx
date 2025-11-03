@@ -1,5 +1,5 @@
 import { ComponentType } from 'react';
-import renderer, { TestRendererOptions } from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import { FormProps } from '@rjsf/core';
 import { RJSFSchema, ErrorSchema, UiSchema, bracketNameGenerator, dotNotationNameGenerator } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -37,25 +37,19 @@ const labelsOff: UiSchema = {
   'ui:globalOptions': { label: false },
 };
 
-export const CHECKBOXES_CUSTOMIZE = 'checkboxes';
-
-export type ArrayRenderCustomOptions = {
-  checkboxes?: TestRendererOptions;
-};
-
-export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayRenderCustomOptions = {}) {
+export function arrayTests(Form: ComponentType<FormProps>) {
   describe('array fields', () => {
-    test('array', () => {
+    test('array', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         items: {
           type: 'string',
         },
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('fixed array', () => {
+    test('fixed array', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         items: [
@@ -67,10 +61,10 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
           },
         ],
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('checkboxes', () => {
+    test('checkboxes', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         items: {
@@ -79,10 +73,10 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
         },
         uniqueItems: true,
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />, customOptions.checkboxes).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('array icons', () => {
+    test('array icons', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         items: {
@@ -92,12 +86,12 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
       const uiSchema: UiSchema = {
         'ui:options': { copyable: true },
       };
-      const tree = renderer
-        .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} formData={['a', 'b']} />)
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} formData={['a', 'b']} />,
+      );
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('has errors', () => {
+    test('has errors', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -110,10 +104,10 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
       const extraErrors = {
         name: { __errors: errors },
       } as unknown as ErrorSchema;
-      const tree = renderer.create(<Form schema={schema} validator={validator} extraErrors={extraErrors} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} extraErrors={extraErrors} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('no errors', () => {
+    test('no errors', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -122,10 +116,10 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
           },
         },
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('empty errors array', () => {
+    test('empty errors array', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -138,12 +132,12 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
       const extraErrors = {
         name: { __errors: errors },
       } as unknown as ErrorSchema;
-      const tree = renderer.create(<Form schema={schema} validator={validator} extraErrors={extraErrors} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} extraErrors={extraErrors} />);
+      expect(asFragment()).toMatchSnapshot();
     });
   });
   describe('with title and description', () => {
-    test('array', () => {
+    test('array', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         ...titleAndDesc,
@@ -152,10 +146,10 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
           type: 'string',
         },
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('fixed array', () => {
+    test('fixed array', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         ...titleAndDesc,
@@ -170,10 +164,10 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
           },
         ],
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('checkboxes', () => {
+    test('checkboxes', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         ...titleAndDesc,
@@ -184,10 +178,10 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
         },
         uniqueItems: true,
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />, customOptions.checkboxes).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('array icons', () => {
+    test('array icons', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         ...titleAndDesc,
@@ -199,24 +193,24 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
       const uiSchema: UiSchema = {
         'ui:options': { copyable: true },
       };
-      const tree = renderer
-        .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} formData={['a', 'b']} />)
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} formData={['a', 'b']} />,
+      );
+      expect(asFragment()).toMatchSnapshot();
     });
   });
   describe('with title and description from uiSchema', () => {
-    test('array', () => {
+    test('array', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         items: {
           type: 'string',
         },
       };
-      const tree = renderer.create(<Form schema={schema} uiSchema={uiTitleAndDesc} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} uiSchema={uiTitleAndDesc} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('fixed array', () => {
+    test('fixed array', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         items: [
@@ -228,10 +222,10 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
           },
         ],
       };
-      const tree = renderer.create(<Form schema={schema} uiSchema={uiTitleAndDesc} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} uiSchema={uiTitleAndDesc} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('checkboxes', () => {
+    test('checkboxes', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         items: {
@@ -240,12 +234,10 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
         },
         uniqueItems: true,
       };
-      const tree = renderer
-        .create(<Form schema={schema} uiSchema={uiTitleAndDesc} validator={validator} />, customOptions.checkboxes)
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} uiSchema={uiTitleAndDesc} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('array icons', () => {
+    test('array icons', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         items: {
@@ -256,14 +248,14 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
         'ui:copyable': true,
         ...uiTitleAndDesc,
       };
-      const tree = renderer
-        .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} formData={['a', 'b']} />)
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} formData={['a', 'b']} />,
+      );
+      expect(asFragment()).toMatchSnapshot();
     });
   });
   describe('with title and description from both', () => {
-    test('array', () => {
+    test('array', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         ...titleAndDesc,
@@ -271,10 +263,10 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
           type: 'string',
         },
       };
-      const tree = renderer.create(<Form schema={schema} uiSchema={uiTitleAndDesc} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} uiSchema={uiTitleAndDesc} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('fixed array', () => {
+    test('fixed array', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         ...titleAndDesc,
@@ -287,10 +279,10 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
           },
         ],
       };
-      const tree = renderer.create(<Form schema={schema} uiSchema={uiTitleAndDesc} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} uiSchema={uiTitleAndDesc} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('checkboxes', () => {
+    test('checkboxes', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         ...titleAndDesc,
@@ -300,12 +292,10 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
         },
         uniqueItems: true,
       };
-      const tree = renderer
-        .create(<Form schema={schema} uiSchema={uiTitleAndDesc} validator={validator} />, customOptions.checkboxes)
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} uiSchema={uiTitleAndDesc} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('array icons', () => {
+    test('array icons', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         ...titleAndDesc,
@@ -317,14 +307,14 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
         'ui:copyable': true,
         ...uiTitleAndDesc,
       };
-      const tree = renderer
-        .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} formData={['a', 'b']} />)
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} formData={['a', 'b']} />,
+      );
+      expect(asFragment()).toMatchSnapshot();
     });
   });
   describe('with title and description with global label off', () => {
-    test('array', () => {
+    test('array', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         ...titleAndDesc,
@@ -333,10 +323,10 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
           type: 'string',
         },
       };
-      const tree = renderer.create(<Form schema={schema} uiSchema={labelsOff} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} uiSchema={labelsOff} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('fixed array', () => {
+    test('fixed array', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         ...titleAndDesc,
@@ -351,10 +341,10 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
           },
         ],
       };
-      const tree = renderer.create(<Form schema={schema} uiSchema={labelsOff} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} uiSchema={labelsOff} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('checkboxes', () => {
+    test('checkboxes', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         ...titleAndDesc,
@@ -365,12 +355,10 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
         },
         uniqueItems: true,
       };
-      const tree = renderer
-        .create(<Form schema={schema} uiSchema={labelsOff} validator={validator} />, customOptions.checkboxes)
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} uiSchema={labelsOff} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('array icons', () => {
+    test('array icons', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         ...titleAndDesc,
@@ -383,16 +371,16 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
         ...labelsOff,
         'ui:options': { copyable: true },
       };
-      const tree = renderer
-        .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} formData={['a', 'b']} />)
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} formData={['a', 'b']} />,
+      );
+      expect(asFragment()).toMatchSnapshot();
     });
   });
 
   describe('nameGenerator', () => {
     describe('bracketNameGenerator', () => {
-      test('array of strings', () => {
+      test('array of strings', async () => {
         const schema: RJSFSchema = {
           type: 'array',
           items: {
@@ -400,15 +388,13 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
           },
         };
         const formData = ['foo', 'bar'];
-        const tree = renderer
-          .create(
-            <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
-          )
-          .toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(
+          <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
+        );
+        expect(asFragment()).toMatchSnapshot();
       });
 
-      test('array of objects', () => {
+      test('array of objects', async () => {
         const schema: RJSFSchema = {
           type: 'array',
           items: {
@@ -423,29 +409,25 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
           { name: 'Item 1', value: 10 },
           { name: 'Item 2', value: 20 },
         ];
-        const tree = renderer
-          .create(
-            <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
-          )
-          .toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(
+          <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
+        );
+        expect(asFragment()).toMatchSnapshot();
       });
 
-      test('fixed array', () => {
+      test('fixed array', async () => {
         const schema: RJSFSchema = {
           type: 'array',
           items: [{ type: 'string' }, { type: 'number' }, { type: 'boolean' }],
         };
         const formData = ['text', 42, true];
-        const tree = renderer
-          .create(
-            <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
-          )
-          .toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(
+          <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
+        );
+        expect(asFragment()).toMatchSnapshot();
       });
 
-      test('nested arrays', () => {
+      test('nested arrays', async () => {
         const schema: RJSFSchema = {
           type: 'array',
           items: {
@@ -459,15 +441,13 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
           ['a', 'b'],
           ['c', 'd'],
         ];
-        const tree = renderer
-          .create(
-            <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
-          )
-          .toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(
+          <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
+        );
+        expect(asFragment()).toMatchSnapshot();
       });
 
-      test('checkboxes with nameGenerator', () => {
+      test('checkboxes with nameGenerator', async () => {
         const schema: RJSFSchema = {
           type: 'array',
           items: {
@@ -476,18 +456,15 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
           },
           uniqueItems: true,
         };
-        const tree = renderer
-          .create(
-            <Form schema={schema} validator={validator} nameGenerator={bracketNameGenerator} />,
-            customOptions.checkboxes,
-          )
-          .toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(
+          <Form schema={schema} validator={validator} nameGenerator={bracketNameGenerator} />,
+        );
+        expect(asFragment()).toMatchSnapshot();
       });
     });
 
     describe('dotNotationNameGenerator', () => {
-      test('array of strings', () => {
+      test('array of strings', async () => {
         const schema: RJSFSchema = {
           type: 'array',
           items: {
@@ -495,15 +472,13 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
           },
         };
         const formData = ['foo', 'bar'];
-        const tree = renderer
-          .create(
-            <Form schema={schema} formData={formData} validator={validator} nameGenerator={dotNotationNameGenerator} />,
-          )
-          .toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(
+          <Form schema={schema} formData={formData} validator={validator} nameGenerator={dotNotationNameGenerator} />,
+        );
+        expect(asFragment()).toMatchSnapshot();
       });
 
-      test('array of objects', () => {
+      test('array of objects', async () => {
         const schema: RJSFSchema = {
           type: 'array',
           items: {
@@ -518,12 +493,10 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
           { name: 'Item 1', value: 10 },
           { name: 'Item 2', value: 20 },
         ];
-        const tree = renderer
-          .create(
-            <Form schema={schema} formData={formData} validator={validator} nameGenerator={dotNotationNameGenerator} />,
-          )
-          .toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(
+          <Form schema={schema} formData={formData} validator={validator} nameGenerator={dotNotationNameGenerator} />,
+        );
+        expect(asFragment()).toMatchSnapshot();
       });
     });
   });

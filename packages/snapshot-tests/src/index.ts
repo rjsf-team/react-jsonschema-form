@@ -1,4 +1,4 @@
-export { type ArrayRenderCustomOptions, CHECKBOXES_CUSTOMIZE, arrayTests } from './arrayTests';
+export { arrayTests } from './arrayTests';
 
 export {
   type FormRenderCustomOptions,
