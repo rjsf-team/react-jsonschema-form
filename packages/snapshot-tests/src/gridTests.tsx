@@ -1,5 +1,5 @@
 import { ComponentType } from 'react';
-import renderer, { TestRendererOptions } from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import { LOOKUP_MAP_NAME, RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { FormProps } from '@rjsf/core';
@@ -314,11 +314,7 @@ const FORM_CONTEXT = {
   },
 };
 
-export function gridTests(
-  Form: ComponentType<FormProps>,
-  customOptions: GridRenderCustomOptions,
-  formOptions?: TestRendererOptions,
-) {
+export function gridTests(Form: ComponentType<FormProps>, customOptions: GridRenderCustomOptions) {
   describe('Two even column grid', () => {
     let uiSchema: UiSchema;
     beforeAll(() => {
@@ -382,14 +378,11 @@ export function gridTests(
         },
       };
     });
-    test('renders person and address in two columns, no employment', () => {
-      const tree = renderer
-        .create(
-          <Form schema={schema} uiSchema={uiSchema} validator={validator} formContext={FORM_CONTEXT} />,
-          formOptions,
-        )
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+    test('renders person and address in two columns, no employment', async () => {
+      const { asFragment } = render(
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} formContext={FORM_CONTEXT} />,
+      );
+      expect(asFragment()).toMatchSnapshot();
     });
   });
   describe('Three even column grid', () => {
@@ -448,87 +441,72 @@ export function gridTests(
         },
       };
     });
-    test('renders person and address in three columns, no employment', () => {
-      const tree = renderer
-        .create(
-          <Form schema={schema} uiSchema={uiSchema} validator={validator} formContext={FORM_CONTEXT} />,
-          formOptions,
-        )
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+    test('renders person and address in three columns, no employment', async () => {
+      const { asFragment } = render(
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} formContext={FORM_CONTEXT} />,
+      );
+      expect(asFragment()).toMatchSnapshot();
     });
   });
   describe('Complex grid', () => {
-    test('renders person and address and employment in a complex grid, no form data', () => {
-      const tree = renderer
-        .create(
-          <Form
-            schema={schema}
-            uiSchema={customOptions.ComplexUiSchema}
-            validator={validator}
-            formContext={FORM_CONTEXT}
-          />,
-          formOptions,
-        )
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+    test('renders person and address and employment in a complex grid, no form data', async () => {
+      const { asFragment } = render(
+        <Form
+          schema={schema}
+          uiSchema={customOptions.ComplexUiSchema}
+          validator={validator}
+          formContext={FORM_CONTEXT}
+        />,
+      );
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('renders person and address and employment in a complex grid, job_type = company', () => {
-      const tree = renderer
-        .create(
-          <Form
-            schema={schema}
-            uiSchema={customOptions.ComplexUiSchema}
-            validator={validator}
-            formData={{
-              employment: {
-                job_type: 'company',
-              },
-            }}
-            formContext={FORM_CONTEXT}
-          />,
-          formOptions,
-        )
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+    test('renders person and address and employment in a complex grid, job_type = company', async () => {
+      const { asFragment } = render(
+        <Form
+          schema={schema}
+          uiSchema={customOptions.ComplexUiSchema}
+          validator={validator}
+          formData={{
+            employment: {
+              job_type: 'company',
+            },
+          }}
+          formContext={FORM_CONTEXT}
+        />,
+      );
+      expect(asFragment!()).toMatchSnapshot();
     });
-    test('renders person and address and employment in a complex grid, job_type = education', () => {
-      const tree = renderer
-        .create(
-          <Form
-            schema={schema}
-            uiSchema={customOptions.ComplexUiSchema}
-            validator={validator}
-            formData={{
-              employment: {
-                job_type: 'education',
-              },
-            }}
-            formContext={FORM_CONTEXT}
-          />,
-          formOptions,
-        )
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+    test('renders person and address and employment in a complex grid, job_type = education', async () => {
+      const { asFragment } = render(
+        <Form
+          schema={schema}
+          uiSchema={customOptions.ComplexUiSchema}
+          validator={validator}
+          formData={{
+            employment: {
+              job_type: 'education',
+            },
+          }}
+          formContext={FORM_CONTEXT}
+        />,
+      );
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('renders person and address and employment in a complex grid, job_type = other', () => {
-      const tree = renderer
-        .create(
-          <Form
-            schema={schema}
-            uiSchema={customOptions.ComplexUiSchema}
-            validator={validator}
-            formData={{
-              employment: {
-                job_type: 'other',
-              },
-            }}
-            formContext={FORM_CONTEXT}
-          />,
-          formOptions,
-        )
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+    test('renders person and address and employment in a complex grid, job_type = other', async () => {
+      const { asFragment } = render(
+        <Form
+          schema={schema}
+          uiSchema={customOptions.ComplexUiSchema}
+          validator={validator}
+          formData={{
+            employment: {
+              job_type: 'other',
+            },
+          }}
+          formContext={FORM_CONTEXT}
+        />,
+      );
+      expect(asFragment()).toMatchSnapshot();
     });
   });
 }
