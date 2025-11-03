@@ -1,3 +1,8 @@
 {
+  "setupFilesAfterEnv": ["../../testing/testSetup.ts"],
+  "testEnvironment": "jsdom",
+  "testEnvironmentOptions": {
+    "browsers": ["chrome", "firefox", "safari"]
+  },
   "transformIgnorePatterns": ["/node_modules/(?!deep-freeze-es6)"]
 }

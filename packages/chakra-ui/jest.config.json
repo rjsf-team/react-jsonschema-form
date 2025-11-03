@@ -4,6 +4,6 @@
   "testEnvironmentOptions": {
     "browsers": ["chrome", "firefox", "safari"]
   },
-  "setupFilesAfterEnv": ["./test/setup-jest-env.js"],
+  "setupFilesAfterEnv": ["./test/setup-jest-env.js", "../../testing/testSetup.ts"],
   "transformIgnorePatterns": ["/node_modules/(?!deep-freeze-es6)"]
 }

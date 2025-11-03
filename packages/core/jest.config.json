@@ -1,7 +1,7 @@
 {
   "verbose": true,
   "testEnvironment": "jsdom",
-  "setupFilesAfterEnv": ["./test/setup-jest-env.js"],
+  "setupFilesAfterEnv": ["./test/setup-jest-env.js", "../../testing/testSetup.ts"],
   "testMatch": ["**/test/**/*.test.[jt]s?(x)"],
   "transformIgnorePatterns": ["/node_modules/(?!deep-freeze-es6)"]
 }

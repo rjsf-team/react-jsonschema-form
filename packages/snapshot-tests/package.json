@@ -30,8 +30,9 @@
   "peerDependencies": {
     "@rjsf/core": "^6.x",
     "@rjsf/utils": "^6.x",
-    "react": ">=18",
-    "react-test-renderer": "^18.2.0"
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "react": ">=18"
   },
   "devDependencies": {
     "@rjsf/core": "^6.x",

@@ -1,4 +1,3 @@
-import renderer from 'react-test-renderer';
 import { render, fireEvent } from '@testing-library/react';
 
 import ToggleWidget from '../src/widgets/ToggleWidget/ToggleWidget';
@@ -6,34 +5,30 @@ import { makeWidgetMockProps } from './helpers/createMocks';
 
 describe('ToggleWidget', () => {
   test('renders correctly', () => {
-    const tree = renderer.create(<ToggleWidget {...makeWidgetMockProps()} />).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { asFragment } = render(<ToggleWidget {...makeWidgetMockProps()} />);
+    expect(asFragment()).toMatchSnapshot();
   });
 
   test('renders with custom label', () => {
-    const tree = renderer
-      .create(
-        <ToggleWidget
-          {...makeWidgetMockProps({
-            label: 'Custom Toggle Label',
-          })}
-        />,
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const { asFragment } = render(
+      <ToggleWidget
+        {...makeWidgetMockProps({
+          label: 'Custom Toggle Label',
+        })}
+      />,
+    );
+    expect(asFragment()).toMatchSnapshot();
   });
 
   test('renders disabled state correctly', () => {
-    const tree = renderer
-      .create(
-        <ToggleWidget
-          {...makeWidgetMockProps({
-            disabled: true,
-          })}
-        />,
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const { asFragment } = render(
+      <ToggleWidget
+        {...makeWidgetMockProps({
+          disabled: true,
+        })}
+      />,
+    );
+    expect(asFragment()).toMatchSnapshot();
   });
 
   test('calls onChange when toggled', () => {

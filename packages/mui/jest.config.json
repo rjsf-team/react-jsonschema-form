@@ -1,4 +1,5 @@
 {
+  "setupFilesAfterEnv": ["../../testing/testSetup.ts"],
   "snapshotSerializers": ["@emotion/jest/serializer"],
   "testEnvironment": "jsdom",
   "testEnvironmentOptions": {

@@ -1,7 +1,7 @@
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import renderer from 'react-test-renderer';
 import { formTests } from '@rjsf/snapshot-tests';
+import { render } from '@testing-library/react';
 
 import Form from '../src';
 
@@ -36,7 +36,7 @@ describe('semantic-ui specific tests', () => {
         },
       },
     };
-    const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { asFragment } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+    expect(asFragment()).toMatchSnapshot();
   });
 });

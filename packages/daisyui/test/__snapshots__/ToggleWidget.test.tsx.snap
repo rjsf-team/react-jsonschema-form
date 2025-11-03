@@ -1,79 +1,71 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ToggleWidget renders correctly 1`] = `
-<div
-  className="form-control"
->
-  <label
-    className="cursor-pointer label my-auto"
+<DocumentFragment>
+  <div
+    class="form-control"
   >
-    <input
-      autoFocus={true}
-      checked="test-value"
-      className="toggle "
-      disabled={false}
-      id="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="checkbox"
-    />
-    <span
-      className="label-text"
-    />
-  </label>
-</div>
+    <label
+      class="cursor-pointer label my-auto"
+    >
+      <input
+        checked=""
+        class="toggle "
+        id="test-id"
+        required=""
+        type="checkbox"
+      />
+      <span
+        class="label-text"
+      />
+    </label>
+  </div>
+</DocumentFragment>
 `;
 
 exports[`ToggleWidget renders disabled state correctly 1`] = `
-<div
-  className="form-control"
->
-  <label
-    className="cursor-pointer label my-auto"
+<DocumentFragment>
+  <div
+    class="form-control"
   >
-    <input
-      autoFocus={true}
-      checked="test-value"
-      className="toggle "
-      disabled={true}
-      id="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="checkbox"
-    />
-    <span
-      className="label-text"
-    />
-  </label>
-</div>
+    <label
+      class="cursor-pointer label my-auto"
+    >
+      <input
+        checked=""
+        class="toggle "
+        disabled=""
+        id="test-id"
+        required=""
+        type="checkbox"
+      />
+      <span
+        class="label-text"
+      />
+    </label>
+  </div>
+</DocumentFragment>
 `;
 
 exports[`ToggleWidget renders with custom label 1`] = `
-<div
-  className="form-control"
->
-  <label
-    className="cursor-pointer label my-auto"
+<DocumentFragment>
+  <div
+    class="form-control"
   >
-    <input
-      autoFocus={true}
-      checked="test-value"
-      className="toggle "
-      disabled={false}
-      id="test-id"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={true}
-      type="checkbox"
-    />
-    <span
-      className="label-text"
-    />
-  </label>
-</div>
+    <label
+      class="cursor-pointer label my-auto"
+    >
+      <input
+        checked=""
+        class="toggle "
+        id="test-id"
+        required=""
+        type="checkbox"
+      />
+      <span
+        class="label-text"
+      />
+    </label>
+  </div>
+</DocumentFragment>
 `;

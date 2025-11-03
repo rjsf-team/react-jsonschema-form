@@ -1,4 +1,3 @@
-import renderer from 'react-test-renderer';
 import { render, fireEvent } from '@testing-library/react';
 
 import RatingWidget from '../src/widgets/RatingWidget/RatingWidget';
@@ -6,74 +5,64 @@ import { makeWidgetMockProps } from './helpers/createMocks';
 
 describe('RatingWidget', () => {
   test('renders with default props (value=0)', () => {
-    const tree = renderer
-      .create(
-        <RatingWidget
-          {...makeWidgetMockProps({
-            value: 0,
-          })}
-        />,
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const { asFragment } = render(
+      <RatingWidget
+        {...makeWidgetMockProps({
+          value: 0,
+        })}
+      />,
+    );
+    expect(asFragment()).toMatchSnapshot();
   });
 
   test('renders with value=3', () => {
-    const tree = renderer
-      .create(
-        <RatingWidget
-          {...makeWidgetMockProps({
-            value: 3,
-          })}
-        />,
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const { asFragment } = render(
+      <RatingWidget
+        {...makeWidgetMockProps({
+          value: 3,
+        })}
+      />,
+    );
+    expect(asFragment()).toMatchSnapshot();
   });
 
   test('renders with maximum stars from schema', () => {
-    const tree = renderer
-      .create(
-        <RatingWidget
-          {...makeWidgetMockProps({
-            schema: {
-              type: 'integer',
-              maximum: 10,
-            },
-            value: 7,
-          })}
-        />,
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const { asFragment } = render(
+      <RatingWidget
+        {...makeWidgetMockProps({
+          schema: {
+            type: 'integer',
+            maximum: 10,
+          },
+          value: 7,
+        })}
+      />,
+    );
+    expect(asFragment()).toMatchSnapshot();
   });
 
   test('renders in disabled state', () => {
-    const tree = renderer
-      .create(
-        <RatingWidget
-          {...makeWidgetMockProps({
-            disabled: true,
-            value: 3,
-          })}
-        />,
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const { asFragment } = render(
+      <RatingWidget
+        {...makeWidgetMockProps({
+          disabled: true,
+          value: 3,
+        })}
+      />,
+    );
+    expect(asFragment()).toMatchSnapshot();
   });
 
   test('renders in readonly state', () => {
-    const tree = renderer
-      .create(
-        <RatingWidget
-          {...makeWidgetMockProps({
-            readonly: true,
-            value: 3,
-          })}
-        />,
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const { asFragment } = render(
+      <RatingWidget
+        {...makeWidgetMockProps({
+          readonly: true,
+          value: 3,
+        })}
+      />,
+    );
+    expect(asFragment()).toMatchSnapshot();
   });
 
   test('calls onChange when rating is changed', () => {

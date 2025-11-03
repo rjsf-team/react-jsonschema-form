@@ -1,5 +1,6 @@
 {
   "rootDir": "./",
+  "setupFilesAfterEnv": ["../../testing/testSetup.ts", "<rootDir>/test/setup-jest-env.ts"],
   "snapshotSerializers": ["<rootDir>/test/cleanSnapshotSerializer.ts"],
   "verbose": true,
   "testEnvironment": "jsdom",

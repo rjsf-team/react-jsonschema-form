@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`getWidget() should not fail on correct component 1`] = `
+<DocumentFragment>
+  <div
+    color="yellow"
+  >
+    test
+  </div>
+</DocumentFragment>
+`;
+
+exports[`getWidget() should not fail on forwarded ref component 1`] = `
+<DocumentFragment>
+  <span
+    id="test-id"
+  >
+    test
+  </span>
+</DocumentFragment>
+`;
+
+exports[`getWidget() should not fail on memo component 1`] = `
+<DocumentFragment>
+  <div>
+    test
+  </div>
+</DocumentFragment>
+`;
+
+exports[`getWidget() should return \`SelectWidget\` for boolean type 1`] = `
+<DocumentFragment>
+  <div
+    color="green"
+  >
+    test
+  </div>
+</DocumentFragment>
+`;
+
+exports[`getWidget() should return widget if in registered widgets 1`] = `
+<DocumentFragment>
+  <div>
+    test
+  </div>
+</DocumentFragment>
+`;
