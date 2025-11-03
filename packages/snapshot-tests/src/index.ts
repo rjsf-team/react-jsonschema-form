@@ -1,12 +1,6 @@
 export { arrayTests } from './arrayTests';
 
-export {
-  type FormRenderCustomOptions,
-  formTests,
-  SELECT_CUSTOMIZE,
-  SLIDER_CUSTOMIZE,
-  TEXTAREA_CUSTOMIZE,
-} from './formTests';
+export { formTests } from './formTests';
 
 export { objectTests } from './objectTests';
 

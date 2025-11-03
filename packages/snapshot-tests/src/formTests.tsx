@@ -1,5 +1,5 @@
 import { ComponentType } from 'react';
-import renderer, { TestRendererOptions } from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import { FormProps } from '@rjsf/core';
 import {
   RJSFSchema,
@@ -17,163 +17,151 @@ jest.mock('@rjsf/utils', () => ({
   getTestIds: jest.fn(() => ({})),
 }));
 
-export const SELECT_CUSTOMIZE = 'selectMulti';
-export const SLIDER_CUSTOMIZE = 'slider';
-export const TEXTAREA_CUSTOMIZE = 'textarea';
-
-export type FormRenderCustomOptions = {
-  selectMulti?: TestRendererOptions;
-  slider?: TestRendererOptions;
-  textarea?: TestRendererOptions;
-};
-
-export function formTests(Form: ComponentType<FormProps>, customOptions: FormRenderCustomOptions = {}) {
+export function formTests(Form: ComponentType<FormProps>) {
   describe('single fields', () => {
     describe('string field', () => {
-      test('regular', () => {
+      test('regular', async () => {
         const schema: RJSFSchema = {
           type: 'string',
         };
-        const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(<Form schema={schema} validator={validator} />);
+        expect(asFragment()).toMatchSnapshot();
       });
-      test('format email', () => {
+      test('format email', async () => {
         const schema: RJSFSchema = {
           type: 'string',
           format: 'email',
         };
-        const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(<Form schema={schema} validator={validator} />);
+        expect(asFragment()).toMatchSnapshot();
       });
-      test('format uri', () => {
+      test('format uri', async () => {
         const schema: RJSFSchema = {
           type: 'string',
           format: 'uri',
         };
-        const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(<Form schema={schema} validator={validator} />);
+        expect(asFragment()).toMatchSnapshot();
       });
-      test('format data-url', () => {
+      test('format data-url', async () => {
         const schema: RJSFSchema = {
           type: 'string',
           format: 'data-url',
         };
-        const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(<Form schema={schema} validator={validator} />);
+        expect(asFragment()).toMatchSnapshot();
       });
     });
-    test('string field with placeholder', () => {
+    test('string field with placeholder', async () => {
       const schema: RJSFSchema = {
         type: 'string',
       };
       const uiSchema = {
         'ui:placeholder': 'placeholder',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('number field', () => {
+    test('number field', async () => {
       const schema: RJSFSchema = {
         type: 'number',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('number field 0', () => {
+    test('number field 0', async () => {
       const schema: RJSFSchema = {
         type: 'number',
       };
       const formData = 0;
-      const tree = renderer.create(<Form schema={schema} validator={validator} formData={formData} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} formData={formData} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('null field', () => {
+    test('null field', async () => {
       const schema: RJSFSchema = {
         type: 'null',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('unsupported field', () => {
+    test('unsupported field', async () => {
       const schema: RJSFSchema = {
         type: undefined,
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('format color', () => {
+    test('format color', async () => {
       const schema: RJSFSchema = {
         type: 'string',
         format: 'color',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('format date', () => {
+    test('format date', async () => {
       const schema: RJSFSchema = {
         type: 'string',
         format: 'date',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('format datetime', () => {
+    test('format datetime', async () => {
       const schema: RJSFSchema = {
         type: 'string',
         format: 'datetime',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('format time', () => {
+    test('format time', async () => {
       const schema: RJSFSchema = {
         type: 'string',
         format: 'time',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('password field', () => {
+    test('password field', async () => {
       const schema: RJSFSchema = {
         type: 'string',
       };
       const uiSchema = {
         'ui:widget': 'password',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('up/down field', () => {
+    test('up/down field', async () => {
       const schema: RJSFSchema = {
         type: 'number',
       };
       const uiSchema = {
         'ui:widget': 'updown',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('textarea field', () => {
+    test('textarea field', async () => {
       const schema: RJSFSchema = {
         type: 'string',
       };
       const uiSchema = {
         'ui:widget': 'textarea',
       };
-      const tree = renderer
-        .create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />, customOptions[TEXTAREA_CUSTOMIZE])
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('select field', () => {
+    test('select field', async () => {
       const schema: RJSFSchema = {
         type: 'string',
         enum: ['foo', 'bar'],
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('select field multiple choice', () => {
+    test('select field multiple choice', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         items: {
@@ -182,12 +170,10 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
         },
         uniqueItems: true,
       };
-      const tree = renderer
-        .create(<Form schema={schema} validator={validator} />, customOptions[SELECT_CUSTOMIZE])
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('select field multiple choice with labels', () => {
+    test('select field multiple choice with labels', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         items: {
@@ -209,12 +195,10 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
         },
         uniqueItems: true,
       };
-      const tree = renderer
-        .create(<Form schema={schema} validator={validator} />, customOptions[SELECT_CUSTOMIZE])
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('select field single choice enumDisabled', () => {
+    test('select field single choice enumDisabled', async () => {
       const schema: RJSFSchema = {
         type: 'string',
         enum: ['foo', 'bar'],
@@ -222,10 +206,10 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
       const uiSchema = {
         'ui:enumDisabled': ['bar'],
       };
-      const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('select field single choice enumDisabled using radio widget', () => {
+    test('select field single choice enumDisabled using radio widget', async () => {
       const schema: RJSFSchema = {
         type: 'string',
         enum: ['foo', 'bar'],
@@ -234,10 +218,10 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
         'ui:widget': 'radio',
         'ui:enumDisabled': ['bar'],
       };
-      const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('select field single choice uiSchema disabled using radio widget', () => {
+    test('select field single choice uiSchema disabled using radio widget', async () => {
       const schema: RJSFSchema = {
         type: 'string',
         enum: ['foo', 'bar'],
@@ -246,10 +230,10 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
         'ui:widget': 'radio',
         'ui:disabled': true,
       };
-      const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('select field single choice form disabled using radio widget', () => {
+    test('select field single choice form disabled using radio widget', async () => {
       const schema: RJSFSchema = {
         type: 'string',
         enum: ['foo', 'bar'],
@@ -257,12 +241,10 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
       const uiSchema = {
         'ui:widget': 'radio',
       };
-      const tree = renderer
-        .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} disabled />)
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} disabled />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('select field multiple choice enumDisabled', () => {
+    test('select field multiple choice enumDisabled', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         items: {
@@ -274,12 +256,10 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
       const uiSchema = {
         'ui:enumDisabled': ['bar'],
       };
-      const tree = renderer
-        .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, customOptions[SELECT_CUSTOMIZE])
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('select field multiple choice enumDisabled using checkboxes', () => {
+    test('select field multiple choice enumDisabled using checkboxes', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         items: {
@@ -292,10 +272,8 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
         'ui:widget': 'checkboxes',
         'ui:enumDisabled': ['bar'],
       };
-      const tree = renderer
-        .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, customOptions[SELECT_CUSTOMIZE])
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
     test('checkboxes widget with custom options and labels', () => {
       const schema: RJSFSchema = {
@@ -317,13 +295,10 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
       };
       const formData = ['option1'];
 
-      const tree = renderer
-        .create(
-          <Form schema={schema} uiSchema={uiSchema} formData={formData} validator={validator} />,
-          customOptions[SELECT_CUSTOMIZE],
-        )
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(
+        <Form schema={schema} uiSchema={uiSchema} formData={formData} validator={validator} />,
+      );
+      expect(asFragment()).toMatchSnapshot();
     });
     test('checkboxes widget with required field', () => {
       const schema: RJSFSchema = {
@@ -341,19 +316,19 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
         'ui:widget': 'checkboxes',
       };
 
-      const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('select field single choice formData', () => {
+    test('select field single choice formData', async () => {
       const schema: RJSFSchema = {
         type: 'string',
         enum: ['foo', 'bar'],
       };
       const formData = 'bar';
-      const tree = renderer.create(<Form schema={schema} formData={formData} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} formData={formData} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('select field multiple choice formData', () => {
+    test('select field multiple choice formData', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         items: {
@@ -363,47 +338,45 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
         uniqueItems: true,
       };
       const formData = ['foo', 'bar'];
-      const tree = renderer
-        .create(<Form schema={schema} formData={formData} validator={validator} />, customOptions[SELECT_CUSTOMIZE])
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} formData={formData} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('checkbox field', () => {
+    test('checkbox field', async () => {
       const schema: RJSFSchema = {
         type: 'boolean',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('checkbox field with label', () => {
+    test('checkbox field with label', async () => {
       const schema: RJSFSchema = {
         type: 'boolean',
         title: 'test',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('checkbox field with label and description', () => {
+    test('checkbox field with label and description', async () => {
       const schema: RJSFSchema = {
         type: 'boolean',
         title: 'test',
         description: 'test description',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('checkbox field with label and rich text description', () => {
+    test('checkbox field with label and rich text description', async () => {
       const schema: RJSFSchema = {
         type: 'boolean',
         title: 'test',
         description: '**test** __description__',
       };
       const uiSchema: UiSchema = { 'ui:enableMarkdownInDescription': true };
-      const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
 
-    test('checkbox field with description in schema and FieldTemplate', () => {
+    test('checkbox field with description in schema and FieldTemplate', async () => {
       const schema: RJSFSchema = {
         type: 'boolean',
         title: 'test',
@@ -412,11 +385,11 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
       const uiSchema: UiSchema = {
         'ui:widget': 'checkbox',
       };
-      const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
 
-    test('radio widget with description in schema and FieldTemplate', () => {
+    test('radio widget with description in schema and FieldTemplate', async () => {
       const schema: RJSFSchema = {
         type: 'boolean',
         title: 'test',
@@ -425,11 +398,11 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
       const uiSchema: UiSchema = {
         'ui:widget': 'radio',
       };
-      const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
 
-    test('select widget with description in schema and FieldTemplate', () => {
+    test('select widget with description in schema and FieldTemplate', async () => {
       const schema: RJSFSchema = {
         type: 'boolean',
         title: 'test',
@@ -438,10 +411,10 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
       const uiSchema: UiSchema = {
         'ui:widget': 'select',
       };
-      const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('checkboxes field', () => {
+    test('checkboxes field', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         title: 'An enum list rendered as checkboxes',
@@ -454,20 +427,20 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
       const uiSchema = {
         'ui:widget': 'checkboxes',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('radio field', () => {
+    test('radio field', async () => {
       const schema: RJSFSchema = {
         type: 'boolean',
       };
       const uiSchema = {
         'ui:widget': 'radio',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('slider field', () => {
+    test('slider field', async () => {
       const schema: RJSFSchema = {
         type: 'integer',
         minimum: 42,
@@ -476,15 +449,10 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
       const uiSchema = {
         'ui:widget': 'range',
       };
-      const tree = renderer
-        .create(
-          <Form schema={schema} validator={validator} uiSchema={uiSchema} formData={75} />,
-          customOptions[SLIDER_CUSTOMIZE],
-        )
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} formData={75} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('hidden field', () => {
+    test('hidden field', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -498,10 +466,10 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
           'ui:widget': 'hidden',
         },
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('field with description', () => {
+    test('field with description', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -511,10 +479,10 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
           },
         },
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('field with description in uiSchema', () => {
+    test('field with description in uiSchema', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -529,10 +497,10 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
           'ui:description': 'some other description',
         },
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('field with markdown description', () => {
+    test('field with markdown description', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -545,10 +513,10 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
       const uiSchema = {
         'my-field': { 'ui:enableMarkdownInDescription': true },
       };
-      const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('field with markdown description in uiSchema', () => {
+    test('field with markdown description in uiSchema', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -564,10 +532,10 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
           'ui:enableMarkdownInDescription': true,
         },
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('title field', () => {
+    test('title field', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -582,10 +550,10 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
           'ui:title': 'Titre 2',
         },
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('hidden label', () => {
+    test('hidden label', async () => {
       const schema: RJSFSchema = {
         type: 'string',
       };
@@ -594,25 +562,25 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
           label: false,
         },
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('using custom tagName', () => {
+    test('using custom tagName', async () => {
       const schema: RJSFSchema = {
         type: 'string',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} tagName='div' />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} tagName='div' />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('schema examples', () => {
+    test('schema examples', async () => {
       const schema: RJSFSchema = {
         type: 'string',
         examples: ['Firefox', 'Chrome', 'Opera', 'Vivaldi', 'Safari'],
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(<Form schema={schema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
     });
-    test('help and error display', () => {
+    test('help and error display', async () => {
       const schema: RJSFSchema = {
         type: 'string',
       };
@@ -621,10 +589,10 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
       };
       const errors: string[] = ['an error'];
       const extraErrors = { __errors: errors } as ErrorSchema;
-      const tree = renderer
-        .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} extraErrors={extraErrors} />)
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+      const { asFragment } = render(
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} extraErrors={extraErrors} />,
+      );
+      expect(asFragment()).toMatchSnapshot();
     });
     describe('optional data controls', () => {
       let schema: RJSFSchema;
@@ -799,27 +767,27 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
           nestedArrayOptional: ['bar'],
         };
       });
-      test('does not show optional controls when not turned on in uiSchema and no formData', () => {
+      test('does not show optional controls when not turned on in uiSchema and no formData', async () => {
         const formProps: FormProps = {
           schema,
           uiSchema: {},
           validator,
           experimental_defaultFormStateBehavior,
         };
-        const tree = renderer.create(<Form {...formProps} />).toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(<Form {...formProps} />);
+        expect(asFragment()).toMatchSnapshot();
       });
-      test('shows "add" optional controls when turned on in uiSchema and no formData', () => {
+      test('shows "add" optional controls when turned on in uiSchema and no formData', async () => {
         const formProps: FormProps = {
           schema,
           uiSchema,
           validator,
           experimental_defaultFormStateBehavior,
         };
-        const tree = renderer.create(<Form {...formProps} />).toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(<Form {...formProps} />);
+        expect(asFragment()).toMatchSnapshot();
       });
-      test('shows "add" and "remove" optional controls when turned on in uiSchema and formData', () => {
+      test('shows "add" and "remove" optional controls when turned on in uiSchema and formData', async () => {
         const formProps: FormProps = {
           schema,
           uiSchema,
@@ -827,10 +795,10 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
           experimental_defaultFormStateBehavior,
           formData,
         };
-        const tree = renderer.create(<Form {...formProps} />).toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(<Form {...formProps} />);
+        expect(asFragment()).toMatchSnapshot();
       });
-      test('does not show optional controls when not turned on in uiSchema, readonly and no formData', () => {
+      test('does not show optional controls when not turned on in uiSchema, readonly and no formData', async () => {
         const formProps: FormProps = {
           schema,
           uiSchema: {},
@@ -838,10 +806,10 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
           experimental_defaultFormStateBehavior,
           readonly: true,
         };
-        const tree = renderer.create(<Form {...formProps} />).toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(<Form {...formProps} />);
+        expect(asFragment()).toMatchSnapshot();
       });
-      test('shows "add" optional controls when turned on in uiSchema, disabled and no formData', () => {
+      test('shows "add" optional controls when turned on in uiSchema, disabled and no formData', async () => {
         const formProps: FormProps = {
           schema,
           uiSchema,
@@ -849,10 +817,10 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
           experimental_defaultFormStateBehavior,
           disabled: true,
         };
-        const tree = renderer.create(<Form {...formProps} />).toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(<Form {...formProps} />);
+        expect(asFragment()).toMatchSnapshot();
       });
-      test('shows "add" and "remove" optional controls when turned on in uiSchema, readonly and formData', () => {
+      test('shows "add" and "remove" optional controls when turned on in uiSchema, readonly and formData', async () => {
         const formProps: FormProps = {
           schema,
           uiSchema,
@@ -861,15 +829,15 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
           formData,
           readonly: true,
         };
-        const tree = renderer.create(<Form {...formProps} />).toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(<Form {...formProps} />);
+        expect(asFragment()).toMatchSnapshot();
       });
     });
   });
 
   describe('nameGenerator', () => {
     describe('bracketNameGenerator', () => {
-      test('simple fields', () => {
+      test('simple fields', async () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -884,13 +852,13 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
             },
           },
         };
-        const tree = renderer
-          .create(<Form schema={schema} validator={validator} nameGenerator={bracketNameGenerator} />)
-          .toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(
+          <Form schema={schema} validator={validator} nameGenerator={bracketNameGenerator} />,
+        );
+        expect(asFragment()).toMatchSnapshot();
       });
 
-      test('nested object', () => {
+      test('nested object', async () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -918,13 +886,13 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
             },
           },
         };
-        const tree = renderer
-          .create(<Form schema={schema} validator={validator} nameGenerator={bracketNameGenerator} />)
-          .toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(
+          <Form schema={schema} validator={validator} nameGenerator={bracketNameGenerator} />,
+        );
+        expect(asFragment()).toMatchSnapshot();
       });
 
-      test('array of strings', () => {
+      test('array of strings', async () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -937,15 +905,13 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
           },
         };
         const formData = { tags: ['foo', 'bar'] };
-        const tree = renderer
-          .create(
-            <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
-          )
-          .toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(
+          <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
+        );
+        expect(asFragment()).toMatchSnapshot();
       });
 
-      test('array of objects', () => {
+      test('array of objects', async () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -971,15 +937,13 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
             { title: 'Task 2', done: true },
           ],
         };
-        const tree = renderer
-          .create(
-            <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
-          )
-          .toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(
+          <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
+        );
+        expect(asFragment()).toMatchSnapshot();
       });
 
-      test('select field with enum', () => {
+      test('select field with enum', async () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -989,13 +953,13 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
             },
           },
         };
-        const tree = renderer
-          .create(<Form schema={schema} validator={validator} nameGenerator={bracketNameGenerator} />)
-          .toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(
+          <Form schema={schema} validator={validator} nameGenerator={bracketNameGenerator} />,
+        );
+        expect(asFragment()).toMatchSnapshot();
       });
 
-      test('radio field', () => {
+      test('radio field', async () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -1010,15 +974,13 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
             'ui:widget': 'radio',
           },
         };
-        const tree = renderer
-          .create(
-            <Form schema={schema} uiSchema={uiSchema} validator={validator} nameGenerator={bracketNameGenerator} />,
-          )
-          .toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(
+          <Form schema={schema} uiSchema={uiSchema} validator={validator} nameGenerator={bracketNameGenerator} />,
+        );
+        expect(asFragment()).toMatchSnapshot();
       });
 
-      test('checkboxes field', () => {
+      test('checkboxes field', async () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -1037,15 +999,13 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
             'ui:widget': 'checkboxes',
           },
         };
-        const tree = renderer
-          .create(
-            <Form schema={schema} uiSchema={uiSchema} validator={validator} nameGenerator={bracketNameGenerator} />,
-          )
-          .toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(
+          <Form schema={schema} uiSchema={uiSchema} validator={validator} nameGenerator={bracketNameGenerator} />,
+        );
+        expect(asFragment()).toMatchSnapshot();
       });
 
-      test('textarea field', () => {
+      test('textarea field', async () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -1059,18 +1019,15 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
             'ui:widget': 'textarea',
           },
         };
-        const tree = renderer
-          .create(
-            <Form schema={schema} uiSchema={uiSchema} validator={validator} nameGenerator={bracketNameGenerator} />,
-            customOptions[TEXTAREA_CUSTOMIZE],
-          )
-          .toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(
+          <Form schema={schema} uiSchema={uiSchema} validator={validator} nameGenerator={bracketNameGenerator} />,
+        );
+        expect(asFragment()).toMatchSnapshot();
       });
     });
 
     describe('dotNotationNameGenerator', () => {
-      test('simple fields', () => {
+      test('simple fields', async () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -1085,13 +1042,13 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
             },
           },
         };
-        const tree = renderer
-          .create(<Form schema={schema} validator={validator} nameGenerator={dotNotationNameGenerator} />)
-          .toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(
+          <Form schema={schema} validator={validator} nameGenerator={dotNotationNameGenerator} />,
+        );
+        expect(asFragment()).toMatchSnapshot();
       });
 
-      test('nested object', () => {
+      test('nested object', async () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -1119,13 +1076,13 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
             },
           },
         };
-        const tree = renderer
-          .create(<Form schema={schema} validator={validator} nameGenerator={dotNotationNameGenerator} />)
-          .toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(
+          <Form schema={schema} validator={validator} nameGenerator={dotNotationNameGenerator} />,
+        );
+        expect(asFragment()).toMatchSnapshot();
       });
 
-      test('array of strings', () => {
+      test('array of strings', async () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -1138,15 +1095,13 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
           },
         };
         const formData = { tags: ['foo', 'bar'] };
-        const tree = renderer
-          .create(
-            <Form schema={schema} formData={formData} validator={validator} nameGenerator={dotNotationNameGenerator} />,
-          )
-          .toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(
+          <Form schema={schema} formData={formData} validator={validator} nameGenerator={dotNotationNameGenerator} />,
+        );
+        expect(asFragment()).toMatchSnapshot();
       });
 
-      test('array of objects', () => {
+      test('array of objects', async () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -1172,15 +1127,13 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
             { title: 'Task 2', done: true },
           ],
         };
-        const tree = renderer
-          .create(
-            <Form schema={schema} formData={formData} validator={validator} nameGenerator={dotNotationNameGenerator} />,
-          )
-          .toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(
+          <Form schema={schema} formData={formData} validator={validator} nameGenerator={dotNotationNameGenerator} />,
+        );
+        expect(asFragment()).toMatchSnapshot();
       });
 
-      test('select field with enum', () => {
+      test('select field with enum', async () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -1190,10 +1143,10 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
             },
           },
         };
-        const tree = renderer
-          .create(<Form schema={schema} validator={validator} nameGenerator={dotNotationNameGenerator} />)
-          .toJSON();
-        expect(tree).toMatchSnapshot();
+        const { asFragment } = render(
+          <Form schema={schema} validator={validator} nameGenerator={dotNotationNameGenerator} />,
+        );
+        expect(asFragment()).toMatchSnapshot();
       });
     });
   });

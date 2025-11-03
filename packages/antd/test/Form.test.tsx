@@ -5,9 +5,8 @@ import { render } from '@testing-library/react';
 
 import '../__mocks__/matchMedia.mock';
 import Form from '../src';
-import { FORM_RENDER_OPTIONS } from './snapshotConstants';
 
-formTests(Form, FORM_RENDER_OPTIONS);
+formTests(Form);
 
 describe('antd specific tests', () => {
   test('descriptionLocation tooltip in formContext', () => {
