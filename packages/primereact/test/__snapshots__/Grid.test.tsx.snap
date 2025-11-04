@@ -1,0 +1,4029 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Complex grid renders person and address and employment in a complex grid, job_type = company 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+      >
+        <div
+          style="display: grid; grid-template-columns: repeat(12, 1fr); align-items: start; gap: 16px;"
+        >
+          <div
+            style="grid-column: span 12 / span 12;"
+          >
+            <div
+              class="rjsf-field rjsf-field-object"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <div
+                  id="root_person__title"
+                >
+                  <h5
+                    style="margin: 0px; font-size: 1.2rem;"
+                  >
+                    Person Info 
+                  </h5>
+                  <div
+                    aria-orientation="horizontal"
+                    class="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+                    data-pc-name="divider"
+                    data-pc-section="root"
+                    role="separator"
+                    style="justify-content: center; margin-top: 0.5rem;"
+                  >
+                    <div
+                      class="p-divider-content"
+                      data-pc-section="content"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 4 / span 4;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_name_first"
+                >
+                  First Name *
+                </label>
+                <input
+                  aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_name_first"
+                  name="root_person_name_first"
+                  placeholder=""
+                  required=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 4 / span 4;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_name_middle"
+                >
+                  Middle 
+                </label>
+                <input
+                  aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_name_middle"
+                  name="root_person_name_middle"
+                  placeholder=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 4 / span 4;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_name_last"
+                >
+                  Last Name *
+                </label>
+                <input
+                  aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_name_last"
+                  name="root_person_name_last"
+                  placeholder=""
+                  required=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 4 / span 4;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_birth_date"
+                >
+                  Date of Birth *
+                </label>
+                <input
+                  aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_birth_date"
+                  name="root_person_birth_date"
+                  placeholder=""
+                  required=""
+                  type="date"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 8 / span 8;"
+          >
+            <div
+              class="rjsf-field rjsf-field-array"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_race"
+                >
+                  Race *
+                </label>
+                <div
+                  id="root_person_race"
+                  style="display: flex; flex-direction: column; gap: 1rem; margin-top: 0.5rem; margin-bottom: 0.5rem;"
+                >
+                  <span
+                    id="root_person_race__description"
+                  >
+                    (Check all that apply)
+                  </span>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-0"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-0"
+                    >
+                      American Indian / Alaska Native 
+                    </label>
+                  </div>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-1"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-1"
+                    >
+                      Asian 
+                    </label>
+                  </div>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-2"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-2"
+                    >
+                      Black / African American 
+                    </label>
+                  </div>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-3"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-3"
+                    >
+                      Native Hawaiian / Other Pacific Islander 
+                    </label>
+                  </div>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-4"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-4"
+                    >
+                      White 
+                    </label>
+                  </div>
+                </div>
+                <small>
+                  <span
+                    id="root_person_race__description"
+                  >
+                    (Check all that apply)
+                  </span>
+                </small>
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 6 / span 6;"
+          >
+            <div
+              style="display: grid; grid-template-columns: repeat(12, 1fr); align-items: start; gap: 16px;"
+            >
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_person_address_line_1"
+                    >
+                      Address *
+                    </label>
+                    <input
+                      aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
+                      class="p-inputtext p-component"
+                      data-pc-name="inputtext"
+                      data-pc-section="root"
+                      id="root_person_address_line_1"
+                      name="root_person_address_line_1"
+                      placeholder=""
+                      required=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_person_address_line_2"
+                    >
+                      Address 2 
+                    </label>
+                    <input
+                      aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
+                      class="p-inputtext p-component"
+                      data-pc-name="inputtext"
+                      data-pc-section="root"
+                      id="root_person_address_line_2"
+                      name="root_person_address_line_2"
+                      placeholder=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_person_address_city"
+                    >
+                      City *
+                    </label>
+                    <input
+                      aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
+                      class="p-inputtext p-component"
+                      data-pc-name="inputtext"
+                      data-pc-section="root"
+                      id="root_person_address_city"
+                      name="root_person_address_city"
+                      placeholder=""
+                      required=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 6 / span 6;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_person_address_state"
+                    >
+                      State *
+                    </label>
+                    <select
+                      aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
+                      id="root_person_address_state"
+                      name="root_person_address_state"
+                      options="[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]"
+                      placeholder=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 6 / span 6;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_person_address_postal_code"
+                    >
+                      ZIP Code *
+                    </label>
+                    <input
+                      aria-describedby="root_person_address_postal_code__error root_person_address_postal_code__description root_person_address_postal_code__help"
+                      class="p-inputtext p-component"
+                      data-pc-name="inputtext"
+                      data-pc-section="root"
+                      id="root_person_address_postal_code"
+                      name="root_person_address_postal_code"
+                      placeholder=""
+                      required=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 6 / span 6;"
+          >
+            <div
+              style="display: grid; grid-template-columns: repeat(12, 1fr); align-items: start; gap: 16px;"
+            >
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div>
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_employment"
+                    >
+                      Employment 
+                    </label>
+                    <div
+                      style="display: flex; flex-direction: row; gap: 1rem;"
+                    >
+                      <div
+                        style="display: flex; align-items: center;"
+                      >
+                        <div
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          class="p-radiobutton p-component p-highlight"
+                          data-p-checked="true"
+                          data-pc-name="radiobutton"
+                          data-pc-section="root"
+                        >
+                          <input
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            checked=""
+                            class="p-radiobutton-input"
+                            data-pc-section="input"
+                            id="root_employment-0"
+                            name="root_employment"
+                            type="radio"
+                          />
+                          <div
+                            class="p-radiobutton-box"
+                            data-pc-section="box"
+                          >
+                            <div
+                              class="p-radiobutton-icon"
+                              data-pc-section="icon"
+                            />
+                          </div>
+                        </div>
+                        <label
+                          for="root_employment-0"
+                          style="margin-left: 8px;"
+                        >
+                          Company
+                        </label>
+                      </div>
+                      <div
+                        style="display: flex; align-items: center;"
+                      >
+                        <div
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          class="p-radiobutton p-component"
+                          data-p-checked="false"
+                          data-pc-name="radiobutton"
+                          data-pc-section="root"
+                        >
+                          <input
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            class="p-radiobutton-input"
+                            data-pc-section="input"
+                            id="root_employment-1"
+                            name="root_employment"
+                            type="radio"
+                          />
+                          <div
+                            class="p-radiobutton-box"
+                            data-pc-section="box"
+                          >
+                            <div
+                              class="p-radiobutton-icon"
+                              data-pc-section="icon"
+                            />
+                          </div>
+                        </div>
+                        <label
+                          for="root_employment-1"
+                          style="margin-left: 8px;"
+                        >
+                          Education
+                        </label>
+                      </div>
+                      <div
+                        style="display: flex; align-items: center;"
+                      >
+                        <div
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          class="p-radiobutton p-component"
+                          data-p-checked="false"
+                          data-pc-name="radiobutton"
+                          data-pc-section="root"
+                        >
+                          <input
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            class="p-radiobutton-input"
+                            data-pc-section="input"
+                            id="root_employment-2"
+                            name="root_employment"
+                            type="radio"
+                          />
+                          <div
+                            class="p-radiobutton-box"
+                            data-pc-section="box"
+                          >
+                            <div
+                              class="p-radiobutton-icon"
+                              data-pc-section="icon"
+                            />
+                          </div>
+                        </div>
+                        <label
+                          for="root_employment-2"
+                          style="margin-left: 8px;"
+                        >
+                          Other
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_employment_business"
+                    >
+                      Company Name *
+                    </label>
+                    <input
+                      aria-describedby="root_employment_business__error root_employment_business__description root_employment_business__help"
+                      class="p-inputtext p-component"
+                      data-pc-name="inputtext"
+                      data-pc-section="root"
+                      id="root_employment_business"
+                      name="root_employment_business"
+                      placeholder=""
+                      required=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_employment_title"
+                    >
+                      Job Title 
+                    </label>
+                    <input
+                      aria-describedby="root_employment_title__error root_employment_title__description root_employment_title__help"
+                      class="p-inputtext p-component"
+                      data-pc-name="inputtext"
+                      data-pc-section="root"
+                      id="root_employment_title"
+                      name="root_employment_title"
+                      placeholder=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_employment_location_city"
+                    >
+                      City *
+                    </label>
+                    <input
+                      aria-describedby="root_employment_location_city__error root_employment_location_city__description root_employment_location_city__help"
+                      class="p-inputtext p-component"
+                      data-pc-name="inputtext"
+                      data-pc-section="root"
+                      id="root_employment_location_city"
+                      name="root_employment_location_city"
+                      placeholder=""
+                      required=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_employment_location_state"
+                    >
+                      State *
+                    </label>
+                    <select
+                      aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
+                      id="root_employment_location_state"
+                      name="root_employment_location_state"
+                      options="[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]"
+                      placeholder=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      aria-label="Submit"
+      class="p-button p-component"
+      data-pc-name="button"
+      data-pc-section="root"
+      type="submit"
+    >
+      <span
+        class="p-button-label p-c"
+        data-pc-section="label"
+      >
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`Complex grid renders person and address and employment in a complex grid, job_type = education 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+      >
+        <div
+          style="display: grid; grid-template-columns: repeat(12, 1fr); align-items: start; gap: 16px;"
+        >
+          <div
+            style="grid-column: span 12 / span 12;"
+          >
+            <div
+              class="rjsf-field rjsf-field-object"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <div
+                  id="root_person__title"
+                >
+                  <h5
+                    style="margin: 0px; font-size: 1.2rem;"
+                  >
+                    Person Info 
+                  </h5>
+                  <div
+                    aria-orientation="horizontal"
+                    class="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+                    data-pc-name="divider"
+                    data-pc-section="root"
+                    role="separator"
+                    style="justify-content: center; margin-top: 0.5rem;"
+                  >
+                    <div
+                      class="p-divider-content"
+                      data-pc-section="content"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 4 / span 4;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_name_first"
+                >
+                  First Name *
+                </label>
+                <input
+                  aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_name_first"
+                  name="root_person_name_first"
+                  placeholder=""
+                  required=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 4 / span 4;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_name_middle"
+                >
+                  Middle 
+                </label>
+                <input
+                  aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_name_middle"
+                  name="root_person_name_middle"
+                  placeholder=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 4 / span 4;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_name_last"
+                >
+                  Last Name *
+                </label>
+                <input
+                  aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_name_last"
+                  name="root_person_name_last"
+                  placeholder=""
+                  required=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 4 / span 4;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_birth_date"
+                >
+                  Date of Birth *
+                </label>
+                <input
+                  aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_birth_date"
+                  name="root_person_birth_date"
+                  placeholder=""
+                  required=""
+                  type="date"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 8 / span 8;"
+          >
+            <div
+              class="rjsf-field rjsf-field-array"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_race"
+                >
+                  Race *
+                </label>
+                <div
+                  id="root_person_race"
+                  style="display: flex; flex-direction: column; gap: 1rem; margin-top: 0.5rem; margin-bottom: 0.5rem;"
+                >
+                  <span
+                    id="root_person_race__description"
+                  >
+                    (Check all that apply)
+                  </span>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-0"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-0"
+                    >
+                      American Indian / Alaska Native 
+                    </label>
+                  </div>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-1"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-1"
+                    >
+                      Asian 
+                    </label>
+                  </div>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-2"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-2"
+                    >
+                      Black / African American 
+                    </label>
+                  </div>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-3"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-3"
+                    >
+                      Native Hawaiian / Other Pacific Islander 
+                    </label>
+                  </div>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-4"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-4"
+                    >
+                      White 
+                    </label>
+                  </div>
+                </div>
+                <small>
+                  <span
+                    id="root_person_race__description"
+                  >
+                    (Check all that apply)
+                  </span>
+                </small>
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 6 / span 6;"
+          >
+            <div
+              style="display: grid; grid-template-columns: repeat(12, 1fr); align-items: start; gap: 16px;"
+            >
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_person_address_line_1"
+                    >
+                      Address *
+                    </label>
+                    <input
+                      aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
+                      class="p-inputtext p-component"
+                      data-pc-name="inputtext"
+                      data-pc-section="root"
+                      id="root_person_address_line_1"
+                      name="root_person_address_line_1"
+                      placeholder=""
+                      required=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_person_address_line_2"
+                    >
+                      Address 2 
+                    </label>
+                    <input
+                      aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
+                      class="p-inputtext p-component"
+                      data-pc-name="inputtext"
+                      data-pc-section="root"
+                      id="root_person_address_line_2"
+                      name="root_person_address_line_2"
+                      placeholder=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_person_address_city"
+                    >
+                      City *
+                    </label>
+                    <input
+                      aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
+                      class="p-inputtext p-component"
+                      data-pc-name="inputtext"
+                      data-pc-section="root"
+                      id="root_person_address_city"
+                      name="root_person_address_city"
+                      placeholder=""
+                      required=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 6 / span 6;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_person_address_state"
+                    >
+                      State *
+                    </label>
+                    <select
+                      aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
+                      id="root_person_address_state"
+                      name="root_person_address_state"
+                      options="[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]"
+                      placeholder=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 6 / span 6;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_person_address_postal_code"
+                    >
+                      ZIP Code *
+                    </label>
+                    <input
+                      aria-describedby="root_person_address_postal_code__error root_person_address_postal_code__description root_person_address_postal_code__help"
+                      class="p-inputtext p-component"
+                      data-pc-name="inputtext"
+                      data-pc-section="root"
+                      id="root_person_address_postal_code"
+                      name="root_person_address_postal_code"
+                      placeholder=""
+                      required=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 6 / span 6;"
+          >
+            <div
+              style="display: grid; grid-template-columns: repeat(12, 1fr); align-items: start; gap: 16px;"
+            >
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div>
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_employment"
+                    >
+                      Employment 
+                    </label>
+                    <div
+                      style="display: flex; flex-direction: row; gap: 1rem;"
+                    >
+                      <div
+                        style="display: flex; align-items: center;"
+                      >
+                        <div
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          class="p-radiobutton p-component"
+                          data-p-checked="false"
+                          data-pc-name="radiobutton"
+                          data-pc-section="root"
+                        >
+                          <input
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            class="p-radiobutton-input"
+                            data-pc-section="input"
+                            id="root_employment-0"
+                            name="root_employment"
+                            type="radio"
+                          />
+                          <div
+                            class="p-radiobutton-box"
+                            data-pc-section="box"
+                          >
+                            <div
+                              class="p-radiobutton-icon"
+                              data-pc-section="icon"
+                            />
+                          </div>
+                        </div>
+                        <label
+                          for="root_employment-0"
+                          style="margin-left: 8px;"
+                        >
+                          Company
+                        </label>
+                      </div>
+                      <div
+                        style="display: flex; align-items: center;"
+                      >
+                        <div
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          class="p-radiobutton p-component p-highlight"
+                          data-p-checked="true"
+                          data-pc-name="radiobutton"
+                          data-pc-section="root"
+                        >
+                          <input
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            checked=""
+                            class="p-radiobutton-input"
+                            data-pc-section="input"
+                            id="root_employment-1"
+                            name="root_employment"
+                            type="radio"
+                          />
+                          <div
+                            class="p-radiobutton-box"
+                            data-pc-section="box"
+                          >
+                            <div
+                              class="p-radiobutton-icon"
+                              data-pc-section="icon"
+                            />
+                          </div>
+                        </div>
+                        <label
+                          for="root_employment-1"
+                          style="margin-left: 8px;"
+                        >
+                          Education
+                        </label>
+                      </div>
+                      <div
+                        style="display: flex; align-items: center;"
+                      >
+                        <div
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          class="p-radiobutton p-component"
+                          data-p-checked="false"
+                          data-pc-name="radiobutton"
+                          data-pc-section="root"
+                        >
+                          <input
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            class="p-radiobutton-input"
+                            data-pc-section="input"
+                            id="root_employment-2"
+                            name="root_employment"
+                            type="radio"
+                          />
+                          <div
+                            class="p-radiobutton-box"
+                            data-pc-section="box"
+                          >
+                            <div
+                              class="p-radiobutton-icon"
+                              data-pc-section="icon"
+                            />
+                          </div>
+                        </div>
+                        <label
+                          for="root_employment-2"
+                          style="margin-left: 8px;"
+                        >
+                          Other
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_employment_district"
+                    >
+                      District Name 
+                    </label>
+                    <input
+                      aria-describedby="root_employment_district__error root_employment_district__description root_employment_district__help"
+                      class="p-inputtext p-component"
+                      data-pc-name="inputtext"
+                      data-pc-section="root"
+                      id="root_employment_district"
+                      name="root_employment_district"
+                      placeholder=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_employment_school"
+                    >
+                      School Name *
+                    </label>
+                    <input
+                      aria-describedby="root_employment_school__error root_employment_school__description root_employment_school__help"
+                      class="p-inputtext p-component"
+                      data-pc-name="inputtext"
+                      data-pc-section="root"
+                      id="root_employment_school"
+                      name="root_employment_school"
+                      placeholder=""
+                      required=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_employment_title"
+                    >
+                      Job Title 
+                    </label>
+                    <input
+                      aria-describedby="root_employment_title__error root_employment_title__description root_employment_title__help"
+                      class="p-inputtext p-component"
+                      data-pc-name="inputtext"
+                      data-pc-section="root"
+                      id="root_employment_title"
+                      name="root_employment_title"
+                      placeholder=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_employment_location_city"
+                    >
+                      City *
+                    </label>
+                    <input
+                      aria-describedby="root_employment_location_city__error root_employment_location_city__description root_employment_location_city__help"
+                      class="p-inputtext p-component"
+                      data-pc-name="inputtext"
+                      data-pc-section="root"
+                      id="root_employment_location_city"
+                      name="root_employment_location_city"
+                      placeholder=""
+                      required=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_employment_location_state"
+                    >
+                      State *
+                    </label>
+                    <select
+                      aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
+                      id="root_employment_location_state"
+                      name="root_employment_location_state"
+                      options="[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]"
+                      placeholder=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      aria-label="Submit"
+      class="p-button p-component"
+      data-pc-name="button"
+      data-pc-section="root"
+      type="submit"
+    >
+      <span
+        class="p-button-label p-c"
+        data-pc-section="label"
+      >
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`Complex grid renders person and address and employment in a complex grid, job_type = other 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+      >
+        <div
+          style="display: grid; grid-template-columns: repeat(12, 1fr); align-items: start; gap: 16px;"
+        >
+          <div
+            style="grid-column: span 12 / span 12;"
+          >
+            <div
+              class="rjsf-field rjsf-field-object"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <div
+                  id="root_person__title"
+                >
+                  <h5
+                    style="margin: 0px; font-size: 1.2rem;"
+                  >
+                    Person Info 
+                  </h5>
+                  <div
+                    aria-orientation="horizontal"
+                    class="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+                    data-pc-name="divider"
+                    data-pc-section="root"
+                    role="separator"
+                    style="justify-content: center; margin-top: 0.5rem;"
+                  >
+                    <div
+                      class="p-divider-content"
+                      data-pc-section="content"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 4 / span 4;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_name_first"
+                >
+                  First Name *
+                </label>
+                <input
+                  aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_name_first"
+                  name="root_person_name_first"
+                  placeholder=""
+                  required=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 4 / span 4;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_name_middle"
+                >
+                  Middle 
+                </label>
+                <input
+                  aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_name_middle"
+                  name="root_person_name_middle"
+                  placeholder=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 4 / span 4;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_name_last"
+                >
+                  Last Name *
+                </label>
+                <input
+                  aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_name_last"
+                  name="root_person_name_last"
+                  placeholder=""
+                  required=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 4 / span 4;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_birth_date"
+                >
+                  Date of Birth *
+                </label>
+                <input
+                  aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_birth_date"
+                  name="root_person_birth_date"
+                  placeholder=""
+                  required=""
+                  type="date"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 8 / span 8;"
+          >
+            <div
+              class="rjsf-field rjsf-field-array"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_race"
+                >
+                  Race *
+                </label>
+                <div
+                  id="root_person_race"
+                  style="display: flex; flex-direction: column; gap: 1rem; margin-top: 0.5rem; margin-bottom: 0.5rem;"
+                >
+                  <span
+                    id="root_person_race__description"
+                  >
+                    (Check all that apply)
+                  </span>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-0"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-0"
+                    >
+                      American Indian / Alaska Native 
+                    </label>
+                  </div>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-1"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-1"
+                    >
+                      Asian 
+                    </label>
+                  </div>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-2"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-2"
+                    >
+                      Black / African American 
+                    </label>
+                  </div>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-3"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-3"
+                    >
+                      Native Hawaiian / Other Pacific Islander 
+                    </label>
+                  </div>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-4"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-4"
+                    >
+                      White 
+                    </label>
+                  </div>
+                </div>
+                <small>
+                  <span
+                    id="root_person_race__description"
+                  >
+                    (Check all that apply)
+                  </span>
+                </small>
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 6 / span 6;"
+          >
+            <div
+              style="display: grid; grid-template-columns: repeat(12, 1fr); align-items: start; gap: 16px;"
+            >
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_person_address_line_1"
+                    >
+                      Address *
+                    </label>
+                    <input
+                      aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
+                      class="p-inputtext p-component"
+                      data-pc-name="inputtext"
+                      data-pc-section="root"
+                      id="root_person_address_line_1"
+                      name="root_person_address_line_1"
+                      placeholder=""
+                      required=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_person_address_line_2"
+                    >
+                      Address 2 
+                    </label>
+                    <input
+                      aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
+                      class="p-inputtext p-component"
+                      data-pc-name="inputtext"
+                      data-pc-section="root"
+                      id="root_person_address_line_2"
+                      name="root_person_address_line_2"
+                      placeholder=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_person_address_city"
+                    >
+                      City *
+                    </label>
+                    <input
+                      aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
+                      class="p-inputtext p-component"
+                      data-pc-name="inputtext"
+                      data-pc-section="root"
+                      id="root_person_address_city"
+                      name="root_person_address_city"
+                      placeholder=""
+                      required=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 6 / span 6;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_person_address_state"
+                    >
+                      State *
+                    </label>
+                    <select
+                      aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
+                      id="root_person_address_state"
+                      name="root_person_address_state"
+                      options="[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]"
+                      placeholder=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 6 / span 6;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_person_address_postal_code"
+                    >
+                      ZIP Code *
+                    </label>
+                    <input
+                      aria-describedby="root_person_address_postal_code__error root_person_address_postal_code__description root_person_address_postal_code__help"
+                      class="p-inputtext p-component"
+                      data-pc-name="inputtext"
+                      data-pc-section="root"
+                      id="root_person_address_postal_code"
+                      name="root_person_address_postal_code"
+                      placeholder=""
+                      required=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 6 / span 6;"
+          >
+            <div
+              style="display: grid; grid-template-columns: repeat(12, 1fr); align-items: start; gap: 16px;"
+            >
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div>
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_employment"
+                    >
+                      Employment 
+                    </label>
+                    <div
+                      style="display: flex; flex-direction: row; gap: 1rem;"
+                    >
+                      <div
+                        style="display: flex; align-items: center;"
+                      >
+                        <div
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          class="p-radiobutton p-component"
+                          data-p-checked="false"
+                          data-pc-name="radiobutton"
+                          data-pc-section="root"
+                        >
+                          <input
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            class="p-radiobutton-input"
+                            data-pc-section="input"
+                            id="root_employment-0"
+                            name="root_employment"
+                            type="radio"
+                          />
+                          <div
+                            class="p-radiobutton-box"
+                            data-pc-section="box"
+                          >
+                            <div
+                              class="p-radiobutton-icon"
+                              data-pc-section="icon"
+                            />
+                          </div>
+                        </div>
+                        <label
+                          for="root_employment-0"
+                          style="margin-left: 8px;"
+                        >
+                          Company
+                        </label>
+                      </div>
+                      <div
+                        style="display: flex; align-items: center;"
+                      >
+                        <div
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          class="p-radiobutton p-component"
+                          data-p-checked="false"
+                          data-pc-name="radiobutton"
+                          data-pc-section="root"
+                        >
+                          <input
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            class="p-radiobutton-input"
+                            data-pc-section="input"
+                            id="root_employment-1"
+                            name="root_employment"
+                            type="radio"
+                          />
+                          <div
+                            class="p-radiobutton-box"
+                            data-pc-section="box"
+                          >
+                            <div
+                              class="p-radiobutton-icon"
+                              data-pc-section="icon"
+                            />
+                          </div>
+                        </div>
+                        <label
+                          for="root_employment-1"
+                          style="margin-left: 8px;"
+                        >
+                          Education
+                        </label>
+                      </div>
+                      <div
+                        style="display: flex; align-items: center;"
+                      >
+                        <div
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          class="p-radiobutton p-component p-highlight"
+                          data-p-checked="true"
+                          data-pc-name="radiobutton"
+                          data-pc-section="root"
+                        >
+                          <input
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            checked=""
+                            class="p-radiobutton-input"
+                            data-pc-section="input"
+                            id="root_employment-2"
+                            name="root_employment"
+                            type="radio"
+                          />
+                          <div
+                            class="p-radiobutton-box"
+                            data-pc-section="box"
+                          >
+                            <div
+                              class="p-radiobutton-icon"
+                              data-pc-section="icon"
+                            />
+                          </div>
+                        </div>
+                        <label
+                          for="root_employment-2"
+                          style="margin-left: 8px;"
+                        >
+                          Other
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_employment_description"
+                    >
+                      Describe your job *
+                    </label>
+                    <textarea
+                      class="p-inputtextarea p-inputtext p-component"
+                      data-pc-name="inputtextarea"
+                      data-pc-section="root"
+                      id="root_employment_description"
+                      name="root_employment_description"
+                      required=""
+                      rows="6"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      aria-label="Submit"
+      class="p-button p-component"
+      data-pc-name="button"
+      data-pc-section="root"
+      type="submit"
+    >
+      <span
+        class="p-button-label p-c"
+        data-pc-section="label"
+      >
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`Complex grid renders person and address and employment in a complex grid, no form data 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+      >
+        <div
+          style="display: grid; grid-template-columns: repeat(12, 1fr); align-items: start; gap: 16px;"
+        >
+          <div
+            style="grid-column: span 12 / span 12;"
+          >
+            <div
+              class="rjsf-field rjsf-field-object"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <div
+                  id="root_person__title"
+                >
+                  <h5
+                    style="margin: 0px; font-size: 1.2rem;"
+                  >
+                    Person Info 
+                  </h5>
+                  <div
+                    aria-orientation="horizontal"
+                    class="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+                    data-pc-name="divider"
+                    data-pc-section="root"
+                    role="separator"
+                    style="justify-content: center; margin-top: 0.5rem;"
+                  >
+                    <div
+                      class="p-divider-content"
+                      data-pc-section="content"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 4 / span 4;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_name_first"
+                >
+                  First Name *
+                </label>
+                <input
+                  aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_name_first"
+                  name="root_person_name_first"
+                  placeholder=""
+                  required=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 4 / span 4;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_name_middle"
+                >
+                  Middle 
+                </label>
+                <input
+                  aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_name_middle"
+                  name="root_person_name_middle"
+                  placeholder=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 4 / span 4;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_name_last"
+                >
+                  Last Name *
+                </label>
+                <input
+                  aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_name_last"
+                  name="root_person_name_last"
+                  placeholder=""
+                  required=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 4 / span 4;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_birth_date"
+                >
+                  Date of Birth *
+                </label>
+                <input
+                  aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_birth_date"
+                  name="root_person_birth_date"
+                  placeholder=""
+                  required=""
+                  type="date"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 8 / span 8;"
+          >
+            <div
+              class="rjsf-field rjsf-field-array"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_race"
+                >
+                  Race *
+                </label>
+                <div
+                  id="root_person_race"
+                  style="display: flex; flex-direction: column; gap: 1rem; margin-top: 0.5rem; margin-bottom: 0.5rem;"
+                >
+                  <span
+                    id="root_person_race__description"
+                  >
+                    (Check all that apply)
+                  </span>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-0"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-0"
+                    >
+                      American Indian / Alaska Native 
+                    </label>
+                  </div>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-1"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-1"
+                    >
+                      Asian 
+                    </label>
+                  </div>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-2"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-2"
+                    >
+                      Black / African American 
+                    </label>
+                  </div>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-3"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-3"
+                    >
+                      Native Hawaiian / Other Pacific Islander 
+                    </label>
+                  </div>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-4"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-4"
+                    >
+                      White 
+                    </label>
+                  </div>
+                </div>
+                <small>
+                  <span
+                    id="root_person_race__description"
+                  >
+                    (Check all that apply)
+                  </span>
+                </small>
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 6 / span 6;"
+          >
+            <div
+              style="display: grid; grid-template-columns: repeat(12, 1fr); align-items: start; gap: 16px;"
+            >
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_person_address_line_1"
+                    >
+                      Address *
+                    </label>
+                    <input
+                      aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
+                      class="p-inputtext p-component"
+                      data-pc-name="inputtext"
+                      data-pc-section="root"
+                      id="root_person_address_line_1"
+                      name="root_person_address_line_1"
+                      placeholder=""
+                      required=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_person_address_line_2"
+                    >
+                      Address 2 
+                    </label>
+                    <input
+                      aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
+                      class="p-inputtext p-component"
+                      data-pc-name="inputtext"
+                      data-pc-section="root"
+                      id="root_person_address_line_2"
+                      name="root_person_address_line_2"
+                      placeholder=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_person_address_city"
+                    >
+                      City *
+                    </label>
+                    <input
+                      aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
+                      class="p-inputtext p-component"
+                      data-pc-name="inputtext"
+                      data-pc-section="root"
+                      id="root_person_address_city"
+                      name="root_person_address_city"
+                      placeholder=""
+                      required=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 6 / span 6;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_person_address_state"
+                    >
+                      State *
+                    </label>
+                    <select
+                      aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
+                      id="root_person_address_state"
+                      name="root_person_address_state"
+                      options="[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]"
+                      placeholder=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 6 / span 6;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_person_address_postal_code"
+                    >
+                      ZIP Code *
+                    </label>
+                    <input
+                      aria-describedby="root_person_address_postal_code__error root_person_address_postal_code__description root_person_address_postal_code__help"
+                      class="p-inputtext p-component"
+                      data-pc-name="inputtext"
+                      data-pc-section="root"
+                      id="root_person_address_postal_code"
+                      name="root_person_address_postal_code"
+                      placeholder=""
+                      required=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 6 / span 6;"
+          >
+            <div
+              style="display: grid; grid-template-columns: repeat(12, 1fr); align-items: start; gap: 16px;"
+            >
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div>
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_employment"
+                    >
+                      Employment 
+                    </label>
+                    <div
+                      style="display: flex; flex-direction: row; gap: 1rem;"
+                    >
+                      <div
+                        style="display: flex; align-items: center;"
+                      >
+                        <div
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          class="p-radiobutton p-component p-highlight"
+                          data-p-checked="true"
+                          data-pc-name="radiobutton"
+                          data-pc-section="root"
+                        >
+                          <input
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            checked=""
+                            class="p-radiobutton-input"
+                            data-pc-section="input"
+                            id="root_employment-0"
+                            name="root_employment"
+                            type="radio"
+                          />
+                          <div
+                            class="p-radiobutton-box"
+                            data-pc-section="box"
+                          >
+                            <div
+                              class="p-radiobutton-icon"
+                              data-pc-section="icon"
+                            />
+                          </div>
+                        </div>
+                        <label
+                          for="root_employment-0"
+                          style="margin-left: 8px;"
+                        >
+                          Company
+                        </label>
+                      </div>
+                      <div
+                        style="display: flex; align-items: center;"
+                      >
+                        <div
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          class="p-radiobutton p-component"
+                          data-p-checked="false"
+                          data-pc-name="radiobutton"
+                          data-pc-section="root"
+                        >
+                          <input
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            class="p-radiobutton-input"
+                            data-pc-section="input"
+                            id="root_employment-1"
+                            name="root_employment"
+                            type="radio"
+                          />
+                          <div
+                            class="p-radiobutton-box"
+                            data-pc-section="box"
+                          >
+                            <div
+                              class="p-radiobutton-icon"
+                              data-pc-section="icon"
+                            />
+                          </div>
+                        </div>
+                        <label
+                          for="root_employment-1"
+                          style="margin-left: 8px;"
+                        >
+                          Education
+                        </label>
+                      </div>
+                      <div
+                        style="display: flex; align-items: center;"
+                      >
+                        <div
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          class="p-radiobutton p-component"
+                          data-p-checked="false"
+                          data-pc-name="radiobutton"
+                          data-pc-section="root"
+                        >
+                          <input
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            class="p-radiobutton-input"
+                            data-pc-section="input"
+                            id="root_employment-2"
+                            name="root_employment"
+                            type="radio"
+                          />
+                          <div
+                            class="p-radiobutton-box"
+                            data-pc-section="box"
+                          >
+                            <div
+                              class="p-radiobutton-icon"
+                              data-pc-section="icon"
+                            />
+                          </div>
+                        </div>
+                        <label
+                          for="root_employment-2"
+                          style="margin-left: 8px;"
+                        >
+                          Other
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_employment_business"
+                    >
+                      Company Name *
+                    </label>
+                    <input
+                      aria-describedby="root_employment_business__error root_employment_business__description root_employment_business__help"
+                      class="p-inputtext p-component"
+                      data-pc-name="inputtext"
+                      data-pc-section="root"
+                      id="root_employment_business"
+                      name="root_employment_business"
+                      placeholder=""
+                      required=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_employment_title"
+                    >
+                      Job Title 
+                    </label>
+                    <input
+                      aria-describedby="root_employment_title__error root_employment_title__description root_employment_title__help"
+                      class="p-inputtext p-component"
+                      data-pc-name="inputtext"
+                      data-pc-section="root"
+                      id="root_employment_title"
+                      name="root_employment_title"
+                      placeholder=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_employment_location_city"
+                    >
+                      City *
+                    </label>
+                    <input
+                      aria-describedby="root_employment_location_city__error root_employment_location_city__description root_employment_location_city__help"
+                      class="p-inputtext p-component"
+                      data-pc-name="inputtext"
+                      data-pc-section="root"
+                      id="root_employment_location_city"
+                      name="root_employment_location_city"
+                      placeholder=""
+                      required=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="grid-column: span 12 / span 12;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                  >
+                    <label
+                      for="root_employment_location_state"
+                    >
+                      State *
+                    </label>
+                    <select
+                      aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
+                      id="root_employment_location_state"
+                      name="root_employment_location_state"
+                      options="[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]"
+                      placeholder=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      aria-label="Submit"
+      class="p-button p-component"
+      data-pc-name="button"
+      data-pc-section="root"
+      type="submit"
+    >
+      <span
+        class="p-button-label p-c"
+        data-pc-section="label"
+      >
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`Three even column grid renders person and address in three columns, no employment 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+      >
+        <div
+          style="display: grid; grid-template-columns: repeat(12, 1fr); align-items: start; gap: 16px;"
+        >
+          <div
+            style="grid-column: span 12 / span 12;"
+          >
+            <div
+              class="rjsf-field rjsf-field-object"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <div
+                  id="root_person__title"
+                >
+                  <h5
+                    style="margin: 0px; font-size: 1.2rem;"
+                  >
+                    Person Info 
+                  </h5>
+                  <div
+                    aria-orientation="horizontal"
+                    class="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+                    data-pc-name="divider"
+                    data-pc-section="root"
+                    role="separator"
+                    style="justify-content: center; margin-top: 0.5rem;"
+                  >
+                    <div
+                      class="p-divider-content"
+                      data-pc-section="content"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 4 / span 4;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_name_first"
+                >
+                  First Name *
+                </label>
+                <input
+                  aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_name_first"
+                  name="root_person_name_first"
+                  placeholder=""
+                  required=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 4 / span 4;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_name_middle"
+                >
+                  Middle 
+                </label>
+                <input
+                  aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_name_middle"
+                  name="root_person_name_middle"
+                  placeholder=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 4 / span 4;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_name_last"
+                >
+                  Last Name *
+                </label>
+                <input
+                  aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_name_last"
+                  name="root_person_name_last"
+                  placeholder=""
+                  required=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 4 / span 4;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_birth_date"
+                >
+                  Date of Birth *
+                </label>
+                <input
+                  aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_birth_date"
+                  name="root_person_birth_date"
+                  placeholder="DOB"
+                  required=""
+                  type="date"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 8 / span 8;"
+          >
+            <div
+              class="rjsf-field rjsf-field-array"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_race"
+                >
+                  Race *
+                </label>
+                <div
+                  id="root_person_race"
+                  style="display: flex; flex-direction: column; gap: 1rem; margin-top: 0.5rem; margin-bottom: 0.5rem;"
+                >
+                  <span
+                    id="root_person_race__description"
+                  >
+                    (Check all that apply)
+                  </span>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-0"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-0"
+                    >
+                      American Indian / Alaska Native 
+                    </label>
+                  </div>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-1"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-1"
+                    >
+                      Asian 
+                    </label>
+                  </div>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-2"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-2"
+                    >
+                      Black / African American 
+                    </label>
+                  </div>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-3"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-3"
+                    >
+                      Native Hawaiian / Other Pacific Islander 
+                    </label>
+                  </div>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-4"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-4"
+                    >
+                      White 
+                    </label>
+                  </div>
+                </div>
+                <small>
+                  <span
+                    id="root_person_race__description"
+                  >
+                    (Check all that apply)
+                  </span>
+                </small>
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 6 / span 6;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_address_line_1"
+                >
+                  Address *
+                </label>
+                <input
+                  aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_address_line_1"
+                  name="root_person_address_line_1"
+                  placeholder=""
+                  required=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 6 / span 6;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_address_line_2"
+                >
+                  Address 2 
+                </label>
+                <input
+                  aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_address_line_2"
+                  name="root_person_address_line_2"
+                  placeholder=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 4 / span 4;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_address_city"
+                >
+                  City *
+                </label>
+                <input
+                  aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_address_city"
+                  name="root_person_address_city"
+                  placeholder=""
+                  required=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 4 / span 4;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_address_state"
+                >
+                  State *
+                </label>
+                <select
+                  aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
+                  id="root_person_address_state"
+                  name="root_person_address_state"
+                  options="[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]"
+                  placeholder=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 4 / span 4;"
+          />
+        </div>
+      </div>
+    </div>
+    <button
+      aria-label="Submit"
+      class="p-button p-component"
+      data-pc-name="button"
+      data-pc-section="root"
+      type="submit"
+    >
+      <span
+        class="p-button-label p-c"
+        data-pc-section="label"
+      >
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`Two even column grid renders person and address in two columns, no employment 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+      >
+        <div
+          style="display: grid; grid-template-columns: repeat(12, 1fr); align-items: start; gap: 16px;"
+        >
+          <div
+            style="grid-column: span 12 / span 12;"
+          >
+            <div
+              class="rjsf-field rjsf-field-object"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <div
+                  id="root_person__title"
+                >
+                  <h5
+                    style="margin: 0px; font-size: 1.2rem;"
+                  >
+                    Person Info 
+                  </h5>
+                  <div
+                    aria-orientation="horizontal"
+                    class="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+                    data-pc-name="divider"
+                    data-pc-section="root"
+                    role="separator"
+                    style="justify-content: center; margin-top: 0.5rem;"
+                  >
+                    <div
+                      class="p-divider-content"
+                      data-pc-section="content"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 6 / span 6;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_name_first"
+                >
+                  First Name *
+                </label>
+                <input
+                  aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_name_first"
+                  name="root_person_name_first"
+                  placeholder=""
+                  required=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 6 / span 6;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_name_middle"
+                >
+                  Middle 
+                </label>
+                <input
+                  aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_name_middle"
+                  name="root_person_name_middle"
+                  placeholder=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 6 / span 6;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_name_first"
+                >
+                  First Name *
+                </label>
+                <input
+                  aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_name_first"
+                  name="root_person_name_first"
+                  placeholder=""
+                  required=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 6 / span 6;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_birth_date"
+                >
+                  Date of Birth *
+                </label>
+                <input
+                  aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_birth_date"
+                  name="root_person_birth_date"
+                  placeholder="DOB"
+                  required=""
+                  type="date"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 12 / span 12;"
+          >
+            <div
+              class="rjsf-field rjsf-field-array"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_race"
+                >
+                  Race *
+                </label>
+                <div
+                  id="root_person_race"
+                  style="display: flex; flex-direction: column; gap: 1rem; margin-top: 0.5rem; margin-bottom: 0.5rem;"
+                >
+                  <span
+                    id="root_person_race__description"
+                  >
+                    (Check all that apply)
+                  </span>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-0"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-0"
+                    >
+                      American Indian / Alaska Native 
+                    </label>
+                  </div>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-1"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-1"
+                    >
+                      Asian 
+                    </label>
+                  </div>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-2"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-2"
+                    >
+                      Black / African American 
+                    </label>
+                  </div>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-3"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-3"
+                    >
+                      Native Hawaiian / Other Pacific Islander 
+                    </label>
+                  </div>
+                  <div
+                    style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+                  >
+                    <div
+                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      class="p-checkbox p-component"
+                      data-p-disabled="false"
+                      data-p-highlight="false"
+                      data-pc-name="checkbox"
+                      data-pc-section="root"
+                    >
+                      <input
+                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-invalid="false"
+                        class="p-checkbox-input"
+                        data-pc-section="input"
+                        id="root_person_race-4"
+                        name="root_person_race"
+                        type="checkbox"
+                      />
+                      <div
+                        class="p-checkbox-box"
+                        data-p-disabled="false"
+                        data-p-highlight="false"
+                        data-pc-section="box"
+                      />
+                    </div>
+                    <label
+                      for="root_person_race-4"
+                    >
+                      White 
+                    </label>
+                  </div>
+                </div>
+                <small>
+                  <span
+                    id="root_person_race__description"
+                  >
+                    (Check all that apply)
+                  </span>
+                </small>
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 6 / span 6;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_address_line_1"
+                >
+                  Address *
+                </label>
+                <input
+                  aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_address_line_1"
+                  name="root_person_address_line_1"
+                  placeholder=""
+                  required=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 6 / span 6;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_address_line_2"
+                >
+                  Address 2 
+                </label>
+                <input
+                  aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_address_line_2"
+                  name="root_person_address_line_2"
+                  placeholder=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 6 / span 6;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_address_city"
+                >
+                  City *
+                </label>
+                <input
+                  aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
+                  class="p-inputtext p-component"
+                  data-pc-name="inputtext"
+                  data-pc-section="root"
+                  id="root_person_address_city"
+                  name="root_person_address_city"
+                  placeholder=""
+                  required=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 6 / span 6;"
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+              >
+                <label
+                  for="root_person_address_state"
+                >
+                  State *
+                </label>
+                <select
+                  aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
+                  id="root_person_address_state"
+                  name="root_person_address_state"
+                  options="[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]"
+                  placeholder=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            style="grid-column: span 12 / span 12;"
+          />
+        </div>
+      </div>
+    </div>
+    <button
+      aria-label="Submit"
+      class="p-button p-component"
+      data-pc-name="button"
+      data-pc-section="root"
+      type="submit"
+    >
+      <span
+        class="p-button-label p-c"
+        data-pc-section="label"
+      >
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;

@@ -60,12 +60,14 @@ npm install @rjsf/snapshot-tests
 ```tsx
 import { arrayTests } from '@rjsf/snapshot-tests'; // OR
 // import { formTests } from '@rjsf/snapshot-tests';
+// import { gridTests } from '@rjsf/snapshot-tests';
 // import { objectTests } from '@rjsf/snapshot-tests';
 
 import Form from '../src';
 
 arrayTests(Form); // OR
 // formTests(Form);
+// gridTests(Form);
 // objectTests(Form);
 ```
 <!-- ROADMAP -->
