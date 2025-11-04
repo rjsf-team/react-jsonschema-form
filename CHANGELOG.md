@@ -70,6 +70,8 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated the `OptionsDrawer` of the playground to add `idPrefix` and `idSeparator` fields
 - Updated test files to switch to using the React Testing library instead of `react-test-renderer`, updating all snapshots accordingly
+- Updated Fluent libraries to latest, with updated snapshots
+- Added Node 24 to `ci.yml`, removing `v5` and old Node 14 non-docs builds 
 
 # 6.0.1
 
