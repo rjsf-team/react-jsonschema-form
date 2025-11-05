@@ -4,6 +4,7 @@
  * utility.
  */
 export const ADDITIONAL_PROPERTY_FLAG = '__additional_property';
+export const ADDITIONAL_PROPERTY_KEY_REMOVE = Symbol('remove-this-key');
 export const ADDITIONAL_PROPERTIES_KEY = 'additionalProperties';
 export const ALL_OF_KEY = 'allOf';
 export const ANY_OF_KEY = 'anyOf';

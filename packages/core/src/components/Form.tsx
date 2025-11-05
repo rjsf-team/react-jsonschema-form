@@ -1,5 +1,6 @@
 import { Component, ElementType, FormEvent, ReactNode, Ref, RefObject, createRef } from 'react';
 import {
+  ADDITIONAL_PROPERTY_KEY_REMOVE,
   createSchemaUtils,
   CustomValidator,
   deepEquals,
@@ -51,6 +52,7 @@ import _isEmpty from 'lodash/isEmpty';
 import _pick from 'lodash/pick';
 import _set from 'lodash/set';
 import _toPath from 'lodash/toPath';
+import _unset from 'lodash/unset';
 
 import getDefaultRegistry from '../getDefaultRegistry';
 
@@ -875,7 +877,10 @@ export default class Form<
     let retrievedSchema = this.state.retrievedSchema;
     let formData = isRootPath ? newValue : _cloneDeep(oldFormData);
     if (isObject(formData) || Array.isArray(formData)) {
-      if (!isRootPath) {
+      if (newValue === ADDITIONAL_PROPERTY_KEY_REMOVE) {
+        // For additional properties, we were given the special remove this key value, so unset it
+        _unset(formData, path);
+      } else if (!isRootPath) {
         // If the newValue is not on the root path, then set it into the form data
         _set(formData, path, newValue);
       }
