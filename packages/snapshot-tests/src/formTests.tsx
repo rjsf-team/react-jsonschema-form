@@ -567,6 +567,42 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
       const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
+    test('field with markdown help', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          'my-field': {
+            type: 'string',
+          },
+        },
+      };
+      const uiSchema = {
+        'my-field': {
+          'ui:help': 'some **Rich** help text',
+          'ui:enableMarkdownInHelp': true,
+        },
+      };
+      const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
+      expect(tree).toMatchSnapshot();
+    });
+    test('field with markdown help in uiSchema', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          'my-field': {
+            type: 'string',
+          },
+        },
+      };
+      const uiSchema = {
+        'my-field': {
+          'ui:help': 'some **other** help',
+          'ui:enableMarkdownInHelp': true,
+        },
+      };
+      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
+      expect(tree).toMatchSnapshot();
+    });
     test('title field', () => {
       const schema: RJSFSchema = {
         type: 'object',

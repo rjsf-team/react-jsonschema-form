@@ -4278,6 +4278,170 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
 </form>
 `;
 
+exports[`single fields field with markdown help 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string"
+            >
+              <div>
+                <label
+                  className="form-label"
+                  htmlFor="root_my-field"
+                >
+                  my-field
+                </label>
+                <input
+                  aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_my-field"
+                  name="root_my-field"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+                <small
+                  className="text-muted form-text"
+                  id="root_my-field__help"
+                >
+                  <span>
+                    some 
+                    <strong>
+                      Rich
+                    </strong>
+                     help text
+                  </span>
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields field with markdown help in uiSchema 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string"
+            >
+              <div>
+                <label
+                  className="form-label"
+                  htmlFor="root_my-field"
+                >
+                  my-field
+                </label>
+                <input
+                  aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_my-field"
+                  name="root_my-field"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+                <small
+                  className="text-muted form-text"
+                  id="root_my-field__help"
+                >
+                  <span>
+                    some 
+                    <strong>
+                      other
+                    </strong>
+                     help
+                  </span>
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields format color 1`] = `
 <form
   className="rjsf"

@@ -5431,6 +5431,190 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
 </form>
 `;
 
+exports[`single fields field with markdown help 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_my-field"
+          >
+            my-field
+             
+          </label>
+          <input
+            aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_my-field"
+            name="root_my-field"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+          <small
+            id="root_my-field__help"
+          >
+            <span>
+              some 
+              <strong>
+                Rich
+              </strong>
+               help text
+            </span>
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields field with markdown help in uiSchema 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_my-field"
+          >
+            my-field
+             
+          </label>
+          <input
+            aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_my-field"
+            name="root_my-field"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+          <small
+            id="root_my-field__help"
+          >
+            <span>
+              some 
+              <strong>
+                other
+              </strong>
+               help
+            </span>
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
 exports[`single fields format color 1`] = `
 <form
   className="rjsf"

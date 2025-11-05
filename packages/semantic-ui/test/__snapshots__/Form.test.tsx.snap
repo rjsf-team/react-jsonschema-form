@@ -3298,9 +3298,7 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
         <div
           className="content"
         >
-          <p>
-            Select all that apply
-          </p>
+          Select all that apply
         </div>
       </div>
     </div>
@@ -3721,6 +3719,156 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
 </form>
 `;
 
+exports[`single fields field with markdown help 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="field"
+          >
+            <label
+              htmlFor="root_my-field"
+            >
+              my-field
+            </label>
+            <div
+              className="ui fluid input"
+            >
+              <input
+                aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                autoFocus={false}
+                disabled={false}
+                id="root_my-field"
+                name="root_my-field"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          <div
+            className="ui mini info message"
+            id="root_my-field__help"
+          >
+            <div
+              className="content"
+            >
+              <span>
+                some 
+                <strong>
+                  Rich
+                </strong>
+                 help text
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`single fields field with markdown help in uiSchema 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="field"
+          >
+            <label
+              htmlFor="root_my-field"
+            >
+              my-field
+            </label>
+            <div
+              className="ui fluid input"
+            >
+              <input
+                aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                autoFocus={false}
+                disabled={false}
+                id="root_my-field"
+                name="root_my-field"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          <div
+            className="ui mini info message"
+            id="root_my-field__help"
+          >
+            <div
+              className="content"
+            >
+              <span>
+                some 
+                <strong>
+                  other
+                </strong>
+                 help
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
 exports[`single fields format color 1`] = `
 <form
   className="ui form rjsf"
@@ -3960,9 +4108,7 @@ exports[`single fields help and error display 1`] = `
         <div
           className="content"
         >
-          <p>
-            help me!
-          </p>
+          help me!
         </div>
       </div>
       <div

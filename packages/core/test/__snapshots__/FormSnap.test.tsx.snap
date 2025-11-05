@@ -2901,6 +2901,136 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
 </form>
 `;
 
+exports[`single fields field with markdown help 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group rjsf-field rjsf-field-object"
+  >
+    <fieldset
+      id="root"
+    >
+      <div
+        className="form-group rjsf-field rjsf-field-string"
+      >
+        <label
+          className="control-label"
+          htmlFor="root_my-field"
+        >
+          my-field
+        </label>
+        <input
+          aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root_my-field"
+          label="my-field"
+          name="root_my-field"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          required={false}
+          type="text"
+          value=""
+        />
+        <p
+          className="help-block"
+          id="root_my-field__help"
+        >
+          <span>
+            some 
+            <strong>
+              Rich
+            </strong>
+             help text
+          </span>
+        </p>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields field with markdown help in uiSchema 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group rjsf-field rjsf-field-object"
+  >
+    <fieldset
+      id="root"
+    >
+      <div
+        className="form-group rjsf-field rjsf-field-string"
+      >
+        <label
+          className="control-label"
+          htmlFor="root_my-field"
+        >
+          my-field
+        </label>
+        <input
+          aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root_my-field"
+          label="my-field"
+          name="root_my-field"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          required={false}
+          type="text"
+          value=""
+        />
+        <p
+          className="help-block"
+          id="root_my-field__help"
+        >
+          <span>
+            some 
+            <strong>
+              other
+            </strong>
+             help
+          </span>
+        </p>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields format color 1`] = `
 <form
   className="rjsf"

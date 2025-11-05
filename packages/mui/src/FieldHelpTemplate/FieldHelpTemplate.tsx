@@ -1,5 +1,6 @@
 import FormHelperText from '@mui/material/FormHelperText';
 import { helpId, FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { RichHelp } from '@rjsf/core';
 
 /** The `FieldHelpTemplate` component renders any help desired for a field
  *
@@ -10,14 +11,14 @@ export default function FieldHelpTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: FieldHelpProps<T, S, F>) {
-  const { fieldPathId, help } = props;
+  const { fieldPathId, help, registry, uiSchema } = props;
   if (!help) {
     return null;
   }
   const id = helpId(fieldPathId);
   return (
     <FormHelperText component='div' id={id}>
-      {help}
+      <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
     </FormHelperText>
   );
 }

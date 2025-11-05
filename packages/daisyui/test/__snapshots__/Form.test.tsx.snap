@@ -141,11 +141,6 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                           className="list-disc list-inside"
                                         />
                                       </div>
-                                      <div
-                                        className="rjsf-field-help-template text-gray-500 text-sm"
-                                      >
-                                        <div />
-                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -195,11 +190,6 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                           className="list-disc list-inside"
                                         />
                                       </div>
-                                      <div
-                                        className="rjsf-field-help-template text-gray-500 text-sm"
-                                      >
-                                        <div />
-                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -211,11 +201,6 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                               <ul
                                 className="list-disc list-inside"
                               />
-                            </div>
-                            <div
-                              className="rjsf-field-help-template text-gray-500 text-sm"
-                            >
-                              <div />
                             </div>
                           </div>
                         </div>
@@ -387,11 +372,6 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                           className="list-disc list-inside"
                                         />
                                       </div>
-                                      <div
-                                        className="rjsf-field-help-template text-gray-500 text-sm"
-                                      >
-                                        <div />
-                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -441,11 +421,6 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                           className="list-disc list-inside"
                                         />
                                       </div>
-                                      <div
-                                        className="rjsf-field-help-template text-gray-500 text-sm"
-                                      >
-                                        <div />
-                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -457,11 +432,6 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                               <ul
                                 className="list-disc list-inside"
                               />
-                            </div>
-                            <div
-                              className="rjsf-field-help-template text-gray-500 text-sm"
-                            >
-                              <div />
                             </div>
                           </div>
                         </div>
@@ -588,11 +558,6 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                     className="list-disc list-inside"
                   />
                 </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -604,11 +569,6 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -740,11 +700,6 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                               <ul
                                 className="list-disc list-inside"
                               />
-                            </div>
-                            <div
-                              className="rjsf-field-help-template text-gray-500 text-sm"
-                            >
-                              <div />
                             </div>
                           </div>
                         </div>
@@ -892,11 +847,6 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                                 className="list-disc list-inside"
                               />
                             </div>
-                            <div
-                              className="rjsf-field-help-template text-gray-500 text-sm"
-                            >
-                              <div />
-                            </div>
                           </div>
                         </div>
                         <div
@@ -1022,11 +972,6 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                     className="list-disc list-inside"
                   />
                 </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -1038,11 +983,6 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -1178,11 +1118,6 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
                     className="list-disc list-inside"
                   />
                 </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -1194,11 +1129,6 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -1323,11 +1253,6 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                               className="list-disc list-inside"
                             />
                           </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -1391,11 +1316,6 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                             <ul
                               className="list-disc list-inside"
                             />
-                          </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
                           </div>
                         </div>
                       </div>
@@ -1490,11 +1410,6 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                         className="list-disc list-inside"
                                       />
                                     </div>
-                                    <div
-                                      className="rjsf-field-help-template text-gray-500 text-sm"
-                                    >
-                                      <div />
-                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -1559,11 +1474,6 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                         className="list-disc list-inside"
                                       />
                                     </div>
-                                    <div
-                                      className="rjsf-field-help-template text-gray-500 text-sm"
-                                    >
-                                      <div />
-                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -1575,11 +1485,6 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                             <ul
                               className="list-disc list-inside"
                             />
-                          </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
                           </div>
                         </div>
                       </div>
@@ -1593,11 +1498,6 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                     className="list-disc list-inside"
                   />
                 </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -1609,11 +1509,6 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -1729,11 +1624,6 @@ exports[`nameGenerator bracketNameGenerator radio field 1`] = `
                     className="list-disc list-inside"
                   />
                 </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -1745,11 +1635,6 @@ exports[`nameGenerator bracketNameGenerator radio field 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -1884,11 +1769,6 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
                     className="list-disc list-inside"
                   />
                 </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -1900,11 +1780,6 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -2000,11 +1875,6 @@ exports[`nameGenerator bracketNameGenerator simple fields 1`] = `
                     className="list-disc list-inside"
                   />
                 </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -2070,11 +1940,6 @@ exports[`nameGenerator bracketNameGenerator simple fields 1`] = `
                     className="list-disc list-inside"
                   />
                 </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -2123,11 +1988,6 @@ exports[`nameGenerator bracketNameGenerator simple fields 1`] = `
                     className="list-disc list-inside"
                   />
                 </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -2139,11 +1999,6 @@ exports[`nameGenerator bracketNameGenerator simple fields 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -2222,11 +2077,6 @@ exports[`nameGenerator bracketNameGenerator textarea field 1`] = `
                     className="list-disc list-inside"
                   />
                 </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -2238,11 +2088,6 @@ exports[`nameGenerator bracketNameGenerator textarea field 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -2399,11 +2244,6 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                           className="list-disc list-inside"
                                         />
                                       </div>
-                                      <div
-                                        className="rjsf-field-help-template text-gray-500 text-sm"
-                                      >
-                                        <div />
-                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -2453,11 +2293,6 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                           className="list-disc list-inside"
                                         />
                                       </div>
-                                      <div
-                                        className="rjsf-field-help-template text-gray-500 text-sm"
-                                      >
-                                        <div />
-                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -2469,11 +2304,6 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                               <ul
                                 className="list-disc list-inside"
                               />
-                            </div>
-                            <div
-                              className="rjsf-field-help-template text-gray-500 text-sm"
-                            >
-                              <div />
                             </div>
                           </div>
                         </div>
@@ -2645,11 +2475,6 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                           className="list-disc list-inside"
                                         />
                                       </div>
-                                      <div
-                                        className="rjsf-field-help-template text-gray-500 text-sm"
-                                      >
-                                        <div />
-                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -2699,11 +2524,6 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                           className="list-disc list-inside"
                                         />
                                       </div>
-                                      <div
-                                        className="rjsf-field-help-template text-gray-500 text-sm"
-                                      >
-                                        <div />
-                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -2715,11 +2535,6 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                               <ul
                                 className="list-disc list-inside"
                               />
-                            </div>
-                            <div
-                              className="rjsf-field-help-template text-gray-500 text-sm"
-                            >
-                              <div />
                             </div>
                           </div>
                         </div>
@@ -2846,11 +2661,6 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                     className="list-disc list-inside"
                   />
                 </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -2862,11 +2672,6 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -2998,11 +2803,6 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                               <ul
                                 className="list-disc list-inside"
                               />
-                            </div>
-                            <div
-                              className="rjsf-field-help-template text-gray-500 text-sm"
-                            >
-                              <div />
                             </div>
                           </div>
                         </div>
@@ -3150,11 +2950,6 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                                 className="list-disc list-inside"
                               />
                             </div>
-                            <div
-                              className="rjsf-field-help-template text-gray-500 text-sm"
-                            >
-                              <div />
-                            </div>
                           </div>
                         </div>
                         <div
@@ -3280,11 +3075,6 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                     className="list-disc list-inside"
                   />
                 </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -3296,11 +3086,6 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -3425,11 +3210,6 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                               className="list-disc list-inside"
                             />
                           </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -3493,11 +3273,6 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                             <ul
                               className="list-disc list-inside"
                             />
-                          </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
                           </div>
                         </div>
                       </div>
@@ -3592,11 +3367,6 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                         className="list-disc list-inside"
                                       />
                                     </div>
-                                    <div
-                                      className="rjsf-field-help-template text-gray-500 text-sm"
-                                    >
-                                      <div />
-                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -3661,11 +3431,6 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                         className="list-disc list-inside"
                                       />
                                     </div>
-                                    <div
-                                      className="rjsf-field-help-template text-gray-500 text-sm"
-                                    >
-                                      <div />
-                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -3677,11 +3442,6 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                             <ul
                               className="list-disc list-inside"
                             />
-                          </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
                           </div>
                         </div>
                       </div>
@@ -3695,11 +3455,6 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                     className="list-disc list-inside"
                   />
                 </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -3711,11 +3466,6 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -3850,11 +3600,6 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
                     className="list-disc list-inside"
                   />
                 </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -3866,11 +3611,6 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -3966,11 +3706,6 @@ exports[`nameGenerator dotNotationNameGenerator simple fields 1`] = `
                     className="list-disc list-inside"
                   />
                 </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -4036,11 +3771,6 @@ exports[`nameGenerator dotNotationNameGenerator simple fields 1`] = `
                     className="list-disc list-inside"
                   />
                 </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -4089,11 +3819,6 @@ exports[`nameGenerator dotNotationNameGenerator simple fields 1`] = `
                     className="list-disc list-inside"
                   />
                 </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -4105,11 +3830,6 @@ exports[`nameGenerator dotNotationNameGenerator simple fields 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -4158,11 +3878,6 @@ exports[`single fields checkbox field 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -4235,11 +3950,6 @@ exports[`single fields checkbox field with description in schema and FieldTempla
           className="list-disc list-inside"
         />
       </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
-      </div>
     </div>
   </div>
   <div>
@@ -4300,11 +4010,6 @@ exports[`single fields checkbox field with label 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -4376,11 +4081,6 @@ exports[`single fields checkbox field with label and description 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -4460,11 +4160,6 @@ exports[`single fields checkbox field with label and rich text description 1`] =
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -4605,11 +4300,6 @@ exports[`single fields checkboxes field 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -4854,11 +4544,6 @@ exports[`single fields checkboxes widget with required field 1`] = `
           className="list-disc list-inside"
         />
       </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
-      </div>
     </div>
   </div>
   <div>
@@ -4953,11 +4638,6 @@ exports[`single fields field with description 1`] = `
                     className="list-disc list-inside"
                   />
                 </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -4969,11 +4649,6 @@ exports[`single fields field with description 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -5069,11 +4744,6 @@ exports[`single fields field with description in uiSchema 1`] = `
                     className="list-disc list-inside"
                   />
                 </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -5085,11 +4755,6 @@ exports[`single fields field with description in uiSchema 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -5185,11 +4850,6 @@ exports[`single fields field with markdown description 1`] = `
                     className="list-disc list-inside"
                   />
                 </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -5201,11 +4861,6 @@ exports[`single fields field with markdown description 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -5301,10 +4956,124 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
                     className="list-disc list-inside"
                   />
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field-error-template text-red-600"
+      >
+        <ul
+          className="list-disc list-inside"
+        />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary btn-primary-content "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields field with markdown help 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="field-template mb-3 rjsf-field rjsf-field-object"
+      disabled={false}
+    >
+      <div
+        className="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+      >
+        <div
+          className="grid grid-cols-1 gap-4 "
+        >
+          <div
+            className=""
+          >
+            <div
+              className="rjsf-field rjsf-field-string"
+            >
+              <div
+                className="field-template mb-3 rjsf-field rjsf-field-string"
+                disabled={false}
+              >
+                <label
+                  className="label"
+                  htmlFor="root_my-field"
+                >
+                  <span
+                    className="label-text font-medium"
+                  >
+                    my-field
+                  </span>
+                </label>
+                <div
+                  className="form-control"
+                >
+                  <label
+                    className="label hidden"
+                    htmlFor="root_my-field"
+                    style={
+                      {
+                        "display": "none",
+                      }
+                    }
+                  >
+                    <span
+                      className="label-text"
+                    >
+                      my-field
+                    </span>
+                  </label>
+                  <input
+                    aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                    autoFocus={false}
+                    className="input input-bordered"
+                    disabled={false}
+                    id="root_my-field"
+                    name="root_my-field"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <div
+                  className="rjsf-field-error-template text-red-600"
+                >
+                  <ul
+                    className="list-disc list-inside"
+                  />
+                </div>
                 <div
                   className="rjsf-field-help-template text-gray-500 text-sm"
                 >
-                  <div />
+                  <div>
+                    <span>
+                      some 
+                      <strong>
+                        Rich
+                      </strong>
+                       help text
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -5318,10 +5087,124 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
           className="list-disc list-inside"
         />
       </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary btn-primary-content "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields field with markdown help in uiSchema 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="field-template mb-3 rjsf-field rjsf-field-object"
+      disabled={false}
+    >
       <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
+        className="form-control bg-base-100 p-6 rounded-xl shadow-lg"
       >
-        <div />
+        <div
+          className="grid grid-cols-1 gap-4 "
+        >
+          <div
+            className=""
+          >
+            <div
+              className="rjsf-field rjsf-field-string"
+            >
+              <div
+                className="field-template mb-3 rjsf-field rjsf-field-string"
+                disabled={false}
+              >
+                <label
+                  className="label"
+                  htmlFor="root_my-field"
+                >
+                  <span
+                    className="label-text font-medium"
+                  >
+                    my-field
+                  </span>
+                </label>
+                <div
+                  className="form-control"
+                >
+                  <label
+                    className="label hidden"
+                    htmlFor="root_my-field"
+                    style={
+                      {
+                        "display": "none",
+                      }
+                    }
+                  >
+                    <span
+                      className="label-text"
+                    >
+                      my-field
+                    </span>
+                  </label>
+                  <input
+                    aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                    autoFocus={false}
+                    className="input input-bordered"
+                    disabled={false}
+                    id="root_my-field"
+                    name="root_my-field"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <div
+                  className="rjsf-field-error-template text-red-600"
+                >
+                  <ul
+                    className="list-disc list-inside"
+                  />
+                </div>
+                <div
+                  className="rjsf-field-help-template text-gray-500 text-sm"
+                >
+                  <div>
+                    <span>
+                      some 
+                      <strong>
+                        other
+                      </strong>
+                       help
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field-error-template text-red-600"
+      >
+        <ul
+          className="list-disc list-inside"
+        />
       </div>
     </div>
   </div>
@@ -5395,11 +5278,6 @@ exports[`single fields format color 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -5481,11 +5359,6 @@ exports[`single fields format date 1`] = `
           className="list-disc list-inside"
         />
       </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
-      </div>
     </div>
   </div>
   <div>
@@ -5566,11 +5439,6 @@ exports[`single fields format datetime 1`] = `
           className="list-disc list-inside"
         />
       </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
-      </div>
     </div>
   </div>
   <div>
@@ -5627,11 +5495,6 @@ exports[`single fields format time 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -5791,11 +5654,6 @@ exports[`single fields hidden field 1`] = `
                   className="list-disc list-inside"
                 />
               </div>
-              <div
-                className="rjsf-field-help-template text-gray-500 text-sm"
-              >
-                <div />
-              </div>
             </div>
           </div>
         </div>
@@ -5806,11 +5664,6 @@ exports[`single fields hidden field 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -5877,11 +5730,6 @@ exports[`single fields hidden label 1`] = `
           className="list-disc list-inside"
         />
       </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
-      </div>
     </div>
   </div>
   <div>
@@ -5923,11 +5771,6 @@ exports[`single fields null field 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -6003,11 +5846,6 @@ exports[`single fields number field 0 1`] = `
           className="list-disc list-inside"
         />
       </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
-      </div>
     </div>
   </div>
   <div>
@@ -6081,11 +5919,6 @@ exports[`single fields number field 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -6223,11 +6056,6 @@ exports[`single fields optional data controls does not show optional controls wh
                               className="list-disc list-inside"
                             />
                           </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -6321,11 +6149,6 @@ exports[`single fields optional data controls does not show optional controls wh
                                         className="list-disc list-inside"
                                       />
                                     </div>
-                                    <div
-                                      className="rjsf-field-help-template text-gray-500 text-sm"
-                                    >
-                                      <div />
-                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -6337,11 +6160,6 @@ exports[`single fields optional data controls does not show optional controls wh
                             <ul
                               className="list-disc list-inside"
                             />
-                          </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
                           </div>
                         </div>
                       </div>
@@ -6436,11 +6254,6 @@ exports[`single fields optional data controls does not show optional controls wh
                                         className="list-disc list-inside"
                                       />
                                     </div>
-                                    <div
-                                      className="rjsf-field-help-template text-gray-500 text-sm"
-                                    >
-                                      <div />
-                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -6452,11 +6265,6 @@ exports[`single fields optional data controls does not show optional controls wh
                             <ul
                               className="list-disc list-inside"
                             />
-                          </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
                           </div>
                         </div>
                       </div>
@@ -6543,11 +6351,6 @@ exports[`single fields optional data controls does not show optional controls wh
                               className="list-disc list-inside"
                             />
                           </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -6632,11 +6435,6 @@ exports[`single fields optional data controls does not show optional controls wh
                             <ul
                               className="list-disc list-inside"
                             />
-                          </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
                           </div>
                         </div>
                       </div>
@@ -6723,11 +6521,6 @@ exports[`single fields optional data controls does not show optional controls wh
                               className="list-disc list-inside"
                             />
                           </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -6739,11 +6532,6 @@ exports[`single fields optional data controls does not show optional controls wh
                   <ul
                     className="list-disc list-inside"
                   />
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -6829,11 +6617,6 @@ exports[`single fields optional data controls does not show optional controls wh
                   <ul
                     className="list-disc list-inside"
                   />
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -6928,11 +6711,6 @@ exports[`single fields optional data controls does not show optional controls wh
                               className="list-disc list-inside"
                             />
                           </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -6944,11 +6722,6 @@ exports[`single fields optional data controls does not show optional controls wh
                   <ul
                     className="list-disc list-inside"
                   />
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -7034,11 +6807,6 @@ exports[`single fields optional data controls does not show optional controls wh
                   <ul
                     className="list-disc list-inside"
                   />
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -7232,11 +7000,6 @@ exports[`single fields optional data controls does not show optional controls wh
                                     className="list-disc list-inside"
                                   />
                                 </div>
-                                <div
-                                  className="rjsf-field-help-template text-gray-500 text-sm"
-                                >
-                                  <div />
-                                </div>
                               </div>
                             </div>
                           </div>
@@ -7249,18 +7012,8 @@ exports[`single fields optional data controls does not show optional controls wh
                           className="list-disc list-inside"
                         />
                       </div>
-                      <div
-                        className="rjsf-field-help-template text-gray-500 text-sm"
-                      >
-                        <div />
-                      </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -7446,18 +7199,8 @@ exports[`single fields optional data controls does not show optional controls wh
                           className="list-disc list-inside"
                         />
                       </div>
-                      <div
-                        className="rjsf-field-help-template text-gray-500 text-sm"
-                      >
-                        <div />
-                      </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -7470,11 +7213,6 @@ exports[`single fields optional data controls does not show optional controls wh
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -7612,11 +7350,6 @@ exports[`single fields optional data controls does not show optional controls wh
                               className="list-disc list-inside"
                             />
                           </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -7710,11 +7443,6 @@ exports[`single fields optional data controls does not show optional controls wh
                                         className="list-disc list-inside"
                                       />
                                     </div>
-                                    <div
-                                      className="rjsf-field-help-template text-gray-500 text-sm"
-                                    >
-                                      <div />
-                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -7726,11 +7454,6 @@ exports[`single fields optional data controls does not show optional controls wh
                             <ul
                               className="list-disc list-inside"
                             />
-                          </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
                           </div>
                         </div>
                       </div>
@@ -7825,11 +7548,6 @@ exports[`single fields optional data controls does not show optional controls wh
                                         className="list-disc list-inside"
                                       />
                                     </div>
-                                    <div
-                                      className="rjsf-field-help-template text-gray-500 text-sm"
-                                    >
-                                      <div />
-                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -7841,11 +7559,6 @@ exports[`single fields optional data controls does not show optional controls wh
                             <ul
                               className="list-disc list-inside"
                             />
-                          </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
                           </div>
                         </div>
                       </div>
@@ -7932,11 +7645,6 @@ exports[`single fields optional data controls does not show optional controls wh
                               className="list-disc list-inside"
                             />
                           </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -8021,11 +7729,6 @@ exports[`single fields optional data controls does not show optional controls wh
                             <ul
                               className="list-disc list-inside"
                             />
-                          </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
                           </div>
                         </div>
                       </div>
@@ -8112,11 +7815,6 @@ exports[`single fields optional data controls does not show optional controls wh
                               className="list-disc list-inside"
                             />
                           </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -8128,11 +7826,6 @@ exports[`single fields optional data controls does not show optional controls wh
                   <ul
                     className="list-disc list-inside"
                   />
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -8218,11 +7911,6 @@ exports[`single fields optional data controls does not show optional controls wh
                   <ul
                     className="list-disc list-inside"
                   />
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -8317,11 +8005,6 @@ exports[`single fields optional data controls does not show optional controls wh
                               className="list-disc list-inside"
                             />
                           </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -8333,11 +8016,6 @@ exports[`single fields optional data controls does not show optional controls wh
                   <ul
                     className="list-disc list-inside"
                   />
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -8423,11 +8101,6 @@ exports[`single fields optional data controls does not show optional controls wh
                   <ul
                     className="list-disc list-inside"
                   />
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -8621,11 +8294,6 @@ exports[`single fields optional data controls does not show optional controls wh
                                     className="list-disc list-inside"
                                   />
                                 </div>
-                                <div
-                                  className="rjsf-field-help-template text-gray-500 text-sm"
-                                >
-                                  <div />
-                                </div>
                               </div>
                             </div>
                           </div>
@@ -8638,18 +8306,8 @@ exports[`single fields optional data controls does not show optional controls wh
                           className="list-disc list-inside"
                         />
                       </div>
-                      <div
-                        className="rjsf-field-help-template text-gray-500 text-sm"
-                      >
-                        <div />
-                      </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -8835,18 +8493,8 @@ exports[`single fields optional data controls does not show optional controls wh
                           className="list-disc list-inside"
                         />
                       </div>
-                      <div
-                        className="rjsf-field-help-template text-gray-500 text-sm"
-                      >
-                        <div />
-                      </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -8859,11 +8507,6 @@ exports[`single fields optional data controls does not show optional controls wh
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -9035,11 +8678,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                               className="list-disc list-inside"
                             />
                           </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -9113,11 +8751,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                             <ul
                               className="list-disc list-inside"
                             />
-                          </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
                           </div>
                         </div>
                       </div>
@@ -9212,11 +8845,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                         className="list-disc list-inside"
                                       />
                                     </div>
-                                    <div
-                                      className="rjsf-field-help-template text-gray-500 text-sm"
-                                    >
-                                      <div />
-                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -9228,11 +8856,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                             <ul
                               className="list-disc list-inside"
                             />
-                          </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
                           </div>
                         </div>
                       </div>
@@ -9319,11 +8942,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                               className="list-disc list-inside"
                             />
                           </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -9401,11 +9019,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                             <ul
                               className="list-disc list-inside"
                             />
-                          </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
                           </div>
                         </div>
                       </div>
@@ -9492,11 +9105,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                               className="list-disc list-inside"
                             />
                           </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -9508,11 +9116,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   <ul
                     className="list-disc list-inside"
                   />
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -9649,11 +9252,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                 className="list-disc list-inside"
                               />
                             </div>
-                            <div
-                              className="rjsf-field-help-template text-gray-500 text-sm"
-                            >
-                              <div />
-                            </div>
                           </div>
                         </div>
                         <div
@@ -9728,11 +9326,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   <ul
                     className="list-disc list-inside"
                   />
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -9827,11 +9420,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                               className="list-disc list-inside"
                             />
                           </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -9843,11 +9431,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   <ul
                     className="list-disc list-inside"
                   />
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -9933,11 +9516,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   <ul
                     className="list-disc list-inside"
                   />
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -10026,18 +9604,8 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                           className="list-disc list-inside"
                         />
                       </div>
-                      <div
-                        className="rjsf-field-help-template text-gray-500 text-sm"
-                      >
-                        <div />
-                      </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -10130,18 +9698,8 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                           className="list-disc list-inside"
                         />
                       </div>
-                      <div
-                        className="rjsf-field-help-template text-gray-500 text-sm"
-                      >
-                        <div />
-                      </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -10154,11 +9712,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -10296,11 +9849,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                               className="list-disc list-inside"
                             />
                           </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -10346,11 +9894,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                             <ul
                               className="list-disc list-inside"
                             />
-                          </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
                           </div>
                         </div>
                       </div>
@@ -10445,11 +9988,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                         className="list-disc list-inside"
                                       />
                                     </div>
-                                    <div
-                                      className="rjsf-field-help-template text-gray-500 text-sm"
-                                    >
-                                      <div />
-                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -10461,11 +9999,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                             <ul
                               className="list-disc list-inside"
                             />
-                          </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
                           </div>
                         </div>
                       </div>
@@ -10552,11 +10085,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                               className="list-disc list-inside"
                             />
                           </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -10605,11 +10133,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                             <ul
                               className="list-disc list-inside"
                             />
-                          </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
                           </div>
                         </div>
                       </div>
@@ -10696,11 +10219,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                               className="list-disc list-inside"
                             />
                           </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -10712,11 +10230,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   <ul
                     className="list-disc list-inside"
                   />
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -10819,11 +10332,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                 className="list-disc list-inside"
                               />
                             </div>
-                            <div
-                              className="rjsf-field-help-template text-gray-500 text-sm"
-                            >
-                              <div />
-                            </div>
                           </div>
                         </div>
                         <div
@@ -10898,11 +10406,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   <ul
                     className="list-disc list-inside"
                   />
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -10997,11 +10500,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                               className="list-disc list-inside"
                             />
                           </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -11013,11 +10511,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   <ul
                     className="list-disc list-inside"
                   />
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -11104,11 +10597,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                     className="list-disc list-inside"
                   />
                 </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -11168,18 +10656,8 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                           className="list-disc list-inside"
                         />
                       </div>
-                      <div
-                        className="rjsf-field-help-template text-gray-500 text-sm"
-                      >
-                        <div />
-                      </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -11243,18 +10721,8 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                           className="list-disc list-inside"
                         />
                       </div>
-                      <div
-                        className="rjsf-field-help-template text-gray-500 text-sm"
-                      >
-                        <div />
-                      </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -11267,11 +10735,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -11390,11 +10853,6 @@ exports[`single fields optional data controls shows "add" optional controls when
                     className="list-disc list-inside"
                   />
                 </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -11472,11 +10930,6 @@ exports[`single fields optional data controls shows "add" optional controls when
                   <ul
                     className="list-disc list-inside"
                   />
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -11571,11 +11024,6 @@ exports[`single fields optional data controls shows "add" optional controls when
                               className="list-disc list-inside"
                             />
                           </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -11587,11 +11035,6 @@ exports[`single fields optional data controls shows "add" optional controls when
                   <ul
                     className="list-disc list-inside"
                   />
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -11677,11 +11120,6 @@ exports[`single fields optional data controls shows "add" optional controls when
                   <ul
                     className="list-disc list-inside"
                   />
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -11770,18 +11208,8 @@ exports[`single fields optional data controls shows "add" optional controls when
                           className="list-disc list-inside"
                         />
                       </div>
-                      <div
-                        className="rjsf-field-help-template text-gray-500 text-sm"
-                      >
-                        <div />
-                      </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -11874,18 +11302,8 @@ exports[`single fields optional data controls shows "add" optional controls when
                           className="list-disc list-inside"
                         />
                       </div>
-                      <div
-                        className="rjsf-field-help-template text-gray-500 text-sm"
-                      >
-                        <div />
-                      </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -11898,11 +11316,6 @@ exports[`single fields optional data controls shows "add" optional controls when
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -11993,11 +11406,6 @@ exports[`single fields optional data controls shows "add" optional controls when
                     className="list-disc list-inside"
                   />
                 </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -12046,11 +11454,6 @@ exports[`single fields optional data controls shows "add" optional controls when
                   <ul
                     className="list-disc list-inside"
                   />
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -12145,11 +11548,6 @@ exports[`single fields optional data controls shows "add" optional controls when
                               className="list-disc list-inside"
                             />
                           </div>
-                          <div
-                            className="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -12161,11 +11559,6 @@ exports[`single fields optional data controls shows "add" optional controls when
                   <ul
                     className="list-disc list-inside"
                   />
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -12252,11 +11645,6 @@ exports[`single fields optional data controls shows "add" optional controls when
                     className="list-disc list-inside"
                   />
                 </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -12316,18 +11704,8 @@ exports[`single fields optional data controls shows "add" optional controls when
                           className="list-disc list-inside"
                         />
                       </div>
-                      <div
-                        className="rjsf-field-help-template text-gray-500 text-sm"
-                      >
-                        <div />
-                      </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -12391,18 +11769,8 @@ exports[`single fields optional data controls shows "add" optional controls when
                           className="list-disc list-inside"
                         />
                       </div>
-                      <div
-                        className="rjsf-field-help-template text-gray-500 text-sm"
-                      >
-                        <div />
-                      </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -12415,11 +11783,6 @@ exports[`single fields optional data controls shows "add" optional controls when
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -12493,11 +11856,6 @@ exports[`single fields password field 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -12585,11 +11943,6 @@ exports[`single fields radio field 1`] = `
           className="list-disc list-inside"
         />
       </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
-      </div>
     </div>
   </div>
   <div>
@@ -12675,11 +12028,6 @@ exports[`single fields radio widget with description in schema and FieldTemplate
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -12773,11 +12121,6 @@ exports[`single fields schema examples 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -12878,11 +12221,6 @@ exports[`single fields select field 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -13040,11 +12378,6 @@ exports[`single fields select field multiple choice 1`] = `
           className="list-disc list-inside"
         />
       </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
-      </div>
     </div>
   </div>
   <div>
@@ -13201,11 +12534,6 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
           className="list-disc list-inside"
         />
       </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
-      </div>
     </div>
   </div>
   <div>
@@ -13343,11 +12671,6 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -13505,11 +12828,6 @@ exports[`single fields select field multiple choice formData 1`] = `
           className="list-disc list-inside"
         />
       </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
-      </div>
     </div>
   </div>
   <div>
@@ -13645,11 +12963,6 @@ exports[`single fields select field multiple choice with labels 1`] = `
           className="list-disc list-inside"
         />
       </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
-      </div>
     </div>
   </div>
   <div>
@@ -13750,11 +13063,6 @@ exports[`single fields select field single choice enumDisabled 1`] = `
           className="list-disc list-inside"
         />
       </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
-      </div>
     </div>
   </div>
   <div>
@@ -13849,11 +13157,6 @@ exports[`single fields select field single choice enumDisabled using radio widge
           className="list-disc list-inside"
         />
       </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
-      </div>
     </div>
   </div>
   <div>
@@ -13947,11 +13250,6 @@ exports[`single fields select field single choice form disabled using radio widg
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -14055,11 +13353,6 @@ exports[`single fields select field single choice formData 1`] = `
           className="list-disc list-inside"
         />
       </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
-      </div>
     </div>
   </div>
   <div>
@@ -14154,11 +13447,6 @@ exports[`single fields select field single choice uiSchema disabled using radio 
           className="list-disc list-inside"
         />
       </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
-      </div>
     </div>
   </div>
   <div>
@@ -14251,11 +13539,6 @@ exports[`single fields select widget with description in schema and FieldTemplat
           className="list-disc list-inside"
         />
       </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
-      </div>
     </div>
   </div>
   <div>
@@ -14323,11 +13606,6 @@ exports[`single fields slider field 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -14405,11 +13683,6 @@ exports[`single fields string field format data-url 1`] = `
           className="list-disc list-inside"
         />
       </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
-      </div>
     </div>
   </div>
   <div>
@@ -14482,11 +13755,6 @@ exports[`single fields string field format email 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -14561,11 +13829,6 @@ exports[`single fields string field format uri 1`] = `
           className="list-disc list-inside"
         />
       </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
-      </div>
     </div>
   </div>
   <div>
@@ -14638,11 +13901,6 @@ exports[`single fields string field regular 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -14717,11 +13975,6 @@ exports[`single fields string field with placeholder 1`] = `
           className="list-disc list-inside"
         />
       </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
-      </div>
     </div>
   </div>
   <div>
@@ -14779,11 +14032,6 @@ exports[`single fields textarea field 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -14892,11 +14140,6 @@ exports[`single fields title field 1`] = `
                     className="list-disc list-inside"
                   />
                 </div>
-                <div
-                  className="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -14908,11 +14151,6 @@ exports[`single fields title field 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -14975,11 +14213,6 @@ exports[`single fields unsupported field 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>
@@ -15054,11 +14287,6 @@ exports[`single fields up/down field 1`] = `
           className="list-disc list-inside"
         />
       </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
-      </div>
     </div>
   </div>
   <div>
@@ -15131,11 +14359,6 @@ exports[`single fields using custom tagName 1`] = `
         <ul
           className="list-disc list-inside"
         />
-      </div>
-      <div
-        className="rjsf-field-help-template text-gray-500 text-sm"
-      >
-        <div />
       </div>
     </div>
   </div>

@@ -1505,8 +1505,8 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
               >
                 <label
                   className="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                  htmlFor="field-r9g__control"
-                  id="field-r9g__label"
+                  htmlFor="field-r9k__control"
+                  id="field-r9k__label"
                 >
                   color
                 </label>
@@ -1516,7 +1516,7 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
                   <button
                     aria-describedby="root_color__error root_color__description root_color__help"
                     aria-expanded={false}
-                    aria-labelledby="field-r9g__label"
+                    aria-labelledby="field-r9k__label"
                     autoFocus={false}
                     className="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                     disabled={false}
@@ -3082,8 +3082,8 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
               >
                 <label
                   className="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                  htmlFor="field-rb0__control"
-                  id="field-rb0__label"
+                  htmlFor="field-rb4__control"
+                  id="field-rb4__label"
                 >
                   color
                 </label>
@@ -3093,7 +3093,7 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
                   <button
                     aria-describedby="root_color__error root_color__description root_color__help"
                     aria-expanded={false}
-                    aria-labelledby="field-rb0__label"
+                    aria-labelledby="field-rb4__label"
                     autoFocus={false}
                     className="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                     disabled={false}
@@ -3928,6 +3928,7 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
         className="fui-Caption1 fui-Text ___13vod6f_1082073 fk6fouc fy9rknc fwrc4pm figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
         id="root__help"
       >
+         
         Select all that apply
       </span>
     </div>
@@ -4455,6 +4456,182 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
 </form>
 `;
 
+exports[`single fields field with markdown help 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+    >
+      <div
+        className="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
+      >
+        <div
+          className="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="rjsf-field rjsf-field-string"
+          >
+            <div
+              className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+            >
+              <label
+                className="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                htmlFor="root_my-field"
+              >
+                my-field
+              </label>
+              <span
+                className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+              >
+                <input
+                  aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                  autoFocus={false}
+                  className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
+                  disabled={false}
+                  id="root_my-field"
+                  name="root_my-field"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </span>
+              <span
+                className="fui-Caption1 fui-Text ___13vod6f_1082073 fk6fouc fy9rknc fwrc4pm figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+                id="root_my-field__help"
+              >
+                 
+                <span>
+                  some 
+                  <strong>
+                    Rich
+                  </strong>
+                   help text
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="___fko12g0_0000000 f1wswflg"
+  >
+    <button
+      className="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields field with markdown help in uiSchema 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+    >
+      <div
+        className="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
+      >
+        <div
+          className="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="rjsf-field rjsf-field-string"
+          >
+            <div
+              className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+            >
+              <label
+                className="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                htmlFor="root_my-field"
+              >
+                my-field
+              </label>
+              <span
+                className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+              >
+                <input
+                  aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                  autoFocus={false}
+                  className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
+                  disabled={false}
+                  id="root_my-field"
+                  name="root_my-field"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </span>
+              <span
+                className="fui-Caption1 fui-Text ___13vod6f_1082073 fk6fouc fy9rknc fwrc4pm figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+                id="root_my-field__help"
+              >
+                 
+                <span>
+                  some 
+                  <strong>
+                    other
+                  </strong>
+                   help
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="___fko12g0_0000000 f1wswflg"
+  >
+    <button
+      className="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields format color 1`] = `
 <form
   className="rjsf"
@@ -4727,6 +4904,7 @@ exports[`single fields help and error display 1`] = `
         className="fui-Caption1 fui-Text ___13vod6f_1082073 fk6fouc fy9rknc fwrc4pm figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
         id="root__help"
       >
+         
         help me!
       </span>
     </div>
@@ -5722,8 +5900,8 @@ exports[`single fields optional data controls does not show optional controls wh
                   >
                     <label
                       className="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                      htmlFor="field-r43__control"
-                      id="field-r43__label"
+                      htmlFor="field-r47__control"
+                      id="field-r47__label"
                     >
                       optionalObjectWithOneofs
                     </label>
@@ -5733,7 +5911,7 @@ exports[`single fields optional data controls does not show optional controls wh
                       <button
                         aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
                         aria-expanded={false}
-                        aria-labelledby="field-r43__label"
+                        aria-labelledby="field-r47__label"
                         autoFocus={false}
                         className="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                         disabled={false}
@@ -5893,8 +6071,8 @@ exports[`single fields optional data controls does not show optional controls wh
                   >
                     <label
                       className="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                      htmlFor="field-r49__control"
-                      id="field-r49__label"
+                      htmlFor="field-r4d__control"
+                      id="field-r4d__label"
                     >
                       optionalArrayWithAnyofs
                     </label>
@@ -5904,7 +6082,7 @@ exports[`single fields optional data controls does not show optional controls wh
                       <button
                         aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
                         aria-expanded={false}
-                        aria-labelledby="field-r49__label"
+                        aria-labelledby="field-r4d__label"
                         autoFocus={false}
                         className="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                         disabled={false}
@@ -6798,8 +6976,8 @@ exports[`single fields optional data controls does not show optional controls wh
                   >
                     <label
                       className="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                      htmlFor="field-r6l__control"
-                      id="field-r6l__label"
+                      htmlFor="field-r6p__control"
+                      id="field-r6p__label"
                     >
                       optionalObjectWithOneofs
                     </label>
@@ -6809,7 +6987,7 @@ exports[`single fields optional data controls does not show optional controls wh
                       <button
                         aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
                         aria-expanded={false}
-                        aria-labelledby="field-r6l__label"
+                        aria-labelledby="field-r6p__label"
                         autoFocus={false}
                         className="fui-Dropdown__button ___b67tb00_4t2umz0 f122n59 f1c21dwh f3bhgqh f1ewtqcl f1s2aq7o f14mj54c fdrzuqr f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                         disabled={true}
@@ -6968,8 +7146,8 @@ exports[`single fields optional data controls does not show optional controls wh
                   >
                     <label
                       className="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                      htmlFor="field-r6r__control"
-                      id="field-r6r__label"
+                      htmlFor="field-r6v__control"
+                      id="field-r6v__label"
                     >
                       optionalArrayWithAnyofs
                     </label>
@@ -6979,7 +7157,7 @@ exports[`single fields optional data controls does not show optional controls wh
                       <button
                         aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
                         aria-expanded={false}
-                        aria-labelledby="field-r6r__label"
+                        aria-labelledby="field-r6v__label"
                         autoFocus={false}
                         className="fui-Dropdown__button ___b67tb00_4t2umz0 f122n59 f1c21dwh f3bhgqh f1ewtqcl f1s2aq7o f14mj54c fdrzuqr f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                         disabled={true}

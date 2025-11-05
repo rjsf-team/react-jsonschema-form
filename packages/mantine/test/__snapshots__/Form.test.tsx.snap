@@ -32,7 +32,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r1bb{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r1c3{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -116,7 +116,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                                         "children": null,
                                                         "props": {
                                                           "dangerouslySetInnerHTML": {
-                                                            "__html": ".__m__-r1bn{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                                            "__html": ".__m__-r1cf{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                                           },
                                                           "data-mantine-styles": "inline",
                                                           "nonce": undefined,
@@ -369,7 +369,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                                           },
                                                         ],
                                                         "props": {
-                                                          "className": "m_2415a157 __m__-r1bn",
+                                                          "className": "m_2415a157 __m__-r1cf",
                                                           "data-size": undefined,
                                                           "data-variant": undefined,
                                                           "size": undefined,
@@ -675,7 +675,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_8bffd616 __m__-r1bi",
+                                          "className": "m_8bffd616 __m__-r1ca",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -736,7 +736,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                                         "children": null,
                                                         "props": {
                                                           "dangerouslySetInnerHTML": {
-                                                            "__html": ".__m__-r1cj{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                                            "__html": ".__m__-r1db{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                                           },
                                                           "data-mantine-styles": "inline",
                                                           "nonce": undefined,
@@ -989,7 +989,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                                           },
                                                         ],
                                                         "props": {
-                                                          "className": "m_2415a157 __m__-r1cj",
+                                                          "className": "m_2415a157 __m__-r1db",
                                                           "data-size": undefined,
                                                           "data-variant": undefined,
                                                           "size": undefined,
@@ -1295,7 +1295,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_8bffd616 __m__-r1ce",
+                                          "className": "m_8bffd616 __m__-r1d6",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -1467,7 +1467,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r1bb",
+                  "className": "m_2415a157 __m__-r1c3",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -1597,7 +1597,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r19v{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r1an{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -2020,7 +2020,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_8bffd616 __m__-r1a6",
+                                          "className": "m_8bffd616 __m__-r1au",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -2420,7 +2420,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_8bffd616 __m__-r1am",
+                                          "className": "m_8bffd616 __m__-r1be",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -2592,7 +2592,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r19v",
+                  "className": "m_2415a157 __m__-r1an",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -2722,7 +2722,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r1f3{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r1fr{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -3124,7 +3124,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
                                       },
                                     ],
                                     "props": {
-                                      "className": "m_8bffd616 __m__-r1f9",
+                                      "className": "m_8bffd616 __m__-r1g1",
                                       "data-size": undefined,
                                       "data-variant": undefined,
                                       "size": undefined,
@@ -3180,7 +3180,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r1f3",
+                  "className": "m_2415a157 __m__-r1fr",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -3310,7 +3310,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r18o{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r19g{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -3351,7 +3351,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                 "children": null,
                                 "props": {
                                   "dangerouslySetInnerHTML": {
-                                    "__html": ".__m__-r18t{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                    "__html": ".__m__-r19l{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                   },
                                   "data-mantine-styles": "inline",
                                   "nonce": undefined,
@@ -3582,7 +3582,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                                 "children": null,
                                                 "props": {
                                                   "dangerouslySetInnerHTML": {
-                                                    "__html": ".__m__-r19e{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                                    "__html": ".__m__-r1a6{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                                   },
                                                   "data-mantine-styles": "inline",
                                                   "nonce": undefined,
@@ -3784,7 +3784,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                                   },
                                                 ],
                                                 "props": {
-                                                  "className": "m_2415a157 __m__-r19e",
+                                                  "className": "m_2415a157 __m__-r1a6",
                                                   "data-size": undefined,
                                                   "data-variant": undefined,
                                                   "size": undefined,
@@ -3831,7 +3831,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "m_2415a157 __m__-r18t",
+                                  "className": "m_2415a157 __m__-r19l",
                                   "data-size": undefined,
                                   "data-variant": undefined,
                                   "size": undefined,
@@ -3878,7 +3878,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r18o",
+                  "className": "m_2415a157 __m__-r19g",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -4008,7 +4008,7 @@ exports[`nameGenerator bracketNameGenerator radio field 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r1eb{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r1f3{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -4295,7 +4295,7 @@ exports[`nameGenerator bracketNameGenerator radio field 1`] = `
                                       },
                                     ],
                                     "props": {
-                                      "className": "m_8bffd616 __m__-r1ei",
+                                      "className": "m_8bffd616 __m__-r1fa",
                                       "data-size": undefined,
                                       "data-variant": undefined,
                                       "size": undefined,
@@ -4351,7 +4351,7 @@ exports[`nameGenerator bracketNameGenerator radio field 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r1eb",
+                  "className": "m_2415a157 __m__-r1f3",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -4481,7 +4481,7 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r1df{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r1e7{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -4643,7 +4643,7 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
                                                           "data-combobox-option": true,
                                                           "data-size": undefined,
                                                           "data-variant": undefined,
-                                                          "id": ":r1e2:",
+                                                          "id": ":r1eq:",
                                                           "onClick": [Function],
                                                           "onMouseDown": [Function],
                                                           "onMouseOver": [Function],
@@ -4672,7 +4672,7 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
                                                           "data-combobox-option": true,
                                                           "data-size": undefined,
                                                           "data-variant": undefined,
-                                                          "id": ":r1e4:",
+                                                          "id": ":r1es:",
                                                           "onClick": [Function],
                                                           "onMouseDown": [Function],
                                                           "onMouseOver": [Function],
@@ -4701,7 +4701,7 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
                                                           "data-combobox-option": true,
                                                           "data-size": undefined,
                                                           "data-variant": undefined,
-                                                          "id": ":r1e6:",
+                                                          "id": ":r1eu:",
                                                           "onClick": [Function],
                                                           "onMouseDown": [Function],
                                                           "onMouseOver": [Function],
@@ -4912,7 +4912,7 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r1df",
+                  "className": "m_2415a157 __m__-r1e7",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -5042,7 +5042,7 @@ exports[`nameGenerator bracketNameGenerator simple fields 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r17u{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r18m{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -5515,7 +5515,7 @@ exports[`nameGenerator bracketNameGenerator simple fields 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r17u",
+                  "className": "m_2415a157 __m__-r18m",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -5645,7 +5645,7 @@ exports[`nameGenerator bracketNameGenerator textarea field 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r1g0{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r1go{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -5755,7 +5755,7 @@ exports[`nameGenerator bracketNameGenerator textarea field 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r1g0",
+                  "className": "m_2415a157 __m__-r1go",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -5885,7 +5885,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r1jo{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r1kg{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -5969,7 +5969,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                                         "children": null,
                                                         "props": {
                                                           "dangerouslySetInnerHTML": {
-                                                            "__html": ".__m__-r1k4{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                                            "__html": ".__m__-r1ks{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                                           },
                                                           "data-mantine-styles": "inline",
                                                           "nonce": undefined,
@@ -6222,7 +6222,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                                           },
                                                         ],
                                                         "props": {
-                                                          "className": "m_2415a157 __m__-r1k4",
+                                                          "className": "m_2415a157 __m__-r1ks",
                                                           "data-size": undefined,
                                                           "data-variant": undefined,
                                                           "size": undefined,
@@ -6528,7 +6528,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_8bffd616 __m__-r1jv",
+                                          "className": "m_8bffd616 __m__-r1kn",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -6589,7 +6589,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                                         "children": null,
                                                         "props": {
                                                           "dangerouslySetInnerHTML": {
-                                                            "__html": ".__m__-r1l0{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                                            "__html": ".__m__-r1lo{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                                           },
                                                           "data-mantine-styles": "inline",
                                                           "nonce": undefined,
@@ -6842,7 +6842,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                                           },
                                                         ],
                                                         "props": {
-                                                          "className": "m_2415a157 __m__-r1l0",
+                                                          "className": "m_2415a157 __m__-r1lo",
                                                           "data-size": undefined,
                                                           "data-variant": undefined,
                                                           "size": undefined,
@@ -7148,7 +7148,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_8bffd616 __m__-r1kr",
+                                          "className": "m_8bffd616 __m__-r1lj",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -7320,7 +7320,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r1jo",
+                  "className": "m_2415a157 __m__-r1kg",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -7450,7 +7450,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r1ic{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r1j4{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -7873,7 +7873,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_8bffd616 __m__-r1ij",
+                                          "className": "m_8bffd616 __m__-r1jb",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -8273,7 +8273,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_8bffd616 __m__-r1j3",
+                                          "className": "m_8bffd616 __m__-r1jr",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -8445,7 +8445,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r1ic",
+                  "className": "m_2415a157 __m__-r1j4",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -8575,7 +8575,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r1h5{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r1ht{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -8616,7 +8616,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                 "children": null,
                                 "props": {
                                   "dangerouslySetInnerHTML": {
-                                    "__html": ".__m__-r1ha{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                    "__html": ".__m__-r1i2{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                   },
                                   "data-mantine-styles": "inline",
                                   "nonce": undefined,
@@ -8847,7 +8847,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                                 "children": null,
                                                 "props": {
                                                   "dangerouslySetInnerHTML": {
-                                                    "__html": ".__m__-r1hr{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                                    "__html": ".__m__-r1ij{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                                   },
                                                   "data-mantine-styles": "inline",
                                                   "nonce": undefined,
@@ -9049,7 +9049,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                                   },
                                                 ],
                                                 "props": {
-                                                  "className": "m_2415a157 __m__-r1hr",
+                                                  "className": "m_2415a157 __m__-r1ij",
                                                   "data-size": undefined,
                                                   "data-variant": undefined,
                                                   "size": undefined,
@@ -9096,7 +9096,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "m_2415a157 __m__-r1ha",
+                                  "className": "m_2415a157 __m__-r1i2",
                                   "data-size": undefined,
                                   "data-variant": undefined,
                                   "size": undefined,
@@ -9143,7 +9143,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r1h5",
+                  "className": "m_2415a157 __m__-r1ht",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -9273,7 +9273,7 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r1ls{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r1mk{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -9435,7 +9435,7 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
                                                           "data-combobox-option": true,
                                                           "data-size": undefined,
                                                           "data-variant": undefined,
-                                                          "id": ":r1mf:",
+                                                          "id": ":r1n7:",
                                                           "onClick": [Function],
                                                           "onMouseDown": [Function],
                                                           "onMouseOver": [Function],
@@ -9464,7 +9464,7 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
                                                           "data-combobox-option": true,
                                                           "data-size": undefined,
                                                           "data-variant": undefined,
-                                                          "id": ":r1mh:",
+                                                          "id": ":r1n9:",
                                                           "onClick": [Function],
                                                           "onMouseDown": [Function],
                                                           "onMouseOver": [Function],
@@ -9493,7 +9493,7 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
                                                           "data-combobox-option": true,
                                                           "data-size": undefined,
                                                           "data-variant": undefined,
-                                                          "id": ":r1mj:",
+                                                          "id": ":r1nb:",
                                                           "onClick": [Function],
                                                           "onMouseDown": [Function],
                                                           "onMouseOver": [Function],
@@ -9704,7 +9704,7 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r1ls",
+                  "className": "m_2415a157 __m__-r1mk",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -9834,7 +9834,7 @@ exports[`nameGenerator dotNotationNameGenerator simple fields 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r1gb{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r1h3{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -10307,7 +10307,7 @@ exports[`nameGenerator dotNotationNameGenerator simple fields 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r1gb",
+                  "className": "m_2415a157 __m__-r1h3",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -14254,6 +14254,562 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
 ]
 `;
 
+exports[`single fields field with markdown help 1`] = `
+[
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}",
+      }
+    }
+    data-mantine-styles="classes"
+  />,
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": null,
+                "props": {
+                  "dangerouslySetInnerHTML": {
+                    "__html": ".__m__-rj0{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                  },
+                  "data-mantine-styles": "inline",
+                  "nonce": undefined,
+                },
+                "type": "style",
+                Symbol(cleaned): true,
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "children": [
+                                  "my-field",
+                                ],
+                                "props": {
+                                  "className": "m_8fdc1311",
+                                  "data-size": "sm",
+                                  "data-variant": undefined,
+                                  "htmlFor": "root_my-field",
+                                  "id": "root_my-field-label",
+                                  "onMouseDown": [Function],
+                                  "size": undefined,
+                                  "style": {
+                                    "--input-label-size": "var(--mantine-font-size-sm)",
+                                  },
+                                },
+                                "type": "label",
+                                Symbol(cleaned): true,
+                              },
+                              {
+                                "children": [
+                                  {
+                                    "children": null,
+                                    "props": {
+                                      "aria-describedby": undefined,
+                                      "aria-invalid": false,
+                                      "autoFocus": false,
+                                      "className": "m_8fb7ebe7",
+                                      "data-size": undefined,
+                                      "data-variant": "default",
+                                      "disabled": false,
+                                      "enableMarkdownInHelp": true,
+                                      "id": "root_my-field",
+                                      "name": "root_my-field",
+                                      "onBlur": [Function],
+                                      "onChange": [Function],
+                                      "onFocus": [Function],
+                                      "placeholder": "",
+                                      "required": false,
+                                      "size": undefined,
+                                      "style": {},
+                                      "type": "text",
+                                    },
+                                    "type": "input",
+                                    Symbol(cleaned): true,
+                                  },
+                                ],
+                                "props": {
+                                  "className": "m_6c018570",
+                                  "data-size": "sm",
+                                  "data-variant": "default",
+                                  "size": undefined,
+                                  "style": {
+                                    "--input-fz": "var(--mantine-font-size-sm)",
+                                    "--input-height": "var(--input-height-sm)",
+                                  },
+                                },
+                                "type": "div",
+                                Symbol(cleaned): true,
+                              },
+                            ],
+                            "props": {
+                              "className": "m_46b77525",
+                              "data-size": "sm",
+                              "data-variant": undefined,
+                              "size": undefined,
+                              "style": {},
+                            },
+                            "type": "div",
+                            Symbol(cleaned): true,
+                          },
+                          {
+                            "children": [
+                              {
+                                "children": [
+                                  "some ",
+                                  {
+                                    "children": [
+                                      "Rich",
+                                    ],
+                                    "props": {
+                                      "className": undefined,
+                                    },
+                                    "type": "strong",
+                                    Symbol(cleaned): true,
+                                  },
+                                  " help text",
+                                ],
+                                "props": {
+                                  "data-testid": undefined,
+                                },
+                                "type": "span",
+                                Symbol(cleaned): true,
+                              },
+                            ],
+                            "props": {
+                              "className": "m_b6d8b162",
+                              "data-size": "sm",
+                              "data-variant": undefined,
+                              "id": "root_my-field__help",
+                              "size": undefined,
+                              "style": {
+                                "--text-fz": "var(--mantine-font-size-sm)",
+                                "--text-lh": "var(--mantine-line-height-sm)",
+                                "color": "var(--mantine-color-dimmed)",
+                                "marginBlock": "var(--mantine-spacing-xs)",
+                              },
+                            },
+                            "type": "p",
+                            Symbol(cleaned): true,
+                          },
+                        ],
+                        "props": {
+                          "className": "rjsf-field rjsf-field-string",
+                          "style": undefined,
+                        },
+                        "type": "div",
+                        Symbol(cleaned): true,
+                      },
+                    ],
+                    "props": {
+                      "className": "",
+                      "data-size": undefined,
+                      "data-variant": undefined,
+                      "size": undefined,
+                      "style": {},
+                    },
+                    "type": "div",
+                    Symbol(cleaned): true,
+                  },
+                ],
+                "props": {
+                  "className": "m_2415a157 __m__-rj0",
+                  "data-size": undefined,
+                  "data-variant": undefined,
+                  "size": undefined,
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                  },
+                },
+                "type": "div",
+                Symbol(cleaned): true,
+              },
+            ],
+            "props": {
+              "className": "m_7485cace",
+              "data-size": undefined,
+              "data-strategy": "block",
+              "data-variant": undefined,
+              "id": "root",
+              "size": undefined,
+              "style": {
+                "padding": "0rem",
+              },
+            },
+            "type": "div",
+            Symbol(cleaned): true,
+          },
+        ],
+        "props": {
+          "className": "rjsf-field rjsf-field-object",
+          "style": undefined,
+        },
+        "type": "div",
+        Symbol(cleaned): true,
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  "Submit",
+                ],
+                "props": {
+                  "className": "m_811560b9",
+                  "data-size": undefined,
+                  "data-variant": undefined,
+                  "size": undefined,
+                  "style": {},
+                },
+                "type": "span",
+                Symbol(cleaned): true,
+              },
+            ],
+            "props": {
+              "className": "m_80f1301b",
+              "style": {},
+            },
+            "type": "span",
+            Symbol(cleaned): true,
+          },
+        ],
+        "props": {
+          "className": "m_77c9d27d m_87cf2631",
+          "data-size": undefined,
+          "data-variant": "filled",
+          "size": undefined,
+          "style": {
+            "--button-bd": "calc(0.0625rem * var(--mantine-scale)) solid transparent",
+            "--button-bg": "var(--mantine-color-blue-filled)",
+            "--button-color": "var(--mantine-color-white)",
+            "--button-hover": "var(--mantine-color-blue-filled-hover)",
+          },
+          "type": "submit",
+        },
+        "type": "button",
+        Symbol(cleaned): true,
+      },
+    ],
+    "props": {
+      "acceptCharset": undefined,
+      "action": undefined,
+      "as": undefined,
+      "autoComplete": undefined,
+      "className": "rjsf",
+      "encType": undefined,
+      "id": undefined,
+      "method": undefined,
+      "name": undefined,
+      "noValidate": false,
+      "onSubmit": [Function],
+      "target": undefined,
+    },
+    "type": "form",
+    Symbol(cleaned): true,
+  },
+]
+`;
+
+exports[`single fields field with markdown help in uiSchema 1`] = `
+[
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}",
+      }
+    }
+    data-mantine-styles="classes"
+  />,
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": null,
+                "props": {
+                  "dangerouslySetInnerHTML": {
+                    "__html": ".__m__-rjc{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                  },
+                  "data-mantine-styles": "inline",
+                  "nonce": undefined,
+                },
+                "type": "style",
+                Symbol(cleaned): true,
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "children": [
+                                  "my-field",
+                                ],
+                                "props": {
+                                  "className": "m_8fdc1311",
+                                  "data-size": "sm",
+                                  "data-variant": undefined,
+                                  "htmlFor": "root_my-field",
+                                  "id": "root_my-field-label",
+                                  "onMouseDown": [Function],
+                                  "size": undefined,
+                                  "style": {
+                                    "--input-label-size": "var(--mantine-font-size-sm)",
+                                  },
+                                },
+                                "type": "label",
+                                Symbol(cleaned): true,
+                              },
+                              {
+                                "children": [
+                                  {
+                                    "children": null,
+                                    "props": {
+                                      "aria-describedby": undefined,
+                                      "aria-invalid": false,
+                                      "autoFocus": false,
+                                      "className": "m_8fb7ebe7",
+                                      "data-size": undefined,
+                                      "data-variant": "default",
+                                      "disabled": false,
+                                      "enableMarkdownInHelp": true,
+                                      "id": "root_my-field",
+                                      "name": "root_my-field",
+                                      "onBlur": [Function],
+                                      "onChange": [Function],
+                                      "onFocus": [Function],
+                                      "placeholder": "",
+                                      "required": false,
+                                      "size": undefined,
+                                      "style": {},
+                                      "type": "text",
+                                    },
+                                    "type": "input",
+                                    Symbol(cleaned): true,
+                                  },
+                                ],
+                                "props": {
+                                  "className": "m_6c018570",
+                                  "data-size": "sm",
+                                  "data-variant": "default",
+                                  "size": undefined,
+                                  "style": {
+                                    "--input-fz": "var(--mantine-font-size-sm)",
+                                    "--input-height": "var(--input-height-sm)",
+                                  },
+                                },
+                                "type": "div",
+                                Symbol(cleaned): true,
+                              },
+                            ],
+                            "props": {
+                              "className": "m_46b77525",
+                              "data-size": "sm",
+                              "data-variant": undefined,
+                              "size": undefined,
+                              "style": {},
+                            },
+                            "type": "div",
+                            Symbol(cleaned): true,
+                          },
+                          {
+                            "children": [
+                              {
+                                "children": [
+                                  "some ",
+                                  {
+                                    "children": [
+                                      "other",
+                                    ],
+                                    "props": {
+                                      "className": undefined,
+                                    },
+                                    "type": "strong",
+                                    Symbol(cleaned): true,
+                                  },
+                                  " help",
+                                ],
+                                "props": {
+                                  "data-testid": undefined,
+                                },
+                                "type": "span",
+                                Symbol(cleaned): true,
+                              },
+                            ],
+                            "props": {
+                              "className": "m_b6d8b162",
+                              "data-size": "sm",
+                              "data-variant": undefined,
+                              "id": "root_my-field__help",
+                              "size": undefined,
+                              "style": {
+                                "--text-fz": "var(--mantine-font-size-sm)",
+                                "--text-lh": "var(--mantine-line-height-sm)",
+                                "color": "var(--mantine-color-dimmed)",
+                                "marginBlock": "var(--mantine-spacing-xs)",
+                              },
+                            },
+                            "type": "p",
+                            Symbol(cleaned): true,
+                          },
+                        ],
+                        "props": {
+                          "className": "rjsf-field rjsf-field-string",
+                          "style": undefined,
+                        },
+                        "type": "div",
+                        Symbol(cleaned): true,
+                      },
+                    ],
+                    "props": {
+                      "className": "",
+                      "data-size": undefined,
+                      "data-variant": undefined,
+                      "size": undefined,
+                      "style": {},
+                    },
+                    "type": "div",
+                    Symbol(cleaned): true,
+                  },
+                ],
+                "props": {
+                  "className": "m_2415a157 __m__-rjc",
+                  "data-size": undefined,
+                  "data-variant": undefined,
+                  "size": undefined,
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                  },
+                },
+                "type": "div",
+                Symbol(cleaned): true,
+              },
+            ],
+            "props": {
+              "className": "m_7485cace",
+              "data-size": undefined,
+              "data-strategy": "block",
+              "data-variant": undefined,
+              "id": "root",
+              "size": undefined,
+              "style": {
+                "padding": "0rem",
+              },
+            },
+            "type": "div",
+            Symbol(cleaned): true,
+          },
+        ],
+        "props": {
+          "className": "rjsf-field rjsf-field-object",
+          "style": undefined,
+        },
+        "type": "div",
+        Symbol(cleaned): true,
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  "Submit",
+                ],
+                "props": {
+                  "className": "m_811560b9",
+                  "data-size": undefined,
+                  "data-variant": undefined,
+                  "size": undefined,
+                  "style": {},
+                },
+                "type": "span",
+                Symbol(cleaned): true,
+              },
+            ],
+            "props": {
+              "className": "m_80f1301b",
+              "style": {},
+            },
+            "type": "span",
+            Symbol(cleaned): true,
+          },
+        ],
+        "props": {
+          "className": "m_77c9d27d m_87cf2631",
+          "data-size": undefined,
+          "data-variant": "filled",
+          "size": undefined,
+          "style": {
+            "--button-bd": "calc(0.0625rem * var(--mantine-scale)) solid transparent",
+            "--button-bg": "var(--mantine-color-blue-filled)",
+            "--button-color": "var(--mantine-color-white)",
+            "--button-hover": "var(--mantine-color-blue-filled-hover)",
+          },
+          "type": "submit",
+        },
+        "type": "button",
+        Symbol(cleaned): true,
+      },
+    ],
+    "props": {
+      "acceptCharset": undefined,
+      "action": undefined,
+      "as": undefined,
+      "autoComplete": undefined,
+      "className": "rjsf",
+      "encType": undefined,
+      "id": undefined,
+      "method": undefined,
+      "name": undefined,
+      "noValidate": false,
+      "onSubmit": [Function],
+      "target": undefined,
+    },
+    "type": "form",
+    Symbol(cleaned): true,
+  },
+]
+`;
+
 exports[`single fields format color 1`] = `
 [
   <style
@@ -16405,7 +16961,7 @@ exports[`single fields optional data controls does not show optional controls wh
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-rkf{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-rl7{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -16446,7 +17002,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                 "children": null,
                                 "props": {
                                   "dangerouslySetInnerHTML": {
-                                    "__html": ".__m__-rkk{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                    "__html": ".__m__-rlc{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                   },
                                   "data-mantine-styles": "inline",
                                   "nonce": undefined,
@@ -16582,7 +17138,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                                 "children": null,
                                                 "props": {
                                                   "dangerouslySetInnerHTML": {
-                                                    "__html": ".__m__-rkv{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                                    "__html": ".__m__-rln{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                                   },
                                                   "data-mantine-styles": "inline",
                                                   "nonce": undefined,
@@ -16689,7 +17245,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                                   },
                                                 ],
                                                 "props": {
-                                                  "className": "m_2415a157 __m__-rkv",
+                                                  "className": "m_2415a157 __m__-rln",
                                                   "data-size": undefined,
                                                   "data-variant": undefined,
                                                   "size": undefined,
@@ -16765,7 +17321,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                                 "children": null,
                                                 "props": {
                                                   "dangerouslySetInnerHTML": {
-                                                    "__html": ".__m__-rla{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                                    "__html": ".__m__-rm2{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                                   },
                                                   "data-mantine-styles": "inline",
                                                   "nonce": undefined,
@@ -16872,7 +17428,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                                   },
                                                 ],
                                                 "props": {
-                                                  "className": "m_2415a157 __m__-rla",
+                                                  "className": "m_2415a157 __m__-rm2",
                                                   "data-size": undefined,
                                                   "data-variant": undefined,
                                                   "size": undefined,
@@ -17465,7 +18021,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                   },
                                 ],
                                 "props": {
-                                  "className": "m_2415a157 __m__-rkk",
+                                  "className": "m_2415a157 __m__-rlc",
                                   "data-size": undefined,
                                   "data-variant": undefined,
                                   "size": undefined,
@@ -17723,7 +18279,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                 "children": null,
                                 "props": {
                                   "dangerouslySetInnerHTML": {
-                                    "__html": ".__m__-rmh{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                    "__html": ".__m__-rn9{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                   },
                                   "data-mantine-styles": "inline",
                                   "nonce": undefined,
@@ -17830,7 +18386,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                   },
                                 ],
                                 "props": {
-                                  "className": "m_2415a157 __m__-rmh",
+                                  "className": "m_2415a157 __m__-rn9",
                                   "data-size": undefined,
                                   "data-variant": undefined,
                                   "size": undefined,
@@ -18236,7 +18792,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                                               "data-combobox-option": true,
                                                               "data-size": undefined,
                                                               "data-variant": undefined,
-                                                              "id": ":rni:",
+                                                              "id": ":roa:",
                                                               "onClick": [Function],
                                                               "onMouseDown": [Function],
                                                               "onMouseOver": [Function],
@@ -18265,7 +18821,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                                               "data-combobox-option": true,
                                                               "data-size": undefined,
                                                               "data-variant": undefined,
-                                                              "id": ":rnk:",
+                                                              "id": ":roc:",
                                                               "onClick": [Function],
                                                               "onMouseDown": [Function],
                                                               "onMouseOver": [Function],
@@ -18294,7 +18850,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                                               "data-combobox-option": true,
                                                               "data-size": undefined,
                                                               "data-variant": undefined,
-                                                              "id": ":rnm:",
+                                                              "id": ":roe:",
                                                               "onClick": [Function],
                                                               "onMouseDown": [Function],
                                                               "onMouseOver": [Function],
@@ -18513,7 +19069,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                         "children": null,
                                         "props": {
                                           "dangerouslySetInnerHTML": {
-                                            "__html": ".__m__-rnq{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                            "__html": ".__m__-roi{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                           },
                                           "data-mantine-styles": "inline",
                                           "nonce": undefined,
@@ -18619,7 +19175,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_2415a157 __m__-rnq",
+                                          "className": "m_2415a157 __m__-roi",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -18867,7 +19423,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                                               "data-combobox-option": true,
                                                               "data-size": undefined,
                                                               "data-variant": undefined,
-                                                              "id": ":rok:",
+                                                              "id": ":rpc:",
                                                               "onClick": [Function],
                                                               "onMouseDown": [Function],
                                                               "onMouseOver": [Function],
@@ -18896,7 +19452,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                                               "data-combobox-option": true,
                                                               "data-size": undefined,
                                                               "data-variant": undefined,
-                                                              "id": ":rom:",
+                                                              "id": ":rpe:",
                                                               "onClick": [Function],
                                                               "onMouseDown": [Function],
                                                               "onMouseOver": [Function],
@@ -18925,7 +19481,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                                               "data-combobox-option": true,
                                                               "data-size": undefined,
                                                               "data-variant": undefined,
-                                                              "id": ":roo:",
+                                                              "id": ":rpg:",
                                                               "onClick": [Function],
                                                               "onMouseDown": [Function],
                                                               "onMouseOver": [Function],
@@ -19321,7 +19877,7 @@ exports[`single fields optional data controls does not show optional controls wh
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-rkf",
+                  "className": "m_2415a157 __m__-rl7",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -19472,7 +20028,7 @@ exports[`single fields optional data controls does not show optional controls wh
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-rur{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-rvj{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -19513,7 +20069,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                 "children": null,
                                 "props": {
                                   "dangerouslySetInnerHTML": {
-                                    "__html": ".__m__-rv0{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                    "__html": ".__m__-rvo{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                   },
                                   "data-mantine-styles": "inline",
                                   "nonce": undefined,
@@ -19648,7 +20204,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                                 "children": null,
                                                 "props": {
                                                   "dangerouslySetInnerHTML": {
-                                                    "__html": ".__m__-rvb{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                                    "__html": ".__m__-r103{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                                   },
                                                   "data-mantine-styles": "inline",
                                                   "nonce": undefined,
@@ -19754,7 +20310,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                                   },
                                                 ],
                                                 "props": {
-                                                  "className": "m_2415a157 __m__-rvb",
+                                                  "className": "m_2415a157 __m__-r103",
                                                   "data-size": undefined,
                                                   "data-variant": undefined,
                                                   "size": undefined,
@@ -19830,7 +20386,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                                 "children": null,
                                                 "props": {
                                                   "dangerouslySetInnerHTML": {
-                                                    "__html": ".__m__-rvm{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                                    "__html": ".__m__-r10e{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                                   },
                                                   "data-mantine-styles": "inline",
                                                   "nonce": undefined,
@@ -19936,7 +20492,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                                   },
                                                 ],
                                                 "props": {
-                                                  "className": "m_2415a157 __m__-rvm",
+                                                  "className": "m_2415a157 __m__-r10e",
                                                   "data-size": undefined,
                                                   "data-variant": undefined,
                                                   "size": undefined,
@@ -20535,7 +21091,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                   },
                                 ],
                                 "props": {
-                                  "className": "m_2415a157 __m__-rv0",
+                                  "className": "m_2415a157 __m__-rvo",
                                   "data-size": undefined,
                                   "data-variant": undefined,
                                   "size": undefined,
@@ -20795,7 +21351,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                 "children": null,
                                 "props": {
                                   "dangerouslySetInnerHTML": {
-                                    "__html": ".__m__-r10t{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                    "__html": ".__m__-r11l{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                   },
                                   "data-mantine-styles": "inline",
                                   "nonce": undefined,
@@ -20901,7 +21457,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                   },
                                 ],
                                 "props": {
-                                  "className": "m_2415a157 __m__-r10t",
+                                  "className": "m_2415a157 __m__-r11l",
                                   "data-size": undefined,
                                   "data-variant": undefined,
                                   "size": undefined,
@@ -21311,7 +21867,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                                               "data-combobox-option": true,
                                                               "data-size": undefined,
                                                               "data-variant": undefined,
-                                                              "id": ":r11u:",
+                                                              "id": ":r12m:",
                                                               "onClick": [Function],
                                                               "onMouseDown": [Function],
                                                               "onMouseOver": [Function],
@@ -21340,7 +21896,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                                               "data-combobox-option": true,
                                                               "data-size": undefined,
                                                               "data-variant": undefined,
-                                                              "id": ":r120:",
+                                                              "id": ":r12o:",
                                                               "onClick": [Function],
                                                               "onMouseDown": [Function],
                                                               "onMouseOver": [Function],
@@ -21369,7 +21925,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                                               "data-combobox-option": true,
                                                               "data-size": undefined,
                                                               "data-variant": undefined,
-                                                              "id": ":r122:",
+                                                              "id": ":r12q:",
                                                               "onClick": [Function],
                                                               "onMouseDown": [Function],
                                                               "onMouseOver": [Function],
@@ -21589,7 +22145,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                         "children": null,
                                         "props": {
                                           "dangerouslySetInnerHTML": {
-                                            "__html": ".__m__-r126{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                            "__html": ".__m__-r12u{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                           },
                                           "data-mantine-styles": "inline",
                                           "nonce": undefined,
@@ -21695,7 +22251,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_2415a157 __m__-r126",
+                                          "className": "m_2415a157 __m__-r12u",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -21945,7 +22501,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                                               "data-combobox-option": true,
                                                               "data-size": undefined,
                                                               "data-variant": undefined,
-                                                              "id": ":r130:",
+                                                              "id": ":r13o:",
                                                               "onClick": [Function],
                                                               "onMouseDown": [Function],
                                                               "onMouseOver": [Function],
@@ -21974,7 +22530,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                                               "data-combobox-option": true,
                                                               "data-size": undefined,
                                                               "data-variant": undefined,
-                                                              "id": ":r132:",
+                                                              "id": ":r13q:",
                                                               "onClick": [Function],
                                                               "onMouseDown": [Function],
                                                               "onMouseOver": [Function],
@@ -22003,7 +22559,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                                               "data-combobox-option": true,
                                                               "data-size": undefined,
                                                               "data-variant": undefined,
-                                                              "id": ":r134:",
+                                                              "id": ":r13s:",
                                                               "onClick": [Function],
                                                               "onMouseDown": [Function],
                                                               "onMouseOver": [Function],
@@ -22402,7 +22958,7 @@ exports[`single fields optional data controls does not show optional controls wh
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-rur",
+                  "className": "m_2415a157 __m__-rvj",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -22553,7 +23109,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-rr0{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-rro{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -22573,7 +23129,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                 "children": null,
                                 "props": {
                                   "dangerouslySetInnerHTML": {
-                                    "__html": ".__m__-rr4{--grid-gutter:var(--mantine-spacing-md);}",
+                                    "__html": ".__m__-rrs{--grid-gutter:var(--mantine-spacing-md);}",
                                   },
                                   "data-mantine-styles": "inline",
                                   "nonce": undefined,
@@ -22589,7 +23145,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                         "children": null,
                                         "props": {
                                           "dangerouslySetInnerHTML": {
-                                            "__html": ".__m__-rr6{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}",
+                                            "__html": ".__m__-rru{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}",
                                           },
                                           "data-mantine-styles": "inline",
                                           "nonce": undefined,
@@ -22622,7 +23178,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_96bdd299 __m__-rr6",
+                                          "className": "m_96bdd299 __m__-rru",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -22635,7 +23191,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                         "children": null,
                                         "props": {
                                           "dangerouslySetInnerHTML": {
-                                            "__html": ".__m__-rr9{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}",
+                                            "__html": ".__m__-rs1{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}",
                                           },
                                           "data-mantine-styles": "inline",
                                           "nonce": undefined,
@@ -22731,7 +23287,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_96bdd299 __m__-rr9",
+                                          "className": "m_96bdd299 __m__-rs1",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -22750,7 +23306,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                   },
                                 ],
                                 "props": {
-                                  "className": "m_410352e9 __m__-rr4",
+                                  "className": "m_410352e9 __m__-rrs",
                                   "data-size": undefined,
                                   "data-variant": undefined,
                                   "size": undefined,
@@ -22763,7 +23319,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                 "children": null,
                                 "props": {
                                   "dangerouslySetInnerHTML": {
-                                    "__html": ".__m__-rrd{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                    "__html": ".__m__-rs5{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                   },
                                   "data-mantine-styles": "inline",
                                   "nonce": undefined,
@@ -22879,7 +23435,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                                 "children": null,
                                                 "props": {
                                                   "dangerouslySetInnerHTML": {
-                                                    "__html": ".__m__-rrn{--grid-gutter:var(--mantine-spacing-md);}",
+                                                    "__html": ".__m__-rsf{--grid-gutter:var(--mantine-spacing-md);}",
                                                   },
                                                   "data-mantine-styles": "inline",
                                                   "nonce": undefined,
@@ -22895,7 +23451,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                                         "children": null,
                                                         "props": {
                                                           "dangerouslySetInnerHTML": {
-                                                            "__html": ".__m__-rrp{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}",
+                                                            "__html": ".__m__-rsh{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}",
                                                           },
                                                           "data-mantine-styles": "inline",
                                                           "nonce": undefined,
@@ -22928,7 +23484,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                                           },
                                                         ],
                                                         "props": {
-                                                          "className": "m_96bdd299 __m__-rrp",
+                                                          "className": "m_96bdd299 __m__-rsh",
                                                           "data-size": undefined,
                                                           "data-variant": undefined,
                                                           "size": undefined,
@@ -22941,7 +23497,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                                         "children": null,
                                                         "props": {
                                                           "dangerouslySetInnerHTML": {
-                                                            "__html": ".__m__-rrs{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}",
+                                                            "__html": ".__m__-rsk{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}",
                                                           },
                                                           "data-mantine-styles": "inline",
                                                           "nonce": undefined,
@@ -23037,7 +23593,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                                           },
                                                         ],
                                                         "props": {
-                                                          "className": "m_96bdd299 __m__-rrs",
+                                                          "className": "m_96bdd299 __m__-rsk",
                                                           "data-size": undefined,
                                                           "data-variant": undefined,
                                                           "size": undefined,
@@ -23056,7 +23612,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                                   },
                                                 ],
                                                 "props": {
-                                                  "className": "m_410352e9 __m__-rrn",
+                                                  "className": "m_410352e9 __m__-rsf",
                                                   "data-size": undefined,
                                                   "data-variant": undefined,
                                                   "size": undefined,
@@ -23069,7 +23625,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                                 "children": null,
                                                 "props": {
                                                   "dangerouslySetInnerHTML": {
-                                                    "__html": ".__m__-rs0{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                                    "__html": ".__m__-rso{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                                   },
                                                   "data-mantine-styles": "inline",
                                                   "nonce": undefined,
@@ -23080,7 +23636,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                               {
                                                 "children": null,
                                                 "props": {
-                                                  "className": "m_2415a157 __m__-rs0",
+                                                  "className": "m_2415a157 __m__-rso",
                                                   "data-size": undefined,
                                                   "data-variant": undefined,
                                                   "size": undefined,
@@ -23156,7 +23712,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                                 "children": null,
                                                 "props": {
                                                   "dangerouslySetInnerHTML": {
-                                                    "__html": ".__m__-rs5{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                                    "__html": ".__m__-rst{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                                   },
                                                   "data-mantine-styles": "inline",
                                                   "nonce": undefined,
@@ -23263,7 +23819,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                                   },
                                                 ],
                                                 "props": {
-                                                  "className": "m_2415a157 __m__-rs5",
+                                                  "className": "m_2415a157 __m__-rst",
                                                   "data-size": undefined,
                                                   "data-variant": undefined,
                                                   "size": undefined,
@@ -23754,7 +24310,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                   },
                                 ],
                                 "props": {
-                                  "className": "m_2415a157 __m__-rrd",
+                                  "className": "m_2415a157 __m__-rs5",
                                   "data-size": undefined,
                                   "data-variant": undefined,
                                   "size": undefined,
@@ -24058,7 +24614,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_8bffd616 __m__-rt4",
+                                          "className": "m_8bffd616 __m__-rts",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -24259,7 +24815,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                 "children": null,
                                 "props": {
                                   "dangerouslySetInnerHTML": {
-                                    "__html": ".__m__-rtl{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                    "__html": ".__m__-rud{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                   },
                                   "data-mantine-styles": "inline",
                                   "nonce": undefined,
@@ -24366,7 +24922,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                   },
                                 ],
                                 "props": {
-                                  "className": "m_2415a157 __m__-rtl",
+                                  "className": "m_2415a157 __m__-rud",
                                   "data-size": undefined,
                                   "data-variant": undefined,
                                   "size": undefined,
@@ -24607,7 +25163,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                         "children": null,
                                         "props": {
                                           "dangerouslySetInnerHTML": {
-                                            "__html": ".__m__-ru7{--grid-gutter:var(--mantine-spacing-md);}",
+                                            "__html": ".__m__-ruv{--grid-gutter:var(--mantine-spacing-md);}",
                                           },
                                           "data-mantine-styles": "inline",
                                           "nonce": undefined,
@@ -24623,7 +25179,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                                 "children": null,
                                                 "props": {
                                                   "dangerouslySetInnerHTML": {
-                                                    "__html": ".__m__-ru9{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}",
+                                                    "__html": ".__m__-rv1{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}",
                                                   },
                                                   "data-mantine-styles": "inline",
                                                   "nonce": undefined,
@@ -24656,7 +25212,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                                   },
                                                 ],
                                                 "props": {
-                                                  "className": "m_96bdd299 __m__-ru9",
+                                                  "className": "m_96bdd299 __m__-rv1",
                                                   "data-size": undefined,
                                                   "data-variant": undefined,
                                                   "size": undefined,
@@ -24669,7 +25225,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                                 "children": null,
                                                 "props": {
                                                   "dangerouslySetInnerHTML": {
-                                                    "__html": ".__m__-ruc{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}",
+                                                    "__html": ".__m__-rv4{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}",
                                                   },
                                                   "data-mantine-styles": "inline",
                                                   "nonce": undefined,
@@ -24765,7 +25321,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                                   },
                                                 ],
                                                 "props": {
-                                                  "className": "m_96bdd299 __m__-ruc",
+                                                  "className": "m_96bdd299 __m__-rv4",
                                                   "data-size": undefined,
                                                   "data-variant": undefined,
                                                   "size": undefined,
@@ -24784,7 +25340,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_410352e9 __m__-ru7",
+                                          "className": "m_410352e9 __m__-ruv",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -24797,7 +25353,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                         "children": null,
                                         "props": {
                                           "dangerouslySetInnerHTML": {
-                                            "__html": ".__m__-rug{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                            "__html": ".__m__-rv8{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                           },
                                           "data-mantine-styles": "inline",
                                           "nonce": undefined,
@@ -24808,7 +25364,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                       {
                                         "children": null,
                                         "props": {
-                                          "className": "m_2415a157 __m__-rug",
+                                          "className": "m_2415a157 __m__-rv8",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -24987,7 +25543,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-rr0",
+                  "className": "m_2415a157 __m__-rro",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -25138,7 +25694,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r14s{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r15k{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -25179,7 +25735,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                 "children": null,
                                 "props": {
                                   "dangerouslySetInnerHTML": {
-                                    "__html": ".__m__-r151{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                    "__html": ".__m__-r15p{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                   },
                                   "data-mantine-styles": "inline",
                                   "nonce": undefined,
@@ -25315,7 +25871,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                                 "children": null,
                                                 "props": {
                                                   "dangerouslySetInnerHTML": {
-                                                    "__html": ".__m__-r15c{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                                    "__html": ".__m__-r164{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                                   },
                                                   "data-mantine-styles": "inline",
                                                   "nonce": undefined,
@@ -25337,7 +25893,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                                   },
                                                 ],
                                                 "props": {
-                                                  "className": "m_2415a157 __m__-r15c",
+                                                  "className": "m_2415a157 __m__-r164",
                                                   "data-size": undefined,
                                                   "data-variant": undefined,
                                                   "size": undefined,
@@ -25413,7 +25969,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                                 "children": null,
                                                 "props": {
                                                   "dangerouslySetInnerHTML": {
-                                                    "__html": ".__m__-r15h{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                                    "__html": ".__m__-r169{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                                   },
                                                   "data-mantine-styles": "inline",
                                                   "nonce": undefined,
@@ -25519,7 +26075,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                                   },
                                                 ],
                                                 "props": {
-                                                  "className": "m_2415a157 __m__-r15h",
+                                                  "className": "m_2415a157 __m__-r169",
                                                   "data-size": undefined,
                                                   "data-variant": undefined,
                                                   "size": undefined,
@@ -26025,7 +26581,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                   },
                                 ],
                                 "props": {
-                                  "className": "m_2415a157 __m__-r151",
+                                  "className": "m_2415a157 __m__-r15p",
                                   "data-size": undefined,
                                   "data-variant": undefined,
                                   "size": undefined,
@@ -26330,7 +26886,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_8bffd616 __m__-r16g",
+                                          "className": "m_8bffd616 __m__-r178",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -26533,7 +27089,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                 "children": null,
                                 "props": {
                                   "dangerouslySetInnerHTML": {
-                                    "__html": ".__m__-r171{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                    "__html": ".__m__-r17p{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                   },
                                   "data-mantine-styles": "inline",
                                   "nonce": undefined,
@@ -26639,7 +27195,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                   },
                                 ],
                                 "props": {
-                                  "className": "m_2415a157 __m__-r171",
+                                  "className": "m_2415a157 __m__-r17p",
                                   "data-size": undefined,
                                   "data-variant": undefined,
                                   "size": undefined,
@@ -26903,7 +27459,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                         "children": null,
                                         "props": {
                                           "dangerouslySetInnerHTML": {
-                                            "__html": ".__m__-r17k{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                            "__html": ".__m__-r18c{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                           },
                                           "data-mantine-styles": "inline",
                                           "nonce": undefined,
@@ -26925,7 +27481,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_2415a157 __m__-r17k",
+                                          "className": "m_2415a157 __m__-r18c",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -27115,7 +27671,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r14s",
+                  "className": "m_2415a157 __m__-r15k",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -27266,7 +27822,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-rp4{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-rps{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -27286,7 +27842,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                                 "children": null,
                                 "props": {
                                   "dangerouslySetInnerHTML": {
-                                    "__html": ".__m__-rp8{--grid-gutter:var(--mantine-spacing-md);}",
+                                    "__html": ".__m__-rq0{--grid-gutter:var(--mantine-spacing-md);}",
                                   },
                                   "data-mantine-styles": "inline",
                                   "nonce": undefined,
@@ -27302,7 +27858,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                                         "children": null,
                                         "props": {
                                           "dangerouslySetInnerHTML": {
-                                            "__html": ".__m__-rpa{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}",
+                                            "__html": ".__m__-rq2{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}",
                                           },
                                           "data-mantine-styles": "inline",
                                           "nonce": undefined,
@@ -27335,7 +27891,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_96bdd299 __m__-rpa",
+                                          "className": "m_96bdd299 __m__-rq2",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -27348,7 +27904,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                                         "children": null,
                                         "props": {
                                           "dangerouslySetInnerHTML": {
-                                            "__html": ".__m__-rpd{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}",
+                                            "__html": ".__m__-rq5{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}",
                                           },
                                           "data-mantine-styles": "inline",
                                           "nonce": undefined,
@@ -27444,7 +28000,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_96bdd299 __m__-rpd",
+                                          "className": "m_96bdd299 __m__-rq5",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -27463,7 +28019,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                                   },
                                 ],
                                 "props": {
-                                  "className": "m_410352e9 __m__-rp8",
+                                  "className": "m_410352e9 __m__-rq0",
                                   "data-size": undefined,
                                   "data-variant": undefined,
                                   "size": undefined,
@@ -27476,7 +28032,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                                 "children": null,
                                 "props": {
                                   "dangerouslySetInnerHTML": {
-                                    "__html": ".__m__-rph{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                    "__html": ".__m__-rq9{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                   },
                                   "data-mantine-styles": "inline",
                                   "nonce": undefined,
@@ -27487,7 +28043,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                               {
                                 "children": null,
                                 "props": {
-                                  "className": "m_2415a157 __m__-rph",
+                                  "className": "m_2415a157 __m__-rq9",
                                   "data-size": undefined,
                                   "data-variant": undefined,
                                   "size": undefined,
@@ -27643,7 +28199,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                                 "children": null,
                                 "props": {
                                   "dangerouslySetInnerHTML": {
-                                    "__html": ".__m__-rpq{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                    "__html": ".__m__-rqi{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                   },
                                   "data-mantine-styles": "inline",
                                   "nonce": undefined,
@@ -27750,7 +28306,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                                   },
                                 ],
                                 "props": {
-                                  "className": "m_2415a157 __m__-rpq",
+                                  "className": "m_2415a157 __m__-rqi",
                                   "data-size": undefined,
                                   "data-variant": undefined,
                                   "size": undefined,
@@ -27991,7 +28547,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                                         "children": null,
                                         "props": {
                                           "dangerouslySetInnerHTML": {
-                                            "__html": ".__m__-rqc{--grid-gutter:var(--mantine-spacing-md);}",
+                                            "__html": ".__m__-rr4{--grid-gutter:var(--mantine-spacing-md);}",
                                           },
                                           "data-mantine-styles": "inline",
                                           "nonce": undefined,
@@ -28007,7 +28563,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                                                 "children": null,
                                                 "props": {
                                                   "dangerouslySetInnerHTML": {
-                                                    "__html": ".__m__-rqe{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}",
+                                                    "__html": ".__m__-rr6{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}",
                                                   },
                                                   "data-mantine-styles": "inline",
                                                   "nonce": undefined,
@@ -28040,7 +28596,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                                                   },
                                                 ],
                                                 "props": {
-                                                  "className": "m_96bdd299 __m__-rqe",
+                                                  "className": "m_96bdd299 __m__-rr6",
                                                   "data-size": undefined,
                                                   "data-variant": undefined,
                                                   "size": undefined,
@@ -28053,7 +28609,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                                                 "children": null,
                                                 "props": {
                                                   "dangerouslySetInnerHTML": {
-                                                    "__html": ".__m__-rqh{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}",
+                                                    "__html": ".__m__-rr9{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}",
                                                   },
                                                   "data-mantine-styles": "inline",
                                                   "nonce": undefined,
@@ -28149,7 +28705,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                                                   },
                                                 ],
                                                 "props": {
-                                                  "className": "m_96bdd299 __m__-rqh",
+                                                  "className": "m_96bdd299 __m__-rr9",
                                                   "data-size": undefined,
                                                   "data-variant": undefined,
                                                   "size": undefined,
@@ -28168,7 +28724,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_410352e9 __m__-rqc",
+                                          "className": "m_410352e9 __m__-rr4",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -28181,7 +28737,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                                         "children": null,
                                         "props": {
                                           "dangerouslySetInnerHTML": {
-                                            "__html": ".__m__-rql{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                            "__html": ".__m__-rrd{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                           },
                                           "data-mantine-styles": "inline",
                                           "nonce": undefined,
@@ -28192,7 +28748,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                                       {
                                         "children": null,
                                         "props": {
-                                          "className": "m_2415a157 __m__-rql",
+                                          "className": "m_2415a157 __m__-rrd",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -28371,7 +28927,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-rp4",
+                  "className": "m_2415a157 __m__-rps",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -28522,7 +29078,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r13g{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r148{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -28563,7 +29119,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                                 "children": null,
                                 "props": {
                                   "dangerouslySetInnerHTML": {
-                                    "__html": ".__m__-r13l{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                    "__html": ".__m__-r14d{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                   },
                                   "data-mantine-styles": "inline",
                                   "nonce": undefined,
@@ -28585,7 +29141,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                                   },
                                 ],
                                 "props": {
-                                  "className": "m_2415a157 __m__-r13l",
+                                  "className": "m_2415a157 __m__-r14d",
                                   "data-size": undefined,
                                   "data-variant": undefined,
                                   "size": undefined,
@@ -28752,7 +29308,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                                 "children": null,
                                 "props": {
                                   "dangerouslySetInnerHTML": {
-                                    "__html": ".__m__-r13u{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                    "__html": ".__m__-r14m{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                   },
                                   "data-mantine-styles": "inline",
                                   "nonce": undefined,
@@ -28861,7 +29417,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                                   },
                                 ],
                                 "props": {
-                                  "className": "m_2415a157 __m__-r13u",
+                                  "className": "m_2415a157 __m__-r14m",
                                   "data-size": undefined,
                                   "data-variant": undefined,
                                   "size": undefined,
@@ -29125,7 +29681,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                                         "children": null,
                                         "props": {
                                           "dangerouslySetInnerHTML": {
-                                            "__html": ".__m__-r14h{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                                            "__html": ".__m__-r159{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                                           },
                                           "data-mantine-styles": "inline",
                                           "nonce": undefined,
@@ -29147,7 +29703,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_2415a157 __m__-r14h",
+                                          "className": "m_2415a157 __m__-r159",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -29337,7 +29893,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r13g",
+                  "className": "m_2415a157 __m__-r148",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -37810,7 +38366,7 @@ exports[`single fields title field 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-rj1{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-rjp{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -37917,7 +38473,7 @@ exports[`single fields title field 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-rj1",
+                  "className": "m_2415a157 __m__-rjp",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,

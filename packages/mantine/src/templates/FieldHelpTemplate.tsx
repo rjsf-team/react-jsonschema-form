@@ -1,5 +1,6 @@
 import { helpId, FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { Text } from '@mantine/core';
+import { RichHelp } from '@rjsf/core';
 
 /** The `FieldHelpTemplate` component renders any help desired for a field
  *
@@ -10,7 +11,7 @@ export default function FieldHelpTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: FieldHelpProps<T, S, F>) {
-  const { fieldPathId, help } = props;
+  const { fieldPathId, help, registry, uiSchema } = props;
 
   if (!help) {
     return null;
@@ -20,7 +21,7 @@ export default function FieldHelpTemplate<
 
   return (
     <Text id={id} size='sm' my='xs' c='dimmed'>
-      {help}
+      <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
     </Text>
   );
 }
