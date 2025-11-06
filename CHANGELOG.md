@@ -15,6 +15,53 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+#6.1.0
+
+## @rjsf/chakra-ui
+
+- Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
+
+## @rjsf/core
+
+- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
+
+## @rjsf/fluentui-rc
+
+- Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
+
+## @rjsf/daisyui
+
+- Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
+
+## @rjsf/mantine
+
+- Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
+
+## @rjsf/mui
+
+- Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
+
+## @rjsf/primereact
+
+- Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
+
+## @rjsf/react-bootstrap
+
+- Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
+
+## @rjsf/semantic-ui
+
+- Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
+
+## @rjsf/shadcn
+
+- Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
+
+## @rjsf/utils
+
+- Added new global UI option `enableMarkdownInHelp` to control markdown rendering of `ui:help`
+
+
 # 6.0.2
 
 ## @rjsf/antd
@@ -27,6 +74,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Modified `CheckboxesWidget` to render the Title, fixing ([#4840](https://github.com/rjsf-team/react-jsonschema-form/issues/4840))
 - Updated `CheckboxWidget` to handle label and description rendering consistently, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
 - Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
+
 
 ## @rjsf/core
 
@@ -45,30 +93,37 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
 
+
+
 ## @rjsf/mantine
 
 - Updated `CheckboxWidget` to handle label and description rendering consistently, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
 - Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
+
 
 ## @rjsf/mui
 
 - Updated `FieldTemplate` to skip label and description rendering for checkbox widgets, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
 - Updated `ArrayFieldItemTemplate` to switch `size` from 'auto' to responsive values on the `Grid`, fixing [#4838](https://github.com/rjsf-team/react-jsonschema-form/issues/4838)
 
+
 ## @rjsf/primereact
 
 - Updated `FieldTemplate` to skip label and description rendering for checkbox widgets, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
 - Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
+
 
 ## @rjsf/react-bootstrap
 
 - Updated `FieldTemplate` to skip label and description rendering for checkbox widgets, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
 - Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
 
+
 ## @rjsf/semantic-ui
 
 - Updated `FieldTemplate` to skip label and description rendering for checkbox widgets, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
 - Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
+
 
 ## @rjsf/shadcn
 
@@ -76,9 +131,11 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated the `Command` component to properly handle `forwardRef`
 - Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
 
+
 ## @rjsf/utils
 
 - Updated `getDefaultFormState()` to not save an undefined field value into an object when the type is `null` and `excludeObjectChildren` is provided, fixing [#4821](https://github.com/rjsf-team/react-jsonschema-form/issues/4821)
+
 
 ## Dev / docs / playground
 
