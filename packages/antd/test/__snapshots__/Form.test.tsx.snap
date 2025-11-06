@@ -18949,6 +18949,331 @@ exports[`single fields slider field 1`] = `
 </DocumentFragment>
 `;
 
+exports[`single fields string field field with markdown help and description 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ac2jek"
+          >
+            <label
+              class=""
+              for="root"
+              title="Markdown Help and Description"
+            >
+              Markdown Help and Description
+            </label>
+          </div>
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ac2jek"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <span
+                  class="ant-input-affix-wrapper css-dev-only-do-not-override-ac2jek ant-input-outlined"
+                  style="width: 100%;"
+                >
+                  <input
+                    aria-describedby="root__error root__description root__help"
+                    class="ant-input css-dev-only-do-not-override-ac2jek"
+                    id="root"
+                    name="root"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
+                  <span
+                    class="ant-input-suffix"
+                  />
+                </span>
+              </div>
+            </div>
+            <div
+              class="ant-form-item-additional"
+              style="min-height: 24px;"
+            >
+              <div
+                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
+              >
+                <div
+                  class=""
+                >
+                  <div
+                    class="help-block"
+                    id="root__help"
+                  >
+                    <span>
+                      This is 
+                      <strong>
+                        help
+                      </strong>
+                       text with 
+                      <a
+                        href="https://example.com"
+                      >
+                        a link
+                      </a>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="ant-form-item-extra"
+              >
+                <span
+                  id="root__description"
+                >
+                  This is a *description* with **markdown**
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="ant-form-item-margin-offset"
+          style="margin-bottom: -24px;"
+        />
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields string field field with markdown help text 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ac2jek"
+          >
+            <label
+              class=""
+              for="root"
+              title="Markdown Help Test"
+            >
+              Markdown Help Test
+            </label>
+          </div>
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ac2jek"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <span
+                  class="ant-input-affix-wrapper css-dev-only-do-not-override-ac2jek ant-input-outlined"
+                  style="width: 100%;"
+                >
+                  <input
+                    aria-describedby="root__error root__description root__help"
+                    class="ant-input css-dev-only-do-not-override-ac2jek"
+                    id="root"
+                    name="root"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
+                  <span
+                    class="ant-input-suffix"
+                  />
+                </span>
+              </div>
+            </div>
+            <div
+              class="ant-form-item-additional"
+              style="min-height: 24px;"
+            >
+              <div
+                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
+              >
+                <div
+                  class=""
+                >
+                  <div
+                    class="help-block"
+                    id="root__help"
+                  >
+                    <span>
+                      This is 
+                      <strong>
+                        markdown
+                      </strong>
+                       help text with 
+                      <a
+                        href="https://example.com"
+                      >
+                        a link
+                      </a>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="ant-form-item-extra"
+              >
+                <span
+                  id="root__description"
+                >
+                  A field with markdown help text
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="ant-form-item-margin-offset"
+          style="margin-bottom: -24px;"
+        />
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields string field field with markdown help text without enabling markdown 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ac2jek"
+          >
+            <label
+              class=""
+              for="root"
+              title="Raw Help Test"
+            >
+              Raw Help Test
+            </label>
+          </div>
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ac2jek"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <span
+                  class="ant-input-affix-wrapper css-dev-only-do-not-override-ac2jek ant-input-outlined"
+                  style="width: 100%;"
+                >
+                  <input
+                    aria-describedby="root__error root__description root__help"
+                    class="ant-input css-dev-only-do-not-override-ac2jek"
+                    id="root"
+                    name="root"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
+                  <span
+                    class="ant-input-suffix"
+                  />
+                </span>
+              </div>
+            </div>
+            <div
+              class="ant-form-item-additional"
+              style="min-height: 24px;"
+            >
+              <div
+                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
+              >
+                <div
+                  class=""
+                >
+                  <p
+                    class="help-block"
+                    id="root__help"
+                  >
+                    This is **markdown** help text with [a link](https://example.com)
+                  </p>
+                </div>
+              </div>
+              <div
+                class="ant-form-item-extra"
+              >
+                <span
+                  id="root__description"
+                >
+                  A field with raw help text
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="ant-form-item-margin-offset"
+          style="margin-bottom: -24px;"
+        />
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields string field format data-url 1`] = `
 <DocumentFragment>
   <form
@@ -19225,6 +19550,113 @@ exports[`single fields string field regular 1`] = `
                 <div
                   class=""
                 />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="ant-form-item-margin-offset"
+          style="margin-bottom: -24px;"
+        />
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields string field required field with markdown help 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ac2jek"
+          >
+            <label
+              class=""
+              for="root"
+              title="Required Field with Markdown Help"
+            >
+              Required Field with Markdown Help
+            </label>
+          </div>
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ac2jek"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <span
+                  class="ant-input-affix-wrapper css-dev-only-do-not-override-ac2jek ant-input-outlined"
+                  style="width: 100%;"
+                >
+                  <input
+                    aria-describedby="root__error root__description root__help"
+                    class="ant-input css-dev-only-do-not-override-ac2jek"
+                    id="root"
+                    name="root"
+                    placeholder=""
+                    type="text"
+                    value="[object Object]"
+                  />
+                  <span
+                    class="ant-input-suffix"
+                  />
+                </span>
+              </div>
+            </div>
+            <div
+              class="ant-form-item-additional"
+              style="min-height: 24px;"
+            >
+              <div
+                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
+              >
+                <div
+                  class=""
+                >
+                  <div
+                    class="help-block"
+                    id="root__help"
+                  >
+                    <span>
+                      This field is 
+                      <strong>
+                        required
+                      </strong>
+                      . Please provide a value.
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="ant-form-item-extra"
+              >
+                <span
+                  id="root__description"
+                >
+                  A required field with markdown help
+                </span>
               </div>
             </div>
           </div>

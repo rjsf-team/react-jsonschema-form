@@ -13208,6 +13208,247 @@ exports[`single fields slider field 1`] = `
 </DocumentFragment>
 `;
 
+exports[`single fields string field field with markdown help and description 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-string"
+      >
+        <label
+          class="label"
+          for="root"
+        >
+          <span
+            class="label-text font-medium"
+          >
+            Markdown Help and Description
+          </span>
+        </label>
+        <div
+          class="form-control"
+        >
+          <label
+            class="label hidden"
+            for="root"
+            style="display: none;"
+          >
+            <span
+              class="label-text"
+            >
+              Markdown Help and Description
+            </span>
+          </label>
+          <input
+            aria-describedby="root__error root__description root__help"
+            class="input input-bordered"
+            id="root"
+            name="root"
+            placeholder=""
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+        <div
+          class="rjsf-field-help-template text-gray-500 text-sm"
+        >
+          <div>
+            <span>
+              This is 
+              <strong>
+                help
+              </strong>
+               text with 
+              <a
+                href="https://example.com"
+              >
+                a link
+              </a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields string field field with markdown help text 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-string"
+      >
+        <label
+          class="label"
+          for="root"
+        >
+          <span
+            class="label-text font-medium"
+          >
+            Markdown Help Test
+          </span>
+        </label>
+        <div
+          class="form-control"
+        >
+          <label
+            class="label hidden"
+            for="root"
+            style="display: none;"
+          >
+            <span
+              class="label-text"
+            >
+              Markdown Help Test
+            </span>
+          </label>
+          <input
+            aria-describedby="root__error root__description root__help"
+            class="input input-bordered"
+            id="root"
+            name="root"
+            placeholder=""
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+        <div
+          class="rjsf-field-help-template text-gray-500 text-sm"
+        >
+          <div>
+            <span>
+              This is 
+              <strong>
+                markdown
+              </strong>
+               help text with 
+              <a
+                href="https://example.com"
+              >
+                a link
+              </a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields string field field with markdown help text without enabling markdown 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-string"
+      >
+        <label
+          class="label"
+          for="root"
+        >
+          <span
+            class="label-text font-medium"
+          >
+            Raw Help Test
+          </span>
+        </label>
+        <div
+          class="form-control"
+        >
+          <label
+            class="label hidden"
+            for="root"
+            style="display: none;"
+          >
+            <span
+              class="label-text"
+            >
+              Raw Help Test
+            </span>
+          </label>
+          <input
+            aria-describedby="root__error root__description root__help"
+            class="input input-bordered"
+            id="root"
+            name="root"
+            placeholder=""
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+        <div
+          class="rjsf-field-help-template text-gray-500 text-sm"
+        >
+          <div>
+            This is **markdown** help text with [a link](https://example.com)
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields string field format data-url 1`] = `
 <DocumentFragment>
   <form
@@ -13463,6 +13704,85 @@ exports[`single fields string field regular 1`] = `
           class="rjsf-field-help-template text-gray-500 text-sm"
         >
           <div />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields string field required field with markdown help 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-string"
+      >
+        <label
+          class="label"
+          for="root"
+        >
+          <span
+            class="label-text font-medium"
+          >
+            Required Field with Markdown Help
+          </span>
+        </label>
+        <div
+          class="form-control"
+        >
+          <label
+            class="label hidden"
+            for="root"
+            style="display: none;"
+          >
+            <span
+              class="label-text"
+            >
+              Required Field with Markdown Help
+            </span>
+          </label>
+          <input
+            aria-describedby="root__error root__description root__help"
+            class="input input-bordered"
+            id="root"
+            name="root"
+            placeholder=""
+            type="text"
+            value="[object Object]"
+          />
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+        <div
+          class="rjsf-field-help-template text-gray-500 text-sm"
+        >
+          <div>
+            <span>
+              This field is 
+              <strong>
+                required
+              </strong>
+              . Please provide a value.
+            </span>
+          </div>
         </div>
       </div>
     </div>

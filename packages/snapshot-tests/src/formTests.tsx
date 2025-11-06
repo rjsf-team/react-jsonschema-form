@@ -51,7 +51,7 @@ export function formTests(Form: ComponentType<FormProps>) {
         const { asFragment } = render(<Form schema={schema} validator={validator} />);
         expect(asFragment()).toMatchSnapshot();
       });
-      test('with markdown help text', async () => {
+      test('field with markdown help text', () => {
         const schema: RJSFSchema = {
           type: 'string',
           title: 'Markdown Help Test',
@@ -62,6 +62,49 @@ export function formTests(Form: ComponentType<FormProps>) {
           'ui:enableMarkdownInHelp': true,
         };
         const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+        expect(asFragment()).toMatchSnapshot();
+      });
+
+      test('field with markdown help text without enabling markdown', () => {
+        const schema: RJSFSchema = {
+          type: 'string',
+          title: 'Raw Help Test',
+          description: 'A field with raw help text',
+        };
+        const uiSchema: UiSchema = {
+          'ui:help': 'This is **markdown** help text with [a link](https://example.com)',
+          'ui:enableMarkdownInHelp': false,
+        };
+        const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+        expect(asFragment()).toMatchSnapshot();
+      });
+
+      test('field with markdown help and description', () => {
+        const schema: RJSFSchema = {
+          type: 'string',
+          title: 'Markdown Help and Description',
+          description: 'This is a *description* with **markdown**',
+        };
+        const uiSchema: UiSchema = {
+          'ui:help': 'This is **help** text with [a link](https://example.com)',
+          'ui:enableMarkdownInHelp': true,
+          'ui:description': 'This is a *description* with **markdown**',
+        };
+        const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+        expect(asFragment()).toMatchSnapshot();
+      });
+
+      test('required field with markdown help', () => {
+        const schema: RJSFSchema = {
+          type: 'string',
+          title: 'Required Field with Markdown Help',
+          description: 'A required field with markdown help',
+        };
+        const uiSchema: UiSchema = {
+          'ui:help': 'This field is **required**. Please provide a value.',
+          'ui:enableMarkdownInHelp': true,
+        };
+        const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} formData={{}} />);
         expect(asFragment()).toMatchSnapshot();
       });
     });
