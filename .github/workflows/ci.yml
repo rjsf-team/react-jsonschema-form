@@ -2,16 +2,16 @@ name: CI
 
 on:
   push:
-    branches: [main, v5]
+    branches: [main]
   pull_request:
-    branches: [main, v5]
+    branches: [main]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [20.x, 22.x]
+        node-version: [20.x, 22.x, 24.x]
 
     steps:
       - uses: actions/checkout@v5
@@ -35,17 +35,6 @@ jobs:
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
-      # Docusaurus doesn't support Node 14. These tasks can be removed once Node 14 is EOL (May 2023)
-      - name: Build with Netlify badge (no docs)
-        run: npx nx run-many --target=build --exclude=@rjsf/docs --parallel=false
-        env:
-          VITE_SHOW_NETLIFY_BADGE: true
-          NODE_OPTIONS: --max_old_space_size=4096
-      - name: Build (no docs)
-        run: npx nx run-many --target=build --exclude=@rjsf/docs --parallel=false
-        env:
-          NODE_OPTIONS: --max_old_space_size=4096
-
       - if: matrix.node-version == '22.x'
         uses: actions/upload-artifact@v5
         with:
@@ -57,6 +46,7 @@ jobs:
           name: docs
           path: packages/docs/build
       - run: npm test
+
   deploy_playground_and_docs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
