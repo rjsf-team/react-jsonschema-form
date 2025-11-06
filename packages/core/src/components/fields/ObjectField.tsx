@@ -1,10 +1,10 @@
 import { FocusEvent, useCallback, useState } from 'react';
 import {
+  ADDITIONAL_PROPERTY_KEY_REMOVE,
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
   getTemplate,
   getUiOptions,
-  hashObject,
   isFormDataAvailable,
   orderProperties,
   shouldRenderOptionalField,
@@ -29,7 +29,6 @@ import get from 'lodash/get';
 import has from 'lodash/has';
 import isObject from 'lodash/isObject';
 import set from 'lodash/set';
-import unset from 'lodash/unset';
 
 /** Returns a flag indicating whether the `name` field is required in the object schema
  *
@@ -220,7 +219,6 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
   const schema: S = schemaUtils.retrieveSchema(rawSchema, formData, true);
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const { properties: schemaProperties = {} } = schema;
-  const formDataHash = hashObject(formData || {});
   // All the children will use childFieldPathId if present in the props, falling back to the fieldPathId
   const childFieldPathId = props.childFieldPathId ?? fieldPathId;
 
@@ -320,15 +318,14 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     [formData, onChange, childFieldPathId, getAvailableKey],
   );
 
-  /** Handles the remove click which removes the old `key` data and calls the `onChange` callback with it
+  /** Handles the remove click which calls the `onChange` callback with the special ADDITIONAL_PROPERTY_FIELD_REMOVE
+   * value for the path plus the key to be removed
    */
   const handleRemoveProperty = useCallback(
     (key: string) => {
-      const copiedFormData = { ...formData } as T;
-      unset(copiedFormData, key);
-      onChange(copiedFormData, childFieldPathId.path);
+      onChange(ADDITIONAL_PROPERTY_KEY_REMOVE as T, [...childFieldPathId.path, key]);
     },
-    [onChange, childFieldPathId, formData],
+    [onChange, childFieldPathId],
   );
 
   if (!renderOptionalField || hasFormData) {
@@ -364,10 +361,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       const hidden = getUiOptions<T, S, F>(fieldUiSchema).widget === 'hidden';
       const content = (
         <ObjectFieldProperty<T, S, F>
-          // For regular properties, the key is just the name. For additionalProperties, the key is a combination of the
-          // name and the hash of the formData so that react rerenders the components with the updated additional
-          // property related callback which will change due to formData changes
-          key={addedByAdditionalProperties ? `${name}-${formDataHash}` : name}
+          key={name}
           propertyName={name}
           required={isRequired<S>(schema, name)}
           schema={get(schema, [PROPERTIES_KEY, name], {}) as S}
