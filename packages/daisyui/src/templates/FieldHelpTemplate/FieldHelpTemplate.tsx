@@ -1,4 +1,4 @@
-import { FieldHelpProps, StrictRJSFSchema, RJSFSchema, FormContextType, getUiOptions } from '@rjsf/utils';
+import { FieldHelpProps, StrictRJSFSchema, RJSFSchema, FormContextType, helpId } from '@rjsf/utils';
 import { RichHelp } from '@rjsf/core';
 
 /** The `FieldHelpTemplate` component renders help text for a specific form field
@@ -15,20 +15,15 @@ export default function FieldHelpTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: FieldHelpProps<T, S, F>) {
-  const { help, uiSchema = {}, registry } = props;
-  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry?.globalUiOptions);
-  if (typeof help === 'string' && uiOptions.enableMarkdownInHelp) {
-    return (
-      <div className='rjsf-field-help-template text-gray-500 text-sm'>
-        <div>
-          <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
-        </div>
-      </div>
-    );
+  const { help, uiSchema, registry, fieldPathId } = props;
+  if (!help) {
+    return null;
   }
   return (
-    <div className='rjsf-field-help-template text-gray-500 text-sm'>
-      <div>{help}</div>
+    <div id={helpId(fieldPathId)} className='description-field my-4'>
+      <div className='text-sm text-base-content/80'>
+        <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
+      </div>
     </div>
   );
 }

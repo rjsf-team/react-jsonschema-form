@@ -1,4 +1,4 @@
-import { helpId, FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema, getUiOptions } from '@rjsf/utils';
+import { helpId, FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import RichHelp from '../RichHelp';
 
 /** The `FieldHelpTemplate` component renders any help desired for a field
@@ -14,25 +14,17 @@ export default function FieldHelpTemplate<
   if (!help) {
     return null;
   }
-  const id = helpId(fieldPathId);
-  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry?.globalUiOptions);
   if (typeof help === 'string') {
-    if (uiOptions.enableMarkdownInHelp) {
-      return (
-        <div id={id} className='help-block'>
-          <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
-        </div>
-      );
-    }
     return (
-      <p id={id} className='help-block'>
+      <p id={helpId(fieldPathId)} className='help-block'>
         {help}
       </p>
     );
   }
+
   return (
-    <div id={id} className='help-block'>
-      {help}
+    <div id={helpId(fieldPathId)} className='help-block'>
+      <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
     </div>
   );
 }

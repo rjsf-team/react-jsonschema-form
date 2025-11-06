@@ -4675,7 +4675,7 @@ exports[`single fields help and error display 1`] = `
           </span>
         </div>
         <span
-          class="text-xs font-medium text-destructive"
+          class="text-xs font-medium text-muted-foreground"
           id="root__help"
         >
           help me!

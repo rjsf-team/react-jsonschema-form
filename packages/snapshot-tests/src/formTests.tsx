@@ -650,6 +650,7 @@ export function formTests(Form: ComponentType<FormProps>) {
       );
       expect(asFragment()).toMatchSnapshot();
     });
+
     describe('optional data controls', () => {
       let schema: RJSFSchema;
       let uiSchema: UiSchema;

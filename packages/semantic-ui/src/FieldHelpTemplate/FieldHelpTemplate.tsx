@@ -1,6 +1,6 @@
-import { Message } from 'semantic-ui-react';
-import { FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema, helpId, getUiOptions } from '@rjsf/utils';
+import { FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema, helpId } from '@rjsf/utils';
 import { RichHelp } from '@rjsf/core';
+import { Message } from 'semantic-ui-react';
 
 /** The `FieldHelpTemplate` component renders any help desired for a field
  *
@@ -11,20 +11,11 @@ export default function FieldHelpTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: FieldHelpProps<T, S, F>) {
-  const { fieldPathId, help, uiSchema = {}, registry } = props;
+  const { fieldPathId, help, uiSchema, registry } = props;
   if (help) {
-    const id = helpId(fieldPathId);
-    const uiOptions = getUiOptions<T, S, F>(uiSchema, registry?.globalUiOptions);
-    if (typeof help === 'string' && uiOptions.enableMarkdownInHelp) {
-      return (
-        <Message size='mini' info id={id}>
-          <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
-        </Message>
-      );
-    }
     return (
-      <Message size='mini' info id={id}>
-        {help}
+      <Message size='mini' info id={helpId(fieldPathId)}>
+        <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
       </Message>
     );
   }

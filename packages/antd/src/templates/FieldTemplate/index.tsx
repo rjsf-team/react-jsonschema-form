@@ -39,7 +39,6 @@ export default function FieldTemplate<
     onRemoveProperty,
     rawErrors,
     rawDescription,
-    // rawHelp,
     readonly,
     registry,
     required,

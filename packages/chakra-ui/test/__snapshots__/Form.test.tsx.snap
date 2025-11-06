@@ -11367,7 +11367,7 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
 }
 
 @layer recipes {
-  .emotion-3 {
+  .emotion-4 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -11380,12 +11380,12 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
   }
 }
 
-.emotion-4 {
+.emotion-5 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-4 {
+  .emotion-5 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -11396,7 +11396,7 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
     width: var(--chakra-sizes-full);
   }
 
-  .emotion-4>:not(style, [hidden])~:not(style, [hidden]) {
+  .emotion-5>:not(style, [hidden])~:not(style, [hidden]) {
     --space-y-reverse: 0;
     margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
     margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
@@ -11404,20 +11404,20 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
 }
 
 @layer recipes {
-  .emotion-5 {
+  .emotion-6 {
     color: var(--chakra-colors-fg);
     font-weight: var(--chakra-font-weights-medium);
     font-size: var(--chakra-font-sizes-sm);
     line-height: 1.25rem;
   }
 
-  .emotion-5:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 }
 
 @layer recipes {
-  .emotion-6 {
+  .emotion-7 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -11429,7 +11429,7 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
   }
 }
 
-.emotion-7 {
+.emotion-8 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -11441,7 +11441,7 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
 }
 
 @layer recipes {
-  .emotion-8 {
+  .emotion-9 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -11457,7 +11457,7 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
 }
 
 @layer recipes {
-  .emotion-9 {
+  .emotion-10 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -11484,19 +11484,19 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
     padding: var(--chakra-spacing-0\\.5);
   }
 
-  .emotion-9:is(:focus-visible, [data-focus-visible]) {
+  .emotion-10:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-9 :where(svg) {
+  .emotion-10 :where(svg) {
     width: var(--chakra-sizes-full);
     height: var(--chakra-sizes-full);
   }
 
-  .emotion-9:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-10:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --chakra-colors-color-palette-50: var(--chakra-colors-red-50);
     --chakra-colors-color-palette-100: var(--chakra-colors-red-100);
     --chakra-colors-color-palette-200: var(--chakra-colors-red-200);
@@ -11518,12 +11518,12 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
     border-color: var(--chakra-colors-border-error);
   }
 
-  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-9:is([data-state=checked], [data-state=indeterminate]) {
+  .emotion-10:is([data-state=checked], [data-state=indeterminate]) {
     background: var(--chakra-colors-color-palette-solid);
     --bg-currentcolor: var(--chakra-colors-color-palette-solid);
     color: var(--chakra-colors-color-palette-contrast);
@@ -11531,7 +11531,7 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
   }
 }
 
-.emotion-10 {
+.emotion-11 {
   fill: none;
   stroke: currentColor;
   stroke-width: 3px;
@@ -11540,7 +11540,7 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
 }
 
 @layer recipes {
-  .emotion-11 {
+  .emotion-12 {
     font-weight: var(--chakra-font-weights-medium);
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -11550,17 +11550,17 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
     line-height: 1.25rem;
   }
 
-  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 }
 
-.emotion-20 {
+.emotion-21 {
   margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-21 {
+  .emotion-22 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -11608,19 +11608,19 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-21:is(:focus-visible, [data-focus-visible]) {
+  .emotion-22:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-21:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-22:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-21 :where(svg) {
+  .emotion-22 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -11628,14 +11628,14 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-21:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-22:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-21:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-22:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -11668,22 +11668,23 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
             A group of checkboxes
           </sup>
         </legend>
-        <p
+        <sup
+          class="emotion-2"
           id="root__help"
         >
           Select all that apply
-        </p>
+        </sup>
         <div
-          class="fieldset__content emotion-3"
+          class="fieldset__content emotion-4"
         >
           <fieldset
             aria-labelledby="fieldset:::r26:::legend"
-            class="fieldset__root emotion-4"
+            class="fieldset__root emotion-5"
             data-part="root"
             data-scope="fieldset"
           >
             <legend
-              class="fieldset__legend emotion-5"
+              class="fieldset__legend emotion-6"
               data-part="legend"
               data-scope="fieldset"
               id="fieldset:::r26:::legend"
@@ -11692,16 +11693,16 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
             </legend>
             <div
               aria-describedby="root__error root__description root__help"
-              class="emotion-6"
+              class="emotion-7"
               data-part="group"
               data-scope="checkbox"
               role="group"
             >
               <div
-                class="chakra-stack emotion-7"
+                class="chakra-stack emotion-8"
               >
                 <label
-                  class="chakra-checkbox__root emotion-8"
+                  class="chakra-checkbox__root emotion-9"
                   data-part="root"
                   data-scope="checkbox"
                   data-state="checked"
@@ -11721,7 +11722,7 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
                   />
                   <div
                     aria-hidden="true"
-                    class="chakra-checkbox__control emotion-9"
+                    class="chakra-checkbox__control emotion-10"
                     data-part="control"
                     data-scope="checkbox"
                     data-state="checked"
@@ -11729,7 +11730,7 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
                     id="checkbox:root-0:control"
                   >
                     <svg
-                      class="emotion-10"
+                      class="emotion-11"
                       data-state="checked"
                       viewBox="0 0 24 24"
                     >
@@ -11739,7 +11740,7 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
                     </svg>
                   </div>
                   <span
-                    class="chakra-checkbox__label emotion-11"
+                    class="chakra-checkbox__label emotion-12"
                     data-part="label"
                     data-scope="checkbox"
                     data-state="checked"
@@ -11752,7 +11753,7 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
                   </span>
                 </label>
                 <label
-                  class="chakra-checkbox__root emotion-8"
+                  class="chakra-checkbox__root emotion-9"
                   data-part="root"
                   data-scope="checkbox"
                   data-state="unchecked"
@@ -11771,7 +11772,7 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
                   />
                   <div
                     aria-hidden="true"
-                    class="chakra-checkbox__control emotion-9"
+                    class="chakra-checkbox__control emotion-10"
                     data-part="control"
                     data-scope="checkbox"
                     data-state="unchecked"
@@ -11779,13 +11780,13 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
                     id="checkbox:root-1:control"
                   >
                     <svg
-                      class="emotion-10"
+                      class="emotion-11"
                       data-state="unchecked"
                       viewBox="0 0 24 24"
                     />
                   </div>
                   <span
-                    class="chakra-checkbox__label emotion-11"
+                    class="chakra-checkbox__label emotion-12"
                     data-part="label"
                     data-scope="checkbox"
                     data-state="unchecked"
@@ -11798,7 +11799,7 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
                   </span>
                 </label>
                 <label
-                  class="chakra-checkbox__root emotion-8"
+                  class="chakra-checkbox__root emotion-9"
                   data-part="root"
                   data-scope="checkbox"
                   data-state="unchecked"
@@ -11817,7 +11818,7 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
                   />
                   <div
                     aria-hidden="true"
-                    class="chakra-checkbox__control emotion-9"
+                    class="chakra-checkbox__control emotion-10"
                     data-part="control"
                     data-scope="checkbox"
                     data-state="unchecked"
@@ -11825,13 +11826,13 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
                     id="checkbox:root-2:control"
                   >
                     <svg
-                      class="emotion-10"
+                      class="emotion-11"
                       data-state="unchecked"
                       viewBox="0 0 24 24"
                     />
                   </div>
                   <span
-                    class="chakra-checkbox__label emotion-11"
+                    class="chakra-checkbox__label emotion-12"
                     data-part="label"
                     data-scope="checkbox"
                     data-state="unchecked"
@@ -11850,10 +11851,10 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
       </fieldset>
     </div>
     <div
-      class="emotion-20"
+      class="emotion-21"
     >
       <button
-        class="chakra-button emotion-21"
+        class="chakra-button emotion-22"
         type="submit"
       >
         Submit
@@ -14916,8 +14917,12 @@ exports[`single fields help and error display 1`] = `
   }
 }
 
+.emotion-9 {
+  font-size: var(--chakra-font-sizes-md);
+}
+
 @layer recipes {
-  .emotion-9 {
+  .emotion-10 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -14930,12 +14935,12 @@ exports[`single fields help and error display 1`] = `
   }
 }
 
-.emotion-10 {
+.emotion-11 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-10 {
+  .emotion-11 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -14954,7 +14959,7 @@ exports[`single fields help and error display 1`] = `
 }
 
 @layer recipes {
-  .emotion-11 {
+  .emotion-12 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -14979,17 +14984,17 @@ exports[`single fields help and error display 1`] = `
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-11:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-12:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-11:is(:focus-visible, [data-focus-visible]) {
+  .emotion-12:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -14998,12 +15003,12 @@ exports[`single fields help and error display 1`] = `
   }
 }
 
-.emotion-12 {
+.emotion-13 {
   margin-top: 0;
 }
 
 @layer recipes {
-  .emotion-12 {
+  .emotion-13 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -15020,12 +15025,12 @@ exports[`single fields help and error display 1`] = `
   }
 }
 
-.emotion-13 {
+.emotion-14 {
   margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-14 {
+  .emotion-15 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -15073,19 +15078,19 @@ exports[`single fields help and error display 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-14:is(:focus-visible, [data-focus-visible]) {
+  .emotion-15:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-14:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-14 :where(svg) {
+  .emotion-15 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -15093,14 +15098,14 @@ exports[`single fields help and error display 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-14:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-15:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-14:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-15:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -15160,16 +15165,17 @@ exports[`single fields help and error display 1`] = `
         data-part="root"
         data-scope="fieldset"
       >
-        <p
+        <sup
+          class="emotion-9"
           id="root__help"
         >
           help me!
-        </p>
+        </sup>
         <div
-          class="fieldset__content emotion-9"
+          class="fieldset__content emotion-10"
         >
           <div
-            class="chakra-field__root emotion-10"
+            class="chakra-field__root emotion-11"
             data-invalid=""
             data-part="root"
             data-scope="field"
@@ -15179,7 +15185,7 @@ exports[`single fields help and error display 1`] = `
             <input
               aria-describedby="root__error root__description root__help"
               aria-invalid="true"
-              class="chakra-input emotion-11"
+              class="chakra-input emotion-12"
               data-invalid=""
               data-part="input"
               data-scope="field"
@@ -15193,7 +15199,7 @@ exports[`single fields help and error display 1`] = `
         </div>
         <span
           aria-live="polite"
-          class="fieldset__errorText emotion-12"
+          class="fieldset__errorText emotion-13"
           data-part="error-text"
           data-scope="fieldset"
           id="root__error"
@@ -15203,10 +15209,10 @@ exports[`single fields help and error display 1`] = `
       </fieldset>
     </div>
     <div
-      class="emotion-13"
+      class="emotion-14"
     >
       <button
-        class="chakra-button emotion-14"
+        class="chakra-button emotion-15"
         type="submit"
       >
         Submit
@@ -34531,7 +34537,7 @@ exports[`single fields string field field with markdown help and description 1`]
 }
 
 @layer recipes {
-  .emotion-3 {
+  .emotion-4 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -34544,12 +34550,12 @@ exports[`single fields string field field with markdown help and description 1`]
   }
 }
 
-.emotion-4 {
+.emotion-5 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-4 {
+  .emotion-5 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -34568,7 +34574,7 @@ exports[`single fields string field field with markdown help and description 1`]
 }
 
 @layer recipes {
-  .emotion-5 {
+  .emotion-6 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -34588,13 +34594,13 @@ exports[`single fields string field field with markdown help and description 1`]
     user-select: none;
   }
 
-  .emotion-5:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 }
 
 @layer recipes {
-  .emotion-6 {
+  .emotion-7 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -34619,17 +34625,17 @@ exports[`single fields string field field with markdown help and description 1`]
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-6:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-7:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-6:is(:focus-visible, [data-focus-visible]) {
+  .emotion-7:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -34638,12 +34644,12 @@ exports[`single fields string field field with markdown help and description 1`]
   }
 }
 
-.emotion-7 {
+.emotion-8 {
   margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-8 {
+  .emotion-9 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -34691,19 +34697,19 @@ exports[`single fields string field field with markdown help and description 1`]
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-8:is(:focus-visible, [data-focus-visible]) {
+  .emotion-9:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-8 :where(svg) {
+  .emotion-9 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -34711,14 +34717,14 @@ exports[`single fields string field field with markdown help and description 1`]
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-8:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-9:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-8:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-9:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -34751,7 +34757,8 @@ exports[`single fields string field field with markdown help and description 1`]
             This is a *description* with **markdown**
           </sup>
         </legend>
-        <p
+        <sup
+          class="emotion-2"
           id="root__help"
         >
           <span>
@@ -34766,19 +34773,19 @@ exports[`single fields string field field with markdown help and description 1`]
               a link
             </a>
           </span>
-        </p>
+        </sup>
         <div
-          class="fieldset__content emotion-3"
+          class="fieldset__content emotion-4"
         >
           <div
-            class="chakra-field__root emotion-4"
+            class="chakra-field__root emotion-5"
             data-part="root"
             data-scope="field"
             id="field:::rd:"
             role="group"
           >
             <label
-              class="chakra-field__label emotion-5"
+              class="chakra-field__label emotion-6"
               data-part="label"
               data-scope="field"
               for=":rd:"
@@ -34788,7 +34795,7 @@ exports[`single fields string field field with markdown help and description 1`]
             </label>
             <input
               aria-describedby="root__error root__description root__help"
-              class="chakra-input emotion-6"
+              class="chakra-input emotion-7"
               data-part="input"
               data-scope="field"
               id="root"
@@ -34802,10 +34809,10 @@ exports[`single fields string field field with markdown help and description 1`]
       </fieldset>
     </div>
     <div
-      class="emotion-7"
+      class="emotion-8"
     >
       <button
-        class="chakra-button emotion-8"
+        class="chakra-button emotion-9"
         type="submit"
       >
         Submit
@@ -34861,7 +34868,7 @@ exports[`single fields string field field with markdown help text 1`] = `
 }
 
 @layer recipes {
-  .emotion-3 {
+  .emotion-4 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -34874,12 +34881,12 @@ exports[`single fields string field field with markdown help text 1`] = `
   }
 }
 
-.emotion-4 {
+.emotion-5 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-4 {
+  .emotion-5 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -34898,7 +34905,7 @@ exports[`single fields string field field with markdown help text 1`] = `
 }
 
 @layer recipes {
-  .emotion-5 {
+  .emotion-6 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -34918,13 +34925,13 @@ exports[`single fields string field field with markdown help text 1`] = `
     user-select: none;
   }
 
-  .emotion-5:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 }
 
 @layer recipes {
-  .emotion-6 {
+  .emotion-7 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -34949,17 +34956,17 @@ exports[`single fields string field field with markdown help text 1`] = `
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-6:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-7:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-6:is(:focus-visible, [data-focus-visible]) {
+  .emotion-7:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -34968,12 +34975,12 @@ exports[`single fields string field field with markdown help text 1`] = `
   }
 }
 
-.emotion-7 {
+.emotion-8 {
   margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-8 {
+  .emotion-9 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -35021,19 +35028,19 @@ exports[`single fields string field field with markdown help text 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-8:is(:focus-visible, [data-focus-visible]) {
+  .emotion-9:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-8 :where(svg) {
+  .emotion-9 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -35041,14 +35048,14 @@ exports[`single fields string field field with markdown help text 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-8:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-9:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-8:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-9:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -35081,7 +35088,8 @@ exports[`single fields string field field with markdown help text 1`] = `
             A field with markdown help text
           </sup>
         </legend>
-        <p
+        <sup
+          class="emotion-2"
           id="root__help"
         >
           <span>
@@ -35096,19 +35104,19 @@ exports[`single fields string field field with markdown help text 1`] = `
               a link
             </a>
           </span>
-        </p>
+        </sup>
         <div
-          class="fieldset__content emotion-3"
+          class="fieldset__content emotion-4"
         >
           <div
-            class="chakra-field__root emotion-4"
+            class="chakra-field__root emotion-5"
             data-part="root"
             data-scope="field"
             id="field:::r9:"
             role="group"
           >
             <label
-              class="chakra-field__label emotion-5"
+              class="chakra-field__label emotion-6"
               data-part="label"
               data-scope="field"
               for=":r9:"
@@ -35118,7 +35126,7 @@ exports[`single fields string field field with markdown help text 1`] = `
             </label>
             <input
               aria-describedby="root__error root__description root__help"
-              class="chakra-input emotion-6"
+              class="chakra-input emotion-7"
               data-part="input"
               data-scope="field"
               id="root"
@@ -35132,10 +35140,10 @@ exports[`single fields string field field with markdown help text 1`] = `
       </fieldset>
     </div>
     <div
-      class="emotion-7"
+      class="emotion-8"
     >
       <button
-        class="chakra-button emotion-8"
+        class="chakra-button emotion-9"
         type="submit"
       >
         Submit
@@ -35191,7 +35199,7 @@ exports[`single fields string field field with markdown help text without enabli
 }
 
 @layer recipes {
-  .emotion-3 {
+  .emotion-4 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -35204,12 +35212,12 @@ exports[`single fields string field field with markdown help text without enabli
   }
 }
 
-.emotion-4 {
+.emotion-5 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-4 {
+  .emotion-5 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -35228,7 +35236,7 @@ exports[`single fields string field field with markdown help text without enabli
 }
 
 @layer recipes {
-  .emotion-5 {
+  .emotion-6 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -35248,13 +35256,13 @@ exports[`single fields string field field with markdown help text without enabli
     user-select: none;
   }
 
-  .emotion-5:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 }
 
 @layer recipes {
-  .emotion-6 {
+  .emotion-7 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -35279,17 +35287,17 @@ exports[`single fields string field field with markdown help text without enabli
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-6:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-7:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-6:is(:focus-visible, [data-focus-visible]) {
+  .emotion-7:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -35298,12 +35306,12 @@ exports[`single fields string field field with markdown help text without enabli
   }
 }
 
-.emotion-7 {
+.emotion-8 {
   margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-8 {
+  .emotion-9 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -35351,19 +35359,19 @@ exports[`single fields string field field with markdown help text without enabli
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-8:is(:focus-visible, [data-focus-visible]) {
+  .emotion-9:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-8 :where(svg) {
+  .emotion-9 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -35371,14 +35379,14 @@ exports[`single fields string field field with markdown help text without enabli
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-8:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-9:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-8:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-9:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -35411,23 +35419,24 @@ exports[`single fields string field field with markdown help text without enabli
             A field with raw help text
           </sup>
         </legend>
-        <p
+        <sup
+          class="emotion-2"
           id="root__help"
         >
           This is **markdown** help text with [a link](https://example.com)
-        </p>
+        </sup>
         <div
-          class="fieldset__content emotion-3"
+          class="fieldset__content emotion-4"
         >
           <div
-            class="chakra-field__root emotion-4"
+            class="chakra-field__root emotion-5"
             data-part="root"
             data-scope="field"
             id="field:::rb:"
             role="group"
           >
             <label
-              class="chakra-field__label emotion-5"
+              class="chakra-field__label emotion-6"
               data-part="label"
               data-scope="field"
               for=":rb:"
@@ -35437,7 +35446,7 @@ exports[`single fields string field field with markdown help text without enabli
             </label>
             <input
               aria-describedby="root__error root__description root__help"
-              class="chakra-input emotion-6"
+              class="chakra-input emotion-7"
               data-part="input"
               data-scope="field"
               id="root"
@@ -35451,10 +35460,10 @@ exports[`single fields string field field with markdown help text without enabli
       </fieldset>
     </div>
     <div
-      class="emotion-7"
+      class="emotion-8"
     >
       <button
-        class="chakra-button emotion-8"
+        class="chakra-button emotion-9"
         type="submit"
       >
         Submit
@@ -36492,7 +36501,7 @@ exports[`single fields string field required field with markdown help 1`] = `
 }
 
 @layer recipes {
-  .emotion-3 {
+  .emotion-4 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -36505,12 +36514,12 @@ exports[`single fields string field required field with markdown help 1`] = `
   }
 }
 
-.emotion-4 {
+.emotion-5 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-4 {
+  .emotion-5 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -36529,7 +36538,7 @@ exports[`single fields string field required field with markdown help 1`] = `
 }
 
 @layer recipes {
-  .emotion-5 {
+  .emotion-6 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -36549,13 +36558,13 @@ exports[`single fields string field required field with markdown help 1`] = `
     user-select: none;
   }
 
-  .emotion-5:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 }
 
 @layer recipes {
-  .emotion-6 {
+  .emotion-7 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -36580,17 +36589,17 @@ exports[`single fields string field required field with markdown help 1`] = `
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-6:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-7:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-6:is(:focus-visible, [data-focus-visible]) {
+  .emotion-7:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -36599,12 +36608,12 @@ exports[`single fields string field required field with markdown help 1`] = `
   }
 }
 
-.emotion-7 {
+.emotion-8 {
   margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-8 {
+  .emotion-9 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -36652,19 +36661,19 @@ exports[`single fields string field required field with markdown help 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-8:is(:focus-visible, [data-focus-visible]) {
+  .emotion-9:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-8 :where(svg) {
+  .emotion-9 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -36672,14 +36681,14 @@ exports[`single fields string field required field with markdown help 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-8:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-9:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-8:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-9:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -36712,7 +36721,8 @@ exports[`single fields string field required field with markdown help 1`] = `
             A required field with markdown help
           </sup>
         </legend>
-        <p
+        <sup
+          class="emotion-2"
           id="root__help"
         >
           <span>
@@ -36722,19 +36732,19 @@ exports[`single fields string field required field with markdown help 1`] = `
             </strong>
             . Please provide a value.
           </span>
-        </p>
+        </sup>
         <div
-          class="fieldset__content emotion-3"
+          class="fieldset__content emotion-4"
         >
           <div
-            class="chakra-field__root emotion-4"
+            class="chakra-field__root emotion-5"
             data-part="root"
             data-scope="field"
             id="field:::rf:"
             role="group"
           >
             <label
-              class="chakra-field__label emotion-5"
+              class="chakra-field__label emotion-6"
               data-part="label"
               data-scope="field"
               for=":rf:"
@@ -36744,7 +36754,7 @@ exports[`single fields string field required field with markdown help 1`] = `
             </label>
             <input
               aria-describedby="root__error root__description root__help"
-              class="chakra-input emotion-6"
+              class="chakra-input emotion-7"
               data-part="input"
               data-scope="field"
               id="root"
@@ -36758,10 +36768,10 @@ exports[`single fields string field required field with markdown help 1`] = `
       </fieldset>
     </div>
     <div
-      class="emotion-7"
+      class="emotion-8"
     >
       <button
-        class="chakra-button emotion-8"
+        class="chakra-button emotion-9"
         type="submit"
       >
         Submit
