@@ -1,6 +1,6 @@
 import { Message } from 'semantic-ui-react';
 import { FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema, helpId, getUiOptions } from '@rjsf/utils';
-import Markdown from 'markdown-to-jsx';
+import { RichHelp } from '@rjsf/core';
 
 /** The `FieldHelpTemplate` component renders any help desired for a field
  *
@@ -18,11 +18,15 @@ export default function FieldHelpTemplate<
     if (typeof help === 'string' && uiOptions.enableMarkdownInHelp) {
       return (
         <Message size='mini' info id={id}>
-          <Markdown options={{ disableParsingRawHTML: true }}>{help}</Markdown>
+          <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
         </Message>
       );
     }
-    return <Message size='mini' info id={id} content={help} />;
+    return (
+      <Message size='mini' info id={id}>
+        {help}
+      </Message>
+    );
   }
   return null;
 }

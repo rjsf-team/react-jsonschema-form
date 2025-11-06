@@ -1,6 +1,6 @@
 import { Caption1 } from '@fluentui/react-components';
 import { helpId, FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema, getUiOptions } from '@rjsf/utils';
-import Markdown from 'markdown-to-jsx';
+import { RichHelp } from '@rjsf/core';
 
 /** The `FieldHelpTemplate` component renders any help desired for a field
  *
@@ -20,7 +20,7 @@ export default function FieldHelpTemplate<
   if (typeof help === 'string' && uiOptions.enableMarkdownInHelp) {
     return (
       <Caption1 id={id}>
-        <Markdown options={{ disableParsingRawHTML: true }}>{help}</Markdown>
+        <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
       </Caption1>
     );
   }

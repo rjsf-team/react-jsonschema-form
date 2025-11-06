@@ -1,6 +1,6 @@
 import FormHelperText from '@mui/material/FormHelperText';
 import { helpId, FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema, getUiOptions } from '@rjsf/utils';
-import Markdown from 'markdown-to-jsx';
+import { RichHelp } from '@rjsf/core';
 
 /** The `FieldHelpTemplate` component renders any help desired for a field
  *
@@ -20,7 +20,7 @@ export default function FieldHelpTemplate<
   if (typeof help === 'string' && uiOptions.enableMarkdownInHelp) {
     return (
       <FormHelperText component='div' id={id}>
-        <Markdown options={{ disableParsingRawHTML: true }}>{help}</Markdown>
+        <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
       </FormHelperText>
     );
   }

@@ -1,5 +1,5 @@
 import { helpId, FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema, getUiOptions } from '@rjsf/utils';
-import Markdown from 'markdown-to-jsx';
+import RichHelp from '../RichHelp';
 
 /** The `FieldHelpTemplate` component renders any help desired for a field
  *
@@ -20,7 +20,7 @@ export default function FieldHelpTemplate<
     if (uiOptions.enableMarkdownInHelp) {
       return (
         <div id={id} className='help-block'>
-          <Markdown options={{ disableParsingRawHTML: true }}>{help}</Markdown>
+          <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
         </div>
       );
     }

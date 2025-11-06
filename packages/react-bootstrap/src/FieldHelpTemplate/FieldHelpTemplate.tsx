@@ -1,6 +1,6 @@
 import { FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema, helpId, getUiOptions } from '@rjsf/utils';
 import Form from 'react-bootstrap/Form';
-import Markdown from 'markdown-to-jsx';
+import { RichHelp } from '@rjsf/core';
 
 /** The `FieldHelpTemplate` component renders any help desired for a field
  *
@@ -20,7 +20,7 @@ export default function FieldHelpTemplate<
   if (typeof help === 'string' && uiOptions.enableMarkdownInHelp) {
     return (
       <Form.Text className={hasErrors ? 'text-danger' : 'text-muted'} id={id}>
-        <Markdown options={{ disableParsingRawHTML: true }}>{help}</Markdown>
+        <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
       </Form.Text>
     );
   }

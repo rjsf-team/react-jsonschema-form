@@ -1,6 +1,6 @@
 import { helpId, FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema, getUiOptions } from '@rjsf/utils';
 import { Text } from '@mantine/core';
-import Markdown from 'markdown-to-jsx';
+import { RichHelp } from '@rjsf/core';
 
 /** The `FieldHelpTemplate` component renders any help desired for a field
  *
@@ -22,7 +22,7 @@ export default function FieldHelpTemplate<
   if (typeof help === 'string' && uiOptions.enableMarkdownInHelp) {
     return (
       <Text id={id} size='sm' my='xs' c='dimmed'>
-        <Markdown options={{ disableParsingRawHTML: true }}>{help}</Markdown>
+        <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
       </Text>
     );
   }

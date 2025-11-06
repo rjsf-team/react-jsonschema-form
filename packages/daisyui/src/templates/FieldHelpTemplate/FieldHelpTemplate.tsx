@@ -1,5 +1,5 @@
 import { FieldHelpProps, StrictRJSFSchema, RJSFSchema, FormContextType, getUiOptions } from '@rjsf/utils';
-import Markdown from 'markdown-to-jsx';
+import { RichHelp } from '@rjsf/core';
 
 /** The `FieldHelpTemplate` component renders help text for a specific form field
  * with DaisyUI styling. It displays the help text in a subtle gray color and smaller size
@@ -21,7 +21,7 @@ export default function FieldHelpTemplate<
     return (
       <div className='rjsf-field-help-template text-gray-500 text-sm'>
         <div>
-          <Markdown options={{ disableParsingRawHTML: true }}>{help}</Markdown>
+          <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
         </div>
       </div>
     );

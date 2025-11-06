@@ -1,7 +1,7 @@
-import { FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema, helpId, getUiOptions } from '@rjsf/utils';
-import Markdown from 'markdown-to-jsx';
+import { FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema, helpId } from '@rjsf/utils';
+import { RichHelp } from '@rjsf/core';
 
-/** The `FieldHelpTemplate` component renders any help desired for a field
+/** The [FieldHelpTemplate](cci:7://file:///Users/suyoghabbu/Desktop/opensource/json-schema/react-jsonschema-form/packages/Users/suyoghabbu/Desktop/opensource/json-schema/react-jsonschema-form/packages/mui/src/FieldHelpTemplate:0:0-0:0) component renders any help desired for a field
  *
  * @param props - The `FieldHelpProps` to be rendered
  */
@@ -13,15 +13,11 @@ export default function FieldHelpTemplate<
   const { fieldPathId, help, uiSchema = {}, registry } = props;
   if (help) {
     const id = helpId(fieldPathId);
-    const uiOptions = getUiOptions<T, S, F>(uiSchema, registry?.globalUiOptions);
-    if (typeof help === 'string' && uiOptions.enableMarkdownInHelp) {
-      return (
-        <small id={id}>
-          <Markdown options={{ disableParsingRawHTML: true }}>{help}</Markdown>
-        </small>
-      );
-    }
-    return <small id={id}>{help}</small>;
+    return (
+      <small id={id}>
+        <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
+      </small>
+    );
   }
   return null;
 }

@@ -51,6 +51,19 @@ export function formTests(Form: ComponentType<FormProps>) {
         const { asFragment } = render(<Form schema={schema} validator={validator} />);
         expect(asFragment()).toMatchSnapshot();
       });
+      test('with markdown help text', async () => {
+        const schema: RJSFSchema = {
+          type: 'string',
+          title: 'Markdown Help Test',
+          description: 'A field with markdown help text',
+        };
+        const uiSchema: UiSchema = {
+          'ui:help': 'This is **markdown** help text with [a link](https://example.com)',
+          'ui:enableMarkdownInHelp': true,
+        };
+        const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+        expect(asFragment()).toMatchSnapshot();
+      });
     });
     test('string field with placeholder', async () => {
       const schema: RJSFSchema = {

@@ -2765,13 +2765,7 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
           class="ui mini info message"
           id="root__help"
         >
-          <div
-            class="content"
-          >
-            <p>
-              Select all that apply
-            </p>
-          </div>
+          Select all that apply
         </div>
       </div>
     </div>
@@ -3344,13 +3338,7 @@ exports[`single fields help and error display 1`] = `
           class="ui mini info message"
           id="root__help"
         >
-          <div
-            class="content"
-          >
-            <p>
-              help me!
-            </p>
-          </div>
+          help me!
         </div>
         <div
           class="ui red pointing above small basic label"
