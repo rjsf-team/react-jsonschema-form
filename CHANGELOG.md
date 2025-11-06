@@ -15,6 +15,7 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+
 #6.1.0
 
 ## @rjsf/chakra-ui
@@ -60,6 +61,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Added new global UI option `enableMarkdownInHelp` to control markdown rendering of `ui:help`
+
 
 
 # 6.0.2
