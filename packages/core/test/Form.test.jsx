@@ -145,6 +145,69 @@ describeRepeated('Form common', (createFormComponent) => {
         },
         'root_unknownProperty',
       );
+
+      // Change the fallback type to 'boolean'
+      fireEvent.change(node.querySelector('select'), { target: { value: 2 } });
+      optionValue = node.querySelector('select').value;
+      optionText = node.querySelector(`select option[value="${optionValue}"]`).textContent;
+      expect(optionText).to.equal('boolean');
+      expect(node.querySelector('input[type=checkbox]')).to.exist;
+      expect(node.querySelector('input[type=checkbox]').checked).to.equal(true);
+      // Verify formData was casted to number
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: {
+            unknownProperty: true,
+          },
+          schema,
+        },
+        'root_unknownProperty',
+      );
+
+      // Change the fallback type to 'object'
+      fireEvent.change(node.querySelector('select'), { target: { value: 3 } });
+      optionValue = node.querySelector('select').value;
+      optionText = node.querySelector(`select option[value="${optionValue}"]`).textContent;
+      expect(optionText).to.equal('object');
+      let addButton = node.querySelector('.rjsf-object-property-expand button');
+      expect(addButton).to.exist;
+      // click the add button
+      act(() => addButton.click());
+
+      // Verify formData was casted to number
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: {
+            unknownProperty: { newKey: 'New Value' },
+          },
+          schema,
+        },
+        'root_unknownProperty',
+      );
+
+      // Change the fallback type to 'array'
+      fireEvent.change(node.querySelector('select'), { target: { value: 4 } });
+      optionValue = node.querySelector('select').value;
+      optionText = node.querySelector(`select option[value="${optionValue}"]`).textContent;
+      expect(optionText).to.equal('array');
+      addButton = node.querySelector('.rjsf-array-item-add button');
+      expect(addButton).to.exist;
+      // click the add button
+      act(() => addButton.click());
+
+      // Verify formData was casted to number
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: {
+            unknownProperty: [undefined],
+          },
+          schema,
+        },
+        'root_unknownProperty',
+      );
     });
   });
 

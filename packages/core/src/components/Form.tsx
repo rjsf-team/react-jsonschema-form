@@ -1,6 +1,5 @@
 import { Component, ElementType, FormEvent, ReactNode, Ref, RefObject, createRef } from 'react';
 import {
-  ADDITIONAL_PROPERTY_KEY_REMOVE,
   createSchemaUtils,
   CustomValidator,
   deepEquals,
@@ -55,9 +54,7 @@ import _toPath from 'lodash/toPath';
 import _unset from 'lodash/unset';
 
 import getDefaultRegistry from '../getDefaultRegistry';
-
-/** Internal only symbol used by the `reset()` function to indicate that a reset operation is happening */
-const IS_RESET = Symbol('reset');
+import { ADDITIONAL_PROPERTY_KEY_REMOVE, IS_RESET } from './constants';
 
 /** The properties that are passed to the `Form` */
 export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {

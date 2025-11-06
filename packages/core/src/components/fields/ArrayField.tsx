@@ -153,9 +153,12 @@ function getNewFormDataRow<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   registry: Registry<T[], S, F>,
   schema: S,
 ): T {
-  const { schemaUtils } = registry;
+  const { schemaUtils, globalFormOptions } = registry;
   let itemSchema = schema.items as S;
-  if (isFixedItems(schema) && allowAdditionalItems(schema)) {
+  if (globalFormOptions.useFallbackUiForUnsupportedType && !itemSchema) {
+    // If we don't have itemSchema and useFallbackUiForUnsupportedType is on, use an empty schema
+    itemSchema = {} as S;
+  } else if (isFixedItems(schema) && allowAdditionalItems(schema)) {
     itemSchema = schema.additionalItems as S;
   }
   // Cast this as a T to work around schema utils being for T[] caused by the FieldProps<T[], S, F> call on the class
@@ -840,7 +843,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
   props: FieldProps<T[], S, F>,
 ) {
   const { schema, uiSchema, errorSchema, fieldPathId, registry, formData, onChange } = props;
-  const { schemaUtils, translateString } = registry;
+  const { globalFormOptions, schemaUtils, translateString } = registry;
   const { keyedFormData, updateKeyedFormData } = useKeyedFormData<T>(formData);
   // All the children will use childFieldPathId if present in the props, falling back to the fieldPathId
   const childFieldPathId = props.childFieldPathId ?? fieldPathId;
@@ -1027,24 +1030,14 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
     [onChange, childFieldPathId],
   );
 
-  if (!(ITEMS_KEY in schema)) {
-    const uiOptions = getUiOptions<T[], S, F>(uiSchema);
-    const UnsupportedFieldTemplate = getTemplate<'UnsupportedFieldTemplate', T[], S, F>(
-      'UnsupportedFieldTemplate',
-      registry,
-      uiOptions,
-    );
-
-    return (
-      <UnsupportedFieldTemplate
-        schema={schema}
-        fieldPathId={fieldPathId}
-        reason={translateString(TranslatableString.MissingItems)}
-        registry={registry}
-      />
-    );
-  }
-  const arrayProps = {
+  const arrayAsMultiProps: ArrayAsFieldProps<T[], S, F> = {
+    ...props,
+    formData,
+    fieldPathId: childFieldPathId,
+    onSelectChange: onSelectChange,
+  };
+  const arrayProps: InternalArrayFieldProps<T, S, F> = {
+    ...props,
     handleAddItem,
     handleCopyItem,
     handleRemoveItem,
@@ -1052,18 +1045,41 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
     keyedFormData,
     onChange: handleChange,
   };
-  if (schemaUtils.isMultiSelect(schema)) {
+  if (!(ITEMS_KEY in schema)) {
+    if (!globalFormOptions.useFallbackUiForUnsupportedType) {
+      const uiOptions = getUiOptions<T[], S, F>(uiSchema);
+      const UnsupportedFieldTemplate = getTemplate<'UnsupportedFieldTemplate', T[], S, F>(
+        'UnsupportedFieldTemplate',
+        registry,
+        uiOptions,
+      );
+
+      return (
+        <UnsupportedFieldTemplate
+          schema={schema}
+          fieldPathId={fieldPathId}
+          reason={translateString(TranslatableString.MissingItems)}
+          registry={registry}
+        />
+      );
+    }
+    // Add an items schema with type as undefined so it triggers FallbackField later on
+    const fallbackSchema = { ...schema, [ITEMS_KEY]: { type: undefined } };
+    arrayAsMultiProps.schema = fallbackSchema;
+    arrayProps.schema = fallbackSchema;
+  }
+  if (schemaUtils.isMultiSelect(arrayAsMultiProps.schema)) {
     // If array has enum or uniqueItems set to true, call renderMultiSelect() to render the default multiselect widget or a custom widget, if specified.
-    return <ArrayAsMultiSelect<T, S, F> {...props} fieldPathId={childFieldPathId} onSelectChange={onSelectChange} />;
+    return <ArrayAsMultiSelect<T, S, F> {...arrayAsMultiProps} />;
   }
   if (isCustomWidget<T[], S, F>(uiSchema)) {
-    return <ArrayAsCustomWidget<T, S, F> {...props} fieldPathId={childFieldPathId} onSelectChange={onSelectChange} />;
+    return <ArrayAsCustomWidget<T, S, F> {...arrayAsMultiProps} />;
   }
-  if (isFixedItems(schema)) {
-    return <FixedArray<T, S, F> {...props} {...arrayProps} />;
+  if (isFixedItems(arrayAsMultiProps.schema)) {
+    return <FixedArray<T, S, F> {...arrayProps} />;
   }
-  if (schemaUtils.isFilesArray(schema, uiSchema)) {
-    return <ArrayAsFiles {...props} fieldPathId={childFieldPathId} onSelectChange={onSelectChange} />;
+  if (schemaUtils.isFilesArray(arrayAsMultiProps.schema, uiSchema)) {
+    return <ArrayAsFiles<T, S, F> {...arrayAsMultiProps} />;
   }
-  return <NormalArray<T, S, F> {...props} {...arrayProps} />;
+  return <NormalArray<T, S, F> {...arrayProps} />;
 }

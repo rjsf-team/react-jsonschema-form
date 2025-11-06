@@ -1,6 +1,5 @@
 import { FocusEvent, useCallback, useState } from 'react';
 import {
-  ADDITIONAL_PROPERTY_KEY_REMOVE,
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
   getTemplate,
@@ -29,6 +28,8 @@ import get from 'lodash/get';
 import has from 'lodash/has';
 import isObject from 'lodash/isObject';
 import set from 'lodash/set';
+
+import { ADDITIONAL_PROPERTY_KEY_REMOVE } from '../constants';
 
 /** Returns a flag indicating whether the `name` field is required in the object schema
  *
