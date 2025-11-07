@@ -36,7 +36,7 @@ export default function ArrayFieldItemTemplate<
   };
   return (
     <Grid container={true} alignItems='center'>
-      <Grid style={{ overflow: 'auto' }}>
+      <Grid size={{ xs: 8, sm: 9, md: 10, lg: 11 }} style={{ overflow: 'auto' }}>
         <Box mb={2}>
           <Paper elevation={2}>
             <Box p={2}>{children}</Box>
