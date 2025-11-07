@@ -3335,7 +3335,7 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
           </span>
         </p>
         <span
-          class="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
+          class="fui-Caption1 fui-Text ___13vod6f_1082073 fk6fouc fy9rknc fwrc4pm figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
           id="root__help"
         >
           Select all that apply
@@ -4006,7 +4006,7 @@ exports[`single fields help and error display 1`] = `
           </li>
         </ul>
         <span
-          class="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
+          class="fui-Caption1 fui-Text ___13vod6f_1082073 fk6fouc fy9rknc fwrc4pm figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
           id="root__help"
         >
           help me!
@@ -9980,7 +9980,7 @@ exports[`single fields string field field with markdown help and description 1`]
           </span>
         </p>
         <span
-          class="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
+          class="fui-Caption1 fui-Text ___13vod6f_1082073 fk6fouc fy9rknc fwrc4pm figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
           id="root__help"
         >
           <span>
@@ -10054,7 +10054,7 @@ exports[`single fields string field field with markdown help text 1`] = `
           </span>
         </p>
         <span
-          class="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
+          class="fui-Caption1 fui-Text ___13vod6f_1082073 fk6fouc fy9rknc fwrc4pm figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
           id="root__help"
         >
           <span>
@@ -10128,7 +10128,7 @@ exports[`single fields string field field with markdown help text without enabli
           </span>
         </p>
         <span
-          class="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
+          class="fui-Caption1 fui-Text ___13vod6f_1082073 fk6fouc fy9rknc fwrc4pm figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
           id="root__help"
         >
           This is **markdown** help text with [a link](https://example.com)
@@ -10369,7 +10369,7 @@ exports[`single fields string field required field with markdown help 1`] = `
           </span>
         </p>
         <span
-          class="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
+          class="fui-Caption1 fui-Text ___13vod6f_1082073 fk6fouc fy9rknc fwrc4pm figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
           id="root__help"
         >
           <span>

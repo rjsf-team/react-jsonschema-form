@@ -3953,14 +3953,10 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
           />
         </div>
         <div
-          class="description-field my-4"
+          class="rjsf-field-help-template text-gray-500 text-sm"
           id="root__help"
         >
-          <div
-            class="text-sm text-base-content/80"
-          >
-            Select all that apply
-          </div>
+          Select all that apply
         </div>
       </div>
     </div>
@@ -4770,14 +4766,10 @@ exports[`single fields help and error display 1`] = `
           </ul>
         </div>
         <div
-          class="description-field my-4"
+          class="rjsf-field-help-template text-gray-500 text-sm"
           id="root__help"
         >
-          <div
-            class="text-sm text-base-content/80"
-          >
-            help me!
-          </div>
+          help me!
         </div>
       </div>
     </div>
@@ -12307,25 +12299,21 @@ exports[`single fields string field field with markdown help and description 1`]
           />
         </div>
         <div
-          class="description-field my-4"
+          class="rjsf-field-help-template text-gray-500 text-sm"
           id="root__help"
         >
-          <div
-            class="text-sm text-base-content/80"
-          >
-            <span>
-              This is 
-              <strong>
-                help
-              </strong>
-               text with 
-              <a
-                href="https://example.com"
-              >
-                a link
-              </a>
-            </span>
-          </div>
+          <span>
+            This is 
+            <strong>
+              help
+            </strong>
+             text with 
+            <a
+              href="https://example.com"
+            >
+              a link
+            </a>
+          </span>
         </div>
       </div>
     </div>
@@ -12394,25 +12382,21 @@ exports[`single fields string field field with markdown help text 1`] = `
           />
         </div>
         <div
-          class="description-field my-4"
+          class="rjsf-field-help-template text-gray-500 text-sm"
           id="root__help"
         >
-          <div
-            class="text-sm text-base-content/80"
-          >
-            <span>
-              This is 
-              <strong>
-                markdown
-              </strong>
-               help text with 
-              <a
-                href="https://example.com"
-              >
-                a link
-              </a>
-            </span>
-          </div>
+          <span>
+            This is 
+            <strong>
+              markdown
+            </strong>
+             help text with 
+            <a
+              href="https://example.com"
+            >
+              a link
+            </a>
+          </span>
         </div>
       </div>
     </div>
@@ -12481,14 +12465,10 @@ exports[`single fields string field field with markdown help text without enabli
           />
         </div>
         <div
-          class="description-field my-4"
+          class="rjsf-field-help-template text-gray-500 text-sm"
           id="root__help"
         >
-          <div
-            class="text-sm text-base-content/80"
-          >
-            This is **markdown** help text with [a link](https://example.com)
-          </div>
+          This is **markdown** help text with [a link](https://example.com)
         </div>
       </div>
     </div>
@@ -12807,20 +12787,16 @@ exports[`single fields string field required field with markdown help 1`] = `
           />
         </div>
         <div
-          class="description-field my-4"
+          class="rjsf-field-help-template text-gray-500 text-sm"
           id="root__help"
         >
-          <div
-            class="text-sm text-base-content/80"
-          >
-            <span>
-              This field is 
-              <strong>
-                required
-              </strong>
-              . Please provide a value.
-            </span>
-          </div>
+          <span>
+            This field is 
+            <strong>
+              required
+            </strong>
+            . Please provide a value.
+          </span>
         </div>
       </div>
     </div>

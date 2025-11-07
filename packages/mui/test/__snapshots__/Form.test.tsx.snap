@@ -14007,12 +14007,27 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
 }
 
 .emotion-20 {
-  margin: 0;
+  color: rgba(0, 0, 0, 0.6);
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-weight: 400;
   font-size: 0.75rem;
   line-height: 1.66;
   letter-spacing: 0.03333em;
+  text-align: left;
+  margin-top: 3px;
+  margin-right: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  margin-left: 14px;
+  margin-right: 14px;
+}
+
+.emotion-20.Mui-disabled {
+  color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-20.Mui-error {
+  color: #d32f2f;
 }
 
 .emotion-21 {
@@ -14266,13 +14281,13 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
             A group of checkboxes
           </h6>
         </span>
-        <span
-          class="MuiTypography-root MuiTypography-caption emotion-20"
+        <p
+          class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-20"
           id="root__help"
           style="margin-top: 5px;"
         >
           Select all that apply
-        </span>
+        </p>
       </div>
     </div>
     <div
@@ -18918,15 +18933,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
   color: #d32f2f;
 }
 
-.emotion-18 {
-  margin: 0;
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
-  font-weight: 400;
-  font-size: 0.75rem;
-  line-height: 1.66;
-  letter-spacing: 0.03333em;
-}
-
 .emotion-19 {
   margin-top: 24px;
 }
@@ -19153,13 +19159,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
             </div>
           </li>
         </ul>
-        <span
-          class="MuiTypography-root MuiTypography-caption emotion-18"
+        <p
+          class="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-17"
           id="root__help"
           style="margin-top: 5px;"
         >
           help me!
-        </span>
+        </p>
       </div>
     </div>
     <div
@@ -39268,12 +39274,27 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
 }
 
 .emotion-9 {
-  margin: 0;
+  color: rgba(0, 0, 0, 0.6);
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-weight: 400;
   font-size: 0.75rem;
   line-height: 1.66;
   letter-spacing: 0.03333em;
+  text-align: left;
+  margin-top: 3px;
+  margin-right: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  margin-left: 14px;
+  margin-right: 14px;
+}
+
+.emotion-9.Mui-disabled {
+  color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-9.Mui-error {
+  color: #d32f2f;
 }
 
 .emotion-10 {
@@ -39457,8 +39478,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
             This is a *description* with **markdown**
           </h6>
         </span>
-        <span
-          class="MuiTypography-root MuiTypography-caption emotion-9"
+        <p
+          class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-9"
           id="root__help"
           style="margin-top: 5px;"
         >
@@ -39474,7 +39495,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
               a link
             </a>
           </span>
-        </span>
+        </p>
       </div>
     </div>
     <div
@@ -39780,12 +39801,27 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
 }
 
 .emotion-9 {
-  margin: 0;
+  color: rgba(0, 0, 0, 0.6);
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-weight: 400;
   font-size: 0.75rem;
   line-height: 1.66;
   letter-spacing: 0.03333em;
+  text-align: left;
+  margin-top: 3px;
+  margin-right: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  margin-left: 14px;
+  margin-right: 14px;
+}
+
+.emotion-9.Mui-disabled {
+  color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-9.Mui-error {
+  color: #d32f2f;
 }
 
 .emotion-10 {
@@ -39969,8 +40005,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
             A field with markdown help text
           </h6>
         </span>
-        <span
-          class="MuiTypography-root MuiTypography-caption emotion-9"
+        <p
+          class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-9"
           id="root__help"
           style="margin-top: 5px;"
         >
@@ -39986,7 +40022,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
               a link
             </a>
           </span>
-        </span>
+        </p>
       </div>
     </div>
     <div
@@ -40292,12 +40328,27 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
 }
 
 .emotion-9 {
-  margin: 0;
+  color: rgba(0, 0, 0, 0.6);
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-weight: 400;
   font-size: 0.75rem;
   line-height: 1.66;
   letter-spacing: 0.03333em;
+  text-align: left;
+  margin-top: 3px;
+  margin-right: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  margin-left: 14px;
+  margin-right: 14px;
+}
+
+.emotion-9.Mui-disabled {
+  color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-9.Mui-error {
+  color: #d32f2f;
 }
 
 .emotion-10 {
@@ -40481,13 +40532,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
             A field with raw help text
           </h6>
         </span>
-        <span
-          class="MuiTypography-root MuiTypography-caption emotion-9"
+        <p
+          class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-9"
           id="root__help"
           style="margin-top: 5px;"
         >
           This is **markdown** help text with [a link](https://example.com)
-        </span>
+        </p>
       </div>
     </div>
     <div
@@ -42382,12 +42433,27 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
 }
 
 .emotion-9 {
-  margin: 0;
+  color: rgba(0, 0, 0, 0.6);
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-weight: 400;
   font-size: 0.75rem;
   line-height: 1.66;
   letter-spacing: 0.03333em;
+  text-align: left;
+  margin-top: 3px;
+  margin-right: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  margin-left: 14px;
+  margin-right: 14px;
+}
+
+.emotion-9.Mui-disabled {
+  color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-9.Mui-error {
+  color: #d32f2f;
 }
 
 .emotion-10 {
@@ -42571,8 +42637,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
             A required field with markdown help
           </h6>
         </span>
-        <span
-          class="MuiTypography-root MuiTypography-caption emotion-9"
+        <p
+          class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-9"
           id="root__help"
           style="margin-top: 5px;"
         >
@@ -42583,7 +42649,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
             </strong>
             . Please provide a value.
           </span>
-        </span>
+        </p>
       </div>
     </div>
     <div

@@ -20,10 +20,8 @@ export default function FieldHelpTemplate<
     return null;
   }
   return (
-    <div id={helpId(fieldPathId)} className='description-field my-4'>
-      <div className='text-sm text-base-content/80'>
-        <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
-      </div>
+    <div id={helpId(fieldPathId)} className='rjsf-field-help-template text-gray-500 text-sm'>
+      <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
     </div>
   );
 }

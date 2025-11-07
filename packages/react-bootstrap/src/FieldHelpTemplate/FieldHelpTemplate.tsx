@@ -16,10 +16,8 @@ export default function FieldHelpTemplate<
     return null;
   }
   return (
-    <div>
-      <Form.Text id={helpId(fieldPathId)} className='text-muted'>
-        <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
-      </Form.Text>
-    </div>
+    <Form.Text id={helpId(fieldPathId)} className='text-muted'>
+      <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
+    </Form.Text>
   );
 }

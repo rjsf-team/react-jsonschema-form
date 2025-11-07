@@ -3068,14 +3068,12 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
             </div>
           </div>
         </small>
-        <div>
-          <small
-            class="text-muted form-text"
-            id="root__help"
-          >
-            Select all that apply
-          </small>
-        </div>
+        <small
+          class="text-muted form-text"
+          id="root__help"
+        >
+          Select all that apply
+        </small>
       </div>
     </div>
     <div>
@@ -3679,14 +3677,12 @@ exports[`single fields help and error display 1`] = `
             </small>
           </li>
         </ul>
-        <div>
-          <small
-            class="text-muted form-text"
-            id="root__help"
-          >
-            help me!
-          </small>
-        </div>
+        <small
+          class="text-muted form-text"
+          id="root__help"
+        >
+          help me!
+        </small>
       </div>
     </div>
     <div>
@@ -9737,25 +9733,23 @@ exports[`single fields string field field with markdown help and description 1`]
             </div>
           </div>
         </small>
-        <div>
-          <small
-            class="text-muted form-text"
-            id="root__help"
-          >
-            <span>
-              This is 
-              <strong>
-                help
-              </strong>
-               text with 
-              <a
-                href="https://example.com"
-              >
-                a link
-              </a>
-            </span>
-          </small>
-        </div>
+        <small
+          class="text-muted form-text"
+          id="root__help"
+        >
+          <span>
+            This is 
+            <strong>
+              help
+            </strong>
+             text with 
+            <a
+              href="https://example.com"
+            >
+              a link
+            </a>
+          </span>
+        </small>
       </div>
     </div>
     <div>
@@ -9806,25 +9800,23 @@ exports[`single fields string field field with markdown help text 1`] = `
             </div>
           </div>
         </small>
-        <div>
-          <small
-            class="text-muted form-text"
-            id="root__help"
-          >
-            <span>
-              This is 
-              <strong>
-                markdown
-              </strong>
-               help text with 
-              <a
-                href="https://example.com"
-              >
-                a link
-              </a>
-            </span>
-          </small>
-        </div>
+        <small
+          class="text-muted form-text"
+          id="root__help"
+        >
+          <span>
+            This is 
+            <strong>
+              markdown
+            </strong>
+             help text with 
+            <a
+              href="https://example.com"
+            >
+              a link
+            </a>
+          </span>
+        </small>
       </div>
     </div>
     <div>
@@ -9875,14 +9867,12 @@ exports[`single fields string field field with markdown help text without enabli
             </div>
           </div>
         </small>
-        <div>
-          <small
-            class="text-muted form-text"
-            id="root__help"
-          >
-            This is **markdown** help text with [a link](https://example.com)
-          </small>
-        </div>
+        <small
+          class="text-muted form-text"
+          id="root__help"
+        >
+          This is **markdown** help text with [a link](https://example.com)
+        </small>
       </div>
     </div>
     <div>
@@ -10079,20 +10069,18 @@ exports[`single fields string field required field with markdown help 1`] = `
             </div>
           </div>
         </small>
-        <div>
-          <small
-            class="text-muted form-text"
-            id="root__help"
-          >
-            <span>
-              This field is 
-              <strong>
-                required
-              </strong>
-              . Please provide a value.
-            </span>
-          </small>
-        </div>
+        <small
+          class="text-muted form-text"
+          id="root__help"
+        >
+          <span>
+            This field is 
+            <strong>
+              required
+            </strong>
+            . Please provide a value.
+          </span>
+        </small>
       </div>
     </div>
     <div>

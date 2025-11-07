@@ -1,4 +1,4 @@
-import { Text } from '@fluentui/react-components';
+import { Caption1 } from '@fluentui/react-components';
 import { helpId, FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { RichHelp } from '@rjsf/core';
 
@@ -17,8 +17,8 @@ export default function FieldHelpTemplate<
     return null;
   }
   return (
-    <Text block id={helpId(fieldPathId)}>
+    <Caption1 id={helpId(fieldPathId)}>
       <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
-    </Text>
+    </Caption1>
   );
 }
