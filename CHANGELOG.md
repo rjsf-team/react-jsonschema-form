@@ -65,6 +65,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
 
+
 # 6.0.2
 
 ## @rjsf/antd
