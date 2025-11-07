@@ -21,7 +21,6 @@ export default function FieldHelpTemplate<
       </p>
     );
   }
-
   return (
     <div id={helpId(fieldPathId)} className='help-block'>
       <RichHelp help={help} registry={registry} uiSchema={uiSchema} />

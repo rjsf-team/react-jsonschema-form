@@ -81,8 +81,6 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Modified `CheckboxesWidget` to render the Title, fixing ([#4840](https://github.com/rjsf-team/react-jsonschema-form/issues/4840))
 - Updated `CheckboxWidget` to handle label and description rendering consistently, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
-- Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
-
 
 ## @rjsf/core
 
@@ -90,24 +88,15 @@ should change the heading of the (upcoming) version to include a major version b
   - Updated `CheckboxWidget` to handle label and description rendering consistently
   - Modified `FieldTemplate` to skip label and description rendering for checkbox widgets, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
 - Updated `ObjectField` to change the removal of an additional property to defer the work to the `processPendingChange()` handler in `Form`, fixing [#4850](https://github.com/rjsf-team/react-jsonschema-form/issues/4850)
-- Updated `FallbackField` to support `object` and `array` types, and improved `ArrayField` so that it handles missing items properly with the fallback field
+- Added new `ADDITIONAL_PROPERTY_KEY_REMOVE` constant
 
 ## @rjsf/fluentui-rc
 
 - Updated `FieldTemplate` to skip label and description rendering for checkbox widgets, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
-- Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
-
-## @rjsf/daisyui
-
-- Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
-
-
 
 ## @rjsf/mantine
 
 - Updated `CheckboxWidget` to handle label and description rendering consistently, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
-- Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
-
 
 ## @rjsf/mui
 
@@ -118,28 +107,19 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/primereact
 
 - Updated `FieldTemplate` to skip label and description rendering for checkbox widgets, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
-- Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
-
 
 ## @rjsf/react-bootstrap
 
 - Updated `FieldTemplate` to skip label and description rendering for checkbox widgets, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
-- Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
-
-
 
 ## @rjsf/semantic-ui
 
 - Updated `FieldTemplate` to skip label and description rendering for checkbox widgets, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
-- Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
-
 
 ## @rjsf/shadcn
 
 - Updated `FieldTemplate` to skip label and description rendering for checkbox widgets, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
 - Updated the `Command` component to properly handle `forwardRef`
-- Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
-
 
 ## @rjsf/utils
 
