@@ -140,18 +140,6 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
 }
 
 .emotion-10 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
-  -webkit-box-flex: 0;
-  -webkit-flex-grow: 0;
-  -ms-flex-positive: 0;
-  flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
   min-width: 0;
   box-sizing: border-box;
 }
@@ -562,11 +550,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
   font-size: 1rem;
   line-height: 1.5;
   letter-spacing: 0.00938em;
-}
-
-.emotion-34 {
-  min-width: 0;
-  box-sizing: border-box;
 }
 
 .emotion-35 {
@@ -1047,7 +1030,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                       class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-9"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-10"
+                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-10"
                         style="overflow: auto;"
                       >
                         <div
@@ -1187,7 +1170,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                         </div>
                       </div>
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-34"
+                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-10"
                       >
                         <button
                           class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall rjsf-array-item-move-up emotion-35"
@@ -1253,7 +1236,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                       class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-9"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-10"
+                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-10"
                         style="overflow: auto;"
                       >
                         <div
@@ -1394,7 +1377,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                         </div>
                       </div>
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-34"
+                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-10"
                       >
                         <button
                           class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-array-item-move-up emotion-35"
@@ -1460,7 +1443,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                       class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-73"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-34"
+                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-10"
                       >
                         <div
                           class="MuiBox-root emotion-75"
@@ -1650,18 +1633,6 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
 }
 
 .emotion-10 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
-  -webkit-box-flex: 0;
-  -webkit-flex-grow: 0;
-  -ms-flex-positive: 0;
-  flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
   min-width: 0;
   box-sizing: border-box;
 }
@@ -1940,11 +1911,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
   display: inline-block;
   opacity: 0;
   visibility: visible;
-}
-
-.emotion-22 {
-  min-width: 0;
-  box-sizing: border-box;
 }
 
 .emotion-23 {
@@ -2442,7 +2408,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                       class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-9"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-10"
+                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-10"
                         style="overflow: auto;"
                       >
                         <div
@@ -2513,7 +2479,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                         </div>
                       </div>
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-22"
+                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-10"
                       >
                         <button
                           class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall rjsf-array-item-move-up emotion-23"
@@ -2579,7 +2545,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                       class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-9"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-10"
+                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-10"
                         style="overflow: auto;"
                       >
                         <div
@@ -2650,7 +2616,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                         </div>
                       </div>
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-22"
+                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-10"
                       >
                         <button
                           class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-array-item-move-up emotion-23"
@@ -2716,7 +2682,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                       class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-49"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-22"
+                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-10"
                       >
                         <div
                           class="MuiBox-root emotion-51"
@@ -6627,18 +6593,6 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
 }
 
 .emotion-10 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
-  -webkit-box-flex: 0;
-  -webkit-flex-grow: 0;
-  -ms-flex-positive: 0;
-  flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
   min-width: 0;
   box-sizing: border-box;
 }
@@ -7049,11 +7003,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
   font-size: 1rem;
   line-height: 1.5;
   letter-spacing: 0.00938em;
-}
-
-.emotion-34 {
-  min-width: 0;
-  box-sizing: border-box;
 }
 
 .emotion-35 {
@@ -7534,7 +7483,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                       class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-9"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-10"
+                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-10"
                         style="overflow: auto;"
                       >
                         <div
@@ -7674,7 +7623,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                         </div>
                       </div>
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-34"
+                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-10"
                       >
                         <button
                           class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall rjsf-array-item-move-up emotion-35"
@@ -7740,7 +7689,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                       class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-9"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-10"
+                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-10"
                         style="overflow: auto;"
                       >
                         <div
@@ -7881,7 +7830,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                         </div>
                       </div>
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-34"
+                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-10"
                       >
                         <button
                           class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-array-item-move-up emotion-35"
@@ -7947,7 +7896,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                       class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-73"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-34"
+                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-10"
                       >
                         <div
                           class="MuiBox-root emotion-75"
@@ -8137,18 +8086,6 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
 }
 
 .emotion-10 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
-  -webkit-box-flex: 0;
-  -webkit-flex-grow: 0;
-  -ms-flex-positive: 0;
-  flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
   min-width: 0;
   box-sizing: border-box;
 }
@@ -8427,11 +8364,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
   display: inline-block;
   opacity: 0;
   visibility: visible;
-}
-
-.emotion-22 {
-  min-width: 0;
-  box-sizing: border-box;
 }
 
 .emotion-23 {
@@ -8929,7 +8861,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                       class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-9"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-10"
+                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-10"
                         style="overflow: auto;"
                       >
                         <div
@@ -9000,7 +8932,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                         </div>
                       </div>
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-22"
+                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-10"
                       >
                         <button
                           class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall rjsf-array-item-move-up emotion-23"
@@ -9066,7 +8998,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                       class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-9"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-10"
+                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-10"
                         style="overflow: auto;"
                       >
                         <div
@@ -9137,7 +9069,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                         </div>
                       </div>
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-22"
+                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-10"
                       >
                         <button
                           class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-array-item-move-up emotion-23"
@@ -9203,7 +9135,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                       class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-49"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-22"
+                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-10"
                       >
                         <div
                           class="MuiBox-root emotion-51"
@@ -25226,23 +25158,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
   --Grid-parent-rowSpacing: 0px;
 }
 
-.emotion-98 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
-  -webkit-box-flex: 0;
-  -webkit-flex-grow: 0;
-  -ms-flex-positive: 0;
-  flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
-  min-width: 0;
-  box-sizing: border-box;
-}
-
 .emotion-99 {
   margin-bottom: 16px;
 }
@@ -25937,7 +25852,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
                       class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-97"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-98"
+                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-57"
                         style="overflow: auto;"
                       >
                         <div
@@ -27010,23 +26925,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
   --Grid-parent-rowSpacing: 0px;
 }
 
-.emotion-78 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
-  -webkit-box-flex: 0;
-  -webkit-flex-grow: 0;
-  -ms-flex-positive: 0;
-  flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
-  min-width: 0;
-  box-sizing: border-box;
-}
-
 .emotion-79 {
   margin-bottom: 16px;
 }
@@ -27714,7 +27612,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
                       class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-77"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-78"
+                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-47"
                         style="overflow: auto;"
                       >
                         <div
