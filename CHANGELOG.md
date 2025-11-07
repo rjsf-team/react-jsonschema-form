@@ -136,7 +136,6 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `getDefaultFormState()` to not save an undefined field value into an object when the type is `null` and `excludeObjectChildren` is provided, fixing [#4821](https://github.com/rjsf-team/react-jsonschema-form/issues/4821)
 
-
 ## Dev / docs / playground
 
 - Updated the `OptionsDrawer` of the playground to add `idPrefix` and `idSeparator` fields
