@@ -62,8 +62,6 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Added new global UI option `enableMarkdownInHelp` to control markdown rendering of `ui:help`
 
-
-
 # 6.0.2
 
 ## @rjsf/antd
