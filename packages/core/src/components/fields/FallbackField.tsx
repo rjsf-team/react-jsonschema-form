@@ -21,7 +21,7 @@ import { JSONSchema7TypeName } from 'json-schema';
 function getFallbackTypeSelectionSchema(title: string): RJSFSchema {
   return {
     type: 'string',
-    enum: ['string', 'number', 'boolean'],
+    enum: ['string', 'number', 'boolean', 'object', 'array'],
     default: 'string',
     title: title,
   };
@@ -35,6 +35,9 @@ function getTypeOfFormData(formData: any): JSONSchema7TypeName {
   const dataType = typeof formData;
   if (dataType === 'string' || dataType === 'number' || dataType === 'boolean') {
     return dataType;
+  }
+  if (dataType === 'object') {
+    return Array.isArray(formData) ? 'array' : 'object';
   }
   // Treat everything else as a string
   return 'string';
@@ -106,20 +109,14 @@ export default function FallbackField<
   };
 
   if (!globalFormOptions.useFallbackUiForUnsupportedType) {
+    const { reason = translateString(TranslatableString.UnknownFieldType, [String(schema.type)]) } = props;
     const UnsupportedFieldTemplate = getTemplate<'UnsupportedFieldTemplate', T, S, F>(
       'UnsupportedFieldTemplate',
       registry,
       uiOptions,
     );
 
-    return (
-      <UnsupportedFieldTemplate
-        schema={schema}
-        fieldPathId={fieldPathId}
-        reason={translateString(TranslatableString.UnknownFieldType, [String(schema.type)])}
-        registry={registry}
-      />
-    );
+    return <UnsupportedFieldTemplate schema={schema} fieldPathId={fieldPathId} reason={reason} registry={registry} />;
   }
 
   const FallbackFieldTemplate = getTemplate<'FallbackFieldTemplate', T, S, F>(
@@ -151,7 +148,18 @@ export default function FallbackField<
           required={required}
         />
       }
-      schemaField={<SchemaField {...props} schema={{ type, title: translateString(TranslatableString.Value) } as S} />}
+      schemaField={
+        <SchemaField
+          {...props}
+          schema={
+            {
+              type,
+              title: translateString(TranslatableString.Value),
+              ...(type === 'object' && { additionalProperties: true }),
+            } as S
+          }
+        />
+      }
     />
   );
 }
