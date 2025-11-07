@@ -16,7 +16,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-#6.1.0
+# 6.1.0
 
 ## @rjsf/chakra-ui
 
