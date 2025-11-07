@@ -21,11 +21,11 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
 
-## @rjsf/chakra-ui
+## @rjsf/antd
 
 - Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
 
-## @rjsf/core
+## @rjsf/antd
 
 - Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
 
@@ -127,7 +127,6 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `getDefaultFormState()` to not save an undefined field value into an object when the type is `null` and `excludeObjectChildren` is provided, fixing [#4821](https://github.com/rjsf-team/react-jsonschema-form/issues/4821)
 - Added new `ADDITIONAL_PROPERTY_KEY_REMOVE` constant
-
 
 ## Dev / docs / playground
 
