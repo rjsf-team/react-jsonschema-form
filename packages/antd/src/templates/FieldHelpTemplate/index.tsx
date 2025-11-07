@@ -20,7 +20,7 @@ export default function FieldHelpTemplate<
   return (
     <div id={id} className='ant-form-item-extra'>
       <div className='help-block'>
-        <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
+        {typeof help === 'string' ? help : <RichHelp help={help} registry={registry} uiSchema={uiSchema} />}
       </div>
     </div>
   );
