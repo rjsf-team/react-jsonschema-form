@@ -140,20 +140,68 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
 }
 
 .emotion-10 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+}
+
+@media (min-width:600px) {
+  .emotion-10 {
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-flex-basis: auto;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    width: calc(100% * 9 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 9) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-10 {
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-flex-basis: auto;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    width: calc(100% * 10 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 10) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
+  }
+}
+
+@media (min-width:1200px) {
+  .emotion-10 {
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-flex-basis: auto;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    width: calc(100% * 11 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 11) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
+  }
+}
+
+@media (min-width:1536px) {
+  .emotion-10 {
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-flex-basis: auto;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    width: calc(100% * 11.25 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 11.25) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
+  }
 }
 
 .emotion-11 {
@@ -1047,7 +1095,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                       class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-9"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-10"
+                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-10"
                         style="overflow: auto;"
                       >
                         <div
@@ -1253,7 +1301,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                       class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-9"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-10"
+                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-10"
                         style="overflow: auto;"
                       >
                         <div
@@ -1650,20 +1698,68 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
 }
 
 .emotion-10 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+}
+
+@media (min-width:600px) {
+  .emotion-10 {
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-flex-basis: auto;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    width: calc(100% * 9 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 9) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-10 {
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-flex-basis: auto;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    width: calc(100% * 10 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 10) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
+  }
+}
+
+@media (min-width:1200px) {
+  .emotion-10 {
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-flex-basis: auto;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    width: calc(100% * 11 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 11) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
+  }
+}
+
+@media (min-width:1536px) {
+  .emotion-10 {
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-flex-basis: auto;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    width: calc(100% * 11.25 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 11.25) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
+  }
 }
 
 .emotion-11 {
@@ -2442,7 +2538,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                       class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-9"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-10"
+                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-10"
                         style="overflow: auto;"
                       >
                         <div
@@ -2579,7 +2675,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                       class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-9"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-10"
+                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-10"
                         style="overflow: auto;"
                       >
                         <div
@@ -6627,20 +6723,68 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
 }
 
 .emotion-10 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+}
+
+@media (min-width:600px) {
+  .emotion-10 {
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-flex-basis: auto;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    width: calc(100% * 9 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 9) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-10 {
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-flex-basis: auto;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    width: calc(100% * 10 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 10) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
+  }
+}
+
+@media (min-width:1200px) {
+  .emotion-10 {
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-flex-basis: auto;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    width: calc(100% * 11 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 11) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
+  }
+}
+
+@media (min-width:1536px) {
+  .emotion-10 {
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-flex-basis: auto;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    width: calc(100% * 11.25 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 11.25) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
+  }
 }
 
 .emotion-11 {
@@ -7534,7 +7678,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                       class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-9"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-10"
+                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-10"
                         style="overflow: auto;"
                       >
                         <div
@@ -7740,7 +7884,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                       class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-9"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-10"
+                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-10"
                         style="overflow: auto;"
                       >
                         <div
@@ -8137,20 +8281,68 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
 }
 
 .emotion-10 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+}
+
+@media (min-width:600px) {
+  .emotion-10 {
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-flex-basis: auto;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    width: calc(100% * 9 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 9) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-10 {
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-flex-basis: auto;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    width: calc(100% * 10 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 10) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
+  }
+}
+
+@media (min-width:1200px) {
+  .emotion-10 {
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-flex-basis: auto;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    width: calc(100% * 11 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 11) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
+  }
+}
+
+@media (min-width:1536px) {
+  .emotion-10 {
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-flex-basis: auto;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    width: calc(100% * 11.25 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 11.25) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
+  }
 }
 
 .emotion-11 {
@@ -8929,7 +9121,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                       class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-9"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-10"
+                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-10"
                         style="overflow: auto;"
                       >
                         <div
@@ -9066,7 +9258,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                       class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-9"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-10"
+                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-10"
                         style="overflow: auto;"
                       >
                         <div
@@ -25227,20 +25419,68 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
 }
 
 .emotion-98 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+}
+
+@media (min-width:600px) {
+  .emotion-98 {
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-flex-basis: auto;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    width: calc(100% * 9 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 9) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-98 {
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-flex-basis: auto;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    width: calc(100% * 10 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 10) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
+  }
+}
+
+@media (min-width:1200px) {
+  .emotion-98 {
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-flex-basis: auto;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    width: calc(100% * 11 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 11) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
+  }
+}
+
+@media (min-width:1536px) {
+  .emotion-98 {
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-flex-basis: auto;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    width: calc(100% * 11.25 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 11.25) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
+  }
 }
 
 .emotion-99 {
@@ -25937,7 +26177,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
                       class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-97"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-98"
+                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-98"
                         style="overflow: auto;"
                       >
                         <div
@@ -27011,20 +27251,68 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
 }
 
 .emotion-78 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+}
+
+@media (min-width:600px) {
+  .emotion-78 {
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-flex-basis: auto;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    width: calc(100% * 9 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 9) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-78 {
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-flex-basis: auto;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    width: calc(100% * 10 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 10) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
+  }
+}
+
+@media (min-width:1200px) {
+  .emotion-78 {
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-flex-basis: auto;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    width: calc(100% * 11 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 11) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
+  }
+}
+
+@media (min-width:1536px) {
+  .emotion-78 {
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -webkit-flex-basis: auto;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    width: calc(100% * 11.25 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 11.25) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
+  }
 }
 
 .emotion-79 {
@@ -27714,7 +28002,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
                       class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-77"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-78"
+                        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-78"
                         style="overflow: auto;"
                       >
                         <div

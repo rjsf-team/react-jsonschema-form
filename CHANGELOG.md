@@ -46,6 +46,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/mui
 
 - Updated `FieldTemplate` to skip label and description rendering for checkbox widgets, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
+- Updated `ArrayFieldItemTemplate` to switch `size` from 'auto' to responsive values on the `Grid`, fixing [#4838](https://github.com/rjsf-team/react-jsonschema-form/issues/4838)
 
 ## @rjsf/primereact
 
