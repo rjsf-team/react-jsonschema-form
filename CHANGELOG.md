@@ -122,6 +122,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
 
 
+
 ## @rjsf/semantic-ui
 
 - Updated `FieldTemplate` to skip label and description rendering for checkbox widgets, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
@@ -139,6 +140,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `getDefaultFormState()` to not save an undefined field value into an object when the type is `null` and `excludeObjectChildren` is provided, fixing [#4821](https://github.com/rjsf-team/react-jsonschema-form/issues/4821)
 - Added new `ADDITIONAL_PROPERTY_KEY_REMOVE` constant
+
 
 ## Dev / docs / playground
 
