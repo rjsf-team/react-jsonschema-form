@@ -15,52 +15,55 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
-
 # 6.1.0
 
-## @rjsf/chakra-ui
+## @rjsf/antd
 
-- Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
+- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
 
 ## @rjsf/core
 
 - Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
 
-## @rjsf/fluentui-rc
-
-- Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
-
-## @rjsf/daisyui
-
-- Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
-
-## @rjsf/mantine
-
-- Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
-
 ## @rjsf/mui
 
-- Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
-
-## @rjsf/primereact
-
-- Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
-
-## @rjsf/react-bootstrap
-
-- Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
-
-## @rjsf/semantic-ui
-
-- Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
+- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
 
 ## @rjsf/shadcn
 
-- Updated `FieldHelpTemplate` to render markdown when `ui:enableMarkdownInHelp` is true
+- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
+
+## @rjsf/primereact
+
+- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
+
+## @rjsf/react-bootstrap
+
+- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
+
+## @rjsf/semantic-ui
+
+- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
+
+## @rjsf/daisyui
+
+- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
+
+## @rjsf/fluentui-rc
+
+- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
+
+## @rjsf/chakra-ui
+
+- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
+
+## @rjsf/mantine
+
+- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
 
 ## @rjsf/utils
 
-- Added new global UI option `enableMarkdownInHelp` to control markdown rendering of `ui:help`
+- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
 
 # 6.0.2
 
@@ -135,6 +138,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Updated `getDefaultFormState()` to not save an undefined field value into an object when the type is `null` and `excludeObjectChildren` is provided, fixing [#4821](https://github.com/rjsf-team/react-jsonschema-form/issues/4821)
+- Added new `ADDITIONAL_PROPERTY_KEY_REMOVE` constant
 
 ## Dev / docs / playground
 

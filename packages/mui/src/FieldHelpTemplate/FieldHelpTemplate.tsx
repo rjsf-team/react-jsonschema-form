@@ -1,6 +1,6 @@
-import { helpId, FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import FormHelperText from '@mui/material/FormHelperText';
 import { RichHelp } from '@rjsf/core';
-import Typography from '@mui/material/Typography';
+import { helpId, FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 /** The `FieldHelpTemplate` component renders any help desired for a field
  *
@@ -15,9 +15,10 @@ export default function FieldHelpTemplate<
   if (!help) {
     return null;
   }
+
   return (
-    <Typography id={helpId(fieldPathId)} variant='caption' style={{ marginTop: '5px' }}>
+    <FormHelperText id={helpId(fieldPathId)} style={{ marginTop: '5px' }}>
       <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
-    </Typography>
+    </FormHelperText>
   );
 }
