@@ -21,6 +21,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
 
+## @rjsf/chakra-ui
+
+- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
+
 ## @rjsf/core
 
 - Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
