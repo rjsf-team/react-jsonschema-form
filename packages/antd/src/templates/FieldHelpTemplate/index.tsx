@@ -19,7 +19,9 @@ export default function FieldHelpTemplate<
 
   return (
     <div id={id} className='ant-form-item-extra'>
-      <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
+      <div className='help-block'>
+        <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
+      </div>
     </div>
   );
 }
