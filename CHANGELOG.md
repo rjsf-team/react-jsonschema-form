@@ -87,8 +87,10 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed duplicate label and description rendering in `CheckboxWidget` by conditionally rendering them based on widget type
   - Updated `CheckboxWidget` to handle label and description rendering consistently
   - Modified `FieldTemplate` to skip label and description rendering for checkbox widgets, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
+  - Updated `CheckboxWidget` to handle label and description rendering consistently
+  - Modified `FieldTemplate` to skip label and description rendering for checkbox widgets, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
 - Updated `ObjectField` to change the removal of an additional property to defer the work to the `processPendingChange()` handler in `Form`, fixing [#4850](https://github.com/rjsf-team/react-jsonschema-form/issues/4850)
-- Added new `ADDITIONAL_PROPERTY_KEY_REMOVE` constant
+- Updated `FallbackField` to support `object` and `array` types, and improved `ArrayField` so that it handles missing items properly with the fallback field
 
 ## @rjsf/fluentui-rc
 
