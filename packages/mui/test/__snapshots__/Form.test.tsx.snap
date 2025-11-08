@@ -14281,13 +14281,13 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
             A group of checkboxes
           </h6>
         </span>
-        <p
+        <div
           class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-20"
           id="root__help"
           style="margin-top: 5px;"
         >
           Select all that apply
-        </p>
+        </div>
       </div>
     </div>
     <div
@@ -19159,13 +19159,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
             </div>
           </li>
         </ul>
-        <p
+        <div
           class="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-17"
           id="root__help"
           style="margin-top: 5px;"
         >
           help me!
-        </p>
+        </div>
       </div>
     </div>
     <div
@@ -39478,7 +39478,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
             This is a *description* with **markdown**
           </h6>
         </span>
-        <p
+        <div
           class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-9"
           id="root__help"
           style="margin-top: 5px;"
@@ -39495,7 +39495,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
               a link
             </a>
           </span>
-        </p>
+        </div>
       </div>
     </div>
     <div
@@ -40005,7 +40005,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
             A field with markdown help text
           </h6>
         </span>
-        <p
+        <div
           class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-9"
           id="root__help"
           style="margin-top: 5px;"
@@ -40022,7 +40022,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
               a link
             </a>
           </span>
-        </p>
+        </div>
       </div>
     </div>
     <div
@@ -40532,13 +40532,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
             A field with raw help text
           </h6>
         </span>
-        <p
+        <div
           class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-9"
           id="root__help"
           style="margin-top: 5px;"
         >
           This is **markdown** help text with [a link](https://example.com)
-        </p>
+        </div>
       </div>
     </div>
     <div
@@ -42637,7 +42637,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
             A required field with markdown help
           </h6>
         </span>
-        <p
+        <div
           class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-9"
           id="root__help"
           style="margin-top: 5px;"
@@ -42649,7 +42649,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
             </strong>
             . Please provide a value.
           </span>
-        </p>
+        </div>
       </div>
     </div>
     <div

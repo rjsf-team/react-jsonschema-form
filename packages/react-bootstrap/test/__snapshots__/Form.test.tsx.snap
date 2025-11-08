@@ -3678,7 +3678,7 @@ exports[`single fields help and error display 1`] = `
           </li>
         </ul>
         <small
-          class="text-muted form-text"
+          class="text-danger form-text"
           id="root__help"
         >
           help me!

@@ -87,8 +87,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed duplicate label and description rendering in `CheckboxWidget` by conditionally rendering them based on widget type
   - Updated `CheckboxWidget` to handle label and description rendering consistently
   - Modified `FieldTemplate` to skip label and description rendering for checkbox widgets, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
-  - Updated `CheckboxWidget` to handle label and description rendering consistently
-  - Modified `FieldTemplate` to skip label and description rendering for checkbox widgets, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
 - Updated `ObjectField` to change the removal of an additional property to defer the work to the `processPendingChange()` handler in `Form`, fixing [#4850](https://github.com/rjsf-team/react-jsonschema-form/issues/4850)
 - Updated `FallbackField` to support `object` and `array` types, and improved `ArrayField` so that it handles missing items properly with the fallback field
 
@@ -104,7 +102,6 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `FieldTemplate` to skip label and description rendering for checkbox widgets, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
 - Updated `ArrayFieldItemTemplate` to switch `size` from 'auto' to responsive values on the `Grid`, fixing [#4838](https://github.com/rjsf-team/react-jsonschema-form/issues/4838)
-
 
 ## @rjsf/primereact
 
@@ -126,7 +123,6 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Updated `getDefaultFormState()` to not save an undefined field value into an object when the type is `null` and `excludeObjectChildren` is provided, fixing [#4821](https://github.com/rjsf-team/react-jsonschema-form/issues/4821)
-- Added new `ADDITIONAL_PROPERTY_KEY_REMOVE` constant
 
 ## Dev / docs / playground
 

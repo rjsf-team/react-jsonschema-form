@@ -15,13 +15,9 @@ export default function FieldHelpTemplate<
     return null;
   }
 
-  const id = helpId(fieldPathId);
-
   return (
-    <div id={id} className='ant-form-item-extra'>
-      <div className='help-block'>
-        {typeof help === 'string' ? help : <RichHelp help={help} registry={registry} uiSchema={uiSchema} />}
-      </div>
+    <div id={helpId(fieldPathId)} className='help-block'>
+      <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
     </div>
   );
 }

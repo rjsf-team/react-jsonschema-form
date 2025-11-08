@@ -17,7 +17,7 @@ export default function FieldHelpTemplate<
   }
 
   return (
-    <FormHelperText id={helpId(fieldPathId)} style={{ marginTop: '5px' }}>
+    <FormHelperText component='div' id={helpId(fieldPathId)} style={{ marginTop: '5px' }}>
       <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
     </FormHelperText>
   );

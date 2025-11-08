@@ -9,7 +9,7 @@ exports[`array fields array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -88,24 +88,8 @@ exports[`array fields array 1`] = `
                 </fieldset>
               </div>
             </div>
-            <div
-              class="ant-form-item-additional"
-              style="min-height: 24px;"
-            >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
-            </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -129,7 +113,7 @@ exports[`array fields array icons 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -167,7 +151,7 @@ exports[`array fields array icons 1`] = `
                             class="rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -200,24 +184,8 @@ exports[`array fields array icons 1`] = `
                                       </span>
                                     </div>
                                   </div>
-                                  <div
-                                    class="ant-form-item-additional"
-                                    style="min-height: 24px;"
-                                  >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
-                                  </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -369,7 +337,7 @@ exports[`array fields array icons 1`] = `
                             class="rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -402,24 +370,8 @@ exports[`array fields array icons 1`] = `
                                       </span>
                                     </div>
                                   </div>
-                                  <div
-                                    class="ant-form-item-additional"
-                                    style="min-height: 24px;"
-                                  >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
-                                  </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -613,24 +565,8 @@ exports[`array fields array icons 1`] = `
                 </fieldset>
               </div>
             </div>
-            <div
-              class="ant-form-item-additional"
-              style="min-height: 24px;"
-            >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
-            </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -654,7 +590,7 @@ exports[`array fields checkboxes 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -751,24 +687,8 @@ exports[`array fields checkboxes 1`] = `
                 </div>
               </div>
             </div>
-            <div
-              class="ant-form-item-additional"
-              style="min-height: 24px;"
-            >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
-            </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -792,7 +712,7 @@ exports[`array fields empty errors array 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -821,7 +741,7 @@ exports[`array fields empty errors array 1`] = `
                         class="rjsf-field rjsf-field-string"
                       >
                         <div
-                          class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                          class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                         >
                           <div
                             class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -865,24 +785,8 @@ exports[`array fields empty errors array 1`] = `
                                   </span>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-additional"
-                                style="min-height: 24px;"
-                              >
-                                <div
-                                  class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                >
-                                  <div
-                                    class=""
-                                  />
-                                </div>
-                              </div>
                             </div>
                           </div>
-                          <div
-                            class="ant-form-item-margin-offset"
-                            style="margin-bottom: -24px;"
-                          />
                         </div>
                       </div>
                     </div>
@@ -890,24 +794,8 @@ exports[`array fields empty errors array 1`] = `
                 </fieldset>
               </div>
             </div>
-            <div
-              class="ant-form-item-additional"
-              style="min-height: 24px;"
-            >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
-            </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -931,7 +819,7 @@ exports[`array fields fixed array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -969,7 +857,7 @@ exports[`array fields fixed array 1`] = `
                             class="rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -1002,24 +890,8 @@ exports[`array fields fixed array 1`] = `
                                       </span>
                                     </div>
                                   </div>
-                                  <div
-                                    class="ant-form-item-additional"
-                                    style="min-height: 24px;"
-                                  >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
-                                  </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -1036,7 +908,7 @@ exports[`array fields fixed array 1`] = `
                             class="rjsf-field rjsf-field-number"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -1138,24 +1010,8 @@ exports[`array fields fixed array 1`] = `
                                       </div>
                                     </div>
                                   </div>
-                                  <div
-                                    class="ant-form-item-additional"
-                                    style="min-height: 24px;"
-                                  >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
-                                  </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -1165,24 +1021,8 @@ exports[`array fields fixed array 1`] = `
                 </fieldset>
               </div>
             </div>
-            <div
-              class="ant-form-item-additional"
-              style="min-height: 24px;"
-            >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
-            </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -1276,7 +1116,7 @@ exports[`array fields has errors 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -1383,7 +1223,15 @@ exports[`array fields has errors 1`] = `
                                 >
                                   <div
                                     class="ant-form-item-explain-error"
-                                  />
+                                  >
+                                    <div
+                                      id="root_name__error"
+                                    >
+                                      <div>
+                                        Bad input
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -1399,24 +1247,8 @@ exports[`array fields has errors 1`] = `
                 </fieldset>
               </div>
             </div>
-            <div
-              class="ant-form-item-additional"
-              style="min-height: 24px;"
-            >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
-            </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -1440,7 +1272,7 @@ exports[`array fields no errors 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -1469,7 +1301,7 @@ exports[`array fields no errors 1`] = `
                         class="rjsf-field rjsf-field-string"
                       >
                         <div
-                          class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                          class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                         >
                           <div
                             class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -1513,24 +1345,8 @@ exports[`array fields no errors 1`] = `
                                   </span>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-additional"
-                                style="min-height: 24px;"
-                              >
-                                <div
-                                  class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                >
-                                  <div
-                                    class=""
-                                  />
-                                </div>
-                              </div>
                             </div>
                           </div>
-                          <div
-                            class="ant-form-item-margin-offset"
-                            style="margin-bottom: -24px;"
-                          />
                         </div>
                       </div>
                     </div>
@@ -1538,24 +1354,8 @@ exports[`array fields no errors 1`] = `
                 </fieldset>
               </div>
             </div>
-            <div
-              class="ant-form-item-additional"
-              style="min-height: 24px;"
-            >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
-            </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -1579,7 +1379,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -1617,7 +1417,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                             class="rjsf-field rjsf-field-object"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -1646,7 +1446,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                               class="rjsf-field rjsf-field-string"
                                             >
                                               <div
-                                                class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                                                class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                                               >
                                                 <div
                                                   class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -1690,24 +1490,8 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                                         </span>
                                                       </div>
                                                     </div>
-                                                    <div
-                                                      class="ant-form-item-additional"
-                                                      style="min-height: 24px;"
-                                                    >
-                                                      <div
-                                                        class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                                      >
-                                                        <div
-                                                          class=""
-                                                        />
-                                                      </div>
-                                                    </div>
                                                   </div>
                                                 </div>
-                                                <div
-                                                  class="ant-form-item-margin-offset"
-                                                  style="margin-bottom: -24px;"
-                                                />
                                               </div>
                                             </div>
                                           </div>
@@ -1719,7 +1503,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                               class="rjsf-field rjsf-field-number"
                                             >
                                               <div
-                                                class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                                                class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                                               >
                                                 <div
                                                   class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -1833,24 +1617,8 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                                         </div>
                                                       </div>
                                                     </div>
-                                                    <div
-                                                      class="ant-form-item-additional"
-                                                      style="min-height: 24px;"
-                                                    >
-                                                      <div
-                                                        class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                                      >
-                                                        <div
-                                                          class=""
-                                                        />
-                                                      </div>
-                                                    </div>
                                                   </div>
                                                 </div>
-                                                <div
-                                                  class="ant-form-item-margin-offset"
-                                                  style="margin-bottom: -24px;"
-                                                />
                                               </div>
                                             </div>
                                           </div>
@@ -1858,24 +1626,8 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                       </fieldset>
                                     </div>
                                   </div>
-                                  <div
-                                    class="ant-form-item-additional"
-                                    style="min-height: 24px;"
-                                  >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
-                                  </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -1996,7 +1748,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                             class="rjsf-field rjsf-field-object"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -2025,7 +1777,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                               class="rjsf-field rjsf-field-string"
                                             >
                                               <div
-                                                class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                                                class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                                               >
                                                 <div
                                                   class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -2069,24 +1821,8 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                                         </span>
                                                       </div>
                                                     </div>
-                                                    <div
-                                                      class="ant-form-item-additional"
-                                                      style="min-height: 24px;"
-                                                    >
-                                                      <div
-                                                        class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                                      >
-                                                        <div
-                                                          class=""
-                                                        />
-                                                      </div>
-                                                    </div>
                                                   </div>
                                                 </div>
-                                                <div
-                                                  class="ant-form-item-margin-offset"
-                                                  style="margin-bottom: -24px;"
-                                                />
                                               </div>
                                             </div>
                                           </div>
@@ -2098,7 +1834,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                               class="rjsf-field rjsf-field-number"
                                             >
                                               <div
-                                                class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                                                class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                                               >
                                                 <div
                                                   class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -2212,24 +1948,8 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                                         </div>
                                                       </div>
                                                     </div>
-                                                    <div
-                                                      class="ant-form-item-additional"
-                                                      style="min-height: 24px;"
-                                                    >
-                                                      <div
-                                                        class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                                      >
-                                                        <div
-                                                          class=""
-                                                        />
-                                                      </div>
-                                                    </div>
                                                   </div>
                                                 </div>
-                                                <div
-                                                  class="ant-form-item-margin-offset"
-                                                  style="margin-bottom: -24px;"
-                                                />
                                               </div>
                                             </div>
                                           </div>
@@ -2237,24 +1957,8 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                       </fieldset>
                                     </div>
                                   </div>
-                                  <div
-                                    class="ant-form-item-additional"
-                                    style="min-height: 24px;"
-                                  >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
-                                  </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -2417,24 +2121,8 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                 </fieldset>
               </div>
             </div>
-            <div
-              class="ant-form-item-additional"
-              style="min-height: 24px;"
-            >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
-            </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -2458,7 +2146,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -2496,7 +2184,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                             class="rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -2529,24 +2217,8 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                                       </span>
                                     </div>
                                   </div>
-                                  <div
-                                    class="ant-form-item-additional"
-                                    style="min-height: 24px;"
-                                  >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
-                                  </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -2667,7 +2339,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                             class="rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -2700,24 +2372,8 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                                       </span>
                                     </div>
                                   </div>
-                                  <div
-                                    class="ant-form-item-additional"
-                                    style="min-height: 24px;"
-                                  >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
-                                  </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -2880,24 +2536,8 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                 </fieldset>
               </div>
             </div>
-            <div
-              class="ant-form-item-additional"
-              style="min-height: 24px;"
-            >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
-            </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -2921,7 +2561,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes with nameGenerator 1`] = 
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -3018,24 +2658,8 @@ exports[`nameGenerator bracketNameGenerator checkboxes with nameGenerator 1`] = 
                 </div>
               </div>
             </div>
-            <div
-              class="ant-form-item-additional"
-              style="min-height: 24px;"
-            >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
-            </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -3059,7 +2683,7 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -3097,7 +2721,7 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
                             class="rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -3130,24 +2754,8 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
                                       </span>
                                     </div>
                                   </div>
-                                  <div
-                                    class="ant-form-item-additional"
-                                    style="min-height: 24px;"
-                                  >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
-                                  </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -3164,7 +2772,7 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
                             class="rjsf-field rjsf-field-number"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -3267,24 +2875,8 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
                                       </div>
                                     </div>
                                   </div>
-                                  <div
-                                    class="ant-form-item-additional"
-                                    style="min-height: 24px;"
-                                  >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
-                                  </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -3301,7 +2893,7 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
                             class="rjsf-field rjsf-field-boolean"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -3339,24 +2931,8 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
                                       </label>
                                     </div>
                                   </div>
-                                  <div
-                                    class="ant-form-item-additional"
-                                    style="min-height: 24px;"
-                                  >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
-                                  </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -3366,24 +2942,8 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
                 </fieldset>
               </div>
             </div>
-            <div
-              class="ant-form-item-additional"
-              style="min-height: 24px;"
-            >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
-            </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -3407,7 +2967,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -3445,7 +3005,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                             class="rjsf-field rjsf-field-array"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -3483,7 +3043,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                                   class="rjsf-field rjsf-field-string"
                                                 >
                                                   <div
-                                                    class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                                                    class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                                                   >
                                                     <div
                                                       class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -3516,24 +3076,8 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                                             </span>
                                                           </div>
                                                         </div>
-                                                        <div
-                                                          class="ant-form-item-additional"
-                                                          style="min-height: 24px;"
-                                                        >
-                                                          <div
-                                                            class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                                          >
-                                                            <div
-                                                              class=""
-                                                            />
-                                                          </div>
-                                                        </div>
                                                       </div>
                                                     </div>
-                                                    <div
-                                                      class="ant-form-item-margin-offset"
-                                                      style="margin-bottom: -24px;"
-                                                    />
                                                   </div>
                                                 </div>
                                               </div>
@@ -3654,7 +3198,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                                   class="rjsf-field rjsf-field-string"
                                                 >
                                                   <div
-                                                    class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                                                    class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                                                   >
                                                     <div
                                                       class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -3687,24 +3231,8 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                                             </span>
                                                           </div>
                                                         </div>
-                                                        <div
-                                                          class="ant-form-item-additional"
-                                                          style="min-height: 24px;"
-                                                        >
-                                                          <div
-                                                            class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                                          >
-                                                            <div
-                                                              class=""
-                                                            />
-                                                          </div>
-                                                        </div>
                                                       </div>
                                                     </div>
-                                                    <div
-                                                      class="ant-form-item-margin-offset"
-                                                      style="margin-bottom: -24px;"
-                                                    />
                                                   </div>
                                                 </div>
                                               </div>
@@ -3867,24 +3395,8 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                       </fieldset>
                                     </div>
                                   </div>
-                                  <div
-                                    class="ant-form-item-additional"
-                                    style="min-height: 24px;"
-                                  >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
-                                  </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -4005,7 +3517,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                             class="rjsf-field rjsf-field-array"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -4043,7 +3555,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                                   class="rjsf-field rjsf-field-string"
                                                 >
                                                   <div
-                                                    class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                                                    class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                                                   >
                                                     <div
                                                       class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -4076,24 +3588,8 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                                             </span>
                                                           </div>
                                                         </div>
-                                                        <div
-                                                          class="ant-form-item-additional"
-                                                          style="min-height: 24px;"
-                                                        >
-                                                          <div
-                                                            class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                                          >
-                                                            <div
-                                                              class=""
-                                                            />
-                                                          </div>
-                                                        </div>
                                                       </div>
                                                     </div>
-                                                    <div
-                                                      class="ant-form-item-margin-offset"
-                                                      style="margin-bottom: -24px;"
-                                                    />
                                                   </div>
                                                 </div>
                                               </div>
@@ -4214,7 +3710,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                                   class="rjsf-field rjsf-field-string"
                                                 >
                                                   <div
-                                                    class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                                                    class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                                                   >
                                                     <div
                                                       class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -4247,24 +3743,8 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                                             </span>
                                                           </div>
                                                         </div>
-                                                        <div
-                                                          class="ant-form-item-additional"
-                                                          style="min-height: 24px;"
-                                                        >
-                                                          <div
-                                                            class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                                          >
-                                                            <div
-                                                              class=""
-                                                            />
-                                                          </div>
-                                                        </div>
                                                       </div>
                                                     </div>
-                                                    <div
-                                                      class="ant-form-item-margin-offset"
-                                                      style="margin-bottom: -24px;"
-                                                    />
                                                   </div>
                                                 </div>
                                               </div>
@@ -4427,24 +3907,8 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                       </fieldset>
                                     </div>
                                   </div>
-                                  <div
-                                    class="ant-form-item-additional"
-                                    style="min-height: 24px;"
-                                  >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
-                                  </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -4607,24 +4071,8 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                 </fieldset>
               </div>
             </div>
-            <div
-              class="ant-form-item-additional"
-              style="min-height: 24px;"
-            >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
-            </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -4648,7 +4096,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -4686,7 +4134,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                             class="rjsf-field rjsf-field-object"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -4715,7 +4163,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                               class="rjsf-field rjsf-field-string"
                                             >
                                               <div
-                                                class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                                                class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                                               >
                                                 <div
                                                   class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -4759,24 +4207,8 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                                         </span>
                                                       </div>
                                                     </div>
-                                                    <div
-                                                      class="ant-form-item-additional"
-                                                      style="min-height: 24px;"
-                                                    >
-                                                      <div
-                                                        class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                                      >
-                                                        <div
-                                                          class=""
-                                                        />
-                                                      </div>
-                                                    </div>
                                                   </div>
                                                 </div>
-                                                <div
-                                                  class="ant-form-item-margin-offset"
-                                                  style="margin-bottom: -24px;"
-                                                />
                                               </div>
                                             </div>
                                           </div>
@@ -4788,7 +4220,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                               class="rjsf-field rjsf-field-number"
                                             >
                                               <div
-                                                class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                                                class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                                               >
                                                 <div
                                                   class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -4902,24 +4334,8 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                                         </div>
                                                       </div>
                                                     </div>
-                                                    <div
-                                                      class="ant-form-item-additional"
-                                                      style="min-height: 24px;"
-                                                    >
-                                                      <div
-                                                        class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                                      >
-                                                        <div
-                                                          class=""
-                                                        />
-                                                      </div>
-                                                    </div>
                                                   </div>
                                                 </div>
-                                                <div
-                                                  class="ant-form-item-margin-offset"
-                                                  style="margin-bottom: -24px;"
-                                                />
                                               </div>
                                             </div>
                                           </div>
@@ -4927,24 +4343,8 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                       </fieldset>
                                     </div>
                                   </div>
-                                  <div
-                                    class="ant-form-item-additional"
-                                    style="min-height: 24px;"
-                                  >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
-                                  </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -5065,7 +4465,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                             class="rjsf-field rjsf-field-object"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -5094,7 +4494,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                               class="rjsf-field rjsf-field-string"
                                             >
                                               <div
-                                                class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                                                class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                                               >
                                                 <div
                                                   class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -5138,24 +4538,8 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                                         </span>
                                                       </div>
                                                     </div>
-                                                    <div
-                                                      class="ant-form-item-additional"
-                                                      style="min-height: 24px;"
-                                                    >
-                                                      <div
-                                                        class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                                      >
-                                                        <div
-                                                          class=""
-                                                        />
-                                                      </div>
-                                                    </div>
                                                   </div>
                                                 </div>
-                                                <div
-                                                  class="ant-form-item-margin-offset"
-                                                  style="margin-bottom: -24px;"
-                                                />
                                               </div>
                                             </div>
                                           </div>
@@ -5167,7 +4551,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                               class="rjsf-field rjsf-field-number"
                                             >
                                               <div
-                                                class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                                                class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                                               >
                                                 <div
                                                   class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -5281,24 +4665,8 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                                         </div>
                                                       </div>
                                                     </div>
-                                                    <div
-                                                      class="ant-form-item-additional"
-                                                      style="min-height: 24px;"
-                                                    >
-                                                      <div
-                                                        class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                                      >
-                                                        <div
-                                                          class=""
-                                                        />
-                                                      </div>
-                                                    </div>
                                                   </div>
                                                 </div>
-                                                <div
-                                                  class="ant-form-item-margin-offset"
-                                                  style="margin-bottom: -24px;"
-                                                />
                                               </div>
                                             </div>
                                           </div>
@@ -5306,24 +4674,8 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                       </fieldset>
                                     </div>
                                   </div>
-                                  <div
-                                    class="ant-form-item-additional"
-                                    style="min-height: 24px;"
-                                  >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
-                                  </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -5486,24 +4838,8 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                 </fieldset>
               </div>
             </div>
-            <div
-              class="ant-form-item-additional"
-              style="min-height: 24px;"
-            >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
-            </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -5527,7 +4863,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -5565,7 +4901,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                             class="rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -5598,24 +4934,8 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                                       </span>
                                     </div>
                                   </div>
-                                  <div
-                                    class="ant-form-item-additional"
-                                    style="min-height: 24px;"
-                                  >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
-                                  </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -5736,7 +5056,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                             class="rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -5769,24 +5089,8 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                                       </span>
                                     </div>
                                   </div>
-                                  <div
-                                    class="ant-form-item-additional"
-                                    style="min-height: 24px;"
-                                  >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
-                                  </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -5949,24 +5253,8 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                 </fieldset>
               </div>
             </div>
-            <div
-              class="ant-form-item-additional"
-              style="min-height: 24px;"
-            >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
-            </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -5990,7 +5278,7 @@ exports[`with title and description array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -6088,15 +5376,7 @@ exports[`with title and description array 1`] = `
             </div>
             <div
               class="ant-form-item-additional"
-              style="min-height: 24px;"
             >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
               <div
                 class="ant-form-item-extra"
               >
@@ -6109,10 +5389,6 @@ exports[`with title and description array 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -6136,7 +5412,7 @@ exports[`with title and description array icons 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -6191,7 +5467,7 @@ exports[`with title and description array icons 1`] = `
                             class="rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -6237,15 +5513,7 @@ exports[`with title and description array icons 1`] = `
                                   </div>
                                   <div
                                     class="ant-form-item-additional"
-                                    style="min-height: 24px;"
                                   >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
                                     <div
                                       class="ant-form-item-extra"
                                     >
@@ -6258,10 +5526,6 @@ exports[`with title and description array icons 1`] = `
                                   </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -6413,7 +5677,7 @@ exports[`with title and description array icons 1`] = `
                             class="rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -6459,15 +5723,7 @@ exports[`with title and description array icons 1`] = `
                                   </div>
                                   <div
                                     class="ant-form-item-additional"
-                                    style="min-height: 24px;"
                                   >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
                                     <div
                                       class="ant-form-item-extra"
                                     >
@@ -6480,10 +5736,6 @@ exports[`with title and description array icons 1`] = `
                                   </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -6679,15 +5931,7 @@ exports[`with title and description array icons 1`] = `
             </div>
             <div
               class="ant-form-item-additional"
-              style="min-height: 24px;"
             >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
               <div
                 class="ant-form-item-extra"
               >
@@ -6700,10 +5944,6 @@ exports[`with title and description array icons 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -6727,7 +5967,7 @@ exports[`with title and description checkboxes 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -6837,15 +6077,7 @@ exports[`with title and description checkboxes 1`] = `
             </div>
             <div
               class="ant-form-item-additional"
-              style="min-height: 24px;"
             >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
               <div
                 class="ant-form-item-extra"
               >
@@ -6858,10 +6090,6 @@ exports[`with title and description checkboxes 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -6885,7 +6113,7 @@ exports[`with title and description fixed array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -6940,7 +6168,7 @@ exports[`with title and description fixed array 1`] = `
                             class="rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -6986,15 +6214,7 @@ exports[`with title and description fixed array 1`] = `
                                   </div>
                                   <div
                                     class="ant-form-item-additional"
-                                    style="min-height: 24px;"
                                   >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
                                     <div
                                       class="ant-form-item-extra"
                                     >
@@ -7007,10 +6227,6 @@ exports[`with title and description fixed array 1`] = `
                                   </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -7027,7 +6243,7 @@ exports[`with title and description fixed array 1`] = `
                             class="rjsf-field rjsf-field-number"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -7142,15 +6358,7 @@ exports[`with title and description fixed array 1`] = `
                                   </div>
                                   <div
                                     class="ant-form-item-additional"
-                                    style="min-height: 24px;"
                                   >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
                                     <div
                                       class="ant-form-item-extra"
                                     >
@@ -7163,10 +6371,6 @@ exports[`with title and description fixed array 1`] = `
                                   </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -7178,15 +6382,7 @@ exports[`with title and description fixed array 1`] = `
             </div>
             <div
               class="ant-form-item-additional"
-              style="min-height: 24px;"
             >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
               <div
                 class="ant-form-item-extra"
               >
@@ -7199,10 +6395,6 @@ exports[`with title and description fixed array 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -7226,7 +6418,7 @@ exports[`with title and description from both array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -7324,15 +6516,7 @@ exports[`with title and description from both array 1`] = `
             </div>
             <div
               class="ant-form-item-additional"
-              style="min-height: 24px;"
             >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
               <div
                 class="ant-form-item-extra"
               >
@@ -7345,10 +6529,6 @@ exports[`with title and description from both array 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -7372,7 +6552,7 @@ exports[`with title and description from both array icons 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -7427,7 +6607,7 @@ exports[`with title and description from both array icons 1`] = `
                             class="rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -7473,15 +6653,7 @@ exports[`with title and description from both array icons 1`] = `
                                   </div>
                                   <div
                                     class="ant-form-item-additional"
-                                    style="min-height: 24px;"
                                   >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
                                     <div
                                       class="ant-form-item-extra"
                                     >
@@ -7494,10 +6666,6 @@ exports[`with title and description from both array icons 1`] = `
                                   </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -7649,7 +6817,7 @@ exports[`with title and description from both array icons 1`] = `
                             class="rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -7695,15 +6863,7 @@ exports[`with title and description from both array icons 1`] = `
                                   </div>
                                   <div
                                     class="ant-form-item-additional"
-                                    style="min-height: 24px;"
                                   >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
                                     <div
                                       class="ant-form-item-extra"
                                     >
@@ -7716,10 +6876,6 @@ exports[`with title and description from both array icons 1`] = `
                                   </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -7915,15 +7071,7 @@ exports[`with title and description from both array icons 1`] = `
             </div>
             <div
               class="ant-form-item-additional"
-              style="min-height: 24px;"
             >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
               <div
                 class="ant-form-item-extra"
               >
@@ -7936,10 +7084,6 @@ exports[`with title and description from both array icons 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -7963,7 +7107,7 @@ exports[`with title and description from both checkboxes 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -8073,15 +7217,7 @@ exports[`with title and description from both checkboxes 1`] = `
             </div>
             <div
               class="ant-form-item-additional"
-              style="min-height: 24px;"
             >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
               <div
                 class="ant-form-item-extra"
               >
@@ -8094,10 +7230,6 @@ exports[`with title and description from both checkboxes 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -8121,7 +7253,7 @@ exports[`with title and description from both fixed array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -8176,7 +7308,7 @@ exports[`with title and description from both fixed array 1`] = `
                             class="rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -8222,15 +7354,7 @@ exports[`with title and description from both fixed array 1`] = `
                                   </div>
                                   <div
                                     class="ant-form-item-additional"
-                                    style="min-height: 24px;"
                                   >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
                                     <div
                                       class="ant-form-item-extra"
                                     >
@@ -8243,10 +7367,6 @@ exports[`with title and description from both fixed array 1`] = `
                                   </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -8263,7 +7383,7 @@ exports[`with title and description from both fixed array 1`] = `
                             class="rjsf-field rjsf-field-number"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -8378,15 +7498,7 @@ exports[`with title and description from both fixed array 1`] = `
                                   </div>
                                   <div
                                     class="ant-form-item-additional"
-                                    style="min-height: 24px;"
                                   >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
                                     <div
                                       class="ant-form-item-extra"
                                     >
@@ -8399,10 +7511,6 @@ exports[`with title and description from both fixed array 1`] = `
                                   </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -8414,15 +7522,7 @@ exports[`with title and description from both fixed array 1`] = `
             </div>
             <div
               class="ant-form-item-additional"
-              style="min-height: 24px;"
             >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
               <div
                 class="ant-form-item-extra"
               >
@@ -8435,10 +7535,6 @@ exports[`with title and description from both fixed array 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -8462,7 +7558,7 @@ exports[`with title and description from uiSchema array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -8560,15 +7656,7 @@ exports[`with title and description from uiSchema array 1`] = `
             </div>
             <div
               class="ant-form-item-additional"
-              style="min-height: 24px;"
             >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
               <div
                 class="ant-form-item-extra"
               >
@@ -8581,10 +7669,6 @@ exports[`with title and description from uiSchema array 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -8608,7 +7692,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -8663,7 +7747,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             class="rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -8709,15 +7793,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                                   </div>
                                   <div
                                     class="ant-form-item-additional"
-                                    style="min-height: 24px;"
                                   >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
                                     <div
                                       class="ant-form-item-extra"
                                     >
@@ -8730,10 +7806,6 @@ exports[`with title and description from uiSchema array icons 1`] = `
                                   </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -8885,7 +7957,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             class="rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -8931,15 +8003,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                                   </div>
                                   <div
                                     class="ant-form-item-additional"
-                                    style="min-height: 24px;"
                                   >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
                                     <div
                                       class="ant-form-item-extra"
                                     >
@@ -8952,10 +8016,6 @@ exports[`with title and description from uiSchema array icons 1`] = `
                                   </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -9151,15 +8211,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             </div>
             <div
               class="ant-form-item-additional"
-              style="min-height: 24px;"
             >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
               <div
                 class="ant-form-item-extra"
               >
@@ -9172,10 +8224,6 @@ exports[`with title and description from uiSchema array icons 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -9199,7 +8247,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -9309,15 +8357,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
             </div>
             <div
               class="ant-form-item-additional"
-              style="min-height: 24px;"
             >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
               <div
                 class="ant-form-item-extra"
               >
@@ -9330,10 +8370,6 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -9357,7 +8393,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -9412,7 +8448,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                             class="rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -9458,15 +8494,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                                   </div>
                                   <div
                                     class="ant-form-item-additional"
-                                    style="min-height: 24px;"
                                   >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
                                     <div
                                       class="ant-form-item-extra"
                                     >
@@ -9479,10 +8507,6 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                                   </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -9499,7 +8523,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                             class="rjsf-field rjsf-field-number"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -9614,15 +8638,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                                   </div>
                                   <div
                                     class="ant-form-item-additional"
-                                    style="min-height: 24px;"
                                   >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
                                     <div
                                       class="ant-form-item-extra"
                                     >
@@ -9635,10 +8651,6 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                                   </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -9650,15 +8662,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
             </div>
             <div
               class="ant-form-item-additional"
-              style="min-height: 24px;"
             >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
               <div
                 class="ant-form-item-extra"
               >
@@ -9671,10 +8675,6 @@ exports[`with title and description from uiSchema fixed array 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -9698,7 +8698,7 @@ exports[`with title and description with global label off array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -9783,15 +8783,7 @@ exports[`with title and description with global label off array 1`] = `
             </div>
             <div
               class="ant-form-item-additional"
-              style="min-height: 24px;"
             >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
               <div
                 class="ant-form-item-extra"
               >
@@ -9804,10 +8796,6 @@ exports[`with title and description with global label off array 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -9831,7 +8819,7 @@ exports[`with title and description with global label off array icons 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -9873,7 +8861,7 @@ exports[`with title and description with global label off array icons 1`] = `
                             class="rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -9908,15 +8896,7 @@ exports[`with title and description with global label off array icons 1`] = `
                                   </div>
                                   <div
                                     class="ant-form-item-additional"
-                                    style="min-height: 24px;"
                                   >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
                                     <div
                                       class="ant-form-item-extra"
                                     >
@@ -9929,10 +8909,6 @@ exports[`with title and description with global label off array icons 1`] = `
                                   </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -10084,7 +9060,7 @@ exports[`with title and description with global label off array icons 1`] = `
                             class="rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -10119,15 +9095,7 @@ exports[`with title and description with global label off array icons 1`] = `
                                   </div>
                                   <div
                                     class="ant-form-item-additional"
-                                    style="min-height: 24px;"
                                   >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
                                     <div
                                       class="ant-form-item-extra"
                                     >
@@ -10140,10 +9108,6 @@ exports[`with title and description with global label off array icons 1`] = `
                                   </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -10339,15 +9303,7 @@ exports[`with title and description with global label off array icons 1`] = `
             </div>
             <div
               class="ant-form-item-additional"
-              style="min-height: 24px;"
             >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
               <div
                 class="ant-form-item-extra"
               >
@@ -10360,10 +9316,6 @@ exports[`with title and description with global label off array icons 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -10387,7 +9339,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -10497,15 +9449,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
             </div>
             <div
               class="ant-form-item-additional"
-              style="min-height: 24px;"
             >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
               <div
                 class="ant-form-item-extra"
               >
@@ -10518,10 +9462,6 @@ exports[`with title and description with global label off checkboxes 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button
@@ -10545,7 +9485,7 @@ exports[`with title and description with global label off fixed array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div
-        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
       >
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -10587,7 +9527,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                             class="rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -10622,15 +9562,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                                   </div>
                                   <div
                                     class="ant-form-item-additional"
-                                    style="min-height: 24px;"
                                   >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
                                     <div
                                       class="ant-form-item-extra"
                                     >
@@ -10643,10 +9575,6 @@ exports[`with title and description with global label off fixed array 1`] = `
                                   </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -10663,7 +9591,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                             class="rjsf-field rjsf-field-number"
                           >
                             <div
-                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-with-help ant-form-item-horizontal"
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
                             >
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
@@ -10767,15 +9695,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                                   </div>
                                   <div
                                     class="ant-form-item-additional"
-                                    style="min-height: 24px;"
                                   >
-                                    <div
-                                      class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-                                    >
-                                      <div
-                                        class=""
-                                      />
-                                    </div>
                                     <div
                                       class="ant-form-item-extra"
                                     >
@@ -10788,10 +9708,6 @@ exports[`with title and description with global label off fixed array 1`] = `
                                   </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-margin-offset"
-                                style="margin-bottom: -24px;"
-                              />
                             </div>
                           </div>
                         </div>
@@ -10803,15 +9719,7 @@ exports[`with title and description with global label off fixed array 1`] = `
             </div>
             <div
               class="ant-form-item-additional"
-              style="min-height: 24px;"
             >
-              <div
-                class="ant-form-item-explain ant-form-item-explain-connected css-dev-only-do-not-override-ac2jek"
-              >
-                <div
-                  class=""
-                />
-              </div>
               <div
                 class="ant-form-item-extra"
               >
@@ -10824,10 +9732,6 @@ exports[`with title and description with global label off fixed array 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="ant-form-item-margin-offset"
-          style="margin-bottom: -24px;"
-        />
       </div>
     </div>
     <button

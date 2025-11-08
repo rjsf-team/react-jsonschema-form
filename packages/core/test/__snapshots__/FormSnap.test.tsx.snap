@@ -2111,12 +2111,12 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
           </span>
         </label>
       </div>
-      <p
+      <div
         class="help-block"
         id="root__help"
       >
         Select all that apply
-      </p>
+      </div>
     </div>
     <div>
       <button
@@ -2610,12 +2610,12 @@ exports[`single fields help and error display 1`] = `
           </li>
         </ul>
       </div>
-      <p
+      <div
         class="help-block"
         id="root__help"
       >
         help me!
-      </p>
+      </div>
     </div>
     <div>
       <button
@@ -6212,12 +6212,23 @@ exports[`single fields string field field with markdown help and description 1`]
         type="text"
         value=""
       />
-      <p
+      <div
         class="help-block"
         id="root__help"
       >
-        This is **help** text with [a link](https://example.com)
-      </p>
+        <span>
+          This is 
+          <strong>
+            help
+          </strong>
+           text with 
+          <a
+            href="https://example.com"
+          >
+            a link
+          </a>
+        </span>
+      </div>
     </div>
     <div>
       <button
@@ -6261,12 +6272,23 @@ exports[`single fields string field field with markdown help text 1`] = `
         type="text"
         value=""
       />
-      <p
+      <div
         class="help-block"
         id="root__help"
       >
-        This is **markdown** help text with [a link](https://example.com)
-      </p>
+        <span>
+          This is 
+          <strong>
+            markdown
+          </strong>
+           help text with 
+          <a
+            href="https://example.com"
+          >
+            a link
+          </a>
+        </span>
+      </div>
     </div>
     <div>
       <button
@@ -6310,12 +6332,12 @@ exports[`single fields string field field with markdown help text without enabli
         type="text"
         value=""
       />
-      <p
+      <div
         class="help-block"
         id="root__help"
       >
         This is **markdown** help text with [a link](https://example.com)
-      </p>
+      </div>
     </div>
     <div>
       <button
@@ -6485,12 +6507,18 @@ exports[`single fields string field required field with markdown help 1`] = `
         type="text"
         value="[object Object]"
       />
-      <p
+      <div
         class="help-block"
         id="root__help"
       >
-        This field is **required**. Please provide a value.
-      </p>
+        <span>
+          This field is 
+          <strong>
+            required
+          </strong>
+          . Please provide a value.
+        </span>
+      </div>
     </div>
     <div>
       <button

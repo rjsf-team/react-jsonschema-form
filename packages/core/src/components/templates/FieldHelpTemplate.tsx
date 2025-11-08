@@ -14,16 +14,10 @@ export default function FieldHelpTemplate<
   if (!help) {
     return null;
   }
-  if (typeof help === 'string') {
-    return (
-      <p id={helpId(fieldPathId)} className='help-block'>
-        {help}
-      </p>
-    );
-  }
+
   return (
     <div id={helpId(fieldPathId)} className='help-block'>
-      <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
+      <RichHelp help={help as string} registry={registry} uiSchema={uiSchema} />
     </div>
   );
 }

@@ -31,6 +31,7 @@ export default function FieldTemplate<
     displayLabel,
     errors,
     help,
+    rawHelp,
     hidden,
     id,
     label,
@@ -99,7 +100,7 @@ export default function FieldTemplate<
       <Form.Item
         colon={colon}
         hasFeedback={schema.type !== 'array' && schema.type !== 'object'}
-        help={help || (rawErrors?.length ? errors : undefined)}
+        help={(!!rawHelp && help) || (rawErrors?.length ? errors : undefined)}
         htmlFor={id}
         label={displayLabel && !isCheckbox && label}
         labelCol={labelCol}

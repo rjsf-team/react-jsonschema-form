@@ -522,7 +522,7 @@ describe('uiSchema', () => {
 
       const { node } = createFormComponent({ schema, uiSchema });
 
-      expect(node.querySelector('p.help-block').textContent).eql('plop');
+      expect(node.querySelector('div.help-block').textContent).eql('plop');
     });
   });
 
