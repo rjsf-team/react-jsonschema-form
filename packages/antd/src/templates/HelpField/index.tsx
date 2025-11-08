@@ -1,5 +1,4 @@
 import { helpId, FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema, getUiOptions } from '@rjsf/utils';
-import { Text } from '@mantine/core';
 import Markdown from 'markdown-to-jsx';
 
 /** The `FieldHelpTemplate` component renders any help desired for a field
@@ -12,23 +11,28 @@ export default function FieldHelpTemplate<
   F extends FormContextType = any,
 >(props: FieldHelpProps<T, S, F>) {
   const { fieldPathId, help, uiSchema = {}, registry } = props;
-
   if (!help) {
     return null;
   }
-
   const id = helpId(fieldPathId);
   const uiOptions = getUiOptions<T, S, F>(uiSchema, registry?.globalUiOptions);
   if (typeof help === 'string' && uiOptions.enableMarkdownInHelp) {
     return (
-      <Text id={id} size='sm' my='xs' c='dimmed'>
+      <div id={id} className='help-block'>
         <Markdown options={{ disableParsingRawHTML: true }}>{help}</Markdown>
-      </Text>
+      </div>
+    );
+  }
+  if (typeof help === 'string') {
+    return (
+      <p id={id} className='help-block'>
+        {help}
+      </p>
     );
   }
   return (
-    <Text id={id} size='sm' my='xs' c='dimmed'>
+    <div id={id} className='help-block'>
       {help}
-    </Text>
+    </div>
   );
 }

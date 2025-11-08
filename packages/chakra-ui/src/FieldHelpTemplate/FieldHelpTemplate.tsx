@@ -1,5 +1,6 @@
 import { Text } from '@chakra-ui/react';
-import { helpId, FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { helpId, FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema, getUiOptions } from '@rjsf/utils';
+import Markdown from 'markdown-to-jsx';
 
 /** The `FieldHelpTemplate` component renders any help desired for a field
  *
@@ -10,10 +11,18 @@ export default function FieldHelpTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: FieldHelpProps<T, S, F>) {
-  const { fieldPathId, help } = props;
+  const { fieldPathId, help, uiSchema = {}, registry } = props;
   if (!help) {
     return null;
   }
   const id = helpId(fieldPathId);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry?.globalUiOptions);
+  if (typeof help === 'string' && uiOptions.enableMarkdownInHelp) {
+    return (
+      <Text id={id}>
+        <Markdown options={{ disableParsingRawHTML: true }}>{help}</Markdown>
+      </Text>
+    );
+  }
   return <Text id={id}>{help}</Text>;
 }

@@ -39,7 +39,7 @@ export default function FieldTemplate<
     onRemoveProperty,
     rawErrors,
     rawDescription,
-    rawHelp,
+    // rawHelp,
     readonly,
     registry,
     required,
@@ -100,7 +100,7 @@ export default function FieldTemplate<
       <Form.Item
         colon={colon}
         hasFeedback={schema.type !== 'array' && schema.type !== 'object'}
-        help={(!!rawHelp && help) || (rawErrors?.length ? errors : undefined)}
+        help={help || (rawErrors?.length ? errors : undefined)}
         htmlFor={id}
         label={displayLabel && !isCheckbox && label}
         labelCol={labelCol}
