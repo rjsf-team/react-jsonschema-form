@@ -68,6 +68,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
+- Fixed issue with schema array with nested dependent fixed-length, fixing [#3754](https://github.com/rjsf-team/react-jsonschema-form/issues/3754)
 
 
 # 6.0.2
