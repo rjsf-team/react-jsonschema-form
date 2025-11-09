@@ -738,6 +738,10 @@ export type ArrayFieldItemTemplateProps<
    * customization in some themes
    */
   parentUiSchema?: UiSchema<T, S, F>;
+  /** A boolean flag indicating whether the label for the field is being shown, used to assist buttons placement */
+  displayLabel?: boolean;
+  /** A boolean flag indicating whether there is a description for the field, used to assist buttons placement */
+  hasDescription?: boolean;
 };
 
 /** The common properties of the two container templates: `ArrayFieldTemplateProps` and `ObjectFieldTemplateProps` */

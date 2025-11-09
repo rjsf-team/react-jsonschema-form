@@ -47,7 +47,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                         style="position: relative;"
                       >
                         <div
-                          style="position: absolute; right: 0px; top: -10px;"
+                          style="position: absolute; right: 0px; top: 0px;"
                         >
                           <div
                             style="flex-direction: row;"
@@ -209,7 +209,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                         style="position: relative;"
                       >
                         <div
-                          style="position: absolute; right: 0px; top: -10px;"
+                          style="position: absolute; right: 0px; top: 0px;"
                         >
                           <div
                             style="flex-direction: row;"
@@ -479,7 +479,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                         style="position: relative;"
                       >
                         <div
-                          style="position: absolute; right: 0px; top: -10px;"
+                          style="position: absolute; right: 0px; top: 24px;"
                         >
                           <div
                             style="flex-direction: row;"
@@ -571,7 +571,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                         style="position: relative;"
                       >
                         <div
-                          style="position: absolute; right: 0px; top: -10px;"
+                          style="position: absolute; right: 0px; top: 24px;"
                         >
                           <div
                             style="flex-direction: row;"
@@ -1432,7 +1432,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                         style="position: relative;"
                       >
                         <div
-                          style="position: absolute; right: 0px; top: -10px;"
+                          style="position: absolute; right: 0px; top: 0px;"
                         >
                           <div
                             style="flex-direction: row;"
@@ -1594,7 +1594,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                         style="position: relative;"
                       >
                         <div
-                          style="position: absolute; right: 0px; top: -10px;"
+                          style="position: absolute; right: 0px; top: 0px;"
                         >
                           <div
                             style="flex-direction: row;"
@@ -1864,7 +1864,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                         style="position: relative;"
                       >
                         <div
-                          style="position: absolute; right: 0px; top: -10px;"
+                          style="position: absolute; right: 0px; top: 24px;"
                         >
                           <div
                             style="flex-direction: row;"
@@ -1956,7 +1956,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                         style="position: relative;"
                       >
                         <div
-                          style="position: absolute; right: 0px; top: -10px;"
+                          style="position: absolute; right: 0px; top: 24px;"
                         >
                           <div
                             style="flex-direction: row;"
@@ -6087,7 +6087,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         style="position: relative;"
                       >
                         <div
-                          style="position: absolute; right: 0px; top: -10px;"
+                          style="position: absolute; right: 0px; top: 24px;"
                         >
                           <div
                             style="flex-direction: row;"
@@ -6871,7 +6871,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         style="position: relative;"
                       >
                         <div
-                          style="position: absolute; right: 0px; top: -10px;"
+                          style="position: absolute; right: 0px; top: 24px;"
                         >
                           <div
                             style="flex-direction: row;"

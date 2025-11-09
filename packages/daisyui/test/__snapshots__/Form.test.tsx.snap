@@ -6,10 +6,10 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3rjsf-field rjsf-field-object"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -21,10 +21,10 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
               class="mt-2"
             >
               <div
-                class="rjsf-field rjsf-field-array"
+                class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3rjsf-field rjsf-field-array"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-object"
@@ -49,13 +49,13 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                         class="rjsf-array-item-list"
                       >
                         <fieldset
-                          class="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+                          class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
                         >
                           <div
-                            class="rjsf-field rjsf-field-object"
+                            class="flex-grow rjsf-field rjsf-field-object"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-object"
+                              class="field-template mb-3rjsf-field rjsf-field-object"
                             >
                               <div
                                 class="form-control "
@@ -80,10 +80,10 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                     class=""
                                   >
                                     <div
-                                      class="rjsf-field rjsf-field-string"
+                                      class="flex-grow rjsf-field rjsf-field-string"
                                     >
                                       <div
-                                        class="field-template mb-3 rjsf-field rjsf-field-string"
+                                        class="field-template mb-3rjsf-field rjsf-field-string"
                                       >
                                         <label
                                           class="label"
@@ -111,7 +111,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                           </label>
                                           <input
                                             aria-describedby="root_tasks_0_title__error root_tasks_0_title__description root_tasks_0_title__help"
-                                            class="input input-bordered"
+                                            class="input input-bordered w-full"
                                             id="root_tasks_0_title"
                                             name="root[tasks][0][title]"
                                             placeholder=""
@@ -133,10 +133,10 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                     class=""
                                   >
                                     <div
-                                      class="rjsf-field rjsf-field-boolean"
+                                      class="flex-grow rjsf-field rjsf-field-boolean"
                                     >
                                       <div
-                                        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+                                        class="field-template mb-3rjsf-field rjsf-field-boolean"
                                       >
                                         <div
                                           class="form-control"
@@ -183,7 +183,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                             </div>
                           </div>
                           <div
-                            class="flex justify-end mt-2"
+                            class="flex justify-end mt-1"
                           >
                             <div
                               class="join"
@@ -256,13 +256,13 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                           </div>
                         </fieldset>
                         <fieldset
-                          class="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+                          class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-9"
                         >
                           <div
-                            class="rjsf-field rjsf-field-object"
+                            class="flex-grow rjsf-field rjsf-field-object"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-object"
+                              class="field-template mb-3rjsf-field rjsf-field-object"
                             >
                               <div
                                 class="form-control "
@@ -287,10 +287,10 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                     class=""
                                   >
                                     <div
-                                      class="rjsf-field rjsf-field-string"
+                                      class="flex-grow rjsf-field rjsf-field-string"
                                     >
                                       <div
-                                        class="field-template mb-3 rjsf-field rjsf-field-string"
+                                        class="field-template mb-3rjsf-field rjsf-field-string"
                                       >
                                         <label
                                           class="label"
@@ -318,7 +318,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                           </label>
                                           <input
                                             aria-describedby="root_tasks_1_title__error root_tasks_1_title__description root_tasks_1_title__help"
-                                            class="input input-bordered"
+                                            class="input input-bordered w-full"
                                             id="root_tasks_1_title"
                                             name="root[tasks][1][title]"
                                             placeholder=""
@@ -340,10 +340,10 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                     class=""
                                   >
                                     <div
-                                      class="rjsf-field rjsf-field-boolean"
+                                      class="flex-grow rjsf-field rjsf-field-boolean"
                                     >
                                       <div
-                                        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+                                        class="field-template mb-3rjsf-field rjsf-field-boolean"
                                       >
                                         <div
                                           class="form-control"
@@ -391,7 +391,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                             </div>
                           </div>
                           <div
-                            class="flex justify-end mt-2"
+                            class="flex justify-end mt-1"
                           >
                             <div
                               class="join"
@@ -538,10 +538,10 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3rjsf-field rjsf-field-object"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -553,10 +553,10 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-array"
+                class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3rjsf-field rjsf-field-array"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -581,13 +581,13 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                         class="rjsf-array-item-list"
                       >
                         <fieldset
-                          class="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+                          class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
                         >
                           <div
-                            class="rjsf-field rjsf-field-string"
+                            class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                              class="field-template mb-3rjsf-field rjsf-field-string"
                             >
                               <label
                                 class="label"
@@ -615,12 +615,12 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                                   <span
                                     class="label-text"
                                   >
-                                    tags-0
+                                    tags-1
                                   </span>
                                 </label>
                                 <input
                                   aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
-                                  class="input input-bordered"
+                                  class="input input-bordered w-full"
                                   id="root_tags_0"
                                   name="root[tags][0]"
                                   placeholder=""
@@ -639,7 +639,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                             </div>
                           </div>
                           <div
-                            class="flex justify-end mt-2"
+                            class="flex justify-end mt-5"
                           >
                             <div
                               class="join"
@@ -712,13 +712,13 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                           </div>
                         </fieldset>
                         <fieldset
-                          class="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+                          class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-9"
                         >
                           <div
-                            class="rjsf-field rjsf-field-string"
+                            class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                              class="field-template mb-3rjsf-field rjsf-field-string"
                             >
                               <label
                                 class="label"
@@ -746,12 +746,12 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                                   <span
                                     class="label-text"
                                   >
-                                    tags-1
+                                    tags-2
                                   </span>
                                 </label>
                                 <input
                                   aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
-                                  class="input input-bordered"
+                                  class="input input-bordered w-full"
                                   id="root_tags_1"
                                   name="root[tags][1]"
                                   placeholder=""
@@ -770,7 +770,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                             </div>
                           </div>
                           <div
-                            class="flex justify-end mt-2"
+                            class="flex justify-end mt-5"
                           >
                             <div
                               class="join"
@@ -917,10 +917,10 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3rjsf-field rjsf-field-object"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -932,10 +932,10 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-array"
+                class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3rjsf-field rjsf-field-array"
                 >
                   <label
                     class="label"
@@ -1042,10 +1042,10 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3rjsf-field rjsf-field-object"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -1057,10 +1057,10 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-object"
+                class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3rjsf-field rjsf-field-object"
                 >
                   <div
                     class="form-control "
@@ -1085,10 +1085,10 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-string"
+                          class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3rjsf-field rjsf-field-string"
                           >
                             <label
                               class="label"
@@ -1116,7 +1116,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                               </label>
                               <input
                                 aria-describedby="root_person_firstName__error root_person_firstName__description root_person_firstName__help"
-                                class="input input-bordered"
+                                class="input input-bordered w-full"
                                 id="root_person_firstName"
                                 name="root[person][firstName]"
                                 placeholder=""
@@ -1138,10 +1138,10 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-string"
+                          class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3rjsf-field rjsf-field-string"
                           >
                             <label
                               class="label"
@@ -1169,7 +1169,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                               </label>
                               <input
                                 aria-describedby="root_person_lastName__error root_person_lastName__description root_person_lastName__help"
-                                class="input input-bordered"
+                                class="input input-bordered w-full"
                                 id="root_person_lastName"
                                 name="root[person][lastName]"
                                 placeholder=""
@@ -1191,10 +1191,10 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-object"
+                          class="flex-grow rjsf-field rjsf-field-object"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-object"
+                            class="field-template mb-3rjsf-field rjsf-field-object"
                           >
                             <div
                               class="form-control "
@@ -1219,10 +1219,10 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                   class=""
                                 >
                                   <div
-                                    class="rjsf-field rjsf-field-string"
+                                    class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
-                                      class="field-template mb-3 rjsf-field rjsf-field-string"
+                                      class="field-template mb-3rjsf-field rjsf-field-string"
                                     >
                                       <label
                                         class="label"
@@ -1250,7 +1250,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                         </label>
                                         <input
                                           aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
-                                          class="input input-bordered"
+                                          class="input input-bordered w-full"
                                           id="root_person_address_street"
                                           name="root[person][address][street]"
                                           placeholder=""
@@ -1272,10 +1272,10 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                   class=""
                                 >
                                   <div
-                                    class="rjsf-field rjsf-field-string"
+                                    class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
-                                      class="field-template mb-3 rjsf-field rjsf-field-string"
+                                      class="field-template mb-3rjsf-field rjsf-field-string"
                                     >
                                       <label
                                         class="label"
@@ -1303,7 +1303,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                         </label>
                                         <input
                                           aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
-                                          class="input input-bordered"
+                                          class="input input-bordered w-full"
                                           id="root_person_address_city"
                                           name="root[person][address][city]"
                                           placeholder=""
@@ -1374,10 +1374,10 @@ exports[`nameGenerator bracketNameGenerator radio field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3rjsf-field rjsf-field-object"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -1389,10 +1389,10 @@ exports[`nameGenerator bracketNameGenerator radio field 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3rjsf-field rjsf-field-string"
                 >
                   <label
                     class="label"
@@ -1485,10 +1485,10 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3rjsf-field rjsf-field-object"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -1500,10 +1500,10 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3rjsf-field rjsf-field-string"
                 >
                   <label
                     class="label"
@@ -1622,10 +1622,10 @@ exports[`nameGenerator bracketNameGenerator simple fields 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3rjsf-field rjsf-field-object"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -1637,10 +1637,10 @@ exports[`nameGenerator bracketNameGenerator simple fields 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3rjsf-field rjsf-field-string"
                 >
                   <label
                     class="label"
@@ -1668,7 +1668,7 @@ exports[`nameGenerator bracketNameGenerator simple fields 1`] = `
                     </label>
                     <input
                       aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_firstName"
                       name="root[firstName]"
                       placeholder=""
@@ -1690,10 +1690,10 @@ exports[`nameGenerator bracketNameGenerator simple fields 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-number"
+                class="flex-grow rjsf-field rjsf-field-number"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-number"
+                  class="field-template mb-3rjsf-field rjsf-field-number"
                 >
                   <label
                     class="label"
@@ -1721,7 +1721,7 @@ exports[`nameGenerator bracketNameGenerator simple fields 1`] = `
                     </label>
                     <input
                       aria-describedby="root_age__error root_age__description root_age__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_age"
                       name="root[age]"
                       placeholder=""
@@ -1744,10 +1744,10 @@ exports[`nameGenerator bracketNameGenerator simple fields 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-boolean"
+                class="flex-grow rjsf-field rjsf-field-boolean"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-boolean"
+                  class="field-template mb-3rjsf-field rjsf-field-boolean"
                 >
                   <div
                     class="form-control"
@@ -1811,10 +1811,10 @@ exports[`nameGenerator bracketNameGenerator textarea field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3rjsf-field rjsf-field-object"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -1826,10 +1826,10 @@ exports[`nameGenerator bracketNameGenerator textarea field 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3rjsf-field rjsf-field-string"
                 >
                   <label
                     class="label"
@@ -1890,10 +1890,10 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3rjsf-field rjsf-field-object"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -1905,10 +1905,10 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
               class="mt-2"
             >
               <div
-                class="rjsf-field rjsf-field-array"
+                class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3rjsf-field rjsf-field-array"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-object"
@@ -1933,13 +1933,13 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                         class="rjsf-array-item-list"
                       >
                         <fieldset
-                          class="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+                          class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
                         >
                           <div
-                            class="rjsf-field rjsf-field-object"
+                            class="flex-grow rjsf-field rjsf-field-object"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-object"
+                              class="field-template mb-3rjsf-field rjsf-field-object"
                             >
                               <div
                                 class="form-control "
@@ -1964,10 +1964,10 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                     class=""
                                   >
                                     <div
-                                      class="rjsf-field rjsf-field-string"
+                                      class="flex-grow rjsf-field rjsf-field-string"
                                     >
                                       <div
-                                        class="field-template mb-3 rjsf-field rjsf-field-string"
+                                        class="field-template mb-3rjsf-field rjsf-field-string"
                                       >
                                         <label
                                           class="label"
@@ -1995,7 +1995,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                           </label>
                                           <input
                                             aria-describedby="root_tasks_0_title__error root_tasks_0_title__description root_tasks_0_title__help"
-                                            class="input input-bordered"
+                                            class="input input-bordered w-full"
                                             id="root_tasks_0_title"
                                             name="root.tasks.0.title"
                                             placeholder=""
@@ -2017,10 +2017,10 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                     class=""
                                   >
                                     <div
-                                      class="rjsf-field rjsf-field-boolean"
+                                      class="flex-grow rjsf-field rjsf-field-boolean"
                                     >
                                       <div
-                                        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+                                        class="field-template mb-3rjsf-field rjsf-field-boolean"
                                       >
                                         <div
                                           class="form-control"
@@ -2067,7 +2067,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                             </div>
                           </div>
                           <div
-                            class="flex justify-end mt-2"
+                            class="flex justify-end mt-1"
                           >
                             <div
                               class="join"
@@ -2140,13 +2140,13 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                           </div>
                         </fieldset>
                         <fieldset
-                          class="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+                          class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-9"
                         >
                           <div
-                            class="rjsf-field rjsf-field-object"
+                            class="flex-grow rjsf-field rjsf-field-object"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-object"
+                              class="field-template mb-3rjsf-field rjsf-field-object"
                             >
                               <div
                                 class="form-control "
@@ -2171,10 +2171,10 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                     class=""
                                   >
                                     <div
-                                      class="rjsf-field rjsf-field-string"
+                                      class="flex-grow rjsf-field rjsf-field-string"
                                     >
                                       <div
-                                        class="field-template mb-3 rjsf-field rjsf-field-string"
+                                        class="field-template mb-3rjsf-field rjsf-field-string"
                                       >
                                         <label
                                           class="label"
@@ -2202,7 +2202,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                           </label>
                                           <input
                                             aria-describedby="root_tasks_1_title__error root_tasks_1_title__description root_tasks_1_title__help"
-                                            class="input input-bordered"
+                                            class="input input-bordered w-full"
                                             id="root_tasks_1_title"
                                             name="root.tasks.1.title"
                                             placeholder=""
@@ -2224,10 +2224,10 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                     class=""
                                   >
                                     <div
-                                      class="rjsf-field rjsf-field-boolean"
+                                      class="flex-grow rjsf-field rjsf-field-boolean"
                                     >
                                       <div
-                                        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+                                        class="field-template mb-3rjsf-field rjsf-field-boolean"
                                       >
                                         <div
                                           class="form-control"
@@ -2275,7 +2275,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                             </div>
                           </div>
                           <div
-                            class="flex justify-end mt-2"
+                            class="flex justify-end mt-1"
                           >
                             <div
                               class="join"
@@ -2422,10 +2422,10 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3rjsf-field rjsf-field-object"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -2437,10 +2437,10 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-array"
+                class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3rjsf-field rjsf-field-array"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -2465,13 +2465,13 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                         class="rjsf-array-item-list"
                       >
                         <fieldset
-                          class="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+                          class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
                         >
                           <div
-                            class="rjsf-field rjsf-field-string"
+                            class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                              class="field-template mb-3rjsf-field rjsf-field-string"
                             >
                               <label
                                 class="label"
@@ -2499,12 +2499,12 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                                   <span
                                     class="label-text"
                                   >
-                                    tags-0
+                                    tags-1
                                   </span>
                                 </label>
                                 <input
                                   aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
-                                  class="input input-bordered"
+                                  class="input input-bordered w-full"
                                   id="root_tags_0"
                                   name="root.tags.0"
                                   placeholder=""
@@ -2523,7 +2523,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                             </div>
                           </div>
                           <div
-                            class="flex justify-end mt-2"
+                            class="flex justify-end mt-5"
                           >
                             <div
                               class="join"
@@ -2596,13 +2596,13 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                           </div>
                         </fieldset>
                         <fieldset
-                          class="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+                          class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-9"
                         >
                           <div
-                            class="rjsf-field rjsf-field-string"
+                            class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                              class="field-template mb-3rjsf-field rjsf-field-string"
                             >
                               <label
                                 class="label"
@@ -2630,12 +2630,12 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                                   <span
                                     class="label-text"
                                   >
-                                    tags-1
+                                    tags-2
                                   </span>
                                 </label>
                                 <input
                                   aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
-                                  class="input input-bordered"
+                                  class="input input-bordered w-full"
                                   id="root_tags_1"
                                   name="root.tags.1"
                                   placeholder=""
@@ -2654,7 +2654,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                             </div>
                           </div>
                           <div
-                            class="flex justify-end mt-2"
+                            class="flex justify-end mt-5"
                           >
                             <div
                               class="join"
@@ -2801,10 +2801,10 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3rjsf-field rjsf-field-object"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -2816,10 +2816,10 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-object"
+                class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3rjsf-field rjsf-field-object"
                 >
                   <div
                     class="form-control "
@@ -2844,10 +2844,10 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-string"
+                          class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3rjsf-field rjsf-field-string"
                           >
                             <label
                               class="label"
@@ -2875,7 +2875,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                               </label>
                               <input
                                 aria-describedby="root_person_firstName__error root_person_firstName__description root_person_firstName__help"
-                                class="input input-bordered"
+                                class="input input-bordered w-full"
                                 id="root_person_firstName"
                                 name="root.person.firstName"
                                 placeholder=""
@@ -2897,10 +2897,10 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-string"
+                          class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3rjsf-field rjsf-field-string"
                           >
                             <label
                               class="label"
@@ -2928,7 +2928,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                               </label>
                               <input
                                 aria-describedby="root_person_lastName__error root_person_lastName__description root_person_lastName__help"
-                                class="input input-bordered"
+                                class="input input-bordered w-full"
                                 id="root_person_lastName"
                                 name="root.person.lastName"
                                 placeholder=""
@@ -2950,10 +2950,10 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-object"
+                          class="flex-grow rjsf-field rjsf-field-object"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-object"
+                            class="field-template mb-3rjsf-field rjsf-field-object"
                           >
                             <div
                               class="form-control "
@@ -2978,10 +2978,10 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                   class=""
                                 >
                                   <div
-                                    class="rjsf-field rjsf-field-string"
+                                    class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
-                                      class="field-template mb-3 rjsf-field rjsf-field-string"
+                                      class="field-template mb-3rjsf-field rjsf-field-string"
                                     >
                                       <label
                                         class="label"
@@ -3009,7 +3009,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                         </label>
                                         <input
                                           aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
-                                          class="input input-bordered"
+                                          class="input input-bordered w-full"
                                           id="root_person_address_street"
                                           name="root.person.address.street"
                                           placeholder=""
@@ -3031,10 +3031,10 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                   class=""
                                 >
                                   <div
-                                    class="rjsf-field rjsf-field-string"
+                                    class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
-                                      class="field-template mb-3 rjsf-field rjsf-field-string"
+                                      class="field-template mb-3rjsf-field rjsf-field-string"
                                     >
                                       <label
                                         class="label"
@@ -3062,7 +3062,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                         </label>
                                         <input
                                           aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
-                                          class="input input-bordered"
+                                          class="input input-bordered w-full"
                                           id="root_person_address_city"
                                           name="root.person.address.city"
                                           placeholder=""
@@ -3133,10 +3133,10 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3rjsf-field rjsf-field-object"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -3148,10 +3148,10 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3rjsf-field rjsf-field-string"
                 >
                   <label
                     class="label"
@@ -3270,10 +3270,10 @@ exports[`nameGenerator dotNotationNameGenerator simple fields 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3rjsf-field rjsf-field-object"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -3285,10 +3285,10 @@ exports[`nameGenerator dotNotationNameGenerator simple fields 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3rjsf-field rjsf-field-string"
                 >
                   <label
                     class="label"
@@ -3316,7 +3316,7 @@ exports[`nameGenerator dotNotationNameGenerator simple fields 1`] = `
                     </label>
                     <input
                       aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_firstName"
                       name="root.firstName"
                       placeholder=""
@@ -3338,10 +3338,10 @@ exports[`nameGenerator dotNotationNameGenerator simple fields 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-number"
+                class="flex-grow rjsf-field rjsf-field-number"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-number"
+                  class="field-template mb-3rjsf-field rjsf-field-number"
                 >
                   <label
                     class="label"
@@ -3369,7 +3369,7 @@ exports[`nameGenerator dotNotationNameGenerator simple fields 1`] = `
                     </label>
                     <input
                       aria-describedby="root_age__error root_age__description root_age__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_age"
                       name="root.age"
                       placeholder=""
@@ -3392,10 +3392,10 @@ exports[`nameGenerator dotNotationNameGenerator simple fields 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-boolean"
+                class="flex-grow rjsf-field rjsf-field-boolean"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-boolean"
+                  class="field-template mb-3rjsf-field rjsf-field-boolean"
                 >
                   <div
                     class="form-control"
@@ -3459,10 +3459,10 @@ exports[`single fields checkbox field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-boolean"
+      class="flex-grow rjsf-field rjsf-field-boolean"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+        class="field-template mb-3rjsf-field rjsf-field-boolean"
       >
         <div
           class="form-control"
@@ -3501,10 +3501,10 @@ exports[`single fields checkbox field with description in schema and FieldTempla
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-boolean"
+      class="flex-grow rjsf-field rjsf-field-boolean"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+        class="field-template mb-3rjsf-field rjsf-field-boolean"
       >
         <div
           class="form-control"
@@ -3540,6 +3540,16 @@ exports[`single fields checkbox field with description in schema and FieldTempla
           </label>
         </div>
         <div
+          class="description-field my-4"
+          id="root__description"
+        >
+          <div
+            class="text-sm text-base-content/80"
+          >
+            This is a checkbox description
+          </div>
+        </div>
+        <div
           class="rjsf-field-error-template text-red-600"
         >
           <ul
@@ -3566,10 +3576,10 @@ exports[`single fields checkbox field with label 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-boolean"
+      class="flex-grow rjsf-field rjsf-field-boolean"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+        class="field-template mb-3rjsf-field rjsf-field-boolean"
       >
         <div
           class="form-control"
@@ -3621,10 +3631,10 @@ exports[`single fields checkbox field with label and description 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-boolean"
+      class="flex-grow rjsf-field rjsf-field-boolean"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+        class="field-template mb-3rjsf-field rjsf-field-boolean"
       >
         <div
           class="form-control"
@@ -3686,10 +3696,10 @@ exports[`single fields checkbox field with label and rich text description 1`] =
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-boolean"
+      class="flex-grow rjsf-field rjsf-field-boolean"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+        class="field-template mb-3rjsf-field rjsf-field-boolean"
       >
         <div
           class="form-control"
@@ -3759,10 +3769,10 @@ exports[`single fields checkboxes field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3rjsf-field rjsf-field-array"
       >
         <label
           class="label"
@@ -3873,10 +3883,10 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3rjsf-field rjsf-field-array"
       >
         <label
           class="label"
@@ -3946,6 +3956,16 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
           </div>
         </div>
         <div
+          class="description-field my-4"
+          id="root__description"
+        >
+          <div
+            class="text-sm text-base-content/80"
+          >
+            A group of checkboxes
+          </div>
+        </div>
+        <div
           class="rjsf-field-error-template text-red-600"
         >
           <ul
@@ -3978,10 +3998,10 @@ exports[`single fields checkboxes widget with required field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3rjsf-field rjsf-field-array"
       >
         <label
           class="label"
@@ -4050,6 +4070,16 @@ exports[`single fields checkboxes widget with required field 1`] = `
           </div>
         </div>
         <div
+          class="description-field my-4"
+          id="root__description"
+        >
+          <div
+            class="text-sm text-base-content/80"
+          >
+            At least one option must be selected
+          </div>
+        </div>
+        <div
           class="rjsf-field-error-template text-red-600"
         >
           <ul
@@ -4076,10 +4106,10 @@ exports[`single fields field with description 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3rjsf-field rjsf-field-object"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -4091,10 +4121,10 @@ exports[`single fields field with description 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3rjsf-field rjsf-field-string"
                 >
                   <label
                     class="label"
@@ -4122,13 +4152,23 @@ exports[`single fields field with description 1`] = `
                     </label>
                     <input
                       aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_my-field"
                       name="root_my-field"
                       placeholder=""
                       type="text"
                       value=""
                     />
+                  </div>
+                  <div
+                    class="description-field my-4"
+                    id="root_my-field__description"
+                  >
+                    <div
+                      class="text-sm text-base-content/80"
+                    >
+                      some description
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -4169,10 +4209,10 @@ exports[`single fields field with description in uiSchema 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3rjsf-field rjsf-field-object"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -4184,10 +4224,10 @@ exports[`single fields field with description in uiSchema 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3rjsf-field rjsf-field-string"
                 >
                   <label
                     class="label"
@@ -4215,13 +4255,23 @@ exports[`single fields field with description in uiSchema 1`] = `
                     </label>
                     <input
                       aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_my-field"
                       name="root_my-field"
                       placeholder=""
                       type="text"
                       value=""
                     />
+                  </div>
+                  <div
+                    class="description-field my-4"
+                    id="root_my-field__description"
+                  >
+                    <div
+                      class="text-sm text-base-content/80"
+                    >
+                      some other description
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -4262,10 +4312,10 @@ exports[`single fields field with markdown description 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3rjsf-field rjsf-field-object"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -4277,10 +4327,10 @@ exports[`single fields field with markdown description 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3rjsf-field rjsf-field-string"
                 >
                   <label
                     class="label"
@@ -4308,13 +4358,29 @@ exports[`single fields field with markdown description 1`] = `
                     </label>
                     <input
                       aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_my-field"
                       name="root_my-field"
                       placeholder=""
                       type="text"
                       value=""
                     />
+                  </div>
+                  <div
+                    class="description-field my-4"
+                    id="root_my-field__description"
+                  >
+                    <div
+                      class="text-sm text-base-content/80"
+                    >
+                      <span>
+                        some 
+                        <strong>
+                          Rich
+                        </strong>
+                         description
+                      </span>
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -4355,10 +4421,10 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3rjsf-field rjsf-field-object"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -4370,10 +4436,10 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3rjsf-field rjsf-field-string"
                 >
                   <label
                     class="label"
@@ -4401,13 +4467,25 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
                     </label>
                     <input
                       aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_my-field"
                       name="root_my-field"
                       placeholder=""
                       type="text"
                       value=""
                     />
+                  </div>
+                  <div
+                    class="description-field my-4"
+                    id="root_my-field__description"
+                  >
+                    <div
+                      class="text-sm text-base-content/80"
+                    >
+                      <span>
+                        some other description
+                      </span>
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -4448,10 +4526,10 @@ exports[`single fields format color 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3rjsf-field rjsf-field-string"
       >
         <label
           class="label"
@@ -4475,7 +4553,7 @@ exports[`single fields format color 1`] = `
           </label>
           <input
             aria-describedby="root__error root__description root__help"
-            class="input input-bordered"
+            class="input input-bordered w-full"
             id="root"
             name="root"
             placeholder=""
@@ -4510,10 +4588,10 @@ exports[`single fields format date 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3rjsf-field rjsf-field-string"
       >
         <label
           class="label"
@@ -4584,10 +4662,10 @@ exports[`single fields format datetime 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3rjsf-field rjsf-field-string"
       >
         <label
           class="label"
@@ -4658,10 +4736,10 @@ exports[`single fields format time 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3rjsf-field rjsf-field-string"
       >
         <label
           class="label"
@@ -4719,10 +4797,10 @@ exports[`single fields help and error display 1`] = `
       </ul>
     </div>
     <div
-      class="rjsf-field rjsf-field-string rjsf-field-error"
+      class="flex-grow rjsf-field rjsf-field-string rjsf-field-error"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string rjsf-field-error"
+        class="field-template mb-3rjsf-field rjsf-field-string rjsf-field-error"
       >
         <label
           class="label"
@@ -4746,7 +4824,7 @@ exports[`single fields help and error display 1`] = `
           </label>
           <input
             aria-describedby="root__error root__description root__help"
-            class="input input-bordered"
+            class="input input-bordered w-full"
             id="root"
             name="root"
             placeholder=""
@@ -4791,10 +4869,10 @@ exports[`single fields hidden field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3rjsf-field rjsf-field-object"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -4803,10 +4881,10 @@ exports[`single fields hidden field 1`] = `
             class="grid grid-cols-1 gap-4 "
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="flex-grow rjsf-field rjsf-field-string"
             >
               <div
-                class="field-template mb-3 rjsf-field rjsf-field-string"
+                class="field-template mb-3rjsf-field rjsf-field-string"
               >
                 <label
                   class="label"
@@ -4862,10 +4940,10 @@ exports[`single fields hidden label 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3rjsf-field rjsf-field-string"
       >
         <div
           class="form-control"
@@ -4881,7 +4959,7 @@ exports[`single fields hidden label 1`] = `
           </label>
           <input
             aria-describedby="root__error root__description root__help"
-            class="input input-bordered"
+            class="input input-bordered w-full"
             id="root"
             name="root"
             placeholder=""
@@ -4916,10 +4994,10 @@ exports[`single fields null field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-null"
+      class="flex-grow rjsf-field rjsf-field-null"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-null"
+        class="field-template mb-3rjsf-field rjsf-field-null"
       >
         <label
           class="label"
@@ -4956,10 +5034,10 @@ exports[`single fields number field 0 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-number"
+      class="flex-grow rjsf-field rjsf-field-number"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-number"
+        class="field-template mb-3rjsf-field rjsf-field-number"
       >
         <label
           class="label"
@@ -4983,7 +5061,7 @@ exports[`single fields number field 0 1`] = `
           </label>
           <input
             aria-describedby="root__error root__description root__help"
-            class="input input-bordered"
+            class="input input-bordered w-full"
             id="root"
             name="root"
             placeholder=""
@@ -5019,10 +5097,10 @@ exports[`single fields number field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-number"
+      class="flex-grow rjsf-field rjsf-field-number"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-number"
+        class="field-template mb-3rjsf-field rjsf-field-number"
       >
         <label
           class="label"
@@ -5046,7 +5124,7 @@ exports[`single fields number field 1`] = `
           </label>
           <input
             aria-describedby="root__error root__description root__help"
-            class="input input-bordered"
+            class="input input-bordered w-full"
             id="root"
             name="root"
             placeholder=""
@@ -5082,10 +5160,10 @@ exports[`single fields optional data controls does not show optional controls wh
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3rjsf-field rjsf-field-object"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -5110,10 +5188,10 @@ exports[`single fields optional data controls does not show optional controls wh
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-object"
+                class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3rjsf-field rjsf-field-object"
                 >
                   <div
                     class="form-control "
@@ -5138,10 +5216,10 @@ exports[`single fields optional data controls does not show optional controls wh
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-string"
+                          class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3rjsf-field rjsf-field-string"
                           >
                             <label
                               class="label"
@@ -5169,7 +5247,7 @@ exports[`single fields optional data controls does not show optional controls wh
                               </label>
                               <input
                                 aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
-                                class="input input-bordered"
+                                class="input input-bordered w-full"
                                 id="root_nestedObjectOptional_test"
                                 name="root_nestedObjectOptional_test"
                                 placeholder=""
@@ -5191,10 +5269,10 @@ exports[`single fields optional data controls does not show optional controls wh
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-object"
+                          class="flex-grow rjsf-field rjsf-field-object"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-object"
+                            class="field-template mb-3rjsf-field rjsf-field-object"
                           >
                             <div
                               class="form-control "
@@ -5219,10 +5297,10 @@ exports[`single fields optional data controls does not show optional controls wh
                                   class=""
                                 >
                                   <div
-                                    class="rjsf-field rjsf-field-string"
+                                    class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
-                                      class="field-template mb-3 rjsf-field rjsf-field-string"
+                                      class="field-template mb-3rjsf-field rjsf-field-string"
                                     >
                                       <label
                                         class="label"
@@ -5250,7 +5328,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                         </label>
                                         <input
                                           aria-describedby="root_nestedObjectOptional_deepObjectOptional_deepTest__error root_nestedObjectOptional_deepObjectOptional_deepTest__description root_nestedObjectOptional_deepObjectOptional_deepTest__help"
-                                          class="input input-bordered"
+                                          class="input input-bordered w-full"
                                           id="root_nestedObjectOptional_deepObjectOptional_deepTest"
                                           name="root_nestedObjectOptional_deepObjectOptional_deepTest"
                                           placeholder=""
@@ -5284,10 +5362,10 @@ exports[`single fields optional data controls does not show optional controls wh
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-object"
+                          class="flex-grow rjsf-field rjsf-field-object"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-object"
+                            class="field-template mb-3rjsf-field rjsf-field-object"
                           >
                             <div
                               class="form-control "
@@ -5312,10 +5390,10 @@ exports[`single fields optional data controls does not show optional controls wh
                                   class=""
                                 >
                                   <div
-                                    class="rjsf-field rjsf-field-string"
+                                    class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
-                                      class="field-template mb-3 rjsf-field rjsf-field-string"
+                                      class="field-template mb-3rjsf-field rjsf-field-string"
                                     >
                                       <label
                                         class="label"
@@ -5343,7 +5421,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                         </label>
                                         <input
                                           aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
-                                          class="input input-bordered"
+                                          class="input input-bordered w-full"
                                           id="root_nestedObjectOptional_deepObject_deepTest"
                                           name="root_nestedObjectOptional_deepObject_deepTest"
                                           placeholder=""
@@ -5377,10 +5455,10 @@ exports[`single fields optional data controls does not show optional controls wh
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-array"
+                          class="flex-grow rjsf-field rjsf-field-array"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-array"
+                            class="field-template mb-3rjsf-field rjsf-field-array"
                           >
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -5459,10 +5537,10 @@ exports[`single fields optional data controls does not show optional controls wh
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-array"
+                          class="flex-grow rjsf-field rjsf-field-array"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-array"
+                            class="field-template mb-3rjsf-field rjsf-field-array"
                           >
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -5541,10 +5619,10 @@ exports[`single fields optional data controls does not show optional controls wh
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-array"
+                          class="flex-grow rjsf-field rjsf-field-array"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-array"
+                            class="field-template mb-3rjsf-field rjsf-field-array"
                           >
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -5635,10 +5713,10 @@ exports[`single fields optional data controls does not show optional controls wh
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-array"
+                class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3rjsf-field rjsf-field-array"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -5717,10 +5795,10 @@ exports[`single fields optional data controls does not show optional controls wh
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-object"
+                class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3rjsf-field rjsf-field-object"
                 >
                   <div
                     class="form-control "
@@ -5745,10 +5823,10 @@ exports[`single fields optional data controls does not show optional controls wh
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-string"
+                          class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3rjsf-field rjsf-field-string"
                           >
                             <label
                               class="label"
@@ -5776,7 +5854,7 @@ exports[`single fields optional data controls does not show optional controls wh
                               </label>
                               <input
                                 aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
-                                class="input input-bordered"
+                                class="input input-bordered w-full"
                                 id="root_nestedObject_test"
                                 name="root_nestedObject_test"
                                 placeholder=""
@@ -5810,10 +5888,10 @@ exports[`single fields optional data controls does not show optional controls wh
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-array"
+                class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3rjsf-field rjsf-field-array"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -5892,10 +5970,10 @@ exports[`single fields optional data controls does not show optional controls wh
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-undefined"
+                class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
+                  class="field-template mb-3rjsf-field rjsf-field-undefined"
                 >
                   <label
                     class="label"
@@ -5985,10 +6063,10 @@ exports[`single fields optional data controls does not show optional controls wh
                       </div>
                     </div>
                     <div
-                      class="rjsf-field rjsf-field-object"
+                      class="flex-grow rjsf-field rjsf-field-object"
                     >
                       <div
-                        class="field-template mb-3 rjsf-field rjsf-field-object"
+                        class="field-template mb-3rjsf-field rjsf-field-object"
                       >
                         <div
                           class="form-control "
@@ -6013,10 +6091,10 @@ exports[`single fields optional data controls does not show optional controls wh
                               class=""
                             >
                               <div
-                                class="rjsf-field rjsf-field-string"
+                                class="flex-grow rjsf-field rjsf-field-string"
                               >
                                 <div
-                                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                                  class="field-template mb-3rjsf-field rjsf-field-string"
                                 >
                                   <label
                                     class="label"
@@ -6044,7 +6122,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                     </label>
                                     <input
                                       aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
-                                      class="input input-bordered"
+                                      class="input input-bordered w-full"
                                       disabled=""
                                       id="root_optionalObjectWithOneofs_name"
                                       name="root_optionalObjectWithOneofs_name"
@@ -6082,10 +6160,10 @@ exports[`single fields optional data controls does not show optional controls wh
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-undefined"
+                class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
+                  class="field-template mb-3rjsf-field rjsf-field-undefined"
                 >
                   <label
                     class="label"
@@ -6175,10 +6253,10 @@ exports[`single fields optional data controls does not show optional controls wh
                       </div>
                     </div>
                     <div
-                      class="rjsf-field rjsf-field-array"
+                      class="flex-grow rjsf-field rjsf-field-array"
                     >
                       <div
-                        class="field-template mb-3 rjsf-field rjsf-field-array"
+                        class="field-template mb-3rjsf-field rjsf-field-array"
                       >
                         <div
                           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -6285,10 +6363,10 @@ exports[`single fields optional data controls does not show optional controls wh
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3rjsf-field rjsf-field-object"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -6313,10 +6391,10 @@ exports[`single fields optional data controls does not show optional controls wh
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-object"
+                class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3rjsf-field rjsf-field-object"
                 >
                   <div
                     class="form-control "
@@ -6341,10 +6419,10 @@ exports[`single fields optional data controls does not show optional controls wh
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-string"
+                          class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3rjsf-field rjsf-field-string"
                           >
                             <label
                               class="label"
@@ -6372,7 +6450,7 @@ exports[`single fields optional data controls does not show optional controls wh
                               </label>
                               <input
                                 aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
-                                class="input input-bordered"
+                                class="input input-bordered w-full"
                                 disabled=""
                                 id="root_nestedObjectOptional_test"
                                 name="root_nestedObjectOptional_test"
@@ -6395,10 +6473,10 @@ exports[`single fields optional data controls does not show optional controls wh
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-object"
+                          class="flex-grow rjsf-field rjsf-field-object"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-object"
+                            class="field-template mb-3rjsf-field rjsf-field-object"
                           >
                             <div
                               class="form-control "
@@ -6423,10 +6501,10 @@ exports[`single fields optional data controls does not show optional controls wh
                                   class=""
                                 >
                                   <div
-                                    class="rjsf-field rjsf-field-string"
+                                    class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
-                                      class="field-template mb-3 rjsf-field rjsf-field-string"
+                                      class="field-template mb-3rjsf-field rjsf-field-string"
                                     >
                                       <label
                                         class="label"
@@ -6454,7 +6532,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                         </label>
                                         <input
                                           aria-describedby="root_nestedObjectOptional_deepObjectOptional_deepTest__error root_nestedObjectOptional_deepObjectOptional_deepTest__description root_nestedObjectOptional_deepObjectOptional_deepTest__help"
-                                          class="input input-bordered"
+                                          class="input input-bordered w-full"
                                           disabled=""
                                           id="root_nestedObjectOptional_deepObjectOptional_deepTest"
                                           name="root_nestedObjectOptional_deepObjectOptional_deepTest"
@@ -6489,10 +6567,10 @@ exports[`single fields optional data controls does not show optional controls wh
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-object"
+                          class="flex-grow rjsf-field rjsf-field-object"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-object"
+                            class="field-template mb-3rjsf-field rjsf-field-object"
                           >
                             <div
                               class="form-control "
@@ -6517,10 +6595,10 @@ exports[`single fields optional data controls does not show optional controls wh
                                   class=""
                                 >
                                   <div
-                                    class="rjsf-field rjsf-field-string"
+                                    class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
-                                      class="field-template mb-3 rjsf-field rjsf-field-string"
+                                      class="field-template mb-3rjsf-field rjsf-field-string"
                                     >
                                       <label
                                         class="label"
@@ -6548,7 +6626,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                         </label>
                                         <input
                                           aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
-                                          class="input input-bordered"
+                                          class="input input-bordered w-full"
                                           disabled=""
                                           id="root_nestedObjectOptional_deepObject_deepTest"
                                           name="root_nestedObjectOptional_deepObject_deepTest"
@@ -6583,10 +6661,10 @@ exports[`single fields optional data controls does not show optional controls wh
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-array"
+                          class="flex-grow rjsf-field rjsf-field-array"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-array"
+                            class="field-template mb-3rjsf-field rjsf-field-array"
                           >
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -6666,10 +6744,10 @@ exports[`single fields optional data controls does not show optional controls wh
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-array"
+                          class="flex-grow rjsf-field rjsf-field-array"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-array"
+                            class="field-template mb-3rjsf-field rjsf-field-array"
                           >
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -6749,10 +6827,10 @@ exports[`single fields optional data controls does not show optional controls wh
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-array"
+                          class="flex-grow rjsf-field rjsf-field-array"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-array"
+                            class="field-template mb-3rjsf-field rjsf-field-array"
                           >
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -6844,10 +6922,10 @@ exports[`single fields optional data controls does not show optional controls wh
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-array"
+                class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3rjsf-field rjsf-field-array"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -6927,10 +7005,10 @@ exports[`single fields optional data controls does not show optional controls wh
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-object"
+                class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3rjsf-field rjsf-field-object"
                 >
                   <div
                     class="form-control "
@@ -6955,10 +7033,10 @@ exports[`single fields optional data controls does not show optional controls wh
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-string"
+                          class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3rjsf-field rjsf-field-string"
                           >
                             <label
                               class="label"
@@ -6986,7 +7064,7 @@ exports[`single fields optional data controls does not show optional controls wh
                               </label>
                               <input
                                 aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
-                                class="input input-bordered"
+                                class="input input-bordered w-full"
                                 disabled=""
                                 id="root_nestedObject_test"
                                 name="root_nestedObject_test"
@@ -7021,10 +7099,10 @@ exports[`single fields optional data controls does not show optional controls wh
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-array"
+                class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3rjsf-field rjsf-field-array"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -7104,10 +7182,10 @@ exports[`single fields optional data controls does not show optional controls wh
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-undefined"
+                class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
+                  class="field-template mb-3rjsf-field rjsf-field-undefined"
                 >
                   <label
                     class="label"
@@ -7197,10 +7275,10 @@ exports[`single fields optional data controls does not show optional controls wh
                       </div>
                     </div>
                     <div
-                      class="rjsf-field rjsf-field-object"
+                      class="flex-grow rjsf-field rjsf-field-object"
                     >
                       <div
-                        class="field-template mb-3 rjsf-field rjsf-field-object"
+                        class="field-template mb-3rjsf-field rjsf-field-object"
                       >
                         <div
                           class="form-control "
@@ -7225,10 +7303,10 @@ exports[`single fields optional data controls does not show optional controls wh
                               class=""
                             >
                               <div
-                                class="rjsf-field rjsf-field-string"
+                                class="flex-grow rjsf-field rjsf-field-string"
                               >
                                 <div
-                                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                                  class="field-template mb-3rjsf-field rjsf-field-string"
                                 >
                                   <label
                                     class="label"
@@ -7256,7 +7334,7 @@ exports[`single fields optional data controls does not show optional controls wh
                                     </label>
                                     <input
                                       aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
-                                      class="input input-bordered"
+                                      class="input input-bordered w-full"
                                       disabled=""
                                       id="root_optionalObjectWithOneofs_name"
                                       name="root_optionalObjectWithOneofs_name"
@@ -7294,10 +7372,10 @@ exports[`single fields optional data controls does not show optional controls wh
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-undefined"
+                class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
+                  class="field-template mb-3rjsf-field rjsf-field-undefined"
                 >
                   <label
                     class="label"
@@ -7387,10 +7465,10 @@ exports[`single fields optional data controls does not show optional controls wh
                       </div>
                     </div>
                     <div
-                      class="rjsf-field rjsf-field-array"
+                      class="flex-grow rjsf-field rjsf-field-array"
                     >
                       <div
-                        class="field-template mb-3 rjsf-field rjsf-field-array"
+                        class="field-template mb-3rjsf-field rjsf-field-array"
                       >
                         <div
                           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -7498,10 +7576,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3rjsf-field rjsf-field-object"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -7526,10 +7604,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-object"
+                class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3rjsf-field rjsf-field-object"
                 >
                   <div
                     class="form-control "
@@ -7587,10 +7665,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-string"
+                          class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3rjsf-field rjsf-field-string"
                           >
                             <label
                               class="label"
@@ -7618,7 +7696,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                               </label>
                               <input
                                 aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
-                                class="input input-bordered"
+                                class="input input-bordered w-full"
                                 id="root_nestedObjectOptional_test"
                                 name="root_nestedObjectOptional_test"
                                 placeholder=""
@@ -7640,10 +7718,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-object"
+                          class="flex-grow rjsf-field rjsf-field-object"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-object"
+                            class="field-template mb-3rjsf-field rjsf-field-object"
                           >
                             <div
                               class="form-control "
@@ -7712,10 +7790,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-object"
+                          class="flex-grow rjsf-field rjsf-field-object"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-object"
+                            class="field-template mb-3rjsf-field rjsf-field-object"
                           >
                             <div
                               class="form-control "
@@ -7740,10 +7818,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                   class=""
                                 >
                                   <div
-                                    class="rjsf-field rjsf-field-string"
+                                    class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
-                                      class="field-template mb-3 rjsf-field rjsf-field-string"
+                                      class="field-template mb-3rjsf-field rjsf-field-string"
                                     >
                                       <label
                                         class="label"
@@ -7771,7 +7849,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                         </label>
                                         <input
                                           aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
-                                          class="input input-bordered"
+                                          class="input input-bordered w-full"
                                           id="root_nestedObjectOptional_deepObject_deepTest"
                                           name="root_nestedObjectOptional_deepObject_deepTest"
                                           placeholder=""
@@ -7805,10 +7883,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-array"
+                          class="flex-grow rjsf-field rjsf-field-array"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-array"
+                            class="field-template mb-3rjsf-field rjsf-field-array"
                           >
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -7887,10 +7965,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-array"
+                          class="flex-grow rjsf-field rjsf-field-array"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-array"
+                            class="field-template mb-3rjsf-field rjsf-field-array"
                           >
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
@@ -7963,10 +8041,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-array"
+                          class="flex-grow rjsf-field rjsf-field-array"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-array"
+                            class="field-template mb-3rjsf-field rjsf-field-array"
                           >
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -8057,10 +8135,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-array"
+                class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3rjsf-field rjsf-field-array"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
@@ -8118,13 +8196,13 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         class="rjsf-array-item-list"
                       >
                         <fieldset
-                          class="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg  z-10"
+                          class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg  z-10"
                         >
                           <div
-                            class="rjsf-field rjsf-field-string"
+                            class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                              class="field-template mb-3rjsf-field rjsf-field-string"
                             >
                               <label
                                 class="label"
@@ -8152,12 +8230,12 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                   <span
                                     class="label-text"
                                   >
-                                    nestedArrayOptional-0
+                                    nestedArrayOptional-1
                                   </span>
                                 </label>
                                 <input
                                   aria-describedby="root_nestedArrayOptional_0__error root_nestedArrayOptional_0__description root_nestedArrayOptional_0__help"
-                                  class="input input-bordered"
+                                  class="input input-bordered w-full"
                                   id="root_nestedArrayOptional_0"
                                   name="root_nestedArrayOptional_0"
                                   placeholder=""
@@ -8176,7 +8254,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                             </div>
                           </div>
                           <div
-                            class="flex justify-end mt-2"
+                            class="flex justify-end mt-5"
                           >
                             <button
                               aria-label="Remove"
@@ -8251,10 +8329,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-object"
+                class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3rjsf-field rjsf-field-object"
                 >
                   <div
                     class="form-control "
@@ -8279,10 +8357,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-string"
+                          class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3rjsf-field rjsf-field-string"
                           >
                             <label
                               class="label"
@@ -8310,7 +8388,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                               </label>
                               <input
                                 aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
-                                class="input input-bordered"
+                                class="input input-bordered w-full"
                                 id="root_nestedObject_test"
                                 name="root_nestedObject_test"
                                 placeholder=""
@@ -8344,10 +8422,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-array"
+                class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3rjsf-field rjsf-field-array"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -8426,10 +8504,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-undefined"
+                class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
+                  class="field-template mb-3rjsf-field rjsf-field-undefined"
                 >
                   <div
                     class="p-4 border rounded-sm shadow-sm"
@@ -8438,10 +8516,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                       class="mb-4"
                     />
                     <div
-                      class="rjsf-field rjsf-field-object"
+                      class="flex-grow rjsf-field rjsf-field-object"
                     >
                       <div
-                        class="field-template mb-3 rjsf-field rjsf-field-object"
+                        class="field-template mb-3rjsf-field rjsf-field-object"
                       >
                         <div
                           class="form-control "
@@ -8513,10 +8591,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-undefined"
+                class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
+                  class="field-template mb-3rjsf-field rjsf-field-undefined"
                 >
                   <div
                     class="p-4 border rounded-sm shadow-sm"
@@ -8525,10 +8603,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                       class="mb-4"
                     />
                     <div
-                      class="rjsf-field rjsf-field-array"
+                      class="flex-grow rjsf-field rjsf-field-array"
                     >
                       <div
-                        class="field-template mb-3 rjsf-field rjsf-field-array"
+                        class="field-template mb-3rjsf-field rjsf-field-array"
                       >
                         <div
                           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
@@ -8629,10 +8707,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3rjsf-field rjsf-field-object"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -8657,10 +8735,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-object"
+                class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3rjsf-field rjsf-field-object"
                 >
                   <div
                     class="form-control "
@@ -8685,10 +8763,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-string"
+                          class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3rjsf-field rjsf-field-string"
                           >
                             <label
                               class="label"
@@ -8716,7 +8794,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                               </label>
                               <input
                                 aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
-                                class="input input-bordered"
+                                class="input input-bordered w-full"
                                 disabled=""
                                 id="root_nestedObjectOptional_test"
                                 name="root_nestedObjectOptional_test"
@@ -8739,10 +8817,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-object"
+                          class="flex-grow rjsf-field rjsf-field-object"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-object"
+                            class="field-template mb-3rjsf-field rjsf-field-object"
                           >
                             <div
                               class="form-control "
@@ -8784,10 +8862,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-object"
+                          class="flex-grow rjsf-field rjsf-field-object"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-object"
+                            class="field-template mb-3rjsf-field rjsf-field-object"
                           >
                             <div
                               class="form-control "
@@ -8812,10 +8890,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                   class=""
                                 >
                                   <div
-                                    class="rjsf-field rjsf-field-string"
+                                    class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
-                                      class="field-template mb-3 rjsf-field rjsf-field-string"
+                                      class="field-template mb-3rjsf-field rjsf-field-string"
                                     >
                                       <label
                                         class="label"
@@ -8843,7 +8921,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                         </label>
                                         <input
                                           aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
-                                          class="input input-bordered"
+                                          class="input input-bordered w-full"
                                           disabled=""
                                           id="root_nestedObjectOptional_deepObject_deepTest"
                                           name="root_nestedObjectOptional_deepObject_deepTest"
@@ -8878,10 +8956,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-array"
+                          class="flex-grow rjsf-field rjsf-field-array"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-array"
+                            class="field-template mb-3rjsf-field rjsf-field-array"
                           >
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -8961,10 +9039,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-array"
+                          class="flex-grow rjsf-field rjsf-field-array"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-array"
+                            class="field-template mb-3rjsf-field rjsf-field-array"
                           >
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
@@ -9009,10 +9087,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-array"
+                          class="flex-grow rjsf-field rjsf-field-array"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-array"
+                            class="field-template mb-3rjsf-field rjsf-field-array"
                           >
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -9104,10 +9182,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-array"
+                class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3rjsf-field rjsf-field-array"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
@@ -9132,13 +9210,13 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         class="rjsf-array-item-list"
                       >
                         <fieldset
-                          class="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg  z-10"
+                          class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg  z-10"
                         >
                           <div
-                            class="rjsf-field rjsf-field-string"
+                            class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                              class="field-template mb-3rjsf-field rjsf-field-string"
                             >
                               <label
                                 class="label"
@@ -9166,12 +9244,12 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                   <span
                                     class="label-text"
                                   >
-                                    nestedArrayOptional-0
+                                    nestedArrayOptional-1
                                   </span>
                                 </label>
                                 <input
                                   aria-describedby="root_nestedArrayOptional_0__error root_nestedArrayOptional_0__description root_nestedArrayOptional_0__help"
-                                  class="input input-bordered"
+                                  class="input input-bordered w-full"
                                   disabled=""
                                   id="root_nestedArrayOptional_0"
                                   name="root_nestedArrayOptional_0"
@@ -9191,7 +9269,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                             </div>
                           </div>
                           <div
-                            class="flex justify-end mt-2"
+                            class="flex justify-end mt-5"
                           >
                             <button
                               aria-label="Remove"
@@ -9268,10 +9346,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-object"
+                class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3rjsf-field rjsf-field-object"
                 >
                   <div
                     class="form-control "
@@ -9296,10 +9374,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-string"
+                          class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3rjsf-field rjsf-field-string"
                           >
                             <label
                               class="label"
@@ -9327,7 +9405,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                               </label>
                               <input
                                 aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
-                                class="input input-bordered"
+                                class="input input-bordered w-full"
                                 disabled=""
                                 id="root_nestedObject_test"
                                 name="root_nestedObject_test"
@@ -9362,10 +9440,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-array"
+                class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3rjsf-field rjsf-field-array"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -9445,10 +9523,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-undefined"
+                class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
+                  class="field-template mb-3rjsf-field rjsf-field-undefined"
                 >
                   <div
                     class="p-4 border rounded-sm shadow-sm"
@@ -9457,10 +9535,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                       class="mb-4"
                     />
                     <div
-                      class="rjsf-field rjsf-field-object"
+                      class="flex-grow rjsf-field rjsf-field-object"
                     >
                       <div
-                        class="field-template mb-3 rjsf-field rjsf-field-object"
+                        class="field-template mb-3rjsf-field rjsf-field-object"
                       >
                         <div
                           class="form-control "
@@ -9505,10 +9583,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-undefined"
+                class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
+                  class="field-template mb-3rjsf-field rjsf-field-undefined"
                 >
                   <div
                     class="p-4 border rounded-sm shadow-sm"
@@ -9517,10 +9595,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                       class="mb-4"
                     />
                     <div
-                      class="rjsf-field rjsf-field-array"
+                      class="flex-grow rjsf-field rjsf-field-array"
                     >
                       <div
-                        class="field-template mb-3 rjsf-field rjsf-field-array"
+                        class="field-template mb-3rjsf-field rjsf-field-array"
                       >
                         <div
                           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
@@ -9593,10 +9671,10 @@ exports[`single fields optional data controls shows "add" optional controls when
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3rjsf-field rjsf-field-object"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -9621,10 +9699,10 @@ exports[`single fields optional data controls shows "add" optional controls when
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-object"
+                class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3rjsf-field rjsf-field-object"
                 >
                   <div
                     class="form-control "
@@ -9693,10 +9771,10 @@ exports[`single fields optional data controls shows "add" optional controls when
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-array"
+                class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3rjsf-field rjsf-field-array"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
@@ -9769,10 +9847,10 @@ exports[`single fields optional data controls shows "add" optional controls when
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-object"
+                class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3rjsf-field rjsf-field-object"
                 >
                   <div
                     class="form-control "
@@ -9797,10 +9875,10 @@ exports[`single fields optional data controls shows "add" optional controls when
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-string"
+                          class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3rjsf-field rjsf-field-string"
                           >
                             <label
                               class="label"
@@ -9828,7 +9906,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                               </label>
                               <input
                                 aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
-                                class="input input-bordered"
+                                class="input input-bordered w-full"
                                 id="root_nestedObject_test"
                                 name="root_nestedObject_test"
                                 placeholder=""
@@ -9862,10 +9940,10 @@ exports[`single fields optional data controls shows "add" optional controls when
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-array"
+                class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3rjsf-field rjsf-field-array"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -9944,10 +10022,10 @@ exports[`single fields optional data controls shows "add" optional controls when
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-undefined"
+                class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
+                  class="field-template mb-3rjsf-field rjsf-field-undefined"
                 >
                   <div
                     class="p-4 border rounded-sm shadow-sm"
@@ -9956,10 +10034,10 @@ exports[`single fields optional data controls shows "add" optional controls when
                       class="mb-4"
                     />
                     <div
-                      class="rjsf-field rjsf-field-object"
+                      class="flex-grow rjsf-field rjsf-field-object"
                     >
                       <div
-                        class="field-template mb-3 rjsf-field rjsf-field-object"
+                        class="field-template mb-3rjsf-field rjsf-field-object"
                       >
                         <div
                           class="form-control "
@@ -10031,10 +10109,10 @@ exports[`single fields optional data controls shows "add" optional controls when
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-undefined"
+                class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
+                  class="field-template mb-3rjsf-field rjsf-field-undefined"
                 >
                   <div
                     class="p-4 border rounded-sm shadow-sm"
@@ -10043,10 +10121,10 @@ exports[`single fields optional data controls shows "add" optional controls when
                       class="mb-4"
                     />
                     <div
-                      class="rjsf-field rjsf-field-array"
+                      class="flex-grow rjsf-field rjsf-field-array"
                     >
                       <div
-                        class="field-template mb-3 rjsf-field rjsf-field-array"
+                        class="field-template mb-3rjsf-field rjsf-field-array"
                       >
                         <div
                           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
@@ -10147,10 +10225,10 @@ exports[`single fields optional data controls shows "add" optional controls when
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3rjsf-field rjsf-field-object"
         disabled=""
       >
         <div
@@ -10176,10 +10254,10 @@ exports[`single fields optional data controls shows "add" optional controls when
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-object"
+                class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3rjsf-field rjsf-field-object"
                   disabled=""
                 >
                   <div
@@ -10222,10 +10300,10 @@ exports[`single fields optional data controls shows "add" optional controls when
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-array"
+                class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3rjsf-field rjsf-field-array"
                   disabled=""
                 >
                   <div
@@ -10271,10 +10349,10 @@ exports[`single fields optional data controls shows "add" optional controls when
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-object"
+                class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3rjsf-field rjsf-field-object"
                   disabled=""
                 >
                   <div
@@ -10300,10 +10378,10 @@ exports[`single fields optional data controls shows "add" optional controls when
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-string"
+                          class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3rjsf-field rjsf-field-string"
                             disabled=""
                           >
                             <label
@@ -10332,7 +10410,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                               </label>
                               <input
                                 aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
-                                class="input input-bordered"
+                                class="input input-bordered w-full"
                                 disabled=""
                                 id="root_nestedObject_test"
                                 name="root_nestedObject_test"
@@ -10367,10 +10445,10 @@ exports[`single fields optional data controls shows "add" optional controls when
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-array"
+                class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3rjsf-field rjsf-field-array"
                   disabled=""
                 >
                   <div
@@ -10451,10 +10529,10 @@ exports[`single fields optional data controls shows "add" optional controls when
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-undefined"
+                class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
+                  class="field-template mb-3rjsf-field rjsf-field-undefined"
                   disabled=""
                 >
                   <div
@@ -10464,10 +10542,10 @@ exports[`single fields optional data controls shows "add" optional controls when
                       class="mb-4"
                     />
                     <div
-                      class="rjsf-field rjsf-field-object"
+                      class="flex-grow rjsf-field rjsf-field-object"
                     >
                       <div
-                        class="field-template mb-3 rjsf-field rjsf-field-object"
+                        class="field-template mb-3rjsf-field rjsf-field-object"
                         disabled=""
                       >
                         <div
@@ -10513,10 +10591,10 @@ exports[`single fields optional data controls shows "add" optional controls when
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-undefined"
+                class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
+                  class="field-template mb-3rjsf-field rjsf-field-undefined"
                   disabled=""
                 >
                   <div
@@ -10526,10 +10604,10 @@ exports[`single fields optional data controls shows "add" optional controls when
                       class="mb-4"
                     />
                     <div
-                      class="rjsf-field rjsf-field-array"
+                      class="flex-grow rjsf-field rjsf-field-array"
                     >
                       <div
-                        class="field-template mb-3 rjsf-field rjsf-field-array"
+                        class="field-template mb-3rjsf-field rjsf-field-array"
                         disabled=""
                       >
                         <div
@@ -10604,10 +10682,10 @@ exports[`single fields password field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3rjsf-field rjsf-field-string"
       >
         <label
           class="label"
@@ -10631,7 +10709,7 @@ exports[`single fields password field 1`] = `
           </label>
           <input
             aria-describedby="root__error root__description root__help"
-            class="input input-bordered"
+            class="input input-bordered w-full"
             id="root"
             name="root"
             placeholder=""
@@ -10666,10 +10744,10 @@ exports[`single fields radio field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-boolean"
+      class="flex-grow rjsf-field rjsf-field-boolean"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+        class="field-template mb-3rjsf-field rjsf-field-boolean"
       >
         <div
           class="form-control"
@@ -10740,10 +10818,10 @@ exports[`single fields radio widget with description in schema and FieldTemplate
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-boolean"
+      class="flex-grow rjsf-field rjsf-field-boolean"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+        class="field-template mb-3rjsf-field rjsf-field-boolean"
       >
         <div
           class="form-control"
@@ -10788,6 +10866,16 @@ exports[`single fields radio widget with description in schema and FieldTemplate
           </div>
         </div>
         <div
+          class="description-field my-4"
+          id="root__description"
+        >
+          <div
+            class="text-sm text-base-content/80"
+          >
+            This is a radio description
+          </div>
+        </div>
+        <div
           class="rjsf-field-error-template text-red-600"
         >
           <ul
@@ -10814,10 +10902,10 @@ exports[`single fields schema examples 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3rjsf-field rjsf-field-string"
       >
         <label
           class="label"
@@ -10841,7 +10929,7 @@ exports[`single fields schema examples 1`] = `
           </label>
           <input
             aria-describedby="root__error root__description root__help root__examples"
-            class="input input-bordered"
+            class="input input-bordered w-full"
             id="root"
             list="root__examples"
             name="root"
@@ -10896,10 +10984,10 @@ exports[`single fields select field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3rjsf-field rjsf-field-string"
       >
         <label
           class="label"
@@ -10990,10 +11078,10 @@ exports[`single fields select field multiple choice 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3rjsf-field rjsf-field-array"
       >
         <label
           class="label"
@@ -11134,10 +11222,10 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3rjsf-field rjsf-field-array"
       >
         <label
           class="label"
@@ -11278,10 +11366,10 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3rjsf-field rjsf-field-array"
       >
         <label
           class="label"
@@ -11390,10 +11478,10 @@ exports[`single fields select field multiple choice formData 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3rjsf-field rjsf-field-array"
       >
         <label
           class="label"
@@ -11536,10 +11624,10 @@ exports[`single fields select field multiple choice with labels 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3rjsf-field rjsf-field-array"
       >
         <label
           class="label"
@@ -11661,10 +11749,10 @@ exports[`single fields select field single choice enumDisabled 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3rjsf-field rjsf-field-string"
       >
         <label
           class="label"
@@ -11755,10 +11843,10 @@ exports[`single fields select field single choice enumDisabled using radio widge
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3rjsf-field rjsf-field-string"
       >
         <label
           class="label"
@@ -11837,10 +11925,10 @@ exports[`single fields select field single choice form disabled using radio widg
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3rjsf-field rjsf-field-string"
         disabled=""
       >
         <label
@@ -11923,10 +12011,10 @@ exports[`single fields select field single choice formData 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3rjsf-field rjsf-field-string"
       >
         <label
           class="label"
@@ -12019,10 +12107,10 @@ exports[`single fields select field single choice uiSchema disabled using radio 
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3rjsf-field rjsf-field-string"
         disabled=""
       >
         <label
@@ -12104,10 +12192,10 @@ exports[`single fields select widget with description in schema and FieldTemplat
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-boolean"
+      class="flex-grow rjsf-field rjsf-field-boolean"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+        class="field-template mb-3rjsf-field rjsf-field-boolean"
       >
         <div
           class="form-control w-full"
@@ -12164,6 +12252,16 @@ exports[`single fields select widget with description in schema and FieldTemplat
           </div>
         </div>
         <div
+          class="description-field my-4"
+          id="root__description"
+        >
+          <div
+            class="text-sm text-base-content/80"
+          >
+            This is a select description
+          </div>
+        </div>
+        <div
           class="rjsf-field-error-template text-red-600"
         >
           <ul
@@ -12190,10 +12288,10 @@ exports[`single fields slider field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-integer"
+      class="flex-grow rjsf-field rjsf-field-integer"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-integer"
+        class="field-template mb-3rjsf-field rjsf-field-integer"
       >
         <label
           class="label"
@@ -12252,10 +12350,10 @@ exports[`single fields string field field with markdown help and description 1`]
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3rjsf-field rjsf-field-string"
       >
         <label
           class="label"
@@ -12283,13 +12381,23 @@ exports[`single fields string field field with markdown help and description 1`]
           </label>
           <input
             aria-describedby="root__error root__description root__help"
-            class="input input-bordered"
+            class="input input-bordered w-full"
             id="root"
             name="root"
             placeholder=""
             type="text"
             value=""
           />
+        </div>
+        <div
+          class="description-field my-4"
+          id="root__description"
+        >
+          <div
+            class="text-sm text-base-content/80"
+          >
+            This is a *description* with **markdown**
+          </div>
         </div>
         <div
           class="rjsf-field-error-template text-red-600"
@@ -12335,10 +12443,10 @@ exports[`single fields string field field with markdown help text 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3rjsf-field rjsf-field-string"
       >
         <label
           class="label"
@@ -12366,13 +12474,23 @@ exports[`single fields string field field with markdown help text 1`] = `
           </label>
           <input
             aria-describedby="root__error root__description root__help"
-            class="input input-bordered"
+            class="input input-bordered w-full"
             id="root"
             name="root"
             placeholder=""
             type="text"
             value=""
           />
+        </div>
+        <div
+          class="description-field my-4"
+          id="root__description"
+        >
+          <div
+            class="text-sm text-base-content/80"
+          >
+            A field with markdown help text
+          </div>
         </div>
         <div
           class="rjsf-field-error-template text-red-600"
@@ -12418,10 +12536,10 @@ exports[`single fields string field field with markdown help text without enabli
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3rjsf-field rjsf-field-string"
       >
         <label
           class="label"
@@ -12449,13 +12567,23 @@ exports[`single fields string field field with markdown help text without enabli
           </label>
           <input
             aria-describedby="root__error root__description root__help"
-            class="input input-bordered"
+            class="input input-bordered w-full"
             id="root"
             name="root"
             placeholder=""
             type="text"
             value=""
           />
+        </div>
+        <div
+          class="description-field my-4"
+          id="root__description"
+        >
+          <div
+            class="text-sm text-base-content/80"
+          >
+            A field with raw help text
+          </div>
         </div>
         <div
           class="rjsf-field-error-template text-red-600"
@@ -12490,10 +12618,10 @@ exports[`single fields string field format data-url 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3rjsf-field rjsf-field-string"
       >
         <label
           class="label"
@@ -12518,7 +12646,7 @@ exports[`single fields string field format data-url 1`] = `
             </label>
             <input
               aria-describedby="root__error root__description root__help"
-              class="file-input w-full"
+              class="file-input"
               id="root"
               name="root"
               placeholder=""
@@ -12554,10 +12682,10 @@ exports[`single fields string field format email 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3rjsf-field rjsf-field-string"
       >
         <label
           class="label"
@@ -12581,7 +12709,7 @@ exports[`single fields string field format email 1`] = `
           </label>
           <input
             aria-describedby="root__error root__description root__help"
-            class="input input-bordered"
+            class="input input-bordered w-full"
             id="root"
             name="root"
             placeholder=""
@@ -12616,10 +12744,10 @@ exports[`single fields string field format uri 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3rjsf-field rjsf-field-string"
       >
         <label
           class="label"
@@ -12643,7 +12771,7 @@ exports[`single fields string field format uri 1`] = `
           </label>
           <input
             aria-describedby="root__error root__description root__help"
-            class="input input-bordered"
+            class="input input-bordered w-full"
             id="root"
             name="root"
             placeholder=""
@@ -12678,10 +12806,10 @@ exports[`single fields string field regular 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3rjsf-field rjsf-field-string"
       >
         <label
           class="label"
@@ -12705,7 +12833,7 @@ exports[`single fields string field regular 1`] = `
           </label>
           <input
             aria-describedby="root__error root__description root__help"
-            class="input input-bordered"
+            class="input input-bordered w-full"
             id="root"
             name="root"
             placeholder=""
@@ -12740,10 +12868,10 @@ exports[`single fields string field required field with markdown help 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3rjsf-field rjsf-field-string"
       >
         <label
           class="label"
@@ -12771,13 +12899,23 @@ exports[`single fields string field required field with markdown help 1`] = `
           </label>
           <input
             aria-describedby="root__error root__description root__help"
-            class="input input-bordered"
+            class="input input-bordered w-full"
             id="root"
             name="root"
             placeholder=""
             type="text"
             value="[object Object]"
           />
+        </div>
+        <div
+          class="description-field my-4"
+          id="root__description"
+        >
+          <div
+            class="text-sm text-base-content/80"
+          >
+            A required field with markdown help
+          </div>
         </div>
         <div
           class="rjsf-field-error-template text-red-600"
@@ -12818,10 +12956,10 @@ exports[`single fields string field with placeholder 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3rjsf-field rjsf-field-string"
       >
         <label
           class="label"
@@ -12845,7 +12983,7 @@ exports[`single fields string field with placeholder 1`] = `
           </label>
           <input
             aria-describedby="root__error root__description root__help"
-            class="input input-bordered"
+            class="input input-bordered w-full"
             id="root"
             name="root"
             placeholder="placeholder"
@@ -12880,10 +13018,10 @@ exports[`single fields textarea field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3rjsf-field rjsf-field-string"
       >
         <label
           class="label"
@@ -12930,10 +13068,10 @@ exports[`single fields title field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3rjsf-field rjsf-field-object"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -12958,10 +13096,10 @@ exports[`single fields title field 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3rjsf-field rjsf-field-string"
                 >
                   <label
                     class="label"
@@ -12989,7 +13127,7 @@ exports[`single fields title field 1`] = `
                     </label>
                     <input
                       aria-describedby="root_title__error root_title__description root_title__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_title"
                       name="root_title"
                       placeholder=""
@@ -13036,10 +13174,10 @@ exports[`single fields unsupported field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-undefined"
+      class="flex-grow rjsf-field rjsf-field-undefined"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-undefined"
+        class="field-template mb-3rjsf-field rjsf-field-undefined"
       >
         <label
           class="label"
@@ -13096,10 +13234,10 @@ exports[`single fields up/down field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-number"
+      class="flex-grow rjsf-field rjsf-field-number"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-number"
+        class="field-template mb-3rjsf-field rjsf-field-number"
       >
         <label
           class="label"
@@ -13123,7 +13261,7 @@ exports[`single fields up/down field 1`] = `
           </label>
           <input
             aria-describedby="root__error root__description root__help"
-            class="input input-bordered"
+            class="input input-bordered w-full"
             id="root"
             name="root"
             placeholder=""
@@ -13158,10 +13296,10 @@ exports[`single fields using custom tagName 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3rjsf-field rjsf-field-string"
       >
         <label
           class="label"
@@ -13185,7 +13323,7 @@ exports[`single fields using custom tagName 1`] = `
           </label>
           <input
             aria-describedby="root__error root__description root__help"
-            class="input input-bordered"
+            class="input input-bordered w-full"
             id="root"
             name="root"
             placeholder=""

@@ -20,55 +20,75 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/antd
 
 - Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
-
-## @rjsf/antd
-
-- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
-
-## @rjsf/antd
-
-- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
-
-## @rjsf/mui
-
-- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
-
-## @rjsf/shadcn
-
-- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
-
-## @rjsf/primereact
-
-- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
-
-## @rjsf/react-bootstrap
-
-- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
-
-## @rjsf/semantic-ui
-
-- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
-
-## @rjsf/daisyui
-
-- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
-
-## @rjsf/fluentui-rc
-
-- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
+- Updated `ArrayFieldItemTemplate` and `ArrayFieldTemplate` to adjust sizes and buttons location using `displayLabel` and `hasDescription`, fixing [#3296](https://github.com/rjsf-team/react-jsonschema-form/issues/3296)
 
 ## @rjsf/chakra-ui
 
 - Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
 
+## @rjsf/core
+
+- Added new `RichHelp` component for use in all the themes for help rendering, fixing [#4601](https://github.com/rjsf-team/react-jsonschema-form/issues/4601)
+- Updated `ArrayField` to compute and pass `displayLabel` and `hasDescription` to the rendered `ArrayFieldItemTemplate` to support fixing [#3296](https://github.com/rjsf-team/react-jsonschema-form/issues/3296)
+- Updated `StringField` to extract the `title` from the props and pass it down to the widget if provided
+- Updated `ArrayFieldItemTemplate` to adjust buttons location using `displayLabel` and `hasDescription`, fixing [#3296](https://github.com/rjsf-team/react-jsonschema-form/issues/3296)
+- Updated `AddButton` to improve it's responsiveness in relation to the `ArrayFieldItemTemplate` changes
+
+## @rjsf/daisyui
+
+- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
+- Updated `ArrayFieldItemTemplate` to adjust buttons location using `displayLabel` and `hasDescription`, fixing [#3296](https://github.com/rjsf-team/react-jsonschema-form/issues/3296)
+- Updated `WrapIfAdditionalTemplate` to add `flexGrow` and `BaseInputTemplate` to add `w-full` to allow the array item fields to grow properly
+- Updated `FieldTemplate` to render the `description` which was missing in the theme
+
+## @rjsf/fluentui-rc
+
+- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
+- Updated `ArrayFieldItemTemplate` to adjust buttons location using `displayLabel`, fixing [#3296](https://github.com/rjsf-team/react-jsonschema-form/issues/3296)
+- Updated `WrapIfAdditionalTemplate` to add `flexGrow` to allow the array item fields to grow properly for non-container elements
+
 ## @rjsf/mantine
 
 - Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
+- Updated `utils.ts` to add `label` to the cleanup fields to filter it from the `uiOptions`
+- Updated `BaseInputTemplate` to display `description` which was missing in the theme
+- Updated `ArrayFieldTitleTemplate` to support the `optionalData`
+
+## @rjsf/mui
+
+- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
+- Updated `ArrayFieldItemTemplate` to adjust buttons location using `displayLabel` and `hasDescription`, fixing [#3296](https://github.com/rjsf-team/react-jsonschema-form/issues/3296)
+
+## @rjsf/primereact
+
+- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
+- Updated `ArrayFieldItemTemplate` to adjust buttons location using `displayLabel`, fixing [#3296](https://github.com/rjsf-team/react-jsonschema-form/issues/3296)
+
+## @rjsf/react-bootstrap
+
+- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
+- Updated `ArrayFieldItemTemplate` to adjust buttons location using `displayLabel` and `hasDescription`, fixing [#3296](https://github.com/rjsf-team/react-jsonschema-form/issues/3296)
+- Updated `ArrayFieldTemplate` to improve it's responsiveness in relation to the `ArrayFieldItemTemplate` changes
+
+## @rjsf/semantic-ui
+
+- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
+- Updated `ArrayFieldItemTemplate` to adjust buttons location using `displayLabel` and `hasDescription`, fixing [#3296](https://github.com/rjsf-team/react-jsonschema-form/issues/3296)
+
+## @rjsf/shadcn
+
+- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
+- Updated `ArrayFieldItemTemplate` to adjust buttons location using `displayLabel` and `hasDescription`, fixing [#3296](https://github.com/rjsf-team/react-jsonschema-form/issues/3296)
+- Updated `ArrayFieldTemplate` to add `justify-end` to the `AddButton` rendering
 
 ## @rjsf/utils
 
-- Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
+- Added new `enableMarkdownInHelp` to the `GlobalUISchemaOptions` type, fixing [#4601](https://github.com/rjsf-team/react-jsonschema-form/issues/4601)
+- Added new `displayLabel` and `hasDescription` flags in the `ArrayFieldItemTemplateProps` to support fixing [#3296](https://github.com/rjsf-team/react-jsonschema-form/issues/3296)
 
+## Dev / docs / playground
+
+- Updated `uiSchema.md` in the docs to document the new `enableMarkdownInHelp` flag
 
 # 6.0.2
 

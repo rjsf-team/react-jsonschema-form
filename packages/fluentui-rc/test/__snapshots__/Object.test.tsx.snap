@@ -48,7 +48,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                     style="margin-bottom: 10px;"
                   >
                     <div
-                      class="rjsf-field rjsf-field-string"
+                      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                     >
                       <div
                         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -109,7 +109,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                             style="margin-bottom: 10px;"
                           >
                             <div
-                              class="rjsf-field rjsf-field-string"
+                              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                             >
                               <div
                                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -141,7 +141,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                             style="margin-bottom: 10px;"
                           >
                             <div
-                              class="rjsf-field rjsf-field-string"
+                              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                             >
                               <div
                                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -173,7 +173,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                             style="margin-bottom: 10px;"
                           >
                             <div
-                              class="rjsf-field rjsf-field-string"
+                              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                             >
                               <div
                                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -244,7 +244,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -423,7 +423,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -455,7 +455,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-number"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-number"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -488,7 +488,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-boolean"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-boolean"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -563,13 +563,13 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                   class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
                 >
                   <div
-                    class="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+                    class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
                   >
                     <div
                       class="fui-Flex ___9stze40_16wdn2w f22iagw fly5x3f f1l02sjl fzy362"
                     >
                       <div
-                        class="rjsf-field rjsf-field-string"
+                        class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                       >
                         <div
                           class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -578,7 +578,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                             class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
                             for="root_tags_0"
                           >
-                            tags-0
+                            tags-1
                             <span
                               aria-hidden="true"
                               class="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
@@ -605,7 +605,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                     </div>
                     <div
                       class="fui-Flex ___1gzszts_10anl4a f22iagw"
-                      style="margin-left: 8px;"
+                      style="margin-left: 8px; margin-top: 26px;"
                     >
                       <button
                         class="fui-Button r1alrhcs rjsf-array-item-move-up ___7dg0yg0_z1vqji0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fuigjrg fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f4dhi0o f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x fequ9m0 f18ktai2 fwbmr0d f44c6la"
@@ -686,13 +686,13 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                     </div>
                   </div>
                   <div
-                    class="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+                    class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
                   >
                     <div
                       class="fui-Flex ___9stze40_16wdn2w f22iagw fly5x3f f1l02sjl fzy362"
                     >
                       <div
-                        class="rjsf-field rjsf-field-string"
+                        class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                       >
                         <div
                           class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -701,7 +701,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                             class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
                             for="root_tags_1"
                           >
-                            tags-1
+                            tags-2
                             <span
                               aria-hidden="true"
                               class="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
@@ -728,7 +728,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                     </div>
                     <div
                       class="fui-Flex ___1gzszts_10anl4a f22iagw"
-                      style="margin-left: 8px;"
+                      style="margin-left: 8px; margin-top: 26px;"
                     >
                       <button
                         class="fui-Button r1alrhcs rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
@@ -877,7 +877,7 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -909,7 +909,7 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -941,7 +941,7 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-number"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-number"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1034,7 +1034,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                     style="margin-bottom: 10px;"
                   >
                     <div
-                      class="rjsf-field rjsf-field-string"
+                      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                     >
                       <div
                         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1095,7 +1095,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                             style="margin-bottom: 10px;"
                           >
                             <div
-                              class="rjsf-field rjsf-field-string"
+                              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                             >
                               <div
                                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1127,7 +1127,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                             style="margin-bottom: 10px;"
                           >
                             <div
-                              class="rjsf-field rjsf-field-string"
+                              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                             >
                               <div
                                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1198,7 +1198,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1230,7 +1230,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-number"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-number"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1288,13 +1288,13 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                   class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
                 >
                   <div
-                    class="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+                    class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
                   >
                     <div
                       class="fui-Flex ___9stze40_16wdn2w f22iagw fly5x3f f1l02sjl fzy362"
                     >
                       <div
-                        class="rjsf-field rjsf-field-string"
+                        class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                       >
                         <div
                           class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1303,7 +1303,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                             class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
                             for="root_items_0"
                           >
-                            items-0
+                            items-1
                             <span
                               aria-hidden="true"
                               class="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
@@ -1330,7 +1330,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                     </div>
                     <div
                       class="fui-Flex ___1gzszts_10anl4a f22iagw"
-                      style="margin-left: 8px;"
+                      style="margin-left: 8px; margin-top: 26px;"
                     >
                       <button
                         class="fui-Button r1alrhcs rjsf-array-item-move-up ___7dg0yg0_z1vqji0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fuigjrg fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f4dhi0o f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x fequ9m0 f18ktai2 fwbmr0d f44c6la"
@@ -1411,13 +1411,13 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                     </div>
                   </div>
                   <div
-                    class="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+                    class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
                   >
                     <div
                       class="fui-Flex ___9stze40_16wdn2w f22iagw fly5x3f f1l02sjl fzy362"
                     >
                       <div
-                        class="rjsf-field rjsf-field-string"
+                        class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                       >
                         <div
                           class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1426,7 +1426,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                             class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
                             for="root_items_1"
                           >
-                            items-1
+                            items-2
                             <span
                               aria-hidden="true"
                               class="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
@@ -1453,7 +1453,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                     </div>
                     <div
                       class="fui-Flex ___1gzszts_10anl4a f22iagw"
-                      style="margin-left: 8px;"
+                      style="margin-left: 8px; margin-top: 26px;"
                     >
                       <button
                         class="fui-Button r1alrhcs rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
@@ -1602,7 +1602,7 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1634,7 +1634,7 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1666,7 +1666,7 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-number"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-number"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1877,7 +1877,7 @@ exports[`object fields object 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1909,7 +1909,7 @@ exports[`object fields object 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-number"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-number"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1960,7 +1960,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-object"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -2480,7 +2480,7 @@ exports[`object fields with title and description from both object 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -2523,7 +2523,7 @@ exports[`object fields with title and description from both object 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-number"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-number"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -2789,7 +2789,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -2832,7 +2832,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-number"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-number"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -2894,7 +2894,7 @@ exports[`object fields with title and description from uiSchema show add button 
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-object"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -3098,7 +3098,7 @@ exports[`object fields with title and description object 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -3141,7 +3141,7 @@ exports[`object fields with title and description object 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-number"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-number"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -3203,7 +3203,7 @@ exports[`object fields with title and description show add button and fields if 
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-object"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -3526,7 +3526,7 @@ exports[`object fields with title and description with global label off object 1
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -3552,7 +3552,7 @@ exports[`object fields with title and description with global label off object 1
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-number"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-number"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -3597,7 +3597,7 @@ exports[`object fields with title and description with global label off show add
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-object"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"

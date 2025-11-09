@@ -2396,6 +2396,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
 .emotion-45 {
   min-width: 0;
   box-sizing: border-box;
+  margin-top: -12px;
 }
 
 .emotion-46 {
@@ -2617,6 +2618,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
 
 .emotion-72>* {
   --Grid-parent-rowSpacing: 0px;
+}
+
+.emotion-73 {
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .emotion-74 {
@@ -3054,7 +3060,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                                       for="root_tags_0"
                                       id="root_tags_0-label"
                                     >
-                                      tags-0
+                                      tags-1
                                       <span
                                         aria-hidden="true"
                                         class="MuiFormLabel-asterisk MuiInputLabel-asterisk emotion-40"
@@ -3083,7 +3089,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                                           class="emotion-9"
                                         >
                                           <span>
-                                            tags-0 *
+                                            tags-1 *
                                           </span>
                                         </legend>
                                       </fieldset>
@@ -3191,7 +3197,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                                       for="root_tags_1"
                                       id="root_tags_1-label"
                                     >
-                                      tags-1
+                                      tags-2
                                       <span
                                         aria-hidden="true"
                                         class="MuiFormLabel-asterisk MuiInputLabel-asterisk emotion-40"
@@ -3220,7 +3226,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                                           class="emotion-9"
                                         >
                                           <span>
-                                            tags-1 *
+                                            tags-2 *
                                           </span>
                                         </legend>
                                       </fieldset>
@@ -3299,7 +3305,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                       class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-72"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-45"
+                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-73"
                       >
                         <div
                           class="MuiBox-root emotion-74"
@@ -5160,6 +5166,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
 .emotion-38 {
   min-width: 0;
   box-sizing: border-box;
+  margin-top: -12px;
 }
 
 .emotion-39 {
@@ -5381,6 +5388,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
 
 .emotion-65>* {
   --Grid-parent-rowSpacing: 0px;
+}
+
+.emotion-66 {
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .emotion-67 {
@@ -5789,7 +5801,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                                       for="root_items_0"
                                       id="root_items_0-label"
                                     >
-                                      items-0
+                                      items-1
                                       <span
                                         aria-hidden="true"
                                         class="MuiFormLabel-asterisk MuiInputLabel-asterisk emotion-33"
@@ -5818,7 +5830,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                                           class="emotion-9"
                                         >
                                           <span>
-                                            items-0 *
+                                            items-1 *
                                           </span>
                                         </legend>
                                       </fieldset>
@@ -5926,7 +5938,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                                       for="root_items_1"
                                       id="root_items_1-label"
                                     >
-                                      items-1
+                                      items-2
                                       <span
                                         aria-hidden="true"
                                         class="MuiFormLabel-asterisk MuiInputLabel-asterisk emotion-33"
@@ -5955,7 +5967,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                                           class="emotion-9"
                                         >
                                           <span>
-                                            items-1 *
+                                            items-2 *
                                           </span>
                                         </legend>
                                       </fieldset>
@@ -6034,7 +6046,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                       class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-65"
                     >
                       <div
-                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-38"
+                        class="MuiGrid-root MuiGrid-direction-xs-row emotion-66"
                       >
                         <div
                           class="MuiBox-root emotion-67"

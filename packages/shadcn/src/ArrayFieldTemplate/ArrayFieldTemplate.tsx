@@ -71,7 +71,7 @@ export default function ArrayFieldTemplate<
             {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
             {items}
             {canAdd && (
-              <div className='mt-2 flex'>
+              <div className='mt-2 flex justify-end'>
                 <AddButton
                   id={buttonId(fieldPathId, 'add')}
                   className='rjsf-array-item-add'

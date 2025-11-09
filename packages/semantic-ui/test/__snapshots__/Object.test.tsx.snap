@@ -468,7 +468,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                               <label
                                 for="root_tags_0"
                               >
-                                tags-0
+                                tags-1
                               </label>
                               <div
                                 class="ui fluid input"
@@ -492,6 +492,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                       >
                         <div
                           class="ui mini buttons"
+                          style="margin-top: 24px;"
                         >
                           <button
                             class="ui icon disabled button rjsf-array-item-move-up"
@@ -551,7 +552,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                               <label
                                 for="root_tags_1"
                               >
-                                tags-1
+                                tags-2
                               </label>
                               <div
                                 class="ui fluid input"
@@ -575,6 +576,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                       >
                         <div
                           class="ui mini buttons"
+                          style="margin-top: 24px;"
                         >
                           <button
                             class="ui icon button rjsf-array-item-move-up"
@@ -1003,7 +1005,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                               <label
                                 for="root_items_0"
                               >
-                                items-0
+                                items-1
                               </label>
                               <div
                                 class="ui fluid input"
@@ -1027,6 +1029,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                       >
                         <div
                           class="ui mini buttons"
+                          style="margin-top: 24px;"
                         >
                           <button
                             class="ui icon disabled button rjsf-array-item-move-up"
@@ -1086,7 +1089,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                               <label
                                 for="root_items_1"
                               >
-                                items-1
+                                items-2
                               </label>
                               <div
                                 class="ui fluid input"
@@ -1110,6 +1113,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                       >
                         <div
                           class="ui mini buttons"
+                          style="margin-top: 24px;"
                         >
                           <button
                             class="ui icon button rjsf-array-item-move-up"

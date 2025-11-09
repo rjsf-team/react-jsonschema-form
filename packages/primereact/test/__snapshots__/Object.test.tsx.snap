@@ -485,7 +485,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                         style="position: relative;"
                       >
                         <div
-                          style="position: absolute; right: 0px; top: -10px;"
+                          style="position: absolute; right: 0px; top: 24px;"
                         >
                           <div
                             style="flex-direction: row;"
@@ -577,7 +577,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                         style="position: relative;"
                       >
                         <div
-                          style="position: absolute; right: 0px; top: -10px;"
+                          style="position: absolute; right: 0px; top: 24px;"
                         >
                           <div
                             style="flex-direction: row;"
@@ -1077,7 +1077,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                         style="position: relative;"
                       >
                         <div
-                          style="position: absolute; right: 0px; top: -10px;"
+                          style="position: absolute; right: 0px; top: 24px;"
                         >
                           <div
                             style="flex-direction: row;"
@@ -1169,7 +1169,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                         style="position: relative;"
                       >
                         <div
-                          style="position: absolute; right: 0px; top: -10px;"
+                          style="position: absolute; right: 0px; top: 24px;"
                         >
                           <div
                             style="flex-direction: row;"

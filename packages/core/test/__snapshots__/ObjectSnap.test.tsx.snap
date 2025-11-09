@@ -229,7 +229,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
           class="row"
         >
           <p
-            class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand"
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
               class="btn btn-info btn-add col-xs-12"
@@ -346,9 +346,10 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
             >
               <div
                 class="rjsf-array-item"
+                style="display: flex; align-items: center;"
               >
                 <div
-                  class="col-xs-9"
+                  class="col-xs-9 col-md-10 col-xl-11"
                 >
                   <div
                     class="form-group rjsf-field rjsf-field-string"
@@ -368,7 +369,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                       aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
                       class="form-control"
                       id="root_tags_0"
-                      label="tags-0"
+                      label="tags-1"
                       name="root[tags][0]"
                       placeholder=""
                       required=""
@@ -378,11 +379,11 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                   </div>
                 </div>
                 <div
-                  class="col-xs-3 array-item-toolbox"
+                  class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
                 >
                   <div
                     class="btn-group"
-                    style="display: flex; justify-content: space-around;"
+                    style="display: flex; justify-content: flex-end; margin-top: 9px;"
                   >
                     <button
                       class="btn btn-default rjsf-array-item-move-up"
@@ -420,9 +421,10 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
               </div>
               <div
                 class="rjsf-array-item"
+                style="display: flex; align-items: center;"
               >
                 <div
-                  class="col-xs-9"
+                  class="col-xs-9 col-md-10 col-xl-11"
                 >
                   <div
                     class="form-group rjsf-field rjsf-field-string"
@@ -442,7 +444,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                       aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
                       class="form-control"
                       id="root_tags_1"
-                      label="tags-1"
+                      label="tags-2"
                       name="root[tags][1]"
                       placeholder=""
                       required=""
@@ -452,11 +454,11 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                   </div>
                 </div>
                 <div
-                  class="col-xs-3 array-item-toolbox"
+                  class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
                 >
                   <div
                     class="btn-group"
-                    style="display: flex; justify-content: space-around;"
+                    style="display: flex; justify-content: flex-end; margin-top: 9px;"
                   >
                     <button
                       class="btn btn-default rjsf-array-item-move-up"
@@ -497,7 +499,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
               class="row"
             >
               <p
-                class="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+                class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
               >
                 <button
                   class="btn btn-info btn-add col-xs-12"
@@ -793,9 +795,10 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
             >
               <div
                 class="rjsf-array-item"
+                style="display: flex; align-items: center;"
               >
                 <div
-                  class="col-xs-9"
+                  class="col-xs-9 col-md-10 col-xl-11"
                 >
                   <div
                     class="form-group rjsf-field rjsf-field-string"
@@ -815,7 +818,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                       aria-describedby="root_items_0__error root_items_0__description root_items_0__help"
                       class="form-control"
                       id="root_items_0"
-                      label="items-0"
+                      label="items-1"
                       name="root.items.0"
                       placeholder=""
                       required=""
@@ -825,11 +828,11 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                   </div>
                 </div>
                 <div
-                  class="col-xs-3 array-item-toolbox"
+                  class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
                 >
                   <div
                     class="btn-group"
-                    style="display: flex; justify-content: space-around;"
+                    style="display: flex; justify-content: flex-end; margin-top: 9px;"
                   >
                     <button
                       class="btn btn-default rjsf-array-item-move-up"
@@ -867,9 +870,10 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
               </div>
               <div
                 class="rjsf-array-item"
+                style="display: flex; align-items: center;"
               >
                 <div
-                  class="col-xs-9"
+                  class="col-xs-9 col-md-10 col-xl-11"
                 >
                   <div
                     class="form-group rjsf-field rjsf-field-string"
@@ -889,7 +893,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                       aria-describedby="root_items_1__error root_items_1__description root_items_1__help"
                       class="form-control"
                       id="root_items_1"
-                      label="items-1"
+                      label="items-2"
                       name="root.items.1"
                       placeholder=""
                       required=""
@@ -899,11 +903,11 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                   </div>
                 </div>
                 <div
-                  class="col-xs-3 array-item-toolbox"
+                  class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
                 >
                   <div
                     class="btn-group"
-                    style="display: flex; justify-content: space-around;"
+                    style="display: flex; justify-content: flex-end; margin-top: 9px;"
                   >
                     <button
                       class="btn btn-default rjsf-array-item-move-up"
@@ -944,7 +948,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
               class="row"
             >
               <p
-                class="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+                class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
               >
                 <button
                   class="btn btn-info btn-add col-xs-12"
@@ -1138,7 +1142,7 @@ exports[`object fields additionalProperties 1`] = `
           class="row"
         >
           <p
-            class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand"
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
               class="btn btn-info btn-add col-xs-12"
@@ -1310,7 +1314,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
           class="row"
         >
           <p
-            class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand"
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
               class="btn btn-info btn-add col-xs-12"
@@ -1427,7 +1431,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
           class="row"
         >
           <p
-            class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand"
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
               class="btn btn-info btn-add col-xs-12"
@@ -1544,7 +1548,7 @@ exports[`object fields with title and description from both additionalProperties
           class="row"
         >
           <p
-            class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand"
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
               class="btn btn-info btn-add col-xs-12"
@@ -1750,7 +1754,7 @@ exports[`object fields with title and description from uiSchema additionalProper
           class="row"
         >
           <p
-            class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand"
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
               class="btn btn-info btn-add col-xs-12"
@@ -1956,7 +1960,7 @@ exports[`object fields with title and description from uiSchema show add button 
           class="row"
         >
           <p
-            class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand"
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
               class="btn btn-info btn-add col-xs-12"
@@ -2162,7 +2166,7 @@ exports[`object fields with title and description show add button and fields if 
           class="row"
         >
           <p
-            class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand"
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
               class="btn btn-info btn-add col-xs-12"
@@ -2262,7 +2266,7 @@ exports[`object fields with title and description with global label off addition
           class="row"
         >
           <p
-            class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand"
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
               class="btn btn-info btn-add col-xs-12"
@@ -2416,7 +2420,7 @@ exports[`object fields with title and description with global label off show add
           class="row"
         >
           <p
-            class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand"
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
               class="btn btn-info btn-add col-xs-12"

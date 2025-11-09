@@ -49,11 +49,11 @@ export default function BaseInputTemplate<
   } = props;
 
   const inputProps = getInputProps<T, S, F>(schema, type, options);
-  let className = 'input input-bordered';
+  let className = 'input input-bordered w-full';
   let isMulti = multiple;
   if (type === 'file') {
     isMulti = schema.type === 'array' || Boolean(options.multiple);
-    className = 'file-input w-full';
+    className = 'file-input';
   }
   // Extract step, min, max, accept from inputProps
   const { step, min, max, accept, ...rest } = inputProps;

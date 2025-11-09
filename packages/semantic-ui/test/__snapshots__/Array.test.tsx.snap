@@ -105,6 +105,7 @@ exports[`array fields array icons 1`] = `
                   >
                     <div
                       class="ui mini buttons"
+                      style="margin-top: 24px;"
                     >
                       <button
                         class="ui icon disabled button rjsf-array-item-move-up"
@@ -193,6 +194,7 @@ exports[`array fields array icons 1`] = `
                   >
                     <div
                       class="ui mini buttons"
+                      style="margin-top: 24px;"
                     >
                       <button
                         class="ui icon button rjsf-array-item-move-up"
@@ -1006,6 +1008,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                   >
                     <div
                       class="ui mini buttons"
+                      style="margin-top: 24px;"
                     >
                       <button
                         class="ui icon disabled button rjsf-array-item-move-up"
@@ -1084,6 +1087,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                   >
                     <div
                       class="ui mini buttons"
+                      style="margin-top: 24px;"
                     >
                       <button
                         class="ui icon button rjsf-array-item-move-up"
@@ -1476,6 +1480,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                   >
                                     <div
                                       class="ui mini buttons"
+                                      style="margin-top: 24px;"
                                     >
                                       <button
                                         class="ui icon disabled button rjsf-array-item-move-up"
@@ -1554,6 +1559,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                   >
                                     <div
                                       class="ui mini buttons"
+                                      style="margin-top: 24px;"
                                     >
                                       <button
                                         class="ui icon button rjsf-array-item-move-up"
@@ -1717,6 +1723,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                   >
                                     <div
                                       class="ui mini buttons"
+                                      style="margin-top: 24px;"
                                     >
                                       <button
                                         class="ui icon disabled button rjsf-array-item-move-up"
@@ -1795,6 +1802,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                   >
                                     <div
                                       class="ui mini buttons"
+                                      style="margin-top: 24px;"
                                     >
                                       <button
                                         class="ui icon button rjsf-array-item-move-up"
@@ -2269,6 +2277,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                   >
                     <div
                       class="ui mini buttons"
+                      style="margin-top: 24px;"
                     >
                       <button
                         class="ui icon disabled button rjsf-array-item-move-up"
@@ -2347,6 +2356,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                   >
                     <div
                       class="ui mini buttons"
+                      style="margin-top: 24px;"
                     >
                       <button
                         class="ui icon button rjsf-array-item-move-up"
@@ -2523,7 +2533,7 @@ exports[`with title and description array icons 1`] = `
                           <label
                             for="root_0"
                           >
-                            Test item
+                            Test field-1
                           </label>
                           <div
                             class="ui fluid input"
@@ -2553,6 +2563,7 @@ exports[`with title and description array icons 1`] = `
                   >
                     <div
                       class="ui mini buttons"
+                      style="margin-top: 5px;"
                     >
                       <button
                         class="ui icon disabled button rjsf-array-item-move-up"
@@ -2622,7 +2633,7 @@ exports[`with title and description array icons 1`] = `
                           <label
                             for="root_1"
                           >
-                            Test item
+                            Test field-2
                           </label>
                           <div
                             class="ui fluid input"
@@ -2652,6 +2663,7 @@ exports[`with title and description array icons 1`] = `
                   >
                     <div
                       class="ui mini buttons"
+                      style="margin-top: 5px;"
                     >
                       <button
                         class="ui icon button rjsf-array-item-move-up"
@@ -2881,7 +2893,7 @@ exports[`with title and description fixed array 1`] = `
                           <label
                             for="root_0"
                           >
-                            Test item
+                            Test field-1
                           </label>
                           <div
                             class="ui fluid input"
@@ -2930,7 +2942,7 @@ exports[`with title and description fixed array 1`] = `
                           <label
                             for="root_1"
                           >
-                            Test item
+                            Test field-2
                           </label>
                           <div
                             class="ui fluid input"
@@ -3113,6 +3125,7 @@ exports[`with title and description from both array icons 1`] = `
                   >
                     <div
                       class="ui mini buttons"
+                      style="margin-top: 5px;"
                     >
                       <button
                         class="ui icon disabled button rjsf-array-item-move-up"
@@ -3212,6 +3225,7 @@ exports[`with title and description from both array icons 1`] = `
                   >
                     <div
                       class="ui mini buttons"
+                      style="margin-top: 5px;"
                     >
                       <button
                         class="ui icon button rjsf-array-item-move-up"
@@ -3673,6 +3687,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   >
                     <div
                       class="ui mini buttons"
+                      style="margin-top: 5px;"
                     >
                       <button
                         class="ui icon disabled button rjsf-array-item-move-up"
@@ -3772,6 +3787,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   >
                     <div
                       class="ui mini buttons"
+                      style="margin-top: 5px;"
                     >
                       <button
                         class="ui icon button rjsf-array-item-move-up"

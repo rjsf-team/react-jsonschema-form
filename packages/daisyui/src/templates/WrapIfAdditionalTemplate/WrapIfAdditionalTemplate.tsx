@@ -42,7 +42,7 @@ export default function WrapIfAdditionalTemplate<
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
 
   if (!additional) {
-    return <div className={classNames}>{children}</div>;
+    return <div className={`flex-grow ${classNames}`}>{children}</div>;
   }
 
   return (
