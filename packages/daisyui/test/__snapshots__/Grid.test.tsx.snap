@@ -47,11 +47,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -116,11 +111,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -174,11 +164,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     <ul
                       class="list-disc list-inside"
                     />
-                  </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
                   </div>
                 </div>
               </div>
@@ -239,11 +224,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     <ul
                       class="list-disc list-inside"
                     />
-                  </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
                   </div>
                 </div>
               </div>
@@ -319,11 +299,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     <ul
                       class="list-disc list-inside"
                     />
-                  </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
                   </div>
                 </div>
               </div>
@@ -453,11 +428,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -535,11 +505,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               class="list-disc list-inside"
                             />
                           </div>
-                          <div
-                            class="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -593,11 +558,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             <ul
                               class="list-disc list-inside"
                             />
-                          </div>
-                          <div
-                            class="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
                           </div>
                         </div>
                       </div>
@@ -658,11 +618,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             <ul
                               class="list-disc list-inside"
                             />
-                          </div>
-                          <div
-                            class="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
                           </div>
                         </div>
                       </div>
@@ -1512,11 +1467,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 class="list-disc list-inside"
                               />
                             </div>
-                            <div
-                              class="rjsf-field-help-template text-gray-500 text-sm"
-                            >
-                              <div />
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -1577,11 +1527,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 class="list-disc list-inside"
                               />
                             </div>
-                            <div
-                              class="rjsf-field-help-template text-gray-500 text-sm"
-                            >
-                              <div />
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -1593,11 +1538,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     <ul
                       class="list-disc list-inside"
                     />
-                  </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
                   </div>
                 </div>
               </div>
@@ -1686,11 +1626,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           <ul
             class="list-disc list-inside"
           />
-        </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
         </div>
       </div>
     </div>
@@ -1753,11 +1688,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -1822,11 +1752,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -1880,11 +1805,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     <ul
                       class="list-disc list-inside"
                     />
-                  </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
                   </div>
                 </div>
               </div>
@@ -1945,11 +1865,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     <ul
                       class="list-disc list-inside"
                     />
-                  </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
                   </div>
                 </div>
               </div>
@@ -2025,11 +1940,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     <ul
                       class="list-disc list-inside"
                     />
-                  </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
                   </div>
                 </div>
               </div>
@@ -2159,11 +2069,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -2241,11 +2146,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               class="list-disc list-inside"
                             />
                           </div>
-                          <div
-                            class="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -2299,11 +2199,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             <ul
                               class="list-disc list-inside"
                             />
-                          </div>
-                          <div
-                            class="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
                           </div>
                         </div>
                       </div>
@@ -2364,11 +2259,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             <ul
                               class="list-disc list-inside"
                             />
-                          </div>
-                          <div
-                            class="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
                           </div>
                         </div>
                       </div>
@@ -3218,11 +3108,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 class="list-disc list-inside"
                               />
                             </div>
-                            <div
-                              class="rjsf-field-help-template text-gray-500 text-sm"
-                            >
-                              <div />
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -3283,11 +3168,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 class="list-disc list-inside"
                               />
                             </div>
-                            <div
-                              class="rjsf-field-help-template text-gray-500 text-sm"
-                            >
-                              <div />
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -3299,11 +3179,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     <ul
                       class="list-disc list-inside"
                     />
-                  </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
                   </div>
                 </div>
               </div>
@@ -3392,11 +3267,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           <ul
             class="list-disc list-inside"
           />
-        </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
         </div>
       </div>
     </div>
@@ -3459,11 +3329,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -3528,11 +3393,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -3586,11 +3446,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     <ul
                       class="list-disc list-inside"
                     />
-                  </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
                   </div>
                 </div>
               </div>
@@ -3651,11 +3506,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     <ul
                       class="list-disc list-inside"
                     />
-                  </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
                   </div>
                 </div>
               </div>
@@ -3731,11 +3581,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     <ul
                       class="list-disc list-inside"
                     />
-                  </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
                   </div>
                 </div>
               </div>
@@ -3865,11 +3710,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -3947,11 +3787,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               class="list-disc list-inside"
                             />
                           </div>
-                          <div
-                            class="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -4005,11 +3840,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             <ul
                               class="list-disc list-inside"
                             />
-                          </div>
-                          <div
-                            class="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
                           </div>
                         </div>
                       </div>
@@ -4070,11 +3900,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             <ul
                               class="list-disc list-inside"
                             />
-                          </div>
-                          <div
-                            class="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
                           </div>
                         </div>
                       </div>
@@ -4924,11 +4749,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 class="list-disc list-inside"
                               />
                             </div>
-                            <div
-                              class="rjsf-field-help-template text-gray-500 text-sm"
-                            >
-                              <div />
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -4989,11 +4809,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 class="list-disc list-inside"
                               />
                             </div>
-                            <div
-                              class="rjsf-field-help-template text-gray-500 text-sm"
-                            >
-                              <div />
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -5005,11 +4820,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     <ul
                       class="list-disc list-inside"
                     />
-                  </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
                   </div>
                 </div>
               </div>
@@ -5098,11 +4908,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           <ul
             class="list-disc list-inside"
           />
-        </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
         </div>
       </div>
     </div>
@@ -5165,11 +4970,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -5234,11 +5034,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -5292,11 +5087,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     <ul
                       class="list-disc list-inside"
                     />
-                  </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
                   </div>
                 </div>
               </div>
@@ -5357,11 +5147,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     <ul
                       class="list-disc list-inside"
                     />
-                  </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
                   </div>
                 </div>
               </div>
@@ -5437,11 +5222,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     <ul
                       class="list-disc list-inside"
                     />
-                  </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
                   </div>
                 </div>
               </div>
@@ -5571,11 +5351,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -5653,11 +5428,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               class="list-disc list-inside"
                             />
                           </div>
-                          <div
-                            class="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -5711,11 +5481,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             <ul
                               class="list-disc list-inside"
                             />
-                          </div>
-                          <div
-                            class="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
                           </div>
                         </div>
                       </div>
@@ -5776,11 +5541,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             <ul
                               class="list-disc list-inside"
                             />
-                          </div>
-                          <div
-                            class="rjsf-field-help-template text-gray-500 text-sm"
-                          >
-                            <div />
                           </div>
                         </div>
                       </div>
@@ -6630,11 +6390,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 class="list-disc list-inside"
                               />
                             </div>
-                            <div
-                              class="rjsf-field-help-template text-gray-500 text-sm"
-                            >
-                              <div />
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -6695,11 +6450,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 class="list-disc list-inside"
                               />
                             </div>
-                            <div
-                              class="rjsf-field-help-template text-gray-500 text-sm"
-                            >
-                              <div />
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -6711,11 +6461,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     <ul
                       class="list-disc list-inside"
                     />
-                  </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
                   </div>
                 </div>
               </div>
@@ -6805,11 +6550,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
             class="list-disc list-inside"
           />
         </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
-        </div>
       </div>
     </div>
     <div>
@@ -6867,11 +6607,6 @@ exports[`Three even column grid renders person and address in three columns, no 
                   <ul
                     class="list-disc list-inside"
                   />
-                </div>
-                <div
-                  class="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -6933,11 +6668,6 @@ exports[`Three even column grid renders person and address in three columns, no 
                     class="list-disc list-inside"
                   />
                 </div>
-                <div
-                  class="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -6991,11 +6721,6 @@ exports[`Three even column grid renders person and address in three columns, no 
                   <ul
                     class="list-disc list-inside"
                   />
-                </div>
-                <div
-                  class="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -7056,11 +6781,6 @@ exports[`Three even column grid renders person and address in three columns, no 
                   <ul
                     class="list-disc list-inside"
                   />
-                </div>
-                <div
-                  class="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -7132,11 +6852,6 @@ exports[`Three even column grid renders person and address in three columns, no 
                   <ul
                     class="list-disc list-inside"
                   />
-                </div>
-                <div
-                  class="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -7266,11 +6981,6 @@ exports[`Three even column grid renders person and address in three columns, no 
                     class="list-disc list-inside"
                   />
                 </div>
-                <div
-                  class="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -7331,11 +7041,6 @@ exports[`Three even column grid renders person and address in three columns, no 
                     class="list-disc list-inside"
                   />
                 </div>
-                <div
-                  class="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -7389,11 +7094,6 @@ exports[`Three even column grid renders person and address in three columns, no 
                   <ul
                     class="list-disc list-inside"
                   />
-                </div>
-                <div
-                  class="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -7454,11 +7154,6 @@ exports[`Three even column grid renders person and address in three columns, no 
                   <ul
                     class="list-disc list-inside"
                   />
-                </div>
-                <div
-                  class="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -8305,11 +8000,6 @@ exports[`Three even column grid renders person and address in three columns, no 
                     class="list-disc list-inside"
                   />
                 </div>
-                <div
-                  class="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -8324,11 +8014,6 @@ exports[`Three even column grid renders person and address in three columns, no 
           <ul
             class="list-disc list-inside"
           />
-        </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
         </div>
       </div>
     </div>
@@ -8388,11 +8073,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
                     class="list-disc list-inside"
                   />
                 </div>
-                <div
-                  class="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -8452,11 +8132,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   <ul
                     class="list-disc list-inside"
                   />
-                </div>
-                <div
-                  class="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -8512,11 +8187,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
                     class="list-disc list-inside"
                   />
                 </div>
-                <div
-                  class="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -8576,11 +8246,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   <ul
                     class="list-disc list-inside"
                   />
-                </div>
-                <div
-                  class="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -8652,11 +8317,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   <ul
                     class="list-disc list-inside"
                   />
-                </div>
-                <div
-                  class="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -8786,11 +8446,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
                     class="list-disc list-inside"
                   />
                 </div>
-                <div
-                  class="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -8851,11 +8506,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
                     class="list-disc list-inside"
                   />
                 </div>
-                <div
-                  class="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -8909,11 +8559,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   <ul
                     class="list-disc list-inside"
                   />
-                </div>
-                <div
-                  class="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -8974,11 +8619,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   <ul
                     class="list-disc list-inside"
                   />
-                </div>
-                <div
-                  class="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
                 </div>
               </div>
             </div>
@@ -9825,11 +9465,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
                     class="list-disc list-inside"
                   />
                 </div>
-                <div
-                  class="rjsf-field-help-template text-gray-500 text-sm"
-                >
-                  <div />
-                </div>
               </div>
             </div>
           </div>
@@ -9844,11 +9479,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
           <ul
             class="list-disc list-inside"
           />
-        </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
         </div>
       </div>
     </div>

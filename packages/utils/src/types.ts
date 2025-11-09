@@ -408,6 +408,9 @@ export type GlobalUISchemaOptions = GenericObjectType & {
   /** Enables the displaying of description text that contains markdown
    */
   enableMarkdownInDescription?: boolean;
+  /** Enables the displaying of help text that contains markdown
+   */
+  enableMarkdownInHelp?: boolean;
   /** Enables the rendering of the Optional Data Field UI for specific types of schemas, either `object`, `array` or
    * both. To disable the Optional Data Field UI for a specific field, provide an empty array within the UI schema.
    */

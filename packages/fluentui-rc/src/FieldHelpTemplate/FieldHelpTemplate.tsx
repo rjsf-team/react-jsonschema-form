@@ -1,5 +1,6 @@
 import { Caption1 } from '@fluentui/react-components';
 import { helpId, FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { RichHelp } from '@rjsf/core';
 
 /** The `FieldHelpTemplate` component renders any help desired for a field
  *
@@ -10,10 +11,14 @@ export default function FieldHelpTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: FieldHelpProps<T, S, F>) {
-  const { fieldPathId, help } = props;
+  const { fieldPathId, help, uiSchema = {}, registry } = props;
+
   if (!help) {
     return null;
   }
-  const id = helpId(fieldPathId);
-  return <Caption1 id={id}>{help}</Caption1>;
+  return (
+    <Caption1 id={helpId(fieldPathId)}>
+      <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
+    </Caption1>
+  );
 }

@@ -95,11 +95,6 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                 class="list-disc list-inside"
                               />
                             </div>
-                            <div
-                              class="rjsf-field-help-template text-gray-500 text-sm"
-                            >
-                              <div />
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -181,11 +176,6 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                           class="list-disc list-inside"
                                         />
                                       </div>
-                                      <div
-                                        class="rjsf-field-help-template text-gray-500 text-sm"
-                                      >
-                                        <div />
-                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -238,11 +228,6 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                         <ul
                                           class="list-disc list-inside"
                                         />
-                                      </div>
-                                      <div
-                                        class="rjsf-field-help-template text-gray-500 text-sm"
-                                      >
-                                        <div />
                                       </div>
                                     </div>
                                   </div>
@@ -297,11 +282,6 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                           class="list-disc list-inside"
                                         />
                                       </div>
-                                      <div
-                                        class="rjsf-field-help-template text-gray-500 text-sm"
-                                      >
-                                        <div />
-                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -313,11 +293,6 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                               <ul
                                 class="list-disc list-inside"
                               />
-                            </div>
-                            <div
-                              class="rjsf-field-help-template text-gray-500 text-sm"
-                            >
-                              <div />
                             </div>
                           </div>
                         </div>
@@ -331,11 +306,6 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -347,11 +317,6 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
           <ul
             class="list-disc list-inside"
           />
-        </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
         </div>
       </div>
     </div>
@@ -434,11 +399,6 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -514,11 +474,6 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                         class="list-disc list-inside"
                       />
                     </div>
-                    <div
-                      class="rjsf-field-help-template text-gray-500 text-sm"
-                    >
-                      <div />
-                    </div>
                   </div>
                   <div
                     class="flex self-center"
@@ -589,11 +544,6 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
           <ul
             class="list-disc list-inside"
           />
-        </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
         </div>
       </div>
     </div>
@@ -676,11 +626,6 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -735,11 +680,6 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -782,11 +722,6 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                     <ul
                       class="list-disc list-inside"
                     />
-                  </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
                   </div>
                 </div>
               </div>
@@ -877,11 +812,6 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                                 <ul
                                   class="list-disc list-inside"
                                 />
-                              </div>
-                              <div
-                                class="rjsf-field-help-template text-gray-500 text-sm"
-                              >
-                                <div />
                               </div>
                             </div>
                           </div>
@@ -1014,11 +944,6 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                                   class="list-disc list-inside"
                                 />
                               </div>
-                              <div
-                                class="rjsf-field-help-template text-gray-500 text-sm"
-                              >
-                                <div />
-                              </div>
                             </div>
                           </div>
                           <div
@@ -1137,11 +1062,6 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -1153,11 +1073,6 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
           <ul
             class="list-disc list-inside"
           />
-        </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
         </div>
       </div>
     </div>
@@ -1240,11 +1155,6 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -1297,11 +1207,6 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
                     <ul
                       class="list-disc list-inside"
                     />
-                  </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
                   </div>
                 </div>
               </div>
@@ -1357,11 +1262,6 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -1373,11 +1273,6 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
           <ul
             class="list-disc list-inside"
           />
-        </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
         </div>
       </div>
     </div>
@@ -1488,11 +1383,6 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                 class="list-disc list-inside"
                               />
                             </div>
-                            <div
-                              class="rjsf-field-help-template text-gray-500 text-sm"
-                            >
-                              <div />
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -1574,11 +1464,6 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                           class="list-disc list-inside"
                                         />
                                       </div>
-                                      <div
-                                        class="rjsf-field-help-template text-gray-500 text-sm"
-                                      >
-                                        <div />
-                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -1632,11 +1517,6 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                           class="list-disc list-inside"
                                         />
                                       </div>
-                                      <div
-                                        class="rjsf-field-help-template text-gray-500 text-sm"
-                                      >
-                                        <div />
-                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -1648,11 +1528,6 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                               <ul
                                 class="list-disc list-inside"
                               />
-                            </div>
-                            <div
-                              class="rjsf-field-help-template text-gray-500 text-sm"
-                            >
-                              <div />
                             </div>
                           </div>
                         </div>
@@ -1666,11 +1541,6 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -1682,11 +1552,6 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
           <ul
             class="list-disc list-inside"
           />
-        </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
         </div>
       </div>
     </div>
@@ -1769,11 +1634,6 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -1827,11 +1687,6 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                     <ul
                       class="list-disc list-inside"
                     />
-                  </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
                   </div>
                 </div>
               </div>
@@ -1922,11 +1777,6 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                                 <ul
                                   class="list-disc list-inside"
                                 />
-                              </div>
-                              <div
-                                class="rjsf-field-help-template text-gray-500 text-sm"
-                              >
-                                <div />
                               </div>
                             </div>
                           </div>
@@ -2059,11 +1909,6 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                                   class="list-disc list-inside"
                                 />
                               </div>
-                              <div
-                                class="rjsf-field-help-template text-gray-500 text-sm"
-                              >
-                                <div />
-                              </div>
                             </div>
                           </div>
                           <div
@@ -2182,11 +2027,6 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -2198,11 +2038,6 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
           <ul
             class="list-disc list-inside"
           />
-        </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
         </div>
       </div>
     </div>
@@ -2285,11 +2120,6 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -2342,11 +2172,6 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
                     <ul
                       class="list-disc list-inside"
                     />
-                  </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
                   </div>
                 </div>
               </div>
@@ -2402,11 +2227,6 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -2418,11 +2238,6 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
           <ul
             class="list-disc list-inside"
           />
-        </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
         </div>
       </div>
     </div>
@@ -2527,11 +2342,6 @@ exports[`object fields additionalProperties 1`] = `
                         class="list-disc list-inside"
                       />
                     </div>
-                    <div
-                      class="rjsf-field-help-template text-gray-500 text-sm"
-                    >
-                      <div />
-                    </div>
                   </div>
                   <div
                     class="flex self-center"
@@ -2602,11 +2412,6 @@ exports[`object fields additionalProperties 1`] = `
           <ul
             class="list-disc list-inside"
           />
-        </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
         </div>
       </div>
     </div>
@@ -2689,11 +2494,6 @@ exports[`object fields object 1`] = `
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -2748,11 +2548,6 @@ exports[`object fields object 1`] = `
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -2764,11 +2559,6 @@ exports[`object fields object 1`] = `
           <ul
             class="list-disc list-inside"
           />
-        </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
         </div>
       </div>
     </div>
@@ -2873,11 +2663,6 @@ exports[`object fields show add button and fields if additionalProperties is tru
                         class="list-disc list-inside"
                       />
                     </div>
-                    <div
-                      class="rjsf-field-help-template text-gray-500 text-sm"
-                    >
-                      <div />
-                    </div>
                   </div>
                   <div
                     class="flex self-center"
@@ -2948,11 +2733,6 @@ exports[`object fields show add button and fields if additionalProperties is tru
           <ul
             class="list-disc list-inside"
           />
-        </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
         </div>
       </div>
     </div>
@@ -3080,11 +2860,6 @@ exports[`object fields with title and description additionalProperties 1`] = `
                         class="list-disc list-inside"
                       />
                     </div>
-                    <div
-                      class="rjsf-field-help-template text-gray-500 text-sm"
-                    >
-                      <div />
-                    </div>
                   </div>
                   <div
                     class="flex self-center"
@@ -3155,11 +2930,6 @@ exports[`object fields with title and description additionalProperties 1`] = `
           <ul
             class="list-disc list-inside"
           />
-        </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
         </div>
       </div>
     </div>
@@ -3287,11 +3057,6 @@ exports[`object fields with title and description from both additionalProperties
                         class="list-disc list-inside"
                       />
                     </div>
-                    <div
-                      class="rjsf-field-help-template text-gray-500 text-sm"
-                    >
-                      <div />
-                    </div>
                   </div>
                   <div
                     class="flex self-center"
@@ -3362,11 +3127,6 @@ exports[`object fields with title and description from both additionalProperties
           <ul
             class="list-disc list-inside"
           />
-        </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
         </div>
       </div>
     </div>
@@ -3472,11 +3232,6 @@ exports[`object fields with title and description from both object 1`] = `
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -3531,11 +3286,6 @@ exports[`object fields with title and description from both object 1`] = `
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -3547,11 +3297,6 @@ exports[`object fields with title and description from both object 1`] = `
           <ul
             class="list-disc list-inside"
           />
-        </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
         </div>
       </div>
     </div>
@@ -3679,11 +3424,6 @@ exports[`object fields with title and description from uiSchema additionalProper
                         class="list-disc list-inside"
                       />
                     </div>
-                    <div
-                      class="rjsf-field-help-template text-gray-500 text-sm"
-                    >
-                      <div />
-                    </div>
                   </div>
                   <div
                     class="flex self-center"
@@ -3754,11 +3494,6 @@ exports[`object fields with title and description from uiSchema additionalProper
           <ul
             class="list-disc list-inside"
           />
-        </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
         </div>
       </div>
     </div>
@@ -3864,11 +3599,6 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -3923,11 +3653,6 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -3939,11 +3664,6 @@ exports[`object fields with title and description from uiSchema object 1`] = `
           <ul
             class="list-disc list-inside"
           />
-        </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
         </div>
       </div>
     </div>
@@ -4071,11 +3791,6 @@ exports[`object fields with title and description from uiSchema show add button 
                         class="list-disc list-inside"
                       />
                     </div>
-                    <div
-                      class="rjsf-field-help-template text-gray-500 text-sm"
-                    >
-                      <div />
-                    </div>
                   </div>
                   <div
                     class="flex self-center"
@@ -4146,11 +3861,6 @@ exports[`object fields with title and description from uiSchema show add button 
           <ul
             class="list-disc list-inside"
           />
-        </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
         </div>
       </div>
     </div>
@@ -4256,11 +3966,6 @@ exports[`object fields with title and description object 1`] = `
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -4315,11 +4020,6 @@ exports[`object fields with title and description object 1`] = `
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -4331,11 +4031,6 @@ exports[`object fields with title and description object 1`] = `
           <ul
             class="list-disc list-inside"
           />
-        </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
         </div>
       </div>
     </div>
@@ -4463,11 +4158,6 @@ exports[`object fields with title and description show add button and fields if 
                         class="list-disc list-inside"
                       />
                     </div>
-                    <div
-                      class="rjsf-field-help-template text-gray-500 text-sm"
-                    >
-                      <div />
-                    </div>
                   </div>
                   <div
                     class="flex self-center"
@@ -4538,11 +4228,6 @@ exports[`object fields with title and description show add button and fields if 
           <ul
             class="list-disc list-inside"
           />
-        </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
         </div>
       </div>
     </div>
@@ -4637,11 +4322,6 @@ exports[`object fields with title and description with global label off addition
                         class="list-disc list-inside"
                       />
                     </div>
-                    <div
-                      class="rjsf-field-help-template text-gray-500 text-sm"
-                    >
-                      <div />
-                    </div>
                   </div>
                   <div
                     class="flex self-center"
@@ -4712,11 +4392,6 @@ exports[`object fields with title and description with global label off addition
           <ul
             class="list-disc list-inside"
           />
-        </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
         </div>
       </div>
     </div>
@@ -4789,11 +4464,6 @@ exports[`object fields with title and description with global label off object 1
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -4838,11 +4508,6 @@ exports[`object fields with title and description with global label off object 1
                       class="list-disc list-inside"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-help-template text-gray-500 text-sm"
-                  >
-                    <div />
-                  </div>
                 </div>
               </div>
             </div>
@@ -4854,11 +4519,6 @@ exports[`object fields with title and description with global label off object 1
           <ul
             class="list-disc list-inside"
           />
-        </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
         </div>
       </div>
     </div>
@@ -4953,11 +4613,6 @@ exports[`object fields with title and description with global label off show add
                         class="list-disc list-inside"
                       />
                     </div>
-                    <div
-                      class="rjsf-field-help-template text-gray-500 text-sm"
-                    >
-                      <div />
-                    </div>
                   </div>
                   <div
                     class="flex self-center"
@@ -5028,11 +4683,6 @@ exports[`object fields with title and description with global label off show add
           <ul
             class="list-disc list-inside"
           />
-        </div>
-        <div
-          class="rjsf-field-help-template text-gray-500 text-sm"
-        >
-          <div />
         </div>
       </div>
     </div>

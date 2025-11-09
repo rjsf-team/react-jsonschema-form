@@ -2765,13 +2765,7 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
           class="ui mini info message"
           id="root__help"
         >
-          <div
-            class="content"
-          >
-            <p>
-              Select all that apply
-            </p>
-          </div>
+          Select all that apply
         </div>
       </div>
     </div>
@@ -3344,13 +3338,7 @@ exports[`single fields help and error display 1`] = `
           class="ui mini info message"
           id="root__help"
         >
-          <div
-            class="content"
-          >
-            <p>
-              help me!
-            </p>
-          </div>
+          help me!
         </div>
         <div
           class="ui red pointing above small basic label"
@@ -7940,6 +7928,196 @@ exports[`single fields slider field 1`] = `
 </DocumentFragment>
 `;
 
+exports[`single fields string field field with markdown help and description 1`] = `
+<DocumentFragment>
+  <form
+    class="ui form rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="grouped equal width fields"
+      >
+        <div
+          class="field"
+        >
+          <label
+            for="root"
+          >
+            Markdown Help and Description
+          </label>
+          <div
+            class="ui fluid input"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              id="root"
+              name="root"
+              placeholder=""
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <p
+          class="sui-description"
+          id="root__description"
+        >
+          This is a *description* with **markdown**
+        </p>
+        <div
+          class="ui mini info message"
+          id="root__help"
+        >
+          <span>
+            This is 
+            <strong>
+              help
+            </strong>
+             text with 
+            <a
+              href="https://example.com"
+            >
+              a link
+            </a>
+          </span>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ui primary button"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields string field field with markdown help text 1`] = `
+<DocumentFragment>
+  <form
+    class="ui form rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="grouped equal width fields"
+      >
+        <div
+          class="field"
+        >
+          <label
+            for="root"
+          >
+            Markdown Help Test
+          </label>
+          <div
+            class="ui fluid input"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              id="root"
+              name="root"
+              placeholder=""
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <p
+          class="sui-description"
+          id="root__description"
+        >
+          A field with markdown help text
+        </p>
+        <div
+          class="ui mini info message"
+          id="root__help"
+        >
+          <span>
+            This is 
+            <strong>
+              markdown
+            </strong>
+             help text with 
+            <a
+              href="https://example.com"
+            >
+              a link
+            </a>
+          </span>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ui primary button"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields string field field with markdown help text without enabling markdown 1`] = `
+<DocumentFragment>
+  <form
+    class="ui form rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="grouped equal width fields"
+      >
+        <div
+          class="field"
+        >
+          <label
+            for="root"
+          >
+            Raw Help Test
+          </label>
+          <div
+            class="ui fluid input"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              id="root"
+              name="root"
+              placeholder=""
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <p
+          class="sui-description"
+          id="root__description"
+        >
+          A field with raw help text
+        </p>
+        <div
+          class="ui mini info message"
+          id="root__help"
+        >
+          This is **markdown** help text with [a link](https://example.com)
+        </div>
+      </div>
+    </div>
+    <button
+      class="ui primary button"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields string field format data-url 1`] = `
 <DocumentFragment>
   <form
@@ -8085,6 +8263,68 @@ exports[`single fields string field regular 1`] = `
               value=""
             />
           </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ui primary button"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields string field required field with markdown help 1`] = `
+<DocumentFragment>
+  <form
+    class="ui form rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="grouped equal width fields"
+      >
+        <div
+          class="field"
+        >
+          <label
+            for="root"
+          >
+            Required Field with Markdown Help
+          </label>
+          <div
+            class="ui fluid input"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              id="root"
+              name="root"
+              placeholder=""
+              type="text"
+              value="[object Object]"
+            />
+          </div>
+        </div>
+        <p
+          class="sui-description"
+          id="root__description"
+        >
+          A required field with markdown help
+        </p>
+        <div
+          class="ui mini info message"
+          id="root__help"
+        >
+          <span>
+            This field is 
+            <strong>
+              required
+            </strong>
+            . Please provide a value.
+          </span>
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
-import { FieldHelpProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
+import { FieldHelpProps, StrictRJSFSchema, RJSFSchema, FormContextType, helpId } from '@rjsf/utils';
+import { RichHelp } from '@rjsf/core';
 
 /** The `FieldHelpTemplate` component renders help text for a specific form field
  * with DaisyUI styling. It displays the help text in a subtle gray color and smaller size
@@ -14,10 +15,13 @@ export default function FieldHelpTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: FieldHelpProps<T, S, F>) {
-  const { help } = props;
+  const { help, uiSchema, registry, fieldPathId } = props;
+  if (!help) {
+    return null;
+  }
   return (
-    <div className='rjsf-field-help-template text-gray-500 text-sm'>
-      <div>{help}</div>
+    <div id={helpId(fieldPathId)} className='rjsf-field-help-template text-gray-500 text-sm'>
+      <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
     </div>
   );
 }
