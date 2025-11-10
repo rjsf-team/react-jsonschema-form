@@ -47,7 +47,7 @@ export default function BaseInputTemplate<
   } = props;
 
   const inputProps = getInputProps<T, S, F>(schema, type, options, false);
-  const description = options.description || schema.description;
+  const description = hideLabel ? undefined : options.description || schema.description;
   const themeProps = cleanupOptions(options);
 
   const handleNumberChange = useCallback((value: number | string) => onChange(value), [onChange]);
