@@ -85,6 +85,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Added new `enableMarkdownInHelp` to the `GlobalUISchemaOptions` type, fixing [#4601](https://github.com/rjsf-team/react-jsonschema-form/issues/4601)
 - Added new `displayLabel` and `hasDescription` flags in the `ArrayFieldItemTemplateProps` to support fixing [#3296](https://github.com/rjsf-team/react-jsonschema-form/issues/3296)
+- Updated the three hooks to add `use client` directive to support NextJS builds
 
 ## Dev / docs / playground
 

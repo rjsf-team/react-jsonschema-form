@@ -77,7 +77,7 @@ export default function FieldTemplate<
       uiSchema={uiSchema}
       registry={registry}
     >
-      <div className={`field-template mb-3${classNames || ''}`} {...divProps}>
+      <div className={`field-template mb-3 ${classNames || ''}`} {...divProps}>
         {displayLabel && !isCheckbox && (
           <label htmlFor={id} className='label'>
             <span className='label-text font-medium'>
