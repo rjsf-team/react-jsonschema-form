@@ -47,6 +47,7 @@ export default function BaseInputTemplate<
   } = props;
 
   const inputProps = getInputProps<T, S, F>(schema, type, options, false);
+  const description = hideLabel ? undefined : options.description || schema.description;
   const themeProps = cleanupOptions(options);
 
   const handleNumberChange = useCallback((value: number | string) => onChange(value), [onChange]);
@@ -74,44 +75,40 @@ export default function BaseInputTemplate<
     [onFocus, id],
   );
 
+  const componentProps = {
+    id,
+    name: htmlName || id,
+    label: labelValue(label || undefined, hideLabel, false),
+    required,
+    autoFocus: autofocus,
+    disabled: disabled || readonly,
+    onBlur: !readonly ? handleBlur : undefined,
+    onFocus: !readonly ? handleFocus : undefined,
+    placeholder,
+    error: rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined,
+    list: schema.examples ? examplesId(id) : undefined,
+  };
+
   const input =
     inputProps.type === 'number' || inputProps.type === 'integer' ? (
       <NumberInput
-        id={id}
-        name={htmlName || id}
-        label={labelValue(label || undefined, hideLabel, false)}
-        required={required}
-        autoFocus={autofocus}
-        disabled={disabled || readonly}
-        onBlur={!readonly ? handleBlur : undefined}
         onChange={!readonly ? handleNumberChange : undefined}
-        onFocus={!readonly ? handleFocus : undefined}
-        placeholder={placeholder}
-        error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
-        list={schema.examples ? examplesId(id) : undefined}
+        {...componentProps}
         {...inputProps}
         {...themeProps}
         step={typeof inputProps.step === 'number' ? inputProps.step : 1}
         type='text'
+        description={description}
         value={value}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
     ) : (
       <TextInput
-        id={id}
-        name={htmlName || id}
-        label={labelValue(label || undefined, hideLabel, false)}
-        required={required}
-        autoFocus={autofocus}
-        disabled={disabled || readonly}
-        onBlur={!readonly ? handleBlur : undefined}
         onChange={!readonly ? handleChange : undefined}
-        onFocus={!readonly ? handleFocus : undefined}
-        placeholder={placeholder}
-        error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
-        list={schema.examples ? examplesId(id) : undefined}
+        {...componentProps}
         {...inputProps}
         {...themeProps}
+        description={description}
         value={value}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />

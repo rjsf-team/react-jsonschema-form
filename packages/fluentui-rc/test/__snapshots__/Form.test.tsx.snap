@@ -44,7 +44,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                   class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
                 >
                   <div
-                    class="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+                    class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
                   >
                     <div
                       class="fui-Flex ___9stze40_16wdn2w f22iagw fly5x3f f1l02sjl fzy362"
@@ -79,7 +79,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                               style="margin-bottom: 10px;"
                             >
                               <div
-                                class="rjsf-field rjsf-field-string"
+                                class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                               >
                                 <div
                                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -111,7 +111,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                               style="margin-bottom: 10px;"
                             >
                               <div
-                                class="rjsf-field rjsf-field-boolean"
+                                class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-boolean"
                               >
                                 <div
                                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -146,7 +146,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                     </div>
                     <div
                       class="fui-Flex ___1gzszts_10anl4a f22iagw"
-                      style="margin-left: 8px;"
+                      style="margin-left: 8px; margin-top: 0px;"
                     >
                       <button
                         class="fui-Button r1alrhcs rjsf-array-item-move-up ___7dg0yg0_z1vqji0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fuigjrg fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f4dhi0o f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x fequ9m0 f18ktai2 fwbmr0d f44c6la"
@@ -227,7 +227,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                     </div>
                   </div>
                   <div
-                    class="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+                    class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
                   >
                     <div
                       class="fui-Flex ___9stze40_16wdn2w f22iagw fly5x3f f1l02sjl fzy362"
@@ -262,7 +262,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                               style="margin-bottom: 10px;"
                             >
                               <div
-                                class="rjsf-field rjsf-field-string"
+                                class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                               >
                                 <div
                                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -294,7 +294,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                               style="margin-bottom: 10px;"
                             >
                               <div
-                                class="rjsf-field rjsf-field-boolean"
+                                class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-boolean"
                               >
                                 <div
                                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -345,7 +345,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                     </div>
                     <div
                       class="fui-Flex ___1gzszts_10anl4a f22iagw"
-                      style="margin-left: 8px;"
+                      style="margin-left: 8px; margin-top: 0px;"
                     >
                       <button
                         class="fui-Button r1alrhcs rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
@@ -519,13 +519,13 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                   class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
                 >
                   <div
-                    class="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+                    class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
                   >
                     <div
                       class="fui-Flex ___9stze40_16wdn2w f22iagw fly5x3f f1l02sjl fzy362"
                     >
                       <div
-                        class="rjsf-field rjsf-field-string"
+                        class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                       >
                         <div
                           class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -534,7 +534,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                             class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
                             for="root_tags_0"
                           >
-                            tags-0
+                            tags-1
                             <span
                               aria-hidden="true"
                               class="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
@@ -561,7 +561,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                     </div>
                     <div
                       class="fui-Flex ___1gzszts_10anl4a f22iagw"
-                      style="margin-left: 8px;"
+                      style="margin-left: 8px; margin-top: 26px;"
                     >
                       <button
                         class="fui-Button r1alrhcs rjsf-array-item-move-up ___7dg0yg0_z1vqji0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fuigjrg fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f4dhi0o f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x fequ9m0 f18ktai2 fwbmr0d f44c6la"
@@ -642,13 +642,13 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                     </div>
                   </div>
                   <div
-                    class="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+                    class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
                   >
                     <div
                       class="fui-Flex ___9stze40_16wdn2w f22iagw fly5x3f f1l02sjl fzy362"
                     >
                       <div
-                        class="rjsf-field rjsf-field-string"
+                        class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                       >
                         <div
                           class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -657,7 +657,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                             class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
                             for="root_tags_1"
                           >
-                            tags-1
+                            tags-2
                             <span
                               aria-hidden="true"
                               class="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
@@ -684,7 +684,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                     </div>
                     <div
                       class="fui-Flex ___1gzszts_10anl4a f22iagw"
-                      style="margin-left: 8px;"
+                      style="margin-left: 8px; margin-top: 26px;"
                     >
                       <button
                         class="fui-Button r1alrhcs rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
@@ -979,7 +979,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                     style="margin-bottom: 10px;"
                   >
                     <div
-                      class="rjsf-field rjsf-field-string"
+                      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                     >
                       <div
                         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1011,7 +1011,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                     style="margin-bottom: 10px;"
                   >
                     <div
-                      class="rjsf-field rjsf-field-string"
+                      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                     >
                       <div
                         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1072,7 +1072,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                             style="margin-bottom: 10px;"
                           >
                             <div
-                              class="rjsf-field rjsf-field-string"
+                              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                             >
                               <div
                                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1104,7 +1104,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                             style="margin-bottom: 10px;"
                           >
                             <div
-                              class="rjsf-field rjsf-field-string"
+                              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                             >
                               <div
                                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1175,7 +1175,7 @@ exports[`nameGenerator bracketNameGenerator radio field 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1276,7 +1276,7 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1386,7 +1386,7 @@ exports[`nameGenerator bracketNameGenerator simple fields 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1418,7 +1418,7 @@ exports[`nameGenerator bracketNameGenerator simple fields 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-number"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-number"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1451,7 +1451,7 @@ exports[`nameGenerator bracketNameGenerator simple fields 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-boolean"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-boolean"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1516,7 +1516,7 @@ exports[`nameGenerator bracketNameGenerator textarea field 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1603,7 +1603,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                   class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
                 >
                   <div
-                    class="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+                    class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
                   >
                     <div
                       class="fui-Flex ___9stze40_16wdn2w f22iagw fly5x3f f1l02sjl fzy362"
@@ -1638,7 +1638,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                               style="margin-bottom: 10px;"
                             >
                               <div
-                                class="rjsf-field rjsf-field-string"
+                                class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                               >
                                 <div
                                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1670,7 +1670,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                               style="margin-bottom: 10px;"
                             >
                               <div
-                                class="rjsf-field rjsf-field-boolean"
+                                class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-boolean"
                               >
                                 <div
                                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1705,7 +1705,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                     </div>
                     <div
                       class="fui-Flex ___1gzszts_10anl4a f22iagw"
-                      style="margin-left: 8px;"
+                      style="margin-left: 8px; margin-top: 0px;"
                     >
                       <button
                         class="fui-Button r1alrhcs rjsf-array-item-move-up ___7dg0yg0_z1vqji0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fuigjrg fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f4dhi0o f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x fequ9m0 f18ktai2 fwbmr0d f44c6la"
@@ -1786,7 +1786,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                     </div>
                   </div>
                   <div
-                    class="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+                    class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
                   >
                     <div
                       class="fui-Flex ___9stze40_16wdn2w f22iagw fly5x3f f1l02sjl fzy362"
@@ -1821,7 +1821,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                               style="margin-bottom: 10px;"
                             >
                               <div
-                                class="rjsf-field rjsf-field-string"
+                                class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                               >
                                 <div
                                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1853,7 +1853,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                               style="margin-bottom: 10px;"
                             >
                               <div
-                                class="rjsf-field rjsf-field-boolean"
+                                class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-boolean"
                               >
                                 <div
                                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1904,7 +1904,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                     </div>
                     <div
                       class="fui-Flex ___1gzszts_10anl4a f22iagw"
-                      style="margin-left: 8px;"
+                      style="margin-left: 8px; margin-top: 0px;"
                     >
                       <button
                         class="fui-Button r1alrhcs rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
@@ -2078,13 +2078,13 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                   class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
                 >
                   <div
-                    class="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+                    class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
                   >
                     <div
                       class="fui-Flex ___9stze40_16wdn2w f22iagw fly5x3f f1l02sjl fzy362"
                     >
                       <div
-                        class="rjsf-field rjsf-field-string"
+                        class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                       >
                         <div
                           class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -2093,7 +2093,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                             class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
                             for="root_tags_0"
                           >
-                            tags-0
+                            tags-1
                             <span
                               aria-hidden="true"
                               class="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
@@ -2120,7 +2120,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                     </div>
                     <div
                       class="fui-Flex ___1gzszts_10anl4a f22iagw"
-                      style="margin-left: 8px;"
+                      style="margin-left: 8px; margin-top: 26px;"
                     >
                       <button
                         class="fui-Button r1alrhcs rjsf-array-item-move-up ___7dg0yg0_z1vqji0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fuigjrg fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f4dhi0o f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x fequ9m0 f18ktai2 fwbmr0d f44c6la"
@@ -2201,13 +2201,13 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                     </div>
                   </div>
                   <div
-                    class="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+                    class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
                   >
                     <div
                       class="fui-Flex ___9stze40_16wdn2w f22iagw fly5x3f f1l02sjl fzy362"
                     >
                       <div
-                        class="rjsf-field rjsf-field-string"
+                        class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                       >
                         <div
                           class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -2216,7 +2216,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                             class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
                             for="root_tags_1"
                           >
-                            tags-1
+                            tags-2
                             <span
                               aria-hidden="true"
                               class="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
@@ -2243,7 +2243,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                     </div>
                     <div
                       class="fui-Flex ___1gzszts_10anl4a f22iagw"
-                      style="margin-left: 8px;"
+                      style="margin-left: 8px; margin-top: 26px;"
                     >
                       <button
                         class="fui-Button r1alrhcs rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
@@ -2421,7 +2421,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                     style="margin-bottom: 10px;"
                   >
                     <div
-                      class="rjsf-field rjsf-field-string"
+                      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                     >
                       <div
                         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -2453,7 +2453,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                     style="margin-bottom: 10px;"
                   >
                     <div
-                      class="rjsf-field rjsf-field-string"
+                      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                     >
                       <div
                         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -2514,7 +2514,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                             style="margin-bottom: 10px;"
                           >
                             <div
-                              class="rjsf-field rjsf-field-string"
+                              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                             >
                               <div
                                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -2546,7 +2546,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                             style="margin-bottom: 10px;"
                           >
                             <div
-                              class="rjsf-field rjsf-field-string"
+                              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                             >
                               <div
                                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -2617,7 +2617,7 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -2727,7 +2727,7 @@ exports[`nameGenerator dotNotationNameGenerator simple fields 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -2759,7 +2759,7 @@ exports[`nameGenerator dotNotationNameGenerator simple fields 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-number"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-number"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -2792,7 +2792,7 @@ exports[`nameGenerator dotNotationNameGenerator simple fields 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-boolean"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-boolean"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -2844,7 +2844,7 @@ exports[`single fields checkbox field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-boolean"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-boolean"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -2890,7 +2890,7 @@ exports[`single fields checkbox field with description in schema and FieldTempla
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-boolean"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-boolean"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -2944,7 +2944,7 @@ exports[`single fields checkbox field with label 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-boolean"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-boolean"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -2992,7 +2992,7 @@ exports[`single fields checkbox field with label and description 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-boolean"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-boolean"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -3046,7 +3046,7 @@ exports[`single fields checkbox field with label and rich text description 1`] =
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-boolean"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-boolean"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -3486,7 +3486,7 @@ exports[`single fields field with description 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -3560,7 +3560,7 @@ exports[`single fields field with description in uiSchema 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -3634,7 +3634,7 @@ exports[`single fields field with markdown description 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -3714,7 +3714,7 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -3777,7 +3777,7 @@ exports[`single fields format color 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -3821,7 +3821,7 @@ exports[`single fields format date 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -3865,7 +3865,7 @@ exports[`single fields format datetime 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -3909,7 +3909,7 @@ exports[`single fields format time 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -3968,7 +3968,7 @@ exports[`single fields help and error display 1`] = `
       </ul>
     </div>
     <div
-      class="rjsf-field rjsf-field-string rjsf-field-error"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string rjsf-field-error"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -4074,7 +4074,7 @@ exports[`single fields hidden label 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -4114,7 +4114,7 @@ exports[`single fields null field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-null"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-null"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -4140,7 +4140,7 @@ exports[`single fields number field 0 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-number"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-number"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -4185,7 +4185,7 @@ exports[`single fields number field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-number"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-number"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -4230,7 +4230,7 @@ exports[`single fields optional data controls does not show optional controls wh
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-object"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -4288,7 +4288,7 @@ exports[`single fields optional data controls does not show optional controls wh
                     style="margin-bottom: 10px;"
                   >
                     <div
-                      class="rjsf-field rjsf-field-string"
+                      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                     >
                       <div
                         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -4349,7 +4349,7 @@ exports[`single fields optional data controls does not show optional controls wh
                             style="margin-bottom: 10px;"
                           >
                             <div
-                              class="rjsf-field rjsf-field-string"
+                              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                             >
                               <div
                                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -4414,7 +4414,7 @@ exports[`single fields optional data controls does not show optional controls wh
                             style="margin-bottom: 10px;"
                           >
                             <div
-                              class="rjsf-field rjsf-field-string"
+                              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                             >
                               <div
                                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -4731,7 +4731,7 @@ exports[`single fields optional data controls does not show optional controls wh
                     style="margin-bottom: 10px;"
                   >
                     <div
-                      class="rjsf-field rjsf-field-string"
+                      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                     >
                       <div
                         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -4829,7 +4829,7 @@ exports[`single fields optional data controls does not show optional controls wh
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-undefined"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-undefined"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -4936,7 +4936,7 @@ exports[`single fields optional data controls does not show optional controls wh
                           style="margin-bottom: 10px;"
                         >
                           <div
-                            class="rjsf-field rjsf-field-string"
+                            class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                           >
                             <div
                               class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -4976,7 +4976,7 @@ exports[`single fields optional data controls does not show optional controls wh
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-undefined"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-undefined"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -5137,7 +5137,7 @@ exports[`single fields optional data controls does not show optional controls wh
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-object"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -5195,7 +5195,7 @@ exports[`single fields optional data controls does not show optional controls wh
                     style="margin-bottom: 10px;"
                   >
                     <div
-                      class="rjsf-field rjsf-field-string"
+                      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                     >
                       <div
                         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -5257,7 +5257,7 @@ exports[`single fields optional data controls does not show optional controls wh
                             style="margin-bottom: 10px;"
                           >
                             <div
-                              class="rjsf-field rjsf-field-string"
+                              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                             >
                               <div
                                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -5323,7 +5323,7 @@ exports[`single fields optional data controls does not show optional controls wh
                             style="margin-bottom: 10px;"
                           >
                             <div
-                              class="rjsf-field rjsf-field-string"
+                              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                             >
                               <div
                                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -5645,7 +5645,7 @@ exports[`single fields optional data controls does not show optional controls wh
                     style="margin-bottom: 10px;"
                   >
                     <div
-                      class="rjsf-field rjsf-field-string"
+                      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                     >
                       <div
                         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -5745,7 +5745,7 @@ exports[`single fields optional data controls does not show optional controls wh
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-undefined"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-undefined"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -5852,7 +5852,7 @@ exports[`single fields optional data controls does not show optional controls wh
                           style="margin-bottom: 10px;"
                         >
                           <div
-                            class="rjsf-field rjsf-field-string"
+                            class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                           >
                             <div
                               class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -5892,7 +5892,7 @@ exports[`single fields optional data controls does not show optional controls wh
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-undefined"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-undefined"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -6054,7 +6054,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-object"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -6149,7 +6149,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                     style="margin-bottom: 10px;"
                   >
                     <div
-                      class="rjsf-field rjsf-field-string"
+                      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                     >
                       <div
                         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -6279,7 +6279,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                             style="margin-bottom: 10px;"
                           >
                             <div
-                              class="rjsf-field rjsf-field-string"
+                              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                             >
                               <div
                                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -6574,13 +6574,13 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
                 >
                   <div
-                    class="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+                    class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
                   >
                     <div
                       class="fui-Flex ___9stze40_16wdn2w f22iagw fly5x3f f1l02sjl fzy362"
                     >
                       <div
-                        class="rjsf-field rjsf-field-string"
+                        class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                       >
                         <div
                           class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -6589,7 +6589,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                             class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
                             for="root_nestedArrayOptional_0"
                           >
-                            nestedArrayOptional-0
+                            nestedArrayOptional-1
                             <span
                               aria-hidden="true"
                               class="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
@@ -6616,7 +6616,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                     </div>
                     <div
                       class="fui-Flex ___1gzszts_10anl4a f22iagw"
-                      style="margin-left: 8px;"
+                      style="margin-left: 8px; margin-top: 26px;"
                     >
                       <button
                         class="fui-Button r1alrhcs rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
@@ -6712,7 +6712,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                     style="margin-bottom: 10px;"
                   >
                     <div
-                      class="rjsf-field rjsf-field-string"
+                      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                     >
                       <div
                         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -6810,7 +6810,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-undefined"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-undefined"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -6892,7 +6892,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-undefined"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-undefined"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -6992,7 +6992,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-object"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -7050,7 +7050,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                     style="margin-bottom: 10px;"
                   >
                     <div
-                      class="rjsf-field rjsf-field-string"
+                      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                     >
                       <div
                         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -7150,7 +7150,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                             style="margin-bottom: 10px;"
                           >
                             <div
-                              class="rjsf-field rjsf-field-string"
+                              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                             >
                               <div
                                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -7380,13 +7380,13 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
                 >
                   <div
-                    class="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+                    class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
                   >
                     <div
                       class="fui-Flex ___9stze40_16wdn2w f22iagw fly5x3f f1l02sjl fzy362"
                     >
                       <div
-                        class="rjsf-field rjsf-field-string"
+                        class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                       >
                         <div
                           class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -7395,7 +7395,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                             class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
                             for="root_nestedArrayOptional_0"
                           >
-                            nestedArrayOptional-0
+                            nestedArrayOptional-1
                             <span
                               aria-hidden="true"
                               class="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
@@ -7423,7 +7423,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                     </div>
                     <div
                       class="fui-Flex ___1gzszts_10anl4a f22iagw"
-                      style="margin-left: 8px;"
+                      style="margin-left: 8px; margin-top: 26px;"
                     >
                       <button
                         class="fui-Button r1alrhcs rjsf-array-item-remove ___7dg0yg0_z1vqji0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fuigjrg fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f4dhi0o f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x fequ9m0 f18ktai2 fwbmr0d f44c6la"
@@ -7521,7 +7521,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                     style="margin-bottom: 10px;"
                   >
                     <div
-                      class="rjsf-field rjsf-field-string"
+                      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                     >
                       <div
                         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -7621,7 +7621,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-undefined"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-undefined"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -7672,7 +7672,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-undefined"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-undefined"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -7741,7 +7741,7 @@ exports[`single fields optional data controls shows "add" optional controls when
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-object"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -7937,7 +7937,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                     style="margin-bottom: 10px;"
                   >
                     <div
-                      class="rjsf-field rjsf-field-string"
+                      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                     >
                       <div
                         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -8035,7 +8035,7 @@ exports[`single fields optional data controls shows "add" optional controls when
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-undefined"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-undefined"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -8117,7 +8117,7 @@ exports[`single fields optional data controls shows "add" optional controls when
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-undefined"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-undefined"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -8217,7 +8217,7 @@ exports[`single fields optional data controls shows "add" optional controls when
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-object"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -8351,7 +8351,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                     style="margin-bottom: 10px;"
                   >
                     <div
-                      class="rjsf-field rjsf-field-string"
+                      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
                     >
                       <div
                         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -8451,7 +8451,7 @@ exports[`single fields optional data controls shows "add" optional controls when
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-undefined"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-undefined"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -8502,7 +8502,7 @@ exports[`single fields optional data controls shows "add" optional controls when
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-undefined"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-undefined"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -8572,7 +8572,7 @@ exports[`single fields password field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -8616,7 +8616,7 @@ exports[`single fields radio field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-boolean"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-boolean"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -8698,7 +8698,7 @@ exports[`single fields radio widget with description in schema and FieldTemplate
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-boolean"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-boolean"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -8793,7 +8793,7 @@ exports[`single fields schema examples 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -8857,7 +8857,7 @@ exports[`single fields select field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -9353,7 +9353,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -9444,7 +9444,7 @@ exports[`single fields select field single choice enumDisabled using radio widge
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -9527,7 +9527,7 @@ exports[`single fields select field single choice form disabled using radio widg
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -9612,7 +9612,7 @@ exports[`single fields select field single choice formData 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -9704,7 +9704,7 @@ exports[`single fields select field single choice uiSchema disabled using radio 
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -9788,7 +9788,7 @@ exports[`single fields select widget with description in schema and FieldTemplat
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-boolean"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-boolean"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -9892,7 +9892,7 @@ exports[`single fields slider field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-integer"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-integer"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -9944,7 +9944,7 @@ exports[`single fields string field field with markdown help and description 1`]
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -10018,7 +10018,7 @@ exports[`single fields string field field with markdown help text 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -10092,7 +10092,7 @@ exports[`single fields string field field with markdown help text without enabli
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -10155,7 +10155,7 @@ exports[`single fields string field format data-url 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -10201,7 +10201,7 @@ exports[`single fields string field format email 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -10245,7 +10245,7 @@ exports[`single fields string field format uri 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -10289,7 +10289,7 @@ exports[`single fields string field regular 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -10333,7 +10333,7 @@ exports[`single fields string field required field with markdown help 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -10402,7 +10402,7 @@ exports[`single fields string field with placeholder 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -10446,7 +10446,7 @@ exports[`single fields textarea field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -10518,7 +10518,7 @@ exports[`single fields title field 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
             >
               <div
                 class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -10568,7 +10568,7 @@ exports[`single fields unsupported field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-undefined"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-undefined"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -10615,7 +10615,7 @@ exports[`single fields up/down field 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-number"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-number"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -10659,7 +10659,7 @@ exports[`single fields using custom tagName 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-string"
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
     >
       <div
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"

@@ -24,7 +24,8 @@ export default function ArrayFieldItemTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: ArrayFieldItemTemplateProps<T, S, F>) {
-  const { children, buttonsProps, hasToolbar, uiSchema, registry, parentUiSchema } = props;
+  const { children, buttonsProps, displayLabel, hasDescription, hasToolbar, uiSchema, registry, parentUiSchema } =
+    props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(
     'ArrayFieldItemButtonsTemplate',
@@ -37,6 +38,7 @@ export default function ArrayFieldItemTemplate<
     defaultSchemaProps: { horizontalButtons: true, wrapItem: false },
   });
   const { horizontalButtons = true, wrapItem = false } = semanticProps;
+  const margin = hasDescription ? 5 : 24;
   return (
     <div className='rjsf-array-item'>
       <MaybeWrap wrap={wrapItem} component={Segment}>
@@ -46,7 +48,11 @@ export default function ArrayFieldItemTemplate<
           </Grid.Column>
           {hasToolbar && (
             <Grid.Column>
-              <Button.Group size='mini' vertical={!horizontalButtons}>
+              <Button.Group
+                size='mini'
+                vertical={!horizontalButtons}
+                style={{ marginTop: displayLabel ? `${margin}px` : undefined }}
+              >
                 <ArrayFieldItemButtonsTemplate {...buttonsProps} />
               </Button.Group>
             </Grid.Column>

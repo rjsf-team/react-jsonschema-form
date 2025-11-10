@@ -27,7 +27,7 @@ export default function ArrayFieldItemTemplate<
   F extends FormContextType = any,
 >(props: ArrayFieldItemTemplateProps<T, S, F>) {
   const classes = useStyles();
-  const { children, buttonsProps, hasToolbar, uiSchema, registry } = props;
+  const { children, buttonsProps, displayLabel, hasToolbar, uiSchema, registry } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(
     'ArrayFieldItemButtonsTemplate',
@@ -36,12 +36,12 @@ export default function ArrayFieldItemTemplate<
   );
 
   return (
-    <Flex vAlign='end'>
+    <Flex vAlign='start'>
       <Flex fill className={classes.arrayFieldItem}>
         {children}
       </Flex>
       {hasToolbar && (
-        <Flex style={{ marginLeft: '8px' }}>
+        <Flex style={{ marginLeft: '8px', marginTop: displayLabel ? '26px' : 0 }}>
           <ArrayFieldItemButtonsTemplate {...buttonsProps} />
         </Flex>
       )}

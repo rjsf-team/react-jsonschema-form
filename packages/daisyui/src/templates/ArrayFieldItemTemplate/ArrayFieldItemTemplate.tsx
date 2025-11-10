@@ -24,7 +24,7 @@ export default function ArrayFieldItemTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: ArrayFieldItemTemplateProps<T, S, F>) {
-  const { children, buttonsProps, hasToolbar, registry, uiSchema, index, totalItems } = props;
+  const { children, buttonsProps, displayLabel, hasToolbar, registry, uiSchema, index, totalItems } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(
     'ArrayFieldItemButtonsTemplate',
@@ -40,13 +40,14 @@ export default function ArrayFieldItemTemplate<
   const zIndex = index === undefined ? '' : 'z-' + (10 - Math.min(index, 9));
 
   return (
-    <fieldset className={`fieldset bg-base-100 border border-base-300 p-4 ${borderRadius} ${marginBottom} ${zIndex}`}>
+    <fieldset
+      className={`fieldset bg-base-100 border border-base-300 p-4 flex ${borderRadius} ${marginBottom} ${zIndex}`}
+    >
       {/* Main content area */}
       {children}
-
       {/* Action buttons */}
       {hasToolbar && (
-        <div className='flex justify-end mt-2'>
+        <div className={`flex justify-end ${displayLabel ? 'mt-5' : 'mt-1'}`}>
           <ArrayFieldItemButtonsTemplate {...buttonsProps} />
         </div>
       )}

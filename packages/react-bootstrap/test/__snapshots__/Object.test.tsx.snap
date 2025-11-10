@@ -540,7 +540,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                               class="mb-2  d-flex align-items-center row"
                             >
                               <div
-                                class="col-lg-9 col-9"
+                                class="col-lg-10 col-md-9 col-8"
                               >
                                 <div
                                   class="rjsf-field rjsf-field-string"
@@ -566,7 +566,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                                 </div>
                               </div>
                               <div
-                                class="py-4 col-lg-3 col-3"
+                                class="pt-4 mt-2 col-lg-2 col-md-3 col-4"
                               >
                                 <div
                                   class="d-flex flex-row"
@@ -641,7 +641,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                               class="mb-2  d-flex align-items-center row"
                             >
                               <div
-                                class="col-lg-9 col-9"
+                                class="col-lg-10 col-md-9 col-8"
                               >
                                 <div
                                   class="rjsf-field rjsf-field-string"
@@ -667,7 +667,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                                 </div>
                               </div>
                               <div
-                                class="py-4 col-lg-3 col-3"
+                                class="pt-4 mt-2 col-lg-2 col-md-3 col-4"
                               >
                                 <div
                                   class="d-flex flex-row"
@@ -744,10 +744,10 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                               class="mt-2 row"
                             >
                               <div
-                                class="col-9"
+                                class="col-lg-11 col-md-10 col-9"
                               />
                               <div
-                                class="py-4 col-lg-3 col-3 col-3"
+                                class="py-4 col-lg-1 col-md-2 col-3"
                               >
                                 <button
                                   class="ml-1 rjsf-array-item-add btn btn-primary"
@@ -1222,7 +1222,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                               class="mb-2  d-flex align-items-center row"
                             >
                               <div
-                                class="col-lg-9 col-9"
+                                class="col-lg-10 col-md-9 col-8"
                               >
                                 <div
                                   class="rjsf-field rjsf-field-string"
@@ -1248,7 +1248,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                                 </div>
                               </div>
                               <div
-                                class="py-4 col-lg-3 col-3"
+                                class="pt-4 mt-2 col-lg-2 col-md-3 col-4"
                               >
                                 <div
                                   class="d-flex flex-row"
@@ -1323,7 +1323,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                               class="mb-2  d-flex align-items-center row"
                             >
                               <div
-                                class="col-lg-9 col-9"
+                                class="col-lg-10 col-md-9 col-8"
                               >
                                 <div
                                   class="rjsf-field rjsf-field-string"
@@ -1349,7 +1349,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                                 </div>
                               </div>
                               <div
-                                class="py-4 col-lg-3 col-3"
+                                class="pt-4 mt-2 col-lg-2 col-md-3 col-4"
                               >
                                 <div
                                   class="d-flex flex-row"
@@ -1426,10 +1426,10 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                               class="mt-2 row"
                             >
                               <div
-                                class="col-9"
+                                class="col-lg-11 col-md-10 col-9"
                               />
                               <div
-                                class="py-4 col-lg-3 col-3 col-3"
+                                class="py-4 col-lg-1 col-md-2 col-3"
                               >
                                 <button
                                   class="ml-1 rjsf-array-item-add btn btn-primary"

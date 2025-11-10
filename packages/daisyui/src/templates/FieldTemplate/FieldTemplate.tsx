@@ -87,6 +87,7 @@ export default function FieldTemplate<
           </label>
         )}
         {children}
+        {displayLabel && description ? description : null}
         {errors}
         {help}
       </div>

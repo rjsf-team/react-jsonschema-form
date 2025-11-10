@@ -1953,7 +1953,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                                         for=":r2v:"
                                         id="field:::r2v:::label"
                                       >
-                                        tags-0
+                                        tags-1
                                         <span
                                           aria-hidden="true"
                                           class="chakra-field__requiredIndicator emotion-32"
@@ -2107,7 +2107,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                                         for=":r31:"
                                         id="field:::r31:::label"
                                       >
-                                        tags-1
+                                        tags-2
                                         <span
                                           aria-hidden="true"
                                           class="chakra-field__requiredIndicator emotion-32"
@@ -3785,7 +3785,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                                         for=":r3p:"
                                         id="field:::r3p:::label"
                                       >
-                                        items-0
+                                        items-1
                                         <span
                                           aria-hidden="true"
                                           class="chakra-field__requiredIndicator emotion-25"
@@ -3939,7 +3939,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                                         for=":r3r:"
                                         id="field:::r3r:::label"
                                       >
-                                        items-1
+                                        items-2
                                         <span
                                           aria-hidden="true"
                                           class="chakra-field__requiredIndicator emotion-25"

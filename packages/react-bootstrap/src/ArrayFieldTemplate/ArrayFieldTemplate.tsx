@@ -72,8 +72,8 @@ export default function ArrayFieldTemplate<
             {canAdd && (
               <Container className=''>
                 <Row className='mt-2'>
-                  <Col xs={9}></Col>
-                  <Col xs={3} className='py-4 col-lg-3 col-3'>
+                  <Col xs={9} md={10} lg={11}></Col>
+                  <Col xs={3} md={2} lg={1} className='py-4'>
                     <AddButton
                       id={buttonId(fieldPathId, 'add')}
                       className='rjsf-array-item-add'

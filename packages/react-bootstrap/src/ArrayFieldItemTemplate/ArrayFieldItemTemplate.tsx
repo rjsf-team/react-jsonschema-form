@@ -15,7 +15,7 @@ export default function ArrayFieldItemTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: ArrayFieldItemTemplateProps<T, S, F>) {
-  const { children, buttonsProps, hasToolbar, uiSchema, registry } = props;
+  const { children, buttonsProps, displayLabel, hasDescription, hasToolbar, uiSchema, registry } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(
     'ArrayFieldItemButtonsTemplate',
@@ -28,13 +28,14 @@ export default function ArrayFieldItemTemplate<
     paddingRight: 6,
     fontWeight: 'bold',
   };
+  const padding = hasDescription ? 'pb-1' : 'pt-4 mt-2';
   return (
     <div>
       <Row className='mb-2  d-flex align-items-center'>
-        <Col xs='9' lg='9'>
+        <Col xs='8' md='9' lg='10'>
           {children}
         </Col>
-        <Col xs='3' lg='3' className='py-4'>
+        <Col xs='4' md='3' lg='2' className={displayLabel ? padding : 'py-4'}>
           {hasToolbar && (
             <div className='d-flex flex-row'>
               <ArrayFieldItemButtonsTemplate {...buttonsProps} style={btnStyle} />

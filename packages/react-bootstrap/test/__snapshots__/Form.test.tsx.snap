@@ -51,7 +51,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                               class="mb-2  d-flex align-items-center row"
                             >
                               <div
-                                class="col-lg-9 col-9"
+                                class="col-lg-10 col-md-9 col-8"
                               >
                                 <div
                                   class="rjsf-field rjsf-field-object"
@@ -146,7 +146,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                 </div>
                               </div>
                               <div
-                                class="py-4 col-lg-3 col-3"
+                                class="py-4 col-lg-2 col-md-3 col-4"
                               >
                                 <div
                                   class="d-flex flex-row"
@@ -221,7 +221,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                               class="mb-2  d-flex align-items-center row"
                             >
                               <div
-                                class="col-lg-9 col-9"
+                                class="col-lg-10 col-md-9 col-8"
                               >
                                 <div
                                   class="rjsf-field rjsf-field-object"
@@ -317,7 +317,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                 </div>
                               </div>
                               <div
-                                class="py-4 col-lg-3 col-3"
+                                class="py-4 col-lg-2 col-md-3 col-4"
                               >
                                 <div
                                   class="d-flex flex-row"
@@ -394,10 +394,10 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                               class="mt-2 row"
                             >
                               <div
-                                class="col-9"
+                                class="col-lg-11 col-md-10 col-9"
                               />
                               <div
-                                class="py-4 col-lg-3 col-3 col-3"
+                                class="py-4 col-lg-1 col-md-2 col-3"
                               >
                                 <button
                                   class="ml-1 rjsf-array-item-add btn btn-primary"
@@ -504,7 +504,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                               class="mb-2  d-flex align-items-center row"
                             >
                               <div
-                                class="col-lg-9 col-9"
+                                class="col-lg-10 col-md-9 col-8"
                               >
                                 <div
                                   class="rjsf-field rjsf-field-string"
@@ -530,7 +530,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                                 </div>
                               </div>
                               <div
-                                class="py-4 col-lg-3 col-3"
+                                class="pt-4 mt-2 col-lg-2 col-md-3 col-4"
                               >
                                 <div
                                   class="d-flex flex-row"
@@ -605,7 +605,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                               class="mb-2  d-flex align-items-center row"
                             >
                               <div
-                                class="col-lg-9 col-9"
+                                class="col-lg-10 col-md-9 col-8"
                               >
                                 <div
                                   class="rjsf-field rjsf-field-string"
@@ -631,7 +631,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                                 </div>
                               </div>
                               <div
-                                class="py-4 col-lg-3 col-3"
+                                class="pt-4 mt-2 col-lg-2 col-md-3 col-4"
                               >
                                 <div
                                   class="d-flex flex-row"
@@ -708,10 +708,10 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                               class="mt-2 row"
                             >
                               <div
-                                class="col-9"
+                                class="col-lg-11 col-md-10 col-9"
                               />
                               <div
-                                class="py-4 col-lg-3 col-3 col-3"
+                                class="py-4 col-lg-1 col-md-2 col-3"
                               >
                                 <button
                                   class="ml-1 rjsf-array-item-add btn btn-primary"
@@ -1495,7 +1495,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                               class="mb-2  d-flex align-items-center row"
                             >
                               <div
-                                class="col-lg-9 col-9"
+                                class="col-lg-10 col-md-9 col-8"
                               >
                                 <div
                                   class="rjsf-field rjsf-field-object"
@@ -1590,7 +1590,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                 </div>
                               </div>
                               <div
-                                class="py-4 col-lg-3 col-3"
+                                class="py-4 col-lg-2 col-md-3 col-4"
                               >
                                 <div
                                   class="d-flex flex-row"
@@ -1665,7 +1665,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                               class="mb-2  d-flex align-items-center row"
                             >
                               <div
-                                class="col-lg-9 col-9"
+                                class="col-lg-10 col-md-9 col-8"
                               >
                                 <div
                                   class="rjsf-field rjsf-field-object"
@@ -1761,7 +1761,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                 </div>
                               </div>
                               <div
-                                class="py-4 col-lg-3 col-3"
+                                class="py-4 col-lg-2 col-md-3 col-4"
                               >
                                 <div
                                   class="d-flex flex-row"
@@ -1838,10 +1838,10 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                               class="mt-2 row"
                             >
                               <div
-                                class="col-9"
+                                class="col-lg-11 col-md-10 col-9"
                               />
                               <div
-                                class="py-4 col-lg-3 col-3 col-3"
+                                class="py-4 col-lg-1 col-md-2 col-3"
                               >
                                 <button
                                   class="ml-1 rjsf-array-item-add btn btn-primary"
@@ -1948,7 +1948,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                               class="mb-2  d-flex align-items-center row"
                             >
                               <div
-                                class="col-lg-9 col-9"
+                                class="col-lg-10 col-md-9 col-8"
                               >
                                 <div
                                   class="rjsf-field rjsf-field-string"
@@ -1974,7 +1974,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                                 </div>
                               </div>
                               <div
-                                class="py-4 col-lg-3 col-3"
+                                class="pt-4 mt-2 col-lg-2 col-md-3 col-4"
                               >
                                 <div
                                   class="d-flex flex-row"
@@ -2049,7 +2049,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                               class="mb-2  d-flex align-items-center row"
                             >
                               <div
-                                class="col-lg-9 col-9"
+                                class="col-lg-10 col-md-9 col-8"
                               >
                                 <div
                                   class="rjsf-field rjsf-field-string"
@@ -2075,7 +2075,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                                 </div>
                               </div>
                               <div
-                                class="py-4 col-lg-3 col-3"
+                                class="pt-4 mt-2 col-lg-2 col-md-3 col-4"
                               >
                                 <div
                                   class="d-flex flex-row"
@@ -2152,10 +2152,10 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                               class="mt-2 row"
                             >
                               <div
-                                class="col-9"
+                                class="col-lg-11 col-md-10 col-9"
                               />
                               <div
-                                class="py-4 col-lg-3 col-3 col-3"
+                                class="py-4 col-lg-1 col-md-2 col-3"
                               >
                                 <button
                                   class="ml-1 rjsf-array-item-add btn btn-primary"
@@ -4126,10 +4126,10 @@ exports[`single fields optional data controls does not show optional controls wh
                                         class="mt-2 row"
                                       >
                                         <div
-                                          class="col-9"
+                                          class="col-lg-11 col-md-10 col-9"
                                         />
                                         <div
-                                          class="py-4 col-lg-3 col-3 col-3"
+                                          class="py-4 col-lg-1 col-md-2 col-3"
                                         >
                                           <button
                                             class="ml-1 rjsf-array-item-add btn btn-primary"
@@ -4211,10 +4211,10 @@ exports[`single fields optional data controls does not show optional controls wh
                                         class="mt-2 row"
                                       >
                                         <div
-                                          class="col-9"
+                                          class="col-lg-11 col-md-10 col-9"
                                         />
                                         <div
-                                          class="py-4 col-lg-3 col-3 col-3"
+                                          class="py-4 col-lg-1 col-md-2 col-3"
                                         >
                                           <button
                                             class="ml-1 rjsf-array-item-add btn btn-primary"
@@ -4296,10 +4296,10 @@ exports[`single fields optional data controls does not show optional controls wh
                                         class="mt-2 row"
                                       >
                                         <div
-                                          class="col-9"
+                                          class="col-lg-11 col-md-10 col-9"
                                         />
                                         <div
-                                          class="py-4 col-lg-3 col-3 col-3"
+                                          class="py-4 col-lg-1 col-md-2 col-3"
                                         >
                                           <button
                                             class="ml-1 rjsf-array-item-add btn btn-primary"
@@ -4386,10 +4386,10 @@ exports[`single fields optional data controls does not show optional controls wh
                               class="mt-2 row"
                             >
                               <div
-                                class="col-9"
+                                class="col-lg-11 col-md-10 col-9"
                               />
                               <div
-                                class="py-4 col-lg-3 col-3 col-3"
+                                class="py-4 col-lg-1 col-md-2 col-3"
                               >
                                 <button
                                   class="ml-1 rjsf-array-item-add btn btn-primary"
@@ -4534,10 +4534,10 @@ exports[`single fields optional data controls does not show optional controls wh
                               class="mt-2 row"
                             >
                               <div
-                                class="col-9"
+                                class="col-lg-11 col-md-10 col-9"
                               />
                               <div
-                                class="py-4 col-lg-3 col-3 col-3"
+                                class="py-4 col-lg-1 col-md-2 col-3"
                               >
                                 <button
                                   class="ml-1 rjsf-array-item-add btn btn-primary"
@@ -4779,10 +4779,10 @@ exports[`single fields optional data controls does not show optional controls wh
                                       class="mt-2 row"
                                     >
                                       <div
-                                        class="col-9"
+                                        class="col-lg-11 col-md-10 col-9"
                                       />
                                       <div
-                                        class="py-4 col-lg-3 col-3 col-3"
+                                        class="py-4 col-lg-1 col-md-2 col-3"
                                       >
                                         <button
                                           class="ml-1 rjsf-array-item-add btn btn-primary"
@@ -5094,10 +5094,10 @@ exports[`single fields optional data controls does not show optional controls wh
                                         class="mt-2 row"
                                       >
                                         <div
-                                          class="col-9"
+                                          class="col-lg-11 col-md-10 col-9"
                                         />
                                         <div
-                                          class="py-4 col-lg-3 col-3 col-3"
+                                          class="py-4 col-lg-1 col-md-2 col-3"
                                         >
                                           <button
                                             class="ml-1 rjsf-array-item-add btn btn-primary"
@@ -5180,10 +5180,10 @@ exports[`single fields optional data controls does not show optional controls wh
                                         class="mt-2 row"
                                       >
                                         <div
-                                          class="col-9"
+                                          class="col-lg-11 col-md-10 col-9"
                                         />
                                         <div
-                                          class="py-4 col-lg-3 col-3 col-3"
+                                          class="py-4 col-lg-1 col-md-2 col-3"
                                         >
                                           <button
                                             class="ml-1 rjsf-array-item-add btn btn-primary"
@@ -5266,10 +5266,10 @@ exports[`single fields optional data controls does not show optional controls wh
                                         class="mt-2 row"
                                       >
                                         <div
-                                          class="col-9"
+                                          class="col-lg-11 col-md-10 col-9"
                                         />
                                         <div
-                                          class="py-4 col-lg-3 col-3 col-3"
+                                          class="py-4 col-lg-1 col-md-2 col-3"
                                         >
                                           <button
                                             class="ml-1 rjsf-array-item-add btn btn-primary"
@@ -5357,10 +5357,10 @@ exports[`single fields optional data controls does not show optional controls wh
                               class="mt-2 row"
                             >
                               <div
-                                class="col-9"
+                                class="col-lg-11 col-md-10 col-9"
                               />
                               <div
-                                class="py-4 col-lg-3 col-3 col-3"
+                                class="py-4 col-lg-1 col-md-2 col-3"
                               >
                                 <button
                                   class="ml-1 rjsf-array-item-add btn btn-primary"
@@ -5507,10 +5507,10 @@ exports[`single fields optional data controls does not show optional controls wh
                               class="mt-2 row"
                             >
                               <div
-                                class="col-9"
+                                class="col-lg-11 col-md-10 col-9"
                               />
                               <div
-                                class="py-4 col-lg-3 col-3 col-3"
+                                class="py-4 col-lg-1 col-md-2 col-3"
                               >
                                 <button
                                   class="ml-1 rjsf-array-item-add btn btn-primary"
@@ -5755,10 +5755,10 @@ exports[`single fields optional data controls does not show optional controls wh
                                       class="mt-2 row"
                                     >
                                       <div
-                                        class="col-9"
+                                        class="col-lg-11 col-md-10 col-9"
                                       />
                                       <div
-                                        class="py-4 col-lg-3 col-3 col-3"
+                                        class="py-4 col-lg-1 col-md-2 col-3"
                                       >
                                         <button
                                           class="ml-1 rjsf-array-item-add btn btn-primary"
@@ -6117,10 +6117,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                         class="mt-2 row"
                                       >
                                         <div
-                                          class="col-9"
+                                          class="col-lg-11 col-md-10 col-9"
                                         />
                                         <div
-                                          class="py-4 col-lg-3 col-3 col-3"
+                                          class="py-4 col-lg-1 col-md-2 col-3"
                                         >
                                           <button
                                             class="ml-1 rjsf-array-item-add btn btn-primary"
@@ -6287,10 +6287,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                         class="mt-2 row"
                                       >
                                         <div
-                                          class="col-9"
+                                          class="col-lg-11 col-md-10 col-9"
                                         />
                                         <div
-                                          class="py-4 col-lg-3 col-3 col-3"
+                                          class="py-4 col-lg-1 col-md-2 col-3"
                                         >
                                           <button
                                             class="ml-1 rjsf-array-item-add btn btn-primary"
@@ -6412,7 +6412,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                               class="mb-2  d-flex align-items-center row"
                             >
                               <div
-                                class="col-lg-9 col-9"
+                                class="col-lg-10 col-md-9 col-8"
                               >
                                 <div
                                   class="rjsf-field rjsf-field-string"
@@ -6438,7 +6438,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                 </div>
                               </div>
                               <div
-                                class="py-4 col-lg-3 col-3"
+                                class="pt-4 mt-2 col-lg-2 col-md-3 col-4"
                               >
                                 <div
                                   class="d-flex flex-row"
@@ -6474,10 +6474,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                               class="mt-2 row"
                             >
                               <div
-                                class="col-9"
+                                class="col-lg-11 col-md-10 col-9"
                               />
                               <div
-                                class="py-4 col-lg-3 col-3 col-3"
+                                class="py-4 col-lg-1 col-md-2 col-3"
                               >
                                 <button
                                   class="ml-1 rjsf-array-item-add btn btn-primary"
@@ -6622,10 +6622,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                               class="mt-2 row"
                             >
                               <div
-                                class="col-9"
+                                class="col-lg-11 col-md-10 col-9"
                               />
                               <div
-                                class="py-4 col-lg-3 col-3 col-3"
+                                class="py-4 col-lg-1 col-md-2 col-3"
                               >
                                 <button
                                   class="ml-1 rjsf-array-item-add btn btn-primary"
@@ -7102,10 +7102,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                         class="mt-2 row"
                                       >
                                         <div
-                                          class="col-9"
+                                          class="col-lg-11 col-md-10 col-9"
                                         />
                                         <div
-                                          class="py-4 col-lg-3 col-3 col-3"
+                                          class="py-4 col-lg-1 col-md-2 col-3"
                                         >
                                           <button
                                             class="ml-1 rjsf-array-item-add btn btn-primary"
@@ -7235,10 +7235,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                         class="mt-2 row"
                                       >
                                         <div
-                                          class="col-9"
+                                          class="col-lg-11 col-md-10 col-9"
                                         />
                                         <div
-                                          class="py-4 col-lg-3 col-3 col-3"
+                                          class="py-4 col-lg-1 col-md-2 col-3"
                                         >
                                           <button
                                             class="ml-1 rjsf-array-item-add btn btn-primary"
@@ -7324,7 +7324,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                               class="mb-2  d-flex align-items-center row"
                             >
                               <div
-                                class="col-lg-9 col-9"
+                                class="col-lg-10 col-md-9 col-8"
                               >
                                 <div
                                   class="rjsf-field rjsf-field-string"
@@ -7351,7 +7351,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                 </div>
                               </div>
                               <div
-                                class="py-4 col-lg-3 col-3"
+                                class="pt-4 mt-2 col-lg-2 col-md-3 col-4"
                               >
                                 <div
                                   class="d-flex flex-row"
@@ -7388,10 +7388,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                               class="mt-2 row"
                             >
                               <div
-                                class="col-9"
+                                class="col-lg-11 col-md-10 col-9"
                               />
                               <div
-                                class="py-4 col-lg-3 col-3 col-3"
+                                class="py-4 col-lg-1 col-md-2 col-3"
                               >
                                 <button
                                   class="ml-1 rjsf-array-item-add btn btn-primary"
@@ -7538,10 +7538,10 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                               class="mt-2 row"
                             >
                               <div
-                                class="col-9"
+                                class="col-lg-11 col-md-10 col-9"
                               />
                               <div
-                                class="py-4 col-lg-3 col-3 col-3"
+                                class="py-4 col-lg-1 col-md-2 col-3"
                               >
                                 <button
                                   class="ml-1 rjsf-array-item-add btn btn-primary"
@@ -8006,10 +8006,10 @@ exports[`single fields optional data controls shows "add" optional controls when
                               class="mt-2 row"
                             >
                               <div
-                                class="col-9"
+                                class="col-lg-11 col-md-10 col-9"
                               />
                               <div
-                                class="py-4 col-lg-3 col-3 col-3"
+                                class="py-4 col-lg-1 col-md-2 col-3"
                               >
                                 <button
                                   class="ml-1 rjsf-array-item-add btn btn-primary"
@@ -8474,10 +8474,10 @@ exports[`single fields optional data controls shows "add" optional controls when
                               class="mt-2 row"
                             >
                               <div
-                                class="col-9"
+                                class="col-lg-11 col-md-10 col-9"
                               />
                               <div
-                                class="py-4 col-lg-3 col-3 col-3"
+                                class="py-4 col-lg-1 col-md-2 col-3"
                               >
                                 <button
                                   class="ml-1 rjsf-array-item-add btn btn-primary"

@@ -370,7 +370,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                               <label
                                 for="root_tags_0"
                               >
-                                tags-0
+                                tags-1
                               </label>
                               <div
                                 class="ui fluid input"
@@ -394,6 +394,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                       >
                         <div
                           class="ui mini buttons"
+                          style="margin-top: 24px;"
                         >
                           <button
                             class="ui icon disabled button rjsf-array-item-move-up"
@@ -453,7 +454,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                               <label
                                 for="root_tags_1"
                               >
-                                tags-1
+                                tags-2
                               </label>
                               <div
                                 class="ui fluid input"
@@ -477,6 +478,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                       >
                         <div
                           class="ui mini buttons"
+                          style="margin-top: 24px;"
                         >
                           <button
                             class="ui icon button rjsf-array-item-move-up"
@@ -1560,7 +1562,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                               <label
                                 for="root_tags_0"
                               >
-                                tags-0
+                                tags-1
                               </label>
                               <div
                                 class="ui fluid input"
@@ -1584,6 +1586,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                       >
                         <div
                           class="ui mini buttons"
+                          style="margin-top: 24px;"
                         >
                           <button
                             class="ui icon disabled button rjsf-array-item-move-up"
@@ -1643,7 +1646,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                               <label
                                 for="root_tags_1"
                               >
-                                tags-1
+                                tags-2
                               </label>
                               <div
                                 class="ui fluid input"
@@ -1667,6 +1670,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                       >
                         <div
                           class="ui mini buttons"
+                          style="margin-top: 24px;"
                         >
                           <button
                             class="ui icon button rjsf-array-item-move-up"
@@ -5219,7 +5223,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                               <label
                                 for="root_nestedArrayOptional_0"
                               >
-                                nestedArrayOptional-0
+                                nestedArrayOptional-1
                               </label>
                               <div
                                 class="ui fluid input"
@@ -5243,6 +5247,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                       >
                         <div
                           class="ui mini buttons"
+                          style="margin-top: 24px;"
                         >
                           <button
                             class="ui icon button rjsf-array-item-remove"
@@ -5750,7 +5755,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                               <label
                                 for="root_nestedArrayOptional_0"
                               >
-                                nestedArrayOptional-0
+                                nestedArrayOptional-1
                               </label>
                               <div
                                 class="ui disabled fluid input"
@@ -5776,6 +5781,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                       >
                         <div
                           class="ui mini buttons"
+                          style="margin-top: 24px;"
                         >
                           <button
                             class="ui icon disabled button rjsf-array-item-remove"

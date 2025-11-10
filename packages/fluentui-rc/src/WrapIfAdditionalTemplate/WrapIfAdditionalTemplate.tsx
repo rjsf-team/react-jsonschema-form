@@ -15,10 +15,15 @@ const useStyles = makeStyles({
   input: {
     width: '100%',
   },
+  grow: {
+    flexGrow: 1,
+  },
   label: {
     marginBottom: '4px',
   },
 });
+
+const containerTypes = ['object', 'array'];
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.
@@ -59,8 +64,11 @@ export default function WrapIfAdditionalTemplate<
   };
 
   if (!additional) {
+    const { type } = schema;
+    // Flex grow only non container classes
+    const className = containerTypes.includes(type as string) ? classNames : `${classes.grow} ${classNames}`;
     return (
-      <div className={classNames} style={style}>
+      <div className={className} style={style}>
         {children}
       </div>
     );

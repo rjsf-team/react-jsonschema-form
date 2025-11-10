@@ -16,7 +16,7 @@ export default function ArrayFieldItemTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: ArrayFieldItemTemplateProps<T, S, F>) {
-  const { children, buttonsProps, hasToolbar, uiSchema, registry } = props;
+  const { children, buttonsProps, displayLabel, hasToolbar, uiSchema, registry } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(
     'ArrayFieldItemButtonsTemplate',
@@ -26,7 +26,7 @@ export default function ArrayFieldItemTemplate<
   return (
     <div style={{ position: 'relative' }}>
       {hasToolbar && (
-        <div style={{ position: 'absolute', right: 0, top: '-10px' }}>
+        <div style={{ position: 'absolute', right: 0, top: displayLabel ? '24px' : 0 }}>
           {hasToolbar && (
             <div style={{ flexDirection: 'row' }}>
               <ArrayFieldItemButtonsTemplate {...buttonsProps} />

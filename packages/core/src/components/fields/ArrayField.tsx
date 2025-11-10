@@ -406,7 +406,9 @@ function ArrayFieldItem<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
     handleReorderItems,
   } = props;
   const {
+    schemaUtils,
     fields: { ArraySchemaField, SchemaField },
+    globalUiOptions,
   } = registry;
   const fieldPathId = useDeepCompareMemo<FieldPathId>(itemFieldPathId);
   const ItemSchemaField = ArraySchemaField || SchemaField;
@@ -415,6 +417,9 @@ function ArrayFieldItem<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
     registry,
     uiOptions,
   );
+  const displayLabel = schemaUtils.getDisplayLabel(itemSchema, itemUiSchema, globalUiOptions);
+  const { description } = getUiOptions(itemUiSchema);
+  const hasDescription = !!description || !!itemSchema.description;
   const { orderable = true, removable = true, copyable = false } = uiOptions;
   const has: { [key: string]: boolean } = {
     moveUp: orderable && canMoveUp,
@@ -510,6 +515,8 @@ function ArrayFieldItem<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
     schema: itemSchema,
     uiSchema: itemUiSchema,
     parentUiSchema,
+    displayLabel,
+    hasDescription,
   };
   return <ArrayFieldItemTemplate {...templateProps} />;
 }

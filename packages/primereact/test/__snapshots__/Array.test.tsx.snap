@@ -124,7 +124,7 @@ exports[`array fields array icons 1`] = `
                     style="position: relative;"
                   >
                     <div
-                      style="position: absolute; right: 0px; top: -10px;"
+                      style="position: absolute; right: 0px; top: 24px;"
                     >
                       <div
                         style="flex-direction: row;"
@@ -229,7 +229,7 @@ exports[`array fields array icons 1`] = `
                     style="position: relative;"
                   >
                     <div
-                      style="position: absolute; right: 0px; top: -10px;"
+                      style="position: absolute; right: 0px; top: 24px;"
                     >
                       <div
                         style="flex-direction: row;"
@@ -817,7 +817,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                     style="position: relative;"
                   >
                     <div
-                      style="position: absolute; right: 0px; top: -10px;"
+                      style="position: absolute; right: 0px; top: 0px;"
                     >
                       <div
                         style="flex-direction: row;"
@@ -941,7 +941,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                     style="position: relative;"
                   >
                     <div
-                      style="position: absolute; right: 0px; top: -10px;"
+                      style="position: absolute; right: 0px; top: 0px;"
                     >
                       <div
                         style="flex-direction: row;"
@@ -1149,7 +1149,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                     style="position: relative;"
                   >
                     <div
-                      style="position: absolute; right: 0px; top: -10px;"
+                      style="position: absolute; right: 0px; top: 24px;"
                     >
                       <div
                         style="flex-direction: row;"
@@ -1236,7 +1236,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                     style="position: relative;"
                   >
                     <div
-                      style="position: absolute; right: 0px; top: -10px;"
+                      style="position: absolute; right: 0px; top: 24px;"
                     >
                       <div
                         style="flex-direction: row;"
@@ -1615,7 +1615,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                     style="position: relative;"
                   >
                     <div
-                      style="position: absolute; right: 0px; top: -10px;"
+                      style="position: absolute; right: 0px; top: 0px;"
                     >
                       <div
                         style="flex-direction: row;"
@@ -1713,7 +1713,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                     style="position: relative;"
                                   >
                                     <div
-                                      style="position: absolute; right: 0px; top: -10px;"
+                                      style="position: absolute; right: 0px; top: 24px;"
                                     >
                                       <div
                                         style="flex-direction: row;"
@@ -1800,7 +1800,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                     style="position: relative;"
                                   >
                                     <div
-                                      style="position: absolute; right: 0px; top: -10px;"
+                                      style="position: absolute; right: 0px; top: 24px;"
                                     >
                                       <div
                                         style="flex-direction: row;"
@@ -1917,7 +1917,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                     style="position: relative;"
                   >
                     <div
-                      style="position: absolute; right: 0px; top: -10px;"
+                      style="position: absolute; right: 0px; top: 0px;"
                     >
                       <div
                         style="flex-direction: row;"
@@ -2015,7 +2015,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                     style="position: relative;"
                                   >
                                     <div
-                                      style="position: absolute; right: 0px; top: -10px;"
+                                      style="position: absolute; right: 0px; top: 24px;"
                                     >
                                       <div
                                         style="flex-direction: row;"
@@ -2102,7 +2102,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                     style="position: relative;"
                                   >
                                     <div
-                                      style="position: absolute; right: 0px; top: -10px;"
+                                      style="position: absolute; right: 0px; top: 24px;"
                                     >
                                       <div
                                         style="flex-direction: row;"
@@ -2303,7 +2303,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                     style="position: relative;"
                   >
                     <div
-                      style="position: absolute; right: 0px; top: -10px;"
+                      style="position: absolute; right: 0px; top: 0px;"
                     >
                       <div
                         style="flex-direction: row;"
@@ -2427,7 +2427,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                     style="position: relative;"
                   >
                     <div
-                      style="position: absolute; right: 0px; top: -10px;"
+                      style="position: absolute; right: 0px; top: 0px;"
                     >
                       <div
                         style="flex-direction: row;"
@@ -2635,7 +2635,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                     style="position: relative;"
                   >
                     <div
-                      style="position: absolute; right: 0px; top: -10px;"
+                      style="position: absolute; right: 0px; top: 24px;"
                     >
                       <div
                         style="flex-direction: row;"
@@ -2722,7 +2722,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                     style="position: relative;"
                   >
                     <div
-                      style="position: absolute; right: 0px; top: -10px;"
+                      style="position: absolute; right: 0px; top: 24px;"
                     >
                       <div
                         style="flex-direction: row;"
@@ -2986,7 +2986,7 @@ exports[`with title and description array icons 1`] = `
                     style="position: relative;"
                   >
                     <div
-                      style="position: absolute; right: 0px; top: -10px;"
+                      style="position: absolute; right: 0px; top: 24px;"
                     >
                       <div
                         style="flex-direction: row;"
@@ -3103,7 +3103,7 @@ exports[`with title and description array icons 1`] = `
                     style="position: relative;"
                   >
                     <div
-                      style="position: absolute; right: 0px; top: -10px;"
+                      style="position: absolute; right: 0px; top: 24px;"
                     >
                       <div
                         style="flex-direction: row;"
@@ -3590,7 +3590,7 @@ exports[`with title and description from both array icons 1`] = `
                     style="position: relative;"
                   >
                     <div
-                      style="position: absolute; right: 0px; top: -10px;"
+                      style="position: absolute; right: 0px; top: 24px;"
                     >
                       <div
                         style="flex-direction: row;"
@@ -3707,7 +3707,7 @@ exports[`with title and description from both array icons 1`] = `
                     style="position: relative;"
                   >
                     <div
-                      style="position: absolute; right: 0px; top: -10px;"
+                      style="position: absolute; right: 0px; top: 24px;"
                     >
                       <div
                         style="flex-direction: row;"
@@ -4194,7 +4194,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     style="position: relative;"
                   >
                     <div
-                      style="position: absolute; right: 0px; top: -10px;"
+                      style="position: absolute; right: 0px; top: 24px;"
                     >
                       <div
                         style="flex-direction: row;"
@@ -4311,7 +4311,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     style="position: relative;"
                   >
                     <div
-                      style="position: absolute; right: 0px; top: -10px;"
+                      style="position: absolute; right: 0px; top: 24px;"
                     >
                       <div
                         style="flex-direction: row;"
@@ -4788,7 +4788,7 @@ exports[`with title and description with global label off array icons 1`] = `
                     style="position: relative;"
                   >
                     <div
-                      style="position: absolute; right: 0px; top: -10px;"
+                      style="position: absolute; right: 0px; top: 0px;"
                     >
                       <div
                         style="flex-direction: row;"
@@ -4893,7 +4893,7 @@ exports[`with title and description with global label off array icons 1`] = `
                     style="position: relative;"
                   >
                     <div
-                      style="position: absolute; right: 0px; top: -10px;"
+                      style="position: absolute; right: 0px; top: 0px;"
                     >
                       <div
                         style="flex-direction: row;"

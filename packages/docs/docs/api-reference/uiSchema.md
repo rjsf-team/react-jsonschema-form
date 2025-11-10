@@ -244,6 +244,43 @@ const uiSchema: UiSchema = {
 render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
+### enableMarkdownInHelp
+
+The `ui:enableMarkdownInHelp` uiSchema directive enables the support of Markdown syntax within the help displayed for
+a field.
+
+```tsx
+import { Form } from '@rjsf/core';
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = { type: 'string' };
+const uiSchema: UiSchema = {
+  'ui:enableMarkdownInHelp': true,
+  'ui:help': '**bolded** text in the help',
+};
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+```
+
+It can also be enabled globally by setting the `enableMarkdownInHelp` option to `true` in the `ui:globalOptions`
+uiSchema directive.
+
+```tsx
+import { Form } from '@rjsf/core';
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = { type: 'string' };
+const uiSchema: UiSchema = {
+  'ui:globalOptions': {
+    enableMarkdownInHelp: true,
+  },
+  'ui:help': '**bolded** text in the help',
+};
+
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+```
+
 ### enableOptionalDataFieldForType
 
 The `ui:enableOptionalDataFieldForType` uiSchema directive enables support for displaying the `Optional Data Controls` feature.

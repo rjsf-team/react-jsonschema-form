@@ -6,7 +6,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -22,7 +22,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="12"
             >
               <div
-                class="rjsf-field rjsf-field-object"
+                class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -59,7 +59,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="4"
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -95,7 +95,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     </label>
                     <input
                       aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_person_name_first"
                       name="root_person_name_first"
                       placeholder=""
@@ -119,7 +119,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="4"
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -150,7 +150,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     </label>
                     <input
                       aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_person_name_middle"
                       name="root_person_name_middle"
                       placeholder=""
@@ -173,7 +173,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="4"
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -209,7 +209,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     </label>
                     <input
                       aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_person_name_last"
                       name="root_person_name_last"
                       placeholder=""
@@ -237,7 +237,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="4"
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -308,7 +308,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="8"
             >
               <div
-                class="rjsf-field rjsf-field-array"
+                class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -422,6 +422,16 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     </div>
                   </div>
                   <div
+                    class="description-field my-4"
+                    id="root_person_race__description"
+                  >
+                    <div
+                      class="text-sm text-base-content/80"
+                    >
+                      (Check all that apply)
+                    </div>
+                  </div>
+                  <div
                     class="rjsf-field-error-template text-red-600"
                   >
                     <ul
@@ -440,7 +450,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="12"
             >
               <div
-                class="rjsf-field rjsf-field-object"
+                class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -453,7 +463,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       xs="12"
                     >
                       <div
-                        class="rjsf-field rjsf-field-string"
+                        class="flex-grow rjsf-field rjsf-field-string"
                       >
                         <div
                           class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -489,7 +499,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <input
                               aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
-                              class="input input-bordered"
+                              class="input input-bordered w-full"
                               id="root_person_address_line_1"
                               name="root_person_address_line_1"
                               placeholder=""
@@ -513,7 +523,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       xs="12"
                     >
                       <div
-                        class="rjsf-field rjsf-field-string"
+                        class="flex-grow rjsf-field rjsf-field-string"
                       >
                         <div
                           class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -544,7 +554,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <input
                               aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
-                              class="input input-bordered"
+                              class="input input-bordered w-full"
                               id="root_person_address_line_2"
                               name="root_person_address_line_2"
                               placeholder=""
@@ -567,7 +577,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       xs="12"
                     >
                       <div
-                        class="rjsf-field rjsf-field-string"
+                        class="flex-grow rjsf-field rjsf-field-string"
                       >
                         <div
                           class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -603,7 +613,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <input
                               aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
-                              class="input input-bordered"
+                              class="input input-bordered w-full"
                               id="root_person_address_city"
                               name="root_person_address_city"
                               placeholder=""
@@ -630,7 +640,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         xs="6"
                       >
                         <div
-                          class="rjsf-field rjsf-field-string"
+                          class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
                             class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -1475,7 +1485,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         xs="6"
                       >
                         <div
-                          class="rjsf-field rjsf-field-string"
+                          class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
                             class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -1511,7 +1521,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               </label>
                               <input
                                 aria-describedby="root_person_address_postal_code__error root_person_address_postal_code__description root_person_address_postal_code__help"
-                                class="input input-bordered"
+                                class="input input-bordered w-full"
                                 id="root_person_address_postal_code"
                                 name="root_person_address_postal_code"
                                 placeholder=""
@@ -1551,7 +1561,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
               style="margin-top: 20px;"
               xs="12"
             >
-              <div>
+              <div
+                class="flex-grow undefined"
+              >
                 <div
                   class="field-template mb-3 "
                 >
@@ -1647,7 +1659,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -1663,7 +1675,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="12"
             >
               <div
-                class="rjsf-field rjsf-field-object"
+                class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -1700,7 +1712,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="4"
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -1736,7 +1748,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     </label>
                     <input
                       aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_person_name_first"
                       name="root_person_name_first"
                       placeholder=""
@@ -1760,7 +1772,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="4"
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -1791,7 +1803,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     </label>
                     <input
                       aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_person_name_middle"
                       name="root_person_name_middle"
                       placeholder=""
@@ -1814,7 +1826,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="4"
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -1850,7 +1862,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     </label>
                     <input
                       aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_person_name_last"
                       name="root_person_name_last"
                       placeholder=""
@@ -1878,7 +1890,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="4"
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -1949,7 +1961,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="8"
             >
               <div
-                class="rjsf-field rjsf-field-array"
+                class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -2063,6 +2075,16 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     </div>
                   </div>
                   <div
+                    class="description-field my-4"
+                    id="root_person_race__description"
+                  >
+                    <div
+                      class="text-sm text-base-content/80"
+                    >
+                      (Check all that apply)
+                    </div>
+                  </div>
+                  <div
                     class="rjsf-field-error-template text-red-600"
                   >
                     <ul
@@ -2081,7 +2103,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="12"
             >
               <div
-                class="rjsf-field rjsf-field-object"
+                class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -2094,7 +2116,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       xs="12"
                     >
                       <div
-                        class="rjsf-field rjsf-field-string"
+                        class="flex-grow rjsf-field rjsf-field-string"
                       >
                         <div
                           class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -2130,7 +2152,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <input
                               aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
-                              class="input input-bordered"
+                              class="input input-bordered w-full"
                               id="root_person_address_line_1"
                               name="root_person_address_line_1"
                               placeholder=""
@@ -2154,7 +2176,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       xs="12"
                     >
                       <div
-                        class="rjsf-field rjsf-field-string"
+                        class="flex-grow rjsf-field rjsf-field-string"
                       >
                         <div
                           class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -2185,7 +2207,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <input
                               aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
-                              class="input input-bordered"
+                              class="input input-bordered w-full"
                               id="root_person_address_line_2"
                               name="root_person_address_line_2"
                               placeholder=""
@@ -2208,7 +2230,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       xs="12"
                     >
                       <div
-                        class="rjsf-field rjsf-field-string"
+                        class="flex-grow rjsf-field rjsf-field-string"
                       >
                         <div
                           class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -2244,7 +2266,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <input
                               aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
-                              class="input input-bordered"
+                              class="input input-bordered w-full"
                               id="root_person_address_city"
                               name="root_person_address_city"
                               placeholder=""
@@ -2271,7 +2293,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         xs="6"
                       >
                         <div
-                          class="rjsf-field rjsf-field-string"
+                          class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
                             class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -3116,7 +3138,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         xs="6"
                       >
                         <div
-                          class="rjsf-field rjsf-field-string"
+                          class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
                             class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -3152,7 +3174,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               </label>
                               <input
                                 aria-describedby="root_person_address_postal_code__error root_person_address_postal_code__description root_person_address_postal_code__help"
-                                class="input input-bordered"
+                                class="input input-bordered w-full"
                                 id="root_person_address_postal_code"
                                 name="root_person_address_postal_code"
                                 placeholder=""
@@ -3192,7 +3214,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
               style="margin-top: 20px;"
               xs="12"
             >
-              <div>
+              <div
+                class="flex-grow undefined"
+              >
                 <div
                   class="field-template mb-3 "
                 >
@@ -3288,7 +3312,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -3304,7 +3328,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="12"
             >
               <div
-                class="rjsf-field rjsf-field-object"
+                class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -3341,7 +3365,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="4"
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -3377,7 +3401,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     </label>
                     <input
                       aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_person_name_first"
                       name="root_person_name_first"
                       placeholder=""
@@ -3401,7 +3425,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="4"
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -3432,7 +3456,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     </label>
                     <input
                       aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_person_name_middle"
                       name="root_person_name_middle"
                       placeholder=""
@@ -3455,7 +3479,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="4"
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -3491,7 +3515,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     </label>
                     <input
                       aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_person_name_last"
                       name="root_person_name_last"
                       placeholder=""
@@ -3519,7 +3543,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="4"
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -3590,7 +3614,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="8"
             >
               <div
-                class="rjsf-field rjsf-field-array"
+                class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -3704,6 +3728,16 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     </div>
                   </div>
                   <div
+                    class="description-field my-4"
+                    id="root_person_race__description"
+                  >
+                    <div
+                      class="text-sm text-base-content/80"
+                    >
+                      (Check all that apply)
+                    </div>
+                  </div>
+                  <div
                     class="rjsf-field-error-template text-red-600"
                   >
                     <ul
@@ -3722,7 +3756,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="12"
             >
               <div
-                class="rjsf-field rjsf-field-object"
+                class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -3735,7 +3769,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       xs="12"
                     >
                       <div
-                        class="rjsf-field rjsf-field-string"
+                        class="flex-grow rjsf-field rjsf-field-string"
                       >
                         <div
                           class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -3771,7 +3805,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <input
                               aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
-                              class="input input-bordered"
+                              class="input input-bordered w-full"
                               id="root_person_address_line_1"
                               name="root_person_address_line_1"
                               placeholder=""
@@ -3795,7 +3829,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       xs="12"
                     >
                       <div
-                        class="rjsf-field rjsf-field-string"
+                        class="flex-grow rjsf-field rjsf-field-string"
                       >
                         <div
                           class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -3826,7 +3860,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <input
                               aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
-                              class="input input-bordered"
+                              class="input input-bordered w-full"
                               id="root_person_address_line_2"
                               name="root_person_address_line_2"
                               placeholder=""
@@ -3849,7 +3883,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       xs="12"
                     >
                       <div
-                        class="rjsf-field rjsf-field-string"
+                        class="flex-grow rjsf-field rjsf-field-string"
                       >
                         <div
                           class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -3885,7 +3919,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <input
                               aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
-                              class="input input-bordered"
+                              class="input input-bordered w-full"
                               id="root_person_address_city"
                               name="root_person_address_city"
                               placeholder=""
@@ -3912,7 +3946,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         xs="6"
                       >
                         <div
-                          class="rjsf-field rjsf-field-string"
+                          class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
                             class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -4757,7 +4791,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         xs="6"
                       >
                         <div
-                          class="rjsf-field rjsf-field-string"
+                          class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
                             class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -4793,7 +4827,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               </label>
                               <input
                                 aria-describedby="root_person_address_postal_code__error root_person_address_postal_code__description root_person_address_postal_code__help"
-                                class="input input-bordered"
+                                class="input input-bordered w-full"
                                 id="root_person_address_postal_code"
                                 name="root_person_address_postal_code"
                                 placeholder=""
@@ -4833,7 +4867,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
               style="margin-top: 20px;"
               xs="12"
             >
-              <div>
+              <div
+                class="flex-grow undefined"
+              >
                 <div
                   class="field-template mb-3 "
                 >
@@ -4929,7 +4965,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -4945,7 +4981,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="12"
             >
               <div
-                class="rjsf-field rjsf-field-object"
+                class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -4982,7 +5018,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="4"
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -5018,7 +5054,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     </label>
                     <input
                       aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_person_name_first"
                       name="root_person_name_first"
                       placeholder=""
@@ -5042,7 +5078,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="4"
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -5073,7 +5109,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     </label>
                     <input
                       aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_person_name_middle"
                       name="root_person_name_middle"
                       placeholder=""
@@ -5096,7 +5132,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="4"
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -5132,7 +5168,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     </label>
                     <input
                       aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_person_name_last"
                       name="root_person_name_last"
                       placeholder=""
@@ -5160,7 +5196,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="4"
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -5231,7 +5267,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="8"
             >
               <div
-                class="rjsf-field rjsf-field-array"
+                class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -5345,6 +5381,16 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     </div>
                   </div>
                   <div
+                    class="description-field my-4"
+                    id="root_person_race__description"
+                  >
+                    <div
+                      class="text-sm text-base-content/80"
+                    >
+                      (Check all that apply)
+                    </div>
+                  </div>
+                  <div
                     class="rjsf-field-error-template text-red-600"
                   >
                     <ul
@@ -5363,7 +5409,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               xs="12"
             >
               <div
-                class="rjsf-field rjsf-field-object"
+                class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -5376,7 +5422,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       xs="12"
                     >
                       <div
-                        class="rjsf-field rjsf-field-string"
+                        class="flex-grow rjsf-field rjsf-field-string"
                       >
                         <div
                           class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -5412,7 +5458,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <input
                               aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
-                              class="input input-bordered"
+                              class="input input-bordered w-full"
                               id="root_person_address_line_1"
                               name="root_person_address_line_1"
                               placeholder=""
@@ -5436,7 +5482,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       xs="12"
                     >
                       <div
-                        class="rjsf-field rjsf-field-string"
+                        class="flex-grow rjsf-field rjsf-field-string"
                       >
                         <div
                           class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -5467,7 +5513,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <input
                               aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
-                              class="input input-bordered"
+                              class="input input-bordered w-full"
                               id="root_person_address_line_2"
                               name="root_person_address_line_2"
                               placeholder=""
@@ -5490,7 +5536,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       xs="12"
                     >
                       <div
-                        class="rjsf-field rjsf-field-string"
+                        class="flex-grow rjsf-field rjsf-field-string"
                       >
                         <div
                           class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -5526,7 +5572,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <input
                               aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
-                              class="input input-bordered"
+                              class="input input-bordered w-full"
                               id="root_person_address_city"
                               name="root_person_address_city"
                               placeholder=""
@@ -5553,7 +5599,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         xs="6"
                       >
                         <div
-                          class="rjsf-field rjsf-field-string"
+                          class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
                             class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -6398,7 +6444,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         xs="6"
                       >
                         <div
-                          class="rjsf-field rjsf-field-string"
+                          class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
                             class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -6434,7 +6480,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               </label>
                               <input
                                 aria-describedby="root_person_address_postal_code__error root_person_address_postal_code__description root_person_address_postal_code__help"
-                                class="input input-bordered"
+                                class="input input-bordered w-full"
                                 id="root_person_address_postal_code"
                                 name="root_person_address_postal_code"
                                 placeholder=""
@@ -6474,7 +6520,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
               style="margin-top: 20px;"
               xs="12"
             >
-              <div>
+              <div
+                class="flex-grow undefined"
+              >
                 <div
                   class="field-template mb-3 "
                 >
@@ -6570,7 +6618,7 @@ exports[`Three even column grid renders person and address in three columns, no 
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -6583,7 +6631,7 @@ exports[`Three even column grid renders person and address in three columns, no 
             xs="24"
           >
             <div
-              class="rjsf-field rjsf-field-object"
+              class="flex-grow rjsf-field rjsf-field-object"
             >
               <div
                 class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -6616,7 +6664,7 @@ exports[`Three even column grid renders person and address in three columns, no 
             xs="8"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="flex-grow rjsf-field rjsf-field-string"
             >
               <div
                 class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -6652,7 +6700,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                   </label>
                   <input
                     aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
-                    class="input input-bordered"
+                    class="input input-bordered w-full"
                     id="root_person_name_first"
                     name="root_person_name_first"
                     placeholder=""
@@ -6676,7 +6724,7 @@ exports[`Three even column grid renders person and address in three columns, no 
             xs="8"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="flex-grow rjsf-field rjsf-field-string"
             >
               <div
                 class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -6707,7 +6755,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                   </label>
                   <input
                     aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
-                    class="input input-bordered"
+                    class="input input-bordered w-full"
                     id="root_person_name_middle"
                     name="root_person_name_middle"
                     placeholder=""
@@ -6730,7 +6778,7 @@ exports[`Three even column grid renders person and address in three columns, no 
             xs="8"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="flex-grow rjsf-field rjsf-field-string"
             >
               <div
                 class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -6766,7 +6814,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                   </label>
                   <input
                     aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
-                    class="input input-bordered"
+                    class="input input-bordered w-full"
                     id="root_person_name_last"
                     name="root_person_name_last"
                     placeholder=""
@@ -6790,7 +6838,7 @@ exports[`Three even column grid renders person and address in three columns, no 
             xs="8"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="flex-grow rjsf-field rjsf-field-string"
             >
               <div
                 class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -6861,7 +6909,7 @@ exports[`Three even column grid renders person and address in three columns, no 
             xs="16"
           >
             <div
-              class="rjsf-field rjsf-field-array"
+              class="flex-grow rjsf-field rjsf-field-array"
             >
               <div
                 class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -6975,6 +7023,16 @@ exports[`Three even column grid renders person and address in three columns, no 
                   </div>
                 </div>
                 <div
+                  class="description-field my-4"
+                  id="root_person_race__description"
+                >
+                  <div
+                    class="text-sm text-base-content/80"
+                  >
+                    (Check all that apply)
+                  </div>
+                </div>
+                <div
                   class="rjsf-field-error-template text-red-600"
                 >
                   <ul
@@ -6989,7 +7047,7 @@ exports[`Three even column grid renders person and address in three columns, no 
             xs="12"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="flex-grow rjsf-field rjsf-field-string"
             >
               <div
                 class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -7025,7 +7083,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                   </label>
                   <input
                     aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
-                    class="input input-bordered"
+                    class="input input-bordered w-full"
                     id="root_person_address_line_1"
                     name="root_person_address_line_1"
                     placeholder=""
@@ -7049,7 +7107,7 @@ exports[`Three even column grid renders person and address in three columns, no 
             xs="12"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="flex-grow rjsf-field rjsf-field-string"
             >
               <div
                 class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -7080,7 +7138,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                   </label>
                   <input
                     aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
-                    class="input input-bordered"
+                    class="input input-bordered w-full"
                     id="root_person_address_line_2"
                     name="root_person_address_line_2"
                     placeholder=""
@@ -7103,7 +7161,7 @@ exports[`Three even column grid renders person and address in three columns, no 
             xs="8"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="flex-grow rjsf-field rjsf-field-string"
             >
               <div
                 class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -7139,7 +7197,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                   </label>
                   <input
                     aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
-                    class="input input-bordered"
+                    class="input input-bordered w-full"
                     id="root_person_address_city"
                     name="root_person_address_city"
                     placeholder=""
@@ -7163,7 +7221,7 @@ exports[`Three even column grid renders person and address in three columns, no 
             xs="8"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="flex-grow rjsf-field rjsf-field-string"
             >
               <div
                 class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -8035,7 +8093,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -8048,7 +8106,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
             xs="24"
           >
             <div
-              class="rjsf-field rjsf-field-object"
+              class="flex-grow rjsf-field rjsf-field-object"
             >
               <div
                 class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -8081,7 +8139,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
             xs="12"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="flex-grow rjsf-field rjsf-field-string"
             >
               <div
                 class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -8117,7 +8175,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   </label>
                   <input
                     aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
-                    class="input input-bordered"
+                    class="input input-bordered w-full"
                     id="root_person_name_first"
                     name="root_person_name_first"
                     placeholder=""
@@ -8141,7 +8199,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
             xs="12"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="flex-grow rjsf-field rjsf-field-string"
             >
               <div
                 class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -8172,7 +8230,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   </label>
                   <input
                     aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
-                    class="input input-bordered"
+                    class="input input-bordered w-full"
                     id="root_person_name_middle"
                     name="root_person_name_middle"
                     placeholder=""
@@ -8195,7 +8253,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
             xs="12"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="flex-grow rjsf-field rjsf-field-string"
             >
               <div
                 class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -8231,7 +8289,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   </label>
                   <input
                     aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
-                    class="input input-bordered"
+                    class="input input-bordered w-full"
                     id="root_person_name_first"
                     name="root_person_name_first"
                     placeholder=""
@@ -8255,7 +8313,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
             xs="12"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="flex-grow rjsf-field rjsf-field-string"
             >
               <div
                 class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -8326,7 +8384,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
             xs="24"
           >
             <div
-              class="rjsf-field rjsf-field-array"
+              class="flex-grow rjsf-field rjsf-field-array"
             >
               <div
                 class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -8440,6 +8498,16 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   </div>
                 </div>
                 <div
+                  class="description-field my-4"
+                  id="root_person_race__description"
+                >
+                  <div
+                    class="text-sm text-base-content/80"
+                  >
+                    (Check all that apply)
+                  </div>
+                </div>
+                <div
                   class="rjsf-field-error-template text-red-600"
                 >
                   <ul
@@ -8454,7 +8522,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
             xs="12"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="flex-grow rjsf-field rjsf-field-string"
             >
               <div
                 class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -8490,7 +8558,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   </label>
                   <input
                     aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
-                    class="input input-bordered"
+                    class="input input-bordered w-full"
                     id="root_person_address_line_1"
                     name="root_person_address_line_1"
                     placeholder=""
@@ -8514,7 +8582,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
             xs="12"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="flex-grow rjsf-field rjsf-field-string"
             >
               <div
                 class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -8545,7 +8613,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   </label>
                   <input
                     aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
-                    class="input input-bordered"
+                    class="input input-bordered w-full"
                     id="root_person_address_line_2"
                     name="root_person_address_line_2"
                     placeholder=""
@@ -8568,7 +8636,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
             xs="12"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="flex-grow rjsf-field rjsf-field-string"
             >
               <div
                 class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -8604,7 +8672,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   </label>
                   <input
                     aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
-                    class="input input-bordered"
+                    class="input input-bordered w-full"
                     id="root_person_address_city"
                     name="root_person_address_city"
                     placeholder=""
@@ -8628,7 +8696,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
             xs="12"
           >
             <div
-              class="rjsf-field rjsf-field-string"
+              class="flex-grow rjsf-field rjsf-field-string"
             >
               <div
                 class="field-template mb-3 rjsf-field rjsf-field-string"
