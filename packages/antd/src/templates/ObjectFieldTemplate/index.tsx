@@ -133,7 +133,7 @@ export default function ObjectFieldTemplate<
       {canExpand(schema, uiSchema, formData) && (
         <Col span={24}>
           <Row gutter={rowGutter} justify='end'>
-            <Col flex='192px'>
+            <Col flex='120px'>
               <AddButton
                 id={buttonId(fieldPathId, 'add')}
                 className='rjsf-object-property-expand'

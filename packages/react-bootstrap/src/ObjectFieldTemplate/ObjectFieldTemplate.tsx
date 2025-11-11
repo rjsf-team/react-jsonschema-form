@@ -77,7 +77,7 @@ export default function ObjectFieldTemplate<
         ))}
         {canExpand(schema, uiSchema, formData) ? (
           <Row>
-            <Col xs={{ offset: 9, span: 3 }} className='py-4'>
+            <Col xs={{ offset: 11, span: 1 }} className='py-0.5'>
               <AddButton
                 id={buttonId(fieldPathId, 'add')}
                 onClick={onAddProperty}

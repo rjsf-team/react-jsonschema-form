@@ -18,6 +18,18 @@ const useStyles = makeStyles({
   grow: {
     flexGrow: 1,
   },
+  halfWidth: {
+    width: '46%',
+  },
+  alignEnd: {
+    alignSelf: 'flex-end',
+    justifyContent: 'flex-end',
+  },
+  alignCenter: {
+    alignSelf: 'center',
+    marginTop: '-14px',
+    justifyContent: 'flex-end',
+  },
   label: {
     marginBottom: '4px',
   },
@@ -42,8 +54,10 @@ export default function WrapIfAdditionalTemplate<
     disabled,
     id,
     label,
+    displayLabel,
     onRemoveProperty,
     onKeyRenameBlur,
+    rawDescription,
     readonly,
     required,
     schema,
@@ -56,6 +70,7 @@ export default function WrapIfAdditionalTemplate<
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
+  const hasDescription = !!rawDescription;
   const btnStyle: CSSProperties = {
     flex: 1,
     paddingLeft: 6,
@@ -75,9 +90,9 @@ export default function WrapIfAdditionalTemplate<
   }
 
   return (
-    <Flex gap='gap.medium' vAlign='center' key={`${id}-key`} className={classNames} style={style}>
-      <div>
-        <Field label={keyLabel} required={required}>
+    <Flex gap='gap.medium' vAlign='start' key={`${id}-key`} className={classNames} style={style}>
+      <div className={classes.halfWidth}>
+        <Field label={displayLabel ? keyLabel : undefined} required={required}>
           <Input
             required={required}
             defaultValue={label}
@@ -92,8 +107,8 @@ export default function WrapIfAdditionalTemplate<
           />
         </Field>
       </div>
-      <div>{children}</div>
-      <div>
+      <div className={classes.halfWidth}>{children}</div>
+      <div className={hasDescription ? classes.alignCenter : classes.alignEnd}>
         <RemoveButton
           id={buttonId(id, 'remove')}
           iconType='default'

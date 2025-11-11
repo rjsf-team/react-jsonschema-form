@@ -78,14 +78,16 @@ export default function ObjectFieldTemplate<
           </div>
         ))}
         {canExpand(schema, uiSchema, formData) ? (
-          <AddButton
-            id={buttonId(fieldPathId, 'add')}
-            onClick={onAddProperty}
-            disabled={disabled || readonly}
-            className='rjsf-object-property-expand'
-            uiSchema={uiSchema}
-            registry={registry}
-          />
+          <div className='mt-2 flex justify-end'>
+            <AddButton
+              id={buttonId(fieldPathId, 'add')}
+              onClick={onAddProperty}
+              disabled={disabled || readonly}
+              className='rjsf-object-property-expand'
+              uiSchema={uiSchema}
+              registry={registry}
+            />
+          </div>
         ) : null}
       </div>
     </>

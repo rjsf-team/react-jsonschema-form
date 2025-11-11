@@ -9345,17 +9345,6 @@ exports[`with title and description with global label off checkboxes 1`] = `
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
         >
           <div
-            class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ac2jek"
-          >
-            <label
-              class=""
-              for="root"
-              title="Test field"
-            >
-              Test field
-            </label>
-          </div>
-          <div
             class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ac2jek"
           >
             <div

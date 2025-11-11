@@ -6824,12 +6824,6 @@ exports[`with title and description with global label off checkboxes 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        >
-          Test field
-        </label>
         <div
           class="p-0.5"
         >
@@ -6872,18 +6866,6 @@ exports[`with title and description with global label off checkboxes 1`] = `
             </div>
           </div>
         </div>
-        <span
-          class="text-xs font-medium text-muted-foreground"
-        >
-          <div>
-            <div
-              class="text-sm text-muted-foreground"
-              id="root__description"
-            >
-              a test description
-            </div>
-          </div>
-        </span>
       </div>
     </div>
     <div>

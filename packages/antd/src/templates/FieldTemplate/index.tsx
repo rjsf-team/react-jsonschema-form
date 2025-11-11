@@ -24,10 +24,7 @@ export default function FieldTemplate<
 >(props: FieldTemplateProps<T, S, F>) {
   const {
     children,
-    classNames,
-    style,
     description,
-    disabled,
     displayLabel,
     errors,
     help,
@@ -35,12 +32,8 @@ export default function FieldTemplate<
     hidden,
     id,
     label,
-    onKeyRename,
-    onKeyRenameBlur,
-    onRemoveProperty,
     rawErrors,
     rawDescription,
-    readonly,
     registry,
     required,
     schema,
@@ -82,21 +75,7 @@ export default function FieldTemplate<
   }
   const isCheckbox = uiOptions.widget === 'checkbox';
   return (
-    <WrapIfAdditionalTemplate
-      classNames={classNames}
-      style={style}
-      disabled={disabled}
-      id={id}
-      label={label}
-      onKeyRename={onKeyRename}
-      onKeyRenameBlur={onKeyRenameBlur}
-      onRemoveProperty={onRemoveProperty}
-      readonly={readonly}
-      required={required}
-      schema={schema}
-      uiSchema={uiSchema}
-      registry={registry}
-    >
+    <WrapIfAdditionalTemplate {...props}>
       <Form.Item
         colon={colon}
         hasFeedback={schema.type !== 'array' && schema.type !== 'object'}

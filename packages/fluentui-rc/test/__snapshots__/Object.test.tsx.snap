@@ -276,16 +276,18 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
             style="margin-bottom: 10px;"
           >
             <div
-              class="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
             >
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
                   <label
                     class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                    for="field-r21__control"
-                    id="field-r21__label"
+                    for="field-r2g__control"
+                    id="field-r2g__label"
                   >
                     customField Key
                   </label>
@@ -293,7 +295,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-r21__label"
+                      aria-labelledby="field-r2g__label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_customField-key"
                       name="root_customField-key"
@@ -303,7 +305,9 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -328,7 +332,9 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
+              >
                 <button
                   class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_customField__remove"
@@ -1730,9 +1736,11 @@ exports[`object fields additionalProperties 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
             >
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -1757,7 +1765,9 @@ exports[`object fields additionalProperties 1`] = `
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -1782,7 +1792,695 @@ exports[`object fields additionalProperties 1`] = `
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
+              >
+                <button
+                  class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                  id="root_foo__remove"
+                  style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
+                  title="Remove"
+                  type="button"
+                >
+                  <span
+                    class="fui-Button__icon rywnvv2"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      fill="currentColor"
+                      height="1em"
+                      viewBox="0 0 20 20"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
+          >
+            <button
+              class="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+              id="root__add"
+              title="Add Item"
+              type="button"
+            >
+              <span
+                class="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="___fko12g0_0000000 f1wswflg"
+    >
+      <button
+        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, array type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+      >
+        <div
+          class="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
+        >
+          <div
+            class="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="fui-Flex rjsf-field rjsf-field-array ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
+            >
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
+                <div
+                  class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+                >
+                  <label
+                    class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+                    for="field-ri__control"
+                    id="field-ri__label"
+                  >
+                    foo Key
+                  </label>
+                  <span
+                    class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  >
+                    <input
+                      aria-labelledby="field-ri__label"
+                      class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
+                      id="root_foo-key"
+                      name="root_foo-key"
+                      type="text"
+                      value="foo"
+                    />
+                  </span>
+                </div>
+              </div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
+                <div
+                  class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+                >
+                  <div
+                    class="___12hmf4e_0000000 f2zxqi febqm8h"
+                    id="root_foo__title"
+                  >
+                    <h5
+                      class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+                      style="margin-block: 0;"
+                    >
+                      foo
+                    </h5>
+                    <div
+                      aria-orientation="horizontal"
+                      class="fui-Divider ___14drqcq_z8b5q40 f122n59 f1ewtqcl f22iagw f1063pyq fqerorx f10pi13n fk6fouc fy9rknc figsok6 fwrc4pm f17mccla fyl8oag f16vkdww fhsnbul f1gw3sf2 f1ly5f7u f1s3tz6t f1wl9k8s f13zj6fq fkfq4zb f1vccso1 f1geml7w f1r7kh1m fjml6kk f16j7guv fx01ahm fl8d8yv fj1a37q fly5x3f f163fonl f51yk4v f13rof3u f8rth92 f6czdpx f1iyka9k fzynn9s fekrn8e f1kyqvp9 fesgyo"
+                      role="separator"
+                    />
+                  </div>
+                  <div
+                    class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                  >
+                    <div
+                      class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
+                    >
+                      <button
+                        class="fui-Button r1alrhcs rjsf-array-item-add ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                        id="root_foo__add"
+                        title="Add Item"
+                        type="button"
+                      >
+                        <span
+                          class="fui-Button__icon rywnvv2"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            fill="currentColor"
+                            height="1em"
+                            viewBox="0 0 20 20"
+                            width="1em"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
+              >
+                <button
+                  class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                  id="root_foo__remove"
+                  style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
+                  title="Remove"
+                  type="button"
+                >
+                  <span
+                    class="fui-Button__icon rywnvv2"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      fill="currentColor"
+                      height="1em"
+                      viewBox="0 0 20 20"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
+          >
+            <button
+              class="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+              id="root__add"
+              title="Add Item"
+              type="button"
+            >
+              <span
+                class="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="___fko12g0_0000000 f1wswflg"
+    >
+      <button
+        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, description 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+      >
+        <div
+          class="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
+        >
+          <div
+            class="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
+            >
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
+                <div
+                  class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+                >
+                  <label
+                    class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+                    for="field-ra__control"
+                    id="field-ra__label"
+                  >
+                    foo Key
+                  </label>
+                  <span
+                    class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  >
+                    <input
+                      aria-labelledby="field-ra__label"
+                      class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
+                      id="root_foo-key"
+                      name="root_foo-key"
+                      type="text"
+                      value="foo"
+                    />
+                  </span>
+                </div>
+              </div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
+                <div
+                  class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+                >
+                  <label
+                    class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                    for="root_foo"
+                  >
+                    foo
+                  </label>
+                  <span
+                    class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  >
+                    <input
+                      aria-describedby="root_foo__error root_foo__description root_foo__help"
+                      class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
+                      id="root_foo"
+                      name="root_foo"
+                      placeholder=""
+                      type="text"
+                      value="foo"
+                    />
+                  </span>
+                  <p
+                    class="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
+                    style="margin-top: 0px; margin-bottom: 0px;"
+                  >
+                    <span
+                      class="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
+                      id="root_foo__description"
+                    >
+                      item description
+                    </span>
+                  </p>
+                </div>
+              </div>
+              <div
+                class="___1qeev60_0000000 f7nlbp4 f14t6dee f9c4gz4"
+              >
+                <button
+                  class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                  id="root_foo__remove"
+                  style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
+                  title="Remove"
+                  type="button"
+                >
+                  <span
+                    class="fui-Button__icon rywnvv2"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      fill="currentColor"
+                      height="1em"
+                      viewBox="0 0 20 20"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
+          >
+            <button
+              class="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+              id="root__add"
+              title="Add Item"
+              type="button"
+            >
+              <span
+                class="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="___fko12g0_0000000 f1wswflg"
+    >
+      <button
+        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, label off 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+      >
+        <div
+          class="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
+        >
+          <div
+            class="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
+            >
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
+                <div
+                  class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+                >
+                  <label
+                    class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+                    for="field-r7__control"
+                    id="field-r7__label"
+                  >
+                    foo Key
+                  </label>
+                  <span
+                    class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  >
+                    <input
+                      aria-labelledby="field-r7__label"
+                      class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
+                      id="root_foo-key"
+                      name="root_foo-key"
+                      type="text"
+                      value="foo"
+                    />
+                  </span>
+                </div>
+              </div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
+                <div
+                  class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+                >
+                  <label
+                    class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                    for="root_foo"
+                  >
+                    foo
+                  </label>
+                  <span
+                    class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  >
+                    <input
+                      aria-describedby="root_foo__error root_foo__description root_foo__help"
+                      class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
+                      id="root_foo"
+                      name="root_foo"
+                      placeholder=""
+                      type="text"
+                      value="foo"
+                    />
+                  </span>
+                </div>
+              </div>
+              <div
+                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
+              >
+                <button
+                  class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                  id="root_foo__remove"
+                  style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
+                  title="Remove"
+                  type="button"
+                >
+                  <span
+                    class="fui-Button__icon rywnvv2"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      fill="currentColor"
+                      height="1em"
+                      viewBox="0 0 20 20"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
+          >
+            <button
+              class="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+              id="root__add"
+              title="Add Item"
+              type="button"
+            >
+              <span
+                class="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="___fko12g0_0000000 f1wswflg"
+    >
+      <button
+        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, object type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+      >
+        <div
+          class="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
+        >
+          <div
+            class="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="fui-Flex rjsf-field rjsf-field-object ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
+            >
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
+                <div
+                  class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+                >
+                  <label
+                    class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+                    for="field-rd__control"
+                    id="field-rd__label"
+                  >
+                    foo Key
+                  </label>
+                  <span
+                    class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  >
+                    <input
+                      aria-labelledby="field-rd__label"
+                      class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
+                      id="root_foo-key"
+                      name="root_foo-key"
+                      type="text"
+                      value="foo"
+                    />
+                  </span>
+                </div>
+              </div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
+                <div
+                  class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+                >
+                  <div
+                    class="___12hmf4e_0000000 f2zxqi febqm8h"
+                    id="root_foo__title"
+                  >
+                    <h5
+                      class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+                      style="margin-block: 0;"
+                    >
+                      foo
+                    </h5>
+                    <div
+                      aria-orientation="horizontal"
+                      class="fui-Divider ___14drqcq_z8b5q40 f122n59 f1ewtqcl f22iagw f1063pyq fqerorx f10pi13n fk6fouc fy9rknc figsok6 fwrc4pm f17mccla fyl8oag f16vkdww fhsnbul f1gw3sf2 f1ly5f7u f1s3tz6t f1wl9k8s f13zj6fq fkfq4zb f1vccso1 f1geml7w f1r7kh1m fjml6kk f16j7guv fx01ahm fl8d8yv fj1a37q fly5x3f f163fonl f51yk4v f13rof3u f8rth92 f6czdpx f1iyka9k fzynn9s fekrn8e f1kyqvp9 fesgyo"
+                      role="separator"
+                    />
+                  </div>
+                  <div
+                    class="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
+                  >
+                    <div
+                      class="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
+                      style="margin-bottom: 10px;"
+                    >
+                      <div
+                        class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
+                      >
+                        <div
+                          class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+                        >
+                          <label
+                            class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                            for="root_foo_foo"
+                          >
+                            foo
+                          </label>
+                          <span
+                            class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                          >
+                            <input
+                              aria-describedby="root_foo_foo__error root_foo_foo__description root_foo_foo__help"
+                              class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
+                              id="root_foo_foo"
+                              name="root_foo_foo"
+                              placeholder=""
+                              type="text"
+                              value=""
+                            />
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
+              >
                 <button
                   class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_foo__remove"
@@ -1973,16 +2671,18 @@ exports[`object fields show add button and fields if additionalProperties is tru
             style="margin-bottom: 10px;"
           >
             <div
-              class="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
             >
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
                   <label
                     class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                    for="field-r7__control"
-                    id="field-r7__label"
+                    for="field-rm__control"
+                    id="field-rm__label"
                   >
                     additionalProperty Key
                   </label>
@@ -1990,7 +2690,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-r7__label"
+                      aria-labelledby="field-rm__label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_additionalProperty-key"
                       name="root_additionalProperty-key"
@@ -2000,7 +2700,9 @@ exports[`object fields show add button and fields if additionalProperties is tru
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -2025,7 +2727,9 @@ exports[`object fields show add button and fields if additionalProperties is tru
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
+              >
                 <button
                   class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_additionalProperty__remove"
@@ -2142,16 +2846,18 @@ exports[`object fields with title and description additionalProperties 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
             >
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
                   <label
                     class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                    for="field-rf__control"
-                    id="field-rf__label"
+                    for="field-ru__control"
+                    id="field-ru__label"
                   >
                     foo Key
                   </label>
@@ -2159,7 +2865,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-rf__label"
+                      aria-labelledby="field-ru__label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -2169,7 +2875,9 @@ exports[`object fields with title and description additionalProperties 1`] = `
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -2194,7 +2902,9 @@ exports[`object fields with title and description additionalProperties 1`] = `
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
+              >
                 <button
                   class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_foo__remove"
@@ -2311,16 +3021,18 @@ exports[`object fields with title and description from both additionalProperties
             style="margin-bottom: 10px;"
           >
             <div
-              class="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
             >
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
                   <label
                     class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                    for="field-r17__control"
-                    id="field-r17__label"
+                    for="field-r1m__control"
+                    id="field-r1m__label"
                   >
                     foo Key
                   </label>
@@ -2328,7 +3040,7 @@ exports[`object fields with title and description from both additionalProperties
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-r17__label"
+                      aria-labelledby="field-r1m__label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -2338,7 +3050,9 @@ exports[`object fields with title and description from both additionalProperties
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -2363,7 +3077,9 @@ exports[`object fields with title and description from both additionalProperties
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
+              >
                 <button
                   class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_foo__remove"
@@ -2620,16 +3336,18 @@ exports[`object fields with title and description from uiSchema additionalProper
             style="margin-bottom: 10px;"
           >
             <div
-              class="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
             >
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
                   <label
                     class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                    for="field-rr__control"
-                    id="field-rr__label"
+                    for="field-r1a__control"
+                    id="field-r1a__label"
                   >
                     foo Key
                   </label>
@@ -2637,7 +3355,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-rr__label"
+                      aria-labelledby="field-r1a__label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -2647,7 +3365,9 @@ exports[`object fields with title and description from uiSchema additionalProper
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -2672,7 +3392,9 @@ exports[`object fields with title and description from uiSchema additionalProper
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
+              >
                 <button
                   class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_foo__remove"
@@ -2929,16 +3651,18 @@ exports[`object fields with title and description from uiSchema show add button 
             style="margin-bottom: 10px;"
           >
             <div
-              class="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
             >
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
                   <label
                     class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                    for="field-rv__control"
-                    id="field-rv__label"
+                    for="field-r1e__control"
+                    id="field-r1e__label"
                   >
                     additionalProperty Key
                   </label>
@@ -2946,7 +3670,7 @@ exports[`object fields with title and description from uiSchema show add button 
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-rv__label"
+                      aria-labelledby="field-r1e__label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_additionalProperty-key"
                       name="root_additionalProperty-key"
@@ -2956,7 +3680,9 @@ exports[`object fields with title and description from uiSchema show add button 
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -2981,7 +3707,9 @@ exports[`object fields with title and description from uiSchema show add button 
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
+              >
                 <button
                   class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_additionalProperty__remove"
@@ -3238,16 +3966,18 @@ exports[`object fields with title and description show add button and fields if 
             style="margin-bottom: 10px;"
           >
             <div
-              class="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
             >
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
                   <label
                     class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                    for="field-rj__control"
-                    id="field-rj__label"
+                    for="field-r12__control"
+                    id="field-r12__label"
                   >
                     additionalProperty Key
                   </label>
@@ -3255,7 +3985,7 @@ exports[`object fields with title and description show add button and fields if 
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-rj__label"
+                      aria-labelledby="field-r12__label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_additionalProperty-key"
                       name="root_additionalProperty-key"
@@ -3265,7 +3995,9 @@ exports[`object fields with title and description show add button and fields if 
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -3290,7 +4022,9 @@ exports[`object fields with title and description show add button and fields if 
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
+              >
                 <button
                   class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_additionalProperty__remove"
@@ -3385,24 +4119,18 @@ exports[`object fields with title and description with global label off addition
             style="margin-bottom: 10px;"
           >
             <div
-              class="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
             >
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
-                  <label
-                    class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                    for="field-r1d__control"
-                    id="field-r1d__label"
-                  >
-                    foo Key
-                  </label>
                   <span
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-r1d__label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -3412,7 +4140,9 @@ exports[`object fields with title and description with global label off addition
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -3431,7 +4161,9 @@ exports[`object fields with title and description with global label off addition
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
+              >
                 <button
                   class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_foo__remove"
@@ -3610,24 +4342,18 @@ exports[`object fields with title and description with global label off show add
             style="margin-bottom: 10px;"
           >
             <div
-              class="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
             >
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
-                  <label
-                    class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                    for="field-r1g__control"
-                    id="field-r1g__label"
-                  >
-                    additionalProperty Key
-                  </label>
                   <span
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-r1g__label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_additionalProperty-key"
                       name="root_additionalProperty-key"
@@ -3637,7 +4363,9 @@ exports[`object fields with title and description with global label off show add
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -3656,7 +4384,9 @@ exports[`object fields with title and description with global label off show add
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
+              >
                 <button
                   class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_additionalProperty__remove"

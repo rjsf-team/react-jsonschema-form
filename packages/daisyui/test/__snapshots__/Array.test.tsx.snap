@@ -6911,16 +6911,6 @@ exports[`with title and description with global label off checkboxes 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          >
-            Test field
-          </span>
-        </label>
         <div
           class="form-control w-full"
         >
@@ -7004,16 +6994,6 @@ exports[`with title and description with global label off checkboxes 1`] = `
                 </div>
               </li>
             </ul>
-          </div>
-        </div>
-        <div
-          class="description-field my-4"
-          id="root__description"
-        >
-          <div
-            class="text-sm text-base-content/80"
-          >
-            a test description
           </div>
         </div>
         <div

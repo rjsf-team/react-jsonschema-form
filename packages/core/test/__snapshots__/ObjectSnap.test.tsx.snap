@@ -210,6 +210,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
             </div>
             <div
               class="col-xs-2"
+              style="margin-top: 26px;"
             >
               <button
                 class="btn btn-danger rjsf-object-property-remove btn-block"
@@ -1123,6 +1124,484 @@ exports[`object fields additionalProperties 1`] = `
             </div>
             <div
               class="col-xs-2"
+              style="margin-top: 26px;"
+            >
+              <button
+                class="btn btn-danger rjsf-object-property-remove btn-block"
+                id="root_foo__remove"
+                style="border: 0px;"
+                title="Remove"
+                type="button"
+              >
+                <i
+                  class="glyphicon glyphicon-remove"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="row"
+        >
+          <p
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
+          >
+            <button
+              class="btn btn-info btn-add col-xs-12"
+              id="root__add"
+              title="Add"
+              type="button"
+            >
+              <i
+                class="glyphicon glyphicon-plus"
+              />
+            </button>
+          </p>
+        </div>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, array type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="form-group rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="form-group rjsf-field rjsf-field-array"
+        >
+          <div
+            class="row"
+          >
+            <div
+              class="col-xs-5 form-additional"
+            >
+              <div
+                class="form-group"
+              >
+                <label
+                  class="control-label"
+                  for="root_foo-key"
+                >
+                  foo Key
+                </label>
+                <input
+                  class="form-control"
+                  id="root_foo-key"
+                  type="text"
+                  value="foo"
+                />
+              </div>
+            </div>
+            <div
+              class="form-additional form-group col-xs-5"
+            >
+              <label
+                class="control-label"
+                for="root_foo"
+              >
+                foo
+              </label>
+              <fieldset
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                id="root_foo"
+              >
+                <legend
+                  id="root_foo__title"
+                >
+                  foo
+                </legend>
+                <div
+                  class="row array-item-list"
+                />
+                <div
+                  class="row"
+                >
+                  <p
+                    class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
+                  >
+                    <button
+                      class="btn btn-info btn-add col-xs-12"
+                      id="root_foo__add"
+                      title="Add"
+                      type="button"
+                    >
+                      <i
+                        class="glyphicon glyphicon-plus"
+                      />
+                    </button>
+                  </p>
+                </div>
+              </fieldset>
+            </div>
+            <div
+              class="col-xs-2"
+              style="margin-top: 26px;"
+            >
+              <button
+                class="btn btn-danger rjsf-object-property-remove btn-block"
+                id="root_foo__remove"
+                style="border: 0px;"
+                title="Remove"
+                type="button"
+              >
+                <i
+                  class="glyphicon glyphicon-remove"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="row"
+        >
+          <p
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
+          >
+            <button
+              class="btn btn-info btn-add col-xs-12"
+              id="root__add"
+              title="Add"
+              type="button"
+            >
+              <i
+                class="glyphicon glyphicon-plus"
+              />
+            </button>
+          </p>
+        </div>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, description 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="form-group rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="form-group rjsf-field rjsf-field-string"
+        >
+          <div
+            class="row"
+          >
+            <div
+              class="col-xs-5 form-additional"
+            >
+              <div
+                class="form-group"
+              >
+                <label
+                  class="control-label"
+                  for="root_foo-key"
+                >
+                  foo Key
+                </label>
+                <div>
+                   
+                </div>
+                <input
+                  class="form-control"
+                  id="root_foo-key"
+                  type="text"
+                  value="foo"
+                />
+              </div>
+            </div>
+            <div
+              class="form-additional form-group col-xs-5"
+            >
+              <label
+                class="control-label"
+                for="root_foo"
+              >
+                foo
+              </label>
+              <div
+                class="field-description"
+                id="root_foo__description"
+              >
+                item description
+              </div>
+              <input
+                aria-describedby="root_foo__error root_foo__description root_foo__help"
+                class="form-control"
+                id="root_foo"
+                label="foo"
+                name="root_foo"
+                placeholder=""
+                type="text"
+                value="foo"
+              />
+            </div>
+            <div
+              class="col-xs-2"
+              style="margin-top: 46px;"
+            >
+              <button
+                class="btn btn-danger rjsf-object-property-remove btn-block"
+                id="root_foo__remove"
+                style="border: 0px;"
+                title="Remove"
+                type="button"
+              >
+                <i
+                  class="glyphicon glyphicon-remove"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="row"
+        >
+          <p
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
+          >
+            <button
+              class="btn btn-info btn-add col-xs-12"
+              id="root__add"
+              title="Add"
+              type="button"
+            >
+              <i
+                class="glyphicon glyphicon-plus"
+              />
+            </button>
+          </p>
+        </div>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, label off 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="form-group rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="form-group rjsf-field rjsf-field-string"
+        >
+          <div
+            class="row"
+          >
+            <div
+              class="col-xs-5 form-additional"
+            >
+              <div
+                class="form-group"
+              >
+                <label
+                  class="control-label"
+                  for="root_foo-key"
+                >
+                  foo Key
+                </label>
+                <input
+                  class="form-control"
+                  id="root_foo-key"
+                  type="text"
+                  value="foo"
+                />
+              </div>
+            </div>
+            <div
+              class="form-additional form-group col-xs-5"
+            >
+              <label
+                class="control-label"
+                for="root_foo"
+              >
+                foo
+              </label>
+              <input
+                aria-describedby="root_foo__error root_foo__description root_foo__help"
+                class="form-control"
+                id="root_foo"
+                label="foo"
+                name="root_foo"
+                placeholder=""
+                type="text"
+                value="foo"
+              />
+            </div>
+            <div
+              class="col-xs-2"
+              style="margin-top: 26px;"
+            >
+              <button
+                class="btn btn-danger rjsf-object-property-remove btn-block"
+                id="root_foo__remove"
+                style="border: 0px;"
+                title="Remove"
+                type="button"
+              >
+                <i
+                  class="glyphicon glyphicon-remove"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="row"
+        >
+          <p
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
+          >
+            <button
+              class="btn btn-info btn-add col-xs-12"
+              id="root__add"
+              title="Add"
+              type="button"
+            >
+              <i
+                class="glyphicon glyphicon-plus"
+              />
+            </button>
+          </p>
+        </div>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, object type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="form-group rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="form-group rjsf-field rjsf-field-object"
+        >
+          <div
+            class="row"
+          >
+            <div
+              class="col-xs-5 form-additional"
+            >
+              <div
+                class="form-group"
+              >
+                <label
+                  class="control-label"
+                  for="root_foo-key"
+                >
+                  foo Key
+                </label>
+                <input
+                  class="form-control"
+                  id="root_foo-key"
+                  type="text"
+                  value="foo"
+                />
+              </div>
+            </div>
+            <div
+              class="form-additional form-group col-xs-5"
+            >
+              <label
+                class="control-label"
+                for="root_foo"
+              >
+                foo
+              </label>
+              <fieldset
+                id="root_foo"
+              >
+                <legend
+                  id="root_foo__title"
+                >
+                  foo
+                </legend>
+                <div
+                  class="form-group rjsf-field rjsf-field-string"
+                >
+                  <label
+                    class="control-label"
+                    for="root_foo_foo"
+                  >
+                    foo
+                  </label>
+                  <input
+                    aria-describedby="root_foo_foo__error root_foo_foo__description root_foo_foo__help"
+                    class="form-control"
+                    id="root_foo_foo"
+                    label="foo"
+                    name="root_foo_foo"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </fieldset>
+            </div>
+            <div
+              class="col-xs-2"
+              style="margin-top: 26px;"
             >
               <button
                 class="btn btn-danger rjsf-object-property-remove btn-block"
@@ -1295,6 +1774,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
             </div>
             <div
               class="col-xs-2"
+              style="margin-top: 26px;"
             >
               <button
                 class="btn btn-danger rjsf-object-property-remove btn-block"
@@ -1412,6 +1892,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
             </div>
             <div
               class="col-xs-2"
+              style="margin-top: 26px;"
             >
               <button
                 class="btn btn-danger rjsf-object-property-remove btn-block"
@@ -1529,6 +2010,7 @@ exports[`object fields with title and description from both additionalProperties
             </div>
             <div
               class="col-xs-2"
+              style="margin-top: 26px;"
             >
               <button
                 class="btn btn-danger rjsf-object-property-remove btn-block"
@@ -1735,6 +2217,7 @@ exports[`object fields with title and description from uiSchema additionalProper
             </div>
             <div
               class="col-xs-2"
+              style="margin-top: 26px;"
             >
               <button
                 class="btn btn-danger rjsf-object-property-remove btn-block"
@@ -1941,6 +2424,7 @@ exports[`object fields with title and description from uiSchema show add button 
             </div>
             <div
               class="col-xs-2"
+              style="margin-top: 26px;"
             >
               <button
                 class="btn btn-danger rjsf-object-property-remove btn-block"
@@ -2147,6 +2631,7 @@ exports[`object fields with title and description show add button and fields if 
             </div>
             <div
               class="col-xs-2"
+              style="margin-top: 26px;"
             >
               <button
                 class="btn btn-danger rjsf-object-property-remove btn-block"
@@ -2217,12 +2702,6 @@ exports[`object fields with title and description with global label off addition
               <div
                 class="form-group"
               >
-                <label
-                  class="control-label"
-                  for="root_foo-key"
-                >
-                  foo Key
-                </label>
                 <input
                   class="form-control"
                   id="root_foo-key"
@@ -2371,12 +2850,6 @@ exports[`object fields with title and description with global label off show add
               <div
                 class="form-group"
               >
-                <label
-                  class="control-label"
-                  for="root_additionalProperty-key"
-                >
-                  additionalProperty Key
-                </label>
                 <input
                   class="form-control"
                   id="root_additionalProperty-key"

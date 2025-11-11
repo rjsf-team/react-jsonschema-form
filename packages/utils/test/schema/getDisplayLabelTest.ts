@@ -1,4 +1,4 @@
-import { createSchemaUtils, getDisplayLabel, RJSFSchema } from '../../src';
+import { ADDITIONAL_PROPERTY_FLAG, createSchemaUtils, getDisplayLabel, RJSFSchema } from '../../src';
 import { TestValidatorType } from './types';
 
 export default function getDisplayLabelTest(testValidator: TestValidatorType) {
@@ -20,6 +20,9 @@ export default function getDisplayLabelTest(testValidator: TestValidatorType) {
     it('object type', () => {
       expect(getDisplayLabel(testValidator, { type: 'object' })).toEqual(false);
     });
+    it('object type from additionalProperty', () => {
+      expect(getDisplayLabel(testValidator, { type: 'object', [ADDITIONAL_PROPERTY_FLAG]: true })).toEqual(true);
+    });
     it('boolean type without widget', () => {
       expect(getDisplayLabel(testValidator, { type: 'boolean' })).toEqual(false);
     });
@@ -32,6 +35,9 @@ export default function getDisplayLabelTest(testValidator: TestValidatorType) {
       expect(schemaUtils.getDisplayLabel(schema, { 'ui:field': 'test' })).toEqual(false);
     });
     describe('array type', () => {
+      it('added by additionalProperty', () => {
+        expect(getDisplayLabel(testValidator, { type: 'array', [ADDITIONAL_PROPERTY_FLAG]: true }, {})).toEqual(true);
+      });
       it('items', () => {
         expect(getDisplayLabel(testValidator, { type: 'array', items: { type: 'string' } }, {})).toEqual(false);
       });

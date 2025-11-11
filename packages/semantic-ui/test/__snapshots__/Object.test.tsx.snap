@@ -211,13 +211,13 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
           class="rjsf-field rjsf-field-string"
         >
           <div
-            class="ui equal width grid"
+            class="ui grid"
           >
             <div
               class="row"
             >
               <div
-                class="column form-additional"
+                class="seven wide column form-additional"
               >
                 <div
                   class="grouped equal width fields"
@@ -245,7 +245,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                 </div>
               </div>
               <div
-                class="middle aligned column form-additional"
+                class="middle aligned seven wide column form-additional"
               >
                 <div
                   class="grouped equal width fields"
@@ -274,7 +274,8 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                 </div>
               </div>
               <div
-                class="column"
+                class="middle aligned column"
+                style="margin-top: 24px;"
               >
                 <button
                   class="ui mini icon button rjsf-object-property-remove"
@@ -1308,13 +1309,13 @@ exports[`object fields additionalProperties 1`] = `
           class="rjsf-field rjsf-field-string"
         >
           <div
-            class="ui equal width grid"
+            class="ui grid"
           >
             <div
               class="row"
             >
               <div
-                class="column form-additional"
+                class="seven wide column form-additional"
               >
                 <div
                   class="grouped equal width fields"
@@ -1342,7 +1343,7 @@ exports[`object fields additionalProperties 1`] = `
                 </div>
               </div>
               <div
-                class="middle aligned column form-additional"
+                class="middle aligned seven wide column form-additional"
               >
                 <div
                   class="grouped equal width fields"
@@ -1371,7 +1372,552 @@ exports[`object fields additionalProperties 1`] = `
                 </div>
               </div>
               <div
-                class="column"
+                class="middle aligned column"
+                style="margin-top: 24px;"
+              >
+                <button
+                  class="ui mini icon button rjsf-object-property-remove"
+                  id="root_foo__remove"
+                  title="Remove"
+                >
+                  <i
+                    aria-hidden="true"
+                    class="trash icon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="middle aligned sixteen wide column"
+        >
+          <div
+            class="row"
+          >
+            <div
+              style="margin-top: 1rem; position: relative; text-align: right;"
+            >
+              <button
+                class="ui tiny icon button rjsf-object-property-expand"
+                id="root__add"
+                title="Add Item"
+              >
+                <i
+                  aria-hidden="true"
+                  class="plus icon"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ui primary button"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, array type 1`] = `
+<DocumentFragment>
+  <form
+    class="ui form rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="grouped equal width fields"
+      >
+        <div
+          class="rjsf-field rjsf-field-array"
+        >
+          <div
+            class="ui grid"
+          >
+            <div
+              class="row"
+            >
+              <div
+                class="seven wide column form-additional"
+              >
+                <div
+                  class="grouped equal width fields"
+                >
+                  <div
+                    class="field form-group"
+                  >
+                    <label
+                      for="root_foo"
+                    >
+                      foo Key
+                    </label>
+                    <div
+                      class="ui fluid input"
+                      for="root_foo"
+                    >
+                      <input
+                        id="root_foo"
+                        name="root_foo"
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="middle aligned seven wide column form-additional"
+              >
+                <div
+                  class="grouped equal width fields"
+                >
+                  <div
+                    class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
+                  >
+                    <h5
+                      class="ui dividing header"
+                      id="root_foo__title"
+                    >
+                      foo
+                    </h5>
+                    <div>
+                      <div
+                        class="row array-item-list"
+                      />
+                      <div
+                        style="margin-top: 1rem; position: relative; text-align: right;"
+                      >
+                        <button
+                          class="ui tiny icon button rjsf-array-item-add"
+                          id="root_foo__add"
+                          title="Add Item"
+                        >
+                          <i
+                            aria-hidden="true"
+                            class="plus icon"
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="middle aligned column"
+                style="margin-top: 24px;"
+              >
+                <button
+                  class="ui mini icon button rjsf-object-property-remove"
+                  id="root_foo__remove"
+                  title="Remove"
+                >
+                  <i
+                    aria-hidden="true"
+                    class="trash icon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="middle aligned sixteen wide column"
+        >
+          <div
+            class="row"
+          >
+            <div
+              style="margin-top: 1rem; position: relative; text-align: right;"
+            >
+              <button
+                class="ui tiny icon button rjsf-object-property-expand"
+                id="root__add"
+                title="Add Item"
+              >
+                <i
+                  aria-hidden="true"
+                  class="plus icon"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ui primary button"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, description 1`] = `
+<DocumentFragment>
+  <form
+    class="ui form rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="grouped equal width fields"
+      >
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <div
+            class="ui grid"
+          >
+            <div
+              class="row"
+            >
+              <div
+                class="seven wide column form-additional"
+              >
+                <div
+                  class="grouped equal width fields"
+                >
+                  <div
+                    class="field form-group"
+                  >
+                    <label
+                      for="root_foo"
+                    >
+                      foo Key
+                    </label>
+                    <div
+                      class="ui fluid input"
+                      for="root_foo"
+                    >
+                      <input
+                        id="root_foo"
+                        name="root_foo"
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="middle aligned seven wide column form-additional"
+              >
+                <div
+                  class="grouped equal width fields"
+                >
+                  <div
+                    class="field"
+                  >
+                    <label
+                      for="root_foo"
+                    >
+                      foo
+                    </label>
+                    <div
+                      class="ui fluid input"
+                    >
+                      <input
+                        aria-describedby="root_foo__error root_foo__description root_foo__help"
+                        id="root_foo"
+                        name="root_foo"
+                        placeholder=""
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
+                  </div>
+                  <p
+                    class="sui-description"
+                    id="root_foo__description"
+                  >
+                    item description
+                  </p>
+                </div>
+              </div>
+              <div
+                class="middle aligned column"
+                style="margin-top: 4px;"
+              >
+                <button
+                  class="ui mini icon button rjsf-object-property-remove"
+                  id="root_foo__remove"
+                  title="Remove"
+                >
+                  <i
+                    aria-hidden="true"
+                    class="trash icon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="middle aligned sixteen wide column"
+        >
+          <div
+            class="row"
+          >
+            <div
+              style="margin-top: 1rem; position: relative; text-align: right;"
+            >
+              <button
+                class="ui tiny icon button rjsf-object-property-expand"
+                id="root__add"
+                title="Add Item"
+              >
+                <i
+                  aria-hidden="true"
+                  class="plus icon"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ui primary button"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, label off 1`] = `
+<DocumentFragment>
+  <form
+    class="ui form rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="grouped equal width fields"
+      >
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <div
+            class="ui grid"
+          >
+            <div
+              class="row"
+            >
+              <div
+                class="seven wide column form-additional"
+              >
+                <div
+                  class="grouped equal width fields"
+                >
+                  <div
+                    class="field form-group"
+                  >
+                    <label
+                      for="root_foo"
+                    >
+                      foo Key
+                    </label>
+                    <div
+                      class="ui fluid input"
+                      for="root_foo"
+                    >
+                      <input
+                        id="root_foo"
+                        name="root_foo"
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="middle aligned seven wide column form-additional"
+              >
+                <div
+                  class="grouped equal width fields"
+                >
+                  <div
+                    class="field"
+                  >
+                    <label
+                      for="root_foo"
+                    >
+                      foo
+                    </label>
+                    <div
+                      class="ui fluid input"
+                    >
+                      <input
+                        aria-describedby="root_foo__error root_foo__description root_foo__help"
+                        id="root_foo"
+                        name="root_foo"
+                        placeholder=""
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="middle aligned column"
+                style="margin-top: 24px;"
+              >
+                <button
+                  class="ui mini icon button rjsf-object-property-remove"
+                  id="root_foo__remove"
+                  title="Remove"
+                >
+                  <i
+                    aria-hidden="true"
+                    class="trash icon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="middle aligned sixteen wide column"
+        >
+          <div
+            class="row"
+          >
+            <div
+              style="margin-top: 1rem; position: relative; text-align: right;"
+            >
+              <button
+                class="ui tiny icon button rjsf-object-property-expand"
+                id="root__add"
+                title="Add Item"
+              >
+                <i
+                  aria-hidden="true"
+                  class="plus icon"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ui primary button"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, object type 1`] = `
+<DocumentFragment>
+  <form
+    class="ui form rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="grouped equal width fields"
+      >
+        <div
+          class="rjsf-field rjsf-field-object"
+        >
+          <div
+            class="ui grid"
+          >
+            <div
+              class="row"
+            >
+              <div
+                class="seven wide column form-additional"
+              >
+                <div
+                  class="grouped equal width fields"
+                >
+                  <div
+                    class="field form-group"
+                  >
+                    <label
+                      for="root_foo"
+                    >
+                      foo Key
+                    </label>
+                    <div
+                      class="ui fluid input"
+                      for="root_foo"
+                    >
+                      <input
+                        id="root_foo"
+                        name="root_foo"
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="middle aligned seven wide column form-additional"
+              >
+                <div
+                  class="grouped equal width fields"
+                >
+                  <h5
+                    class="ui dividing header"
+                    id="root_foo__title"
+                  >
+                    foo
+                  </h5>
+                  <div
+                    class="rjsf-field rjsf-field-string"
+                  >
+                    <div
+                      class="grouped equal width fields"
+                    >
+                      <div
+                        class="field"
+                      >
+                        <label
+                          for="root_foo_foo"
+                        >
+                          foo
+                        </label>
+                        <div
+                          class="ui fluid input"
+                        >
+                          <input
+                            aria-describedby="root_foo_foo__error root_foo_foo__description root_foo_foo__help"
+                            id="root_foo_foo"
+                            name="root_foo_foo"
+                            placeholder=""
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="middle aligned column"
+                style="margin-top: 24px;"
               >
                 <button
                   class="ui mini icon button rjsf-object-property-remove"
@@ -1518,13 +2064,13 @@ exports[`object fields show add button and fields if additionalProperties is tru
           class="rjsf-field rjsf-field-string"
         >
           <div
-            class="ui equal width grid"
+            class="ui grid"
           >
             <div
               class="row"
             >
               <div
-                class="column form-additional"
+                class="seven wide column form-additional"
               >
                 <div
                   class="grouped equal width fields"
@@ -1552,7 +2098,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                 </div>
               </div>
               <div
-                class="middle aligned column form-additional"
+                class="middle aligned seven wide column form-additional"
               >
                 <div
                   class="grouped equal width fields"
@@ -1581,7 +2127,8 @@ exports[`object fields show add button and fields if additionalProperties is tru
                 </div>
               </div>
               <div
-                class="column"
+                class="middle aligned column"
+                style="margin-top: 24px;"
               >
                 <button
                   class="ui mini icon button rjsf-object-property-remove"
@@ -1658,13 +2205,13 @@ exports[`object fields with title and description additionalProperties 1`] = `
           class="rjsf-field rjsf-field-string"
         >
           <div
-            class="ui equal width grid"
+            class="ui grid"
           >
             <div
               class="row"
             >
               <div
-                class="column form-additional"
+                class="seven wide column form-additional"
               >
                 <div
                   class="grouped equal width fields"
@@ -1692,7 +2239,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                 </div>
               </div>
               <div
-                class="middle aligned column form-additional"
+                class="middle aligned seven wide column form-additional"
               >
                 <div
                   class="grouped equal width fields"
@@ -1721,7 +2268,8 @@ exports[`object fields with title and description additionalProperties 1`] = `
                 </div>
               </div>
               <div
-                class="column"
+                class="middle aligned column"
+                style="margin-top: 24px;"
               >
                 <button
                   class="ui mini icon button rjsf-object-property-remove"
@@ -1798,13 +2346,13 @@ exports[`object fields with title and description from both additionalProperties
           class="rjsf-field rjsf-field-string"
         >
           <div
-            class="ui equal width grid"
+            class="ui grid"
           >
             <div
               class="row"
             >
               <div
-                class="column form-additional"
+                class="seven wide column form-additional"
               >
                 <div
                   class="grouped equal width fields"
@@ -1832,7 +2380,7 @@ exports[`object fields with title and description from both additionalProperties
                 </div>
               </div>
               <div
-                class="middle aligned column form-additional"
+                class="middle aligned seven wide column form-additional"
               >
                 <div
                   class="grouped equal width fields"
@@ -1861,7 +2409,8 @@ exports[`object fields with title and description from both additionalProperties
                 </div>
               </div>
               <div
-                class="column"
+                class="middle aligned column"
+                style="margin-top: 24px;"
               >
                 <button
                   class="ui mini icon button rjsf-object-property-remove"
@@ -2044,13 +2593,13 @@ exports[`object fields with title and description from uiSchema additionalProper
           class="rjsf-field rjsf-field-string"
         >
           <div
-            class="ui equal width grid"
+            class="ui grid"
           >
             <div
               class="row"
             >
               <div
-                class="column form-additional"
+                class="seven wide column form-additional"
               >
                 <div
                   class="grouped equal width fields"
@@ -2078,7 +2627,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                 </div>
               </div>
               <div
-                class="middle aligned column form-additional"
+                class="middle aligned seven wide column form-additional"
               >
                 <div
                   class="grouped equal width fields"
@@ -2107,7 +2656,8 @@ exports[`object fields with title and description from uiSchema additionalProper
                 </div>
               </div>
               <div
-                class="column"
+                class="middle aligned column"
+                style="margin-top: 24px;"
               >
                 <button
                   class="ui mini icon button rjsf-object-property-remove"
@@ -2290,13 +2840,13 @@ exports[`object fields with title and description from uiSchema show add button 
           class="rjsf-field rjsf-field-string"
         >
           <div
-            class="ui equal width grid"
+            class="ui grid"
           >
             <div
               class="row"
             >
               <div
-                class="column form-additional"
+                class="seven wide column form-additional"
               >
                 <div
                   class="grouped equal width fields"
@@ -2324,7 +2874,7 @@ exports[`object fields with title and description from uiSchema show add button 
                 </div>
               </div>
               <div
-                class="middle aligned column form-additional"
+                class="middle aligned seven wide column form-additional"
               >
                 <div
                   class="grouped equal width fields"
@@ -2353,7 +2903,8 @@ exports[`object fields with title and description from uiSchema show add button 
                 </div>
               </div>
               <div
-                class="column"
+                class="middle aligned column"
+                style="margin-top: 24px;"
               >
                 <button
                   class="ui mini icon button rjsf-object-property-remove"
@@ -2536,13 +3087,13 @@ exports[`object fields with title and description show add button and fields if 
           class="rjsf-field rjsf-field-string"
         >
           <div
-            class="ui equal width grid"
+            class="ui grid"
           >
             <div
               class="row"
             >
               <div
-                class="column form-additional"
+                class="seven wide column form-additional"
               >
                 <div
                   class="grouped equal width fields"
@@ -2570,7 +3121,7 @@ exports[`object fields with title and description show add button and fields if 
                 </div>
               </div>
               <div
-                class="middle aligned column form-additional"
+                class="middle aligned seven wide column form-additional"
               >
                 <div
                   class="grouped equal width fields"
@@ -2599,7 +3150,8 @@ exports[`object fields with title and description show add button and fields if 
                 </div>
               </div>
               <div
-                class="column"
+                class="middle aligned column"
+                style="margin-top: 24px;"
               >
                 <button
                   class="ui mini icon button rjsf-object-property-remove"
@@ -2664,13 +3216,13 @@ exports[`object fields with title and description with global label off addition
           class="rjsf-field rjsf-field-string"
         >
           <div
-            class="ui equal width grid"
+            class="ui grid"
           >
             <div
               class="row"
             >
               <div
-                class="column form-additional"
+                class="seven wide column form-additional"
               >
                 <div
                   class="grouped equal width fields"
@@ -2678,11 +3230,6 @@ exports[`object fields with title and description with global label off addition
                   <div
                     class="field form-group"
                   >
-                    <label
-                      for="root_foo"
-                    >
-                      foo Key
-                    </label>
                     <div
                       class="ui fluid input"
                       for="root_foo"
@@ -2698,7 +3245,7 @@ exports[`object fields with title and description with global label off addition
                 </div>
               </div>
               <div
-                class="middle aligned column form-additional"
+                class="middle aligned seven wide column form-additional"
               >
                 <div
                   class="grouped equal width fields"
@@ -2722,7 +3269,7 @@ exports[`object fields with title and description with global label off addition
                 </div>
               </div>
               <div
-                class="column"
+                class="middle aligned column"
               >
                 <button
                   class="ui mini icon button rjsf-object-property-remove"
@@ -2859,13 +3406,13 @@ exports[`object fields with title and description with global label off show add
           class="rjsf-field rjsf-field-string"
         >
           <div
-            class="ui equal width grid"
+            class="ui grid"
           >
             <div
               class="row"
             >
               <div
-                class="column form-additional"
+                class="seven wide column form-additional"
               >
                 <div
                   class="grouped equal width fields"
@@ -2873,11 +3420,6 @@ exports[`object fields with title and description with global label off show add
                   <div
                     class="field form-group"
                   >
-                    <label
-                      for="root_additionalProperty"
-                    >
-                      additionalProperty Key
-                    </label>
                     <div
                       class="ui fluid input"
                       for="root_additionalProperty"
@@ -2893,7 +3435,7 @@ exports[`object fields with title and description with global label off show add
                 </div>
               </div>
               <div
-                class="middle aligned column form-additional"
+                class="middle aligned seven wide column form-additional"
               >
                 <div
                   class="grouped equal width fields"
@@ -2917,7 +3459,7 @@ exports[`object fields with title and description with global label off show add
                 </div>
               </div>
               <div
-                class="column"
+                class="middle aligned column"
               >
                 <button
                   class="ui mini icon button rjsf-object-property-remove"
