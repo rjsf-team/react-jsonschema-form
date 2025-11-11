@@ -66,7 +66,7 @@ export default function WrapIfAdditionalTemplate<
         <div className='col-xs-5 form-additional'>
           <div className='form-group'>
             {displayLabel && <Label label={keyLabel} required={required} id={`${id}-key`} />}
-            {rawDescription && <div>&nbsp;</div>}
+            {displayLabel && rawDescription && <div>&nbsp;</div>}
             <input
               className='form-control'
               type='text'

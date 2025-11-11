@@ -103,6 +103,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Updated `uiSchema.md` in the docs to document the new `enableMarkdownInHelp` flag
+- Updated `objectTests.tsx` to increase the variations of the additionalProperties tests to include labels off, descriptions and object and array types
 
 # 6.0.2
 

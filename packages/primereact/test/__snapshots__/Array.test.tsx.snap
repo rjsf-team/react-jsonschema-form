@@ -5052,11 +5052,6 @@ exports[`with title and description with global label off checkboxes 1`] = `
       <div
         style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
       >
-        <label
-          for="root"
-        >
-          Test field 
-        </label>
         <select
           aria-describedby="root__error root__description root__help"
           display="comma"
@@ -5066,13 +5061,6 @@ exports[`with title and description with global label off checkboxes 1`] = `
           options="[object Object],[object Object],[object Object]"
           pt="[object Object]"
         />
-        <small>
-          <span
-            id="root__description"
-          >
-            a test description
-          </span>
-        </small>
       </div>
     </div>
     <button

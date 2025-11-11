@@ -1415,7 +1415,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rit"
+              class="m_8bffd616 mantine-Flex-root __m__-ris"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -1434,10 +1434,10 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-rj1{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                      .__m__-rj0{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                     </style>
                     <div
-                      class="m_2415a157 mantine-SimpleGrid-root __m__-rj1"
+                      class="m_2415a157 mantine-SimpleGrid-root __m__-rj0"
                       style="margin-bottom: var(--mantine-spacing-sm);"
                     >
                       <div
@@ -1697,7 +1697,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rjp"
+              class="m_8bffd616 mantine-Flex-root __m__-rjo"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -1716,10 +1716,10 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-rjt{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                      .__m__-rjs{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                     </style>
                     <div
-                      class="m_2415a157 mantine-SimpleGrid-root __m__-rjt"
+                      class="m_2415a157 mantine-SimpleGrid-root __m__-rjs"
                       style="margin-bottom: var(--mantine-spacing-sm);"
                     >
                       <div
@@ -2075,7 +2075,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rho"
+              class="m_8bffd616 mantine-Flex-root __m__-rhn"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -2232,7 +2232,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-ri7"
+              class="m_8bffd616 mantine-Flex-root __m__-ri6"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -2568,7 +2568,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes with nameGenerator 1`] = 
                       aria-selected="false"
                       class="m_92253aa5 mantine-MultiSelect-option m_390b5f4"
                       data-combobox-option="true"
-                      id=":rpc:"
+                      id=":rpb:"
                       role="option"
                       value="0"
                     >
@@ -2580,7 +2580,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes with nameGenerator 1`] = 
                       aria-selected="false"
                       class="m_92253aa5 mantine-MultiSelect-option m_390b5f4"
                       data-combobox-option="true"
-                      id=":rpe:"
+                      id=":rpd:"
                       role="option"
                       value="1"
                     >
@@ -2592,7 +2592,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes with nameGenerator 1`] = 
                       aria-selected="false"
                       class="m_92253aa5 mantine-MultiSelect-option m_390b5f4"
                       data-combobox-option="true"
-                      id=":rpg:"
+                      id=":rpf:"
                       role="option"
                       value="2"
                     >
@@ -2682,7 +2682,7 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rks"
+              class="m_8bffd616 mantine-Flex-root __m__-rkr"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -2724,7 +2724,7 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rl4"
+              class="m_8bffd616 mantine-Flex-root __m__-rl3"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -2819,7 +2819,7 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rle"
+              class="m_8bffd616 mantine-Flex-root __m__-rld"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -2934,7 +2934,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rlr"
+              class="m_8bffd616 mantine-Flex-root __m__-rlq"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -2957,7 +2957,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                         style="margin-bottom: var(--mantine-spacing-xs);"
                       >
                         <div
-                          class="m_8bffd616 mantine-Flex-root __m__-rm1"
+                          class="m_8bffd616 mantine-Flex-root __m__-rm0"
                           style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
                         >
                           <div
@@ -3114,7 +3114,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                         style="margin-bottom: var(--mantine-spacing-xs);"
                       >
                         <div
-                          class="m_8bffd616 mantine-Flex-root __m__-rmg"
+                          class="m_8bffd616 mantine-Flex-root __m__-rmf"
                           style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
                         >
                           <div
@@ -3435,7 +3435,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rn9"
+              class="m_8bffd616 mantine-Flex-root __m__-rn8"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -3458,7 +3458,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                         style="margin-bottom: var(--mantine-spacing-xs);"
                       >
                         <div
-                          class="m_8bffd616 mantine-Flex-root __m__-rnf"
+                          class="m_8bffd616 mantine-Flex-root __m__-rne"
                           style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
                         >
                           <div
@@ -3615,7 +3615,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                         style="margin-bottom: var(--mantine-spacing-xs);"
                       >
                         <div
-                          class="m_8bffd616 mantine-Flex-root __m__-rnu"
+                          class="m_8bffd616 mantine-Flex-root __m__-rnt"
                           style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
                         >
                           <div
@@ -4032,7 +4032,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rqs"
+              class="m_8bffd616 mantine-Flex-root __m__-rqr"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -4051,10 +4051,10 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-rr0{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                      .__m__-rqv{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                     </style>
                     <div
-                      class="m_2415a157 mantine-SimpleGrid-root __m__-rr0"
+                      class="m_2415a157 mantine-SimpleGrid-root __m__-rqv"
                       style="margin-bottom: var(--mantine-spacing-sm);"
                     >
                       <div
@@ -4314,7 +4314,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rro"
+              class="m_8bffd616 mantine-Flex-root __m__-rrn"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -4333,10 +4333,10 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-rrs{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                      .__m__-rrr{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                     </style>
                     <div
-                      class="m_2415a157 mantine-SimpleGrid-root __m__-rrs"
+                      class="m_2415a157 mantine-SimpleGrid-root __m__-rrr"
                       style="margin-bottom: var(--mantine-spacing-sm);"
                     >
                       <div
@@ -4692,7 +4692,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rpn"
+              class="m_8bffd616 mantine-Flex-root __m__-rpm"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -4849,7 +4849,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rq6"
+              class="m_8bffd616 mantine-Flex-root __m__-rq5"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -8623,7 +8623,7 @@ exports[`with title and description with global label off array icons 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rgf"
+              class="m_8bffd616 mantine-Flex-root __m__-rge"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -8818,7 +8818,7 @@ exports[`with title and description with global label off array icons 1`] = `
             style="margin-bottom: var(--mantine-spacing-xs);"
           >
             <div
-              class="m_8bffd616 mantine-Flex-root __m__-rh0"
+              class="m_8bffd616 mantine-Flex-root __m__-rgv"
               style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
             >
               <div
@@ -9100,15 +9100,6 @@ exports[`with title and description with global label off checkboxes 1`] = `
         class="m_46b77525 mantine-InputWrapper-root mantine-MultiSelect-root"
         data-size="sm"
       >
-        <label
-          class="m_8fdc1311 mantine-InputWrapper-label mantine-MultiSelect-label"
-          data-size="sm"
-          for="root"
-          id="root-label"
-          style="--input-label-size: var(--mantine-font-size-sm);"
-        >
-          Test field
-        </label>
         <div
           class="m_6c018570 mantine-Input-wrapper mantine-MultiSelect-wrapper"
           data-multiline="true"
@@ -9171,7 +9162,6 @@ exports[`with title and description with global label off checkboxes 1`] = `
         style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
       >
         <div
-          aria-labelledby="root-label"
           class="m_b2821a6e mantine-MultiSelect-options"
           id="mantine-i"
           role="listbox"
@@ -9203,7 +9193,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
                       aria-selected="false"
                       class="m_92253aa5 mantine-MultiSelect-option m_390b5f4"
                       data-combobox-option="true"
-                      id=":rg4:"
+                      id=":rg3:"
                       role="option"
                       value="0"
                     >
@@ -9215,7 +9205,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
                       aria-selected="false"
                       class="m_92253aa5 mantine-MultiSelect-option m_390b5f4"
                       data-combobox-option="true"
-                      id=":rg6:"
+                      id=":rg5:"
                       role="option"
                       value="1"
                     >
@@ -9227,7 +9217,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
                       aria-selected="false"
                       class="m_92253aa5 mantine-MultiSelect-option m_390b5f4"
                       data-combobox-option="true"
-                      id=":rg8:"
+                      id=":rg7:"
                       role="option"
                       value="2"
                     >

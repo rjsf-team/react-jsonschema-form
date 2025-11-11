@@ -59,6 +59,58 @@ export function objectTests(Form: ComponentType<FormProps>) {
       const { asFragment } = render(<Form schema={schema} validator={validator} formData={{ foo: 'foo' }} />);
       expect(asFragment()).toMatchSnapshot();
     });
+    test('additionalProperties, label off', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        additionalProperties: true,
+      };
+      const uiSchema: UiSchema = {
+        'ui:label': false,
+      };
+      const { asFragment } = render(
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} formData={{ foo: 'foo' }} />,
+      );
+      expect(asFragment()).toMatchSnapshot();
+    });
+    test('additionalProperties, description', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        additionalProperties: {
+          type: 'string',
+          description: 'item description',
+        },
+      };
+      const { asFragment } = render(<Form schema={schema} validator={validator} formData={{ foo: 'foo' }} />);
+      expect(asFragment()).toMatchSnapshot();
+    });
+    test('additionalProperties, object type', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        additionalProperties: {
+          type: 'object',
+          properties: {
+            foo: {
+              type: 'string',
+            },
+          },
+        },
+      };
+      const { asFragment } = render(<Form schema={schema} validator={validator} formData={{ foo: 'foo' }} />);
+      expect(asFragment()).toMatchSnapshot();
+    });
+    test('additionalProperties, array type', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        additionalProperties: {
+          type: 'array',
+          items: {
+            type: 'string',
+          },
+        },
+      };
+      const { asFragment } = render(<Form schema={schema} validator={validator} formData={{ foo: 'foo' }} />);
+      expect(asFragment()).toMatchSnapshot();
+    });
     test('show add button and fields if additionalProperties is true and not an object', async () => {
       const schema: RJSFSchema = {
         additionalProperties: true,
