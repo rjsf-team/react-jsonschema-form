@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/daisyui",
-  "version": "6.0.2",
+  "version": "6.1.0",
   "description": "Daisy UI components for react-jsonschema-form",
   "main": "dist/index.js",
   "module": "lib/index.js",
