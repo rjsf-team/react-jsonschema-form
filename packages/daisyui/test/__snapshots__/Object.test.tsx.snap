@@ -2429,6 +2429,805 @@ exports[`object fields additionalProperties 1`] = `
 </DocumentFragment>
 `;
 
+exports[`object fields additionalProperties, array type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-object"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-object"
+      >
+        <div
+          class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+        >
+          <div
+            class="grid grid-cols-1 gap-4 "
+          >
+            <div
+              class=""
+            >
+              <div
+                class="wrap-if-additional-template rjsf-field rjsf-field-array"
+              >
+                <div
+                  class="flex items-baseline"
+                  style="justify-content: space-between;"
+                >
+                  <div>
+                    <label
+                      class="label"
+                      for="root_foo-key"
+                    >
+                      <span
+                        class="label-text"
+                      >
+                        foo Key
+                      </span>
+                    </label>
+                    <input
+                      class="input input-bordered"
+                      id="root_foo-key"
+                      type="text"
+                      value="foo"
+                    />
+                  </div>
+                  <div
+                    class="field-template mb-3 rjsf-field rjsf-field-array"
+                  >
+                    <label
+                      class="label"
+                      for="root_foo"
+                    >
+                      <span
+                        class="label-text font-medium"
+                      >
+                        foo
+                      </span>
+                    </label>
+                    <div
+                      class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                    >
+                      <div
+                        class="title-field mb-6"
+                        id="root_foo__title"
+                      >
+                        <h2
+                          class="text-3xl font-bold text-primary mb-2"
+                        >
+                          foo
+                        </h2>
+                        <div
+                          class="divider divider-primary my-0"
+                        />
+                      </div>
+                      <div
+                        class="flex flex-col gap-4"
+                      >
+                        <div
+                          class="rjsf-array-item-list"
+                        >
+                          <div
+                            class="text-center italic text-base-content/70"
+                          >
+                            No items yet. Use the button below to add some.
+                          </div>
+                        </div>
+                        <div
+                          class="flex justify-end"
+                        >
+                          <div
+                            class="row"
+                          >
+                            <p
+                              class="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add btn btn-primary btn-sm"
+                            >
+                              <button
+                                aria-label="Add"
+                                class="btn-add col-xs-12 btn-primary btn-primary-content"
+                                id="root_foo__add"
+                                title="Add"
+                                type="button"
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  class="svg-inline--fa fa-plus h-5 w-5"
+                                  data-icon="plus"
+                                  data-prefix="fas"
+                                  role="img"
+                                  viewBox="0 0 448 512"
+                                >
+                                  <path
+                                    d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="rjsf-field-error-template text-red-600"
+                    >
+                      <ul
+                        class="list-disc list-inside"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="flex self-start"
+                    style="margin-top: 32px;"
+                  >
+                    <button
+                      aria-label="Remove"
+                      class="rjsf-object-property-remove"
+                      id="root_foo__remove"
+                      title="Remove"
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="svg-inline--fa fa-trash h-5 w-5"
+                        data-icon="trash"
+                        data-prefix="fas"
+                        role="img"
+                        viewBox="0 0 448 512"
+                      >
+                        <path
+                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="flex justify-end"
+            >
+              <div
+                class="row"
+              >
+                <p
+                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                >
+                  <button
+                    aria-label="Add"
+                    class="btn-add col-xs-12 btn-primary btn-primary-content"
+                    id="root__add"
+                    title="Add"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="svg-inline--fa fa-plus h-5 w-5"
+                      data-icon="plus"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 448 512"
+                    >
+                      <path
+                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, description 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-object"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-object"
+      >
+        <div
+          class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+        >
+          <div
+            class="grid grid-cols-1 gap-4 "
+          >
+            <div
+              class=""
+            >
+              <div
+                class="wrap-if-additional-template rjsf-field rjsf-field-string"
+              >
+                <div
+                  class="flex items-baseline"
+                  style="justify-content: space-between;"
+                >
+                  <div>
+                    <label
+                      class="label"
+                      for="root_foo-key"
+                    >
+                      <span
+                        class="label-text"
+                      >
+                        foo Key
+                      </span>
+                    </label>
+                    <input
+                      class="input input-bordered"
+                      id="root_foo-key"
+                      type="text"
+                      value="foo"
+                    />
+                  </div>
+                  <div
+                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                  >
+                    <label
+                      class="label"
+                      for="root_foo"
+                    >
+                      <span
+                        class="label-text font-medium"
+                      >
+                        foo
+                      </span>
+                    </label>
+                    <div
+                      class="form-control"
+                    >
+                      <label
+                        class="label hidden"
+                        for="root_foo"
+                        style="display: none;"
+                      >
+                        <span
+                          class="label-text"
+                        >
+                          foo
+                        </span>
+                      </label>
+                      <input
+                        aria-describedby="root_foo__error root_foo__description root_foo__help"
+                        class="input input-bordered w-full"
+                        id="root_foo"
+                        name="root_foo"
+                        placeholder=""
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
+                    <div
+                      class="description-field my-4"
+                      id="root_foo__description"
+                    >
+                      <div
+                        class="text-sm text-base-content/80"
+                      >
+                        item description
+                      </div>
+                    </div>
+                    <div
+                      class="rjsf-field-error-template text-red-600"
+                    >
+                      <ul
+                        class="list-disc list-inside"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="flex self-start"
+                    style="margin-top: 32px;"
+                  >
+                    <button
+                      aria-label="Remove"
+                      class="rjsf-object-property-remove"
+                      id="root_foo__remove"
+                      title="Remove"
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="svg-inline--fa fa-trash h-5 w-5"
+                        data-icon="trash"
+                        data-prefix="fas"
+                        role="img"
+                        viewBox="0 0 448 512"
+                      >
+                        <path
+                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="flex justify-end"
+            >
+              <div
+                class="row"
+              >
+                <p
+                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                >
+                  <button
+                    aria-label="Add"
+                    class="btn-add col-xs-12 btn-primary btn-primary-content"
+                    id="root__add"
+                    title="Add"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="svg-inline--fa fa-plus h-5 w-5"
+                      data-icon="plus"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 448 512"
+                    >
+                      <path
+                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, label off 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-object"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-object"
+      >
+        <div
+          class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+        >
+          <div
+            class="grid grid-cols-1 gap-4 "
+          >
+            <div
+              class=""
+            >
+              <div
+                class="wrap-if-additional-template rjsf-field rjsf-field-string"
+              >
+                <div
+                  class="flex items-baseline"
+                  style="justify-content: space-between;"
+                >
+                  <div>
+                    <label
+                      class="label"
+                      for="root_foo-key"
+                    >
+                      <span
+                        class="label-text"
+                      >
+                        foo Key
+                      </span>
+                    </label>
+                    <input
+                      class="input input-bordered"
+                      id="root_foo-key"
+                      type="text"
+                      value="foo"
+                    />
+                  </div>
+                  <div
+                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                  >
+                    <label
+                      class="label"
+                      for="root_foo"
+                    >
+                      <span
+                        class="label-text font-medium"
+                      >
+                        foo
+                      </span>
+                    </label>
+                    <div
+                      class="form-control"
+                    >
+                      <label
+                        class="label hidden"
+                        for="root_foo"
+                        style="display: none;"
+                      >
+                        <span
+                          class="label-text"
+                        >
+                          foo
+                        </span>
+                      </label>
+                      <input
+                        aria-describedby="root_foo__error root_foo__description root_foo__help"
+                        class="input input-bordered w-full"
+                        id="root_foo"
+                        name="root_foo"
+                        placeholder=""
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
+                    <div
+                      class="rjsf-field-error-template text-red-600"
+                    >
+                      <ul
+                        class="list-disc list-inside"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="flex self-start"
+                    style="margin-top: 32px;"
+                  >
+                    <button
+                      aria-label="Remove"
+                      class="rjsf-object-property-remove"
+                      id="root_foo__remove"
+                      title="Remove"
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="svg-inline--fa fa-trash h-5 w-5"
+                        data-icon="trash"
+                        data-prefix="fas"
+                        role="img"
+                        viewBox="0 0 448 512"
+                      >
+                        <path
+                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="flex justify-end"
+            >
+              <div
+                class="row"
+              >
+                <p
+                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                >
+                  <button
+                    aria-label="Add"
+                    class="btn-add col-xs-12 btn-primary btn-primary-content"
+                    id="root__add"
+                    title="Add"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="svg-inline--fa fa-plus h-5 w-5"
+                      data-icon="plus"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 448 512"
+                    >
+                      <path
+                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, object type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-object"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-object"
+      >
+        <div
+          class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+        >
+          <div
+            class="grid grid-cols-1 gap-4 "
+          >
+            <div
+              class=""
+            >
+              <div
+                class="wrap-if-additional-template rjsf-field rjsf-field-object"
+              >
+                <div
+                  class="flex items-baseline"
+                  style="justify-content: space-between;"
+                >
+                  <div>
+                    <label
+                      class="label"
+                      for="root_foo-key"
+                    >
+                      <span
+                        class="label-text"
+                      >
+                        foo Key
+                      </span>
+                    </label>
+                    <input
+                      class="input input-bordered"
+                      id="root_foo-key"
+                      type="text"
+                      value="foo"
+                    />
+                  </div>
+                  <div
+                    class="field-template mb-3 rjsf-field rjsf-field-object"
+                  >
+                    <label
+                      class="label"
+                      for="root_foo"
+                    >
+                      <span
+                        class="label-text font-medium"
+                      >
+                        foo
+                      </span>
+                    </label>
+                    <div
+                      class="form-control "
+                    >
+                      <div
+                        class="title-field mb-6"
+                        id="root_foo__title"
+                      >
+                        <h2
+                          class="text-3xl font-bold text-primary mb-2"
+                        >
+                          foo
+                        </h2>
+                        <div
+                          class="divider divider-primary my-0"
+                        />
+                      </div>
+                      <div
+                        class="grid grid-cols-1 gap-4 mb-4"
+                      >
+                        <div
+                          class=""
+                        >
+                          <div
+                            class="flex-grow rjsf-field rjsf-field-string"
+                          >
+                            <div
+                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                            >
+                              <label
+                                class="label"
+                                for="root_foo_foo"
+                              >
+                                <span
+                                  class="label-text font-medium"
+                                >
+                                  foo
+                                </span>
+                              </label>
+                              <div
+                                class="form-control"
+                              >
+                                <label
+                                  class="label hidden"
+                                  for="root_foo_foo"
+                                  style="display: none;"
+                                >
+                                  <span
+                                    class="label-text"
+                                  >
+                                    foo
+                                  </span>
+                                </label>
+                                <input
+                                  aria-describedby="root_foo_foo__error root_foo_foo__description root_foo_foo__help"
+                                  class="input input-bordered w-full"
+                                  id="root_foo_foo"
+                                  name="root_foo_foo"
+                                  placeholder=""
+                                  type="text"
+                                  value=""
+                                />
+                              </div>
+                              <div
+                                class="rjsf-field-error-template text-red-600"
+                              >
+                                <ul
+                                  class="list-disc list-inside"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="rjsf-field-error-template text-red-600"
+                    >
+                      <ul
+                        class="list-disc list-inside"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="flex self-start"
+                    style="margin-top: 32px;"
+                  >
+                    <button
+                      aria-label="Remove"
+                      class="rjsf-object-property-remove"
+                      id="root_foo__remove"
+                      title="Remove"
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="svg-inline--fa fa-trash h-5 w-5"
+                        data-icon="trash"
+                        data-prefix="fas"
+                        role="img"
+                        viewBox="0 0 448 512"
+                      >
+                        <path
+                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="flex justify-end"
+            >
+              <div
+                class="row"
+              >
+                <p
+                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                >
+                  <button
+                    aria-label="Add"
+                    class="btn-add col-xs-12 btn-primary btn-primary-content"
+                    id="root__add"
+                    title="Add"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="svg-inline--fa fa-plus h-5 w-5"
+                      data-icon="plus"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 448 512"
+                    >
+                      <path
+                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`object fields object 1`] = `
 <DocumentFragment>
   <form

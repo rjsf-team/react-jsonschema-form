@@ -254,7 +254,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r24:::legend"
+        aria-labelledby="fieldset:::r2k:::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -270,7 +270,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                 class="rjsf-field rjsf-field-object"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r25:::legend"
+                  aria-labelledby="fieldset:::r2l:::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -301,7 +301,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                           class="rjsf-field rjsf-field-string"
                         >
                           <fieldset
-                            aria-labelledby="fieldset:::r26:::legend"
+                            aria-labelledby="fieldset:::r2m:::legend"
                             class="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -313,15 +313,15 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                 class="chakra-field__root emotion-11"
                                 data-part="root"
                                 data-scope="field"
-                                id="field:::r27:"
+                                id="field:::r2n:"
                                 role="group"
                               >
                                 <label
                                   class="chakra-field__label emotion-12"
                                   data-part="label"
                                   data-scope="field"
-                                  for=":r27:"
-                                  id="field:::r27:::label"
+                                  for=":r2n:"
+                                  id="field:::r2n:::label"
                                 >
                                   name
                                 </label>
@@ -346,7 +346,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                           class="rjsf-field rjsf-field-object"
                         >
                           <fieldset
-                            aria-labelledby="fieldset:::r28:::legend"
+                            aria-labelledby="fieldset:::r2o:::legend"
                             class="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -377,7 +377,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                     class="rjsf-field rjsf-field-string"
                                   >
                                     <fieldset
-                                      aria-labelledby="fieldset:::r29:::legend"
+                                      aria-labelledby="fieldset:::r2p:::legend"
                                       class="fieldset__root emotion-0"
                                       data-part="root"
                                       data-scope="fieldset"
@@ -389,15 +389,15 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                           class="chakra-field__root emotion-11"
                                           data-part="root"
                                           data-scope="field"
-                                          id="field:::r2a:"
+                                          id="field:::r2q:"
                                           role="group"
                                         >
                                           <label
                                             class="chakra-field__label emotion-12"
                                             data-part="label"
                                             data-scope="field"
-                                            for=":r2a:"
-                                            id="field:::r2a:::label"
+                                            for=":r2q:"
+                                            id="field:::r2q:::label"
                                           >
                                             street
                                           </label>
@@ -422,7 +422,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                     class="rjsf-field rjsf-field-string"
                                   >
                                     <fieldset
-                                      aria-labelledby="fieldset:::r2b:::legend"
+                                      aria-labelledby="fieldset:::r2r:::legend"
                                       class="fieldset__root emotion-0"
                                       data-part="root"
                                       data-scope="fieldset"
@@ -434,15 +434,15 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                           class="chakra-field__root emotion-11"
                                           data-part="root"
                                           data-scope="field"
-                                          id="field:::r2c:"
+                                          id="field:::r2s:"
                                           role="group"
                                         >
                                           <label
                                             class="chakra-field__label emotion-12"
                                             data-part="label"
                                             data-scope="field"
-                                            for=":r2c:"
-                                            id="field:::r2c:::label"
+                                            for=":r2s:"
+                                            id="field:::r2s:::label"
                                           >
                                             city
                                           </label>
@@ -467,7 +467,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                     class="rjsf-field rjsf-field-string"
                                   >
                                     <fieldset
-                                      aria-labelledby="fieldset:::r2d:::legend"
+                                      aria-labelledby="fieldset:::r2t:::legend"
                                       class="fieldset__root emotion-0"
                                       data-part="root"
                                       data-scope="fieldset"
@@ -479,15 +479,15 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                           class="chakra-field__root emotion-11"
                                           data-part="root"
                                           data-scope="field"
-                                          id="field:::r2e:"
+                                          id="field:::r2u:"
                                           role="group"
                                         >
                                           <label
                                             class="chakra-field__label emotion-12"
                                             data-part="label"
                                             data-scope="field"
-                                            for=":r2e:"
-                                            id="field:::r2e:::label"
+                                            for=":r2u:"
+                                            id="field:::r2u:::label"
                                           >
                                             country
                                           </label>
@@ -947,7 +947,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r2f:::legend"
+        aria-labelledby="fieldset:::r2v:::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -963,7 +963,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r2g:::legend"
+                  aria-labelledby="fieldset:::r30:::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -975,15 +975,15 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r2h:"
+                      id="field:::r31:"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for=":r2h:"
-                        id="field:::r2h:::label"
+                        for=":r31:"
+                        id="field:::r31:::label"
                       >
                         name
                       </label>
@@ -1014,15 +1014,15 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                     class="chakra-field__root emotion-10"
                     data-part="root"
                     data-scope="field"
-                    id="field:::r2i:"
+                    id="field:::r32:"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-6"
                       data-part="label"
                       data-scope="field"
-                      for=":r2i:"
-                      id="field:::r2i:::label"
+                      for=":r32:"
+                      id="field:::r32:::label"
                     >
                       customField Key
                     </label>
@@ -1041,7 +1041,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                   class="emotion-9"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r2j:::legend"
+                    aria-labelledby="fieldset:::r33:::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -1053,15 +1053,15 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                         class="chakra-field__root emotion-5"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r2k:"
+                        id="field:::r34:"
                         role="group"
                       >
                         <label
                           class="chakra-field__label emotion-6"
                           data-part="label"
                           data-scope="field"
-                          for=":r2k:"
-                          id="field:::r2k:::label"
+                          for=":r34:"
+                          id="field:::r34:::label"
                         >
                           customField
                         </label>
@@ -1720,7 +1720,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r2l:::legend"
+        aria-labelledby="fieldset:::r35:::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -1736,7 +1736,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r2m:::legend"
+                  aria-labelledby="fieldset:::r36:::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -1748,15 +1748,15 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r2n:"
+                      id="field:::r37:"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for=":r2n:"
-                        id="field:::r2n:::label"
+                        for=":r37:"
+                        id="field:::r37:::label"
                       >
                         name
                       </label>
@@ -1781,7 +1781,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                 class="rjsf-field rjsf-field-number"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r2o:::legend"
+                  aria-labelledby="fieldset:::r38:::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -1793,15 +1793,15 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r2p:"
+                      id="field:::r39:"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for=":r2p:"
-                        id="field:::r2p:::label"
+                        for=":r39:"
+                        id="field:::r39:::label"
                       >
                         age
                       </label>
@@ -1827,7 +1827,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                 class="rjsf-field rjsf-field-boolean"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r2q:::legend"
+                  aria-labelledby="fieldset:::r3a:::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -1839,7 +1839,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r2r:"
+                      id="field:::r3b:"
                       role="group"
                     >
                       <label
@@ -1849,14 +1849,14 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                         data-scope="checkbox"
                         data-state="checked"
                         dir="ltr"
-                        for=":r2r:"
+                        for=":r3b:"
                         id="checkbox:root_active"
                       >
                         <input
                           aria-invalid="false"
-                          aria-labelledby="field:::r2r:::label"
+                          aria-labelledby="field:::r3b:::label"
                           checked=""
-                          id=":r2r:"
+                          id=":r3b:"
                           name="root[active]"
                           style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                           type="checkbox"
@@ -1887,7 +1887,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                           data-scope="checkbox"
                           data-state="checked"
                           dir="ltr"
-                          id="field:::r2r:::label"
+                          id="field:::r3b:::label"
                         >
                           <p>
                             active
@@ -1904,7 +1904,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                 class="rjsf-field rjsf-field-array"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r2t:::legend"
+                  aria-labelledby="fieldset:::r3d:::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -1942,7 +1942,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                                 class="rjsf-field rjsf-field-string"
                               >
                                 <fieldset
-                                  aria-labelledby="fieldset:::r2u:::legend"
+                                  aria-labelledby="fieldset:::r3e:::legend"
                                   class="fieldset__root emotion-0"
                                   data-part="root"
                                   data-scope="fieldset"
@@ -1954,7 +1954,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                                       class="chakra-field__root emotion-5"
                                       data-part="root"
                                       data-scope="field"
-                                      id="field:::r2v:"
+                                      id="field:::r3f:"
                                       role="group"
                                     >
                                       <label
@@ -1962,8 +1962,8 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                                         data-part="label"
                                         data-required=""
                                         data-scope="field"
-                                        for=":r2v:"
-                                        id="field:::r2v:::label"
+                                        for=":r3f:"
+                                        id="field:::r3f:::label"
                                       >
                                         tags-1
                                         <span
@@ -2096,7 +2096,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                                 class="rjsf-field rjsf-field-string"
                               >
                                 <fieldset
-                                  aria-labelledby="fieldset:::r30:::legend"
+                                  aria-labelledby="fieldset:::r3g:::legend"
                                   class="fieldset__root emotion-0"
                                   data-part="root"
                                   data-scope="fieldset"
@@ -2108,7 +2108,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                                       class="chakra-field__root emotion-5"
                                       data-part="root"
                                       data-scope="field"
-                                      id="field:::r31:"
+                                      id="field:::r3h:"
                                       role="group"
                                     >
                                       <label
@@ -2116,8 +2116,8 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                                         data-part="label"
                                         data-required=""
                                         data-scope="field"
-                                        for=":r31:"
-                                        id="field:::r31:::label"
+                                        for=":r3h:"
+                                        id="field:::r3h:::label"
                                       >
                                         tags-2
                                         <span
@@ -2533,7 +2533,7 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r1t:::legend"
+        aria-labelledby="fieldset:::r2d:::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -2549,7 +2549,7 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r1u:::legend"
+                  aria-labelledby="fieldset:::r2e:::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -2561,15 +2561,15 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r1v:"
+                      id="field:::r2f:"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for=":r1v:"
-                        id="field:::r1v:::label"
+                        for=":r2f:"
+                        id="field:::r2f:::label"
                       >
                         firstName
                       </label>
@@ -2594,7 +2594,7 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r20:::legend"
+                  aria-labelledby="fieldset:::r2g:::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -2606,15 +2606,15 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r21:"
+                      id="field:::r2h:"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for=":r21:"
-                        id="field:::r21:::label"
+                        for=":r2h:"
+                        id="field:::r2h:::label"
                       >
                         lastName
                       </label>
@@ -2639,7 +2639,7 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
                 class="rjsf-field rjsf-field-number"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r22:::legend"
+                  aria-labelledby="fieldset:::r2i:::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -2651,15 +2651,15 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r23:"
+                      id="field:::r2j:"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for=":r23:"
-                        id="field:::r23:::label"
+                        for=":r2j:"
+                        id="field:::r2j:::label"
                       >
                         age
                       </label>
@@ -2955,7 +2955,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r39:::legend"
+        aria-labelledby="fieldset:::r3p:::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -2971,7 +2971,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                 class="rjsf-field rjsf-field-object"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r3a:::legend"
+                  aria-labelledby="fieldset:::r3q:::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -3002,7 +3002,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                           class="rjsf-field rjsf-field-string"
                         >
                           <fieldset
-                            aria-labelledby="fieldset:::r3b:::legend"
+                            aria-labelledby="fieldset:::r3r:::legend"
                             class="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -3014,15 +3014,15 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                 class="chakra-field__root emotion-11"
                                 data-part="root"
                                 data-scope="field"
-                                id="field:::r3c:"
+                                id="field:::r3s:"
                                 role="group"
                               >
                                 <label
                                   class="chakra-field__label emotion-12"
                                   data-part="label"
                                   data-scope="field"
-                                  for=":r3c:"
-                                  id="field:::r3c:::label"
+                                  for=":r3s:"
+                                  id="field:::r3s:::label"
                                 >
                                   name
                                 </label>
@@ -3047,7 +3047,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                           class="rjsf-field rjsf-field-object"
                         >
                           <fieldset
-                            aria-labelledby="fieldset:::r3d:::legend"
+                            aria-labelledby="fieldset:::r3t:::legend"
                             class="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -3078,7 +3078,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                     class="rjsf-field rjsf-field-string"
                                   >
                                     <fieldset
-                                      aria-labelledby="fieldset:::r3e:::legend"
+                                      aria-labelledby="fieldset:::r3u:::legend"
                                       class="fieldset__root emotion-0"
                                       data-part="root"
                                       data-scope="fieldset"
@@ -3090,15 +3090,15 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                           class="chakra-field__root emotion-11"
                                           data-part="root"
                                           data-scope="field"
-                                          id="field:::r3f:"
+                                          id="field:::r3v:"
                                           role="group"
                                         >
                                           <label
                                             class="chakra-field__label emotion-12"
                                             data-part="label"
                                             data-scope="field"
-                                            for=":r3f:"
-                                            id="field:::r3f:::label"
+                                            for=":r3v:"
+                                            id="field:::r3v:::label"
                                           >
                                             street
                                           </label>
@@ -3123,7 +3123,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                     class="rjsf-field rjsf-field-string"
                                   >
                                     <fieldset
-                                      aria-labelledby="fieldset:::r3g:::legend"
+                                      aria-labelledby="fieldset:::r40:::legend"
                                       class="fieldset__root emotion-0"
                                       data-part="root"
                                       data-scope="fieldset"
@@ -3135,15 +3135,15 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                           class="chakra-field__root emotion-11"
                                           data-part="root"
                                           data-scope="field"
-                                          id="field:::r3h:"
+                                          id="field:::r41:"
                                           role="group"
                                         >
                                           <label
                                             class="chakra-field__label emotion-12"
                                             data-part="label"
                                             data-scope="field"
-                                            for=":r3h:"
-                                            id="field:::r3h:::label"
+                                            for=":r41:"
+                                            id="field:::r41:::label"
                                           >
                                             city
                                           </label>
@@ -3629,7 +3629,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r3i:::legend"
+        aria-labelledby="fieldset:::r42:::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -3645,7 +3645,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r3j:::legend"
+                  aria-labelledby="fieldset:::r43:::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -3657,15 +3657,15 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r3k:"
+                      id="field:::r44:"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for=":r3k:"
-                        id="field:::r3k:::label"
+                        for=":r44:"
+                        id="field:::r44:::label"
                       >
                         name
                       </label>
@@ -3690,7 +3690,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                 class="rjsf-field rjsf-field-number"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r3l:::legend"
+                  aria-labelledby="fieldset:::r45:::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -3702,15 +3702,15 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r3m:"
+                      id="field:::r46:"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for=":r3m:"
-                        id="field:::r3m:::label"
+                        for=":r46:"
+                        id="field:::r46:::label"
                       >
                         count
                       </label>
@@ -3736,7 +3736,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                 class="rjsf-field rjsf-field-array"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r3n:::legend"
+                  aria-labelledby="fieldset:::r47:::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -3774,7 +3774,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                                 class="rjsf-field rjsf-field-string"
                               >
                                 <fieldset
-                                  aria-labelledby="fieldset:::r3o:::legend"
+                                  aria-labelledby="fieldset:::r48:::legend"
                                   class="fieldset__root emotion-0"
                                   data-part="root"
                                   data-scope="fieldset"
@@ -3786,7 +3786,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                                       class="chakra-field__root emotion-5"
                                       data-part="root"
                                       data-scope="field"
-                                      id="field:::r3p:"
+                                      id="field:::r49:"
                                       role="group"
                                     >
                                       <label
@@ -3794,8 +3794,8 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                                         data-part="label"
                                         data-required=""
                                         data-scope="field"
-                                        for=":r3p:"
-                                        id="field:::r3p:::label"
+                                        for=":r49:"
+                                        id="field:::r49:::label"
                                       >
                                         items-1
                                         <span
@@ -3928,7 +3928,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                                 class="rjsf-field rjsf-field-string"
                               >
                                 <fieldset
-                                  aria-labelledby="fieldset:::r3q:::legend"
+                                  aria-labelledby="fieldset:::r4a:::legend"
                                   class="fieldset__root emotion-0"
                                   data-part="root"
                                   data-scope="fieldset"
@@ -3940,7 +3940,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                                       class="chakra-field__root emotion-5"
                                       data-part="root"
                                       data-scope="field"
-                                      id="field:::r3r:"
+                                      id="field:::r4b:"
                                       role="group"
                                     >
                                       <label
@@ -3948,8 +3948,8 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                                         data-part="label"
                                         data-required=""
                                         data-scope="field"
-                                        for=":r3r:"
-                                        id="field:::r3r:::label"
+                                        for=":r4b:"
+                                        id="field:::r4b:::label"
                                       >
                                         items-2
                                         <span
@@ -4365,7 +4365,7 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r32:::legend"
+        aria-labelledby="fieldset:::r3i:::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -4381,7 +4381,7 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r33:::legend"
+                  aria-labelledby="fieldset:::r3j:::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -4393,15 +4393,15 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r34:"
+                      id="field:::r3k:"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for=":r34:"
-                        id="field:::r34:::label"
+                        for=":r3k:"
+                        id="field:::r3k:::label"
                       >
                         firstName
                       </label>
@@ -4426,7 +4426,7 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r35:::legend"
+                  aria-labelledby="fieldset:::r3l:::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -4438,15 +4438,15 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r36:"
+                      id="field:::r3m:"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for=":r36:"
-                        id="field:::r36:::label"
+                        for=":r3m:"
+                        id="field:::r3m:::label"
                       >
                         lastName
                       </label>
@@ -4471,7 +4471,7 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
                 class="rjsf-field rjsf-field-number"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r37:::legend"
+                  aria-labelledby="fieldset:::r3n:::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -4483,15 +4483,15 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r38:"
+                      id="field:::r3o:"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for=":r38:"
-                        id="field:::r38:::label"
+                        for=":r3o:"
+                        id="field:::r3o:::label"
                       >
                         age
                       </label>
@@ -5108,6 +5108,2442 @@ exports[`object fields additionalProperties 1`] = `
     >
       <button
         class="chakra-button emotion-17"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+  <span
+    hidden=""
+  />
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, array type 1`] = `
+<DocumentFragment>
+  @layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
+.emotion-2 {
+  display: grid;
+  gap: var(--chakra-spacing-4);
+  margin-bottom: var(--chakra-spacing-4);
+}
+
+.emotion-3 {
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: var(--chakra-spacing-2);
+}
+
+.emotion-4 {
+  grid-column: span 5/span 5;
+}
+
+@layer recipes {
+  .emotion-5 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: start;
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    font-weight: var(--chakra-font-weights-medium);
+    gap: var(--chakra-spacing-1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
+.emotion-7 {
+  margin-bottom: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-7 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-7:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-7:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
+.emotion-11 {
+  margin-top: var(--chakra-spacing-1);
+  margin-bottom: var(--chakra-spacing-4);
+}
+
+@layer recipes {
+  .emotion-12 {
+    font-family: var(--chakra-fonts-heading);
+    font-weight: var(--chakra-font-weights-semibold);
+    font-size: var(--chakra-font-sizes-xl);
+    line-height: 1.875rem;
+  }
+}
+
+@layer recipes {
+  .emotion-13 {
+    display: block;
+    border-color: var(--chakra-colors-border);
+    --separator-thickness: 1px;
+    border-style: solid;
+    border-top-width: var(--separator-thickness);
+  }
+}
+
+.emotion-14 {
+  display: grid;
+}
+
+.emotion-15 {
+  justify-self: flex-end;
+}
+
+.emotion-16 {
+  margin-top: var(--chakra-spacing-2);
+}
+
+@layer recipes {
+  .emotion-17 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-17:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-17:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-17 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-17:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-17:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
+}
+
+.emotion-19 {
+  padding-inline: 0;
+  padding-block: 0;
+}
+
+@layer recipes {
+  .emotion-19 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-19:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-19:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-19 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-19:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-19:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
+}
+
+.emotion-19 :where(svg) {
+  font-size: 1.2em;
+}
+
+.emotion-22 {
+  margin-top: var(--chakra-spacing-3);
+}
+
+<form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        aria-labelledby="fieldset:::rm:::legend"
+        class="fieldset__root emotion-0"
+        data-part="root"
+        data-scope="fieldset"
+      >
+        <div
+          class="fieldset__content emotion-1"
+        >
+          <div
+            class="emotion-2"
+          >
+            <div>
+              <div
+                class="rjsf-field rjsf-field-array emotion-3"
+              >
+                <div
+                  class="emotion-4"
+                >
+                  <div
+                    class="chakra-field__root emotion-5"
+                    data-part="root"
+                    data-scope="field"
+                    id="field:::rn:"
+                    role="group"
+                  >
+                    <label
+                      class="chakra-field__label emotion-6"
+                      data-part="label"
+                      data-scope="field"
+                      for=":rn:"
+                      id="field:::rn:::label"
+                    >
+                      foo Key
+                    </label>
+                    <input
+                      class="chakra-input emotion-7"
+                      data-part="input"
+                      data-scope="field"
+                      id="root_foo-key"
+                      name="root_foo-key"
+                      type="text"
+                      value="foo"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="emotion-4"
+                >
+                  <fieldset
+                    aria-labelledby="fieldset:::ro:::legend"
+                    class="fieldset__root emotion-0"
+                    data-part="root"
+                    data-scope="fieldset"
+                  >
+                    <div
+                      class="fieldset__content emotion-1"
+                    >
+                      <div>
+                        <div
+                          class="emotion-11"
+                          id="root_foo__title"
+                        >
+                          <h5
+                            class="chakra-heading emotion-12"
+                          >
+                            foo
+                          </h5>
+                          <span
+                            aria-orientation="horizontal"
+                            class="chakra-separator emotion-13"
+                            role="separator"
+                          />
+                        </div>
+                        <div
+                          class="emotion-14"
+                        >
+                          <div />
+                          <div
+                            class="emotion-15"
+                          >
+                            <div
+                              class="emotion-16"
+                            >
+                              <button
+                                class="chakra-button rjsf-array-item-add emotion-17"
+                                id="root_foo__add"
+                                type="button"
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  class="lucide lucide-plus"
+                                  fill="none"
+                                  height="24"
+                                  stroke="currentColor"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  viewBox="0 0 24 24"
+                                  width="24"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M5 12h14"
+                                  />
+                                  <path
+                                    d="M12 5v14"
+                                  />
+                                </svg>
+                                Add Item
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+                <div
+                  class="emotion-15"
+                  style="margin-top: 22px;"
+                >
+                  <button
+                    aria-label="Remove"
+                    class="chakra-button rjsf-object-property-remove emotion-19"
+                    id="root_foo__remove"
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-delete"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10 5a2 2 0 0 0-1.344.519l-6.328 5.74a1 1 0 0 0 0 1.481l6.328 5.741A2 2 0 0 0 10 19h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z"
+                      />
+                      <path
+                        d="m12 9 6 6"
+                      />
+                      <path
+                        d="m18 9-6 6"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              class="emotion-15"
+            >
+              <button
+                class="chakra-button rjsf-object-property-expand emotion-17"
+                id="root__add"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-plus"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M5 12h14"
+                  />
+                  <path
+                    d="M12 5v14"
+                  />
+                </svg>
+                Add Item
+              </button>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div
+      class="emotion-22"
+    >
+      <button
+        class="chakra-button emotion-17"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+  <span
+    hidden=""
+  />
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, description 1`] = `
+<DocumentFragment>
+  @layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
+.emotion-2 {
+  display: grid;
+  gap: var(--chakra-spacing-4);
+  margin-bottom: var(--chakra-spacing-4);
+}
+
+.emotion-3 {
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: var(--chakra-spacing-2);
+}
+
+.emotion-4 {
+  grid-column: span 5/span 5;
+}
+
+@layer recipes {
+  .emotion-5 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: start;
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    font-weight: var(--chakra-font-weights-medium);
+    gap: var(--chakra-spacing-1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
+.emotion-7 {
+  margin-bottom: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-7 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-7:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-7:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
+.emotion-10 {
+  margin-top: var(--chakra-spacing-2);
+}
+
+@layer recipes {
+  .emotion-10 {
+    color: var(--chakra-colors-fg);
+    font-weight: var(--chakra-font-weights-medium);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+  }
+
+  .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
+.emotion-11 {
+  font-size: var(--chakra-font-sizes-md);
+}
+
+.emotion-13 {
+  margin-bottom: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-13 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-15 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-15:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-15:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
+.emotion-16 {
+  justify-self: flex-end;
+}
+
+.emotion-17 {
+  padding-inline: 0;
+  padding-block: 0;
+}
+
+@layer recipes {
+  .emotion-17 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-17:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-17:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-17 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-17:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-17:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
+}
+
+.emotion-17 :where(svg) {
+  font-size: 1.2em;
+}
+
+@layer recipes {
+  .emotion-19 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-19:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-19:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-19 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-19:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-19:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
+}
+
+.emotion-20 {
+  margin-top: var(--chakra-spacing-3);
+}
+
+<form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        aria-labelledby="fieldset:::rd:::legend"
+        class="fieldset__root emotion-0"
+        data-part="root"
+        data-scope="fieldset"
+      >
+        <div
+          class="fieldset__content emotion-1"
+        >
+          <div
+            class="emotion-2"
+          >
+            <div>
+              <div
+                class="rjsf-field rjsf-field-string emotion-3"
+              >
+                <div
+                  class="emotion-4"
+                  style="margin-top: 36px;"
+                >
+                  <div
+                    class="chakra-field__root emotion-5"
+                    data-part="root"
+                    data-scope="field"
+                    id="field:::re:"
+                    role="group"
+                  >
+                    <label
+                      class="chakra-field__label emotion-6"
+                      data-part="label"
+                      data-scope="field"
+                      for=":re:"
+                      id="field:::re:::label"
+                    >
+                      foo Key
+                    </label>
+                    <input
+                      class="chakra-input emotion-7"
+                      data-part="input"
+                      data-scope="field"
+                      id="root_foo-key"
+                      name="root_foo-key"
+                      type="text"
+                      value="foo"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="emotion-4"
+                >
+                  <fieldset
+                    aria-labelledby="fieldset:::rf:::legend"
+                    class="fieldset__root emotion-0"
+                    data-part="root"
+                    data-scope="fieldset"
+                  >
+                    <legend
+                      class="fieldset__legend emotion-10"
+                      data-part="legend"
+                      data-scope="fieldset"
+                      id="fieldset:::rf:::legend"
+                    >
+                      <sup
+                        class="emotion-11"
+                        id="root_foo__description"
+                      >
+                        item description
+                      </sup>
+                    </legend>
+                    <div
+                      class="fieldset__content emotion-1"
+                    >
+                      <div
+                        class="chakra-field__root emotion-13"
+                        data-part="root"
+                        data-scope="field"
+                        id="field:::rg:"
+                        role="group"
+                      >
+                        <label
+                          class="chakra-field__label emotion-6"
+                          data-part="label"
+                          data-scope="field"
+                          for=":rg:"
+                          id="field:::rg:::label"
+                        >
+                          foo
+                        </label>
+                        <input
+                          aria-describedby="root_foo__error root_foo__description root_foo__help"
+                          class="chakra-input emotion-15"
+                          data-part="input"
+                          data-scope="field"
+                          id="root_foo"
+                          name="root_foo"
+                          placeholder=""
+                          type="text"
+                          value="foo"
+                        />
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+                <div
+                  class="emotion-16"
+                  style="margin-top: 58px;"
+                >
+                  <button
+                    aria-label="Remove"
+                    class="chakra-button rjsf-object-property-remove emotion-17"
+                    id="root_foo__remove"
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-delete"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10 5a2 2 0 0 0-1.344.519l-6.328 5.74a1 1 0 0 0 0 1.481l6.328 5.741A2 2 0 0 0 10 19h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z"
+                      />
+                      <path
+                        d="m12 9 6 6"
+                      />
+                      <path
+                        d="m18 9-6 6"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              class="emotion-16"
+            >
+              <button
+                class="chakra-button rjsf-object-property-expand emotion-19"
+                id="root__add"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-plus"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M5 12h14"
+                  />
+                  <path
+                    d="M12 5v14"
+                  />
+                </svg>
+                Add Item
+              </button>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div
+      class="emotion-20"
+    >
+      <button
+        class="chakra-button emotion-19"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+  <span
+    hidden=""
+  />
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, label off 1`] = `
+<DocumentFragment>
+  @layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
+.emotion-2 {
+  display: grid;
+  gap: var(--chakra-spacing-4);
+  margin-bottom: var(--chakra-spacing-4);
+}
+
+.emotion-3 {
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: var(--chakra-spacing-2);
+}
+
+.emotion-4 {
+  grid-column: span 5/span 5;
+}
+
+@layer recipes {
+  .emotion-5 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: start;
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    font-weight: var(--chakra-font-weights-medium);
+    gap: var(--chakra-spacing-1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
+.emotion-7 {
+  margin-bottom: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-7 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-7:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-7:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
+.emotion-11 {
+  margin-bottom: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-11 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-13 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-13:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-13:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-13:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
+.emotion-14 {
+  justify-self: flex-end;
+}
+
+.emotion-15 {
+  padding-inline: 0;
+  padding-block: 0;
+}
+
+@layer recipes {
+  .emotion-15 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-15:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-15 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-15:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-15:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
+}
+
+.emotion-15 :where(svg) {
+  font-size: 1.2em;
+}
+
+@layer recipes {
+  .emotion-17 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-17:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-17:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-17 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-17:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-17:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
+}
+
+.emotion-18 {
+  margin-top: var(--chakra-spacing-3);
+}
+
+<form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        aria-labelledby="fieldset:::r9:::legend"
+        class="fieldset__root emotion-0"
+        data-part="root"
+        data-scope="fieldset"
+      >
+        <div
+          class="fieldset__content emotion-1"
+        >
+          <div
+            class="emotion-2"
+          >
+            <div>
+              <div
+                class="rjsf-field rjsf-field-string emotion-3"
+              >
+                <div
+                  class="emotion-4"
+                >
+                  <div
+                    class="chakra-field__root emotion-5"
+                    data-part="root"
+                    data-scope="field"
+                    id="field:::ra:"
+                    role="group"
+                  >
+                    <label
+                      class="chakra-field__label emotion-6"
+                      data-part="label"
+                      data-scope="field"
+                      for=":ra:"
+                      id="field:::ra:::label"
+                    >
+                      foo Key
+                    </label>
+                    <input
+                      class="chakra-input emotion-7"
+                      data-part="input"
+                      data-scope="field"
+                      id="root_foo-key"
+                      name="root_foo-key"
+                      type="text"
+                      value="foo"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="emotion-4"
+                >
+                  <fieldset
+                    aria-labelledby="fieldset:::rb:::legend"
+                    class="fieldset__root emotion-0"
+                    data-part="root"
+                    data-scope="fieldset"
+                  >
+                    <div
+                      class="fieldset__content emotion-1"
+                    >
+                      <div
+                        class="chakra-field__root emotion-11"
+                        data-part="root"
+                        data-scope="field"
+                        id="field:::rc:"
+                        role="group"
+                      >
+                        <label
+                          class="chakra-field__label emotion-6"
+                          data-part="label"
+                          data-scope="field"
+                          for=":rc:"
+                          id="field:::rc:::label"
+                        >
+                          foo
+                        </label>
+                        <input
+                          aria-describedby="root_foo__error root_foo__description root_foo__help"
+                          class="chakra-input emotion-13"
+                          data-part="input"
+                          data-scope="field"
+                          id="root_foo"
+                          name="root_foo"
+                          placeholder=""
+                          type="text"
+                          value="foo"
+                        />
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+                <div
+                  class="emotion-14"
+                  style="margin-top: 22px;"
+                >
+                  <button
+                    aria-label="Remove"
+                    class="chakra-button rjsf-object-property-remove emotion-15"
+                    id="root_foo__remove"
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-delete"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10 5a2 2 0 0 0-1.344.519l-6.328 5.74a1 1 0 0 0 0 1.481l6.328 5.741A2 2 0 0 0 10 19h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z"
+                      />
+                      <path
+                        d="m12 9 6 6"
+                      />
+                      <path
+                        d="m18 9-6 6"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              class="emotion-14"
+            >
+              <button
+                class="chakra-button rjsf-object-property-expand emotion-17"
+                id="root__add"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-plus"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M5 12h14"
+                  />
+                  <path
+                    d="M12 5v14"
+                  />
+                </svg>
+                Add Item
+              </button>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div
+      class="emotion-18"
+    >
+      <button
+        class="chakra-button emotion-17"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+  <span
+    hidden=""
+  />
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, object type 1`] = `
+<DocumentFragment>
+  @layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
+.emotion-2 {
+  display: grid;
+  gap: var(--chakra-spacing-4);
+  margin-bottom: var(--chakra-spacing-4);
+}
+
+.emotion-3 {
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: var(--chakra-spacing-2);
+}
+
+.emotion-4 {
+  grid-column: span 5/span 5;
+}
+
+@layer recipes {
+  .emotion-5 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: start;
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    font-weight: var(--chakra-font-weights-medium);
+    gap: var(--chakra-spacing-1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
+.emotion-7 {
+  margin-bottom: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-7 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-7:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-7:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
+.emotion-11 {
+  margin-top: var(--chakra-spacing-1);
+  margin-bottom: var(--chakra-spacing-4);
+}
+
+@layer recipes {
+  .emotion-12 {
+    font-family: var(--chakra-fonts-heading);
+    font-weight: var(--chakra-font-weights-semibold);
+    font-size: var(--chakra-font-sizes-xl);
+    line-height: 1.875rem;
+  }
+}
+
+@layer recipes {
+  .emotion-13 {
+    display: block;
+    border-color: var(--chakra-colors-border);
+    --separator-thickness: 1px;
+    border-style: solid;
+    border-top-width: var(--separator-thickness);
+  }
+}
+
+.emotion-17 {
+  margin-bottom: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-17 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-19 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-19:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-19:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-19:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
+.emotion-20 {
+  justify-self: flex-end;
+}
+
+.emotion-21 {
+  padding-inline: 0;
+  padding-block: 0;
+}
+
+@layer recipes {
+  .emotion-21 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-21:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-21:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-21 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-21:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-21:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
+}
+
+.emotion-21 :where(svg) {
+  font-size: 1.2em;
+}
+
+@layer recipes {
+  .emotion-23 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-23:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-23:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-23 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-23:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-23:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
+}
+
+.emotion-24 {
+  margin-top: var(--chakra-spacing-3);
+}
+
+<form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        aria-labelledby="fieldset:::rh:::legend"
+        class="fieldset__root emotion-0"
+        data-part="root"
+        data-scope="fieldset"
+      >
+        <div
+          class="fieldset__content emotion-1"
+        >
+          <div
+            class="emotion-2"
+          >
+            <div>
+              <div
+                class="rjsf-field rjsf-field-object emotion-3"
+              >
+                <div
+                  class="emotion-4"
+                >
+                  <div
+                    class="chakra-field__root emotion-5"
+                    data-part="root"
+                    data-scope="field"
+                    id="field:::ri:"
+                    role="group"
+                  >
+                    <label
+                      class="chakra-field__label emotion-6"
+                      data-part="label"
+                      data-scope="field"
+                      for=":ri:"
+                      id="field:::ri:::label"
+                    >
+                      foo Key
+                    </label>
+                    <input
+                      class="chakra-input emotion-7"
+                      data-part="input"
+                      data-scope="field"
+                      id="root_foo-key"
+                      name="root_foo-key"
+                      type="text"
+                      value="foo"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="emotion-4"
+                >
+                  <fieldset
+                    aria-labelledby="fieldset:::rj:::legend"
+                    class="fieldset__root emotion-0"
+                    data-part="root"
+                    data-scope="fieldset"
+                  >
+                    <div
+                      class="fieldset__content emotion-1"
+                    >
+                      <div
+                        class="emotion-11"
+                        id="root_foo__title"
+                      >
+                        <h5
+                          class="chakra-heading emotion-12"
+                        >
+                          foo
+                        </h5>
+                        <span
+                          aria-orientation="horizontal"
+                          class="chakra-separator emotion-13"
+                          role="separator"
+                        />
+                      </div>
+                      <div
+                        class="emotion-2"
+                      >
+                        <div>
+                          <div
+                            class="rjsf-field rjsf-field-string"
+                          >
+                            <fieldset
+                              aria-labelledby="fieldset:::rk:::legend"
+                              class="fieldset__root emotion-0"
+                              data-part="root"
+                              data-scope="fieldset"
+                            >
+                              <div
+                                class="fieldset__content emotion-1"
+                              >
+                                <div
+                                  class="chakra-field__root emotion-17"
+                                  data-part="root"
+                                  data-scope="field"
+                                  id="field:::rl:"
+                                  role="group"
+                                >
+                                  <label
+                                    class="chakra-field__label emotion-6"
+                                    data-part="label"
+                                    data-scope="field"
+                                    for=":rl:"
+                                    id="field:::rl:::label"
+                                  >
+                                    foo
+                                  </label>
+                                  <input
+                                    aria-describedby="root_foo_foo__error root_foo_foo__description root_foo_foo__help"
+                                    class="chakra-input emotion-19"
+                                    data-part="input"
+                                    data-scope="field"
+                                    id="root_foo_foo"
+                                    name="root_foo_foo"
+                                    placeholder=""
+                                    type="text"
+                                    value=""
+                                  />
+                                </div>
+                              </div>
+                            </fieldset>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+                <div
+                  class="emotion-20"
+                  style="margin-top: 22px;"
+                >
+                  <button
+                    aria-label="Remove"
+                    class="chakra-button rjsf-object-property-remove emotion-21"
+                    id="root_foo__remove"
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-delete"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10 5a2 2 0 0 0-1.344.519l-6.328 5.74a1 1 0 0 0 0 1.481l6.328 5.741A2 2 0 0 0 10 19h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z"
+                      />
+                      <path
+                        d="m12 9 6 6"
+                      />
+                      <path
+                        d="m18 9-6 6"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              class="emotion-20"
+            >
+              <button
+                class="chakra-button rjsf-object-property-expand emotion-23"
+                id="root__add"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-plus"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M5 12h14"
+                  />
+                  <path
+                    d="M12 5v14"
+                  />
+                </svg>
+                Add Item
+              </button>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div
+      class="emotion-24"
+    >
+      <button
+        class="chakra-button emotion-23"
         type="submit"
       >
         Submit
@@ -5882,7 +8318,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r9:::legend"
+        aria-labelledby="fieldset:::rp:::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -5904,15 +8340,15 @@ exports[`object fields show add button and fields if additionalProperties is tru
                     class="chakra-field__root emotion-5"
                     data-part="root"
                     data-scope="field"
-                    id="field:::ra:"
+                    id="field:::rq:"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-6"
                       data-part="label"
                       data-scope="field"
-                      for=":ra:"
-                      id="field:::ra:::label"
+                      for=":rq:"
+                      id="field:::rq:::label"
                     >
                       additionalProperty Key
                     </label>
@@ -5931,7 +8367,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                   class="emotion-4"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::rb:::legend"
+                    aria-labelledby="fieldset:::rr:::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -5943,15 +8379,15 @@ exports[`object fields show add button and fields if additionalProperties is tru
                         class="chakra-field__root emotion-11"
                         data-part="root"
                         data-scope="field"
-                        id="field:::rc:"
+                        id="field:::rs:"
                         role="group"
                       >
                         <label
                           class="chakra-field__label emotion-6"
                           data-part="label"
                           data-scope="field"
-                          for=":rc:"
-                          id="field:::rc:::label"
+                          for=":rs:"
+                          id="field:::rs:::label"
                         >
                           additionalProperty
                         </label>
@@ -6497,7 +8933,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::ri:::legend"
+        aria-labelledby="fieldset:::r12:::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -6540,15 +8976,15 @@ exports[`object fields with title and description additionalProperties 1`] = `
                     class="chakra-field__root emotion-9"
                     data-part="root"
                     data-scope="field"
-                    id="field:::rj:"
+                    id="field:::r13:"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-10"
                       data-part="label"
                       data-scope="field"
-                      for=":rj:"
-                      id="field:::rj:::label"
+                      for=":r13:"
+                      id="field:::r13:::label"
                     >
                       foo Key
                     </label>
@@ -6567,7 +9003,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                   class="emotion-8"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::rk:::legend"
+                    aria-labelledby="fieldset:::r14:::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -6579,15 +9015,15 @@ exports[`object fields with title and description additionalProperties 1`] = `
                         class="chakra-field__root emotion-15"
                         data-part="root"
                         data-scope="field"
-                        id="field:::rl:"
+                        id="field:::r15:"
                         role="group"
                       >
                         <label
                           class="chakra-field__label emotion-10"
                           data-part="label"
                           data-scope="field"
-                          for=":rl:"
-                          id="field:::rl:::label"
+                          for=":r15:"
+                          id="field:::r15:::label"
                         >
                           foo
                         </label>
@@ -7133,7 +9569,7 @@ exports[`object fields with title and description from both additionalProperties
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r1c:::legend"
+        aria-labelledby="fieldset:::r1s:::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -7176,15 +9612,15 @@ exports[`object fields with title and description from both additionalProperties
                     class="chakra-field__root emotion-9"
                     data-part="root"
                     data-scope="field"
-                    id="field:::r1d:"
+                    id="field:::r1t:"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-10"
                       data-part="label"
                       data-scope="field"
-                      for=":r1d:"
-                      id="field:::r1d:::label"
+                      for=":r1t:"
+                      id="field:::r1t:::label"
                     >
                       foo Key
                     </label>
@@ -7203,7 +9639,7 @@ exports[`object fields with title and description from both additionalProperties
                   class="emotion-8"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r1e:::legend"
+                    aria-labelledby="fieldset:::r1u:::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -7215,15 +9651,15 @@ exports[`object fields with title and description from both additionalProperties
                         class="chakra-field__root emotion-15"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r1f:"
+                        id="field:::r1v:"
                         role="group"
                       >
                         <label
                           class="chakra-field__label emotion-10"
                           data-part="label"
                           data-scope="field"
-                          for=":r1f:"
-                          id="field:::r1f:::label"
+                          for=":r1v:"
+                          id="field:::r1v:::label"
                         >
                           foo
                         </label>
@@ -7607,7 +10043,7 @@ exports[`object fields with title and description from both object 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r17:::legend"
+        aria-labelledby="fieldset:::r1n:::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -7644,7 +10080,7 @@ exports[`object fields with title and description from both object 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r18:::legend"
+                  aria-labelledby="fieldset:::r1o:::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -7653,7 +10089,7 @@ exports[`object fields with title and description from both object 1`] = `
                     class="fieldset__legend emotion-8"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset:::r18:::legend"
+                    id="fieldset:::r1o:::legend"
                   >
                     <sup
                       class="emotion-5"
@@ -7669,15 +10105,15 @@ exports[`object fields with title and description from both object 1`] = `
                       class="chakra-field__root emotion-11"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r19:"
+                      id="field:::r1p:"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-12"
                         data-part="label"
                         data-scope="field"
-                        for=":r19:"
-                        id="field:::r19:::label"
+                        for=":r1p:"
+                        id="field:::r1p:::label"
                       >
                         My Item A
                       </label>
@@ -7702,7 +10138,7 @@ exports[`object fields with title and description from both object 1`] = `
                 class="rjsf-field rjsf-field-number"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r1a:::legend"
+                  aria-labelledby="fieldset:::r1q:::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -7711,7 +10147,7 @@ exports[`object fields with title and description from both object 1`] = `
                     class="fieldset__legend emotion-8"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset:::r1a:::legend"
+                    id="fieldset:::r1q:::legend"
                   >
                     <sup
                       class="emotion-5"
@@ -7727,15 +10163,15 @@ exports[`object fields with title and description from both object 1`] = `
                       class="chakra-field__root emotion-11"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r1b:"
+                      id="field:::r1r:"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-12"
                         data-part="label"
                         data-scope="field"
-                        for=":r1b:"
-                        id="field:::r1b:::label"
+                        for=":r1r:"
+                        id="field:::r1r:::label"
                       >
                         My Item B
                       </label>
@@ -8214,7 +10650,7 @@ exports[`object fields with title and description from uiSchema additionalProper
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::rv:::legend"
+        aria-labelledby="fieldset:::r1f:::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -8257,15 +10693,15 @@ exports[`object fields with title and description from uiSchema additionalProper
                     class="chakra-field__root emotion-9"
                     data-part="root"
                     data-scope="field"
-                    id="field:::r10:"
+                    id="field:::r1g:"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-10"
                       data-part="label"
                       data-scope="field"
-                      for=":r10:"
-                      id="field:::r10:::label"
+                      for=":r1g:"
+                      id="field:::r1g:::label"
                     >
                       foo Key
                     </label>
@@ -8284,7 +10720,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                   class="emotion-8"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r11:::legend"
+                    aria-labelledby="fieldset:::r1h:::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -8296,15 +10732,15 @@ exports[`object fields with title and description from uiSchema additionalProper
                         class="chakra-field__root emotion-15"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r12:"
+                        id="field:::r1i:"
                         role="group"
                       >
                         <label
                           class="chakra-field__label emotion-10"
                           data-part="label"
                           data-scope="field"
-                          for=":r12:"
-                          id="field:::r12:::label"
+                          for=":r1i:"
+                          id="field:::r1i:::label"
                         >
                           foo
                         </label>
@@ -8688,7 +11124,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::rq:::legend"
+        aria-labelledby="fieldset:::r1a:::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -8725,7 +11161,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::rr:::legend"
+                  aria-labelledby="fieldset:::r1b:::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -8734,7 +11170,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                     class="fieldset__legend emotion-8"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset:::rr:::legend"
+                    id="fieldset:::r1b:::legend"
                   >
                     <sup
                       class="emotion-5"
@@ -8750,15 +11186,15 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                       class="chakra-field__root emotion-11"
                       data-part="root"
                       data-scope="field"
-                      id="field:::rs:"
+                      id="field:::r1c:"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-12"
                         data-part="label"
                         data-scope="field"
-                        for=":rs:"
-                        id="field:::rs:::label"
+                        for=":r1c:"
+                        id="field:::r1c:::label"
                       >
                         My Item A
                       </label>
@@ -8783,7 +11219,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                 class="rjsf-field rjsf-field-number"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::rt:::legend"
+                  aria-labelledby="fieldset:::r1d:::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -8792,7 +11228,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                     class="fieldset__legend emotion-8"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset:::rt:::legend"
+                    id="fieldset:::r1d:::legend"
                   >
                     <sup
                       class="emotion-5"
@@ -8808,15 +11244,15 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                       class="chakra-field__root emotion-11"
                       data-part="root"
                       data-scope="field"
-                      id="field:::ru:"
+                      id="field:::r1e:"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-12"
                         data-part="label"
                         data-scope="field"
-                        for=":ru:"
-                        id="field:::ru:::label"
+                        for=":r1e:"
+                        id="field:::r1e:::label"
                       >
                         My Item B
                       </label>
@@ -9295,7 +11731,7 @@ exports[`object fields with title and description from uiSchema show add button 
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r13:::legend"
+        aria-labelledby="fieldset:::r1j:::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -9338,15 +11774,15 @@ exports[`object fields with title and description from uiSchema show add button 
                     class="chakra-field__root emotion-9"
                     data-part="root"
                     data-scope="field"
-                    id="field:::r14:"
+                    id="field:::r1k:"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-10"
                       data-part="label"
                       data-scope="field"
-                      for=":r14:"
-                      id="field:::r14:::label"
+                      for=":r1k:"
+                      id="field:::r1k:::label"
                     >
                       additionalProperty Key
                     </label>
@@ -9365,7 +11801,7 @@ exports[`object fields with title and description from uiSchema show add button 
                   class="emotion-8"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r15:::legend"
+                    aria-labelledby="fieldset:::r1l:::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -9377,15 +11813,15 @@ exports[`object fields with title and description from uiSchema show add button 
                         class="chakra-field__root emotion-15"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r16:"
+                        id="field:::r1m:"
                         role="group"
                       >
                         <label
                           class="chakra-field__label emotion-10"
                           data-part="label"
                           data-scope="field"
-                          for=":r16:"
-                          id="field:::r16:::label"
+                          for=":r1m:"
+                          id="field:::r1m:::label"
                         >
                           additionalProperty
                         </label>
@@ -9769,7 +12205,7 @@ exports[`object fields with title and description object 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::rd:::legend"
+        aria-labelledby="fieldset:::rt:::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -9806,7 +12242,7 @@ exports[`object fields with title and description object 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::re:::legend"
+                  aria-labelledby="fieldset:::ru:::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -9815,7 +12251,7 @@ exports[`object fields with title and description object 1`] = `
                     class="fieldset__legend emotion-8"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset:::re:::legend"
+                    id="fieldset:::ru:::legend"
                   >
                     <sup
                       class="emotion-5"
@@ -9831,15 +12267,15 @@ exports[`object fields with title and description object 1`] = `
                       class="chakra-field__root emotion-11"
                       data-part="root"
                       data-scope="field"
-                      id="field:::rf:"
+                      id="field:::rv:"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-12"
                         data-part="label"
                         data-scope="field"
-                        for=":rf:"
-                        id="field:::rf:::label"
+                        for=":rv:"
+                        id="field:::rv:::label"
                       >
                         A
                       </label>
@@ -9864,7 +12300,7 @@ exports[`object fields with title and description object 1`] = `
                 class="rjsf-field rjsf-field-number"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::rg:::legend"
+                  aria-labelledby="fieldset:::r10:::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -9873,7 +12309,7 @@ exports[`object fields with title and description object 1`] = `
                     class="fieldset__legend emotion-8"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset:::rg:::legend"
+                    id="fieldset:::r10:::legend"
                   >
                     <sup
                       class="emotion-5"
@@ -9889,15 +12325,15 @@ exports[`object fields with title and description object 1`] = `
                       class="chakra-field__root emotion-11"
                       data-part="root"
                       data-scope="field"
-                      id="field:::rh:"
+                      id="field:::r11:"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-12"
                         data-part="label"
                         data-scope="field"
-                        for=":rh:"
-                        id="field:::rh:::label"
+                        for=":r11:"
+                        id="field:::r11:::label"
                       >
                         B
                       </label>
@@ -10376,7 +12812,7 @@ exports[`object fields with title and description show add button and fields if 
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::rm:::legend"
+        aria-labelledby="fieldset:::r16:::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -10419,15 +12855,15 @@ exports[`object fields with title and description show add button and fields if 
                     class="chakra-field__root emotion-9"
                     data-part="root"
                     data-scope="field"
-                    id="field:::rn:"
+                    id="field:::r17:"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-10"
                       data-part="label"
                       data-scope="field"
-                      for=":rn:"
-                      id="field:::rn:::label"
+                      for=":r17:"
+                      id="field:::r17:::label"
                     >
                       additionalProperty Key
                     </label>
@@ -10446,7 +12882,7 @@ exports[`object fields with title and description show add button and fields if 
                   class="emotion-8"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::ro:::legend"
+                    aria-labelledby="fieldset:::r18:::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -10458,15 +12894,15 @@ exports[`object fields with title and description show add button and fields if 
                         class="chakra-field__root emotion-15"
                         data-part="root"
                         data-scope="field"
-                        id="field:::rp:"
+                        id="field:::r19:"
                         role="group"
                       >
                         <label
                           class="chakra-field__label emotion-10"
                           data-part="label"
                           data-scope="field"
-                          for=":rp:"
-                          id="field:::rp:::label"
+                          for=":r19:"
+                          id="field:::r19:::label"
                         >
                           additionalProperty
                         </label>
@@ -10958,7 +13394,7 @@ exports[`object fields with title and description with global label off addition
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r1l:::legend"
+        aria-labelledby="fieldset:::r25:::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -10980,7 +13416,7 @@ exports[`object fields with title and description with global label off addition
                     class="chakra-field__root emotion-5"
                     data-part="root"
                     data-scope="field"
-                    id="field:::r1m:"
+                    id="field:::r26:"
                     role="group"
                   >
                     <input
@@ -10998,7 +13434,7 @@ exports[`object fields with title and description with global label off addition
                   class="emotion-4"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r1n:::legend"
+                    aria-labelledby="fieldset:::r27:::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -11010,7 +13446,7 @@ exports[`object fields with title and description with global label off addition
                         class="chakra-field__root emotion-10"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r1o:"
+                        id="field:::r28:"
                         role="group"
                       >
                         <input
@@ -11321,7 +13757,7 @@ exports[`object fields with title and description with global label off object 1
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r1g:::legend"
+        aria-labelledby="fieldset:::r20:::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -11337,7 +13773,7 @@ exports[`object fields with title and description with global label off object 1
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r1h:::legend"
+                  aria-labelledby="fieldset:::r21:::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -11349,7 +13785,7 @@ exports[`object fields with title and description with global label off object 1
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r1i:"
+                      id="field:::r22:"
                       role="group"
                     >
                       <input
@@ -11373,7 +13809,7 @@ exports[`object fields with title and description with global label off object 1
                 class="rjsf-field rjsf-field-number"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r1j:::legend"
+                  aria-labelledby="fieldset:::r23:::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -11385,7 +13821,7 @@ exports[`object fields with title and description with global label off object 1
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r1k:"
+                      id="field:::r24:"
                       role="group"
                     >
                       <input
@@ -11809,7 +14245,7 @@ exports[`object fields with title and description with global label off show add
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r1p:::legend"
+        aria-labelledby="fieldset:::r29:::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -11831,7 +14267,7 @@ exports[`object fields with title and description with global label off show add
                     class="chakra-field__root emotion-5"
                     data-part="root"
                     data-scope="field"
-                    id="field:::r1q:"
+                    id="field:::r2a:"
                     role="group"
                   >
                     <input
@@ -11849,7 +14285,7 @@ exports[`object fields with title and description with global label off show add
                   class="emotion-4"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r1r:::legend"
+                    aria-labelledby="fieldset:::r2b:::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -11861,7 +14297,7 @@ exports[`object fields with title and description with global label off show add
                         class="chakra-field__root emotion-10"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r1s:"
+                        id="field:::r2c:"
                         role="group"
                       >
                         <input

@@ -1749,6 +1749,684 @@ exports[`object fields additionalProperties 1`] = `
 </DocumentFragment>
 `;
 
+exports[`object fields additionalProperties, array type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div>
+        <div
+          class="p-0 container-fluid"
+        >
+          <div
+            class="row"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="col-12"
+            >
+               
+              <div
+                class="rjsf-field rjsf-field-array row"
+              >
+                <div
+                  class="col-5"
+                >
+                  <div>
+                    <label
+                      class="form-label"
+                      for="root_foo-key"
+                    >
+                      foo Key
+                    </label>
+                    <input
+                      class="form-control"
+                      id="root_foo-key"
+                      name="root_foo-key"
+                      type="text"
+                      value="foo"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="col-6"
+                >
+                  <div>
+                    <label
+                      class="form-label"
+                      for="root_foo"
+                    >
+                      foo
+                    </label>
+                    <div>
+                      <div
+                        class="p-0 m-0 row"
+                      >
+                        <div
+                          class="p-0 m-0 col"
+                        >
+                          <div
+                            class="my-1"
+                            id="root_foo__title"
+                          >
+                            <h5>
+                              foo
+                            </h5>
+                            <hr
+                              class="border-0 bg-secondary mt-0"
+                              style="height: 1px;"
+                            />
+                          </div>
+                          <div
+                            class="p-0 m-0 container-fluid"
+                          >
+                            <div
+                              class="container"
+                            >
+                              <div
+                                class="mt-2 row"
+                              >
+                                <div
+                                  class="col-lg-11 col-md-10 col-9"
+                                />
+                                <div
+                                  class="py-4 col-lg-1 col-md-2 col-3"
+                                >
+                                  <button
+                                    class="ml-1 rjsf-array-item-add btn btn-primary"
+                                    id="root_foo__add"
+                                    style="width: 100%;"
+                                    title="Add Item"
+                                    type="button"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="1em"
+                                      stroke="currentColor"
+                                      stroke-width="0"
+                                      viewBox="0 0 16 16"
+                                      width="1em"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                                        fill-rule="evenodd"
+                                      />
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="py-4 d-grid gap-2 col-1"
+                  style="margin-top: 12px;"
+                >
+                  <button
+                    class="btn btn-danger btn-sm"
+                    id="root_foo__remove"
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-width="0"
+                      viewBox="0 0 512 512"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="row"
+          >
+            <div
+              class="py-0.5 col-1 offset-11"
+            >
+              <button
+                class="ml-1 rjsf-object-property-expand btn btn-primary"
+                id="root__add"
+                style="width: 100%;"
+                title="Add Item"
+                type="button"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 16 16"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                    fill-rule="evenodd"
+                  />
+                  <path
+                    clip-rule="evenodd"
+                    d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, description 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div>
+        <div
+          class="p-0 container-fluid"
+        >
+          <div
+            class="row"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="col-12"
+            >
+               
+              <div
+                class="rjsf-field rjsf-field-string row"
+              >
+                <div
+                  class="col-5"
+                >
+                  <div>
+                    <label
+                      class="form-label"
+                      for="root_foo-key"
+                    >
+                      foo Key
+                    </label>
+                    <input
+                      class="form-control"
+                      id="root_foo-key"
+                      name="root_foo-key"
+                      type="text"
+                      value="foo"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="col-6"
+                >
+                  <div>
+                    <label
+                      class="form-label"
+                      for="root_foo"
+                    >
+                      foo
+                    </label>
+                    <input
+                      aria-describedby="root_foo__error root_foo__description root_foo__help"
+                      class="form-control"
+                      id="root_foo"
+                      name="root_foo"
+                      placeholder=""
+                      type="text"
+                      value="foo"
+                    />
+                    <small
+                      class="text-muted form-text"
+                    >
+                      <div>
+                        <div
+                          class="mb-3"
+                          id="root_foo__description"
+                        >
+                          item description
+                        </div>
+                      </div>
+                    </small>
+                  </div>
+                </div>
+                <div
+                  class="py-5 d-grid gap-2 col-1"
+                  style="margin-top: -12px;"
+                >
+                  <button
+                    class="btn btn-danger btn-sm"
+                    id="root_foo__remove"
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-width="0"
+                      viewBox="0 0 512 512"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="row"
+          >
+            <div
+              class="py-0.5 col-1 offset-11"
+            >
+              <button
+                class="ml-1 rjsf-object-property-expand btn btn-primary"
+                id="root__add"
+                style="width: 100%;"
+                title="Add Item"
+                type="button"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 16 16"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                    fill-rule="evenodd"
+                  />
+                  <path
+                    clip-rule="evenodd"
+                    d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, label off 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div>
+        <div
+          class="p-0 container-fluid"
+        >
+          <div
+            class="row"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="col-12"
+            >
+               
+              <div
+                class="rjsf-field rjsf-field-string row"
+              >
+                <div
+                  class="col-5"
+                >
+                  <div>
+                    <label
+                      class="form-label"
+                      for="root_foo-key"
+                    >
+                      foo Key
+                    </label>
+                    <input
+                      class="form-control"
+                      id="root_foo-key"
+                      name="root_foo-key"
+                      type="text"
+                      value="foo"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="col-6"
+                >
+                  <div>
+                    <label
+                      class="form-label"
+                      for="root_foo"
+                    >
+                      foo
+                    </label>
+                    <input
+                      aria-describedby="root_foo__error root_foo__description root_foo__help"
+                      class="form-control"
+                      id="root_foo"
+                      name="root_foo"
+                      placeholder=""
+                      type="text"
+                      value="foo"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="py-4 d-grid gap-2 col-1"
+                  style="margin-top: 12px;"
+                >
+                  <button
+                    class="btn btn-danger btn-sm"
+                    id="root_foo__remove"
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-width="0"
+                      viewBox="0 0 512 512"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="row"
+          >
+            <div
+              class="py-0.5 col-1 offset-11"
+            >
+              <button
+                class="ml-1 rjsf-object-property-expand btn btn-primary"
+                id="root__add"
+                style="width: 100%;"
+                title="Add Item"
+                type="button"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 16 16"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                    fill-rule="evenodd"
+                  />
+                  <path
+                    clip-rule="evenodd"
+                    d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, object type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div>
+        <div
+          class="p-0 container-fluid"
+        >
+          <div
+            class="row"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="col-12"
+            >
+               
+              <div
+                class="rjsf-field rjsf-field-object row"
+              >
+                <div
+                  class="col-5"
+                >
+                  <div>
+                    <label
+                      class="form-label"
+                      for="root_foo-key"
+                    >
+                      foo Key
+                    </label>
+                    <input
+                      class="form-control"
+                      id="root_foo-key"
+                      name="root_foo-key"
+                      type="text"
+                      value="foo"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="col-6"
+                >
+                  <div>
+                    <label
+                      class="form-label"
+                      for="root_foo"
+                    >
+                      foo
+                    </label>
+                    <div
+                      class="my-1"
+                      id="root_foo__title"
+                    >
+                      <h5>
+                        foo
+                      </h5>
+                      <hr
+                        class="border-0 bg-secondary mt-0"
+                        style="height: 1px;"
+                      />
+                    </div>
+                    <div
+                      class="p-0 container-fluid"
+                    >
+                      <div
+                        class="row"
+                        style="margin-bottom: 10px;"
+                      >
+                        <div
+                          class="col-12"
+                        >
+                           
+                          <div
+                            class="rjsf-field rjsf-field-string"
+                          >
+                            <div>
+                              <label
+                                class="form-label"
+                                for="root_foo_foo"
+                              >
+                                foo
+                              </label>
+                              <input
+                                aria-describedby="root_foo_foo__error root_foo_foo__description root_foo_foo__help"
+                                class="form-control"
+                                id="root_foo_foo"
+                                name="root_foo_foo"
+                                placeholder=""
+                                type="text"
+                                value=""
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="py-4 d-grid gap-2 col-1"
+                  style="margin-top: 12px;"
+                >
+                  <button
+                    class="btn btn-danger btn-sm"
+                    id="root_foo__remove"
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-width="0"
+                      viewBox="0 0 512 512"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="row"
+          >
+            <div
+              class="py-0.5 col-1 offset-11"
+            >
+              <button
+                class="ml-1 rjsf-object-property-expand btn btn-primary"
+                id="root__add"
+                style="width: 100%;"
+                title="Add Item"
+                type="button"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 16 16"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                    fill-rule="evenodd"
+                  />
+                  <path
+                    clip-rule="evenodd"
+                    d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`object fields object 1`] = `
 <DocumentFragment>
   <form

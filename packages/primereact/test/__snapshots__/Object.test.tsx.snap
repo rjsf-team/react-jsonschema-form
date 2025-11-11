@@ -1535,6 +1535,581 @@ exports[`object fields additionalProperties 1`] = `
 </DocumentFragment>
 `;
 
+exports[`object fields additionalProperties, array type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+      >
+        <div
+          class="rjsf-field rjsf-field-array"
+          style="display: flex; align-items: flex-start; gap: 1rem;"
+        >
+          <div
+            style="flex: 1 1 0%;"
+          >
+            <label
+              for="root_foo-key"
+              style="display: block; margin-bottom: 0.5rem;"
+            >
+              foo Key
+            </label>
+            <input
+              class="p-inputtext p-component p-filled"
+              data-pc-name="inputtext"
+              data-pc-section="root"
+              id="root_foo-key"
+              name="root_foo-key"
+              style="width: 100%;"
+              value="foo"
+            />
+          </div>
+          <div
+            style="flex: 1 1 0%;"
+          >
+            <div
+              style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+            >
+              <label
+                for="root_foo"
+              >
+                foo 
+              </label>
+              <h5
+                id="root_foo__title"
+                style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+              >
+                foo 
+              </h5>
+              <fieldset
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
+                data-pc-name="fieldset"
+                data-pc-section="root"
+                formdata=""
+                id="root_foo"
+              >
+                <div
+                  aria-labelledby="root_foo_header"
+                  class="p-toggleable-content"
+                  data-pc-section="toggleablecontent"
+                  id="root_foo_content"
+                  role="region"
+                >
+                  <div
+                    class="p-fieldset-content"
+                    data-pc-section="content"
+                  >
+                    <div>
+                      <div />
+                      <div
+                        style="margin-top: 1rem; position: relative; text-align: right;"
+                      >
+                        <button
+                          aria-label="Add Item"
+                          class="rjsf-array-item-add p-button p-component p-button-outlined p-button-sm p-button-secondary"
+                          data-pc-name="button"
+                          data-pc-section="root"
+                          id="root_foo__add"
+                        >
+                          <span
+                            class="p-button-icon p-c p-button-icon-left pi pi-plus"
+                            data-pc-section="icon"
+                          />
+                          <span
+                            class="p-button-label p-c"
+                            data-pc-section="label"
+                          >
+                            Add Item
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+          <div
+            style="align-self: center; margin-top: 12px;"
+          >
+            <button
+              class="rjsf-object-property-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+              data-pc-name="button"
+              data-pc-section="root"
+              id="root_foo__remove"
+              title="Remove"
+            >
+              <span
+                class="p-button-icon p-c pi pi-trash"
+                data-pc-section="icon"
+              />
+              <span
+                class="p-button-label p-c"
+                data-pc-section="label"
+              >
+                 
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          style="margin-top: 1rem; text-align: right;"
+        >
+          <button
+            aria-label="Add Item"
+            class="rjsf-object-property-expand p-button p-component p-button-outlined p-button-sm p-button-secondary"
+            data-pc-name="button"
+            data-pc-section="root"
+            id="root__add"
+          >
+            <span
+              class="p-button-icon p-c p-button-icon-left pi pi-plus"
+              data-pc-section="icon"
+            />
+            <span
+              class="p-button-label p-c"
+              data-pc-section="label"
+            >
+              Add Item
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <button
+      aria-label="Submit"
+      class="p-button p-component"
+      data-pc-name="button"
+      data-pc-section="root"
+      type="submit"
+    >
+      <span
+        class="p-button-label p-c"
+        data-pc-section="label"
+      >
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, description 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+      >
+        <div
+          class="rjsf-field rjsf-field-string"
+          style="display: flex; align-items: flex-start; gap: 1rem;"
+        >
+          <div
+            style="flex: 1 1 0%;"
+          >
+            <label
+              for="root_foo-key"
+              style="display: block; margin-bottom: 0.5rem;"
+            >
+              foo Key
+            </label>
+            <input
+              class="p-inputtext p-component p-filled"
+              data-pc-name="inputtext"
+              data-pc-section="root"
+              id="root_foo-key"
+              name="root_foo-key"
+              style="width: 100%;"
+              value="foo"
+            />
+          </div>
+          <div
+            style="flex: 1 1 0%;"
+          >
+            <div
+              style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+            >
+              <label
+                for="root_foo"
+              >
+                foo 
+              </label>
+              <input
+                aria-describedby="root_foo__error root_foo__description root_foo__help"
+                class="p-inputtext p-component p-filled"
+                data-pc-name="inputtext"
+                data-pc-section="root"
+                id="root_foo"
+                name="root_foo"
+                placeholder=""
+                type="text"
+                value="foo"
+              />
+              <small>
+                <span
+                  id="root_foo__description"
+                >
+                  item description
+                </span>
+              </small>
+            </div>
+          </div>
+          <div
+            style="align-self: center; margin-top: -8px;"
+          >
+            <button
+              class="rjsf-object-property-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+              data-pc-name="button"
+              data-pc-section="root"
+              id="root_foo__remove"
+              title="Remove"
+            >
+              <span
+                class="p-button-icon p-c pi pi-trash"
+                data-pc-section="icon"
+              />
+              <span
+                class="p-button-label p-c"
+                data-pc-section="label"
+              >
+                 
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          style="margin-top: 1rem; text-align: right;"
+        >
+          <button
+            aria-label="Add Item"
+            class="rjsf-object-property-expand p-button p-component p-button-outlined p-button-sm p-button-secondary"
+            data-pc-name="button"
+            data-pc-section="root"
+            id="root__add"
+          >
+            <span
+              class="p-button-icon p-c p-button-icon-left pi pi-plus"
+              data-pc-section="icon"
+            />
+            <span
+              class="p-button-label p-c"
+              data-pc-section="label"
+            >
+              Add Item
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <button
+      aria-label="Submit"
+      class="p-button p-component"
+      data-pc-name="button"
+      data-pc-section="root"
+      type="submit"
+    >
+      <span
+        class="p-button-label p-c"
+        data-pc-section="label"
+      >
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, label off 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+      >
+        <div
+          class="rjsf-field rjsf-field-string"
+          style="display: flex; align-items: flex-start; gap: 1rem;"
+        >
+          <div
+            style="flex: 1 1 0%;"
+          >
+            <label
+              for="root_foo-key"
+              style="display: block; margin-bottom: 0.5rem;"
+            >
+              foo Key
+            </label>
+            <input
+              class="p-inputtext p-component p-filled"
+              data-pc-name="inputtext"
+              data-pc-section="root"
+              id="root_foo-key"
+              name="root_foo-key"
+              style="width: 100%;"
+              value="foo"
+            />
+          </div>
+          <div
+            style="flex: 1 1 0%;"
+          >
+            <div
+              style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+            >
+              <label
+                for="root_foo"
+              >
+                foo 
+              </label>
+              <input
+                aria-describedby="root_foo__error root_foo__description root_foo__help"
+                class="p-inputtext p-component p-filled"
+                data-pc-name="inputtext"
+                data-pc-section="root"
+                id="root_foo"
+                name="root_foo"
+                placeholder=""
+                type="text"
+                value="foo"
+              />
+            </div>
+          </div>
+          <div
+            style="align-self: center; margin-top: 12px;"
+          >
+            <button
+              class="rjsf-object-property-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+              data-pc-name="button"
+              data-pc-section="root"
+              id="root_foo__remove"
+              title="Remove"
+            >
+              <span
+                class="p-button-icon p-c pi pi-trash"
+                data-pc-section="icon"
+              />
+              <span
+                class="p-button-label p-c"
+                data-pc-section="label"
+              >
+                 
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          style="margin-top: 1rem; text-align: right;"
+        >
+          <button
+            aria-label="Add Item"
+            class="rjsf-object-property-expand p-button p-component p-button-outlined p-button-sm p-button-secondary"
+            data-pc-name="button"
+            data-pc-section="root"
+            id="root__add"
+          >
+            <span
+              class="p-button-icon p-c p-button-icon-left pi pi-plus"
+              data-pc-section="icon"
+            />
+            <span
+              class="p-button-label p-c"
+              data-pc-section="label"
+            >
+              Add Item
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <button
+      aria-label="Submit"
+      class="p-button p-component"
+      data-pc-name="button"
+      data-pc-section="root"
+      type="submit"
+    >
+      <span
+        class="p-button-label p-c"
+        data-pc-section="label"
+      >
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, object type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+      >
+        <div
+          class="rjsf-field rjsf-field-object"
+          style="display: flex; align-items: flex-start; gap: 1rem;"
+        >
+          <div
+            style="flex: 1 1 0%;"
+          >
+            <label
+              for="root_foo-key"
+              style="display: block; margin-bottom: 0.5rem;"
+            >
+              foo Key
+            </label>
+            <input
+              class="p-inputtext p-component p-filled"
+              data-pc-name="inputtext"
+              data-pc-section="root"
+              id="root_foo-key"
+              name="root_foo-key"
+              style="width: 100%;"
+              value="foo"
+            />
+          </div>
+          <div
+            style="flex: 1 1 0%;"
+          >
+            <div
+              style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+            >
+              <label
+                for="root_foo"
+              >
+                foo 
+              </label>
+              <div
+                id="root_foo__title"
+              >
+                <h5
+                  style="margin: 0px; font-size: 1.2rem;"
+                >
+                  foo 
+                </h5>
+                <div
+                  aria-orientation="horizontal"
+                  class="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+                  data-pc-name="divider"
+                  data-pc-section="root"
+                  role="separator"
+                  style="justify-content: center; margin-top: 0.5rem;"
+                >
+                  <div
+                    class="p-divider-content"
+                    data-pc-section="content"
+                  />
+                </div>
+              </div>
+              <div
+                class="rjsf-field rjsf-field-string"
+              >
+                <div
+                  style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                >
+                  <label
+                    for="root_foo_foo"
+                  >
+                    foo 
+                  </label>
+                  <input
+                    aria-describedby="root_foo_foo__error root_foo_foo__description root_foo_foo__help"
+                    class="p-inputtext p-component"
+                    data-pc-name="inputtext"
+                    data-pc-section="root"
+                    id="root_foo_foo"
+                    name="root_foo_foo"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="align-self: center; margin-top: 12px;"
+          >
+            <button
+              class="rjsf-object-property-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+              data-pc-name="button"
+              data-pc-section="root"
+              id="root_foo__remove"
+              title="Remove"
+            >
+              <span
+                class="p-button-icon p-c pi pi-trash"
+                data-pc-section="icon"
+              />
+              <span
+                class="p-button-label p-c"
+                data-pc-section="label"
+              >
+                 
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          style="margin-top: 1rem; text-align: right;"
+        >
+          <button
+            aria-label="Add Item"
+            class="rjsf-object-property-expand p-button p-component p-button-outlined p-button-sm p-button-secondary"
+            data-pc-name="button"
+            data-pc-section="root"
+            id="root__add"
+          >
+            <span
+              class="p-button-icon p-c p-button-icon-left pi pi-plus"
+              data-pc-section="icon"
+            />
+            <span
+              class="p-button-label p-c"
+              data-pc-section="label"
+            >
+              Add Item
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <button
+      aria-label="Submit"
+      class="p-button p-component"
+      data-pc-name="button"
+      data-pc-section="root"
+      type="submit"
+    >
+      <span
+        class="p-button-label p-c"
+        data-pc-section="label"
+      >
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`object fields object 1`] = `
 <DocumentFragment>
   <form
