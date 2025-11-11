@@ -42,7 +42,7 @@ body:
     attributes:
       label: Version
       description: You can usually get this information in your `package.json` or in the file URL if you're using the unpkg one.
-      value: 5.x
+      value: 6.x
     validations:
       required: true
   - type: textarea
@@ -74,8 +74,8 @@ body:
       description: |
         examples:
           - **OS**: Ubuntu 20.04
-          - **Node**: 13.14.0
-          - **npm**: 7.6.3
+          - **Node**: 22.14.1
+          - **npm**: 10.9.4
       value: |
         - OS:
         - Node:
