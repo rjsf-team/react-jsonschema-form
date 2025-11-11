@@ -45,11 +45,12 @@
   "scripts": {
     "build:css": "tsx build-css.ts",
     "compileReplacer": "tsc -p tsconfig.replacer.json && move-file lodashReplacer.js lodashReplacer.cjs",
+    "copy-resources": "cp dist/*.css resources",
     "build:ts": "npm run compileReplacer && rimraf ./lib && tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/rjsf-shadcn.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/rjsf-shadcn.esm.js --format=umd --file=dist/rjsf-shadcn.umd.js --name=@rjsf/rjsf-shadcn",
-    "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd && npm run build:css",
+    "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd && npm run build:css && npm run copy-resources",
     "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
     "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
     "lint": "eslint src test",

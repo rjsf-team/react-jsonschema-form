@@ -324,35 +324,38 @@ const themes: PlaygroundProps['themes'] = {
     theme: SuiTheme,
   },
   shadcn: {
-    stylesheet: '//cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/v4/default.css',
+    stylesheet: '//cdn.jsdelivr.net/gh/rjsf-team/react-jsonschema-form@main/packages/shadcn/resources/default.css',
     theme: shadcnTheme,
     subthemes: {
       default: {
-        stylesheet: '//cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/v4/default.css',
+        stylesheet: '//cdn.jsdelivr.net/gh/rjsf-team/react-jsonschema-form@main/packages/shadcn/resources/default.css',
       },
       'Amethyst Haze': {
-        stylesheet: '//cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/v4/amethyst-haze.css',
+        stylesheet:
+          '//cdn.jsdelivr.net/gh/rjsf-team/react-jsonschema-form@main/packages/shadcn/resources/amethyst-haze.css',
       },
       Caffeine: {
-        stylesheet: '//cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/v4/caffeine.css',
+        stylesheet: '//cdn.jsdelivr.net/gh/rjsf-team/react-jsonschema-form@main/packages/shadcn/resources/caffeine.css',
       },
       Claude: {
-        stylesheet: '//cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/v4/claude.css',
+        stylesheet: '//cdn.jsdelivr.net/gh/rjsf-team/react-jsonschema-form@main/packages/shadcn/resources/claude.css',
       },
       'Neo Brutalism': {
-        stylesheet: '//cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/v4/neo-brutalism.css',
+        stylesheet:
+          '//cdn.jsdelivr.net/gh/rjsf-team/react-jsonschema-form@main/packages/shadcn/resources/neo-brutalism.css',
       },
       'Pastel Dreams': {
-        stylesheet: '//cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/v4/pastel-dreams.css',
+        stylesheet:
+          '//cdn.jsdelivr.net/gh/rjsf-team/react-jsonschema-form@main/packages/shadcn/resources/pastel-dreams.css',
       },
       'Soft Pop': {
-        stylesheet: '//cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/v4/soft-pop.css',
+        stylesheet: '//cdn.jsdelivr.net/gh/rjsf-team/react-jsonschema-form@main/packages/shadcn/resources/soft-pop.css',
       },
       Twitter: {
-        stylesheet: '//cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/v4/twitter.css',
+        stylesheet: '//cdn.jsdelivr.net/gh/rjsf-team/react-jsonschema-form@main/packages/shadcn/resources/twitter.css',
       },
       Vercel: {
-        stylesheet: '//cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/v4/vercel.css',
+        stylesheet: '//cdn.jsdelivr.net/gh/rjsf-team/react-jsonschema-form@main/packages/shadcn/resources/vercel.css',
       },
     },
   },

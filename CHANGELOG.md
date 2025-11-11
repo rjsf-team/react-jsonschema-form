@@ -15,6 +15,16 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 6.1.1
+
+## @rjsf/shadcn
+
+- Updated `package.json` to copy css files to new `resources` directory
+
+## Dev / docs / playground
+
+- Updated the `playground` to use the css files for `@rjsf/shadcn` from the CDN connected with github, pointing to the new resources directory
+
 # 6.1.0
 
 ## @rjsf/antd
