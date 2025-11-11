@@ -26,8 +26,10 @@ export default function WrapIfAdditionalTemplate<
     disabled,
     id,
     label,
+    displayLabel,
     onKeyRenameBlur,
     onRemoveProperty,
+    rawDescription,
     readonly,
     required,
     schema,
@@ -41,6 +43,7 @@ export default function WrapIfAdditionalTemplate<
   const { readonlyAsDisabled = true, wrapperStyle } = registry.formContext;
 
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
+  const margin = rawDescription ? 4 : 24;
 
   if (!additional) {
     return (
@@ -52,16 +55,16 @@ export default function WrapIfAdditionalTemplate<
 
   return (
     <div className={classNames} style={style} key={`${id}-key`}>
-      <Grid columns='equal'>
+      <Grid>
         <Grid.Row>
-          <Grid.Column className='form-additional'>
+          <Grid.Column width={7} className='form-additional'>
             <Form.Group widths='equal' grouped>
               <Form.Input
                 className='form-group'
                 hasFeedback
                 fluid
                 htmlFor={`${id}`}
-                label={keyLabel}
+                label={displayLabel ? keyLabel : undefined}
                 required={required}
                 defaultValue={label}
                 disabled={disabled || (readonlyAsDisabled && readonly)}
@@ -73,10 +76,10 @@ export default function WrapIfAdditionalTemplate<
               ></Form.Input>
             </Form.Group>
           </Grid.Column>
-          <Grid.Column className='form-additional' verticalAlign='middle'>
+          <Grid.Column width={7} className='form-additional' verticalAlign='middle'>
             {children}
           </Grid.Column>
-          <Grid.Column>
+          <Grid.Column verticalAlign='middle' style={displayLabel ? { marginTop: `${margin}px` } : undefined}>
             <RemoveButton
               id={buttonId(id, 'remove')}
               iconType='mini'

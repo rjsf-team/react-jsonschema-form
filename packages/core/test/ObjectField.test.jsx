@@ -728,6 +728,7 @@ describe('ObjectField', () => {
           },
         },
       });
+      console.log(node.innerHTML);
       const labels = [...node.querySelectorAll('label.control-label')].map((n) => n.textContent);
       expect(labels).to.include('property1 Key');
       const objectTitle = node.querySelector('.form-additional > fieldset > legend');

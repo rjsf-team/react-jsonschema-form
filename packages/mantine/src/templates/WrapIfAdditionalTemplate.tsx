@@ -25,6 +25,8 @@ export default function WrapIfAdditionalTemplate<
     classNames,
     style,
     label,
+    displayLabel,
+    rawDescription,
     required,
     readonly,
     disabled,
@@ -61,32 +63,33 @@ export default function WrapIfAdditionalTemplate<
       <Flex gap='xs' align='end' justify='center'>
         <Grid w='100%' align='center'>
           <Grid.Col span={6} className='form-additional'>
-            <div className='form-group'>
-              <TextInput
-                className='form-group'
-                label={keyLabel}
-                defaultValue={label}
-                required={required}
-                disabled={disabled || readonly}
-                id={`${id}-key`}
-                name={`${id}-key`}
-                onBlur={!readonly ? onKeyRenameBlur : undefined}
-              />
-            </div>
+            <TextInput
+              className='form-group'
+              label={displayLabel ? keyLabel : undefined}
+              defaultValue={label}
+              required={required}
+              description={rawDescription ? '\u00A0' : undefined}
+              disabled={disabled || readonly}
+              id={`${id}-key`}
+              name={`${id}-key`}
+              onBlur={!readonly ? onKeyRenameBlur : undefined}
+            />
           </Grid.Col>
           <Grid.Col span={6} className='form-additional'>
             {children}
           </Grid.Col>
         </Grid>
-        <RemoveButton
-          id={buttonId(id, 'remove')}
-          iconType='sm'
-          className='rjsf-array-item-remove'
-          disabled={disabled || readonly}
-          onClick={onRemoveProperty}
-          uiSchema={buttonUiOptions}
-          registry={registry}
-        />
+        <div>
+          <RemoveButton
+            id={buttonId(id, 'remove')}
+            iconType='sm'
+            className='rjsf-array-item-remove'
+            disabled={disabled || readonly}
+            onClick={onRemoveProperty}
+            uiSchema={buttonUiOptions}
+            registry={registry}
+          />
+        </div>
       </Flex>
     </div>
   );

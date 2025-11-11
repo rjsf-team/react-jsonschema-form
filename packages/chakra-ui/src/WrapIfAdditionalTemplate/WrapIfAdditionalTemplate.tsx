@@ -21,10 +21,12 @@ export default function WrapIfAdditionalTemplate<
     classNames,
     style,
     disabled,
+    displayLabel,
     id,
     label,
     onRemoveProperty,
     onKeyRenameBlur,
+    rawDescription,
     readonly,
     registry,
     required,
@@ -34,8 +36,10 @@ export default function WrapIfAdditionalTemplate<
   const { templates, translateString } = registry;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
-  const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
+  const keyLabel = displayLabel ? translateString(TranslatableString.KeyLabel, [label]) : undefined;
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
+  const hasDescription = !!rawDescription;
+  const margin = hasDescription ? 58 : 22;
   if (!additional) {
     return (
       <div className={classNames} style={style}>
@@ -45,8 +49,15 @@ export default function WrapIfAdditionalTemplate<
   }
 
   return (
-    <Grid key={`${id}-key`} className={classNames} style={style} alignItems='center' gap={2}>
-      <GridItem>
+    <Grid
+      key={`${id}-key`}
+      templateColumns='repeat(11, 1fr)'
+      className={classNames}
+      style={style}
+      alignItems='center'
+      gap={2}
+    >
+      <GridItem colSpan={5} style={{ marginTop: hasDescription ? '36px' : undefined }}>
         <Field required={required} label={keyLabel}>
           <Input
             defaultValue={label}
@@ -59,8 +70,8 @@ export default function WrapIfAdditionalTemplate<
           />
         </Field>
       </GridItem>
-      <GridItem>{children}</GridItem>
-      <GridItem>
+      <GridItem colSpan={5}>{children}</GridItem>
+      <GridItem justifySelf='flex-end' style={{ marginTop: displayLabel ? `${margin}px` : undefined }}>
         <RemoveButton
           id={buttonId(id, 'remove')}
           className='rjsf-object-property-remove'

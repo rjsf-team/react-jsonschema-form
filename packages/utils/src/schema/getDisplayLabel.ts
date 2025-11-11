@@ -1,4 +1,6 @@
-import { UI_FIELD_KEY, UI_WIDGET_KEY } from '../constants';
+import get from 'lodash/get';
+
+import { ADDITIONAL_PROPERTY_FLAG, UI_FIELD_KEY, UI_WIDGET_KEY } from '../constants';
 import getSchemaType from '../getSchemaType';
 import getUiOptions from '../getUiOptions';
 import isCustomWidget from '../isCustomWidget';
@@ -39,24 +41,28 @@ export default function getDisplayLabel<
 ): boolean {
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalOptions);
   const { label = true } = uiOptions;
-  let displayLabel = !!label;
-  const schemaType = getSchemaType<S>(schema);
+  let displayLabel = Boolean(label);
+  if (displayLabel) {
+    const schemaType = getSchemaType<S>(schema);
+    const addedByAdditionalProperty = get(schema, ADDITIONAL_PROPERTY_FLAG, false);
 
-  if (schemaType === 'array') {
-    displayLabel =
-      isMultiSelect<T, S, F>(validator, schema, rootSchema, experimental_customMergeAllOf) ||
-      isFilesArray<T, S, F>(validator, schema, uiSchema, rootSchema, experimental_customMergeAllOf) ||
-      isCustomWidget(uiSchema);
-  }
+    if (schemaType === 'array') {
+      displayLabel =
+        addedByAdditionalProperty ||
+        isMultiSelect<T, S, F>(validator, schema, rootSchema, experimental_customMergeAllOf) ||
+        isFilesArray<T, S, F>(validator, schema, uiSchema, rootSchema, experimental_customMergeAllOf) ||
+        isCustomWidget(uiSchema);
+    }
 
-  if (schemaType === 'object') {
-    displayLabel = false;
-  }
-  if (schemaType === 'boolean' && uiSchema && !uiSchema[UI_WIDGET_KEY]) {
-    displayLabel = false;
-  }
-  if (uiSchema && uiSchema[UI_FIELD_KEY]) {
-    displayLabel = false;
+    if (schemaType === 'object') {
+      displayLabel = addedByAdditionalProperty;
+    }
+    if (schemaType === 'boolean' && uiSchema && !uiSchema[UI_WIDGET_KEY]) {
+      displayLabel = false;
+    }
+    if (uiSchema && uiSchema[UI_FIELD_KEY]) {
+      displayLabel = false;
+    }
   }
   return displayLabel;
 }

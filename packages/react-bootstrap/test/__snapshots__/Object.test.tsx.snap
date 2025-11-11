@@ -289,7 +289,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                   </div>
                 </div>
                 <div
-                  class="col-5"
+                  class="col-6"
                 >
                   <div>
                     <label
@@ -310,7 +310,8 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                   </div>
                 </div>
                 <div
-                  class="py-4 d-grid gap-2 col-2"
+                  class="py-4 d-grid gap-2 col-1"
+                  style="margin-top: 12px;"
                 >
                   <button
                     class="btn btn-danger btn-sm"
@@ -340,7 +341,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
             class="row"
           >
             <div
-              class="py-4 col-3 offset-9"
+              class="py-0.5 col-1 offset-11"
             >
               <button
                 class="ml-1 rjsf-object-property-expand btn btn-primary"
@@ -1649,7 +1650,7 @@ exports[`object fields additionalProperties 1`] = `
                   </div>
                 </div>
                 <div
-                  class="col-5"
+                  class="col-6"
                 >
                   <div>
                     <label
@@ -1670,7 +1671,8 @@ exports[`object fields additionalProperties 1`] = `
                   </div>
                 </div>
                 <div
-                  class="py-4 d-grid gap-2 col-2"
+                  class="py-4 d-grid gap-2 col-1"
+                  style="margin-top: 12px;"
                 >
                   <button
                     class="btn btn-danger btn-sm"
@@ -1700,7 +1702,7 @@ exports[`object fields additionalProperties 1`] = `
             class="row"
           >
             <div
-              class="py-4 col-3 offset-9"
+              class="py-0.5 col-1 offset-11"
             >
               <button
                 class="ml-1 rjsf-object-property-expand btn btn-primary"
@@ -1880,7 +1882,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                   </div>
                 </div>
                 <div
-                  class="col-5"
+                  class="col-6"
                 >
                   <div>
                     <label
@@ -1901,7 +1903,8 @@ exports[`object fields show add button and fields if additionalProperties is tru
                   </div>
                 </div>
                 <div
-                  class="py-4 d-grid gap-2 col-2"
+                  class="py-4 d-grid gap-2 col-1"
+                  style="margin-top: 12px;"
                 >
                   <button
                     class="btn btn-danger btn-sm"
@@ -1931,7 +1934,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
             class="row"
           >
             <div
-              class="py-4 col-3 offset-9"
+              class="py-0.5 col-1 offset-11"
             >
               <button
                 class="ml-1 rjsf-object-property-expand btn btn-primary"
@@ -2041,7 +2044,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                   </div>
                 </div>
                 <div
-                  class="col-5"
+                  class="col-6"
                 >
                   <div>
                     <label
@@ -2062,7 +2065,8 @@ exports[`object fields with title and description additionalProperties 1`] = `
                   </div>
                 </div>
                 <div
-                  class="py-4 d-grid gap-2 col-2"
+                  class="py-4 d-grid gap-2 col-1"
+                  style="margin-top: 12px;"
                 >
                   <button
                     class="btn btn-danger btn-sm"
@@ -2092,7 +2096,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
             class="row"
           >
             <div
-              class="py-4 col-3 offset-9"
+              class="py-0.5 col-1 offset-11"
             >
               <button
                 class="ml-1 rjsf-object-property-expand btn btn-primary"
@@ -2202,7 +2206,7 @@ exports[`object fields with title and description from both additionalProperties
                   </div>
                 </div>
                 <div
-                  class="col-5"
+                  class="col-6"
                 >
                   <div>
                     <label
@@ -2223,7 +2227,8 @@ exports[`object fields with title and description from both additionalProperties
                   </div>
                 </div>
                 <div
-                  class="py-4 d-grid gap-2 col-2"
+                  class="py-4 d-grid gap-2 col-1"
+                  style="margin-top: 12px;"
                 >
                   <button
                     class="btn btn-danger btn-sm"
@@ -2253,7 +2258,7 @@ exports[`object fields with title and description from both additionalProperties
             class="row"
           >
             <div
-              class="py-4 col-3 offset-9"
+              class="py-0.5 col-1 offset-11"
             >
               <button
                 class="ml-1 rjsf-object-property-expand btn btn-primary"
@@ -2497,7 +2502,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                   </div>
                 </div>
                 <div
-                  class="col-5"
+                  class="col-6"
                 >
                   <div>
                     <label
@@ -2518,7 +2523,8 @@ exports[`object fields with title and description from uiSchema additionalProper
                   </div>
                 </div>
                 <div
-                  class="py-4 d-grid gap-2 col-2"
+                  class="py-4 d-grid gap-2 col-1"
+                  style="margin-top: 12px;"
                 >
                   <button
                     class="btn btn-danger btn-sm"
@@ -2548,7 +2554,7 @@ exports[`object fields with title and description from uiSchema additionalProper
             class="row"
           >
             <div
-              class="py-4 col-3 offset-9"
+              class="py-0.5 col-1 offset-11"
             >
               <button
                 class="ml-1 rjsf-object-property-expand btn btn-primary"
@@ -2792,7 +2798,7 @@ exports[`object fields with title and description from uiSchema show add button 
                   </div>
                 </div>
                 <div
-                  class="col-5"
+                  class="col-6"
                 >
                   <div>
                     <label
@@ -2813,7 +2819,8 @@ exports[`object fields with title and description from uiSchema show add button 
                   </div>
                 </div>
                 <div
-                  class="py-4 d-grid gap-2 col-2"
+                  class="py-4 d-grid gap-2 col-1"
+                  style="margin-top: 12px;"
                 >
                   <button
                     class="btn btn-danger btn-sm"
@@ -2843,7 +2850,7 @@ exports[`object fields with title and description from uiSchema show add button 
             class="row"
           >
             <div
-              class="py-4 col-3 offset-9"
+              class="py-0.5 col-1 offset-11"
             >
               <button
                 class="ml-1 rjsf-object-property-expand btn btn-primary"
@@ -3087,7 +3094,7 @@ exports[`object fields with title and description show add button and fields if 
                   </div>
                 </div>
                 <div
-                  class="col-5"
+                  class="col-6"
                 >
                   <div>
                     <label
@@ -3108,7 +3115,8 @@ exports[`object fields with title and description show add button and fields if 
                   </div>
                 </div>
                 <div
-                  class="py-4 d-grid gap-2 col-2"
+                  class="py-4 d-grid gap-2 col-1"
+                  style="margin-top: 12px;"
                 >
                   <button
                     class="btn btn-danger btn-sm"
@@ -3138,7 +3146,7 @@ exports[`object fields with title and description show add button and fields if 
             class="row"
           >
             <div
-              class="py-4 col-3 offset-9"
+              class="py-0.5 col-1 offset-11"
             >
               <button
                 class="ml-1 rjsf-object-property-expand btn btn-primary"
@@ -3212,12 +3220,6 @@ exports[`object fields with title and description with global label off addition
                   class="col-5"
                 >
                   <div>
-                    <label
-                      class="form-label"
-                      for="root_foo-key"
-                    >
-                      foo Key
-                    </label>
                     <input
                       class="form-control"
                       id="root_foo-key"
@@ -3228,7 +3230,7 @@ exports[`object fields with title and description with global label off addition
                   </div>
                 </div>
                 <div
-                  class="col-5"
+                  class="col-6"
                 >
                   <div>
                     <input
@@ -3243,7 +3245,8 @@ exports[`object fields with title and description with global label off addition
                   </div>
                 </div>
                 <div
-                  class="py-4 d-grid gap-2 col-2"
+                  class="py-1 d-grid gap-2 col-1"
+                  style="margin-top: 0px;"
                 >
                   <button
                     class="btn btn-danger btn-sm"
@@ -3273,7 +3276,7 @@ exports[`object fields with title and description with global label off addition
             class="row"
           >
             <div
-              class="py-4 col-3 offset-9"
+              class="py-0.5 col-1 offset-11"
             >
               <button
                 class="ml-1 rjsf-object-property-expand btn btn-primary"
@@ -3425,12 +3428,6 @@ exports[`object fields with title and description with global label off show add
                   class="col-5"
                 >
                   <div>
-                    <label
-                      class="form-label"
-                      for="root_additionalProperty-key"
-                    >
-                      additionalProperty Key
-                    </label>
                     <input
                       class="form-control"
                       id="root_additionalProperty-key"
@@ -3441,7 +3438,7 @@ exports[`object fields with title and description with global label off show add
                   </div>
                 </div>
                 <div
-                  class="col-5"
+                  class="col-6"
                 >
                   <div>
                     <input
@@ -3456,7 +3453,8 @@ exports[`object fields with title and description with global label off show add
                   </div>
                 </div>
                 <div
-                  class="py-4 d-grid gap-2 col-2"
+                  class="py-1 d-grid gap-2 col-1"
+                  style="margin-top: 0px;"
                 >
                   <button
                     class="btn btn-danger btn-sm"
@@ -3486,7 +3484,7 @@ exports[`object fields with title and description with global label off show add
             class="row"
           >
             <div
-              class="py-4 col-3 offset-9"
+              class="py-0.5 col-1 offset-11"
             >
               <button
                 class="ml-1 rjsf-object-property-expand btn btn-primary"

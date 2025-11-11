@@ -58,9 +58,11 @@ export default function FieldTemplate<
       disabled={disabled}
       id={id}
       label={label}
+      displayLabel={displayLabel}
       onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
       onRemoveProperty={onRemoveProperty}
+      rawDescription={rawDescription}
       readonly={readonly}
       required={required}
       schema={schema}

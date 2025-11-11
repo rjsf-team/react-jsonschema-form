@@ -68,6 +68,7 @@ export default function FieldTemplate<
       disabled={divProps.disabled}
       id={id}
       label={label}
+      displayLabel={displayLabel}
       onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
       onRemoveProperty={onRemoveProperty}

@@ -32,6 +32,7 @@ export default function WrapIfAdditionalTemplate<
     classNames,
     style,
     disabled,
+    displayLabel,
     id,
     label,
     onRemoveProperty,
@@ -82,7 +83,7 @@ export default function WrapIfAdditionalTemplate<
               className='form-group'
               hasFeedback
               htmlFor={`${id}-key`}
-              label={keyLabel}
+              label={displayLabel ? keyLabel : undefined}
               labelCol={labelCol}
               required={required}
               style={wrapperStyle}
@@ -104,7 +105,7 @@ export default function WrapIfAdditionalTemplate<
         <Col className='form-additional' flex='1'>
           {children}
         </Col>
-        <Col flex='192px'>
+        <Col flex='120px' style={{ marginTop: displayLabel ? '40px' : undefined }}>
           <RemoveButton
             id={buttonId(id, 'remove')}
             className='rjsf-object-property-remove'

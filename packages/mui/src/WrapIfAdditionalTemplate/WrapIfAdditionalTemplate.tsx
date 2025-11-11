@@ -28,6 +28,7 @@ export default function WrapIfAdditionalTemplate<
     disabled,
     id,
     label,
+    displayLabel,
     onKeyRenameBlur,
     onRemoveProperty,
     readonly,
@@ -57,12 +58,12 @@ export default function WrapIfAdditionalTemplate<
   }
 
   return (
-    <Grid container key={`${id}-key`} alignItems='center' spacing={2} className={classNames} style={style}>
-      <Grid size='auto'>
+    <Grid container key={`${id}-key`} alignItems='flex-start' spacing={2} className={classNames} style={style}>
+      <Grid size={5.5}>
         <TextField
           fullWidth={true}
           required={required}
-          label={keyLabel}
+          label={displayLabel ? keyLabel : undefined}
           defaultValue={label}
           disabled={disabled || readonly}
           id={`${id}-key`}
@@ -71,8 +72,8 @@ export default function WrapIfAdditionalTemplate<
           type='text'
         />
       </Grid>
-      <Grid size='auto'>{children}</Grid>
-      <Grid>
+      <Grid size={5.5}>{children}</Grid>
+      <Grid sx={{ mt: 1.5 }}>
         <RemoveButton
           id={buttonId(id, 'remove')}
           className='rjsf-object-property-remove'

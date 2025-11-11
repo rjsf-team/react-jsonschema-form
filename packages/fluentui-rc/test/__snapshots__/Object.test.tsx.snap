@@ -276,9 +276,11 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
             style="margin-bottom: 10px;"
           >
             <div
-              class="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
             >
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -303,7 +305,9 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -328,7 +332,9 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
+              >
                 <button
                   class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_customField__remove"
@@ -1730,9 +1736,11 @@ exports[`object fields additionalProperties 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
             >
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -1757,7 +1765,9 @@ exports[`object fields additionalProperties 1`] = `
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -1782,7 +1792,9 @@ exports[`object fields additionalProperties 1`] = `
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
+              >
                 <button
                   class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_foo__remove"
@@ -1973,9 +1985,11 @@ exports[`object fields show add button and fields if additionalProperties is tru
             style="margin-bottom: 10px;"
           >
             <div
-              class="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
             >
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -2000,7 +2014,9 @@ exports[`object fields show add button and fields if additionalProperties is tru
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -2025,7 +2041,9 @@ exports[`object fields show add button and fields if additionalProperties is tru
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
+              >
                 <button
                   class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_additionalProperty__remove"
@@ -2142,9 +2160,11 @@ exports[`object fields with title and description additionalProperties 1`] = `
             style="margin-bottom: 10px;"
           >
             <div
-              class="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
             >
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -2169,7 +2189,9 @@ exports[`object fields with title and description additionalProperties 1`] = `
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -2194,7 +2216,9 @@ exports[`object fields with title and description additionalProperties 1`] = `
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
+              >
                 <button
                   class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_foo__remove"
@@ -2311,9 +2335,11 @@ exports[`object fields with title and description from both additionalProperties
             style="margin-bottom: 10px;"
           >
             <div
-              class="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
             >
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -2338,7 +2364,9 @@ exports[`object fields with title and description from both additionalProperties
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -2363,7 +2391,9 @@ exports[`object fields with title and description from both additionalProperties
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
+              >
                 <button
                   class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_foo__remove"
@@ -2620,9 +2650,11 @@ exports[`object fields with title and description from uiSchema additionalProper
             style="margin-bottom: 10px;"
           >
             <div
-              class="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
             >
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -2647,7 +2679,9 @@ exports[`object fields with title and description from uiSchema additionalProper
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -2672,7 +2706,9 @@ exports[`object fields with title and description from uiSchema additionalProper
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
+              >
                 <button
                   class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_foo__remove"
@@ -2929,9 +2965,11 @@ exports[`object fields with title and description from uiSchema show add button 
             style="margin-bottom: 10px;"
           >
             <div
-              class="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
             >
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -2956,7 +2994,9 @@ exports[`object fields with title and description from uiSchema show add button 
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -2981,7 +3021,9 @@ exports[`object fields with title and description from uiSchema show add button 
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
+              >
                 <button
                   class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_additionalProperty__remove"
@@ -3238,9 +3280,11 @@ exports[`object fields with title and description show add button and fields if 
             style="margin-bottom: 10px;"
           >
             <div
-              class="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
             >
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -3265,7 +3309,9 @@ exports[`object fields with title and description show add button and fields if 
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -3290,7 +3336,9 @@ exports[`object fields with title and description show add button and fields if 
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
+              >
                 <button
                   class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_additionalProperty__remove"
@@ -3385,24 +3433,18 @@ exports[`object fields with title and description with global label off addition
             style="margin-bottom: 10px;"
           >
             <div
-              class="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
             >
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
-                  <label
-                    class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                    for="field-r1d__control"
-                    id="field-r1d__label"
-                  >
-                    foo Key
-                  </label>
                   <span
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-r1d__label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -3412,7 +3454,9 @@ exports[`object fields with title and description with global label off addition
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -3431,7 +3475,9 @@ exports[`object fields with title and description with global label off addition
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
+              >
                 <button
                   class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_foo__remove"
@@ -3610,24 +3656,18 @@ exports[`object fields with title and description with global label off show add
             style="margin-bottom: 10px;"
           >
             <div
-              class="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
             >
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
-                  <label
-                    class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                    for="field-r1g__control"
-                    id="field-r1g__label"
-                  >
-                    additionalProperty Key
-                  </label>
                   <span
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-r1g__label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_additionalProperty-key"
                       name="root_additionalProperty-key"
@@ -3637,7 +3677,9 @@ exports[`object fields with title and description with global label off show add
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
@@ -3656,7 +3698,9 @@ exports[`object fields with title and description with global label off show add
                   </span>
                 </div>
               </div>
-              <div>
+              <div
+                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
+              >
                 <button
                   class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_additionalProperty__remove"

@@ -596,7 +596,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                           </div>
                           <div
                             class="ant-col css-dev-only-do-not-override-ac2jek"
-                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 40px;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
@@ -643,7 +643,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                     >
                       <div
                         class="ant-col css-dev-only-do-not-override-ac2jek"
-                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                       >
                         <button
                           class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
@@ -3168,7 +3168,7 @@ exports[`object fields additionalProperties 1`] = `
                           </div>
                           <div
                             class="ant-col css-dev-only-do-not-override-ac2jek"
-                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 40px;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
@@ -3215,7 +3215,7 @@ exports[`object fields additionalProperties 1`] = `
                     >
                       <div
                         class="ant-col css-dev-only-do-not-override-ac2jek"
-                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                       >
                         <button
                           class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
@@ -3657,7 +3657,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                           </div>
                           <div
                             class="ant-col css-dev-only-do-not-override-ac2jek"
-                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 40px;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
@@ -3704,7 +3704,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                     >
                       <div
                         class="ant-col css-dev-only-do-not-override-ac2jek"
-                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                       >
                         <button
                           class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
@@ -3930,7 +3930,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                           </div>
                           <div
                             class="ant-col css-dev-only-do-not-override-ac2jek"
-                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 40px;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
@@ -3977,7 +3977,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                     >
                       <div
                         class="ant-col css-dev-only-do-not-override-ac2jek"
-                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                       >
                         <button
                           class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
@@ -4216,7 +4216,7 @@ exports[`object fields with title and description from both additionalProperties
                           </div>
                           <div
                             class="ant-col css-dev-only-do-not-override-ac2jek"
-                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 40px;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
@@ -4263,7 +4263,7 @@ exports[`object fields with title and description from both additionalProperties
                     >
                       <div
                         class="ant-col css-dev-only-do-not-override-ac2jek"
-                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                       >
                         <button
                           class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
@@ -4791,7 +4791,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                           </div>
                           <div
                             class="ant-col css-dev-only-do-not-override-ac2jek"
-                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 40px;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
@@ -4838,7 +4838,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                     >
                       <div
                         class="ant-col css-dev-only-do-not-override-ac2jek"
-                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                       >
                         <button
                           class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
@@ -5366,7 +5366,7 @@ exports[`object fields with title and description from uiSchema show add button 
                           </div>
                           <div
                             class="ant-col css-dev-only-do-not-override-ac2jek"
-                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 40px;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
@@ -5413,7 +5413,7 @@ exports[`object fields with title and description from uiSchema show add button 
                     >
                       <div
                         class="ant-col css-dev-only-do-not-override-ac2jek"
-                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                       >
                         <button
                           class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
@@ -5941,7 +5941,7 @@ exports[`object fields with title and description show add button and fields if 
                           </div>
                           <div
                             class="ant-col css-dev-only-do-not-override-ac2jek"
-                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 40px;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
@@ -5988,7 +5988,7 @@ exports[`object fields with title and description show add button and fields if 
                     >
                       <div
                         class="ant-col css-dev-only-do-not-override-ac2jek"
-                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                       >
                         <button
                           class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
@@ -6114,17 +6114,6 @@ exports[`object fields with title and description with global label off addition
                                   class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
                                 >
                                   <div
-                                    class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ac2jek"
-                                  >
-                                    <label
-                                      class=""
-                                      for="root_foo-key"
-                                      title="foo Key"
-                                    >
-                                      foo Key
-                                    </label>
-                                  </div>
-                                  <div
                                     class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ac2jek"
                                   >
                                     <div
@@ -6199,7 +6188,7 @@ exports[`object fields with title and description with global label off addition
                           </div>
                           <div
                             class="ant-col css-dev-only-do-not-override-ac2jek"
-                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
@@ -6246,7 +6235,7 @@ exports[`object fields with title and description with global label off addition
                     >
                       <div
                         class="ant-col css-dev-only-do-not-override-ac2jek"
-                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                       >
                         <button
                           class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
@@ -6622,17 +6611,6 @@ exports[`object fields with title and description with global label off show add
                                   class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
                                 >
                                   <div
-                                    class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ac2jek"
-                                  >
-                                    <label
-                                      class=""
-                                      for="root_additionalProperty-key"
-                                      title="additionalProperty Key"
-                                    >
-                                      additionalProperty Key
-                                    </label>
-                                  </div>
-                                  <div
                                     class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ac2jek"
                                   >
                                     <div
@@ -6707,7 +6685,7 @@ exports[`object fields with title and description with global label off show add
                           </div>
                           <div
                             class="ant-col css-dev-only-do-not-override-ac2jek"
-                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
@@ -6754,7 +6732,7 @@ exports[`object fields with title and description with global label off show add
                     >
                       <div
                         class="ant-col css-dev-only-do-not-override-ac2jek"
-                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                       >
                         <button
                           class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"

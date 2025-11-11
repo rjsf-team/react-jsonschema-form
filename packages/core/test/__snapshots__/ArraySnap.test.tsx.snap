@@ -3682,18 +3682,6 @@ exports[`with title and description with global label off checkboxes 1`] = `
     <div
       class="form-group rjsf-field rjsf-field-array"
     >
-      <label
-        class="control-label"
-        for="root"
-      >
-        Test field
-      </label>
-      <div
-        class="field-description"
-        id="root__description"
-      >
-        a test description
-      </div>
       <select
         aria-describedby="root__error root__description root__help"
         class="form-control"

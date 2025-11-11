@@ -21,10 +21,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
 - Updated `ArrayFieldItemTemplate` and `ArrayFieldTemplate` to adjust sizes and buttons location using `displayLabel` and `hasDescription`, fixing [#3296](https://github.com/rjsf-team/react-jsonschema-form/issues/3296)
+- Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to adjust the sizes and buttons location using `displayLabel`
 
 ## @rjsf/chakra-ui
 
 - Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
+- Updated `FieldTemplate` and `WrapIfAdditionalTemplate` to adjust the sizes and buttons location using `displayLabel` and `rawDescription`
 
 ## @rjsf/core
 
@@ -33,6 +35,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `StringField` to extract the `title` from the props and pass it down to the widget if provided
 - Updated `ArrayFieldItemTemplate` to adjust buttons location using `displayLabel` and `hasDescription`, fixing [#3296](https://github.com/rjsf-team/react-jsonschema-form/issues/3296)
 - Updated `AddButton` to improve it's responsiveness in relation to the `ArrayFieldItemTemplate` changes
+- Updated `WrapIfAdditionalTemplate` to adjust the sizes and buttons location using `displayLabel` and `rawDescription`
 
 ## @rjsf/daisyui
 
@@ -40,12 +43,14 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `ArrayFieldItemTemplate` to adjust buttons location using `displayLabel` and `hasDescription`, fixing [#3296](https://github.com/rjsf-team/react-jsonschema-form/issues/3296)
 - Updated `WrapIfAdditionalTemplate` to add `flexGrow` and `BaseInputTemplate` to add `w-full` to allow the array item fields to grow properly
 - Updated `FieldTemplate` to render the `description` which was missing in the theme
+- Updated `FieldTemplate` and `WrapIfAdditionalTemplate` to adjust the sizes and buttons location using `displayLabel` and `rawDescription`
 
 ## @rjsf/fluentui-rc
 
 - Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
 - Updated `ArrayFieldItemTemplate` to adjust buttons location using `displayLabel`, fixing [#3296](https://github.com/rjsf-team/react-jsonschema-form/issues/3296)
 - Updated `WrapIfAdditionalTemplate` to add `flexGrow` to allow the array item fields to grow properly for non-container elements
+- Updated `FieldTemplate` and `WrapIfAdditionalTemplate` to adjust the sizes and buttons location using `displayLabel` and `rawDescription`
 
 ## @rjsf/mantine
 
@@ -53,39 +58,47 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `utils.ts` to add `label` to the cleanup fields to filter it from the `uiOptions`
 - Updated `BaseInputTemplate` to display `description` which was missing in the theme
 - Updated `ArrayFieldTitleTemplate` to support the `optionalData`
+- Updated `FieldTemplate` and `WrapIfAdditionalTemplate` to adjust the sizes and buttons location using `displayLabel` and `rawDescription`
 
 ## @rjsf/mui
 
 - Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
 - Updated `ArrayFieldItemTemplate` to adjust buttons location using `displayLabel` and `hasDescription`, fixing [#3296](https://github.com/rjsf-team/react-jsonschema-form/issues/3296)
+- Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to adjust the sizes and buttons location using `displayLabel`
 
 ## @rjsf/primereact
 
 - Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
 - Updated `ArrayFieldItemTemplate` to adjust buttons location using `displayLabel`, fixing [#3296](https://github.com/rjsf-team/react-jsonschema-form/issues/3296)
+- Updated `WrapIfAdditionalTemplate` to adjust the sizes and buttons location using `displayLabel` and `rawDescription`
 
 ## @rjsf/react-bootstrap
 
 - Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
 - Updated `ArrayFieldItemTemplate` to adjust buttons location using `displayLabel` and `hasDescription`, fixing [#3296](https://github.com/rjsf-team/react-jsonschema-form/issues/3296)
 - Updated `ArrayFieldTemplate` to improve it's responsiveness in relation to the `ArrayFieldItemTemplate` changes
+- Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to adjust the sizes and buttons location using `displayLabel` and `rawDescription`
 
 ## @rjsf/semantic-ui
 
 - Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
 - Updated `ArrayFieldItemTemplate` to adjust buttons location using `displayLabel` and `hasDescription`, fixing [#3296](https://github.com/rjsf-team/react-jsonschema-form/issues/3296)
+- Updated `FieldTemplate` and `WrapIfAdditionalTemplate` to adjust the sizes and buttons location using `displayLabel` and `rawDescription`
 
 ## @rjsf/shadcn
 
 - Added support for rendering `ui:help` as markdown via new `ui:enableMarkdownInHelp` flag in `FieldHelpTemplate`
 - Updated `ArrayFieldItemTemplate` to adjust buttons location using `displayLabel` and `hasDescription`, fixing [#3296](https://github.com/rjsf-team/react-jsonschema-form/issues/3296)
 - Updated `ArrayFieldTemplate` to add `justify-end` to the `AddButton` rendering
+- Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to adjust the sizes and buttons location using `displayLabel` and `rawDescription`
 
 ## @rjsf/utils
 
 - Added new `enableMarkdownInHelp` to the `GlobalUISchemaOptions` type, fixing [#4601](https://github.com/rjsf-team/react-jsonschema-form/issues/4601)
 - Added new `displayLabel` and `hasDescription` flags in the `ArrayFieldItemTemplateProps` to support fixing [#3296](https://github.com/rjsf-team/react-jsonschema-form/issues/3296)
 - Updated the three hooks to add `use client` directive to support NextJS builds
+- Updated `WrapIfAdditionalTemplateProps` to also pick the `displayLabel` and `rawDescription` props from `FieldProps` for use in adjusting the Additional Properties buttons location
+- Fixed bug in `getDisplayLabel()` to return false ALWAYS, when the `ui:options` is set to false AND to return true for `array` and `object` types when they were added via additionalProperties
 
 ## Dev / docs / playground
 

@@ -476,7 +476,8 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                     </div>
                   </div>
                   <div
-                    class="flex self-center"
+                    class="flex self-start"
+                    style="margin-top: 32px;"
                   >
                     <button
                       aria-label="Remove"
@@ -2344,7 +2345,8 @@ exports[`object fields additionalProperties 1`] = `
                     </div>
                   </div>
                   <div
-                    class="flex self-center"
+                    class="flex self-start"
+                    style="margin-top: 32px;"
                   >
                     <button
                       aria-label="Remove"
@@ -2665,7 +2667,8 @@ exports[`object fields show add button and fields if additionalProperties is tru
                     </div>
                   </div>
                   <div
-                    class="flex self-center"
+                    class="flex self-start"
+                    style="margin-top: 32px;"
                   >
                     <button
                       aria-label="Remove"
@@ -2862,7 +2865,8 @@ exports[`object fields with title and description additionalProperties 1`] = `
                     </div>
                   </div>
                   <div
-                    class="flex self-center"
+                    class="flex self-start"
+                    style="margin-top: 32px;"
                   >
                     <button
                       aria-label="Remove"
@@ -3059,7 +3063,8 @@ exports[`object fields with title and description from both additionalProperties
                     </div>
                   </div>
                   <div
-                    class="flex self-center"
+                    class="flex self-start"
+                    style="margin-top: 32px;"
                   >
                     <button
                       aria-label="Remove"
@@ -3446,7 +3451,8 @@ exports[`object fields with title and description from uiSchema additionalProper
                     </div>
                   </div>
                   <div
-                    class="flex self-center"
+                    class="flex self-start"
+                    style="margin-top: 32px;"
                   >
                     <button
                       aria-label="Remove"
@@ -3833,7 +3839,8 @@ exports[`object fields with title and description from uiSchema show add button 
                     </div>
                   </div>
                   <div
-                    class="flex self-center"
+                    class="flex self-start"
+                    style="margin-top: 32px;"
                   >
                     <button
                       aria-label="Remove"
@@ -4220,7 +4227,8 @@ exports[`object fields with title and description show add button and fields if 
                     </div>
                   </div>
                   <div
-                    class="flex self-center"
+                    class="flex self-start"
+                    style="margin-top: 32px;"
                   >
                     <button
                       aria-label="Remove"
@@ -4331,16 +4339,6 @@ exports[`object fields with title and description with global label off addition
                   style="justify-content: space-between;"
                 >
                   <div>
-                    <label
-                      class="label"
-                      for="root_foo-key"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        foo Key
-                      </span>
-                    </label>
                     <input
                       class="input input-bordered"
                       id="root_foo-key"
@@ -4384,7 +4382,8 @@ exports[`object fields with title and description with global label off addition
                     </div>
                   </div>
                   <div
-                    class="flex self-center"
+                    class="flex self-start"
+                    style="margin-top: 10px;"
                   >
                     <button
                       aria-label="Remove"
@@ -4622,16 +4621,6 @@ exports[`object fields with title and description with global label off show add
                   style="justify-content: space-between;"
                 >
                   <div>
-                    <label
-                      class="label"
-                      for="root_additionalProperty-key"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        additionalProperty Key
-                      </span>
-                    </label>
                     <input
                       class="input input-bordered"
                       id="root_additionalProperty-key"
@@ -4675,7 +4664,8 @@ exports[`object fields with title and description with global label off show add
                     </div>
                   </div>
                   <div
-                    class="flex self-center"
+                    class="flex self-start"
+                    style="margin-top: 10px;"
                   >
                     <button
                       aria-label="Remove"

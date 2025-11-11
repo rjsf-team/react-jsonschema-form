@@ -675,6 +675,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
 
 .emotion-8 {
   display: grid;
+  grid-template-columns: repeat(11, 1fr);
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -682,8 +683,12 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
   gap: var(--chakra-spacing-2);
 }
 
+.emotion-9 {
+  grid-column: span 5/span 5;
+}
+
 @layer recipes {
-  .emotion-9 {
+  .emotion-10 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -701,12 +706,12 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
   }
 }
 
-.emotion-11 {
+.emotion-12 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-11 {
+  .emotion-12 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -731,17 +736,17 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-11:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-12:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-11:is(:focus-visible, [data-focus-visible]) {
+  .emotion-12:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -750,13 +755,17 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
   }
 }
 
-.emotion-17 {
+.emotion-19 {
+  justify-self: flex-end;
+}
+
+.emotion-20 {
   padding-inline: 0;
   padding-block: 0;
 }
 
 @layer recipes {
-  .emotion-17 {
+  .emotion-20 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -804,19 +813,19 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-17:is(:focus-visible, [data-focus-visible]) {
+  .emotion-20:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-17:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-20:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-17 :where(svg) {
+  .emotion-20 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -824,14 +833,14 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-17:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-20:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-17:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-20:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -839,16 +848,12 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
   }
 }
 
-.emotion-17 :where(svg) {
+.emotion-20 :where(svg) {
   font-size: 1.2em;
 }
 
-.emotion-18 {
-  justify-self: flex-end;
-}
-
 @layer recipes {
-  .emotion-19 {
+  .emotion-22 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -896,19 +901,19 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-19:is(:focus-visible, [data-focus-visible]) {
+  .emotion-22:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-19:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-22:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-19 :where(svg) {
+  .emotion-22 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -916,14 +921,14 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-19:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-22:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-19:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-22:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -931,7 +936,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
   }
 }
 
-.emotion-20 {
+.emotion-23 {
   margin-top: var(--chakra-spacing-3);
 }
 
@@ -1002,9 +1007,11 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
               <div
                 class="rjsf-field rjsf-field-string emotion-8"
               >
-                <div>
+                <div
+                  class="emotion-9"
+                >
                   <div
-                    class="chakra-field__root emotion-9"
+                    class="chakra-field__root emotion-10"
                     data-part="root"
                     data-scope="field"
                     id="field:::r2i:"
@@ -1020,7 +1027,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                       customField Key
                     </label>
                     <input
-                      class="chakra-input emotion-11"
+                      class="chakra-input emotion-12"
                       data-part="input"
                       data-scope="field"
                       id="root_customField-key"
@@ -1030,7 +1037,9 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                     />
                   </div>
                 </div>
-                <div>
+                <div
+                  class="emotion-9"
+                >
                   <fieldset
                     aria-labelledby="fieldset:::r2j:::legend"
                     class="fieldset__root emotion-0"
@@ -1071,10 +1080,13 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                     </div>
                   </fieldset>
                 </div>
-                <div>
+                <div
+                  class="emotion-19"
+                  style="margin-top: 22px;"
+                >
                   <button
                     aria-label="Remove"
-                    class="chakra-button rjsf-object-property-remove emotion-17"
+                    class="chakra-button rjsf-object-property-remove emotion-20"
                     id="root_customField__remove"
                     title="Remove"
                     type="button"
@@ -1107,10 +1119,10 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
               </div>
             </div>
             <div
-              class="emotion-18"
+              class="emotion-19"
             >
               <button
-                class="chakra-button rjsf-object-property-expand emotion-19"
+                class="chakra-button rjsf-object-property-expand emotion-22"
                 id="root__add"
                 type="button"
               >
@@ -1142,10 +1154,10 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
       </fieldset>
     </div>
     <div
-      class="emotion-20"
+      class="emotion-23"
     >
       <button
-        class="chakra-button emotion-19"
+        class="chakra-button emotion-22"
         type="submit"
       >
         Submit
@@ -4564,6 +4576,7 @@ exports[`object fields additionalProperties 1`] = `
 
 .emotion-3 {
   display: grid;
+  grid-template-columns: repeat(11, 1fr);
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -4571,8 +4584,12 @@ exports[`object fields additionalProperties 1`] = `
   gap: var(--chakra-spacing-2);
 }
 
+.emotion-4 {
+  grid-column: span 5/span 5;
+}
+
 @layer recipes {
-  .emotion-4 {
+  .emotion-5 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -4591,7 +4608,7 @@ exports[`object fields additionalProperties 1`] = `
 }
 
 @layer recipes {
-  .emotion-5 {
+  .emotion-6 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -4611,17 +4628,17 @@ exports[`object fields additionalProperties 1`] = `
     user-select: none;
   }
 
-  .emotion-5:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 }
 
-.emotion-6 {
+.emotion-7 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-6 {
+  .emotion-7 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -4646,17 +4663,17 @@ exports[`object fields additionalProperties 1`] = `
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-6:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-7:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-6:is(:focus-visible, [data-focus-visible]) {
+  .emotion-7:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -4665,12 +4682,12 @@ exports[`object fields additionalProperties 1`] = `
   }
 }
 
-.emotion-9 {
+.emotion-11 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-9 {
+  .emotion-11 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -4689,7 +4706,7 @@ exports[`object fields additionalProperties 1`] = `
 }
 
 @layer recipes {
-  .emotion-11 {
+  .emotion-13 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -4714,17 +4731,17 @@ exports[`object fields additionalProperties 1`] = `
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-13:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-11:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-13:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-11:is(:focus-visible, [data-focus-visible]) {
+  .emotion-13:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -4733,13 +4750,17 @@ exports[`object fields additionalProperties 1`] = `
   }
 }
 
-.emotion-12 {
+.emotion-14 {
+  justify-self: flex-end;
+}
+
+.emotion-15 {
   padding-inline: 0;
   padding-block: 0;
 }
 
 @layer recipes {
-  .emotion-12 {
+  .emotion-15 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -4787,19 +4808,19 @@ exports[`object fields additionalProperties 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-12:is(:focus-visible, [data-focus-visible]) {
+  .emotion-15:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-12 :where(svg) {
+  .emotion-15 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -4807,14 +4828,14 @@ exports[`object fields additionalProperties 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-12:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-15:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-12:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-15:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -4822,16 +4843,12 @@ exports[`object fields additionalProperties 1`] = `
   }
 }
 
-.emotion-12 :where(svg) {
+.emotion-15 :where(svg) {
   font-size: 1.2em;
 }
 
-.emotion-13 {
-  justify-self: flex-end;
-}
-
 @layer recipes {
-  .emotion-14 {
+  .emotion-17 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -4879,19 +4896,19 @@ exports[`object fields additionalProperties 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-14:is(:focus-visible, [data-focus-visible]) {
+  .emotion-17:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-14:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-17:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-14 :where(svg) {
+  .emotion-17 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -4899,14 +4916,14 @@ exports[`object fields additionalProperties 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-14:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-17:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-14:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-17:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -4914,7 +4931,7 @@ exports[`object fields additionalProperties 1`] = `
   }
 }
 
-.emotion-15 {
+.emotion-18 {
   margin-top: var(--chakra-spacing-3);
 }
 
@@ -4940,16 +4957,18 @@ exports[`object fields additionalProperties 1`] = `
               <div
                 class="rjsf-field rjsf-field-string emotion-3"
               >
-                <div>
+                <div
+                  class="emotion-4"
+                >
                   <div
-                    class="chakra-field__root emotion-4"
+                    class="chakra-field__root emotion-5"
                     data-part="root"
                     data-scope="field"
                     id="field:::r6:"
                     role="group"
                   >
                     <label
-                      class="chakra-field__label emotion-5"
+                      class="chakra-field__label emotion-6"
                       data-part="label"
                       data-scope="field"
                       for=":r6:"
@@ -4958,7 +4977,7 @@ exports[`object fields additionalProperties 1`] = `
                       foo Key
                     </label>
                     <input
-                      class="chakra-input emotion-6"
+                      class="chakra-input emotion-7"
                       data-part="input"
                       data-scope="field"
                       id="root_foo-key"
@@ -4968,7 +4987,9 @@ exports[`object fields additionalProperties 1`] = `
                     />
                   </div>
                 </div>
-                <div>
+                <div
+                  class="emotion-4"
+                >
                   <fieldset
                     aria-labelledby="fieldset:::r7:::legend"
                     class="fieldset__root emotion-0"
@@ -4979,14 +5000,14 @@ exports[`object fields additionalProperties 1`] = `
                       class="fieldset__content emotion-1"
                     >
                       <div
-                        class="chakra-field__root emotion-9"
+                        class="chakra-field__root emotion-11"
                         data-part="root"
                         data-scope="field"
                         id="field:::r8:"
                         role="group"
                       >
                         <label
-                          class="chakra-field__label emotion-5"
+                          class="chakra-field__label emotion-6"
                           data-part="label"
                           data-scope="field"
                           for=":r8:"
@@ -4996,7 +5017,7 @@ exports[`object fields additionalProperties 1`] = `
                         </label>
                         <input
                           aria-describedby="root_foo__error root_foo__description root_foo__help"
-                          class="chakra-input emotion-11"
+                          class="chakra-input emotion-13"
                           data-part="input"
                           data-scope="field"
                           id="root_foo"
@@ -5009,10 +5030,13 @@ exports[`object fields additionalProperties 1`] = `
                     </div>
                   </fieldset>
                 </div>
-                <div>
+                <div
+                  class="emotion-14"
+                  style="margin-top: 22px;"
+                >
                   <button
                     aria-label="Remove"
-                    class="chakra-button rjsf-object-property-remove emotion-12"
+                    class="chakra-button rjsf-object-property-remove emotion-15"
                     id="root_foo__remove"
                     title="Remove"
                     type="button"
@@ -5045,10 +5069,10 @@ exports[`object fields additionalProperties 1`] = `
               </div>
             </div>
             <div
-              class="emotion-13"
+              class="emotion-14"
             >
               <button
-                class="chakra-button rjsf-object-property-expand emotion-14"
+                class="chakra-button rjsf-object-property-expand emotion-17"
                 id="root__add"
                 type="button"
               >
@@ -5080,10 +5104,10 @@ exports[`object fields additionalProperties 1`] = `
       </fieldset>
     </div>
     <div
-      class="emotion-15"
+      class="emotion-18"
     >
       <button
-        class="chakra-button emotion-14"
+        class="chakra-button emotion-17"
         type="submit"
       >
         Submit
@@ -5492,6 +5516,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
 
 .emotion-3 {
   display: grid;
+  grid-template-columns: repeat(11, 1fr);
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -5499,8 +5524,12 @@ exports[`object fields show add button and fields if additionalProperties is tru
   gap: var(--chakra-spacing-2);
 }
 
+.emotion-4 {
+  grid-column: span 5/span 5;
+}
+
 @layer recipes {
-  .emotion-4 {
+  .emotion-5 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -5519,7 +5548,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
 }
 
 @layer recipes {
-  .emotion-5 {
+  .emotion-6 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -5539,17 +5568,17 @@ exports[`object fields show add button and fields if additionalProperties is tru
     user-select: none;
   }
 
-  .emotion-5:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 }
 
-.emotion-6 {
+.emotion-7 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-6 {
+  .emotion-7 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -5574,17 +5603,17 @@ exports[`object fields show add button and fields if additionalProperties is tru
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-6:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-7:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-6:is(:focus-visible, [data-focus-visible]) {
+  .emotion-7:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -5593,12 +5622,12 @@ exports[`object fields show add button and fields if additionalProperties is tru
   }
 }
 
-.emotion-9 {
+.emotion-11 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-9 {
+  .emotion-11 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -5617,7 +5646,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
 }
 
 @layer recipes {
-  .emotion-11 {
+  .emotion-13 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -5642,17 +5671,17 @@ exports[`object fields show add button and fields if additionalProperties is tru
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-13:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-11:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-13:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-11:is(:focus-visible, [data-focus-visible]) {
+  .emotion-13:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -5661,13 +5690,17 @@ exports[`object fields show add button and fields if additionalProperties is tru
   }
 }
 
-.emotion-12 {
+.emotion-14 {
+  justify-self: flex-end;
+}
+
+.emotion-15 {
   padding-inline: 0;
   padding-block: 0;
 }
 
 @layer recipes {
-  .emotion-12 {
+  .emotion-15 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -5715,19 +5748,19 @@ exports[`object fields show add button and fields if additionalProperties is tru
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-12:is(:focus-visible, [data-focus-visible]) {
+  .emotion-15:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-12 :where(svg) {
+  .emotion-15 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -5735,14 +5768,14 @@ exports[`object fields show add button and fields if additionalProperties is tru
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-12:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-15:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-12:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-15:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -5750,16 +5783,12 @@ exports[`object fields show add button and fields if additionalProperties is tru
   }
 }
 
-.emotion-12 :where(svg) {
+.emotion-15 :where(svg) {
   font-size: 1.2em;
 }
 
-.emotion-13 {
-  justify-self: flex-end;
-}
-
 @layer recipes {
-  .emotion-14 {
+  .emotion-17 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -5807,19 +5836,19 @@ exports[`object fields show add button and fields if additionalProperties is tru
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-14:is(:focus-visible, [data-focus-visible]) {
+  .emotion-17:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-14:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-17:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-14 :where(svg) {
+  .emotion-17 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -5827,14 +5856,14 @@ exports[`object fields show add button and fields if additionalProperties is tru
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-14:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-17:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-14:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-17:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -5842,7 +5871,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
   }
 }
 
-.emotion-15 {
+.emotion-18 {
   margin-top: var(--chakra-spacing-3);
 }
 
@@ -5868,16 +5897,18 @@ exports[`object fields show add button and fields if additionalProperties is tru
               <div
                 class="rjsf-field rjsf-field-string emotion-3"
               >
-                <div>
+                <div
+                  class="emotion-4"
+                >
                   <div
-                    class="chakra-field__root emotion-4"
+                    class="chakra-field__root emotion-5"
                     data-part="root"
                     data-scope="field"
                     id="field:::ra:"
                     role="group"
                   >
                     <label
-                      class="chakra-field__label emotion-5"
+                      class="chakra-field__label emotion-6"
                       data-part="label"
                       data-scope="field"
                       for=":ra:"
@@ -5886,7 +5917,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                       additionalProperty Key
                     </label>
                     <input
-                      class="chakra-input emotion-6"
+                      class="chakra-input emotion-7"
                       data-part="input"
                       data-scope="field"
                       id="root_additionalProperty-key"
@@ -5896,7 +5927,9 @@ exports[`object fields show add button and fields if additionalProperties is tru
                     />
                   </div>
                 </div>
-                <div>
+                <div
+                  class="emotion-4"
+                >
                   <fieldset
                     aria-labelledby="fieldset:::rb:::legend"
                     class="fieldset__root emotion-0"
@@ -5907,14 +5940,14 @@ exports[`object fields show add button and fields if additionalProperties is tru
                       class="fieldset__content emotion-1"
                     >
                       <div
-                        class="chakra-field__root emotion-9"
+                        class="chakra-field__root emotion-11"
                         data-part="root"
                         data-scope="field"
                         id="field:::rc:"
                         role="group"
                       >
                         <label
-                          class="chakra-field__label emotion-5"
+                          class="chakra-field__label emotion-6"
                           data-part="label"
                           data-scope="field"
                           for=":rc:"
@@ -5924,7 +5957,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                         </label>
                         <input
                           aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
-                          class="chakra-input emotion-11"
+                          class="chakra-input emotion-13"
                           data-part="input"
                           data-scope="field"
                           id="root_additionalProperty"
@@ -5937,10 +5970,13 @@ exports[`object fields show add button and fields if additionalProperties is tru
                     </div>
                   </fieldset>
                 </div>
-                <div>
+                <div
+                  class="emotion-14"
+                  style="margin-top: 22px;"
+                >
                   <button
                     aria-label="Remove"
-                    class="chakra-button rjsf-object-property-remove emotion-12"
+                    class="chakra-button rjsf-object-property-remove emotion-15"
                     id="root_additionalProperty__remove"
                     title="Remove"
                     type="button"
@@ -5973,10 +6009,10 @@ exports[`object fields show add button and fields if additionalProperties is tru
               </div>
             </div>
             <div
-              class="emotion-13"
+              class="emotion-14"
             >
               <button
-                class="chakra-button rjsf-object-property-expand emotion-14"
+                class="chakra-button rjsf-object-property-expand emotion-17"
                 id="root__add"
                 type="button"
               >
@@ -6008,10 +6044,10 @@ exports[`object fields show add button and fields if additionalProperties is tru
       </fieldset>
     </div>
     <div
-      class="emotion-15"
+      class="emotion-18"
     >
       <button
-        class="chakra-button emotion-14"
+        class="chakra-button emotion-17"
         type="submit"
       >
         Submit
@@ -6095,6 +6131,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
 
 .emotion-7 {
   display: grid;
+  grid-template-columns: repeat(11, 1fr);
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -6102,8 +6139,12 @@ exports[`object fields with title and description additionalProperties 1`] = `
   gap: var(--chakra-spacing-2);
 }
 
+.emotion-8 {
+  grid-column: span 5/span 5;
+}
+
 @layer recipes {
-  .emotion-8 {
+  .emotion-9 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -6122,7 +6163,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
 }
 
 @layer recipes {
-  .emotion-9 {
+  .emotion-10 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -6142,17 +6183,17 @@ exports[`object fields with title and description additionalProperties 1`] = `
     user-select: none;
   }
 
-  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 }
 
-.emotion-10 {
+.emotion-11 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-10 {
+  .emotion-11 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -6177,17 +6218,17 @@ exports[`object fields with title and description additionalProperties 1`] = `
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-10:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-11:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-10:is(:focus-visible, [data-focus-visible]) {
+  .emotion-11:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -6196,12 +6237,12 @@ exports[`object fields with title and description additionalProperties 1`] = `
   }
 }
 
-.emotion-13 {
+.emotion-15 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-13 {
+  .emotion-15 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -6220,7 +6261,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
 }
 
 @layer recipes {
-  .emotion-15 {
+  .emotion-17 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -6245,17 +6286,17 @@ exports[`object fields with title and description additionalProperties 1`] = `
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-17:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-15:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-17:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-15:is(:focus-visible, [data-focus-visible]) {
+  .emotion-17:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -6264,13 +6305,17 @@ exports[`object fields with title and description additionalProperties 1`] = `
   }
 }
 
-.emotion-16 {
+.emotion-18 {
+  justify-self: flex-end;
+}
+
+.emotion-19 {
   padding-inline: 0;
   padding-block: 0;
 }
 
 @layer recipes {
-  .emotion-16 {
+  .emotion-19 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -6318,19 +6363,19 @@ exports[`object fields with title and description additionalProperties 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-16:is(:focus-visible, [data-focus-visible]) {
+  .emotion-19:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-19:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-16 :where(svg) {
+  .emotion-19 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -6338,14 +6383,14 @@ exports[`object fields with title and description additionalProperties 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-16:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-19:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-16:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-19:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -6353,16 +6398,12 @@ exports[`object fields with title and description additionalProperties 1`] = `
   }
 }
 
-.emotion-16 :where(svg) {
+.emotion-19 :where(svg) {
   font-size: 1.2em;
 }
 
-.emotion-17 {
-  justify-self: flex-end;
-}
-
 @layer recipes {
-  .emotion-18 {
+  .emotion-21 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -6410,19 +6451,19 @@ exports[`object fields with title and description additionalProperties 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-18:is(:focus-visible, [data-focus-visible]) {
+  .emotion-21:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-18:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-21:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-18 :where(svg) {
+  .emotion-21 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -6430,14 +6471,14 @@ exports[`object fields with title and description additionalProperties 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-18:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-21:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-18:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-21:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -6445,7 +6486,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
   }
 }
 
-.emotion-19 {
+.emotion-22 {
   margin-top: var(--chakra-spacing-3);
 }
 
@@ -6492,16 +6533,18 @@ exports[`object fields with title and description additionalProperties 1`] = `
               <div
                 class="rjsf-field rjsf-field-string emotion-7"
               >
-                <div>
+                <div
+                  class="emotion-8"
+                >
                   <div
-                    class="chakra-field__root emotion-8"
+                    class="chakra-field__root emotion-9"
                     data-part="root"
                     data-scope="field"
                     id="field:::rj:"
                     role="group"
                   >
                     <label
-                      class="chakra-field__label emotion-9"
+                      class="chakra-field__label emotion-10"
                       data-part="label"
                       data-scope="field"
                       for=":rj:"
@@ -6510,7 +6553,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                       foo Key
                     </label>
                     <input
-                      class="chakra-input emotion-10"
+                      class="chakra-input emotion-11"
                       data-part="input"
                       data-scope="field"
                       id="root_foo-key"
@@ -6520,7 +6563,9 @@ exports[`object fields with title and description additionalProperties 1`] = `
                     />
                   </div>
                 </div>
-                <div>
+                <div
+                  class="emotion-8"
+                >
                   <fieldset
                     aria-labelledby="fieldset:::rk:::legend"
                     class="fieldset__root emotion-0"
@@ -6531,14 +6576,14 @@ exports[`object fields with title and description additionalProperties 1`] = `
                       class="fieldset__content emotion-1"
                     >
                       <div
-                        class="chakra-field__root emotion-13"
+                        class="chakra-field__root emotion-15"
                         data-part="root"
                         data-scope="field"
                         id="field:::rl:"
                         role="group"
                       >
                         <label
-                          class="chakra-field__label emotion-9"
+                          class="chakra-field__label emotion-10"
                           data-part="label"
                           data-scope="field"
                           for=":rl:"
@@ -6548,7 +6593,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                         </label>
                         <input
                           aria-describedby="root_foo__error root_foo__description root_foo__help"
-                          class="chakra-input emotion-15"
+                          class="chakra-input emotion-17"
                           data-part="input"
                           data-scope="field"
                           id="root_foo"
@@ -6561,10 +6606,13 @@ exports[`object fields with title and description additionalProperties 1`] = `
                     </div>
                   </fieldset>
                 </div>
-                <div>
+                <div
+                  class="emotion-18"
+                  style="margin-top: 22px;"
+                >
                   <button
                     aria-label="Remove"
-                    class="chakra-button rjsf-object-property-remove emotion-16"
+                    class="chakra-button rjsf-object-property-remove emotion-19"
                     id="root_foo__remove"
                     title="Remove"
                     type="button"
@@ -6597,10 +6645,10 @@ exports[`object fields with title and description additionalProperties 1`] = `
               </div>
             </div>
             <div
-              class="emotion-17"
+              class="emotion-18"
             >
               <button
-                class="chakra-button rjsf-object-property-expand emotion-18"
+                class="chakra-button rjsf-object-property-expand emotion-21"
                 id="root__add"
                 type="button"
               >
@@ -6632,10 +6680,10 @@ exports[`object fields with title and description additionalProperties 1`] = `
       </fieldset>
     </div>
     <div
-      class="emotion-19"
+      class="emotion-22"
     >
       <button
-        class="chakra-button emotion-18"
+        class="chakra-button emotion-21"
         type="submit"
       >
         Submit
@@ -6719,6 +6767,7 @@ exports[`object fields with title and description from both additionalProperties
 
 .emotion-7 {
   display: grid;
+  grid-template-columns: repeat(11, 1fr);
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -6726,8 +6775,12 @@ exports[`object fields with title and description from both additionalProperties
   gap: var(--chakra-spacing-2);
 }
 
+.emotion-8 {
+  grid-column: span 5/span 5;
+}
+
 @layer recipes {
-  .emotion-8 {
+  .emotion-9 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -6746,7 +6799,7 @@ exports[`object fields with title and description from both additionalProperties
 }
 
 @layer recipes {
-  .emotion-9 {
+  .emotion-10 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -6766,17 +6819,17 @@ exports[`object fields with title and description from both additionalProperties
     user-select: none;
   }
 
-  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 }
 
-.emotion-10 {
+.emotion-11 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-10 {
+  .emotion-11 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -6801,17 +6854,17 @@ exports[`object fields with title and description from both additionalProperties
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-10:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-11:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-10:is(:focus-visible, [data-focus-visible]) {
+  .emotion-11:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -6820,12 +6873,12 @@ exports[`object fields with title and description from both additionalProperties
   }
 }
 
-.emotion-13 {
+.emotion-15 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-13 {
+  .emotion-15 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -6844,7 +6897,7 @@ exports[`object fields with title and description from both additionalProperties
 }
 
 @layer recipes {
-  .emotion-15 {
+  .emotion-17 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -6869,17 +6922,17 @@ exports[`object fields with title and description from both additionalProperties
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-17:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-15:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-17:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-15:is(:focus-visible, [data-focus-visible]) {
+  .emotion-17:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -6888,13 +6941,17 @@ exports[`object fields with title and description from both additionalProperties
   }
 }
 
-.emotion-16 {
+.emotion-18 {
+  justify-self: flex-end;
+}
+
+.emotion-19 {
   padding-inline: 0;
   padding-block: 0;
 }
 
 @layer recipes {
-  .emotion-16 {
+  .emotion-19 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -6942,19 +6999,19 @@ exports[`object fields with title and description from both additionalProperties
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-16:is(:focus-visible, [data-focus-visible]) {
+  .emotion-19:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-19:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-16 :where(svg) {
+  .emotion-19 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -6962,14 +7019,14 @@ exports[`object fields with title and description from both additionalProperties
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-16:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-19:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-16:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-19:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -6977,16 +7034,12 @@ exports[`object fields with title and description from both additionalProperties
   }
 }
 
-.emotion-16 :where(svg) {
+.emotion-19 :where(svg) {
   font-size: 1.2em;
 }
 
-.emotion-17 {
-  justify-self: flex-end;
-}
-
 @layer recipes {
-  .emotion-18 {
+  .emotion-21 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -7034,19 +7087,19 @@ exports[`object fields with title and description from both additionalProperties
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-18:is(:focus-visible, [data-focus-visible]) {
+  .emotion-21:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-18:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-21:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-18 :where(svg) {
+  .emotion-21 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -7054,14 +7107,14 @@ exports[`object fields with title and description from both additionalProperties
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-18:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-21:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-18:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-21:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -7069,7 +7122,7 @@ exports[`object fields with title and description from both additionalProperties
   }
 }
 
-.emotion-19 {
+.emotion-22 {
   margin-top: var(--chakra-spacing-3);
 }
 
@@ -7116,16 +7169,18 @@ exports[`object fields with title and description from both additionalProperties
               <div
                 class="rjsf-field rjsf-field-string emotion-7"
               >
-                <div>
+                <div
+                  class="emotion-8"
+                >
                   <div
-                    class="chakra-field__root emotion-8"
+                    class="chakra-field__root emotion-9"
                     data-part="root"
                     data-scope="field"
                     id="field:::r1d:"
                     role="group"
                   >
                     <label
-                      class="chakra-field__label emotion-9"
+                      class="chakra-field__label emotion-10"
                       data-part="label"
                       data-scope="field"
                       for=":r1d:"
@@ -7134,7 +7189,7 @@ exports[`object fields with title and description from both additionalProperties
                       foo Key
                     </label>
                     <input
-                      class="chakra-input emotion-10"
+                      class="chakra-input emotion-11"
                       data-part="input"
                       data-scope="field"
                       id="root_foo-key"
@@ -7144,7 +7199,9 @@ exports[`object fields with title and description from both additionalProperties
                     />
                   </div>
                 </div>
-                <div>
+                <div
+                  class="emotion-8"
+                >
                   <fieldset
                     aria-labelledby="fieldset:::r1e:::legend"
                     class="fieldset__root emotion-0"
@@ -7155,14 +7212,14 @@ exports[`object fields with title and description from both additionalProperties
                       class="fieldset__content emotion-1"
                     >
                       <div
-                        class="chakra-field__root emotion-13"
+                        class="chakra-field__root emotion-15"
                         data-part="root"
                         data-scope="field"
                         id="field:::r1f:"
                         role="group"
                       >
                         <label
-                          class="chakra-field__label emotion-9"
+                          class="chakra-field__label emotion-10"
                           data-part="label"
                           data-scope="field"
                           for=":r1f:"
@@ -7172,7 +7229,7 @@ exports[`object fields with title and description from both additionalProperties
                         </label>
                         <input
                           aria-describedby="root_foo__error root_foo__description root_foo__help"
-                          class="chakra-input emotion-15"
+                          class="chakra-input emotion-17"
                           data-part="input"
                           data-scope="field"
                           id="root_foo"
@@ -7185,10 +7242,13 @@ exports[`object fields with title and description from both additionalProperties
                     </div>
                   </fieldset>
                 </div>
-                <div>
+                <div
+                  class="emotion-18"
+                  style="margin-top: 22px;"
+                >
                   <button
                     aria-label="Remove"
-                    class="chakra-button rjsf-object-property-remove emotion-16"
+                    class="chakra-button rjsf-object-property-remove emotion-19"
                     id="root_foo__remove"
                     title="Remove"
                     type="button"
@@ -7221,10 +7281,10 @@ exports[`object fields with title and description from both additionalProperties
               </div>
             </div>
             <div
-              class="emotion-17"
+              class="emotion-18"
             >
               <button
-                class="chakra-button rjsf-object-property-expand emotion-18"
+                class="chakra-button rjsf-object-property-expand emotion-21"
                 id="root__add"
                 type="button"
               >
@@ -7256,10 +7316,10 @@ exports[`object fields with title and description from both additionalProperties
       </fieldset>
     </div>
     <div
-      class="emotion-19"
+      class="emotion-22"
     >
       <button
-        class="chakra-button emotion-18"
+        class="chakra-button emotion-21"
         type="submit"
       >
         Submit
@@ -7788,6 +7848,7 @@ exports[`object fields with title and description from uiSchema additionalProper
 
 .emotion-7 {
   display: grid;
+  grid-template-columns: repeat(11, 1fr);
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -7795,8 +7856,12 @@ exports[`object fields with title and description from uiSchema additionalProper
   gap: var(--chakra-spacing-2);
 }
 
+.emotion-8 {
+  grid-column: span 5/span 5;
+}
+
 @layer recipes {
-  .emotion-8 {
+  .emotion-9 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -7815,7 +7880,7 @@ exports[`object fields with title and description from uiSchema additionalProper
 }
 
 @layer recipes {
-  .emotion-9 {
+  .emotion-10 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -7835,17 +7900,17 @@ exports[`object fields with title and description from uiSchema additionalProper
     user-select: none;
   }
 
-  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 }
 
-.emotion-10 {
+.emotion-11 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-10 {
+  .emotion-11 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -7870,17 +7935,17 @@ exports[`object fields with title and description from uiSchema additionalProper
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-10:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-11:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-10:is(:focus-visible, [data-focus-visible]) {
+  .emotion-11:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -7889,12 +7954,12 @@ exports[`object fields with title and description from uiSchema additionalProper
   }
 }
 
-.emotion-13 {
+.emotion-15 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-13 {
+  .emotion-15 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -7913,7 +7978,7 @@ exports[`object fields with title and description from uiSchema additionalProper
 }
 
 @layer recipes {
-  .emotion-15 {
+  .emotion-17 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -7938,17 +8003,17 @@ exports[`object fields with title and description from uiSchema additionalProper
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-17:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-15:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-17:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-15:is(:focus-visible, [data-focus-visible]) {
+  .emotion-17:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -7957,13 +8022,17 @@ exports[`object fields with title and description from uiSchema additionalProper
   }
 }
 
-.emotion-16 {
+.emotion-18 {
+  justify-self: flex-end;
+}
+
+.emotion-19 {
   padding-inline: 0;
   padding-block: 0;
 }
 
 @layer recipes {
-  .emotion-16 {
+  .emotion-19 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -8011,19 +8080,19 @@ exports[`object fields with title and description from uiSchema additionalProper
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-16:is(:focus-visible, [data-focus-visible]) {
+  .emotion-19:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-19:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-16 :where(svg) {
+  .emotion-19 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -8031,14 +8100,14 @@ exports[`object fields with title and description from uiSchema additionalProper
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-16:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-19:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-16:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-19:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -8046,16 +8115,12 @@ exports[`object fields with title and description from uiSchema additionalProper
   }
 }
 
-.emotion-16 :where(svg) {
+.emotion-19 :where(svg) {
   font-size: 1.2em;
 }
 
-.emotion-17 {
-  justify-self: flex-end;
-}
-
 @layer recipes {
-  .emotion-18 {
+  .emotion-21 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -8103,19 +8168,19 @@ exports[`object fields with title and description from uiSchema additionalProper
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-18:is(:focus-visible, [data-focus-visible]) {
+  .emotion-21:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-18:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-21:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-18 :where(svg) {
+  .emotion-21 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -8123,14 +8188,14 @@ exports[`object fields with title and description from uiSchema additionalProper
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-18:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-21:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-18:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-21:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -8138,7 +8203,7 @@ exports[`object fields with title and description from uiSchema additionalProper
   }
 }
 
-.emotion-19 {
+.emotion-22 {
   margin-top: var(--chakra-spacing-3);
 }
 
@@ -8185,16 +8250,18 @@ exports[`object fields with title and description from uiSchema additionalProper
               <div
                 class="rjsf-field rjsf-field-string emotion-7"
               >
-                <div>
+                <div
+                  class="emotion-8"
+                >
                   <div
-                    class="chakra-field__root emotion-8"
+                    class="chakra-field__root emotion-9"
                     data-part="root"
                     data-scope="field"
                     id="field:::r10:"
                     role="group"
                   >
                     <label
-                      class="chakra-field__label emotion-9"
+                      class="chakra-field__label emotion-10"
                       data-part="label"
                       data-scope="field"
                       for=":r10:"
@@ -8203,7 +8270,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                       foo Key
                     </label>
                     <input
-                      class="chakra-input emotion-10"
+                      class="chakra-input emotion-11"
                       data-part="input"
                       data-scope="field"
                       id="root_foo-key"
@@ -8213,7 +8280,9 @@ exports[`object fields with title and description from uiSchema additionalProper
                     />
                   </div>
                 </div>
-                <div>
+                <div
+                  class="emotion-8"
+                >
                   <fieldset
                     aria-labelledby="fieldset:::r11:::legend"
                     class="fieldset__root emotion-0"
@@ -8224,14 +8293,14 @@ exports[`object fields with title and description from uiSchema additionalProper
                       class="fieldset__content emotion-1"
                     >
                       <div
-                        class="chakra-field__root emotion-13"
+                        class="chakra-field__root emotion-15"
                         data-part="root"
                         data-scope="field"
                         id="field:::r12:"
                         role="group"
                       >
                         <label
-                          class="chakra-field__label emotion-9"
+                          class="chakra-field__label emotion-10"
                           data-part="label"
                           data-scope="field"
                           for=":r12:"
@@ -8241,7 +8310,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                         </label>
                         <input
                           aria-describedby="root_foo__error root_foo__description root_foo__help"
-                          class="chakra-input emotion-15"
+                          class="chakra-input emotion-17"
                           data-part="input"
                           data-scope="field"
                           id="root_foo"
@@ -8254,10 +8323,13 @@ exports[`object fields with title and description from uiSchema additionalProper
                     </div>
                   </fieldset>
                 </div>
-                <div>
+                <div
+                  class="emotion-18"
+                  style="margin-top: 22px;"
+                >
                   <button
                     aria-label="Remove"
-                    class="chakra-button rjsf-object-property-remove emotion-16"
+                    class="chakra-button rjsf-object-property-remove emotion-19"
                     id="root_foo__remove"
                     title="Remove"
                     type="button"
@@ -8290,10 +8362,10 @@ exports[`object fields with title and description from uiSchema additionalProper
               </div>
             </div>
             <div
-              class="emotion-17"
+              class="emotion-18"
             >
               <button
-                class="chakra-button rjsf-object-property-expand emotion-18"
+                class="chakra-button rjsf-object-property-expand emotion-21"
                 id="root__add"
                 type="button"
               >
@@ -8325,10 +8397,10 @@ exports[`object fields with title and description from uiSchema additionalProper
       </fieldset>
     </div>
     <div
-      class="emotion-19"
+      class="emotion-22"
     >
       <button
-        class="chakra-button emotion-18"
+        class="chakra-button emotion-21"
         type="submit"
       >
         Submit
@@ -8857,6 +8929,7 @@ exports[`object fields with title and description from uiSchema show add button 
 
 .emotion-7 {
   display: grid;
+  grid-template-columns: repeat(11, 1fr);
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -8864,8 +8937,12 @@ exports[`object fields with title and description from uiSchema show add button 
   gap: var(--chakra-spacing-2);
 }
 
+.emotion-8 {
+  grid-column: span 5/span 5;
+}
+
 @layer recipes {
-  .emotion-8 {
+  .emotion-9 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -8884,7 +8961,7 @@ exports[`object fields with title and description from uiSchema show add button 
 }
 
 @layer recipes {
-  .emotion-9 {
+  .emotion-10 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -8904,17 +8981,17 @@ exports[`object fields with title and description from uiSchema show add button 
     user-select: none;
   }
 
-  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 }
 
-.emotion-10 {
+.emotion-11 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-10 {
+  .emotion-11 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -8939,17 +9016,17 @@ exports[`object fields with title and description from uiSchema show add button 
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-10:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-11:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-10:is(:focus-visible, [data-focus-visible]) {
+  .emotion-11:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -8958,12 +9035,12 @@ exports[`object fields with title and description from uiSchema show add button 
   }
 }
 
-.emotion-13 {
+.emotion-15 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-13 {
+  .emotion-15 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -8982,7 +9059,7 @@ exports[`object fields with title and description from uiSchema show add button 
 }
 
 @layer recipes {
-  .emotion-15 {
+  .emotion-17 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -9007,17 +9084,17 @@ exports[`object fields with title and description from uiSchema show add button 
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-17:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-15:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-17:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-15:is(:focus-visible, [data-focus-visible]) {
+  .emotion-17:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -9026,13 +9103,17 @@ exports[`object fields with title and description from uiSchema show add button 
   }
 }
 
-.emotion-16 {
+.emotion-18 {
+  justify-self: flex-end;
+}
+
+.emotion-19 {
   padding-inline: 0;
   padding-block: 0;
 }
 
 @layer recipes {
-  .emotion-16 {
+  .emotion-19 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -9080,19 +9161,19 @@ exports[`object fields with title and description from uiSchema show add button 
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-16:is(:focus-visible, [data-focus-visible]) {
+  .emotion-19:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-19:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-16 :where(svg) {
+  .emotion-19 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -9100,14 +9181,14 @@ exports[`object fields with title and description from uiSchema show add button 
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-16:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-19:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-16:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-19:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -9115,16 +9196,12 @@ exports[`object fields with title and description from uiSchema show add button 
   }
 }
 
-.emotion-16 :where(svg) {
+.emotion-19 :where(svg) {
   font-size: 1.2em;
 }
 
-.emotion-17 {
-  justify-self: flex-end;
-}
-
 @layer recipes {
-  .emotion-18 {
+  .emotion-21 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -9172,19 +9249,19 @@ exports[`object fields with title and description from uiSchema show add button 
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-18:is(:focus-visible, [data-focus-visible]) {
+  .emotion-21:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-18:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-21:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-18 :where(svg) {
+  .emotion-21 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -9192,14 +9269,14 @@ exports[`object fields with title and description from uiSchema show add button 
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-18:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-21:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-18:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-21:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -9207,7 +9284,7 @@ exports[`object fields with title and description from uiSchema show add button 
   }
 }
 
-.emotion-19 {
+.emotion-22 {
   margin-top: var(--chakra-spacing-3);
 }
 
@@ -9254,16 +9331,18 @@ exports[`object fields with title and description from uiSchema show add button 
               <div
                 class="rjsf-field rjsf-field-string emotion-7"
               >
-                <div>
+                <div
+                  class="emotion-8"
+                >
                   <div
-                    class="chakra-field__root emotion-8"
+                    class="chakra-field__root emotion-9"
                     data-part="root"
                     data-scope="field"
                     id="field:::r14:"
                     role="group"
                   >
                     <label
-                      class="chakra-field__label emotion-9"
+                      class="chakra-field__label emotion-10"
                       data-part="label"
                       data-scope="field"
                       for=":r14:"
@@ -9272,7 +9351,7 @@ exports[`object fields with title and description from uiSchema show add button 
                       additionalProperty Key
                     </label>
                     <input
-                      class="chakra-input emotion-10"
+                      class="chakra-input emotion-11"
                       data-part="input"
                       data-scope="field"
                       id="root_additionalProperty-key"
@@ -9282,7 +9361,9 @@ exports[`object fields with title and description from uiSchema show add button 
                     />
                   </div>
                 </div>
-                <div>
+                <div
+                  class="emotion-8"
+                >
                   <fieldset
                     aria-labelledby="fieldset:::r15:::legend"
                     class="fieldset__root emotion-0"
@@ -9293,14 +9374,14 @@ exports[`object fields with title and description from uiSchema show add button 
                       class="fieldset__content emotion-1"
                     >
                       <div
-                        class="chakra-field__root emotion-13"
+                        class="chakra-field__root emotion-15"
                         data-part="root"
                         data-scope="field"
                         id="field:::r16:"
                         role="group"
                       >
                         <label
-                          class="chakra-field__label emotion-9"
+                          class="chakra-field__label emotion-10"
                           data-part="label"
                           data-scope="field"
                           for=":r16:"
@@ -9310,7 +9391,7 @@ exports[`object fields with title and description from uiSchema show add button 
                         </label>
                         <input
                           aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
-                          class="chakra-input emotion-15"
+                          class="chakra-input emotion-17"
                           data-part="input"
                           data-scope="field"
                           id="root_additionalProperty"
@@ -9323,10 +9404,13 @@ exports[`object fields with title and description from uiSchema show add button 
                     </div>
                   </fieldset>
                 </div>
-                <div>
+                <div
+                  class="emotion-18"
+                  style="margin-top: 22px;"
+                >
                   <button
                     aria-label="Remove"
-                    class="chakra-button rjsf-object-property-remove emotion-16"
+                    class="chakra-button rjsf-object-property-remove emotion-19"
                     id="root_additionalProperty__remove"
                     title="Remove"
                     type="button"
@@ -9359,10 +9443,10 @@ exports[`object fields with title and description from uiSchema show add button 
               </div>
             </div>
             <div
-              class="emotion-17"
+              class="emotion-18"
             >
               <button
-                class="chakra-button rjsf-object-property-expand emotion-18"
+                class="chakra-button rjsf-object-property-expand emotion-21"
                 id="root__add"
                 type="button"
               >
@@ -9394,10 +9478,10 @@ exports[`object fields with title and description from uiSchema show add button 
       </fieldset>
     </div>
     <div
-      class="emotion-19"
+      class="emotion-22"
     >
       <button
-        class="chakra-button emotion-18"
+        class="chakra-button emotion-21"
         type="submit"
       >
         Submit
@@ -9926,6 +10010,7 @@ exports[`object fields with title and description show add button and fields if 
 
 .emotion-7 {
   display: grid;
+  grid-template-columns: repeat(11, 1fr);
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -9933,8 +10018,12 @@ exports[`object fields with title and description show add button and fields if 
   gap: var(--chakra-spacing-2);
 }
 
+.emotion-8 {
+  grid-column: span 5/span 5;
+}
+
 @layer recipes {
-  .emotion-8 {
+  .emotion-9 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -9953,7 +10042,7 @@ exports[`object fields with title and description show add button and fields if 
 }
 
 @layer recipes {
-  .emotion-9 {
+  .emotion-10 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -9973,17 +10062,17 @@ exports[`object fields with title and description show add button and fields if 
     user-select: none;
   }
 
-  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 }
 
-.emotion-10 {
+.emotion-11 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-10 {
+  .emotion-11 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -10008,17 +10097,17 @@ exports[`object fields with title and description show add button and fields if 
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-10:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-11:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-10:is(:focus-visible, [data-focus-visible]) {
+  .emotion-11:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -10027,12 +10116,12 @@ exports[`object fields with title and description show add button and fields if 
   }
 }
 
-.emotion-13 {
+.emotion-15 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-13 {
+  .emotion-15 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -10051,7 +10140,7 @@ exports[`object fields with title and description show add button and fields if 
 }
 
 @layer recipes {
-  .emotion-15 {
+  .emotion-17 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -10076,17 +10165,17 @@ exports[`object fields with title and description show add button and fields if 
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-17:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-15:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-17:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-15:is(:focus-visible, [data-focus-visible]) {
+  .emotion-17:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -10095,13 +10184,17 @@ exports[`object fields with title and description show add button and fields if 
   }
 }
 
-.emotion-16 {
+.emotion-18 {
+  justify-self: flex-end;
+}
+
+.emotion-19 {
   padding-inline: 0;
   padding-block: 0;
 }
 
 @layer recipes {
-  .emotion-16 {
+  .emotion-19 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -10149,19 +10242,19 @@ exports[`object fields with title and description show add button and fields if 
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-16:is(:focus-visible, [data-focus-visible]) {
+  .emotion-19:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-19:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-16 :where(svg) {
+  .emotion-19 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -10169,14 +10262,14 @@ exports[`object fields with title and description show add button and fields if 
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-16:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-19:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-16:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-19:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -10184,16 +10277,12 @@ exports[`object fields with title and description show add button and fields if 
   }
 }
 
-.emotion-16 :where(svg) {
+.emotion-19 :where(svg) {
   font-size: 1.2em;
 }
 
-.emotion-17 {
-  justify-self: flex-end;
-}
-
 @layer recipes {
-  .emotion-18 {
+  .emotion-21 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -10241,19 +10330,19 @@ exports[`object fields with title and description show add button and fields if 
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-18:is(:focus-visible, [data-focus-visible]) {
+  .emotion-21:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-18:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-21:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-18 :where(svg) {
+  .emotion-21 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -10261,14 +10350,14 @@ exports[`object fields with title and description show add button and fields if 
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-18:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-21:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-18:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-21:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -10276,7 +10365,7 @@ exports[`object fields with title and description show add button and fields if 
   }
 }
 
-.emotion-19 {
+.emotion-22 {
   margin-top: var(--chakra-spacing-3);
 }
 
@@ -10323,16 +10412,18 @@ exports[`object fields with title and description show add button and fields if 
               <div
                 class="rjsf-field rjsf-field-string emotion-7"
               >
-                <div>
+                <div
+                  class="emotion-8"
+                >
                   <div
-                    class="chakra-field__root emotion-8"
+                    class="chakra-field__root emotion-9"
                     data-part="root"
                     data-scope="field"
                     id="field:::rn:"
                     role="group"
                   >
                     <label
-                      class="chakra-field__label emotion-9"
+                      class="chakra-field__label emotion-10"
                       data-part="label"
                       data-scope="field"
                       for=":rn:"
@@ -10341,7 +10432,7 @@ exports[`object fields with title and description show add button and fields if 
                       additionalProperty Key
                     </label>
                     <input
-                      class="chakra-input emotion-10"
+                      class="chakra-input emotion-11"
                       data-part="input"
                       data-scope="field"
                       id="root_additionalProperty-key"
@@ -10351,7 +10442,9 @@ exports[`object fields with title and description show add button and fields if 
                     />
                   </div>
                 </div>
-                <div>
+                <div
+                  class="emotion-8"
+                >
                   <fieldset
                     aria-labelledby="fieldset:::ro:::legend"
                     class="fieldset__root emotion-0"
@@ -10362,14 +10455,14 @@ exports[`object fields with title and description show add button and fields if 
                       class="fieldset__content emotion-1"
                     >
                       <div
-                        class="chakra-field__root emotion-13"
+                        class="chakra-field__root emotion-15"
                         data-part="root"
                         data-scope="field"
                         id="field:::rp:"
                         role="group"
                       >
                         <label
-                          class="chakra-field__label emotion-9"
+                          class="chakra-field__label emotion-10"
                           data-part="label"
                           data-scope="field"
                           for=":rp:"
@@ -10379,7 +10472,7 @@ exports[`object fields with title and description show add button and fields if 
                         </label>
                         <input
                           aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
-                          class="chakra-input emotion-15"
+                          class="chakra-input emotion-17"
                           data-part="input"
                           data-scope="field"
                           id="root_additionalProperty"
@@ -10392,10 +10485,13 @@ exports[`object fields with title and description show add button and fields if 
                     </div>
                   </fieldset>
                 </div>
-                <div>
+                <div
+                  class="emotion-18"
+                  style="margin-top: 22px;"
+                >
                   <button
                     aria-label="Remove"
-                    class="chakra-button rjsf-object-property-remove emotion-16"
+                    class="chakra-button rjsf-object-property-remove emotion-19"
                     id="root_additionalProperty__remove"
                     title="Remove"
                     type="button"
@@ -10428,10 +10524,10 @@ exports[`object fields with title and description show add button and fields if 
               </div>
             </div>
             <div
-              class="emotion-17"
+              class="emotion-18"
             >
               <button
-                class="chakra-button rjsf-object-property-expand emotion-18"
+                class="chakra-button rjsf-object-property-expand emotion-21"
                 id="root__add"
                 type="button"
               >
@@ -10463,10 +10559,10 @@ exports[`object fields with title and description show add button and fields if 
       </fieldset>
     </div>
     <div
-      class="emotion-19"
+      class="emotion-22"
     >
       <button
-        class="chakra-button emotion-18"
+        class="chakra-button emotion-21"
         type="submit"
       >
         Submit
@@ -10522,6 +10618,7 @@ exports[`object fields with title and description with global label off addition
 
 .emotion-3 {
   display: grid;
+  grid-template-columns: repeat(11, 1fr);
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -10529,8 +10626,12 @@ exports[`object fields with title and description with global label off addition
   gap: var(--chakra-spacing-2);
 }
 
+.emotion-4 {
+  grid-column: span 5/span 5;
+}
+
 @layer recipes {
-  .emotion-4 {
+  .emotion-5 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -10545,32 +10646,6 @@ exports[`object fields with title and description with global label off addition
     -webkit-box-align: flex-start;
     -ms-flex-align: flex-start;
     align-items: flex-start;
-  }
-}
-
-@layer recipes {
-  .emotion-5 {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-align-items: center;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    text-align: start;
-    font-size: var(--chakra-font-sizes-sm);
-    line-height: 1.25rem;
-    font-weight: var(--chakra-font-weights-medium);
-    gap: var(--chakra-spacing-1);
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-  }
-
-  .emotion-5:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
-    opacity: 0.5;
   }
 }
 
@@ -10623,12 +10698,12 @@ exports[`object fields with title and description with global label off addition
   }
 }
 
-.emotion-9 {
+.emotion-10 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-9 {
+  .emotion-10 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -10647,7 +10722,7 @@ exports[`object fields with title and description with global label off addition
 }
 
 @layer recipes {
-  .emotion-10 {
+  .emotion-11 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -10672,17 +10747,17 @@ exports[`object fields with title and description with global label off addition
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-10:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-11:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-10:is(:focus-visible, [data-focus-visible]) {
+  .emotion-11:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -10691,101 +10766,13 @@ exports[`object fields with title and description with global label off addition
   }
 }
 
-.emotion-11 {
-  padding-inline: 0;
-  padding-block: 0;
-}
-
-@layer recipes {
-  .emotion-11 {
-    display: -webkit-inline-box;
-    display: -webkit-inline-flex;
-    display: -ms-inline-flexbox;
-    display: inline-flex;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    -ms-appearance: none;
-    appearance: none;
-    -webkit-align-items: center;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    -webkit-justify-content: center;
-    justify-content: center;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    position: relative;
-    border-radius: var(--chakra-radii-l2);
-    white-space: nowrap;
-    vertical-align: middle;
-    border-width: 1px;
-    border-color: var(--chakra-colors-transparent);
-    cursor: var(--chakra-cursor-button);
-    -webkit-flex-shrink: 0;
-    -ms-flex-negative: 0;
-    flex-shrink: 0;
-    outline: 0;
-    line-height: 1.25rem;
-    isolation: isolate;
-    font-weight: var(--chakra-font-weights-medium);
-    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
-    transition-duration: var(--chakra-durations-moderate);
-    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
-    height: var(--chakra-sizes-10);
-    min-width: var(--chakra-sizes-10);
-    font-size: var(--chakra-font-sizes-sm);
-    padding-inline: var(--chakra-spacing-4);
-    gap: var(--chakra-spacing-2);
-    background: var(--chakra-colors-color-palette-solid);
-    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
-    color: var(--chakra-colors-color-palette-contrast);
-  }
-
-  .emotion-11:is(:focus-visible, [data-focus-visible]) {
-    outline-width: var(--focus-ring-width, 2px);
-    outline-offset: var(--focus-ring-offset, 2px);
-    outline-style: var(--focus-ring-style, solid);
-    outline-color: var(--focus-ring-color);
-  }
-
-  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  .emotion-11 :where(svg) {
-    -webkit-flex-shrink: 0;
-    -ms-flex-negative: 0;
-    flex-shrink: 0;
-    width: var(--chakra-sizes-5);
-    height: var(--chakra-sizes-5);
-  }
-
-  .emotion-11:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
-    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
-    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
-    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
-  }
-
-  @media (hover: hover) {
-    .emotion-11:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
-      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
-      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
-      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
-    }
-  }
-}
-
-.emotion-11 :where(svg) {
-  font-size: 1.2em;
-}
-
 .emotion-12 {
   justify-self: flex-end;
+}
+
+.emotion-13 {
+  padding-inline: 0;
+  padding-block: 0;
 }
 
 @layer recipes {
@@ -10872,7 +10859,95 @@ exports[`object fields with title and description with global label off addition
   }
 }
 
-.emotion-14 {
+.emotion-13 :where(svg) {
+  font-size: 1.2em;
+}
+
+@layer recipes {
+  .emotion-15 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-15:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-15 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-15:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-15:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
+}
+
+.emotion-16 {
   margin-top: var(--chakra-spacing-3);
 }
 
@@ -10898,23 +10973,16 @@ exports[`object fields with title and description with global label off addition
               <div
                 class="rjsf-field rjsf-field-string emotion-3"
               >
-                <div>
+                <div
+                  class="emotion-4"
+                >
                   <div
-                    class="chakra-field__root emotion-4"
+                    class="chakra-field__root emotion-5"
                     data-part="root"
                     data-scope="field"
                     id="field:::r1m:"
                     role="group"
                   >
-                    <label
-                      class="chakra-field__label emotion-5"
-                      data-part="label"
-                      data-scope="field"
-                      for=":r1m:"
-                      id="field:::r1m:::label"
-                    >
-                      foo Key
-                    </label>
                     <input
                       class="chakra-input emotion-6"
                       data-part="input"
@@ -10926,7 +10994,9 @@ exports[`object fields with title and description with global label off addition
                     />
                   </div>
                 </div>
-                <div>
+                <div
+                  class="emotion-4"
+                >
                   <fieldset
                     aria-labelledby="fieldset:::r1n:::legend"
                     class="fieldset__root emotion-0"
@@ -10937,7 +11007,7 @@ exports[`object fields with title and description with global label off addition
                       class="fieldset__content emotion-1"
                     >
                       <div
-                        class="chakra-field__root emotion-9"
+                        class="chakra-field__root emotion-10"
                         data-part="root"
                         data-scope="field"
                         id="field:::r1o:"
@@ -10945,7 +11015,7 @@ exports[`object fields with title and description with global label off addition
                       >
                         <input
                           aria-describedby="root_foo__error root_foo__description root_foo__help"
-                          class="chakra-input emotion-10"
+                          class="chakra-input emotion-11"
                           data-part="input"
                           data-scope="field"
                           id="root_foo"
@@ -10958,10 +11028,12 @@ exports[`object fields with title and description with global label off addition
                     </div>
                   </fieldset>
                 </div>
-                <div>
+                <div
+                  class="emotion-12"
+                >
                   <button
                     aria-label="Remove"
-                    class="chakra-button rjsf-object-property-remove emotion-11"
+                    class="chakra-button rjsf-object-property-remove emotion-13"
                     id="root_foo__remove"
                     title="Remove"
                     type="button"
@@ -10997,7 +11069,7 @@ exports[`object fields with title and description with global label off addition
               class="emotion-12"
             >
               <button
-                class="chakra-button rjsf-object-property-expand emotion-13"
+                class="chakra-button rjsf-object-property-expand emotion-15"
                 id="root__add"
                 type="button"
               >
@@ -11029,10 +11101,10 @@ exports[`object fields with title and description with global label off addition
       </fieldset>
     </div>
     <div
-      class="emotion-14"
+      class="emotion-16"
     >
       <button
-        class="chakra-button emotion-13"
+        class="chakra-button emotion-15"
         type="submit"
       >
         Submit
@@ -11397,6 +11469,7 @@ exports[`object fields with title and description with global label off show add
 
 .emotion-3 {
   display: grid;
+  grid-template-columns: repeat(11, 1fr);
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -11404,8 +11477,12 @@ exports[`object fields with title and description with global label off show add
   gap: var(--chakra-spacing-2);
 }
 
+.emotion-4 {
+  grid-column: span 5/span 5;
+}
+
 @layer recipes {
-  .emotion-4 {
+  .emotion-5 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -11420,32 +11497,6 @@ exports[`object fields with title and description with global label off show add
     -webkit-box-align: flex-start;
     -ms-flex-align: flex-start;
     align-items: flex-start;
-  }
-}
-
-@layer recipes {
-  .emotion-5 {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-align-items: center;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    text-align: start;
-    font-size: var(--chakra-font-sizes-sm);
-    line-height: 1.25rem;
-    font-weight: var(--chakra-font-weights-medium);
-    gap: var(--chakra-spacing-1);
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-  }
-
-  .emotion-5:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
-    opacity: 0.5;
   }
 }
 
@@ -11498,12 +11549,12 @@ exports[`object fields with title and description with global label off show add
   }
 }
 
-.emotion-9 {
+.emotion-10 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-9 {
+  .emotion-10 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -11522,7 +11573,7 @@ exports[`object fields with title and description with global label off show add
 }
 
 @layer recipes {
-  .emotion-10 {
+  .emotion-11 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -11547,17 +11598,17 @@ exports[`object fields with title and description with global label off show add
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-10:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-11:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-10:is(:focus-visible, [data-focus-visible]) {
+  .emotion-11:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -11566,101 +11617,13 @@ exports[`object fields with title and description with global label off show add
   }
 }
 
-.emotion-11 {
-  padding-inline: 0;
-  padding-block: 0;
-}
-
-@layer recipes {
-  .emotion-11 {
-    display: -webkit-inline-box;
-    display: -webkit-inline-flex;
-    display: -ms-inline-flexbox;
-    display: inline-flex;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    -ms-appearance: none;
-    appearance: none;
-    -webkit-align-items: center;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    -webkit-justify-content: center;
-    justify-content: center;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    position: relative;
-    border-radius: var(--chakra-radii-l2);
-    white-space: nowrap;
-    vertical-align: middle;
-    border-width: 1px;
-    border-color: var(--chakra-colors-transparent);
-    cursor: var(--chakra-cursor-button);
-    -webkit-flex-shrink: 0;
-    -ms-flex-negative: 0;
-    flex-shrink: 0;
-    outline: 0;
-    line-height: 1.25rem;
-    isolation: isolate;
-    font-weight: var(--chakra-font-weights-medium);
-    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
-    transition-duration: var(--chakra-durations-moderate);
-    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
-    height: var(--chakra-sizes-10);
-    min-width: var(--chakra-sizes-10);
-    font-size: var(--chakra-font-sizes-sm);
-    padding-inline: var(--chakra-spacing-4);
-    gap: var(--chakra-spacing-2);
-    background: var(--chakra-colors-color-palette-solid);
-    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
-    color: var(--chakra-colors-color-palette-contrast);
-  }
-
-  .emotion-11:is(:focus-visible, [data-focus-visible]) {
-    outline-width: var(--focus-ring-width, 2px);
-    outline-offset: var(--focus-ring-offset, 2px);
-    outline-style: var(--focus-ring-style, solid);
-    outline-color: var(--focus-ring-color);
-  }
-
-  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  .emotion-11 :where(svg) {
-    -webkit-flex-shrink: 0;
-    -ms-flex-negative: 0;
-    flex-shrink: 0;
-    width: var(--chakra-sizes-5);
-    height: var(--chakra-sizes-5);
-  }
-
-  .emotion-11:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
-    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
-    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
-    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
-  }
-
-  @media (hover: hover) {
-    .emotion-11:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
-      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
-      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
-      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
-    }
-  }
-}
-
-.emotion-11 :where(svg) {
-  font-size: 1.2em;
-}
-
 .emotion-12 {
   justify-self: flex-end;
+}
+
+.emotion-13 {
+  padding-inline: 0;
+  padding-block: 0;
 }
 
 @layer recipes {
@@ -11747,7 +11710,95 @@ exports[`object fields with title and description with global label off show add
   }
 }
 
-.emotion-14 {
+.emotion-13 :where(svg) {
+  font-size: 1.2em;
+}
+
+@layer recipes {
+  .emotion-15 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-15:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-15 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-15:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-15:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
+}
+
+.emotion-16 {
   margin-top: var(--chakra-spacing-3);
 }
 
@@ -11773,23 +11824,16 @@ exports[`object fields with title and description with global label off show add
               <div
                 class="rjsf-field rjsf-field-string emotion-3"
               >
-                <div>
+                <div
+                  class="emotion-4"
+                >
                   <div
-                    class="chakra-field__root emotion-4"
+                    class="chakra-field__root emotion-5"
                     data-part="root"
                     data-scope="field"
                     id="field:::r1q:"
                     role="group"
                   >
-                    <label
-                      class="chakra-field__label emotion-5"
-                      data-part="label"
-                      data-scope="field"
-                      for=":r1q:"
-                      id="field:::r1q:::label"
-                    >
-                      additionalProperty Key
-                    </label>
                     <input
                       class="chakra-input emotion-6"
                       data-part="input"
@@ -11801,7 +11845,9 @@ exports[`object fields with title and description with global label off show add
                     />
                   </div>
                 </div>
-                <div>
+                <div
+                  class="emotion-4"
+                >
                   <fieldset
                     aria-labelledby="fieldset:::r1r:::legend"
                     class="fieldset__root emotion-0"
@@ -11812,7 +11858,7 @@ exports[`object fields with title and description with global label off show add
                       class="fieldset__content emotion-1"
                     >
                       <div
-                        class="chakra-field__root emotion-9"
+                        class="chakra-field__root emotion-10"
                         data-part="root"
                         data-scope="field"
                         id="field:::r1s:"
@@ -11820,7 +11866,7 @@ exports[`object fields with title and description with global label off show add
                       >
                         <input
                           aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
-                          class="chakra-input emotion-10"
+                          class="chakra-input emotion-11"
                           data-part="input"
                           data-scope="field"
                           id="root_additionalProperty"
@@ -11833,10 +11879,12 @@ exports[`object fields with title and description with global label off show add
                     </div>
                   </fieldset>
                 </div>
-                <div>
+                <div
+                  class="emotion-12"
+                >
                   <button
                     aria-label="Remove"
-                    class="chakra-button rjsf-object-property-remove emotion-11"
+                    class="chakra-button rjsf-object-property-remove emotion-13"
                     id="root_additionalProperty__remove"
                     title="Remove"
                     type="button"
@@ -11872,7 +11920,7 @@ exports[`object fields with title and description with global label off show add
               class="emotion-12"
             >
               <button
-                class="chakra-button rjsf-object-property-expand emotion-13"
+                class="chakra-button rjsf-object-property-expand emotion-15"
                 id="root__add"
                 type="button"
               >
@@ -11904,10 +11952,10 @@ exports[`object fields with title and description with global label off show add
       </fieldset>
     </div>
     <div
-      class="emotion-14"
+      class="emotion-16"
     >
       <button
-        class="chakra-button emotion-13"
+        class="chakra-button emotion-15"
         type="submit"
       >
         Submit

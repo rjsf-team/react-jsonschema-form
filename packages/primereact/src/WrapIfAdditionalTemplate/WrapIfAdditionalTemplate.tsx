@@ -23,10 +23,12 @@ export default function WrapIfAdditionalTemplate<
   style,
   children,
   disabled,
+  displayLabel,
   id,
   label,
   onRemoveProperty,
   onKeyRenameBlur,
+  rawDescription,
   readonly,
   required,
   schema,
@@ -36,6 +38,8 @@ export default function WrapIfAdditionalTemplate<
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
+  const hasDescription = !!rawDescription;
+  const margin = hasDescription ? -8 : 12;
 
   if (!additional) {
     return (
@@ -48,13 +52,15 @@ export default function WrapIfAdditionalTemplate<
   return (
     <div
       className={classNames}
-      style={{ ...style, display: 'flex', alignItems: 'center', gap: '1rem' }}
+      style={{ ...style, display: 'flex', alignItems: 'flex-start', gap: '1rem' }}
       key={`${id}-key`}
     >
       <div style={{ flex: 1 }}>
-        <label htmlFor={`${id}-key`} style={{ display: 'block', marginBottom: '0.5rem' }}>
-          {keyLabel}
-        </label>
+        {displayLabel && (
+          <label htmlFor={`${id}-key`} style={{ display: 'block', marginBottom: '0.5rem' }}>
+            {keyLabel}
+          </label>
+        )}
         <InputText
           id={`${id}-key`}
           name={`${id}-key`}
@@ -66,7 +72,7 @@ export default function WrapIfAdditionalTemplate<
         />
       </div>
       <div style={{ flex: 1 }}>{children}</div>
-      <div>
+      <div style={displayLabel ? { alignSelf: 'center', marginTop: `${margin}px` } : undefined}>
         <RemoveButton
           id={buttonId(id, 'remove')}
           className='rjsf-object-property-remove'

@@ -224,7 +224,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
         </div>
         <div
           class="rjsf-field rjsf-field-string"
-          style="display: flex; align-items: center; gap: 1rem;"
+          style="display: flex; align-items: flex-start; gap: 1rem;"
         >
           <div
             style="flex: 1 1 0%;"
@@ -269,7 +269,9 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
               />
             </div>
           </div>
-          <div>
+          <div
+            style="align-self: center; margin-top: 12px;"
+          >
             <button
               class="rjsf-object-property-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
               data-pc-name="button"
@@ -1423,7 +1425,7 @@ exports[`object fields additionalProperties 1`] = `
       >
         <div
           class="rjsf-field rjsf-field-string"
-          style="display: flex; align-items: center; gap: 1rem;"
+          style="display: flex; align-items: flex-start; gap: 1rem;"
         >
           <div
             style="flex: 1 1 0%;"
@@ -1468,7 +1470,9 @@ exports[`object fields additionalProperties 1`] = `
               />
             </div>
           </div>
-          <div>
+          <div
+            style="align-self: center; margin-top: 12px;"
+          >
             <button
               class="rjsf-object-property-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
               data-pc-name="button"
@@ -1624,7 +1628,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
       >
         <div
           class="rjsf-field rjsf-field-string"
-          style="display: flex; align-items: center; gap: 1rem;"
+          style="display: flex; align-items: flex-start; gap: 1rem;"
         >
           <div
             style="flex: 1 1 0%;"
@@ -1669,7 +1673,9 @@ exports[`object fields show add button and fields if additionalProperties is tru
               />
             </div>
           </div>
-          <div>
+          <div
+            style="align-self: center; margin-top: 12px;"
+          >
             <button
               class="rjsf-object-property-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
               data-pc-name="button"
@@ -1776,7 +1782,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
         </div>
         <div
           class="rjsf-field rjsf-field-string"
-          style="display: flex; align-items: center; gap: 1rem;"
+          style="display: flex; align-items: flex-start; gap: 1rem;"
         >
           <div
             style="flex: 1 1 0%;"
@@ -1821,7 +1827,9 @@ exports[`object fields with title and description additionalProperties 1`] = `
               />
             </div>
           </div>
-          <div>
+          <div
+            style="align-self: center; margin-top: 12px;"
+          >
             <button
               class="rjsf-object-property-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
               data-pc-name="button"
@@ -1928,7 +1936,7 @@ exports[`object fields with title and description from both additionalProperties
         </div>
         <div
           class="rjsf-field rjsf-field-string"
-          style="display: flex; align-items: center; gap: 1rem;"
+          style="display: flex; align-items: flex-start; gap: 1rem;"
         >
           <div
             style="flex: 1 1 0%;"
@@ -1973,7 +1981,9 @@ exports[`object fields with title and description from both additionalProperties
               />
             </div>
           </div>
-          <div>
+          <div
+            style="align-self: center; margin-top: 12px;"
+          >
             <button
               class="rjsf-object-property-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
               data-pc-name="button"
@@ -2205,7 +2215,7 @@ exports[`object fields with title and description from uiSchema additionalProper
         </div>
         <div
           class="rjsf-field rjsf-field-string"
-          style="display: flex; align-items: center; gap: 1rem;"
+          style="display: flex; align-items: flex-start; gap: 1rem;"
         >
           <div
             style="flex: 1 1 0%;"
@@ -2250,7 +2260,9 @@ exports[`object fields with title and description from uiSchema additionalProper
               />
             </div>
           </div>
-          <div>
+          <div
+            style="align-self: center; margin-top: 12px;"
+          >
             <button
               class="rjsf-object-property-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
               data-pc-name="button"
@@ -2482,7 +2494,7 @@ exports[`object fields with title and description from uiSchema show add button 
         </div>
         <div
           class="rjsf-field rjsf-field-string"
-          style="display: flex; align-items: center; gap: 1rem;"
+          style="display: flex; align-items: flex-start; gap: 1rem;"
         >
           <div
             style="flex: 1 1 0%;"
@@ -2527,7 +2539,9 @@ exports[`object fields with title and description from uiSchema show add button 
               />
             </div>
           </div>
-          <div>
+          <div
+            style="align-self: center; margin-top: 12px;"
+          >
             <button
               class="rjsf-object-property-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
               data-pc-name="button"
@@ -2759,7 +2773,7 @@ exports[`object fields with title and description show add button and fields if 
         </div>
         <div
           class="rjsf-field rjsf-field-string"
-          style="display: flex; align-items: center; gap: 1rem;"
+          style="display: flex; align-items: flex-start; gap: 1rem;"
         >
           <div
             style="flex: 1 1 0%;"
@@ -2804,7 +2818,9 @@ exports[`object fields with title and description show add button and fields if 
               />
             </div>
           </div>
-          <div>
+          <div
+            style="align-self: center; margin-top: 12px;"
+          >
             <button
               class="rjsf-object-property-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
               data-pc-name="button"
@@ -2880,17 +2896,11 @@ exports[`object fields with title and description with global label off addition
       >
         <div
           class="rjsf-field rjsf-field-string"
-          style="display: flex; align-items: center; gap: 1rem;"
+          style="display: flex; align-items: flex-start; gap: 1rem;"
         >
           <div
             style="flex: 1 1 0%;"
           >
-            <label
-              for="root_foo-key"
-              style="display: block; margin-bottom: 0.5rem;"
-            >
-              foo Key
-            </label>
             <input
               class="p-inputtext p-component p-filled"
               data-pc-name="inputtext"
@@ -3066,17 +3076,11 @@ exports[`object fields with title and description with global label off show add
       >
         <div
           class="rjsf-field rjsf-field-string"
-          style="display: flex; align-items: center; gap: 1rem;"
+          style="display: flex; align-items: flex-start; gap: 1rem;"
         >
           <div
             style="flex: 1 1 0%;"
           >
-            <label
-              for="root_additionalProperty-key"
-              style="display: block; margin-bottom: 0.5rem;"
-            >
-              additionalProperty Key
-            </label>
             <input
               class="p-inputtext p-component p-filled"
               data-pc-name="inputtext"

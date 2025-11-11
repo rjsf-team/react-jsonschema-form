@@ -25,9 +25,11 @@ export default function WrapIfAdditionalTemplate<
     classNames,
     style,
     disabled,
+    displayLabel,
     label,
     onKeyRenameBlur,
     onRemoveProperty,
+    rawDescription,
     readonly,
     required,
     schema,
@@ -42,6 +44,7 @@ export default function WrapIfAdditionalTemplate<
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
+  const hasDescription = !!rawDescription;
 
   const classNamesList = ['form-group', classNames];
   if (!hideError && rawErrors && rawErrors.length > 0) {
@@ -56,13 +59,14 @@ export default function WrapIfAdditionalTemplate<
       </div>
     );
   }
-
+  const margin = hasDescription ? 46 : 26;
   return (
     <div className={uiClassNames} style={style}>
       <div className='row'>
         <div className='col-xs-5 form-additional'>
           <div className='form-group'>
-            <Label label={keyLabel} required={required} id={`${id}-key`} />
+            {displayLabel && <Label label={keyLabel} required={required} id={`${id}-key`} />}
+            {rawDescription && <div>&nbsp;</div>}
             <input
               className='form-control'
               type='text'
@@ -73,7 +77,7 @@ export default function WrapIfAdditionalTemplate<
           </div>
         </div>
         <div className='form-additional form-group col-xs-5'>{children}</div>
-        <div className='col-xs-2'>
+        <div className='col-xs-2' style={{ marginTop: displayLabel ? `${margin}px` : undefined }}>
           <RemoveButton
             id={buttonId(id, 'remove')}
             className='rjsf-object-property-remove btn-block'

@@ -210,6 +210,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
             </div>
             <div
               class="col-xs-2"
+              style="margin-top: 26px;"
             >
               <button
                 class="btn btn-danger rjsf-object-property-remove btn-block"
@@ -1123,6 +1124,7 @@ exports[`object fields additionalProperties 1`] = `
             </div>
             <div
               class="col-xs-2"
+              style="margin-top: 26px;"
             >
               <button
                 class="btn btn-danger rjsf-object-property-remove btn-block"
@@ -1295,6 +1297,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
             </div>
             <div
               class="col-xs-2"
+              style="margin-top: 26px;"
             >
               <button
                 class="btn btn-danger rjsf-object-property-remove btn-block"
@@ -1412,6 +1415,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
             </div>
             <div
               class="col-xs-2"
+              style="margin-top: 26px;"
             >
               <button
                 class="btn btn-danger rjsf-object-property-remove btn-block"
@@ -1529,6 +1533,7 @@ exports[`object fields with title and description from both additionalProperties
             </div>
             <div
               class="col-xs-2"
+              style="margin-top: 26px;"
             >
               <button
                 class="btn btn-danger rjsf-object-property-remove btn-block"
@@ -1735,6 +1740,7 @@ exports[`object fields with title and description from uiSchema additionalProper
             </div>
             <div
               class="col-xs-2"
+              style="margin-top: 26px;"
             >
               <button
                 class="btn btn-danger rjsf-object-property-remove btn-block"
@@ -1941,6 +1947,7 @@ exports[`object fields with title and description from uiSchema show add button 
             </div>
             <div
               class="col-xs-2"
+              style="margin-top: 26px;"
             >
               <button
                 class="btn btn-danger rjsf-object-property-remove btn-block"
@@ -2147,6 +2154,7 @@ exports[`object fields with title and description show add button and fields if 
             </div>
             <div
               class="col-xs-2"
+              style="margin-top: 26px;"
             >
               <button
                 class="btn btn-danger rjsf-object-property-remove btn-block"
@@ -2217,12 +2225,6 @@ exports[`object fields with title and description with global label off addition
               <div
                 class="form-group"
               >
-                <label
-                  class="control-label"
-                  for="root_foo-key"
-                >
-                  foo Key
-                </label>
                 <input
                   class="form-control"
                   id="root_foo-key"
@@ -2371,12 +2373,6 @@ exports[`object fields with title and description with global label off show add
               <div
                 class="form-group"
               >
-                <label
-                  class="control-label"
-                  for="root_additionalProperty-key"
-                >
-                  additionalProperty Key
-                </label>
                 <input
                   class="form-control"
                   id="root_additionalProperty-key"

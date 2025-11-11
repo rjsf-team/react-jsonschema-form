@@ -72,7 +72,7 @@ export default function ObjectFieldTemplate<
           registry={registry}
         />
       )}
-      <Grid container={true} spacing={2} style={{ marginTop: '10px' }}>
+      <Grid container spacing={2} style={{ marginTop: '10px' }}>
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
         {properties.map((element, index) =>
           // Remove the <Grid> if the inner element is hidden as the <Grid>
@@ -85,21 +85,21 @@ export default function ObjectFieldTemplate<
             </Grid>
           ),
         )}
-        {canExpand<T, S, F>(schema, uiSchema, formData) && (
-          <Grid container justifyContent='flex-end'>
-            <Grid>
-              <AddButton
-                id={buttonId(fieldPathId, 'add')}
-                className='rjsf-object-property-expand'
-                onClick={onAddProperty}
-                disabled={disabled || readonly}
-                uiSchema={uiSchema}
-                registry={registry}
-              />
-            </Grid>
-          </Grid>
-        )}
       </Grid>
+      {canExpand<T, S, F>(schema, uiSchema, formData) && (
+        <Grid container justifyContent='flex-end'>
+          <Grid>
+            <AddButton
+              id={buttonId(fieldPathId, 'add')}
+              className='rjsf-object-property-expand'
+              onClick={onAddProperty}
+              disabled={disabled || readonly}
+              uiSchema={uiSchema}
+              registry={registry}
+            />
+          </Grid>
+        </Grid>
+      )}
     </>
   );
 }

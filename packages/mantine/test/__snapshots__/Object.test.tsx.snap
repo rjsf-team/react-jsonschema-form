@@ -31,10 +31,10 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-rcg{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-rce{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-rcg"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-rce"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -60,10 +60,10 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-rcl{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                  .__m__-rcj{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                 </style>
                 <div
-                  class="m_2415a157 mantine-SimpleGrid-root __m__-rcl"
+                  class="m_2415a157 mantine-SimpleGrid-root __m__-rcj"
                   style="margin-bottom: var(--mantine-spacing-sm);"
                 >
                   <div
@@ -127,10 +127,10 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                         <style
                           data-mantine-styles="inline"
                         >
-                          .__m__-rd0{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                          .__m__-rcu{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                         </style>
                         <div
-                          class="m_2415a157 mantine-SimpleGrid-root __m__-rd0"
+                          class="m_2415a157 mantine-SimpleGrid-root __m__-rcu"
                           style="margin-bottom: var(--mantine-spacing-sm);"
                         >
                           <div
@@ -309,10 +309,10 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
         <style
           data-mantine-styles="inline"
         >
-          .__m__-rdn{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-rdl{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-rdn"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-rdl"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -361,16 +361,16 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
               class="rjsf-field rjsf-field-string"
             >
               <div
-                class="m_8bffd616 mantine-Flex-root __m__-re0"
+                class="m_8bffd616 mantine-Flex-root __m__-rdu"
                 style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
               >
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-re2{--grid-gutter:var(--mantine-spacing-md);}
+                  .__m__-re0{--grid-gutter:var(--mantine-spacing-md);}
                 </style>
                 <div
-                  class="m_410352e9 mantine-Grid-root __m__-re2"
+                  class="m_410352e9 mantine-Grid-root __m__-re0"
                   style="--grid-align: center; width: 100%;"
                 >
                   <div
@@ -379,52 +379,48 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-re4{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}
+                      .__m__-re2{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col form-additional __m__-re4"
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-re2"
                     >
                       <div
-                        class="form-group"
+                        class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                        data-size="sm"
                       >
-                        <div
-                          class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                        <label
+                          class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
+                          for="root_customField-key"
+                          id="root_customField-key-label"
+                          style="--input-label-size: var(--mantine-font-size-sm);"
                         >
-                          <label
-                            class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
-                            data-size="sm"
-                            for="root_customField-key"
-                            id="root_customField-key-label"
-                            style="--input-label-size: var(--mantine-font-size-sm);"
-                          >
-                            customField Key
-                          </label>
-                          <div
-                            class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
-                            data-size="sm"
+                          customField Key
+                        </label>
+                        <div
+                          class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
+                          data-size="sm"
+                          data-variant="default"
+                          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
+                        >
+                          <input
+                            aria-invalid="false"
+                            class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
-                            style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
-                          >
-                            <input
-                              aria-invalid="false"
-                              class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
-                              data-variant="default"
-                              id="root_customField-key"
-                              name="root_customField-key"
-                              value="customField"
-                            />
-                          </div>
+                            id="root_customField-key"
+                            name="root_customField-key"
+                            value="customField"
+                          />
                         </div>
                       </div>
                     </div>
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-reb{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}
+                      .__m__-re9{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col form-additional __m__-reb"
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-re9"
                     >
                       <div
                         class="m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
@@ -460,44 +456,46 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                     </div>
                   </div>
                 </div>
-                <button
-                  class="mantine-focus-auto mantine-active rjsf-array-item-remove m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
-                  data-size="sm"
-                  data-variant="subtle"
-                  id="root_customField__remove"
-                  style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
-                  title="Remove"
-                  type="button"
-                >
-                  <span
-                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                <div>
+                  <button
+                    class="mantine-focus-auto mantine-active rjsf-array-item-remove m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                    data-size="sm"
+                    data-variant="subtle"
+                    id="root_customField__remove"
+                    style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                    title="Remove"
+                    type="button"
                   >
-                    <svg
-                      class="icon icon-tabler icons-tabler-outline icon-tabler-x"
-                      fill="none"
-                      height="24"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      xmlns="http://www.w3.org/2000/svg"
+                    <span
+                      class="m_8d3afb97 mantine-ActionIcon-icon"
                     >
-                      <path
-                        d="M0 0h24v24H0z"
+                      <svg
+                        class="icon icon-tabler icons-tabler-outline icon-tabler-x"
                         fill="none"
-                        stroke="none"
-                      />
-                      <path
-                        d="M18 6l-12 12"
-                      />
-                      <path
-                        d="M6 6l12 12"
-                      />
-                    </svg>
-                  </span>
-                </button>
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                          stroke="none"
+                        />
+                        <path
+                          d="M18 6l-12 12"
+                        />
+                        <path
+                          d="M6 6l12 12"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -598,10 +596,10 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-req{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-reo{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-req"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-reo"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -823,7 +821,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                     style="margin-bottom: var(--mantine-spacing-xs);"
                   >
                     <div
-                      class="m_8bffd616 mantine-Flex-root __m__-rfm"
+                      class="m_8bffd616 mantine-Flex-root __m__-rfk"
                       style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
                     >
                       <div
@@ -996,7 +994,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                     style="margin-bottom: var(--mantine-spacing-xs);"
                   >
                     <div
-                      class="m_8bffd616 mantine-Flex-root __m__-rg6"
+                      class="m_8bffd616 mantine-Flex-root __m__-rg4"
                       style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
                     >
                       <div
@@ -1265,10 +1263,10 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-rbn{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-rbl{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-rbn"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-rbl"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -1493,10 +1491,10 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-rhk{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-rhi{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-rhk"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-rhi"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -1522,10 +1520,10 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-rhp{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                  .__m__-rhn{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                 </style>
                 <div
-                  class="m_2415a157 mantine-SimpleGrid-root __m__-rhp"
+                  class="m_2415a157 mantine-SimpleGrid-root __m__-rhn"
                   style="margin-bottom: var(--mantine-spacing-sm);"
                 >
                   <div
@@ -1589,10 +1587,10 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                         <style
                           data-mantine-styles="inline"
                         >
-                          .__m__-ri4{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                          .__m__-ri2{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                         </style>
                         <div
-                          class="m_2415a157 mantine-SimpleGrid-root __m__-ri4"
+                          class="m_2415a157 mantine-SimpleGrid-root __m__-ri2"
                           style="margin-bottom: var(--mantine-spacing-sm);"
                         >
                           <div
@@ -1733,10 +1731,10 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-ril{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-rij{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-ril"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-rij"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -1901,7 +1899,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                     style="margin-bottom: var(--mantine-spacing-xs);"
                   >
                     <div
-                      class="m_8bffd616 mantine-Flex-root __m__-rja"
+                      class="m_8bffd616 mantine-Flex-root __m__-rj8"
                       style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
                     >
                       <div
@@ -2074,7 +2072,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                     style="margin-bottom: var(--mantine-spacing-xs);"
                   >
                     <div
-                      class="m_8bffd616 mantine-Flex-root __m__-rjq"
+                      class="m_8bffd616 mantine-Flex-root __m__-rjo"
                       style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
                     >
                       <div
@@ -2343,10 +2341,10 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-rgr{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-rgp{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-rgr"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-rgp"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -2608,36 +2606,32 @@ exports[`object fields additionalProperties 1`] = `
                       class="m_96bdd299 mantine-Grid-col form-additional __m__-rr"
                     >
                       <div
-                        class="form-group"
+                        class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                        data-size="sm"
                       >
-                        <div
-                          class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                        <label
+                          class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
+                          for="root_foo-key"
+                          id="root_foo-key-label"
+                          style="--input-label-size: var(--mantine-font-size-sm);"
                         >
-                          <label
-                            class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
-                            data-size="sm"
-                            for="root_foo-key"
-                            id="root_foo-key-label"
-                            style="--input-label-size: var(--mantine-font-size-sm);"
-                          >
-                            foo Key
-                          </label>
-                          <div
-                            class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
-                            data-size="sm"
+                          foo Key
+                        </label>
+                        <div
+                          class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
+                          data-size="sm"
+                          data-variant="default"
+                          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
+                        >
+                          <input
+                            aria-invalid="false"
+                            class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
-                            style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
-                          >
-                            <input
-                              aria-invalid="false"
-                              class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
-                              data-variant="default"
-                              id="root_foo-key"
-                              name="root_foo-key"
-                              value="foo"
-                            />
-                          </div>
+                            id="root_foo-key"
+                            name="root_foo-key"
+                            value="foo"
+                          />
                         </div>
                       </div>
                     </div>
@@ -2683,44 +2677,46 @@ exports[`object fields additionalProperties 1`] = `
                     </div>
                   </div>
                 </div>
-                <button
-                  class="mantine-focus-auto mantine-active rjsf-array-item-remove m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
-                  data-size="sm"
-                  data-variant="subtle"
-                  id="root_foo__remove"
-                  style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
-                  title="Remove"
-                  type="button"
-                >
-                  <span
-                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                <div>
+                  <button
+                    class="mantine-focus-auto mantine-active rjsf-array-item-remove m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                    data-size="sm"
+                    data-variant="subtle"
+                    id="root_foo__remove"
+                    style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                    title="Remove"
+                    type="button"
                   >
-                    <svg
-                      class="icon icon-tabler icons-tabler-outline icon-tabler-x"
-                      fill="none"
-                      height="24"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      xmlns="http://www.w3.org/2000/svg"
+                    <span
+                      class="m_8d3afb97 mantine-ActionIcon-icon"
                     >
-                      <path
-                        d="M0 0h24v24H0z"
+                      <svg
+                        class="icon icon-tabler icons-tabler-outline icon-tabler-x"
                         fill="none"
-                        stroke="none"
-                      />
-                      <path
-                        d="M18 6l-12 12"
-                      />
-                      <path
-                        d="M6 6l12 12"
-                      />
-                    </svg>
-                  </span>
-                </button>
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                          stroke="none"
+                        />
+                        <path
+                          d="M18 6l-12 12"
+                        />
+                        <path
+                          d="M6 6l12 12"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -3048,36 +3044,32 @@ exports[`object fields show add button and fields if additionalProperties is tru
                       class="m_96bdd299 mantine-Grid-col form-additional __m__-r1o"
                     >
                       <div
-                        class="form-group"
+                        class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                        data-size="sm"
                       >
-                        <div
-                          class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                        <label
+                          class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
+                          for="root_additionalProperty-key"
+                          id="root_additionalProperty-key-label"
+                          style="--input-label-size: var(--mantine-font-size-sm);"
                         >
-                          <label
-                            class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
-                            data-size="sm"
-                            for="root_additionalProperty-key"
-                            id="root_additionalProperty-key-label"
-                            style="--input-label-size: var(--mantine-font-size-sm);"
-                          >
-                            additionalProperty Key
-                          </label>
-                          <div
-                            class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
-                            data-size="sm"
+                          additionalProperty Key
+                        </label>
+                        <div
+                          class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
+                          data-size="sm"
+                          data-variant="default"
+                          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
+                        >
+                          <input
+                            aria-invalid="false"
+                            class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
-                            style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
-                          >
-                            <input
-                              aria-invalid="false"
-                              class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
-                              data-variant="default"
-                              id="root_additionalProperty-key"
-                              name="root_additionalProperty-key"
-                              value="additionalProperty"
-                            />
-                          </div>
+                            id="root_additionalProperty-key"
+                            name="root_additionalProperty-key"
+                            value="additionalProperty"
+                          />
                         </div>
                       </div>
                     </div>
@@ -3123,44 +3115,46 @@ exports[`object fields show add button and fields if additionalProperties is tru
                     </div>
                   </div>
                 </div>
-                <button
-                  class="mantine-focus-auto mantine-active rjsf-array-item-remove m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
-                  data-size="sm"
-                  data-variant="subtle"
-                  id="root_additionalProperty__remove"
-                  style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
-                  title="Remove"
-                  type="button"
-                >
-                  <span
-                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                <div>
+                  <button
+                    class="mantine-focus-auto mantine-active rjsf-array-item-remove m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                    data-size="sm"
+                    data-variant="subtle"
+                    id="root_additionalProperty__remove"
+                    style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                    title="Remove"
+                    type="button"
                   >
-                    <svg
-                      class="icon icon-tabler icons-tabler-outline icon-tabler-x"
-                      fill="none"
-                      height="24"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      xmlns="http://www.w3.org/2000/svg"
+                    <span
+                      class="m_8d3afb97 mantine-ActionIcon-icon"
                     >
-                      <path
-                        d="M0 0h24v24H0z"
+                      <svg
+                        class="icon icon-tabler icons-tabler-outline icon-tabler-x"
                         fill="none"
-                        stroke="none"
-                      />
-                      <path
-                        d="M18 6l-12 12"
-                      />
-                      <path
-                        d="M6 6l12 12"
-                      />
-                    </svg>
-                  </span>
-                </button>
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                          stroke="none"
+                        />
+                        <path
+                          d="M18 6l-12 12"
+                        />
+                        <path
+                          d="M6 6l12 12"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -3313,36 +3307,32 @@ exports[`object fields with title and description additionalProperties 1`] = `
                       class="m_96bdd299 mantine-Grid-col form-additional __m__-r3e"
                     >
                       <div
-                        class="form-group"
+                        class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                        data-size="sm"
                       >
-                        <div
-                          class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                        <label
+                          class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
+                          for="root_foo-key"
+                          id="root_foo-key-label"
+                          style="--input-label-size: var(--mantine-font-size-sm);"
                         >
-                          <label
-                            class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
-                            data-size="sm"
-                            for="root_foo-key"
-                            id="root_foo-key-label"
-                            style="--input-label-size: var(--mantine-font-size-sm);"
-                          >
-                            foo Key
-                          </label>
-                          <div
-                            class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
-                            data-size="sm"
+                          foo Key
+                        </label>
+                        <div
+                          class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
+                          data-size="sm"
+                          data-variant="default"
+                          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
+                        >
+                          <input
+                            aria-invalid="false"
+                            class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
-                            style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
-                          >
-                            <input
-                              aria-invalid="false"
-                              class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
-                              data-variant="default"
-                              id="root_foo-key"
-                              name="root_foo-key"
-                              value="foo"
-                            />
-                          </div>
+                            id="root_foo-key"
+                            name="root_foo-key"
+                            value="foo"
+                          />
                         </div>
                       </div>
                     </div>
@@ -3388,44 +3378,46 @@ exports[`object fields with title and description additionalProperties 1`] = `
                     </div>
                   </div>
                 </div>
-                <button
-                  class="mantine-focus-auto mantine-active rjsf-array-item-remove m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
-                  data-size="sm"
-                  data-variant="subtle"
-                  id="root_foo__remove"
-                  style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
-                  title="Remove"
-                  type="button"
-                >
-                  <span
-                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                <div>
+                  <button
+                    class="mantine-focus-auto mantine-active rjsf-array-item-remove m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                    data-size="sm"
+                    data-variant="subtle"
+                    id="root_foo__remove"
+                    style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                    title="Remove"
+                    type="button"
                   >
-                    <svg
-                      class="icon icon-tabler icons-tabler-outline icon-tabler-x"
-                      fill="none"
-                      height="24"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      xmlns="http://www.w3.org/2000/svg"
+                    <span
+                      class="m_8d3afb97 mantine-ActionIcon-icon"
                     >
-                      <path
-                        d="M0 0h24v24H0z"
+                      <svg
+                        class="icon icon-tabler icons-tabler-outline icon-tabler-x"
                         fill="none"
-                        stroke="none"
-                      />
-                      <path
-                        d="M18 6l-12 12"
-                      />
-                      <path
-                        d="M6 6l12 12"
-                      />
-                    </svg>
-                  </span>
-                </button>
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                          stroke="none"
+                        />
+                        <path
+                          d="M18 6l-12 12"
+                        />
+                        <path
+                          d="M6 6l12 12"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -3578,36 +3570,32 @@ exports[`object fields with title and description from both additionalProperties
                       class="m_96bdd299 mantine-Grid-col form-additional __m__-r8o"
                     >
                       <div
-                        class="form-group"
+                        class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                        data-size="sm"
                       >
-                        <div
-                          class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                        <label
+                          class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
+                          for="root_foo-key"
+                          id="root_foo-key-label"
+                          style="--input-label-size: var(--mantine-font-size-sm);"
                         >
-                          <label
-                            class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
-                            data-size="sm"
-                            for="root_foo-key"
-                            id="root_foo-key-label"
-                            style="--input-label-size: var(--mantine-font-size-sm);"
-                          >
-                            foo Key
-                          </label>
-                          <div
-                            class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
-                            data-size="sm"
+                          foo Key
+                        </label>
+                        <div
+                          class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
+                          data-size="sm"
+                          data-variant="default"
+                          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
+                        >
+                          <input
+                            aria-invalid="false"
+                            class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
-                            style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
-                          >
-                            <input
-                              aria-invalid="false"
-                              class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
-                              data-variant="default"
-                              id="root_foo-key"
-                              name="root_foo-key"
-                              value="foo"
-                            />
-                          </div>
+                            id="root_foo-key"
+                            name="root_foo-key"
+                            value="foo"
+                          />
                         </div>
                       </div>
                     </div>
@@ -3653,44 +3641,46 @@ exports[`object fields with title and description from both additionalProperties
                     </div>
                   </div>
                 </div>
-                <button
-                  class="mantine-focus-auto mantine-active rjsf-array-item-remove m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
-                  data-size="sm"
-                  data-variant="subtle"
-                  id="root_foo__remove"
-                  style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
-                  title="Remove"
-                  type="button"
-                >
-                  <span
-                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                <div>
+                  <button
+                    class="mantine-focus-auto mantine-active rjsf-array-item-remove m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                    data-size="sm"
+                    data-variant="subtle"
+                    id="root_foo__remove"
+                    style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                    title="Remove"
+                    type="button"
                   >
-                    <svg
-                      class="icon icon-tabler icons-tabler-outline icon-tabler-x"
-                      fill="none"
-                      height="24"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      xmlns="http://www.w3.org/2000/svg"
+                    <span
+                      class="m_8d3afb97 mantine-ActionIcon-icon"
                     >
-                      <path
-                        d="M0 0h24v24H0z"
+                      <svg
+                        class="icon icon-tabler icons-tabler-outline icon-tabler-x"
                         fill="none"
-                        stroke="none"
-                      />
-                      <path
-                        d="M18 6l-12 12"
-                      />
-                      <path
-                        d="M6 6l12 12"
-                      />
-                    </svg>
-                  </span>
-                </button>
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                          stroke="none"
+                        />
+                        <path
+                          d="M18 6l-12 12"
+                        />
+                        <path
+                          d="M6 6l12 12"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -4066,36 +4056,32 @@ exports[`object fields with title and description from uiSchema additionalProper
                       class="m_96bdd299 mantine-Grid-col form-additional __m__-r63"
                     >
                       <div
-                        class="form-group"
+                        class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                        data-size="sm"
                       >
-                        <div
-                          class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                        <label
+                          class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
+                          for="root_foo-key"
+                          id="root_foo-key-label"
+                          style="--input-label-size: var(--mantine-font-size-sm);"
                         >
-                          <label
-                            class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
-                            data-size="sm"
-                            for="root_foo-key"
-                            id="root_foo-key-label"
-                            style="--input-label-size: var(--mantine-font-size-sm);"
-                          >
-                            foo Key
-                          </label>
-                          <div
-                            class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
-                            data-size="sm"
+                          foo Key
+                        </label>
+                        <div
+                          class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
+                          data-size="sm"
+                          data-variant="default"
+                          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
+                        >
+                          <input
+                            aria-invalid="false"
+                            class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
-                            style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
-                          >
-                            <input
-                              aria-invalid="false"
-                              class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
-                              data-variant="default"
-                              id="root_foo-key"
-                              name="root_foo-key"
-                              value="foo"
-                            />
-                          </div>
+                            id="root_foo-key"
+                            name="root_foo-key"
+                            value="foo"
+                          />
                         </div>
                       </div>
                     </div>
@@ -4141,44 +4127,46 @@ exports[`object fields with title and description from uiSchema additionalProper
                     </div>
                   </div>
                 </div>
-                <button
-                  class="mantine-focus-auto mantine-active rjsf-array-item-remove m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
-                  data-size="sm"
-                  data-variant="subtle"
-                  id="root_foo__remove"
-                  style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
-                  title="Remove"
-                  type="button"
-                >
-                  <span
-                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                <div>
+                  <button
+                    class="mantine-focus-auto mantine-active rjsf-array-item-remove m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                    data-size="sm"
+                    data-variant="subtle"
+                    id="root_foo__remove"
+                    style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                    title="Remove"
+                    type="button"
                   >
-                    <svg
-                      class="icon icon-tabler icons-tabler-outline icon-tabler-x"
-                      fill="none"
-                      height="24"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      xmlns="http://www.w3.org/2000/svg"
+                    <span
+                      class="m_8d3afb97 mantine-ActionIcon-icon"
                     >
-                      <path
-                        d="M0 0h24v24H0z"
+                      <svg
+                        class="icon icon-tabler icons-tabler-outline icon-tabler-x"
                         fill="none"
-                        stroke="none"
-                      />
-                      <path
-                        d="M18 6l-12 12"
-                      />
-                      <path
-                        d="M6 6l12 12"
-                      />
-                    </svg>
-                  </span>
-                </button>
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                          stroke="none"
+                        />
+                        <path
+                          d="M18 6l-12 12"
+                        />
+                        <path
+                          d="M6 6l12 12"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -4554,36 +4542,32 @@ exports[`object fields with title and description from uiSchema show add button 
                       class="m_96bdd299 mantine-Grid-col form-additional __m__-r72"
                     >
                       <div
-                        class="form-group"
+                        class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                        data-size="sm"
                       >
-                        <div
-                          class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                        <label
+                          class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
+                          for="root_additionalProperty-key"
+                          id="root_additionalProperty-key-label"
+                          style="--input-label-size: var(--mantine-font-size-sm);"
                         >
-                          <label
-                            class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
-                            data-size="sm"
-                            for="root_additionalProperty-key"
-                            id="root_additionalProperty-key-label"
-                            style="--input-label-size: var(--mantine-font-size-sm);"
-                          >
-                            additionalProperty Key
-                          </label>
-                          <div
-                            class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
-                            data-size="sm"
+                          additionalProperty Key
+                        </label>
+                        <div
+                          class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
+                          data-size="sm"
+                          data-variant="default"
+                          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
+                        >
+                          <input
+                            aria-invalid="false"
+                            class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
-                            style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
-                          >
-                            <input
-                              aria-invalid="false"
-                              class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
-                              data-variant="default"
-                              id="root_additionalProperty-key"
-                              name="root_additionalProperty-key"
-                              value="additionalProperty"
-                            />
-                          </div>
+                            id="root_additionalProperty-key"
+                            name="root_additionalProperty-key"
+                            value="additionalProperty"
+                          />
                         </div>
                       </div>
                     </div>
@@ -4629,44 +4613,46 @@ exports[`object fields with title and description from uiSchema show add button 
                     </div>
                   </div>
                 </div>
-                <button
-                  class="mantine-focus-auto mantine-active rjsf-array-item-remove m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
-                  data-size="sm"
-                  data-variant="subtle"
-                  id="root_additionalProperty__remove"
-                  style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
-                  title="Remove"
-                  type="button"
-                >
-                  <span
-                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                <div>
+                  <button
+                    class="mantine-focus-auto mantine-active rjsf-array-item-remove m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                    data-size="sm"
+                    data-variant="subtle"
+                    id="root_additionalProperty__remove"
+                    style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                    title="Remove"
+                    type="button"
                   >
-                    <svg
-                      class="icon icon-tabler icons-tabler-outline icon-tabler-x"
-                      fill="none"
-                      height="24"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      xmlns="http://www.w3.org/2000/svg"
+                    <span
+                      class="m_8d3afb97 mantine-ActionIcon-icon"
                     >
-                      <path
-                        d="M0 0h24v24H0z"
+                      <svg
+                        class="icon icon-tabler icons-tabler-outline icon-tabler-x"
                         fill="none"
-                        stroke="none"
-                      />
-                      <path
-                        d="M18 6l-12 12"
-                      />
-                      <path
-                        d="M6 6l12 12"
-                      />
-                    </svg>
-                  </span>
-                </button>
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                          stroke="none"
+                        />
+                        <path
+                          d="M18 6l-12 12"
+                        />
+                        <path
+                          d="M6 6l12 12"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -5042,36 +5028,32 @@ exports[`object fields with title and description show add button and fields if 
                       class="m_96bdd299 mantine-Grid-col form-additional __m__-r4d"
                     >
                       <div
-                        class="form-group"
+                        class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                        data-size="sm"
                       >
-                        <div
-                          class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                        <label
+                          class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
+                          for="root_additionalProperty-key"
+                          id="root_additionalProperty-key-label"
+                          style="--input-label-size: var(--mantine-font-size-sm);"
                         >
-                          <label
-                            class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
-                            data-size="sm"
-                            for="root_additionalProperty-key"
-                            id="root_additionalProperty-key-label"
-                            style="--input-label-size: var(--mantine-font-size-sm);"
-                          >
-                            additionalProperty Key
-                          </label>
-                          <div
-                            class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
-                            data-size="sm"
+                          additionalProperty Key
+                        </label>
+                        <div
+                          class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
+                          data-size="sm"
+                          data-variant="default"
+                          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
+                        >
+                          <input
+                            aria-invalid="false"
+                            class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
-                            style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
-                          >
-                            <input
-                              aria-invalid="false"
-                              class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
-                              data-variant="default"
-                              id="root_additionalProperty-key"
-                              name="root_additionalProperty-key"
-                              value="additionalProperty"
-                            />
-                          </div>
+                            id="root_additionalProperty-key"
+                            name="root_additionalProperty-key"
+                            value="additionalProperty"
+                          />
                         </div>
                       </div>
                     </div>
@@ -5117,44 +5099,46 @@ exports[`object fields with title and description show add button and fields if 
                     </div>
                   </div>
                 </div>
-                <button
-                  class="mantine-focus-auto mantine-active rjsf-array-item-remove m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
-                  data-size="sm"
-                  data-variant="subtle"
-                  id="root_additionalProperty__remove"
-                  style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
-                  title="Remove"
-                  type="button"
-                >
-                  <span
-                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                <div>
+                  <button
+                    class="mantine-focus-auto mantine-active rjsf-array-item-remove m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                    data-size="sm"
+                    data-variant="subtle"
+                    id="root_additionalProperty__remove"
+                    style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                    title="Remove"
+                    type="button"
                   >
-                    <svg
-                      class="icon icon-tabler icons-tabler-outline icon-tabler-x"
-                      fill="none"
-                      height="24"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      xmlns="http://www.w3.org/2000/svg"
+                    <span
+                      class="m_8d3afb97 mantine-ActionIcon-icon"
                     >
-                      <path
-                        d="M0 0h24v24H0z"
+                      <svg
+                        class="icon icon-tabler icons-tabler-outline icon-tabler-x"
                         fill="none"
-                        stroke="none"
-                      />
-                      <path
-                        d="M18 6l-12 12"
-                      />
-                      <path
-                        d="M6 6l12 12"
-                      />
-                    </svg>
-                  </span>
-                </button>
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                          stroke="none"
+                        />
+                        <path
+                          d="M18 6l-12 12"
+                        />
+                        <path
+                          d="M6 6l12 12"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -5292,46 +5276,33 @@ exports[`object fields with title and description with global label off addition
                       class="m_96bdd299 mantine-Grid-col form-additional __m__-ra6"
                     >
                       <div
-                        class="form-group"
+                        class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                        data-size="sm"
                       >
                         <div
-                          class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                          class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
                           data-size="sm"
+                          data-variant="default"
+                          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                         >
-                          <label
-                            class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
-                            data-size="sm"
-                            for="root_foo-key"
-                            id="root_foo-key-label"
-                            style="--input-label-size: var(--mantine-font-size-sm);"
-                          >
-                            foo Key
-                          </label>
-                          <div
-                            class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
-                            data-size="sm"
+                          <input
+                            aria-invalid="false"
+                            class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
-                            style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
-                          >
-                            <input
-                              aria-invalid="false"
-                              class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
-                              data-variant="default"
-                              id="root_foo-key"
-                              name="root_foo-key"
-                              value="foo"
-                            />
-                          </div>
+                            id="root_foo-key"
+                            name="root_foo-key"
+                            value="foo"
+                          />
                         </div>
                       </div>
                     </div>
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-rad{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}
+                      .__m__-rac{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col form-additional __m__-rad"
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-rac"
                     >
                       <div
                         class="m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
@@ -5358,44 +5329,46 @@ exports[`object fields with title and description with global label off addition
                     </div>
                   </div>
                 </div>
-                <button
-                  class="mantine-focus-auto mantine-active rjsf-array-item-remove m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
-                  data-size="sm"
-                  data-variant="subtle"
-                  id="root_foo__remove"
-                  style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
-                  title="Remove"
-                  type="button"
-                >
-                  <span
-                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                <div>
+                  <button
+                    class="mantine-focus-auto mantine-active rjsf-array-item-remove m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                    data-size="sm"
+                    data-variant="subtle"
+                    id="root_foo__remove"
+                    style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                    title="Remove"
+                    type="button"
                   >
-                    <svg
-                      class="icon icon-tabler icons-tabler-outline icon-tabler-x"
-                      fill="none"
-                      height="24"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      xmlns="http://www.w3.org/2000/svg"
+                    <span
+                      class="m_8d3afb97 mantine-ActionIcon-icon"
                     >
-                      <path
-                        d="M0 0h24v24H0z"
+                      <svg
+                        class="icon icon-tabler icons-tabler-outline icon-tabler-x"
                         fill="none"
-                        stroke="none"
-                      />
-                      <path
-                        d="M18 6l-12 12"
-                      />
-                      <path
-                        d="M6 6l12 12"
-                      />
-                    </svg>
-                  </span>
-                </button>
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                          stroke="none"
+                        />
+                        <path
+                          d="M18 6l-12 12"
+                        />
+                        <path
+                          d="M6 6l12 12"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -5668,10 +5641,10 @@ exports[`object fields with title and description with global label off show add
         <style
           data-mantine-styles="inline"
         >
-          .__m__-rar{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-raq{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-rar"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-raq"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -5681,16 +5654,16 @@ exports[`object fields with title and description with global label off show add
               class="rjsf-field rjsf-field-string"
             >
               <div
-                class="m_8bffd616 mantine-Flex-root __m__-rau"
+                class="m_8bffd616 mantine-Flex-root __m__-rat"
                 style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
               >
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-rb0{--grid-gutter:var(--mantine-spacing-md);}
+                  .__m__-rav{--grid-gutter:var(--mantine-spacing-md);}
                 </style>
                 <div
-                  class="m_410352e9 mantine-Grid-root __m__-rb0"
+                  class="m_410352e9 mantine-Grid-root __m__-rav"
                   style="--grid-align: center; width: 100%;"
                 >
                   <div
@@ -5699,52 +5672,39 @@ exports[`object fields with title and description with global label off show add
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-rb2{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}
+                      .__m__-rb1{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col form-additional __m__-rb2"
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-rb1"
                     >
                       <div
-                        class="form-group"
+                        class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                        data-size="sm"
                       >
                         <div
-                          class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                          class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
                           data-size="sm"
+                          data-variant="default"
+                          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                         >
-                          <label
-                            class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
-                            data-size="sm"
-                            for="root_additionalProperty-key"
-                            id="root_additionalProperty-key-label"
-                            style="--input-label-size: var(--mantine-font-size-sm);"
-                          >
-                            additionalProperty Key
-                          </label>
-                          <div
-                            class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
-                            data-size="sm"
+                          <input
+                            aria-invalid="false"
+                            class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
-                            style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
-                          >
-                            <input
-                              aria-invalid="false"
-                              class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
-                              data-variant="default"
-                              id="root_additionalProperty-key"
-                              name="root_additionalProperty-key"
-                              value="additionalProperty"
-                            />
-                          </div>
+                            id="root_additionalProperty-key"
+                            name="root_additionalProperty-key"
+                            value="additionalProperty"
+                          />
                         </div>
                       </div>
                     </div>
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-rb9{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}
+                      .__m__-rb7{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col form-additional __m__-rb9"
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-rb7"
                     >
                       <div
                         class="m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
@@ -5771,44 +5731,46 @@ exports[`object fields with title and description with global label off show add
                     </div>
                   </div>
                 </div>
-                <button
-                  class="mantine-focus-auto mantine-active rjsf-array-item-remove m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
-                  data-size="sm"
-                  data-variant="subtle"
-                  id="root_additionalProperty__remove"
-                  style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
-                  title="Remove"
-                  type="button"
-                >
-                  <span
-                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                <div>
+                  <button
+                    class="mantine-focus-auto mantine-active rjsf-array-item-remove m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                    data-size="sm"
+                    data-variant="subtle"
+                    id="root_additionalProperty__remove"
+                    style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                    title="Remove"
+                    type="button"
                   >
-                    <svg
-                      class="icon icon-tabler icons-tabler-outline icon-tabler-x"
-                      fill="none"
-                      height="24"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      xmlns="http://www.w3.org/2000/svg"
+                    <span
+                      class="m_8d3afb97 mantine-ActionIcon-icon"
                     >
-                      <path
-                        d="M0 0h24v24H0z"
+                      <svg
+                        class="icon icon-tabler icons-tabler-outline icon-tabler-x"
                         fill="none"
-                        stroke="none"
-                      />
-                      <path
-                        d="M18 6l-12 12"
-                      />
-                      <path
-                        d="M6 6l12 12"
-                      />
-                    </svg>
-                  </span>
-                </button>
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                          stroke="none"
+                        />
+                        <path
+                          d="M18 6l-12 12"
+                        />
+                        <path
+                          d="M6 6l12 12"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
