@@ -468,6 +468,41 @@ describe('ObjectField', () => {
       errorMessages = node.querySelectorAll('#root_foo__error');
       expect(errorMessages).to.have.length(0);
     });
+
+    it('should not copy errors when name has dotted-path similar to real property', () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          'Foo.Bar': {
+            type: 'string',
+            minLength: 5,
+          },
+          Foo: {
+            type: 'object',
+            properties: {
+              Bar: {
+                type: 'string',
+                minLength: 2,
+              },
+            },
+          },
+        },
+      };
+      const formData = {
+        'Foo.Bar': 'FooBar',
+        Foo: {
+          Bar: 'B',
+        },
+      };
+      const { node } = createFormComponent({ schema, formData });
+      // click submit
+      submitForm(node);
+      console.log(node.innerHTML);
+      const fooDotBarErrors = node.querySelectorAll('#root_Foo.Bar__error');
+      expect(fooDotBarErrors).to.have.length(0);
+      const fooBarErrors = node.querySelectorAll('#root_Foo_Bar__error');
+      expect(fooBarErrors).to.have.length(1);
+    });
   });
 
   describe('fields ordering', () => {
