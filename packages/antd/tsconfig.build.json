@@ -15,7 +15,11 @@
     "replacers": {
       "lodash": {
         "enabled": true,
-        "file": "lodashReplacer.cjs"
+        "file": "lodashReplacer.cjs",
+      },
+      "antdIcons": {
+        "enabled": true,
+        "file": "antdIconsReplacer.cjs"
       }
     }
   }

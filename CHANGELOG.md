@@ -28,6 +28,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Updated the `playground` to use the css files for `@rjsf/shadcn` from the CDN connected with github, pointing to the new resources directory
+- Added new `antdIconsReplacer.ts` and used it in `@rjsf/antd` during build time to append `.js` onto imports of `@antd/icons` to fix es build issues on webpack and vite
 
 # 6.1.0
 
