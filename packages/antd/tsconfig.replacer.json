@@ -6,7 +6,8 @@
     "skipLibCheck": true,
   },
   "files": [
-    "../../tsc-alias-replacer/lodashReplacer.ts"
+    "../../tsc-alias-replacer/lodashReplacer.ts",
+    "../../tsc-alias-replacer/antdIconsReplacer.ts"
   ],
   "exclude": [
     "./src",

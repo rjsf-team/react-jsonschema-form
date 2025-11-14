@@ -5,10 +5,10 @@ import { AliasReplacerArguments } from 'tsc-alias';
  *
  * @param orig - The original import name
  */
-export default function ajvReplacer({ orig }: AliasReplacerArguments): string {
-  if (orig.startsWith("from 'ajv/dist/standalone")) {
-    const origAjv = orig.substring(0, orig.length - 1);
-    return `${origAjv}/index.js'`;
+export default function antdIconsReplacer({ orig }: AliasReplacerArguments): string {
+  if (orig.startsWith("from '@ant-design/icons/")) {
+    const origIcons = orig.substring(0, orig.length - 1);
+    return `${origIcons}.js'`;
   }
 
   return orig;
