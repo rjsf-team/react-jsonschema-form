@@ -17,6 +17,10 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 6.1.1
 
+## @rjsf/core
+
+- Updated `ObjectField` to get errors and formData by wrapping `name` in brackets to prevent names that have dots in them incorrectly getting data from a lower level, fixing [#3846](https://github.com/rjsf-team/react-jsonschema-form/issues/3846)
+
 ## @rjsf/shadcn
 
 - Updated `package.json` to copy css files to new `resources` directory
