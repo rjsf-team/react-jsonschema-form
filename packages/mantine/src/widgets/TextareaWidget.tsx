@@ -40,7 +40,7 @@ export default function TextareaWidget<
   } = props;
 
   const themeProps = cleanupOptions(options);
-  const emptyValue = options?.emptyValue ?? '';
+  const emptyValue = options?.emptyValue;
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLTextAreaElement>) => {
