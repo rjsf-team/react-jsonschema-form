@@ -15,6 +15,12 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 6.1.2
+
+## @rjsf/mantine
+
+Align Mantine’s behavior with other themes when clearing string fields: clearing an input now removes the key from formData instead of setting it to an empty string. ([#4875](https://github.com/rjsf-team/react-jsonschema-form/pull/4875))
+
 # 6.1.1
 
 ## @rjsf/core
