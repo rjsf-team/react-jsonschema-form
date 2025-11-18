@@ -55,7 +55,7 @@ export default function BaseInputTemplate<
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const handler = onChangeOverride ? onChangeOverride : onChange;
-      const value = e.target.value === '' ? (options.emptyValue ?? '') : e.target.value;
+      const value = e.target.value === '' ? options.emptyValue : e.target.value;
       handler(value);
     },
     [onChange, onChangeOverride, options],
