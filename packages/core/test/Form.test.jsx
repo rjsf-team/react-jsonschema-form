@@ -908,7 +908,7 @@ describeRepeated('Form common', (createFormComponent) => {
       expect(node.querySelectorAll('input[type=text]')).to.have.length.of(1);
     });
 
-    it('should priorize definition over schema type property', () => {
+    it('should prioritize definition over schema type property', () => {
       // Refs bug #140
       const schema = {
         type: 'object',
@@ -934,7 +934,7 @@ describeRepeated('Form common', (createFormComponent) => {
       expect(node.querySelectorAll('input[type=text]')).to.have.length.of(2);
     });
 
-    it('should priorize local properties over definition ones', () => {
+    it('should prioritize local properties over definition ones', () => {
       // Refs bug #140
       const schema = {
         type: 'object',
