@@ -523,8 +523,8 @@ const shallowAllOfMerge = createShallowAllOfMerge(mergeArrayOfSchemaDefinitions)
 
 /**
  * Internal helper that merges allOf schemas using @x0k/json-schema-merge's shallow allOf merge
- * @param schema
- * @returns
+ * @param schema - The schema containing an `allOf` keyword
+ * @returns The schema with allOf schemas merged
  */
 function mergeAllOf<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S {
   return shallowAllOfMerge(schema) as S;
