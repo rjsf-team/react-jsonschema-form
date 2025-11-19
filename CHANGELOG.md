@@ -17,9 +17,20 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 6.1.2
 
+## @rjsf/antd
+
+- Updated `SelectWidget` to add a static `getPopupContainerCallback` to the `SelectWidget` component, partially fixing [#3609](https://github.com/rjsf-team/react-jsonschema-form/issues/3609)
+
 ## @rjsf/mantine
 
-Align Mantine’s behavior with other themes when clearing string fields: clearing an input now removes the key from formData instead of setting it to an empty string. ([#4875](https://github.com/rjsf-team/react-jsonschema-form/pull/4875))
+- Align Mantine’s behavior with other themes when clearing string fields: clearing an input now removes the key from formData instead of setting it to an empty string. ([#4875](https://github.com/rjsf-team/react-jsonschema-form/pull/4875))
+
+## Dev / docs / playground
+
+- Updated `DemoFrame` as follows to fix [#3609](https://github.com/rjsf-team/react-jsonschema-form/issues/3609)
+  - Override `antd`'s `SelectWidget.getPopupContainerCallback` callback function to return undefined
+  - Added a `AntdSelectPatcher` component that observes the creation of `antd` select dropdowns and makes sure they open in the correct location
+  - Update the `antd` theme wrapper to render the `AntdSelectPatcher`, `AntdStyleProvider` and `ConfigProvider` with it's own `getPopupContainer()` function inside of a `FrameContextConsumer`
 
 # 6.1.1
 
