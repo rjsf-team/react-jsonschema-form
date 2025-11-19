@@ -513,6 +513,23 @@ export function stubExistingAdditionalProperties<
   return schema;
 }
 
+const { compareSchemaDefinitions, compareSchemaValues } = createComparator();
+const { mergeArrayOfSchemaDefinitions } = createMerger({
+  intersectJson: createIntersector(compareSchemaValues),
+  deduplicateJsonSchemaDef: createDeduplicator(compareSchemaDefinitions),
+});
+
+const shallowAllOfMerge = createShallowAllOfMerge(mergeArrayOfSchemaDefinitions);
+
+/**
+ * Internal helper that merges allOf schemas using @x0k/json-schema-merge's shallow allOf merge
+ * @param schema
+ * @returns
+ */
+function mergeAllOf<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S {
+  return shallowAllOfMerge(schema) as S;
+}
+
 /** Internal handler that retrieves an expanded schema that has had all of its conditions, additional properties,
  * references and dependencies resolved and merged into the `schema` given a `validator`, `rootSchema` and `rawFormData`
  * that is used to do the potentially recursive resolution. If `expandAllBranches` is true, then all possible branches
@@ -637,18 +654,6 @@ export function retrieveSchemaInternal<
 
     return resolvedSchema;
   });
-}
-
-const { compareSchemaDefinitions, compareSchemaValues } = createComparator();
-const { mergeArrayOfSchemaDefinitions } = createMerger({
-  intersectJson: createIntersector(compareSchemaValues),
-  deduplicateJsonSchemaDef: createDeduplicator(compareSchemaDefinitions),
-});
-
-const shallowAllOfMerge = createShallowAllOfMerge(mergeArrayOfSchemaDefinitions);
-
-function mergeAllOf<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S {
-  return shallowAllOfMerge(schema) as S;
 }
 
 /** Resolves an `anyOf` or `oneOf` within a schema (if present) to the list of schemas returned from
