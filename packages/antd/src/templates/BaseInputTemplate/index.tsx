@@ -43,6 +43,8 @@ export default function BaseInputTemplate<
     type,
   } = props;
   const { formContext } = registry;
+  // InputNumber doesn't use a native <input type="number"> directly - it wraps it and controls the stepping behavior
+  // through its own props. The step prop in Ant Design expects a number, not the string "any"
   const inputProps = getInputProps<T, S, F>(schema, type, options, false);
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
