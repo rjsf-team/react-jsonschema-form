@@ -5,7 +5,7 @@ import transform from 'lodash/transform';
 import merge from 'lodash/merge';
 import flattenDeep from 'lodash/flattenDeep';
 import uniq from 'lodash/uniq';
-import mergeAllOf, { Options } from 'json-schema-merge-allof';
+import { createComparator, createMerger, createShallowAllOfMerge } from '@x0k/json-schema-merge';
 
 import {
   ADDITIONAL_PROPERTIES_KEY,
@@ -37,6 +37,7 @@ import {
 import getFirstMatchingOption from './getFirstMatchingOption';
 import deepEquals from '../deepEquals';
 import isEmpty from 'lodash/isEmpty';
+import { createDeduplicator, createIntersector } from '@x0k/json-schema-merge/lib/array';
 
 /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and dependencies
  * resolved and merged into the `schema` given a `validator`, `rootSchema` and `rawFormData` that is used to do the
@@ -590,12 +591,7 @@ export function retrieveSchemaInternal<
         }
         resolvedSchema = experimental_customMergeAllOf
           ? experimental_customMergeAllOf(resolvedSchema)
-          : (mergeAllOf(resolvedSchema, {
-              deep: false,
-              resolvers: {
-                $defs: mergeAllOf.options.resolvers.definitions,
-              },
-            } as Options) as S);
+          : mergeAllOf(resolvedSchema);
         if (withContainsSchemas.length) {
           resolvedSchema.allOf = withContainsSchemas;
         }
@@ -641,6 +637,18 @@ export function retrieveSchemaInternal<
 
     return resolvedSchema;
   });
+}
+
+const { compareSchemaDefinitions, compareSchemaValues } = createComparator();
+const { mergeArrayOfSchemaDefinitions } = createMerger({
+  intersectJson: createIntersector(compareSchemaValues),
+  deduplicateJsonSchemaDef: createDeduplicator(compareSchemaDefinitions),
+});
+
+const shallowAllOfMerge = createShallowAllOfMerge(mergeArrayOfSchemaDefinitions);
+
+function mergeAllOf<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S {
+  return shallowAllOfMerge(schema) as S;
 }
 
 /** Resolves an `anyOf` or `oneOf` within a schema (if present) to the list of schemas returned from

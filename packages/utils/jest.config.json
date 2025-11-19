@@ -6,7 +6,7 @@
     "browsers": ["chrome", "firefox", "safari"]
   },
   "testMatch": ["**/test/**/*.test.ts?(x)"],
-  "transformIgnorePatterns": ["/node_modules/(?!deep-freeze-es6)"],
+  "transformIgnorePatterns": ["/node_modules/(?!(@x0k/json-schema-merge|deep-freeze-es6)/)"],
   "coverageDirectory": "<rootDir>/coverage/",
   "collectCoverage": true,
   "coveragePathIgnorePatterns": ["<rootDir>/node_modules/", "<rootDir>/test"],

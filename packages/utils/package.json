@@ -65,8 +65,8 @@
     "react": ">=18"
   },
   "dependencies": {
+    "@x0k/json-schema-merge": "^1.0.2",
     "fast-uri": "^3.1.0",
-    "json-schema-merge-allof": "^0.8.1",
     "jsonpointer": "^5.0.1",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
@@ -74,7 +74,6 @@
   },
   "devDependencies": {
     "@types/json-schema": "^7.0.15",
-    "@types/json-schema-merge-allof": "^0.6.5",
     "@types/react-is": "^18.3.1",
     "deep-freeze-es6": "^4.0.1",
     "eslint": "^8.57.1"
