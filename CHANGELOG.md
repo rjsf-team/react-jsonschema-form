@@ -20,6 +20,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/antd
 
 - Updated `SelectWidget` to add a static `getPopupContainerCallback` to the `SelectWidget` component, partially fixing [#3609](https://github.com/rjsf-team/react-jsonschema-form/issues/3609)
+  - Also, added the explicit `open` state to the `Select` in conjunction with providing the `setOpen` as the `onOpenChange` prop 
 
 ## @rjsf/mantine
 
