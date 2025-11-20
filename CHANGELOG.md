@@ -38,7 +38,8 @@ should change the heading of the (upcoming) version to include a major version b
   - Override `antd`'s `SelectWidget.getPopupContainerCallback` callback function to return undefined
   - Added a `AntdSelectPatcher` component that observes the creation of `antd` select dropdowns and makes sure they open in the correct location
   - Update the `antd` theme wrapper to render the `AntdSelectPatcher`, `AntdStyleProvider` and `ConfigProvider` with it's own `getPopupContainer()` function inside of a `FrameContextConsumer`
-- Updated TypeScript configuration to use `"moduleResolution": "bundler"`
+- Updated the base TypeScript configuration to use `"moduleResolution": "bundler"`
+- Updated the `validation.md` documentation to note that HTML 5 validation is not translatable via RJSF translation mechanisms and should be turned off, fixing [#4092](https://github.com/rjsf-team/react-jsonschema-form/issues/4092)
 
 # 6.1.1
 

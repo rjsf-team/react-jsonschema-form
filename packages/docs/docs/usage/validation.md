@@ -780,3 +780,4 @@ NOTES:
 - If you provided your own function, modify the list in place.
 - You must process all the cases which you need by yourself. See the full list of possible cases [here](https://github.com/ajv-validator/ajv-i18n/blob/master/messages/index.js).
 - Each element in the `errors` list passed to the custom function represent a **raw** error object returned by ajv ([see doc](https://github.com/ajv-validator/ajv/blob/master/docs/api.md#error-objects)).
+- [HTML 5 Validation](#html5-validation) will cause the browser to display a "popup" message, the text of which is entirely under control of the browser. If you are seeing messages which aren't translated "popping up", then add `noHtml5Validate` to your form.
