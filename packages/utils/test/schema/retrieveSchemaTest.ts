@@ -1097,7 +1097,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             },
             food: { type: 'string', enum: ['meat', 'grass', 'fish'] },
           },
-          required: ['animal', 'food'],
+          required: ['food', 'animal'],
         });
       });
       it('should resolve multiple conditions in nested allOf blocks', () => {
@@ -1262,7 +1262,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             },
             food: { type: 'string', enum: ['meat', 'grass', 'fish'] },
           },
-          required: ['animal', 'food'],
+          required: ['food', 'animal'],
         });
       });
       it('handles nested if then else', () => {

@@ -6,9 +6,7 @@
     "^.+\\.(t|j)sx?$": "babel-jest"
   },
   "coveragePathIgnorePatterns": ["/node_modules/", "/test/"],
-  "transformIgnorePatterns": [
-    "/node_modules/(?!(@fortawesome|yup|react-day-picker|dayjs|deep-freeze-es6)/)"
-  ],
+  "transformIgnorePatterns": ["/node_modules/(?!(@x0k|@fortawesome|yup|react-day-picker|dayjs|deep-freeze-es6)/)"],
   "moduleNameMapper": {
     "\\.(css|less|scss|sass)$": "<rootDir>/test/fileMock.js"
   }
