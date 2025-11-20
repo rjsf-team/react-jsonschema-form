@@ -23,6 +23,8 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `SelectWidget` to add a static `getPopupContainerCallback` to the `SelectWidget` component, partially fixing [#3609](https://github.com/rjsf-team/react-jsonschema-form/issues/3609)
   - Also, added the explicit `open` state to the `Select` in conjunction with providing the `setOpen` as the `onOpenChange` prop
 - In `BaseInputTemplate` added comments explaining why `step='1'` is returned, closing [#4022](https://github.com/rjsf-team/react-jsonschema-form/issues/4022)
+ 
+- In `BaseInputTemplate` added comments explaining why `step='1'` is returned, closing [#4022](https://github.com/rjsf-team/react-jsonschema-form/issues/4022)
 
 ## @rjsf/mantine
 

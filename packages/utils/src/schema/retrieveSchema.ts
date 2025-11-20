@@ -5,7 +5,9 @@ import transform from 'lodash/transform';
 import merge from 'lodash/merge';
 import flattenDeep from 'lodash/flattenDeep';
 import uniq from 'lodash/uniq';
+import isEmpty from 'lodash/isEmpty';
 import { createComparator, createMerger, createShallowAllOfMerge } from '@x0k/json-schema-merge';
+import { createDeduplicator, createIntersector } from '@x0k/json-schema-merge/lib/array';
 
 import {
   ADDITIONAL_PROPERTIES_KEY,
@@ -36,8 +38,6 @@ import {
 } from '../types';
 import getFirstMatchingOption from './getFirstMatchingOption';
 import deepEquals from '../deepEquals';
-import isEmpty from 'lodash/isEmpty';
-import { createDeduplicator, createIntersector } from '@x0k/json-schema-merge/lib/array';
 
 /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and dependencies
  * resolved and merged into the `schema` given a `validator`, `rootSchema` and `rawFormData` that is used to do the
