@@ -21,14 +21,28 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
   const schemaMaps = schemaParser(schema);
   const schemas = Object.values(schemaMaps);
 
-  const { additionalMetaSchemas, customFormats, ajvOptionsOverrides = {}, ajvFormatOptions, AjvClass } = options;
+  const {
+    additionalMetaSchemas,
+    customFormats,
+    ajvOptionsOverrides = {},
+    ajvFormatOptions,
+    AjvClass,
+    extenderFn,
+  } = options;
   // Allow users to turn off the `lines: true` feature in their own overrides, but NOT the `source: true`
   const compileOptions = {
     ...ajvOptionsOverrides,
     code: { lines: true, ...ajvOptionsOverrides.code, source: true },
     schemas,
   };
-  const ajv = createAjvInstance(additionalMetaSchemas, customFormats, compileOptions, ajvFormatOptions, AjvClass);
+  const ajv = createAjvInstance(
+    additionalMetaSchemas,
+    customFormats,
+    compileOptions,
+    ajvFormatOptions,
+    AjvClass,
+    extenderFn,
+  );
 
   return standaloneCode(ajv);
 }

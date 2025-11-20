@@ -1,12 +1,14 @@
 import { ErrorObject } from 'ajv';
 import get from 'lodash/get';
 import {
+  ANY_OF_KEY,
   createErrorHandler,
   CustomValidator,
   ErrorTransformer,
   FormContextType,
   getDefaultFormState,
   getUiOptions,
+  ONE_OF_KEY,
   PROPERTIES_KEY,
   RJSFSchema,
   RJSFValidationError,
@@ -34,7 +36,7 @@ export function transformRJSFValidationErrors<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(errors: ErrorObject[] = [], uiSchema?: UiSchema<T, S, F>): RJSFValidationError[] {
-  return errors.map((e: ErrorObject) => {
+  const errorList = errors.map((e: ErrorObject) => {
     const { instancePath, keyword, params, schemaPath, parentSchema, ...rest } = e;
     let { message = '' } = rest;
     let property = instancePath.replace(/\//g, '.');
@@ -105,6 +107,28 @@ export function transformRJSFValidationErrors<
       title: uiTitle,
     };
   });
+  // Filter out duplicates around anyOf/oneOf messages
+  return errorList.reduce((acc: RJSFValidationError[], err: RJSFValidationError) => {
+    const { message, schemaPath } = err;
+    const anyOfIndex = schemaPath?.indexOf(`/${ANY_OF_KEY}/`);
+    const oneOfIndex = schemaPath?.indexOf(`/${ONE_OF_KEY}/`);
+    let schemaPrefix: string | undefined;
+    // Look specifically for `/anyOr/` or `/oneOf/` within the schemaPath information
+    if (anyOfIndex && anyOfIndex >= 0) {
+      schemaPrefix = schemaPath?.substring(0, anyOfIndex);
+    } else if (oneOfIndex && oneOfIndex >= 0) {
+      schemaPrefix = schemaPath?.substring(0, oneOfIndex);
+    }
+    // If there is a schemaPrefix, then search for a duplicate message with the same prefix, otherwise undefined
+    const dup = schemaPrefix
+      ? acc.find((e: RJSFValidationError) => e.message === message && e.schemaPath?.startsWith(schemaPrefix))
+      : undefined;
+    if (!dup) {
+      // Only push an error that is not a duplicate
+      acc.push(err);
+    }
+    return acc;
+  }, [] as RJSFValidationError[]);
 }
 
 /** This function processes the `formData` with an optional user contributed `customValidate` function, which receives

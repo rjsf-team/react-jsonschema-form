@@ -42,8 +42,16 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
    * @param [localizer] - If provided, is used to localize a list of Ajv `ErrorObject`s
    */
   constructor(options: CustomValidatorOptionsType, localizer?: Localizer) {
-    const { additionalMetaSchemas, customFormats, ajvOptionsOverrides, ajvFormatOptions, AjvClass } = options;
-    this.ajv = createAjvInstance(additionalMetaSchemas, customFormats, ajvOptionsOverrides, ajvFormatOptions, AjvClass);
+    const { additionalMetaSchemas, customFormats, ajvOptionsOverrides, ajvFormatOptions, AjvClass, extenderFn } =
+      options;
+    this.ajv = createAjvInstance(
+      additionalMetaSchemas,
+      customFormats,
+      ajvOptionsOverrides,
+      ajvFormatOptions,
+      AjvClass,
+      extenderFn,
+    );
     this.localizer = localizer;
   }
 

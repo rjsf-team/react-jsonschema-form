@@ -32,6 +32,13 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Replace json-schema-merge-allof with [@x0k/json-schema-merge](https://github.com/x0k/json-schema-merge/) ([#4774](https://github.com/rjsf-team/react-jsonschema-form/issues/4774))
 
+## @rjsf/validator-ajv8
+
+- Updated `CustomValidatorOptionsType` to add new `extenderFn?: (ajv: Ajv) => Ajv` prop
+- Updated `createAjvInstance()` to add new `extenderFn?: (ajv: Ajv) => Ajv` parameter, using it to extend the `ajv` instance, fixing [#4746](https://github.com/rjsf-team/react-jsonschema-form/issues/4746)
+  - Updated the `AJV8Validator` and `compileSchemaValidatorsCode()` to pass `extenderFn` from the `options` into `createAjvInstance()`
+- Updated `transformRJSFValidationErrors()` to add filtering of duplicate `anyOf`/`oneOf` based errors from the returned errors, fixing [#4167](https://github.com/rjsf-team/react-jsonschema-form/issues/4167)
+
 ## Dev / docs / playground
 
 - Updated `DemoFrame` as follows to fix [#3609](https://github.com/rjsf-team/react-jsonschema-form/issues/3609)
@@ -40,6 +47,7 @@ should change the heading of the (upcoming) version to include a major version b
   - Update the `antd` theme wrapper to render the `AntdSelectPatcher`, `AntdStyleProvider` and `ConfigProvider` with it's own `getPopupContainer()` function inside of a `FrameContextConsumer`
 - Updated the base TypeScript configuration to use `"moduleResolution": "bundler"`
 - Updated the `validation.md` documentation to note that HTML 5 validation is not translatable via RJSF translation mechanisms and should be turned off, fixing [#4092](https://github.com/rjsf-team/react-jsonschema-form/issues/4092)
+  - Also added documentation for the new `extenderFn` prop on `CustomValidatorOptionsType`
 
 # 6.1.1
 
