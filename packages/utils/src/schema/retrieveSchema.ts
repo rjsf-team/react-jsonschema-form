@@ -513,6 +513,7 @@ export function stubExistingAdditionalProperties<
   return schema;
 }
 
+// Set up @x0k/json-schema-merge utilities
 const { compareSchemaDefinitions, compareSchemaValues } = createComparator();
 const { mergeArrayOfSchemaDefinitions } = createMerger({
   intersectJson: createIntersector(compareSchemaValues),
