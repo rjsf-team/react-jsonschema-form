@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/react-bootstrap",
-  "version": "6.1.1",
+  "version": "6.1.2",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
