@@ -56,6 +56,11 @@ import _unset from 'lodash/unset';
 import getDefaultRegistry from '../getDefaultRegistry';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE, IS_RESET } from './constants';
 
+/** Represents a boolean option that is deprecated.
+ * @deprecated - In a future major release, this type will be removed
+ */
+type DeprecatedBooleanOption = boolean;
+
 /** The properties that are passed to the `Form` */
 export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
   /** The JSON schema object for the form */
@@ -184,9 +189,9 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * is provided, then live validation will be performed when a field that was updated is blurred (as a performance
    * optimization).
    *
-   * @deprecated - In a future major release, the `boolean` options for this flag will be removed
+   * NOTE: In a future major release, the `boolean` options for this flag will be removed
    */
-  liveValidate?: boolean | 'onChange' | 'onBlur';
+  liveValidate?: 'onChange' | 'onBlur' | DeprecatedBooleanOption;
   /** Flag that describes when live omit will be performed. Live omit happens only when `omitExtraData` is also set to
    * to `true` and the form's data is updated by the user.
    *
@@ -195,9 +200,9 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * is provided, then live omit will be performed when a field that was updated is blurred (as a performance
    * optimization).
    *
-   * @deprecated - In a future major release, the `boolean` options for this flag will be removed
+   * NOTE: In a future major release, the `boolean` options for this flag will be removed
    */
-  liveOmit?: boolean | 'onChange' | 'onBlur';
+  liveOmit?: 'onChange' | 'onBlur' | DeprecatedBooleanOption;
   /** If set to true, then extra form data values that are not in any form field will be removed whenever `onSubmit` is
    * called. Set to `false` by default.
    */
