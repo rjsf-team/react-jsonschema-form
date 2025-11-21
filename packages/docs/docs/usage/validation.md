@@ -701,7 +701,7 @@ const schema: RJSFSchema = {
   format: 'date',
 };
 
-const validator = customizeValidator({ extender: ajvErrors });
+const validator = customizeValidator({ extenderFn: ajvErrors });
 
 render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
