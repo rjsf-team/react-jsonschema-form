@@ -688,7 +688,7 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 
 ### extenderFn
 
-If you need to use an additional library, such as `ajv-errors` with our validators, you can do so by creating a custom validator and pass it via the `extenderFn` prop on the `options` parameter.
+If you need to use an additional library, such as `ajv-errors`, with our validators you can do so by creating a custom validator and pass it the `ajv` library "extender" via the `extenderFn` prop on the `options` parameter.
 
 ```tsx
 import { Form } from '@rjsf/core';
@@ -702,8 +702,6 @@ const schema: RJSFSchema = {
 };
 
 const validator = customizeValidator({ extender: ajvErrors });
-// or
-// const validator = customizeValidator({ AjvClass: Ajv2020 });
 
 render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
