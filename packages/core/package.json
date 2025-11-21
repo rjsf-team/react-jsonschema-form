@@ -84,7 +84,7 @@
     "@testing-library/user-event": "^14.6.1",
     "ajv": "^8.17.1",
     "atob": "^2.1.2",
-    "chai": "^3.5.0",
+    "chai": "^6.2.1",
     "eslint": "^8.57.1",
     "html": "^1.0.0",
     "jsdom": "^27.0.1",
