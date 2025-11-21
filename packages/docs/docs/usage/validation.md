@@ -686,6 +686,26 @@ const validator = customizeValidator({ AjvClass: Ajv2019 });
 render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
+### extenderFn
+
+If you need to use an additional library, such as `ajv-errors`, with our validators you can do so by creating a custom validator and pass it the `ajv` library "extender" via the `extenderFn` prop on the `options` parameter.
+
+```tsx
+import { Form } from '@rjsf/core';
+import { RJSFSchema } from '@rjsf/utils';
+import { customizeValidator } from '@rjsf/validator-ajv8';
+import ajvErrors from 'ajv-errors';
+
+const schema: RJSFSchema = {
+  type: 'string',
+  format: 'date',
+};
+
+const validator = customizeValidator({ extenderFn: ajvErrors });
+
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+```
+
 ### Localization (L10n) support
 
 The Ajv 8 validator supports the localization of error messages using [ajv-i18n](https://github.com/ajv-validator/ajv-i18n).

@@ -16,6 +16,8 @@ export interface CustomValidatorOptionsType {
   ajvFormatOptions?: FormatsPluginOptions | false;
   /** The AJV class to construct */
   AjvClass?: typeof Ajv;
+  /** A function to call to extend AJV, such as `ajvErrors()` */
+  extenderFn?: (ajv: Ajv) => Ajv;
 }
 
 /** The type describing a function that takes a list of Ajv `ErrorObject`s and localizes them
