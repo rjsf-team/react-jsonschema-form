@@ -1673,7 +1673,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                                         for=":r8u:"
                                         id="field:::r8u:::label"
                                       >
-                                        tags-0
+                                        tags-1
                                         <span
                                           aria-hidden="true"
                                           class="chakra-field__requiredIndicator emotion-15"
@@ -1827,7 +1827,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                                         for=":r90:"
                                         id="field:::r90:::label"
                                       >
-                                        tags-1
+                                        tags-2
                                         <span
                                           aria-hidden="true"
                                           class="chakra-field__requiredIndicator emotion-15"
@@ -6816,7 +6816,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                                         for=":ram:"
                                         id="field:::ram:::label"
                                       >
-                                        tags-0
+                                        tags-1
                                         <span
                                           aria-hidden="true"
                                           class="chakra-field__requiredIndicator emotion-15"
@@ -6970,7 +6970,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                                         for=":rao:"
                                         id="field:::rao:::label"
                                       >
-                                        tags-1
+                                        tags-2
                                         <span
                                           aria-hidden="true"
                                           class="chakra-field__requiredIndicator emotion-15"
@@ -21687,7 +21687,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                         for=":r62:"
                                         id="field:::r62:::label"
                                       >
-                                        nestedArrayOptional-0
+                                        nestedArrayOptional-1
                                         <span
                                           aria-hidden="true"
                                           class="chakra-field__requiredIndicator emotion-82"
@@ -23164,7 +23164,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                         for=":r7v:"
                                         id="field:::r7v:::label"
                                       >
-                                        nestedArrayOptional-0
+                                        nestedArrayOptional-1
                                         <span
                                           aria-hidden="true"
                                           class="chakra-field__requiredIndicator emotion-70"

@@ -30,6 +30,7 @@ export const DATA_URL_FORMAT_REGEX = /^data:([a-z]+\/[a-z0-9-+.]+)?;(?:name=(.*)
  * @param [ajvOptionsOverrides={}] - The set of validator config override options
  * @param [ajvFormatOptions] - The `ajv-format` options to use when adding formats to `ajv`; pass `false` to disable it
  * @param [AjvClass] - The `Ajv` class to use when creating the validator instance
+ * @param [extenderFn] - A function to call to extend AJV, such as `ajvErrors()`
  */
 export default function createAjvInstance(
   additionalMetaSchemas?: CustomValidatorOptionsType['additionalMetaSchemas'],
@@ -37,8 +38,9 @@ export default function createAjvInstance(
   ajvOptionsOverrides: CustomValidatorOptionsType['ajvOptionsOverrides'] = {},
   ajvFormatOptions?: FormatsPluginOptions | false,
   AjvClass: typeof Ajv = Ajv,
+  extenderFn?: CustomValidatorOptionsType['extenderFn'],
 ) {
-  const ajv = new AjvClass({ ...AJV_CONFIG, ...ajvOptionsOverrides });
+  let ajv = new AjvClass({ ...AJV_CONFIG, ...ajvOptionsOverrides });
   if (ajvFormatOptions) {
     addFormats(ajv, ajvFormatOptions);
   } else if (ajvFormatOptions !== false) {
@@ -63,6 +65,9 @@ export default function createAjvInstance(
     Object.keys(customFormats).forEach((formatName) => {
       ajv.addFormat(formatName, customFormats[formatName]);
     });
+  }
+  if (extenderFn) {
+    ajv = extenderFn(ajv);
   }
 
   return ajv;

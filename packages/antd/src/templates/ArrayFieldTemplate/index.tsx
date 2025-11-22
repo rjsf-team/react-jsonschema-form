@@ -82,7 +82,7 @@ export default function ArrayFieldTemplate<
         {canAdd && (
           <Col span={24}>
             <Row gutter={rowGutter} justify='end'>
-              <Col flex='192px'>
+              <Col flex='120px'>
                 <AddButton
                   id={buttonId(fieldPathId, 'add')}
                   className='rjsf-array-item-add'

@@ -686,6 +686,26 @@ const validator = customizeValidator({ AjvClass: Ajv2019 });
 render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
+### extenderFn
+
+If you need to use an additional library, such as `ajv-errors`, with our validators you can do so by creating a custom validator and pass it the `ajv` library "extender" via the `extenderFn` prop on the `options` parameter.
+
+```tsx
+import { Form } from '@rjsf/core';
+import { RJSFSchema } from '@rjsf/utils';
+import { customizeValidator } from '@rjsf/validator-ajv8';
+import ajvErrors from 'ajv-errors';
+
+const schema: RJSFSchema = {
+  type: 'string',
+  format: 'date',
+};
+
+const validator = customizeValidator({ extenderFn: ajvErrors });
+
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+```
+
 ### Localization (L10n) support
 
 The Ajv 8 validator supports the localization of error messages using [ajv-i18n](https://github.com/ajv-validator/ajv-i18n).
@@ -780,3 +800,4 @@ NOTES:
 - If you provided your own function, modify the list in place.
 - You must process all the cases which you need by yourself. See the full list of possible cases [here](https://github.com/ajv-validator/ajv-i18n/blob/master/messages/index.js).
 - Each element in the `errors` list passed to the custom function represent a **raw** error object returned by ajv ([see doc](https://github.com/ajv-validator/ajv/blob/master/docs/api.md#error-objects)).
+- [HTML 5 Validation](#html5-validation) will cause the browser to display a "popup" message, the text of which is entirely under control of the browser. If you are seeing messages which aren't translated "popping up", then add `noHtml5Validate` to your form.

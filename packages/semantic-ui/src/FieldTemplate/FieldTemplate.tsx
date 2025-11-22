@@ -60,6 +60,8 @@ export default function FieldTemplate<
       style={style}
       id={id}
       label={label}
+      displayLabel={displayLabel}
+      rawDescription={rawDescription}
       registry={registry}
       schema={schema}
       uiSchema={uiSchema}

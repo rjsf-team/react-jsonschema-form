@@ -6,7 +6,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -21,7 +21,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-object"
+                class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -49,7 +49,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-string"
+                          class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
                             class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -80,7 +80,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                               </label>
                               <input
                                 aria-describedby="root_person_name__error root_person_name__description root_person_name__help"
-                                class="input input-bordered"
+                                class="input input-bordered w-full"
                                 id="root_person_name"
                                 name="root[person][name]"
                                 placeholder=""
@@ -102,7 +102,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-object"
+                          class="flex-grow rjsf-field rjsf-field-object"
                         >
                           <div
                             class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -130,7 +130,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                   class=""
                                 >
                                   <div
-                                    class="rjsf-field rjsf-field-string"
+                                    class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
                                       class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -161,7 +161,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                         </label>
                                         <input
                                           aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
-                                          class="input input-bordered"
+                                          class="input input-bordered w-full"
                                           id="root_person_address_street"
                                           name="root[person][address][street]"
                                           placeholder=""
@@ -183,7 +183,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                   class=""
                                 >
                                   <div
-                                    class="rjsf-field rjsf-field-string"
+                                    class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
                                       class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -214,7 +214,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                         </label>
                                         <input
                                           aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
-                                          class="input input-bordered"
+                                          class="input input-bordered w-full"
                                           id="root_person_address_city"
                                           name="root[person][address][city]"
                                           placeholder=""
@@ -236,7 +236,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                   class=""
                                 >
                                   <div
-                                    class="rjsf-field rjsf-field-string"
+                                    class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
                                       class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -267,7 +267,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                         </label>
                                         <input
                                           aria-describedby="root_person_address_country__error root_person_address_country__description root_person_address_country__help"
-                                          class="input input-bordered"
+                                          class="input input-bordered w-full"
                                           id="root_person_address_country"
                                           name="root[person][address][country]"
                                           placeholder=""
@@ -338,7 +338,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -353,7 +353,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -384,7 +384,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                     </label>
                     <input
                       aria-describedby="root_name__error root_name__description root_name__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_name"
                       name="root[name]"
                       placeholder=""
@@ -459,7 +459,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                       </label>
                       <input
                         aria-describedby="root_customField__error root_customField__description root_customField__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_customField"
                         name="root[customField]"
                         placeholder=""
@@ -476,7 +476,8 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                     </div>
                   </div>
                   <div
-                    class="flex self-center"
+                    class="flex self-start"
+                    style="margin-top: 32px;"
                   >
                     <button
                       aria-label="Remove"
@@ -565,7 +566,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -580,7 +581,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -611,7 +612,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                     </label>
                     <input
                       aria-describedby="root_name__error root_name__description root_name__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_name"
                       name="root[name]"
                       placeholder=""
@@ -633,7 +634,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-number"
+                class="flex-grow rjsf-field rjsf-field-number"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-number"
@@ -664,7 +665,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                     </label>
                     <input
                       aria-describedby="root_age__error root_age__description root_age__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_age"
                       name="root[age]"
                       placeholder=""
@@ -687,7 +688,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-boolean"
+                class="flex-grow rjsf-field rjsf-field-boolean"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-boolean"
@@ -730,7 +731,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-array"
+                class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -758,10 +759,10 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                         class="rjsf-array-item-list"
                       >
                         <fieldset
-                          class="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+                          class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
                         >
                           <div
-                            class="rjsf-field rjsf-field-string"
+                            class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
                               class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -792,12 +793,12 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                                   <span
                                     class="label-text"
                                   >
-                                    tags-0
+                                    tags-1
                                   </span>
                                 </label>
                                 <input
                                   aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
-                                  class="input input-bordered"
+                                  class="input input-bordered w-full"
                                   id="root_tags_0"
                                   name="root[tags][0]"
                                   placeholder=""
@@ -816,7 +817,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                             </div>
                           </div>
                           <div
-                            class="flex justify-end mt-2"
+                            class="flex justify-end mt-5"
                           >
                             <div
                               class="join"
@@ -889,10 +890,10 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                           </div>
                         </fieldset>
                         <fieldset
-                          class="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+                          class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-9"
                         >
                           <div
-                            class="rjsf-field rjsf-field-string"
+                            class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
                               class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -923,12 +924,12 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                                   <span
                                     class="label-text"
                                   >
-                                    tags-1
+                                    tags-2
                                   </span>
                                 </label>
                                 <input
                                   aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
-                                  class="input input-bordered"
+                                  class="input input-bordered w-full"
                                   id="root_tags_1"
                                   name="root[tags][1]"
                                   placeholder=""
@@ -947,7 +948,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                             </div>
                           </div>
                           <div
-                            class="flex justify-end mt-2"
+                            class="flex justify-end mt-5"
                           >
                             <div
                               class="join"
@@ -1094,7 +1095,7 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -1109,7 +1110,7 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -1140,7 +1141,7 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
                     </label>
                     <input
                       aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_firstName"
                       name="root[firstName]"
                       placeholder=""
@@ -1162,7 +1163,7 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -1193,7 +1194,7 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
                     </label>
                     <input
                       aria-describedby="root_lastName__error root_lastName__description root_lastName__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_lastName"
                       name="root[lastName]"
                       placeholder=""
@@ -1215,7 +1216,7 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-number"
+                class="flex-grow rjsf-field rjsf-field-number"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-number"
@@ -1246,7 +1247,7 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
                     </label>
                     <input
                       aria-describedby="root_age__error root_age__description root_age__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_age"
                       name="root[age]"
                       placeholder=""
@@ -1294,7 +1295,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -1309,7 +1310,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-object"
+                class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -1337,7 +1338,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-string"
+                          class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
                             class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -1368,7 +1369,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                               </label>
                               <input
                                 aria-describedby="root_person_name__error root_person_name__description root_person_name__help"
-                                class="input input-bordered"
+                                class="input input-bordered w-full"
                                 id="root_person_name"
                                 name="root.person.name"
                                 placeholder=""
@@ -1390,7 +1391,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                         class=""
                       >
                         <div
-                          class="rjsf-field rjsf-field-object"
+                          class="flex-grow rjsf-field rjsf-field-object"
                         >
                           <div
                             class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -1418,7 +1419,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                   class=""
                                 >
                                   <div
-                                    class="rjsf-field rjsf-field-string"
+                                    class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
                                       class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -1449,7 +1450,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                         </label>
                                         <input
                                           aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
-                                          class="input input-bordered"
+                                          class="input input-bordered w-full"
                                           id="root_person_address_street"
                                           name="root.person.address.street"
                                           placeholder=""
@@ -1471,7 +1472,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                   class=""
                                 >
                                   <div
-                                    class="rjsf-field rjsf-field-string"
+                                    class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
                                       class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -1502,7 +1503,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                         </label>
                                         <input
                                           aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
-                                          class="input input-bordered"
+                                          class="input input-bordered w-full"
                                           id="root_person_address_city"
                                           name="root.person.address.city"
                                           placeholder=""
@@ -1573,7 +1574,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -1588,7 +1589,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -1619,7 +1620,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                     </label>
                     <input
                       aria-describedby="root_name__error root_name__description root_name__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_name"
                       name="root.name"
                       placeholder=""
@@ -1641,7 +1642,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-number"
+                class="flex-grow rjsf-field rjsf-field-number"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-number"
@@ -1672,7 +1673,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                     </label>
                     <input
                       aria-describedby="root_count__error root_count__description root_count__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_count"
                       name="root.count"
                       placeholder=""
@@ -1695,7 +1696,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-array"
+                class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -1723,10 +1724,10 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                         class="rjsf-array-item-list"
                       >
                         <fieldset
-                          class="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+                          class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
                         >
                           <div
-                            class="rjsf-field rjsf-field-string"
+                            class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
                               class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -1757,12 +1758,12 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                                   <span
                                     class="label-text"
                                   >
-                                    items-0
+                                    items-1
                                   </span>
                                 </label>
                                 <input
                                   aria-describedby="root_items_0__error root_items_0__description root_items_0__help"
-                                  class="input input-bordered"
+                                  class="input input-bordered w-full"
                                   id="root_items_0"
                                   name="root.items.0"
                                   placeholder=""
@@ -1781,7 +1782,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                             </div>
                           </div>
                           <div
-                            class="flex justify-end mt-2"
+                            class="flex justify-end mt-5"
                           >
                             <div
                               class="join"
@@ -1854,10 +1855,10 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                           </div>
                         </fieldset>
                         <fieldset
-                          class="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+                          class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-9"
                         >
                           <div
-                            class="rjsf-field rjsf-field-string"
+                            class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
                               class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -1888,12 +1889,12 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                                   <span
                                     class="label-text"
                                   >
-                                    items-1
+                                    items-2
                                   </span>
                                 </label>
                                 <input
                                   aria-describedby="root_items_1__error root_items_1__description root_items_1__help"
-                                  class="input input-bordered"
+                                  class="input input-bordered w-full"
                                   id="root_items_1"
                                   name="root.items.1"
                                   placeholder=""
@@ -1912,7 +1913,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                             </div>
                           </div>
                           <div
-                            class="flex justify-end mt-2"
+                            class="flex justify-end mt-5"
                           >
                             <div
                               class="join"
@@ -2059,7 +2060,7 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -2074,7 +2075,7 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -2105,7 +2106,7 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
                     </label>
                     <input
                       aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_firstName"
                       name="root.firstName"
                       placeholder=""
@@ -2127,7 +2128,7 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -2158,7 +2159,7 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
                     </label>
                     <input
                       aria-describedby="root_lastName__error root_lastName__description root_lastName__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_lastName"
                       name="root.lastName"
                       placeholder=""
@@ -2180,7 +2181,7 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-number"
+                class="flex-grow rjsf-field rjsf-field-number"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-number"
@@ -2211,7 +2212,7 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
                     </label>
                     <input
                       aria-describedby="root_age__error root_age__description root_age__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_age"
                       name="root.age"
                       placeholder=""
@@ -2259,7 +2260,7 @@ exports[`object fields additionalProperties 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -2327,7 +2328,7 @@ exports[`object fields additionalProperties 1`] = `
                       </label>
                       <input
                         aria-describedby="root_foo__error root_foo__description root_foo__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_foo"
                         name="root_foo"
                         placeholder=""
@@ -2344,7 +2345,807 @@ exports[`object fields additionalProperties 1`] = `
                     </div>
                   </div>
                   <div
-                    class="flex self-center"
+                    class="flex self-start"
+                    style="margin-top: 32px;"
+                  >
+                    <button
+                      aria-label="Remove"
+                      class="rjsf-object-property-remove"
+                      id="root_foo__remove"
+                      title="Remove"
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="svg-inline--fa fa-trash h-5 w-5"
+                        data-icon="trash"
+                        data-prefix="fas"
+                        role="img"
+                        viewBox="0 0 448 512"
+                      >
+                        <path
+                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="flex justify-end"
+            >
+              <div
+                class="row"
+              >
+                <p
+                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                >
+                  <button
+                    aria-label="Add"
+                    class="btn-add col-xs-12 btn-primary btn-primary-content"
+                    id="root__add"
+                    title="Add"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="svg-inline--fa fa-plus h-5 w-5"
+                      data-icon="plus"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 448 512"
+                    >
+                      <path
+                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, array type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-object"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-object"
+      >
+        <div
+          class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+        >
+          <div
+            class="grid grid-cols-1 gap-4 "
+          >
+            <div
+              class=""
+            >
+              <div
+                class="wrap-if-additional-template rjsf-field rjsf-field-array"
+              >
+                <div
+                  class="flex items-baseline"
+                  style="justify-content: space-between;"
+                >
+                  <div>
+                    <label
+                      class="label"
+                      for="root_foo-key"
+                    >
+                      <span
+                        class="label-text"
+                      >
+                        foo Key
+                      </span>
+                    </label>
+                    <input
+                      class="input input-bordered"
+                      id="root_foo-key"
+                      type="text"
+                      value="foo"
+                    />
+                  </div>
+                  <div
+                    class="field-template mb-3 rjsf-field rjsf-field-array"
+                  >
+                    <label
+                      class="label"
+                      for="root_foo"
+                    >
+                      <span
+                        class="label-text font-medium"
+                      >
+                        foo
+                      </span>
+                    </label>
+                    <div
+                      class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                    >
+                      <div
+                        class="title-field mb-6"
+                        id="root_foo__title"
+                      >
+                        <h2
+                          class="text-3xl font-bold text-primary mb-2"
+                        >
+                          foo
+                        </h2>
+                        <div
+                          class="divider divider-primary my-0"
+                        />
+                      </div>
+                      <div
+                        class="flex flex-col gap-4"
+                      >
+                        <div
+                          class="rjsf-array-item-list"
+                        >
+                          <div
+                            class="text-center italic text-base-content/70"
+                          >
+                            No items yet. Use the button below to add some.
+                          </div>
+                        </div>
+                        <div
+                          class="flex justify-end"
+                        >
+                          <div
+                            class="row"
+                          >
+                            <p
+                              class="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add btn btn-primary btn-sm"
+                            >
+                              <button
+                                aria-label="Add"
+                                class="btn-add col-xs-12 btn-primary btn-primary-content"
+                                id="root_foo__add"
+                                title="Add"
+                                type="button"
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  class="svg-inline--fa fa-plus h-5 w-5"
+                                  data-icon="plus"
+                                  data-prefix="fas"
+                                  role="img"
+                                  viewBox="0 0 448 512"
+                                >
+                                  <path
+                                    d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="rjsf-field-error-template text-red-600"
+                    >
+                      <ul
+                        class="list-disc list-inside"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="flex self-start"
+                    style="margin-top: 32px;"
+                  >
+                    <button
+                      aria-label="Remove"
+                      class="rjsf-object-property-remove"
+                      id="root_foo__remove"
+                      title="Remove"
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="svg-inline--fa fa-trash h-5 w-5"
+                        data-icon="trash"
+                        data-prefix="fas"
+                        role="img"
+                        viewBox="0 0 448 512"
+                      >
+                        <path
+                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="flex justify-end"
+            >
+              <div
+                class="row"
+              >
+                <p
+                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                >
+                  <button
+                    aria-label="Add"
+                    class="btn-add col-xs-12 btn-primary btn-primary-content"
+                    id="root__add"
+                    title="Add"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="svg-inline--fa fa-plus h-5 w-5"
+                      data-icon="plus"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 448 512"
+                    >
+                      <path
+                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, description 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-object"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-object"
+      >
+        <div
+          class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+        >
+          <div
+            class="grid grid-cols-1 gap-4 "
+          >
+            <div
+              class=""
+            >
+              <div
+                class="wrap-if-additional-template rjsf-field rjsf-field-string"
+              >
+                <div
+                  class="flex items-baseline"
+                  style="justify-content: space-between;"
+                >
+                  <div>
+                    <label
+                      class="label"
+                      for="root_foo-key"
+                    >
+                      <span
+                        class="label-text"
+                      >
+                        foo Key
+                      </span>
+                    </label>
+                    <input
+                      class="input input-bordered"
+                      id="root_foo-key"
+                      type="text"
+                      value="foo"
+                    />
+                  </div>
+                  <div
+                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                  >
+                    <label
+                      class="label"
+                      for="root_foo"
+                    >
+                      <span
+                        class="label-text font-medium"
+                      >
+                        foo
+                      </span>
+                    </label>
+                    <div
+                      class="form-control"
+                    >
+                      <label
+                        class="label hidden"
+                        for="root_foo"
+                        style="display: none;"
+                      >
+                        <span
+                          class="label-text"
+                        >
+                          foo
+                        </span>
+                      </label>
+                      <input
+                        aria-describedby="root_foo__error root_foo__description root_foo__help"
+                        class="input input-bordered w-full"
+                        id="root_foo"
+                        name="root_foo"
+                        placeholder=""
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
+                    <div
+                      class="description-field my-4"
+                      id="root_foo__description"
+                    >
+                      <div
+                        class="text-sm text-base-content/80"
+                      >
+                        item description
+                      </div>
+                    </div>
+                    <div
+                      class="rjsf-field-error-template text-red-600"
+                    >
+                      <ul
+                        class="list-disc list-inside"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="flex self-start"
+                    style="margin-top: 32px;"
+                  >
+                    <button
+                      aria-label="Remove"
+                      class="rjsf-object-property-remove"
+                      id="root_foo__remove"
+                      title="Remove"
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="svg-inline--fa fa-trash h-5 w-5"
+                        data-icon="trash"
+                        data-prefix="fas"
+                        role="img"
+                        viewBox="0 0 448 512"
+                      >
+                        <path
+                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="flex justify-end"
+            >
+              <div
+                class="row"
+              >
+                <p
+                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                >
+                  <button
+                    aria-label="Add"
+                    class="btn-add col-xs-12 btn-primary btn-primary-content"
+                    id="root__add"
+                    title="Add"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="svg-inline--fa fa-plus h-5 w-5"
+                      data-icon="plus"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 448 512"
+                    >
+                      <path
+                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, label off 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-object"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-object"
+      >
+        <div
+          class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+        >
+          <div
+            class="grid grid-cols-1 gap-4 "
+          >
+            <div
+              class=""
+            >
+              <div
+                class="wrap-if-additional-template rjsf-field rjsf-field-string"
+              >
+                <div
+                  class="flex items-baseline"
+                  style="justify-content: space-between;"
+                >
+                  <div>
+                    <label
+                      class="label"
+                      for="root_foo-key"
+                    >
+                      <span
+                        class="label-text"
+                      >
+                        foo Key
+                      </span>
+                    </label>
+                    <input
+                      class="input input-bordered"
+                      id="root_foo-key"
+                      type="text"
+                      value="foo"
+                    />
+                  </div>
+                  <div
+                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                  >
+                    <label
+                      class="label"
+                      for="root_foo"
+                    >
+                      <span
+                        class="label-text font-medium"
+                      >
+                        foo
+                      </span>
+                    </label>
+                    <div
+                      class="form-control"
+                    >
+                      <label
+                        class="label hidden"
+                        for="root_foo"
+                        style="display: none;"
+                      >
+                        <span
+                          class="label-text"
+                        >
+                          foo
+                        </span>
+                      </label>
+                      <input
+                        aria-describedby="root_foo__error root_foo__description root_foo__help"
+                        class="input input-bordered w-full"
+                        id="root_foo"
+                        name="root_foo"
+                        placeholder=""
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
+                    <div
+                      class="rjsf-field-error-template text-red-600"
+                    >
+                      <ul
+                        class="list-disc list-inside"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="flex self-start"
+                    style="margin-top: 32px;"
+                  >
+                    <button
+                      aria-label="Remove"
+                      class="rjsf-object-property-remove"
+                      id="root_foo__remove"
+                      title="Remove"
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="svg-inline--fa fa-trash h-5 w-5"
+                        data-icon="trash"
+                        data-prefix="fas"
+                        role="img"
+                        viewBox="0 0 448 512"
+                      >
+                        <path
+                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="flex justify-end"
+            >
+              <div
+                class="row"
+              >
+                <p
+                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                >
+                  <button
+                    aria-label="Add"
+                    class="btn-add col-xs-12 btn-primary btn-primary-content"
+                    id="root__add"
+                    title="Add"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="svg-inline--fa fa-plus h-5 w-5"
+                      data-icon="plus"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 448 512"
+                    >
+                      <path
+                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, object type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-object"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-object"
+      >
+        <div
+          class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+        >
+          <div
+            class="grid grid-cols-1 gap-4 "
+          >
+            <div
+              class=""
+            >
+              <div
+                class="wrap-if-additional-template rjsf-field rjsf-field-object"
+              >
+                <div
+                  class="flex items-baseline"
+                  style="justify-content: space-between;"
+                >
+                  <div>
+                    <label
+                      class="label"
+                      for="root_foo-key"
+                    >
+                      <span
+                        class="label-text"
+                      >
+                        foo Key
+                      </span>
+                    </label>
+                    <input
+                      class="input input-bordered"
+                      id="root_foo-key"
+                      type="text"
+                      value="foo"
+                    />
+                  </div>
+                  <div
+                    class="field-template mb-3 rjsf-field rjsf-field-object"
+                  >
+                    <label
+                      class="label"
+                      for="root_foo"
+                    >
+                      <span
+                        class="label-text font-medium"
+                      >
+                        foo
+                      </span>
+                    </label>
+                    <div
+                      class="form-control "
+                    >
+                      <div
+                        class="title-field mb-6"
+                        id="root_foo__title"
+                      >
+                        <h2
+                          class="text-3xl font-bold text-primary mb-2"
+                        >
+                          foo
+                        </h2>
+                        <div
+                          class="divider divider-primary my-0"
+                        />
+                      </div>
+                      <div
+                        class="grid grid-cols-1 gap-4 mb-4"
+                      >
+                        <div
+                          class=""
+                        >
+                          <div
+                            class="flex-grow rjsf-field rjsf-field-string"
+                          >
+                            <div
+                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                            >
+                              <label
+                                class="label"
+                                for="root_foo_foo"
+                              >
+                                <span
+                                  class="label-text font-medium"
+                                >
+                                  foo
+                                </span>
+                              </label>
+                              <div
+                                class="form-control"
+                              >
+                                <label
+                                  class="label hidden"
+                                  for="root_foo_foo"
+                                  style="display: none;"
+                                >
+                                  <span
+                                    class="label-text"
+                                  >
+                                    foo
+                                  </span>
+                                </label>
+                                <input
+                                  aria-describedby="root_foo_foo__error root_foo_foo__description root_foo_foo__help"
+                                  class="input input-bordered w-full"
+                                  id="root_foo_foo"
+                                  name="root_foo_foo"
+                                  placeholder=""
+                                  type="text"
+                                  value=""
+                                />
+                              </div>
+                              <div
+                                class="rjsf-field-error-template text-red-600"
+                              >
+                                <ul
+                                  class="list-disc list-inside"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="rjsf-field-error-template text-red-600"
+                    >
+                      <ul
+                        class="list-disc list-inside"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="flex self-start"
+                    style="margin-top: 32px;"
                   >
                     <button
                       aria-label="Remove"
@@ -2433,7 +3234,7 @@ exports[`object fields object 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -2448,7 +3249,7 @@ exports[`object fields object 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -2479,7 +3280,7 @@ exports[`object fields object 1`] = `
                     </label>
                     <input
                       aria-describedby="root_a__error root_a__description root_a__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_a"
                       name="root_a"
                       placeholder=""
@@ -2501,7 +3302,7 @@ exports[`object fields object 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-number"
+                class="flex-grow rjsf-field rjsf-field-number"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-number"
@@ -2532,7 +3333,7 @@ exports[`object fields object 1`] = `
                     </label>
                     <input
                       aria-describedby="root_b__error root_b__description root_b__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_b"
                       name="root_b"
                       placeholder=""
@@ -2580,7 +3381,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -2648,7 +3449,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                       </label>
                       <input
                         aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_additionalProperty"
                         name="root_additionalProperty"
                         placeholder=""
@@ -2665,7 +3466,8 @@ exports[`object fields show add button and fields if additionalProperties is tru
                     </div>
                   </div>
                   <div
-                    class="flex self-center"
+                    class="flex self-start"
+                    style="margin-top: 32px;"
                   >
                     <button
                       aria-label="Remove"
@@ -2754,7 +3556,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -2845,7 +3647,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                       </label>
                       <input
                         aria-describedby="root_foo__error root_foo__description root_foo__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_foo"
                         name="root_foo"
                         placeholder=""
@@ -2862,7 +3664,8 @@ exports[`object fields with title and description additionalProperties 1`] = `
                     </div>
                   </div>
                   <div
-                    class="flex self-center"
+                    class="flex self-start"
+                    style="margin-top: 32px;"
                   >
                     <button
                       aria-label="Remove"
@@ -2951,7 +3754,7 @@ exports[`object fields with title and description from both additionalProperties
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -3042,7 +3845,7 @@ exports[`object fields with title and description from both additionalProperties
                       </label>
                       <input
                         aria-describedby="root_foo__error root_foo__description root_foo__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_foo"
                         name="root_foo"
                         placeholder=""
@@ -3059,7 +3862,8 @@ exports[`object fields with title and description from both additionalProperties
                     </div>
                   </div>
                   <div
-                    class="flex self-center"
+                    class="flex self-start"
+                    style="margin-top: 32px;"
                   >
                     <button
                       aria-label="Remove"
@@ -3148,7 +3952,7 @@ exports[`object fields with title and description from both object 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -3186,7 +3990,7 @@ exports[`object fields with title and description from both object 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -3217,13 +4021,23 @@ exports[`object fields with title and description from both object 1`] = `
                     </label>
                     <input
                       aria-describedby="root_a__error root_a__description root_a__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_a"
                       name="root_a"
                       placeholder=""
                       type="text"
                       value=""
                     />
+                  </div>
+                  <div
+                    class="description-field my-4"
+                    id="root_a__description"
+                  >
+                    <div
+                      class="text-sm text-base-content/80"
+                    >
+                      a fancier item A description
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -3239,7 +4053,7 @@ exports[`object fields with title and description from both object 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-number"
+                class="flex-grow rjsf-field rjsf-field-number"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-number"
@@ -3270,7 +4084,7 @@ exports[`object fields with title and description from both object 1`] = `
                     </label>
                     <input
                       aria-describedby="root_b__error root_b__description root_b__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_b"
                       name="root_b"
                       placeholder=""
@@ -3278,6 +4092,16 @@ exports[`object fields with title and description from both object 1`] = `
                       type="number"
                       value=""
                     />
+                  </div>
+                  <div
+                    class="description-field my-4"
+                    id="root_b__description"
+                  >
+                    <div
+                      class="text-sm text-base-content/80"
+                    >
+                      a fancier item B description
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -3318,7 +4142,7 @@ exports[`object fields with title and description from uiSchema additionalProper
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -3409,7 +4233,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                       </label>
                       <input
                         aria-describedby="root_foo__error root_foo__description root_foo__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_foo"
                         name="root_foo"
                         placeholder=""
@@ -3426,7 +4250,8 @@ exports[`object fields with title and description from uiSchema additionalProper
                     </div>
                   </div>
                   <div
-                    class="flex self-center"
+                    class="flex self-start"
+                    style="margin-top: 32px;"
                   >
                     <button
                       aria-label="Remove"
@@ -3515,7 +4340,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -3553,7 +4378,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -3584,13 +4409,23 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                     </label>
                     <input
                       aria-describedby="root_a__error root_a__description root_a__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_a"
                       name="root_a"
                       placeholder=""
                       type="text"
                       value=""
                     />
+                  </div>
+                  <div
+                    class="description-field my-4"
+                    id="root_a__description"
+                  >
+                    <div
+                      class="text-sm text-base-content/80"
+                    >
+                      a fancier item A description
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -3606,7 +4441,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-number"
+                class="flex-grow rjsf-field rjsf-field-number"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-number"
@@ -3637,7 +4472,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                     </label>
                     <input
                       aria-describedby="root_b__error root_b__description root_b__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_b"
                       name="root_b"
                       placeholder=""
@@ -3645,6 +4480,16 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                       type="number"
                       value=""
                     />
+                  </div>
+                  <div
+                    class="description-field my-4"
+                    id="root_b__description"
+                  >
+                    <div
+                      class="text-sm text-base-content/80"
+                    >
+                      a fancier item B description
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -3685,7 +4530,7 @@ exports[`object fields with title and description from uiSchema show add button 
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -3776,7 +4621,7 @@ exports[`object fields with title and description from uiSchema show add button 
                       </label>
                       <input
                         aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_additionalProperty"
                         name="root_additionalProperty"
                         placeholder=""
@@ -3793,7 +4638,8 @@ exports[`object fields with title and description from uiSchema show add button 
                     </div>
                   </div>
                   <div
-                    class="flex self-center"
+                    class="flex self-start"
+                    style="margin-top: 32px;"
                   >
                     <button
                       aria-label="Remove"
@@ -3882,7 +4728,7 @@ exports[`object fields with title and description object 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -3920,7 +4766,7 @@ exports[`object fields with title and description object 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -3951,13 +4797,23 @@ exports[`object fields with title and description object 1`] = `
                     </label>
                     <input
                       aria-describedby="root_a__error root_a__description root_a__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_a"
                       name="root_a"
                       placeholder=""
                       type="text"
                       value=""
                     />
+                  </div>
+                  <div
+                    class="description-field my-4"
+                    id="root_a__description"
+                  >
+                    <div
+                      class="text-sm text-base-content/80"
+                    >
+                      A description
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -3973,7 +4829,7 @@ exports[`object fields with title and description object 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-number"
+                class="flex-grow rjsf-field rjsf-field-number"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-number"
@@ -4004,7 +4860,7 @@ exports[`object fields with title and description object 1`] = `
                     </label>
                     <input
                       aria-describedby="root_b__error root_b__description root_b__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_b"
                       name="root_b"
                       placeholder=""
@@ -4012,6 +4868,16 @@ exports[`object fields with title and description object 1`] = `
                       type="number"
                       value=""
                     />
+                  </div>
+                  <div
+                    class="description-field my-4"
+                    id="root_b__description"
+                  >
+                    <div
+                      class="text-sm text-base-content/80"
+                    >
+                      B description
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -4052,7 +4918,7 @@ exports[`object fields with title and description show add button and fields if 
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -4143,7 +5009,7 @@ exports[`object fields with title and description show add button and fields if 
                       </label>
                       <input
                         aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_additionalProperty"
                         name="root_additionalProperty"
                         placeholder=""
@@ -4160,7 +5026,8 @@ exports[`object fields with title and description show add button and fields if 
                     </div>
                   </div>
                   <div
-                    class="flex self-center"
+                    class="flex self-start"
+                    style="margin-top: 32px;"
                   >
                     <button
                       aria-label="Remove"
@@ -4249,7 +5116,7 @@ exports[`object fields with title and description with global label off addition
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -4271,16 +5138,6 @@ exports[`object fields with title and description with global label off addition
                   style="justify-content: space-between;"
                 >
                   <div>
-                    <label
-                      class="label"
-                      for="root_foo-key"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        foo Key
-                      </span>
-                    </label>
                     <input
                       class="input input-bordered"
                       id="root_foo-key"
@@ -4307,7 +5164,7 @@ exports[`object fields with title and description with global label off addition
                       </label>
                       <input
                         aria-describedby="root_foo__error root_foo__description root_foo__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_foo"
                         name="root_foo"
                         placeholder=""
@@ -4324,7 +5181,8 @@ exports[`object fields with title and description with global label off addition
                     </div>
                   </div>
                   <div
-                    class="flex self-center"
+                    class="flex self-start"
+                    style="margin-top: 10px;"
                   >
                     <button
                       aria-label="Remove"
@@ -4413,7 +5271,7 @@ exports[`object fields with title and description with global label off object 1
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -4428,7 +5286,7 @@ exports[`object fields with title and description with global label off object 1
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -4449,7 +5307,7 @@ exports[`object fields with title and description with global label off object 1
                     </label>
                     <input
                       aria-describedby="root_a__error root_a__description root_a__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_a"
                       name="root_a"
                       placeholder=""
@@ -4471,7 +5329,7 @@ exports[`object fields with title and description with global label off object 1
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-number"
+                class="flex-grow rjsf-field rjsf-field-number"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-number"
@@ -4492,7 +5350,7 @@ exports[`object fields with title and description with global label off object 1
                     </label>
                     <input
                       aria-describedby="root_b__error root_b__description root_b__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_b"
                       name="root_b"
                       placeholder=""
@@ -4540,7 +5398,7 @@ exports[`object fields with title and description with global label off show add
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -4562,16 +5420,6 @@ exports[`object fields with title and description with global label off show add
                   style="justify-content: space-between;"
                 >
                   <div>
-                    <label
-                      class="label"
-                      for="root_additionalProperty-key"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        additionalProperty Key
-                      </span>
-                    </label>
                     <input
                       class="input input-bordered"
                       id="root_additionalProperty-key"
@@ -4598,7 +5446,7 @@ exports[`object fields with title and description with global label off show add
                       </label>
                       <input
                         aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_additionalProperty"
                         name="root_additionalProperty"
                         placeholder=""
@@ -4615,7 +5463,8 @@ exports[`object fields with title and description with global label off show add
                     </div>
                   </div>
                   <div
-                    class="flex self-center"
+                    class="flex self-start"
+                    style="margin-top: 10px;"
                   >
                     <button
                       aria-label="Remove"

@@ -72,7 +72,7 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 
 ## allOf
 
-When `allOf` is specified in a schema, react-jsonschema-form uses the [json-schema-merge-allof](https://github.com/mokkabonna/json-schema-merge-allof) library to merge the specified subschemas to create a combined subschema that is valid. For example, the below schema evaluates to a combined subschema of `{type: "boolean"}`:
+When `allOf` is specified in a schema, react-jsonschema-form uses the [@x0k/json-schema-merge](https://github.com/x0k/json-schema-merge/) library to merge the specified subschemas to create a combined subschema that is valid. For example, the below schema evaluates to a combined subschema of `{type: "boolean"}`:
 
 ```tsx
 import { RJSFSchema } from '@rjsf/utils';

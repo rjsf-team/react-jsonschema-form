@@ -39,7 +39,7 @@ export default function PasswordWidget<
     onFocus,
   } = props;
 
-  const emptyValue = options.emptyValue || '';
+  const emptyValue = options.emptyValue;
   const themeProps = cleanupOptions(options);
 
   const handleChange = useCallback(

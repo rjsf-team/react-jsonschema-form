@@ -26,7 +26,14 @@ describe('compileSchemaValidatorsCode()', () => {
         code: { source: true, lines: true },
         schemas,
       };
-      expect(createAjvInstance).toHaveBeenCalledWith(undefined, undefined, expectedCompileOpts, undefined, undefined);
+      expect(createAjvInstance).toHaveBeenCalledWith(
+        undefined,
+        undefined,
+        expectedCompileOpts,
+        undefined,
+        undefined,
+        undefined,
+      );
     });
     it('generates the expected output', () => {
       expect(generatedCode).toBe(expectedCode);
@@ -53,6 +60,7 @@ describe('compileSchemaValidatorsCode()', () => {
         ajvOptionsOverrides = {},
         ajvFormatOptions,
         AjvClass,
+        extenderFn,
       } = CUSTOM_OPTIONS;
       const expectedCompileOpts = {
         ...ajvOptionsOverrides,
@@ -65,6 +73,7 @@ describe('compileSchemaValidatorsCode()', () => {
         expectedCompileOpts,
         ajvFormatOptions,
         AjvClass,
+        extenderFn,
       );
     });
     it('generates expected output', () => {

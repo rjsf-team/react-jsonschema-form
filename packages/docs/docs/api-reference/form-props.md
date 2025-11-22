@@ -284,7 +284,7 @@ NOTE: If there is a default for a field and the `formData` is unspecified, the d
 
 ## experimental_customMergeAllOf
 
-The `experimental_customMergeAllOf` function allows you to provide a custom implementation for merging `allOf` schemas. This can be particularly useful in scenarios where the default [json-schema-merge-allof](https://github.com/mokkabonna/json-schema-merge-allof) library becomes a performance bottleneck, especially with large and complex schemas or doesn't satisfy your needs.
+The `experimental_customMergeAllOf` function allows you to provide a custom implementation for merging `allOf` schemas. This can be particularly useful in case the where the default merge library ([@x0k/json-schema-merge](https://github.com/x0k/json-schema-merge/)) doesn't satisfy your functional or performance requirements.
 
 By providing your own implementation, you can potentially achieve significant performance improvements. For instance, if your use case only requires a subset of JSON Schema features, you can implement a faster, more tailored merging strategy.
 

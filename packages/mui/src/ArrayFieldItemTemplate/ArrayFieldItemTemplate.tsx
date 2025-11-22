@@ -20,7 +20,7 @@ export default function ArrayFieldItemTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: ArrayFieldItemTemplateProps<T, S, F>) {
-  const { children, buttonsProps, hasToolbar, uiSchema, registry } = props;
+  const { children, buttonsProps, hasDescription, hasToolbar, uiSchema, registry } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(
     'ArrayFieldItemButtonsTemplate',
@@ -44,7 +44,7 @@ export default function ArrayFieldItemTemplate<
         </Box>
       </Grid>
       {hasToolbar && (
-        <Grid>
+        <Grid sx={{ mt: hasDescription ? -5 : -1.5 }}>
           <ArrayFieldItemButtonsTemplate {...buttonsProps} style={btnStyle} />
         </Grid>
       )}

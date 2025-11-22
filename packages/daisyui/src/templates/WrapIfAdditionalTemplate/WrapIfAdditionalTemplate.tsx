@@ -24,6 +24,7 @@ export default function WrapIfAdditionalTemplate<
     disabled,
     id,
     label,
+    displayLabel,
     readonly,
     required,
     schema,
@@ -31,6 +32,7 @@ export default function WrapIfAdditionalTemplate<
     onKeyRename,
     onKeyRenameBlur,
     onRemoveProperty,
+    rawDescription,
     registry,
     ...rest
   } = props;
@@ -40,18 +42,22 @@ export default function WrapIfAdditionalTemplate<
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
+  const marginDesc = rawDescription ? 10 : 0;
+  const margin = displayLabel ? 32 + marginDesc : 10;
 
   if (!additional) {
-    return <div className={classNames}>{children}</div>;
+    return <div className={`flex-grow ${classNames}`}>{children}</div>;
   }
 
   return (
     <div className={`wrap-if-additional-template ${classNames}`} {...rest}>
       <div className='flex items-baseline' style={{ justifyContent: 'space-between' }}>
         <div>
-          <label htmlFor={`${id}-key`} className='label'>
-            <span className='label-text'>{keyLabel}</span>
-          </label>
+          {displayLabel && (
+            <label htmlFor={`${id}-key`} className='label'>
+              <span className='label-text'>{keyLabel}</span>
+            </label>
+          )}
           <input
             type='text'
             className='input input-bordered'
@@ -62,7 +68,7 @@ export default function WrapIfAdditionalTemplate<
           />
         </div>
         {children}
-        <div className='flex self-center'>
+        <div className='flex self-start' style={{ marginTop: `${margin}px` }}>
           <RemoveButton
             id={buttonId(id, 'remove')}
             className='rjsf-object-property-remove'

@@ -6,7 +6,7 @@ exports[`array fields array 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -88,7 +88,7 @@ exports[`array fields array icons 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -103,10 +103,10 @@ exports[`array fields array icons 1`] = `
               class="rjsf-array-item-list"
             >
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
               >
                 <div
-                  class="rjsf-field rjsf-field-string"
+                  class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -139,7 +139,7 @@ exports[`array fields array icons 1`] = `
                       </label>
                       <input
                         aria-describedby="root_0__error root_0__description root_0__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_0"
                         name="root_0"
                         placeholder=""
@@ -158,7 +158,7 @@ exports[`array fields array icons 1`] = `
                   </div>
                 </div>
                 <div
-                  class="flex justify-end mt-2"
+                  class="flex justify-end mt-5"
                 >
                   <div
                     class="join"
@@ -252,10 +252,10 @@ exports[`array fields array icons 1`] = `
                 </div>
               </fieldset>
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-9"
               >
                 <div
-                  class="rjsf-field rjsf-field-string"
+                  class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -288,7 +288,7 @@ exports[`array fields array icons 1`] = `
                       </label>
                       <input
                         aria-describedby="root_1__error root_1__description root_1__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_1"
                         name="root_1"
                         placeholder=""
@@ -307,7 +307,7 @@ exports[`array fields array icons 1`] = `
                   </div>
                 </div>
                 <div
-                  class="flex justify-end mt-2"
+                  class="flex justify-end mt-5"
                 >
                   <div
                     class="join"
@@ -463,7 +463,7 @@ exports[`array fields checkboxes 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -588,7 +588,7 @@ exports[`array fields empty errors array 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -603,7 +603,7 @@ exports[`array fields empty errors array 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -634,7 +634,7 @@ exports[`array fields empty errors array 1`] = `
                     </label>
                     <input
                       aria-describedby="root_name__error root_name__description root_name__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_name"
                       name="root_name"
                       placeholder=""
@@ -681,7 +681,7 @@ exports[`array fields fixed array 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -696,10 +696,10 @@ exports[`array fields fixed array 1`] = `
               class="rjsf-array-item-list"
             >
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
               >
                 <div
-                  class="rjsf-field rjsf-field-string"
+                  class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -732,7 +732,7 @@ exports[`array fields fixed array 1`] = `
                       </label>
                       <input
                         aria-describedby="root_0__error root_0__description root_0__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_0"
                         name="root_0"
                         placeholder=""
@@ -752,10 +752,10 @@ exports[`array fields fixed array 1`] = `
                 </div>
               </fieldset>
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-9"
               >
                 <div
-                  class="rjsf-field rjsf-field-number"
+                  class="flex-grow rjsf-field rjsf-field-number"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-number"
@@ -788,7 +788,7 @@ exports[`array fields fixed array 1`] = `
                       </label>
                       <input
                         aria-describedby="root_1__error root_1__description root_1__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_1"
                         name="root_1"
                         placeholder=""
@@ -849,7 +849,7 @@ exports[`array fields has errors 1`] = `
       </ul>
     </div>
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -864,7 +864,7 @@ exports[`array fields has errors 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-string rjsf-field-error"
+                class="flex-grow rjsf-field rjsf-field-string rjsf-field-error"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string rjsf-field-error"
@@ -895,7 +895,7 @@ exports[`array fields has errors 1`] = `
                     </label>
                     <input
                       aria-describedby="root_name__error root_name__description root_name__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_name"
                       name="root_name"
                       placeholder=""
@@ -946,7 +946,7 @@ exports[`array fields no errors 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-object"
+      class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -961,7 +961,7 @@ exports[`array fields no errors 1`] = `
               class=""
             >
               <div
-                class="rjsf-field rjsf-field-string"
+                class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
                   class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -992,7 +992,7 @@ exports[`array fields no errors 1`] = `
                     </label>
                     <input
                       aria-describedby="root_name__error root_name__description root_name__help"
-                      class="input input-bordered"
+                      class="input input-bordered w-full"
                       id="root_name"
                       name="root_name"
                       placeholder=""
@@ -1039,7 +1039,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -1054,10 +1054,10 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
               class="rjsf-array-item-list"
             >
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
               >
                 <div
-                  class="rjsf-field rjsf-field-object"
+                  class="flex-grow rjsf-field rjsf-field-object"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -1072,7 +1072,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                           class=""
                         >
                           <div
-                            class="rjsf-field rjsf-field-string"
+                            class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
                               class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -1103,7 +1103,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                 </label>
                                 <input
                                   aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
-                                  class="input input-bordered"
+                                  class="input input-bordered w-full"
                                   id="root_0_name"
                                   name="root[0][name]"
                                   placeholder=""
@@ -1125,7 +1125,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                           class=""
                         >
                           <div
-                            class="rjsf-field rjsf-field-number"
+                            class="flex-grow rjsf-field rjsf-field-number"
                           >
                             <div
                               class="field-template mb-3 rjsf-field rjsf-field-number"
@@ -1156,7 +1156,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                 </label>
                                 <input
                                   aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
-                                  class="input input-bordered"
+                                  class="input input-bordered w-full"
                                   id="root_0_value"
                                   name="root[0][value]"
                                   placeholder=""
@@ -1187,7 +1187,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                   </div>
                 </div>
                 <div
-                  class="flex justify-end mt-2"
+                  class="flex justify-end mt-1"
                 >
                   <div
                     class="join"
@@ -1260,10 +1260,10 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                 </div>
               </fieldset>
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-9"
               >
                 <div
-                  class="rjsf-field rjsf-field-object"
+                  class="flex-grow rjsf-field rjsf-field-object"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -1278,7 +1278,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                           class=""
                         >
                           <div
-                            class="rjsf-field rjsf-field-string"
+                            class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
                               class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -1309,7 +1309,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                 </label>
                                 <input
                                   aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
-                                  class="input input-bordered"
+                                  class="input input-bordered w-full"
                                   id="root_1_name"
                                   name="root[1][name]"
                                   placeholder=""
@@ -1331,7 +1331,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                           class=""
                         >
                           <div
-                            class="rjsf-field rjsf-field-number"
+                            class="flex-grow rjsf-field rjsf-field-number"
                           >
                             <div
                               class="field-template mb-3 rjsf-field rjsf-field-number"
@@ -1362,7 +1362,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                 </label>
                                 <input
                                   aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
-                                  class="input input-bordered"
+                                  class="input input-bordered w-full"
                                   id="root_1_value"
                                   name="root[1][value]"
                                   placeholder=""
@@ -1393,7 +1393,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                   </div>
                 </div>
                 <div
-                  class="flex justify-end mt-2"
+                  class="flex justify-end mt-1"
                 >
                   <div
                     class="join"
@@ -1528,7 +1528,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -1543,10 +1543,10 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
               class="rjsf-array-item-list"
             >
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
               >
                 <div
-                  class="rjsf-field rjsf-field-string"
+                  class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -1579,7 +1579,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                       </label>
                       <input
                         aria-describedby="root_0__error root_0__description root_0__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_0"
                         name="root[0]"
                         placeholder=""
@@ -1598,7 +1598,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                   </div>
                 </div>
                 <div
-                  class="flex justify-end mt-2"
+                  class="flex justify-end mt-5"
                 >
                   <div
                     class="join"
@@ -1671,10 +1671,10 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                 </div>
               </fieldset>
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-9"
               >
                 <div
-                  class="rjsf-field rjsf-field-string"
+                  class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -1707,7 +1707,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                       </label>
                       <input
                         aria-describedby="root_1__error root_1__description root_1__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_1"
                         name="root[1]"
                         placeholder=""
@@ -1726,7 +1726,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                   </div>
                 </div>
                 <div
-                  class="flex justify-end mt-2"
+                  class="flex justify-end mt-5"
                 >
                   <div
                     class="join"
@@ -1861,7 +1861,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes with nameGenerator 1`] = 
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -1986,7 +1986,7 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -2001,10 +2001,10 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
               class="rjsf-array-item-list"
             >
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
               >
                 <div
-                  class="rjsf-field rjsf-field-string"
+                  class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -2037,7 +2037,7 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
                       </label>
                       <input
                         aria-describedby="root_0__error root_0__description root_0__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_0"
                         name="root[0]"
                         placeholder=""
@@ -2057,10 +2057,10 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
                 </div>
               </fieldset>
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4  mb-[-1px] z-9"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex  mb-[-1px] z-9"
               >
                 <div
-                  class="rjsf-field rjsf-field-number"
+                  class="flex-grow rjsf-field rjsf-field-number"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-number"
@@ -2093,7 +2093,7 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
                       </label>
                       <input
                         aria-describedby="root_1__error root_1__description root_1__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_1"
                         name="root[1]"
                         placeholder=""
@@ -2114,10 +2114,10 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
                 </div>
               </fieldset>
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-8"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-8"
               >
                 <div
-                  class="rjsf-field rjsf-field-boolean"
+                  class="flex-grow rjsf-field rjsf-field-boolean"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-boolean"
@@ -2174,7 +2174,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -2189,10 +2189,10 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
               class="rjsf-array-item-list"
             >
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
               >
                 <div
-                  class="rjsf-field rjsf-field-array"
+                  class="flex-grow rjsf-field rjsf-field-array"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -2207,10 +2207,10 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                           class="rjsf-array-item-list"
                         >
                           <fieldset
-                            class="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+                            class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
                           >
                             <div
-                              class="rjsf-field rjsf-field-string"
+                              class="flex-grow rjsf-field rjsf-field-string"
                             >
                               <div
                                 class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -2243,7 +2243,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                   </label>
                                   <input
                                     aria-describedby="root_0_0__error root_0_0__description root_0_0__help"
-                                    class="input input-bordered"
+                                    class="input input-bordered w-full"
                                     id="root_0_0"
                                     name="root[0][0]"
                                     placeholder=""
@@ -2262,7 +2262,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                               </div>
                             </div>
                             <div
-                              class="flex justify-end mt-2"
+                              class="flex justify-end mt-5"
                             >
                               <div
                                 class="join"
@@ -2335,10 +2335,10 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                             </div>
                           </fieldset>
                           <fieldset
-                            class="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+                            class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-9"
                           >
                             <div
-                              class="rjsf-field rjsf-field-string"
+                              class="flex-grow rjsf-field rjsf-field-string"
                             >
                               <div
                                 class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -2371,7 +2371,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                   </label>
                                   <input
                                     aria-describedby="root_0_1__error root_0_1__description root_0_1__help"
-                                    class="input input-bordered"
+                                    class="input input-bordered w-full"
                                     id="root_0_1"
                                     name="root[0][1]"
                                     placeholder=""
@@ -2390,7 +2390,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                               </div>
                             </div>
                             <div
-                              class="flex justify-end mt-2"
+                              class="flex justify-end mt-5"
                             >
                               <div
                                 class="join"
@@ -2508,7 +2508,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                   </div>
                 </div>
                 <div
-                  class="flex justify-end mt-2"
+                  class="flex justify-end mt-1"
                 >
                   <div
                     class="join"
@@ -2581,10 +2581,10 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                 </div>
               </fieldset>
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-9"
               >
                 <div
-                  class="rjsf-field rjsf-field-array"
+                  class="flex-grow rjsf-field rjsf-field-array"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -2599,10 +2599,10 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                           class="rjsf-array-item-list"
                         >
                           <fieldset
-                            class="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+                            class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
                           >
                             <div
-                              class="rjsf-field rjsf-field-string"
+                              class="flex-grow rjsf-field rjsf-field-string"
                             >
                               <div
                                 class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -2635,7 +2635,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                   </label>
                                   <input
                                     aria-describedby="root_1_0__error root_1_0__description root_1_0__help"
-                                    class="input input-bordered"
+                                    class="input input-bordered w-full"
                                     id="root_1_0"
                                     name="root[1][0]"
                                     placeholder=""
@@ -2654,7 +2654,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                               </div>
                             </div>
                             <div
-                              class="flex justify-end mt-2"
+                              class="flex justify-end mt-5"
                             >
                               <div
                                 class="join"
@@ -2727,10 +2727,10 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                             </div>
                           </fieldset>
                           <fieldset
-                            class="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+                            class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-9"
                           >
                             <div
-                              class="rjsf-field rjsf-field-string"
+                              class="flex-grow rjsf-field rjsf-field-string"
                             >
                               <div
                                 class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -2763,7 +2763,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                   </label>
                                   <input
                                     aria-describedby="root_1_1__error root_1_1__description root_1_1__help"
-                                    class="input input-bordered"
+                                    class="input input-bordered w-full"
                                     id="root_1_1"
                                     name="root[1][1]"
                                     placeholder=""
@@ -2782,7 +2782,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                               </div>
                             </div>
                             <div
-                              class="flex justify-end mt-2"
+                              class="flex justify-end mt-5"
                             >
                               <div
                                 class="join"
@@ -2900,7 +2900,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                   </div>
                 </div>
                 <div
-                  class="flex justify-end mt-2"
+                  class="flex justify-end mt-1"
                 >
                   <div
                     class="join"
@@ -3035,7 +3035,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -3050,10 +3050,10 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
               class="rjsf-array-item-list"
             >
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
               >
                 <div
-                  class="rjsf-field rjsf-field-object"
+                  class="flex-grow rjsf-field rjsf-field-object"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -3068,7 +3068,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                           class=""
                         >
                           <div
-                            class="rjsf-field rjsf-field-string"
+                            class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
                               class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -3099,7 +3099,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                 </label>
                                 <input
                                   aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
-                                  class="input input-bordered"
+                                  class="input input-bordered w-full"
                                   id="root_0_name"
                                   name="root.0.name"
                                   placeholder=""
@@ -3121,7 +3121,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                           class=""
                         >
                           <div
-                            class="rjsf-field rjsf-field-number"
+                            class="flex-grow rjsf-field rjsf-field-number"
                           >
                             <div
                               class="field-template mb-3 rjsf-field rjsf-field-number"
@@ -3152,7 +3152,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                 </label>
                                 <input
                                   aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
-                                  class="input input-bordered"
+                                  class="input input-bordered w-full"
                                   id="root_0_value"
                                   name="root.0.value"
                                   placeholder=""
@@ -3183,7 +3183,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                   </div>
                 </div>
                 <div
-                  class="flex justify-end mt-2"
+                  class="flex justify-end mt-1"
                 >
                   <div
                     class="join"
@@ -3256,10 +3256,10 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                 </div>
               </fieldset>
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-9"
               >
                 <div
-                  class="rjsf-field rjsf-field-object"
+                  class="flex-grow rjsf-field rjsf-field-object"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-object"
@@ -3274,7 +3274,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                           class=""
                         >
                           <div
-                            class="rjsf-field rjsf-field-string"
+                            class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
                               class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -3305,7 +3305,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                 </label>
                                 <input
                                   aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
-                                  class="input input-bordered"
+                                  class="input input-bordered w-full"
                                   id="root_1_name"
                                   name="root.1.name"
                                   placeholder=""
@@ -3327,7 +3327,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                           class=""
                         >
                           <div
-                            class="rjsf-field rjsf-field-number"
+                            class="flex-grow rjsf-field rjsf-field-number"
                           >
                             <div
                               class="field-template mb-3 rjsf-field rjsf-field-number"
@@ -3358,7 +3358,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                 </label>
                                 <input
                                   aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
-                                  class="input input-bordered"
+                                  class="input input-bordered w-full"
                                   id="root_1_value"
                                   name="root.1.value"
                                   placeholder=""
@@ -3389,7 +3389,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                   </div>
                 </div>
                 <div
-                  class="flex justify-end mt-2"
+                  class="flex justify-end mt-1"
                 >
                   <div
                     class="join"
@@ -3524,7 +3524,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -3539,10 +3539,10 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
               class="rjsf-array-item-list"
             >
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
               >
                 <div
-                  class="rjsf-field rjsf-field-string"
+                  class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -3575,7 +3575,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                       </label>
                       <input
                         aria-describedby="root_0__error root_0__description root_0__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_0"
                         name="root.0"
                         placeholder=""
@@ -3594,7 +3594,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                   </div>
                 </div>
                 <div
-                  class="flex justify-end mt-2"
+                  class="flex justify-end mt-5"
                 >
                   <div
                     class="join"
@@ -3667,10 +3667,10 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                 </div>
               </fieldset>
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-9"
               >
                 <div
-                  class="rjsf-field rjsf-field-string"
+                  class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -3703,7 +3703,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                       </label>
                       <input
                         aria-describedby="root_1__error root_1__description root_1__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_1"
                         name="root.1"
                         placeholder=""
@@ -3722,7 +3722,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                   </div>
                 </div>
                 <div
-                  class="flex justify-end mt-2"
+                  class="flex justify-end mt-5"
                 >
                   <div
                     class="join"
@@ -3857,7 +3857,7 @@ exports[`with title and description array 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -3962,7 +3962,7 @@ exports[`with title and description array icons 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -4000,10 +4000,10 @@ exports[`with title and description array icons 1`] = `
               class="rjsf-array-item-list"
             >
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
               >
                 <div
-                  class="rjsf-field rjsf-field-string"
+                  class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -4034,12 +4034,12 @@ exports[`with title and description array icons 1`] = `
                         <span
                           class="label-text"
                         >
-                          Test item
+                          Test field-1
                         </span>
                       </label>
                       <input
                         aria-describedby="root_0__error root_0__description root_0__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_0"
                         name="root_0"
                         placeholder=""
@@ -4047,6 +4047,16 @@ exports[`with title and description array icons 1`] = `
                         type="text"
                         value="a"
                       />
+                    </div>
+                    <div
+                      class="description-field my-4"
+                      id="root_0__description"
+                    >
+                      <div
+                        class="text-sm text-base-content/80"
+                      >
+                        a test item description
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -4058,7 +4068,7 @@ exports[`with title and description array icons 1`] = `
                   </div>
                 </div>
                 <div
-                  class="flex justify-end mt-2"
+                  class="flex justify-end mt-5"
                 >
                   <div
                     class="join"
@@ -4152,10 +4162,10 @@ exports[`with title and description array icons 1`] = `
                 </div>
               </fieldset>
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-9"
               >
                 <div
-                  class="rjsf-field rjsf-field-string"
+                  class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -4186,12 +4196,12 @@ exports[`with title and description array icons 1`] = `
                         <span
                           class="label-text"
                         >
-                          Test item
+                          Test field-2
                         </span>
                       </label>
                       <input
                         aria-describedby="root_1__error root_1__description root_1__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_1"
                         name="root_1"
                         placeholder=""
@@ -4199,6 +4209,16 @@ exports[`with title and description array icons 1`] = `
                         type="text"
                         value="b"
                       />
+                    </div>
+                    <div
+                      class="description-field my-4"
+                      id="root_1__description"
+                    >
+                      <div
+                        class="text-sm text-base-content/80"
+                      >
+                        a test item description
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -4210,7 +4230,7 @@ exports[`with title and description array icons 1`] = `
                   </div>
                 </div>
                 <div
-                  class="flex justify-end mt-2"
+                  class="flex justify-end mt-5"
                 >
                   <div
                     class="join"
@@ -4366,7 +4386,7 @@ exports[`with title and description checkboxes 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -4467,6 +4487,16 @@ exports[`with title and description checkboxes 1`] = `
           </div>
         </div>
         <div
+          class="description-field my-4"
+          id="root__description"
+        >
+          <div
+            class="text-sm text-base-content/80"
+          >
+            a test description
+          </div>
+        </div>
+        <div
           class="rjsf-field-error-template text-red-600"
         >
           <ul
@@ -4493,7 +4523,7 @@ exports[`with title and description fixed array 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -4531,10 +4561,10 @@ exports[`with title and description fixed array 1`] = `
               class="rjsf-array-item-list"
             >
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
               >
                 <div
-                  class="rjsf-field rjsf-field-string"
+                  class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -4565,12 +4595,12 @@ exports[`with title and description fixed array 1`] = `
                         <span
                           class="label-text"
                         >
-                          Test item
+                          Test field-1
                         </span>
                       </label>
                       <input
                         aria-describedby="root_0__error root_0__description root_0__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_0"
                         name="root_0"
                         placeholder=""
@@ -4578,6 +4608,16 @@ exports[`with title and description fixed array 1`] = `
                         type="text"
                         value=""
                       />
+                    </div>
+                    <div
+                      class="description-field my-4"
+                      id="root_0__description"
+                    >
+                      <div
+                        class="text-sm text-base-content/80"
+                      >
+                        a test item description
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -4590,10 +4630,10 @@ exports[`with title and description fixed array 1`] = `
                 </div>
               </fieldset>
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-9"
               >
                 <div
-                  class="rjsf-field rjsf-field-number"
+                  class="flex-grow rjsf-field rjsf-field-number"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-number"
@@ -4624,12 +4664,12 @@ exports[`with title and description fixed array 1`] = `
                         <span
                           class="label-text"
                         >
-                          Test item
+                          Test field-2
                         </span>
                       </label>
                       <input
                         aria-describedby="root_1__error root_1__description root_1__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_1"
                         name="root_1"
                         placeholder=""
@@ -4638,6 +4678,16 @@ exports[`with title and description fixed array 1`] = `
                         type="number"
                         value=""
                       />
+                    </div>
+                    <div
+                      class="description-field my-4"
+                      id="root_1__description"
+                    >
+                      <div
+                        class="text-sm text-base-content/80"
+                      >
+                        a test item description
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -4679,7 +4729,7 @@ exports[`with title and description from both array 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -4784,7 +4834,7 @@ exports[`with title and description from both array icons 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -4822,10 +4872,10 @@ exports[`with title and description from both array icons 1`] = `
               class="rjsf-array-item-list"
             >
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
               >
                 <div
-                  class="rjsf-field rjsf-field-string"
+                  class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -4861,7 +4911,7 @@ exports[`with title and description from both array icons 1`] = `
                       </label>
                       <input
                         aria-describedby="root_0__error root_0__description root_0__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_0"
                         name="root_0"
                         placeholder=""
@@ -4869,6 +4919,16 @@ exports[`with title and description from both array icons 1`] = `
                         type="text"
                         value="a"
                       />
+                    </div>
+                    <div
+                      class="description-field my-4"
+                      id="root_0__description"
+                    >
+                      <div
+                        class="text-sm text-base-content/80"
+                      >
+                        a fancier item description
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -4880,7 +4940,7 @@ exports[`with title and description from both array icons 1`] = `
                   </div>
                 </div>
                 <div
-                  class="flex justify-end mt-2"
+                  class="flex justify-end mt-5"
                 >
                   <div
                     class="join"
@@ -4974,10 +5034,10 @@ exports[`with title and description from both array icons 1`] = `
                 </div>
               </fieldset>
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-9"
               >
                 <div
-                  class="rjsf-field rjsf-field-string"
+                  class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -5013,7 +5073,7 @@ exports[`with title and description from both array icons 1`] = `
                       </label>
                       <input
                         aria-describedby="root_1__error root_1__description root_1__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_1"
                         name="root_1"
                         placeholder=""
@@ -5021,6 +5081,16 @@ exports[`with title and description from both array icons 1`] = `
                         type="text"
                         value="b"
                       />
+                    </div>
+                    <div
+                      class="description-field my-4"
+                      id="root_1__description"
+                    >
+                      <div
+                        class="text-sm text-base-content/80"
+                      >
+                        a fancier item description
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -5032,7 +5102,7 @@ exports[`with title and description from both array icons 1`] = `
                   </div>
                 </div>
                 <div
-                  class="flex justify-end mt-2"
+                  class="flex justify-end mt-5"
                 >
                   <div
                     class="join"
@@ -5188,7 +5258,7 @@ exports[`with title and description from both checkboxes 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -5289,6 +5359,16 @@ exports[`with title and description from both checkboxes 1`] = `
           </div>
         </div>
         <div
+          class="description-field my-4"
+          id="root__description"
+        >
+          <div
+            class="text-sm text-base-content/80"
+          >
+            a fancier description
+          </div>
+        </div>
+        <div
           class="rjsf-field-error-template text-red-600"
         >
           <ul
@@ -5315,7 +5395,7 @@ exports[`with title and description from both fixed array 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -5353,10 +5433,10 @@ exports[`with title and description from both fixed array 1`] = `
               class="rjsf-array-item-list"
             >
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
               >
                 <div
-                  class="rjsf-field rjsf-field-string"
+                  class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -5392,7 +5472,7 @@ exports[`with title and description from both fixed array 1`] = `
                       </label>
                       <input
                         aria-describedby="root_0__error root_0__description root_0__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_0"
                         name="root_0"
                         placeholder=""
@@ -5400,6 +5480,16 @@ exports[`with title and description from both fixed array 1`] = `
                         type="text"
                         value=""
                       />
+                    </div>
+                    <div
+                      class="description-field my-4"
+                      id="root_0__description"
+                    >
+                      <div
+                        class="text-sm text-base-content/80"
+                      >
+                        a fancier item description
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -5412,10 +5502,10 @@ exports[`with title and description from both fixed array 1`] = `
                 </div>
               </fieldset>
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-9"
               >
                 <div
-                  class="rjsf-field rjsf-field-number"
+                  class="flex-grow rjsf-field rjsf-field-number"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-number"
@@ -5451,7 +5541,7 @@ exports[`with title and description from both fixed array 1`] = `
                       </label>
                       <input
                         aria-describedby="root_1__error root_1__description root_1__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_1"
                         name="root_1"
                         placeholder=""
@@ -5460,6 +5550,16 @@ exports[`with title and description from both fixed array 1`] = `
                         type="number"
                         value=""
                       />
+                    </div>
+                    <div
+                      class="description-field my-4"
+                      id="root_1__description"
+                    >
+                      <div
+                        class="text-sm text-base-content/80"
+                      >
+                        a fancier item description
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -5501,7 +5601,7 @@ exports[`with title and description from uiSchema array 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -5606,7 +5706,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -5644,10 +5744,10 @@ exports[`with title and description from uiSchema array icons 1`] = `
               class="rjsf-array-item-list"
             >
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
               >
                 <div
-                  class="rjsf-field rjsf-field-string"
+                  class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -5683,7 +5783,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                       </label>
                       <input
                         aria-describedby="root_0__error root_0__description root_0__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_0"
                         name="root_0"
                         placeholder=""
@@ -5691,6 +5791,16 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         type="text"
                         value="a"
                       />
+                    </div>
+                    <div
+                      class="description-field my-4"
+                      id="root_0__description"
+                    >
+                      <div
+                        class="text-sm text-base-content/80"
+                      >
+                        a fancier item description
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -5702,7 +5812,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   </div>
                 </div>
                 <div
-                  class="flex justify-end mt-2"
+                  class="flex justify-end mt-5"
                 >
                   <div
                     class="join"
@@ -5796,10 +5906,10 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 </div>
               </fieldset>
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-9"
               >
                 <div
-                  class="rjsf-field rjsf-field-string"
+                  class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -5835,7 +5945,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                       </label>
                       <input
                         aria-describedby="root_1__error root_1__description root_1__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_1"
                         name="root_1"
                         placeholder=""
@@ -5843,6 +5953,16 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         type="text"
                         value="b"
                       />
+                    </div>
+                    <div
+                      class="description-field my-4"
+                      id="root_1__description"
+                    >
+                      <div
+                        class="text-sm text-base-content/80"
+                      >
+                        a fancier item description
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -5854,7 +5974,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   </div>
                 </div>
                 <div
-                  class="flex justify-end mt-2"
+                  class="flex justify-end mt-5"
                 >
                   <div
                     class="join"
@@ -6010,7 +6130,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -6111,6 +6231,16 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
           </div>
         </div>
         <div
+          class="description-field my-4"
+          id="root__description"
+        >
+          <div
+            class="text-sm text-base-content/80"
+          >
+            a fancier description
+          </div>
+        </div>
+        <div
           class="rjsf-field-error-template text-red-600"
         >
           <ul
@@ -6137,7 +6267,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -6175,10 +6305,10 @@ exports[`with title and description from uiSchema fixed array 1`] = `
               class="rjsf-array-item-list"
             >
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
               >
                 <div
-                  class="rjsf-field rjsf-field-string"
+                  class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -6214,7 +6344,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                       </label>
                       <input
                         aria-describedby="root_0__error root_0__description root_0__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_0"
                         name="root_0"
                         placeholder=""
@@ -6222,6 +6352,16 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                         type="text"
                         value=""
                       />
+                    </div>
+                    <div
+                      class="description-field my-4"
+                      id="root_0__description"
+                    >
+                      <div
+                        class="text-sm text-base-content/80"
+                      >
+                        a fancier item description
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -6234,10 +6374,10 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                 </div>
               </fieldset>
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-9"
               >
                 <div
-                  class="rjsf-field rjsf-field-number"
+                  class="flex-grow rjsf-field rjsf-field-number"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-number"
@@ -6273,7 +6413,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                       </label>
                       <input
                         aria-describedby="root_1__error root_1__description root_1__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_1"
                         name="root_1"
                         placeholder=""
@@ -6282,6 +6422,16 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                         type="number"
                         value=""
                       />
+                    </div>
+                    <div
+                      class="description-field my-4"
+                      id="root_1__description"
+                    >
+                      <div
+                        class="text-sm text-base-content/80"
+                      >
+                        a fancier item description
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -6323,7 +6473,7 @@ exports[`with title and description with global label off array 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -6405,7 +6555,7 @@ exports[`with title and description with global label off array icons 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -6420,10 +6570,10 @@ exports[`with title and description with global label off array icons 1`] = `
               class="rjsf-array-item-list"
             >
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
               >
                 <div
-                  class="rjsf-field rjsf-field-string"
+                  class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -6439,12 +6589,12 @@ exports[`with title and description with global label off array icons 1`] = `
                         <span
                           class="label-text"
                         >
-                          Test item
+                          Test field-1
                         </span>
                       </label>
                       <input
                         aria-describedby="root_0__error root_0__description root_0__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_0"
                         name="root_0"
                         placeholder=""
@@ -6463,7 +6613,7 @@ exports[`with title and description with global label off array icons 1`] = `
                   </div>
                 </div>
                 <div
-                  class="flex justify-end mt-2"
+                  class="flex justify-end mt-1"
                 >
                   <div
                     class="join"
@@ -6557,10 +6707,10 @@ exports[`with title and description with global label off array icons 1`] = `
                 </div>
               </fieldset>
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-9"
               >
                 <div
-                  class="rjsf-field rjsf-field-string"
+                  class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -6576,12 +6726,12 @@ exports[`with title and description with global label off array icons 1`] = `
                         <span
                           class="label-text"
                         >
-                          Test item
+                          Test field-2
                         </span>
                       </label>
                       <input
                         aria-describedby="root_1__error root_1__description root_1__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_1"
                         name="root_1"
                         placeholder=""
@@ -6600,7 +6750,7 @@ exports[`with title and description with global label off array icons 1`] = `
                   </div>
                 </div>
                 <div
-                  class="flex justify-end mt-2"
+                  class="flex justify-end mt-1"
                 >
                   <div
                     class="join"
@@ -6756,21 +6906,11 @@ exports[`with title and description with global label off checkboxes 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          >
-            Test field
-          </span>
-        </label>
         <div
           class="form-control w-full"
         >
@@ -6883,7 +7023,7 @@ exports[`with title and description with global label off fixed array 1`] = `
     class="rjsf"
   >
     <div
-      class="rjsf-field rjsf-field-array"
+      class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
@@ -6898,10 +7038,10 @@ exports[`with title and description with global label off fixed array 1`] = `
               class="rjsf-array-item-list"
             >
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
               >
                 <div
-                  class="rjsf-field rjsf-field-string"
+                  class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
@@ -6917,12 +7057,12 @@ exports[`with title and description with global label off fixed array 1`] = `
                         <span
                           class="label-text"
                         >
-                          Test item
+                          Test field-1
                         </span>
                       </label>
                       <input
                         aria-describedby="root_0__error root_0__description root_0__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_0"
                         name="root_0"
                         placeholder=""
@@ -6942,10 +7082,10 @@ exports[`with title and description with global label off fixed array 1`] = `
                 </div>
               </fieldset>
               <fieldset
-                class="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-9"
               >
                 <div
-                  class="rjsf-field rjsf-field-number"
+                  class="flex-grow rjsf-field rjsf-field-number"
                 >
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-number"
@@ -6961,12 +7101,12 @@ exports[`with title and description with global label off fixed array 1`] = `
                         <span
                           class="label-text"
                         >
-                          Test item
+                          Test field-2
                         </span>
                       </label>
                       <input
                         aria-describedby="root_1__error root_1__description root_1__help"
-                        class="input input-bordered"
+                        class="input input-bordered w-full"
                         id="root_1"
                         name="root_1"
                         placeholder=""

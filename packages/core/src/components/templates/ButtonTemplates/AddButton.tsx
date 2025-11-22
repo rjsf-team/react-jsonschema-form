@@ -14,7 +14,9 @@ export default function AddButton<T = any, S extends StrictRJSFSchema = RJSFSche
   const { translateString } = registry;
   return (
     <div className='row'>
-      <p className={`col-xs-3 col-xs-offset-9 text-right ${className}`}>
+      <p
+        className={`col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right ${className}`}
+      >
         <IconButton
           id={id}
           iconType='info'

@@ -596,7 +596,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                           </div>
                           <div
                             class="ant-col css-dev-only-do-not-override-ac2jek"
-                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 40px;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
@@ -643,7 +643,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                     >
                       <div
                         class="ant-col css-dev-only-do-not-override-ac2jek"
-                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                       >
                         <button
                           class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
@@ -1020,7 +1020,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                                         style="padding-left: 12px; padding-right: 12px;"
                                       >
                                         <div
-                                          class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                                          class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                                           style="margin-left: -12px; margin-right: -12px;"
                                         >
                                           <div
@@ -1082,11 +1082,11 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                                           </div>
                                           <div
                                             class="ant-col css-dev-only-do-not-override-ac2jek"
-                                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 16px;"
                                           >
                                             <div
                                               class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                                              style="width: 100%;"
+                                              style="width: 100%; justify-content: flex-end;"
                                             >
                                               <button
                                                 class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -1186,7 +1186,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                                           </div>
                                         </div>
                                         <div
-                                          class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                                          class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                                           style="margin-left: -12px; margin-right: -12px;"
                                         >
                                           <div
@@ -1248,11 +1248,11 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                                           </div>
                                           <div
                                             class="ant-col css-dev-only-do-not-override-ac2jek"
-                                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 16px;"
                                           >
                                             <div
                                               class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                                              style="width: 100%;"
+                                              style="width: 100%; justify-content: flex-end;"
                                             >
                                               <button
                                                 class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -1362,7 +1362,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                                         >
                                           <div
                                             class="ant-col css-dev-only-do-not-override-ac2jek"
-                                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                                           >
                                             <button
                                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
@@ -2317,7 +2317,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                                         style="padding-left: 12px; padding-right: 12px;"
                                       >
                                         <div
-                                          class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                                          class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                                           style="margin-left: -12px; margin-right: -12px;"
                                         >
                                           <div
@@ -2379,11 +2379,11 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                                           </div>
                                           <div
                                             class="ant-col css-dev-only-do-not-override-ac2jek"
-                                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 16px;"
                                           >
                                             <div
                                               class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                                              style="width: 100%;"
+                                              style="width: 100%; justify-content: flex-end;"
                                             >
                                               <button
                                                 class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -2483,7 +2483,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                                           </div>
                                         </div>
                                         <div
-                                          class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                                          class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                                           style="margin-left: -12px; margin-right: -12px;"
                                         >
                                           <div
@@ -2545,11 +2545,11 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                                           </div>
                                           <div
                                             class="ant-col css-dev-only-do-not-override-ac2jek"
-                                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 16px;"
                                           >
                                             <div
                                               class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                                              style="width: 100%;"
+                                              style="width: 100%; justify-content: flex-end;"
                                             >
                                               <button
                                                 class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -2659,7 +2659,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                                         >
                                           <div
                                             class="ant-col css-dev-only-do-not-override-ac2jek"
-                                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                                           >
                                             <button
                                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
@@ -3168,7 +3168,7 @@ exports[`object fields additionalProperties 1`] = `
                           </div>
                           <div
                             class="ant-col css-dev-only-do-not-override-ac2jek"
-                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 40px;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
@@ -3215,7 +3215,1173 @@ exports[`object fields additionalProperties 1`] = `
                     >
                       <div
                         class="ant-col css-dev-only-do-not-override-ac2jek"
-                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
+                      >
+                        <button
+                          class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
+                          id="root__add"
+                          style="padding-top: 4px;"
+                          title="Add Item"
+                          type="button"
+                        >
+                          <span
+                            class="ant-btn-icon"
+                          >
+                            <span
+                              aria-label="plus-circle"
+                              class="anticon anticon-plus-circle"
+                              role="img"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                data-icon="plus-circle"
+                                fill="currentColor"
+                                focusable="false"
+                                height="1em"
+                                viewBox="64 64 896 896"
+                                width="1em"
+                              >
+                                <path
+                                  d="M696 480H544V328c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v152H328c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h152v152c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V544h152c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8z"
+                                />
+                                <path
+                                  d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, array type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ac2jek"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <fieldset
+                  id="root"
+                >
+                  <div
+                    class="ant-row css-dev-only-do-not-override-ac2jek"
+                    style="margin-left: -12px; margin-right: -12px;"
+                  >
+                    <div
+                      class="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
+                      style="padding-left: 12px; padding-right: 12px;"
+                    >
+                      <div
+                        class="rjsf-field rjsf-field-array"
+                      >
+                        <div
+                          class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                          style="margin-left: -12px; margin-right: -12px;"
+                        >
+                          <div
+                            class="ant-col form-additional css-dev-only-do-not-override-ac2jek"
+                            style="padding-left: 12px; padding-right: 12px; flex: 1 1 0%;"
+                          >
+                            <div
+                              class="form-group"
+                            >
+                              <div
+                                class="ant-form-item form-group css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
+                              >
+                                <div
+                                  class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
+                                >
+                                  <div
+                                    class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ac2jek"
+                                  >
+                                    <label
+                                      class=""
+                                      for="root_foo-key"
+                                      title="foo Key"
+                                    >
+                                      foo Key
+                                    </label>
+                                  </div>
+                                  <div
+                                    class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ac2jek"
+                                  >
+                                    <div
+                                      class="ant-form-item-control-input"
+                                    >
+                                      <div
+                                        class="ant-form-item-control-input-content"
+                                      >
+                                        <span
+                                          class="ant-input-affix-wrapper css-dev-only-do-not-override-ac2jek ant-input-outlined form-control"
+                                          style="width: 100%;"
+                                        >
+                                          <input
+                                            class="ant-input css-dev-only-do-not-override-ac2jek"
+                                            id="root_foo-key"
+                                            name="root_foo-key"
+                                            type="text"
+                                            value="foo"
+                                          />
+                                          <span
+                                            class="ant-input-suffix"
+                                          />
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="ant-col form-additional css-dev-only-do-not-override-ac2jek"
+                            style="padding-left: 12px; padding-right: 12px; flex: 1 1 0%;"
+                          >
+                            <div
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
+                            >
+                              <div
+                                class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
+                              >
+                                <div
+                                  class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ac2jek"
+                                >
+                                  <label
+                                    class=""
+                                    for="root_foo"
+                                    title="foo"
+                                  >
+                                    foo
+                                  </label>
+                                </div>
+                                <div
+                                  class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ac2jek"
+                                >
+                                  <div
+                                    class="ant-form-item-control-input"
+                                  >
+                                    <div
+                                      class="ant-form-item-control-input-content"
+                                    >
+                                      <fieldset
+                                        class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                                        id="root_foo"
+                                      >
+                                        <div
+                                          class="ant-row css-dev-only-do-not-override-ac2jek"
+                                          style="margin-left: -12px; margin-right: -12px;"
+                                        >
+                                          <div
+                                            class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ac2jek"
+                                            style="padding-left: 12px; padding-right: 12px;"
+                                          >
+                                            <label
+                                              class=""
+                                              for="root_foo__title"
+                                              title="foo"
+                                            >
+                                              foo
+                                            </label>
+                                            <div
+                                              class="ant-divider css-dev-only-do-not-override-ac2jek ant-divider-horizontal ant-divider-sm"
+                                              role="separator"
+                                              style="margin-block: 1px;"
+                                            />
+                                          </div>
+                                          <div
+                                            class="ant-col ant-col-24 row array-item-list css-dev-only-do-not-override-ac2jek"
+                                            style="padding-left: 12px; padding-right: 12px;"
+                                          />
+                                          <div
+                                            class="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
+                                            style="padding-left: 12px; padding-right: 12px;"
+                                          >
+                                            <div
+                                              class="ant-row ant-row-end css-dev-only-do-not-override-ac2jek"
+                                              style="margin-left: -12px; margin-right: -12px;"
+                                            >
+                                              <div
+                                                class="ant-col css-dev-only-do-not-override-ac2jek"
+                                                style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
+                                              >
+                                                <button
+                                                  class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
+                                                  id="root_foo__add"
+                                                  style="padding-top: 4px;"
+                                                  title="Add Item"
+                                                  type="button"
+                                                >
+                                                  <span
+                                                    class="ant-btn-icon"
+                                                  >
+                                                    <span
+                                                      aria-label="plus-circle"
+                                                      class="anticon anticon-plus-circle"
+                                                      role="img"
+                                                    >
+                                                      <svg
+                                                        aria-hidden="true"
+                                                        data-icon="plus-circle"
+                                                        fill="currentColor"
+                                                        focusable="false"
+                                                        height="1em"
+                                                        viewBox="64 64 896 896"
+                                                        width="1em"
+                                                      >
+                                                        <path
+                                                          d="M696 480H544V328c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v152H328c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h152v152c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V544h152c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8z"
+                                                        />
+                                                        <path
+                                                          d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                                                        />
+                                                      </svg>
+                                                    </span>
+                                                  </span>
+                                                </button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </fieldset>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="ant-col css-dev-only-do-not-override-ac2jek"
+                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 40px;"
+                          >
+                            <button
+                              class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
+                              id="root_foo__remove"
+                              style="padding-top: 4px;"
+                              title="Remove"
+                              type="button"
+                            >
+                              <span
+                                class="ant-btn-icon"
+                              >
+                                <span
+                                  aria-label="delete"
+                                  class="anticon anticon-delete"
+                                  role="img"
+                                >
+                                  <svg
+                                    aria-hidden="true"
+                                    data-icon="delete"
+                                    fill="currentColor"
+                                    focusable="false"
+                                    height="1em"
+                                    viewBox="64 64 896 896"
+                                    width="1em"
+                                  >
+                                    <path
+                                      d="M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z"
+                                    />
+                                  </svg>
+                                </span>
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
+                  >
+                    <div
+                      class="ant-row ant-row-end css-dev-only-do-not-override-ac2jek"
+                      style="margin-left: -12px; margin-right: -12px;"
+                    >
+                      <div
+                        class="ant-col css-dev-only-do-not-override-ac2jek"
+                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
+                      >
+                        <button
+                          class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
+                          id="root__add"
+                          style="padding-top: 4px;"
+                          title="Add Item"
+                          type="button"
+                        >
+                          <span
+                            class="ant-btn-icon"
+                          >
+                            <span
+                              aria-label="plus-circle"
+                              class="anticon anticon-plus-circle"
+                              role="img"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                data-icon="plus-circle"
+                                fill="currentColor"
+                                focusable="false"
+                                height="1em"
+                                viewBox="64 64 896 896"
+                                width="1em"
+                              >
+                                <path
+                                  d="M696 480H544V328c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v152H328c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h152v152c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V544h152c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8z"
+                                />
+                                <path
+                                  d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, description 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ac2jek"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <fieldset
+                  id="root"
+                >
+                  <div
+                    class="ant-row css-dev-only-do-not-override-ac2jek"
+                    style="margin-left: -12px; margin-right: -12px;"
+                  >
+                    <div
+                      class="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
+                      style="padding-left: 12px; padding-right: 12px;"
+                    >
+                      <div
+                        class="rjsf-field rjsf-field-string"
+                      >
+                        <div
+                          class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                          style="margin-left: -12px; margin-right: -12px;"
+                        >
+                          <div
+                            class="ant-col form-additional css-dev-only-do-not-override-ac2jek"
+                            style="padding-left: 12px; padding-right: 12px; flex: 1 1 0%;"
+                          >
+                            <div
+                              class="form-group"
+                            >
+                              <div
+                                class="ant-form-item form-group css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
+                              >
+                                <div
+                                  class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
+                                >
+                                  <div
+                                    class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ac2jek"
+                                  >
+                                    <label
+                                      class=""
+                                      for="root_foo-key"
+                                      title="foo Key"
+                                    >
+                                      foo Key
+                                    </label>
+                                  </div>
+                                  <div
+                                    class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ac2jek"
+                                  >
+                                    <div
+                                      class="ant-form-item-control-input"
+                                    >
+                                      <div
+                                        class="ant-form-item-control-input-content"
+                                      >
+                                        <span
+                                          class="ant-input-affix-wrapper css-dev-only-do-not-override-ac2jek ant-input-outlined form-control"
+                                          style="width: 100%;"
+                                        >
+                                          <input
+                                            class="ant-input css-dev-only-do-not-override-ac2jek"
+                                            id="root_foo-key"
+                                            name="root_foo-key"
+                                            type="text"
+                                            value="foo"
+                                          />
+                                          <span
+                                            class="ant-input-suffix"
+                                          />
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="ant-col form-additional css-dev-only-do-not-override-ac2jek"
+                            style="padding-left: 12px; padding-right: 12px; flex: 1 1 0%;"
+                          >
+                            <div
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
+                            >
+                              <div
+                                class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
+                              >
+                                <div
+                                  class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ac2jek"
+                                >
+                                  <label
+                                    class=""
+                                    for="root_foo"
+                                    title="foo"
+                                  >
+                                    foo
+                                  </label>
+                                </div>
+                                <div
+                                  class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ac2jek"
+                                >
+                                  <div
+                                    class="ant-form-item-control-input"
+                                  >
+                                    <div
+                                      class="ant-form-item-control-input-content"
+                                    >
+                                      <span
+                                        class="ant-input-affix-wrapper css-dev-only-do-not-override-ac2jek ant-input-outlined"
+                                        style="width: 100%;"
+                                      >
+                                        <input
+                                          aria-describedby="root_foo__error root_foo__description root_foo__help"
+                                          class="ant-input css-dev-only-do-not-override-ac2jek"
+                                          id="root_foo"
+                                          name="root_foo"
+                                          placeholder=""
+                                          type="text"
+                                          value="foo"
+                                        />
+                                        <span
+                                          class="ant-input-suffix"
+                                        />
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div
+                                    class="ant-form-item-additional"
+                                  >
+                                    <div
+                                      class="ant-form-item-extra"
+                                    >
+                                      <span
+                                        id="root_foo__description"
+                                      >
+                                        item description
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="ant-col css-dev-only-do-not-override-ac2jek"
+                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 40px;"
+                          >
+                            <button
+                              class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
+                              id="root_foo__remove"
+                              style="padding-top: 4px;"
+                              title="Remove"
+                              type="button"
+                            >
+                              <span
+                                class="ant-btn-icon"
+                              >
+                                <span
+                                  aria-label="delete"
+                                  class="anticon anticon-delete"
+                                  role="img"
+                                >
+                                  <svg
+                                    aria-hidden="true"
+                                    data-icon="delete"
+                                    fill="currentColor"
+                                    focusable="false"
+                                    height="1em"
+                                    viewBox="64 64 896 896"
+                                    width="1em"
+                                  >
+                                    <path
+                                      d="M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z"
+                                    />
+                                  </svg>
+                                </span>
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
+                  >
+                    <div
+                      class="ant-row ant-row-end css-dev-only-do-not-override-ac2jek"
+                      style="margin-left: -12px; margin-right: -12px;"
+                    >
+                      <div
+                        class="ant-col css-dev-only-do-not-override-ac2jek"
+                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
+                      >
+                        <button
+                          class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
+                          id="root__add"
+                          style="padding-top: 4px;"
+                          title="Add Item"
+                          type="button"
+                        >
+                          <span
+                            class="ant-btn-icon"
+                          >
+                            <span
+                              aria-label="plus-circle"
+                              class="anticon anticon-plus-circle"
+                              role="img"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                data-icon="plus-circle"
+                                fill="currentColor"
+                                focusable="false"
+                                height="1em"
+                                viewBox="64 64 896 896"
+                                width="1em"
+                              >
+                                <path
+                                  d="M696 480H544V328c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v152H328c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h152v152c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V544h152c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8z"
+                                />
+                                <path
+                                  d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, label off 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ac2jek"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <fieldset
+                  id="root"
+                >
+                  <div
+                    class="ant-row css-dev-only-do-not-override-ac2jek"
+                    style="margin-left: -12px; margin-right: -12px;"
+                  >
+                    <div
+                      class="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
+                      style="padding-left: 12px; padding-right: 12px;"
+                    >
+                      <div
+                        class="rjsf-field rjsf-field-string"
+                      >
+                        <div
+                          class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                          style="margin-left: -12px; margin-right: -12px;"
+                        >
+                          <div
+                            class="ant-col form-additional css-dev-only-do-not-override-ac2jek"
+                            style="padding-left: 12px; padding-right: 12px; flex: 1 1 0%;"
+                          >
+                            <div
+                              class="form-group"
+                            >
+                              <div
+                                class="ant-form-item form-group css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
+                              >
+                                <div
+                                  class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
+                                >
+                                  <div
+                                    class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ac2jek"
+                                  >
+                                    <label
+                                      class=""
+                                      for="root_foo-key"
+                                      title="foo Key"
+                                    >
+                                      foo Key
+                                    </label>
+                                  </div>
+                                  <div
+                                    class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ac2jek"
+                                  >
+                                    <div
+                                      class="ant-form-item-control-input"
+                                    >
+                                      <div
+                                        class="ant-form-item-control-input-content"
+                                      >
+                                        <span
+                                          class="ant-input-affix-wrapper css-dev-only-do-not-override-ac2jek ant-input-outlined form-control"
+                                          style="width: 100%;"
+                                        >
+                                          <input
+                                            class="ant-input css-dev-only-do-not-override-ac2jek"
+                                            id="root_foo-key"
+                                            name="root_foo-key"
+                                            type="text"
+                                            value="foo"
+                                          />
+                                          <span
+                                            class="ant-input-suffix"
+                                          />
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="ant-col form-additional css-dev-only-do-not-override-ac2jek"
+                            style="padding-left: 12px; padding-right: 12px; flex: 1 1 0%;"
+                          >
+                            <div
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
+                            >
+                              <div
+                                class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
+                              >
+                                <div
+                                  class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ac2jek"
+                                >
+                                  <label
+                                    class=""
+                                    for="root_foo"
+                                    title="foo"
+                                  >
+                                    foo
+                                  </label>
+                                </div>
+                                <div
+                                  class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ac2jek"
+                                >
+                                  <div
+                                    class="ant-form-item-control-input"
+                                  >
+                                    <div
+                                      class="ant-form-item-control-input-content"
+                                    >
+                                      <span
+                                        class="ant-input-affix-wrapper css-dev-only-do-not-override-ac2jek ant-input-outlined"
+                                        style="width: 100%;"
+                                      >
+                                        <input
+                                          aria-describedby="root_foo__error root_foo__description root_foo__help"
+                                          class="ant-input css-dev-only-do-not-override-ac2jek"
+                                          id="root_foo"
+                                          name="root_foo"
+                                          placeholder=""
+                                          type="text"
+                                          value="foo"
+                                        />
+                                        <span
+                                          class="ant-input-suffix"
+                                        />
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="ant-col css-dev-only-do-not-override-ac2jek"
+                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 40px;"
+                          >
+                            <button
+                              class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
+                              id="root_foo__remove"
+                              style="padding-top: 4px;"
+                              title="Remove"
+                              type="button"
+                            >
+                              <span
+                                class="ant-btn-icon"
+                              >
+                                <span
+                                  aria-label="delete"
+                                  class="anticon anticon-delete"
+                                  role="img"
+                                >
+                                  <svg
+                                    aria-hidden="true"
+                                    data-icon="delete"
+                                    fill="currentColor"
+                                    focusable="false"
+                                    height="1em"
+                                    viewBox="64 64 896 896"
+                                    width="1em"
+                                  >
+                                    <path
+                                      d="M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z"
+                                    />
+                                  </svg>
+                                </span>
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
+                  >
+                    <div
+                      class="ant-row ant-row-end css-dev-only-do-not-override-ac2jek"
+                      style="margin-left: -12px; margin-right: -12px;"
+                    >
+                      <div
+                        class="ant-col css-dev-only-do-not-override-ac2jek"
+                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
+                      >
+                        <button
+                          class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
+                          id="root__add"
+                          style="padding-top: 4px;"
+                          title="Add Item"
+                          type="button"
+                        >
+                          <span
+                            class="ant-btn-icon"
+                          >
+                            <span
+                              aria-label="plus-circle"
+                              class="anticon anticon-plus-circle"
+                              role="img"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                data-icon="plus-circle"
+                                fill="currentColor"
+                                focusable="false"
+                                height="1em"
+                                viewBox="64 64 896 896"
+                                width="1em"
+                              >
+                                <path
+                                  d="M696 480H544V328c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v152H328c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h152v152c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V544h152c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8z"
+                                />
+                                <path
+                                  d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields additionalProperties, object type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ac2jek"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <fieldset
+                  id="root"
+                >
+                  <div
+                    class="ant-row css-dev-only-do-not-override-ac2jek"
+                    style="margin-left: -12px; margin-right: -12px;"
+                  >
+                    <div
+                      class="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
+                      style="padding-left: 12px; padding-right: 12px;"
+                    >
+                      <div
+                        class="rjsf-field rjsf-field-object"
+                      >
+                        <div
+                          class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                          style="margin-left: -12px; margin-right: -12px;"
+                        >
+                          <div
+                            class="ant-col form-additional css-dev-only-do-not-override-ac2jek"
+                            style="padding-left: 12px; padding-right: 12px; flex: 1 1 0%;"
+                          >
+                            <div
+                              class="form-group"
+                            >
+                              <div
+                                class="ant-form-item form-group css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
+                              >
+                                <div
+                                  class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
+                                >
+                                  <div
+                                    class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ac2jek"
+                                  >
+                                    <label
+                                      class=""
+                                      for="root_foo-key"
+                                      title="foo Key"
+                                    >
+                                      foo Key
+                                    </label>
+                                  </div>
+                                  <div
+                                    class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ac2jek"
+                                  >
+                                    <div
+                                      class="ant-form-item-control-input"
+                                    >
+                                      <div
+                                        class="ant-form-item-control-input-content"
+                                      >
+                                        <span
+                                          class="ant-input-affix-wrapper css-dev-only-do-not-override-ac2jek ant-input-outlined form-control"
+                                          style="width: 100%;"
+                                        >
+                                          <input
+                                            class="ant-input css-dev-only-do-not-override-ac2jek"
+                                            id="root_foo-key"
+                                            name="root_foo-key"
+                                            type="text"
+                                            value="foo"
+                                          />
+                                          <span
+                                            class="ant-input-suffix"
+                                          />
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="ant-col form-additional css-dev-only-do-not-override-ac2jek"
+                            style="padding-left: 12px; padding-right: 12px; flex: 1 1 0%;"
+                          >
+                            <div
+                              class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
+                            >
+                              <div
+                                class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
+                              >
+                                <div
+                                  class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ac2jek"
+                                >
+                                  <label
+                                    class=""
+                                    for="root_foo"
+                                    title="foo"
+                                  >
+                                    foo
+                                  </label>
+                                </div>
+                                <div
+                                  class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ac2jek"
+                                >
+                                  <div
+                                    class="ant-form-item-control-input"
+                                  >
+                                    <div
+                                      class="ant-form-item-control-input-content"
+                                    >
+                                      <fieldset
+                                        id="root_foo"
+                                      >
+                                        <div
+                                          class="ant-row css-dev-only-do-not-override-ac2jek"
+                                          style="margin-left: -12px; margin-right: -12px;"
+                                        >
+                                          <div
+                                            class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ac2jek"
+                                            style="padding-left: 12px; padding-right: 12px;"
+                                          >
+                                            <label
+                                              class=""
+                                              for="root_foo__title"
+                                              title="foo"
+                                            >
+                                              foo
+                                            </label>
+                                            <div
+                                              class="ant-divider css-dev-only-do-not-override-ac2jek ant-divider-horizontal ant-divider-sm"
+                                              role="separator"
+                                              style="margin-block: 1px;"
+                                            />
+                                          </div>
+                                          <div
+                                            class="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
+                                            style="padding-left: 12px; padding-right: 12px;"
+                                          >
+                                            <div
+                                              class="rjsf-field rjsf-field-string"
+                                            >
+                                              <div
+                                                class="ant-form-item css-dev-only-do-not-override-ac2jek ant-form-item-horizontal"
+                                              >
+                                                <div
+                                                  class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
+                                                >
+                                                  <div
+                                                    class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ac2jek"
+                                                  >
+                                                    <label
+                                                      class=""
+                                                      for="root_foo_foo"
+                                                      title="foo"
+                                                    >
+                                                      foo
+                                                    </label>
+                                                  </div>
+                                                  <div
+                                                    class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ac2jek"
+                                                  >
+                                                    <div
+                                                      class="ant-form-item-control-input"
+                                                    >
+                                                      <div
+                                                        class="ant-form-item-control-input-content"
+                                                      >
+                                                        <span
+                                                          class="ant-input-affix-wrapper css-dev-only-do-not-override-ac2jek ant-input-outlined"
+                                                          style="width: 100%;"
+                                                        >
+                                                          <input
+                                                            aria-describedby="root_foo_foo__error root_foo_foo__description root_foo_foo__help"
+                                                            class="ant-input css-dev-only-do-not-override-ac2jek"
+                                                            id="root_foo_foo"
+                                                            name="root_foo_foo"
+                                                            placeholder=""
+                                                            type="text"
+                                                            value=""
+                                                          />
+                                                          <span
+                                                            class="ant-input-suffix"
+                                                          />
+                                                        </span>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </fieldset>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="ant-col css-dev-only-do-not-override-ac2jek"
+                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 40px;"
+                          >
+                            <button
+                              class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
+                              id="root_foo__remove"
+                              style="padding-top: 4px;"
+                              title="Remove"
+                              type="button"
+                            >
+                              <span
+                                class="ant-btn-icon"
+                              >
+                                <span
+                                  aria-label="delete"
+                                  class="anticon anticon-delete"
+                                  role="img"
+                                >
+                                  <svg
+                                    aria-hidden="true"
+                                    data-icon="delete"
+                                    fill="currentColor"
+                                    focusable="false"
+                                    height="1em"
+                                    viewBox="64 64 896 896"
+                                    width="1em"
+                                  >
+                                    <path
+                                      d="M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z"
+                                    />
+                                  </svg>
+                                </span>
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="ant-col ant-col-24 css-dev-only-do-not-override-ac2jek"
+                  >
+                    <div
+                      class="ant-row ant-row-end css-dev-only-do-not-override-ac2jek"
+                      style="margin-left: -12px; margin-right: -12px;"
+                    >
+                      <div
+                        class="ant-col css-dev-only-do-not-override-ac2jek"
+                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                       >
                         <button
                           class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
@@ -3657,7 +4823,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                           </div>
                           <div
                             class="ant-col css-dev-only-do-not-override-ac2jek"
-                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 40px;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
@@ -3704,7 +4870,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                     >
                       <div
                         class="ant-col css-dev-only-do-not-override-ac2jek"
-                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                       >
                         <button
                           class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
@@ -3930,7 +5096,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                           </div>
                           <div
                             class="ant-col css-dev-only-do-not-override-ac2jek"
-                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 40px;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
@@ -3977,7 +5143,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                     >
                       <div
                         class="ant-col css-dev-only-do-not-override-ac2jek"
-                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                       >
                         <button
                           class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
@@ -4216,7 +5382,7 @@ exports[`object fields with title and description from both additionalProperties
                           </div>
                           <div
                             class="ant-col css-dev-only-do-not-override-ac2jek"
-                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 40px;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
@@ -4263,7 +5429,7 @@ exports[`object fields with title and description from both additionalProperties
                     >
                       <div
                         class="ant-col css-dev-only-do-not-override-ac2jek"
-                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                       >
                         <button
                           class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
@@ -4791,7 +5957,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                           </div>
                           <div
                             class="ant-col css-dev-only-do-not-override-ac2jek"
-                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 40px;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
@@ -4838,7 +6004,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                     >
                       <div
                         class="ant-col css-dev-only-do-not-override-ac2jek"
-                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                       >
                         <button
                           class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
@@ -5366,7 +6532,7 @@ exports[`object fields with title and description from uiSchema show add button 
                           </div>
                           <div
                             class="ant-col css-dev-only-do-not-override-ac2jek"
-                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 40px;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
@@ -5413,7 +6579,7 @@ exports[`object fields with title and description from uiSchema show add button 
                     >
                       <div
                         class="ant-col css-dev-only-do-not-override-ac2jek"
-                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                       >
                         <button
                           class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
@@ -5941,7 +7107,7 @@ exports[`object fields with title and description show add button and fields if 
                           </div>
                           <div
                             class="ant-col css-dev-only-do-not-override-ac2jek"
-                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 40px;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
@@ -5988,7 +7154,7 @@ exports[`object fields with title and description show add button and fields if 
                     >
                       <div
                         class="ant-col css-dev-only-do-not-override-ac2jek"
-                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                       >
                         <button
                           class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
@@ -6114,17 +7280,6 @@ exports[`object fields with title and description with global label off addition
                                   class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
                                 >
                                   <div
-                                    class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ac2jek"
-                                  >
-                                    <label
-                                      class=""
-                                      for="root_foo-key"
-                                      title="foo Key"
-                                    >
-                                      foo Key
-                                    </label>
-                                  </div>
-                                  <div
                                     class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ac2jek"
                                   >
                                     <div
@@ -6199,7 +7354,7 @@ exports[`object fields with title and description with global label off addition
                           </div>
                           <div
                             class="ant-col css-dev-only-do-not-override-ac2jek"
-                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
@@ -6246,7 +7401,7 @@ exports[`object fields with title and description with global label off addition
                     >
                       <div
                         class="ant-col css-dev-only-do-not-override-ac2jek"
-                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                       >
                         <button
                           class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
@@ -6622,17 +7777,6 @@ exports[`object fields with title and description with global label off show add
                                   class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
                                 >
                                   <div
-                                    class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ac2jek"
-                                  >
-                                    <label
-                                      class=""
-                                      for="root_additionalProperty-key"
-                                      title="additionalProperty Key"
-                                    >
-                                      additionalProperty Key
-                                    </label>
-                                  </div>
-                                  <div
                                     class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ac2jek"
                                   >
                                     <div
@@ -6707,7 +7851,7 @@ exports[`object fields with title and description with global label off show add
                           </div>
                           <div
                             class="ant-col css-dev-only-do-not-override-ac2jek"
-                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                            style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
@@ -6754,7 +7898,7 @@ exports[`object fields with title and description with global label off show add
                     >
                       <div
                         class="ant-col css-dev-only-do-not-override-ac2jek"
-                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                        style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                       >
                         <button
                           class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"

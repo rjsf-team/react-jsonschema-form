@@ -7,7 +7,6 @@ import { AliasReplacerArguments } from 'tsc-alias';
 export default function lodashReplacer({ orig }: AliasReplacerArguments): string {
   if (orig.startsWith("from 'lodash/")) {
     const origLodashEs = orig.substring(0, orig.length - 1).replace('lodash/', 'lodash-es/');
-    // console.log(origLodashEs);
     return `${origLodashEs}.js'`;
   }
 

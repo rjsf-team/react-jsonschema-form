@@ -45,7 +45,7 @@ exports[`array fields array 1`] = `
                       >
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                         >
                           <button
                             class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
@@ -140,7 +140,7 @@ exports[`array fields array icons 1`] = `
                       style="padding-left: 12px; padding-right: 12px;"
                     >
                       <div
-                        class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                        class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                         style="margin-left: -12px; margin-right: -12px;"
                       >
                         <div
@@ -191,11 +191,11 @@ exports[`array fields array icons 1`] = `
                         </div>
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 16px;"
                         >
                           <div
                             class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                            style="width: 100%;"
+                            style="width: 100%; justify-content: flex-end;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -326,7 +326,7 @@ exports[`array fields array icons 1`] = `
                         </div>
                       </div>
                       <div
-                        class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                        class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                         style="margin-left: -12px; margin-right: -12px;"
                       >
                         <div
@@ -377,11 +377,11 @@ exports[`array fields array icons 1`] = `
                         </div>
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 16px;"
                         >
                           <div
                             class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                            style="width: 100%;"
+                            style="width: 100%; justify-content: flex-end;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -522,7 +522,7 @@ exports[`array fields array icons 1`] = `
                       >
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                         >
                           <button
                             class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
@@ -846,7 +846,7 @@ exports[`array fields fixed array 1`] = `
                       style="padding-left: 12px; padding-right: 12px;"
                     >
                       <div
-                        class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                        class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                         style="margin-left: -12px; margin-right: -12px;"
                       >
                         <div
@@ -897,7 +897,7 @@ exports[`array fields fixed array 1`] = `
                         </div>
                       </div>
                       <div
-                        class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                        class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                         style="margin-left: -12px; margin-right: -12px;"
                       >
                         <div
@@ -1633,11 +1633,11 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                         </div>
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                         >
                           <div
                             class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                            style="width: 100%;"
+                            style="width: 100%; justify-content: flex-end;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -1964,11 +1964,11 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                         </div>
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                         >
                           <div
                             class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                            style="width: 100%;"
+                            style="width: 100%; justify-content: flex-end;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -2078,7 +2078,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                       >
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                         >
                           <button
                             class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
@@ -2173,7 +2173,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                       style="padding-left: 12px; padding-right: 12px;"
                     >
                       <div
-                        class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                        class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                         style="margin-left: -12px; margin-right: -12px;"
                       >
                         <div
@@ -2224,11 +2224,11 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                         </div>
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 16px;"
                         >
                           <div
                             class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                            style="width: 100%;"
+                            style="width: 100%; justify-content: flex-end;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -2328,7 +2328,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                         </div>
                       </div>
                       <div
-                        class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                        class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                         style="margin-left: -12px; margin-right: -12px;"
                       >
                         <div
@@ -2379,11 +2379,11 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                         </div>
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 16px;"
                         >
                           <div
                             class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                            style="width: 100%;"
+                            style="width: 100%; justify-content: flex-end;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -2493,7 +2493,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                       >
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                         >
                           <button
                             class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
@@ -2710,7 +2710,7 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
                       style="padding-left: 12px; padding-right: 12px;"
                     >
                       <div
-                        class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                        class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                         style="margin-left: -12px; margin-right: -12px;"
                       >
                         <div
@@ -2761,7 +2761,7 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
                         </div>
                       </div>
                       <div
-                        class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                        class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                         style="margin-left: -12px; margin-right: -12px;"
                       >
                         <div
@@ -3032,7 +3032,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                             style="padding-left: 12px; padding-right: 12px;"
                                           >
                                             <div
-                                              class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                                              class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                                               style="margin-left: -12px; margin-right: -12px;"
                                             >
                                               <div
@@ -3083,11 +3083,11 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                               </div>
                                               <div
                                                 class="ant-col css-dev-only-do-not-override-ac2jek"
-                                                style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                                                style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 16px;"
                                               >
                                                 <div
                                                   class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                                                  style="width: 100%;"
+                                                  style="width: 100%; justify-content: flex-end;"
                                                 >
                                                   <button
                                                     class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -3187,7 +3187,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                               </div>
                                             </div>
                                             <div
-                                              class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                                              class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                                               style="margin-left: -12px; margin-right: -12px;"
                                             >
                                               <div
@@ -3238,11 +3238,11 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                               </div>
                                               <div
                                                 class="ant-col css-dev-only-do-not-override-ac2jek"
-                                                style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                                                style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 16px;"
                                               >
                                                 <div
                                                   class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                                                  style="width: 100%;"
+                                                  style="width: 100%; justify-content: flex-end;"
                                                 >
                                                   <button
                                                     class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -3352,7 +3352,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                             >
                                               <div
                                                 class="ant-col css-dev-only-do-not-override-ac2jek"
-                                                style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                                                style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                                               >
                                                 <button
                                                   class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
@@ -3402,11 +3402,11 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                         </div>
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                         >
                           <div
                             class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                            style="width: 100%;"
+                            style="width: 100%; justify-content: flex-end;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -3544,7 +3544,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                             style="padding-left: 12px; padding-right: 12px;"
                                           >
                                             <div
-                                              class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                                              class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                                               style="margin-left: -12px; margin-right: -12px;"
                                             >
                                               <div
@@ -3595,11 +3595,11 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                               </div>
                                               <div
                                                 class="ant-col css-dev-only-do-not-override-ac2jek"
-                                                style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                                                style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 16px;"
                                               >
                                                 <div
                                                   class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                                                  style="width: 100%;"
+                                                  style="width: 100%; justify-content: flex-end;"
                                                 >
                                                   <button
                                                     class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -3699,7 +3699,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                               </div>
                                             </div>
                                             <div
-                                              class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                                              class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                                               style="margin-left: -12px; margin-right: -12px;"
                                             >
                                               <div
@@ -3750,11 +3750,11 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                               </div>
                                               <div
                                                 class="ant-col css-dev-only-do-not-override-ac2jek"
-                                                style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                                                style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 16px;"
                                               >
                                                 <div
                                                   class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                                                  style="width: 100%;"
+                                                  style="width: 100%; justify-content: flex-end;"
                                                 >
                                                   <button
                                                     class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -3864,7 +3864,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                             >
                                               <div
                                                 class="ant-col css-dev-only-do-not-override-ac2jek"
-                                                style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                                                style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                                               >
                                                 <button
                                                   class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
@@ -3914,11 +3914,11 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                         </div>
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                         >
                           <div
                             class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                            style="width: 100%;"
+                            style="width: 100%; justify-content: flex-end;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -4028,7 +4028,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                       >
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                         >
                           <button
                             class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
@@ -4350,11 +4350,11 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                         </div>
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                         >
                           <div
                             class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                            style="width: 100%;"
+                            style="width: 100%; justify-content: flex-end;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -4681,11 +4681,11 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                         </div>
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                         >
                           <div
                             class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                            style="width: 100%;"
+                            style="width: 100%; justify-content: flex-end;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -4795,7 +4795,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                       >
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                         >
                           <button
                             class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
@@ -4890,7 +4890,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                       style="padding-left: 12px; padding-right: 12px;"
                     >
                       <div
-                        class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                        class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                         style="margin-left: -12px; margin-right: -12px;"
                       >
                         <div
@@ -4941,11 +4941,11 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                         </div>
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 16px;"
                         >
                           <div
                             class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                            style="width: 100%;"
+                            style="width: 100%; justify-content: flex-end;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -5045,7 +5045,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                         </div>
                       </div>
                       <div
-                        class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                        class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                         style="margin-left: -12px; margin-right: -12px;"
                       >
                         <div
@@ -5096,11 +5096,11 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                         </div>
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: 16px;"
                         >
                           <div
                             class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                            style="width: 100%;"
+                            style="width: 100%; justify-content: flex-end;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -5210,7 +5210,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                       >
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                         >
                           <button
                             class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
@@ -5331,7 +5331,7 @@ exports[`with title and description array 1`] = `
                       >
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                         >
                           <button
                             class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
@@ -5456,7 +5456,7 @@ exports[`with title and description array icons 1`] = `
                       style="padding-left: 12px; padding-right: 12px;"
                     >
                       <div
-                        class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                        class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                         style="margin-left: -12px; margin-right: -12px;"
                       >
                         <div
@@ -5531,11 +5531,11 @@ exports[`with title and description array icons 1`] = `
                         </div>
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: -8px;"
                         >
                           <div
                             class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                            style="width: 100%;"
+                            style="width: 100%; justify-content: flex-end;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -5666,7 +5666,7 @@ exports[`with title and description array icons 1`] = `
                         </div>
                       </div>
                       <div
-                        class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                        class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                         style="margin-left: -12px; margin-right: -12px;"
                       >
                         <div
@@ -5741,11 +5741,11 @@ exports[`with title and description array icons 1`] = `
                         </div>
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: -8px;"
                         >
                           <div
                             class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                            style="width: 100%;"
+                            style="width: 100%; justify-content: flex-end;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -5886,7 +5886,7 @@ exports[`with title and description array icons 1`] = `
                       >
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                         >
                           <button
                             class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
@@ -6157,7 +6157,7 @@ exports[`with title and description fixed array 1`] = `
                       style="padding-left: 12px; padding-right: 12px;"
                     >
                       <div
-                        class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                        class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                         style="margin-left: -12px; margin-right: -12px;"
                       >
                         <div
@@ -6232,7 +6232,7 @@ exports[`with title and description fixed array 1`] = `
                         </div>
                       </div>
                       <div
-                        class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                        class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                         style="margin-left: -12px; margin-right: -12px;"
                       >
                         <div
@@ -6471,7 +6471,7 @@ exports[`with title and description from both array 1`] = `
                       >
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                         >
                           <button
                             class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
@@ -6596,7 +6596,7 @@ exports[`with title and description from both array icons 1`] = `
                       style="padding-left: 12px; padding-right: 12px;"
                     >
                       <div
-                        class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                        class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                         style="margin-left: -12px; margin-right: -12px;"
                       >
                         <div
@@ -6671,11 +6671,11 @@ exports[`with title and description from both array icons 1`] = `
                         </div>
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: -8px;"
                         >
                           <div
                             class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                            style="width: 100%;"
+                            style="width: 100%; justify-content: flex-end;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -6806,7 +6806,7 @@ exports[`with title and description from both array icons 1`] = `
                         </div>
                       </div>
                       <div
-                        class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                        class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                         style="margin-left: -12px; margin-right: -12px;"
                       >
                         <div
@@ -6881,11 +6881,11 @@ exports[`with title and description from both array icons 1`] = `
                         </div>
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: -8px;"
                         >
                           <div
                             class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                            style="width: 100%;"
+                            style="width: 100%; justify-content: flex-end;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -7026,7 +7026,7 @@ exports[`with title and description from both array icons 1`] = `
                       >
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                         >
                           <button
                             class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
@@ -7297,7 +7297,7 @@ exports[`with title and description from both fixed array 1`] = `
                       style="padding-left: 12px; padding-right: 12px;"
                     >
                       <div
-                        class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                        class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                         style="margin-left: -12px; margin-right: -12px;"
                       >
                         <div
@@ -7372,7 +7372,7 @@ exports[`with title and description from both fixed array 1`] = `
                         </div>
                       </div>
                       <div
-                        class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                        class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                         style="margin-left: -12px; margin-right: -12px;"
                       >
                         <div
@@ -7611,7 +7611,7 @@ exports[`with title and description from uiSchema array 1`] = `
                       >
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                         >
                           <button
                             class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
@@ -7736,7 +7736,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                       style="padding-left: 12px; padding-right: 12px;"
                     >
                       <div
-                        class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                        class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                         style="margin-left: -12px; margin-right: -12px;"
                       >
                         <div
@@ -7811,11 +7811,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         </div>
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: -8px;"
                         >
                           <div
                             class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                            style="width: 100%;"
+                            style="width: 100%; justify-content: flex-end;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -7946,7 +7946,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         </div>
                       </div>
                       <div
-                        class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                        class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                         style="margin-left: -12px; margin-right: -12px;"
                       >
                         <div
@@ -8021,11 +8021,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         </div>
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px; margin-top: -8px;"
                         >
                           <div
                             class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                            style="width: 100%;"
+                            style="width: 100%; justify-content: flex-end;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -8166,7 +8166,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                       >
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                         >
                           <button
                             class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
@@ -8437,7 +8437,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                       style="padding-left: 12px; padding-right: 12px;"
                     >
                       <div
-                        class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                        class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                         style="margin-left: -12px; margin-right: -12px;"
                       >
                         <div
@@ -8512,7 +8512,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                         </div>
                       </div>
                       <div
-                        class="ant-row ant-row-top css-dev-only-do-not-override-ac2jek"
+                        class="ant-row ant-row-middle css-dev-only-do-not-override-ac2jek"
                         style="margin-left: -12px; margin-right: -12px;"
                       >
                         <div
@@ -8738,7 +8738,7 @@ exports[`with title and description with global label off array 1`] = `
                       >
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                         >
                           <button
                             class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
@@ -8914,11 +8914,11 @@ exports[`with title and description with global label off array icons 1`] = `
                         </div>
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                         >
                           <div
                             class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                            style="width: 100%;"
+                            style="width: 100%; justify-content: flex-end;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -9113,11 +9113,11 @@ exports[`with title and description with global label off array icons 1`] = `
                         </div>
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                         >
                           <div
                             class="ant-space-compact css-dev-only-do-not-override-ac2jek"
-                            style="width: 100%;"
+                            style="width: 100%; justify-content: flex-end;"
                           >
                             <button
                               class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
@@ -9258,7 +9258,7 @@ exports[`with title and description with global label off array icons 1`] = `
                       >
                         <div
                           class="ant-col css-dev-only-do-not-override-ac2jek"
-                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 192px;"
+                          style="padding-left: 12px; padding-right: 12px; flex: 0 0 120px;"
                         >
                           <button
                             class="ant-btn css-dev-only-do-not-override-ac2jek ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
@@ -9344,17 +9344,6 @@ exports[`with title and description with global label off checkboxes 1`] = `
         <div
           class="ant-row ant-form-item-row css-dev-only-do-not-override-ac2jek"
         >
-          <div
-            class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ac2jek"
-          >
-            <label
-              class=""
-              for="root"
-              title="Test field"
-            >
-              Test field
-            </label>
-          </div>
           <div
             class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ac2jek"
           >

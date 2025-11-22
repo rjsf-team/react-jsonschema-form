@@ -7,8 +7,8 @@ import { AliasReplacerArguments } from 'tsc-alias';
  */
 export default function ajvReplacer({ orig }: AliasReplacerArguments): string {
   if (orig.startsWith("from 'ajv/dist/standalone")) {
-    const origLodashEs = orig.substring(0, orig.length - 1);
-    return `${origLodashEs}/index.js'`;
+    const origAjv = orig.substring(0, orig.length - 1);
+    return `${origAjv}/index.js'`;
   }
 
   return orig;

@@ -19,7 +19,7 @@ exports[`array fields array 1`] = `
           class="row"
         >
           <p
-            class="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
               class="btn btn-info btn-add col-xs-12"
@@ -64,9 +64,10 @@ exports[`array fields array icons 1`] = `
         >
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: center;"
           >
             <div
-              class="col-xs-9"
+              class="col-xs-9 col-md-10 col-xl-11"
             >
               <div
                 class="form-group rjsf-field rjsf-field-string"
@@ -85,11 +86,11 @@ exports[`array fields array icons 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
             >
               <div
                 class="btn-group"
-                style="display: flex; justify-content: space-around;"
+                style="display: flex; justify-content: flex-end; margin-top: 9px;"
               >
                 <button
                   class="btn btn-default rjsf-array-item-move-up"
@@ -137,9 +138,10 @@ exports[`array fields array icons 1`] = `
           </div>
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: center;"
           >
             <div
-              class="col-xs-9"
+              class="col-xs-9 col-md-10 col-xl-11"
             >
               <div
                 class="form-group rjsf-field rjsf-field-string"
@@ -158,11 +160,11 @@ exports[`array fields array icons 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
             >
               <div
                 class="btn-group"
-                style="display: flex; justify-content: space-around;"
+                style="display: flex; justify-content: flex-end; margin-top: 9px;"
               >
                 <button
                   class="btn btn-default rjsf-array-item-move-up"
@@ -213,7 +215,7 @@ exports[`array fields array icons 1`] = `
           class="row"
         >
           <p
-            class="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
               class="btn btn-info btn-add col-xs-12"
@@ -348,6 +350,7 @@ exports[`array fields fixed array 1`] = `
         >
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: center;"
           >
             <div
               class="col-xs-12"
@@ -371,6 +374,7 @@ exports[`array fields fixed array 1`] = `
           </div>
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: center;"
           >
             <div
               class="col-xs-12"
@@ -549,9 +553,10 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
         >
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: baseline;"
           >
             <div
-              class="col-xs-9"
+              class="col-xs-9 col-md-10 col-xl-11"
             >
               <div
                 class="form-group rjsf-field rjsf-field-object"
@@ -604,11 +609,11 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
             >
               <div
                 class="btn-group"
-                style="display: flex; justify-content: space-around;"
+                style="display: flex; justify-content: flex-end; margin-top: 0px;"
               >
                 <button
                   class="btn btn-default rjsf-array-item-move-up"
@@ -646,9 +651,10 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
           </div>
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: baseline;"
           >
             <div
-              class="col-xs-9"
+              class="col-xs-9 col-md-10 col-xl-11"
             >
               <div
                 class="form-group rjsf-field rjsf-field-object"
@@ -701,11 +707,11 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
             >
               <div
                 class="btn-group"
-                style="display: flex; justify-content: space-around;"
+                style="display: flex; justify-content: flex-end; margin-top: 0px;"
               >
                 <button
                   class="btn btn-default rjsf-array-item-move-up"
@@ -746,7 +752,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
           class="row"
         >
           <p
-            class="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
               class="btn btn-info btn-add col-xs-12"
@@ -791,9 +797,10 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
         >
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: center;"
           >
             <div
-              class="col-xs-9"
+              class="col-xs-9 col-md-10 col-xl-11"
             >
               <div
                 class="form-group rjsf-field rjsf-field-string"
@@ -812,11 +819,11 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
             >
               <div
                 class="btn-group"
-                style="display: flex; justify-content: space-around;"
+                style="display: flex; justify-content: flex-end; margin-top: 9px;"
               >
                 <button
                   class="btn btn-default rjsf-array-item-move-up"
@@ -854,9 +861,10 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
           </div>
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: center;"
           >
             <div
-              class="col-xs-9"
+              class="col-xs-9 col-md-10 col-xl-11"
             >
               <div
                 class="form-group rjsf-field rjsf-field-string"
@@ -875,11 +883,11 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
             >
               <div
                 class="btn-group"
-                style="display: flex; justify-content: space-around;"
+                style="display: flex; justify-content: flex-end; margin-top: 9px;"
               >
                 <button
                   class="btn btn-default rjsf-array-item-move-up"
@@ -920,7 +928,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
           class="row"
         >
           <p
-            class="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
               class="btn btn-info btn-add col-xs-12"
@@ -1010,6 +1018,7 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
         >
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: center;"
           >
             <div
               class="col-xs-12"
@@ -1033,6 +1042,7 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
           </div>
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: center;"
           >
             <div
               class="col-xs-12"
@@ -1057,6 +1067,7 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
           </div>
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: baseline;"
           >
             <div
               class="col-xs-12"
@@ -1113,9 +1124,10 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
         >
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: baseline;"
           >
             <div
-              class="col-xs-9"
+              class="col-xs-9 col-md-10 col-xl-11"
             >
               <div
                 class="form-group rjsf-field rjsf-field-array"
@@ -1129,9 +1141,10 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                   >
                     <div
                       class="rjsf-array-item"
+                      style="display: flex; align-items: center;"
                     >
                       <div
-                        class="col-xs-9"
+                        class="col-xs-9 col-md-10 col-xl-11"
                       >
                         <div
                           class="form-group rjsf-field rjsf-field-string"
@@ -1150,11 +1163,11 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                         </div>
                       </div>
                       <div
-                        class="col-xs-3 array-item-toolbox"
+                        class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
                       >
                         <div
                           class="btn-group"
-                          style="display: flex; justify-content: space-around;"
+                          style="display: flex; justify-content: flex-end; margin-top: 9px;"
                         >
                           <button
                             class="btn btn-default rjsf-array-item-move-up"
@@ -1192,9 +1205,10 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                     </div>
                     <div
                       class="rjsf-array-item"
+                      style="display: flex; align-items: center;"
                     >
                       <div
-                        class="col-xs-9"
+                        class="col-xs-9 col-md-10 col-xl-11"
                       >
                         <div
                           class="form-group rjsf-field rjsf-field-string"
@@ -1213,11 +1227,11 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                         </div>
                       </div>
                       <div
-                        class="col-xs-3 array-item-toolbox"
+                        class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
                       >
                         <div
                           class="btn-group"
-                          style="display: flex; justify-content: space-around;"
+                          style="display: flex; justify-content: flex-end; margin-top: 9px;"
                         >
                           <button
                             class="btn btn-default rjsf-array-item-move-up"
@@ -1258,7 +1272,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                     class="row"
                   >
                     <p
-                      class="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+                      class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
                     >
                       <button
                         class="btn btn-info btn-add col-xs-12"
@@ -1276,11 +1290,11 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
             >
               <div
                 class="btn-group"
-                style="display: flex; justify-content: space-around;"
+                style="display: flex; justify-content: flex-end; margin-top: 0px;"
               >
                 <button
                   class="btn btn-default rjsf-array-item-move-up"
@@ -1318,9 +1332,10 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
           </div>
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: baseline;"
           >
             <div
-              class="col-xs-9"
+              class="col-xs-9 col-md-10 col-xl-11"
             >
               <div
                 class="form-group rjsf-field rjsf-field-array"
@@ -1334,9 +1349,10 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                   >
                     <div
                       class="rjsf-array-item"
+                      style="display: flex; align-items: center;"
                     >
                       <div
-                        class="col-xs-9"
+                        class="col-xs-9 col-md-10 col-xl-11"
                       >
                         <div
                           class="form-group rjsf-field rjsf-field-string"
@@ -1355,11 +1371,11 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                         </div>
                       </div>
                       <div
-                        class="col-xs-3 array-item-toolbox"
+                        class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
                       >
                         <div
                           class="btn-group"
-                          style="display: flex; justify-content: space-around;"
+                          style="display: flex; justify-content: flex-end; margin-top: 9px;"
                         >
                           <button
                             class="btn btn-default rjsf-array-item-move-up"
@@ -1397,9 +1413,10 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                     </div>
                     <div
                       class="rjsf-array-item"
+                      style="display: flex; align-items: center;"
                     >
                       <div
-                        class="col-xs-9"
+                        class="col-xs-9 col-md-10 col-xl-11"
                       >
                         <div
                           class="form-group rjsf-field rjsf-field-string"
@@ -1418,11 +1435,11 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                         </div>
                       </div>
                       <div
-                        class="col-xs-3 array-item-toolbox"
+                        class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
                       >
                         <div
                           class="btn-group"
-                          style="display: flex; justify-content: space-around;"
+                          style="display: flex; justify-content: flex-end; margin-top: 9px;"
                         >
                           <button
                             class="btn btn-default rjsf-array-item-move-up"
@@ -1463,7 +1480,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                     class="row"
                   >
                     <p
-                      class="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+                      class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
                     >
                       <button
                         class="btn btn-info btn-add col-xs-12"
@@ -1481,11 +1498,11 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
             >
               <div
                 class="btn-group"
-                style="display: flex; justify-content: space-around;"
+                style="display: flex; justify-content: flex-end; margin-top: 0px;"
               >
                 <button
                   class="btn btn-default rjsf-array-item-move-up"
@@ -1526,7 +1543,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
           class="row"
         >
           <p
-            class="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
               class="btn btn-info btn-add col-xs-12"
@@ -1571,9 +1588,10 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
         >
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: baseline;"
           >
             <div
-              class="col-xs-9"
+              class="col-xs-9 col-md-10 col-xl-11"
             >
               <div
                 class="form-group rjsf-field rjsf-field-object"
@@ -1626,11 +1644,11 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
             >
               <div
                 class="btn-group"
-                style="display: flex; justify-content: space-around;"
+                style="display: flex; justify-content: flex-end; margin-top: 0px;"
               >
                 <button
                   class="btn btn-default rjsf-array-item-move-up"
@@ -1668,9 +1686,10 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
           </div>
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: baseline;"
           >
             <div
-              class="col-xs-9"
+              class="col-xs-9 col-md-10 col-xl-11"
             >
               <div
                 class="form-group rjsf-field rjsf-field-object"
@@ -1723,11 +1742,11 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
             >
               <div
                 class="btn-group"
-                style="display: flex; justify-content: space-around;"
+                style="display: flex; justify-content: flex-end; margin-top: 0px;"
               >
                 <button
                   class="btn btn-default rjsf-array-item-move-up"
@@ -1768,7 +1787,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
           class="row"
         >
           <p
-            class="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
               class="btn btn-info btn-add col-xs-12"
@@ -1813,9 +1832,10 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
         >
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: center;"
           >
             <div
-              class="col-xs-9"
+              class="col-xs-9 col-md-10 col-xl-11"
             >
               <div
                 class="form-group rjsf-field rjsf-field-string"
@@ -1834,11 +1854,11 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
             >
               <div
                 class="btn-group"
-                style="display: flex; justify-content: space-around;"
+                style="display: flex; justify-content: flex-end; margin-top: 9px;"
               >
                 <button
                   class="btn btn-default rjsf-array-item-move-up"
@@ -1876,9 +1896,10 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
           </div>
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: center;"
           >
             <div
-              class="col-xs-9"
+              class="col-xs-9 col-md-10 col-xl-11"
             >
               <div
                 class="form-group rjsf-field rjsf-field-string"
@@ -1897,11 +1918,11 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
             >
               <div
                 class="btn-group"
-                style="display: flex; justify-content: space-around;"
+                style="display: flex; justify-content: flex-end; margin-top: 9px;"
               >
                 <button
                   class="btn btn-default rjsf-array-item-move-up"
@@ -1942,7 +1963,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
           class="row"
         >
           <p
-            class="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
               class="btn btn-info btn-add col-xs-12"
@@ -2000,7 +2021,7 @@ exports[`with title and description array 1`] = `
           class="row"
         >
           <p
-            class="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
               class="btn btn-info btn-add col-xs-12"
@@ -2056,9 +2077,10 @@ exports[`with title and description array icons 1`] = `
         >
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: center;"
           >
             <div
-              class="col-xs-9"
+              class="col-xs-9 col-md-10 col-xl-11"
             >
               <div
                 class="form-group rjsf-field rjsf-field-string"
@@ -2084,7 +2106,7 @@ exports[`with title and description array icons 1`] = `
                   aria-describedby="root_0__error root_0__description root_0__help"
                   class="form-control"
                   id="root_0"
-                  label="Test item"
+                  label="Test field-1"
                   name="root_0"
                   placeholder=""
                   required=""
@@ -2094,11 +2116,11 @@ exports[`with title and description array icons 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
             >
               <div
                 class="btn-group"
-                style="display: flex; justify-content: space-around;"
+                style="display: flex; justify-content: flex-end; margin-top: 31px;"
               >
                 <button
                   class="btn btn-default rjsf-array-item-move-up"
@@ -2146,9 +2168,10 @@ exports[`with title and description array icons 1`] = `
           </div>
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: center;"
           >
             <div
-              class="col-xs-9"
+              class="col-xs-9 col-md-10 col-xl-11"
             >
               <div
                 class="form-group rjsf-field rjsf-field-string"
@@ -2174,7 +2197,7 @@ exports[`with title and description array icons 1`] = `
                   aria-describedby="root_1__error root_1__description root_1__help"
                   class="form-control"
                   id="root_1"
-                  label="Test item"
+                  label="Test field-2"
                   name="root_1"
                   placeholder=""
                   required=""
@@ -2184,11 +2207,11 @@ exports[`with title and description array icons 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
             >
               <div
                 class="btn-group"
-                style="display: flex; justify-content: space-around;"
+                style="display: flex; justify-content: flex-end; margin-top: 31px;"
               >
                 <button
                   class="btn btn-default rjsf-array-item-move-up"
@@ -2239,7 +2262,7 @@ exports[`with title and description array icons 1`] = `
           class="row"
         >
           <p
-            class="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
               class="btn btn-info btn-add col-xs-12"
@@ -2352,6 +2375,7 @@ exports[`with title and description fixed array 1`] = `
         >
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: center;"
           >
             <div
               class="col-xs-12"
@@ -2380,7 +2404,7 @@ exports[`with title and description fixed array 1`] = `
                   aria-describedby="root_0__error root_0__description root_0__help"
                   class="form-control"
                   id="root_0"
-                  label="Test item"
+                  label="Test field-1"
                   name="root_0"
                   placeholder=""
                   required=""
@@ -2392,6 +2416,7 @@ exports[`with title and description fixed array 1`] = `
           </div>
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: center;"
           >
             <div
               class="col-xs-12"
@@ -2420,7 +2445,7 @@ exports[`with title and description fixed array 1`] = `
                   aria-describedby="root_1__error root_1__description root_1__help"
                   class="form-control"
                   id="root_1"
-                  label="Test item"
+                  label="Test field-2"
                   name="root_1"
                   placeholder=""
                   required=""
@@ -2476,7 +2501,7 @@ exports[`with title and description from both array 1`] = `
           class="row"
         >
           <p
-            class="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
               class="btn btn-info btn-add col-xs-12"
@@ -2532,9 +2557,10 @@ exports[`with title and description from both array icons 1`] = `
         >
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: center;"
           >
             <div
-              class="col-xs-9"
+              class="col-xs-9 col-md-10 col-xl-11"
             >
               <div
                 class="form-group rjsf-field rjsf-field-string"
@@ -2570,11 +2596,11 @@ exports[`with title and description from both array icons 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
             >
               <div
                 class="btn-group"
-                style="display: flex; justify-content: space-around;"
+                style="display: flex; justify-content: flex-end; margin-top: 31px;"
               >
                 <button
                   class="btn btn-default rjsf-array-item-move-up"
@@ -2622,9 +2648,10 @@ exports[`with title and description from both array icons 1`] = `
           </div>
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: center;"
           >
             <div
-              class="col-xs-9"
+              class="col-xs-9 col-md-10 col-xl-11"
             >
               <div
                 class="form-group rjsf-field rjsf-field-string"
@@ -2660,11 +2687,11 @@ exports[`with title and description from both array icons 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
             >
               <div
                 class="btn-group"
-                style="display: flex; justify-content: space-around;"
+                style="display: flex; justify-content: flex-end; margin-top: 31px;"
               >
                 <button
                   class="btn btn-default rjsf-array-item-move-up"
@@ -2715,7 +2742,7 @@ exports[`with title and description from both array icons 1`] = `
           class="row"
         >
           <p
-            class="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
               class="btn btn-info btn-add col-xs-12"
@@ -2828,6 +2855,7 @@ exports[`with title and description from both fixed array 1`] = `
         >
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: center;"
           >
             <div
               class="col-xs-12"
@@ -2868,6 +2896,7 @@ exports[`with title and description from both fixed array 1`] = `
           </div>
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: center;"
           >
             <div
               class="col-xs-12"
@@ -2952,7 +2981,7 @@ exports[`with title and description from uiSchema array 1`] = `
           class="row"
         >
           <p
-            class="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
               class="btn btn-info btn-add col-xs-12"
@@ -3008,9 +3037,10 @@ exports[`with title and description from uiSchema array icons 1`] = `
         >
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: center;"
           >
             <div
-              class="col-xs-9"
+              class="col-xs-9 col-md-10 col-xl-11"
             >
               <div
                 class="form-group rjsf-field rjsf-field-string"
@@ -3046,11 +3076,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
             >
               <div
                 class="btn-group"
-                style="display: flex; justify-content: space-around;"
+                style="display: flex; justify-content: flex-end; margin-top: 31px;"
               >
                 <button
                   class="btn btn-default rjsf-array-item-move-up"
@@ -3098,9 +3128,10 @@ exports[`with title and description from uiSchema array icons 1`] = `
           </div>
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: center;"
           >
             <div
-              class="col-xs-9"
+              class="col-xs-9 col-md-10 col-xl-11"
             >
               <div
                 class="form-group rjsf-field rjsf-field-string"
@@ -3136,11 +3167,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
             >
               <div
                 class="btn-group"
-                style="display: flex; justify-content: space-around;"
+                style="display: flex; justify-content: flex-end; margin-top: 31px;"
               >
                 <button
                   class="btn btn-default rjsf-array-item-move-up"
@@ -3191,7 +3222,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
           class="row"
         >
           <p
-            class="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
               class="btn btn-info btn-add col-xs-12"
@@ -3304,6 +3335,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
         >
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: center;"
           >
             <div
               class="col-xs-12"
@@ -3344,6 +3376,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
           </div>
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: center;"
           >
             <div
               class="col-xs-12"
@@ -3417,7 +3450,7 @@ exports[`with title and description with global label off array 1`] = `
           class="row"
         >
           <p
-            class="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
               class="btn btn-info btn-add col-xs-12"
@@ -3462,9 +3495,10 @@ exports[`with title and description with global label off array icons 1`] = `
         >
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: baseline;"
           >
             <div
-              class="col-xs-9"
+              class="col-xs-9 col-md-10 col-xl-11"
             >
               <div
                 class="form-group rjsf-field rjsf-field-string"
@@ -3473,7 +3507,7 @@ exports[`with title and description with global label off array icons 1`] = `
                   aria-describedby="root_0__error root_0__description root_0__help"
                   class="form-control"
                   id="root_0"
-                  label="Test item"
+                  label="Test field-1"
                   name="root_0"
                   placeholder=""
                   required=""
@@ -3483,11 +3517,11 @@ exports[`with title and description with global label off array icons 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
             >
               <div
                 class="btn-group"
-                style="display: flex; justify-content: space-around;"
+                style="display: flex; justify-content: flex-end; margin-top: 0px;"
               >
                 <button
                   class="btn btn-default rjsf-array-item-move-up"
@@ -3535,9 +3569,10 @@ exports[`with title and description with global label off array icons 1`] = `
           </div>
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: baseline;"
           >
             <div
-              class="col-xs-9"
+              class="col-xs-9 col-md-10 col-xl-11"
             >
               <div
                 class="form-group rjsf-field rjsf-field-string"
@@ -3546,7 +3581,7 @@ exports[`with title and description with global label off array icons 1`] = `
                   aria-describedby="root_1__error root_1__description root_1__help"
                   class="form-control"
                   id="root_1"
-                  label="Test item"
+                  label="Test field-2"
                   name="root_1"
                   placeholder=""
                   required=""
@@ -3556,11 +3591,11 @@ exports[`with title and description with global label off array icons 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
             >
               <div
                 class="btn-group"
-                style="display: flex; justify-content: space-around;"
+                style="display: flex; justify-content: flex-end; margin-top: 0px;"
               >
                 <button
                   class="btn btn-default rjsf-array-item-move-up"
@@ -3611,7 +3646,7 @@ exports[`with title and description with global label off array icons 1`] = `
           class="row"
         >
           <p
-            class="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
               class="btn btn-info btn-add col-xs-12"
@@ -3647,18 +3682,6 @@ exports[`with title and description with global label off checkboxes 1`] = `
     <div
       class="form-group rjsf-field rjsf-field-array"
     >
-      <label
-        class="control-label"
-        for="root"
-      >
-        Test field
-      </label>
-      <div
-        class="field-description"
-        id="root__description"
-      >
-        a test description
-      </div>
       <select
         aria-describedby="root__error root__description root__help"
         class="form-control"
@@ -3713,6 +3736,7 @@ exports[`with title and description with global label off fixed array 1`] = `
         >
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: baseline;"
           >
             <div
               class="col-xs-12"
@@ -3724,7 +3748,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                   aria-describedby="root_0__error root_0__description root_0__help"
                   class="form-control"
                   id="root_0"
-                  label="Test item"
+                  label="Test field-1"
                   name="root_0"
                   placeholder=""
                   required=""
@@ -3736,6 +3760,7 @@ exports[`with title and description with global label off fixed array 1`] = `
           </div>
           <div
             class="rjsf-array-item"
+            style="display: flex; align-items: baseline;"
           >
             <div
               class="col-xs-12"
@@ -3747,7 +3772,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                   aria-describedby="root_1__error root_1__description root_1__help"
                   class="form-control"
                   id="root_1"
-                  label="Test item"
+                  label="Test field-2"
                   name="root_1"
                   placeholder=""
                   required=""

@@ -27,8 +27,10 @@ export default function WrapIfAdditionalTemplate<
   disabled,
   id,
   label,
+  displayLabel,
   onRemoveProperty,
   onKeyRenameBlur,
+  rawDescription,
   readonly,
   required,
   schema,
@@ -49,16 +51,20 @@ export default function WrapIfAdditionalTemplate<
     );
   }
 
+  const marginDesc = rawDescription ? -28 : 0;
+  const margin = displayLabel ? 22 + marginDesc : 0;
   const keyId = `${id}-key`;
 
   return (
     <>
-      <div className={`flex flex-row items-center gap-2 relative w-full ${classNames}`} style={style}>
-        <div className='flex flex-col w-full gap-2 line-clamp-1'>
-          <div className='flex-grow'>
-            <label htmlFor={keyId} className='pt-2 text-sm font-medium text-muted-foreground mb-4 line-clamp-1'>
-              {keyLabel}
-            </label>
+      <div className={`grid grid-cols-12 col-span-12 items-center gap-2 ${classNames}`} style={style}>
+        <div className='grid gap-2 col-span-5'>
+          <div className='flex flex-col gap-2'>
+            {displayLabel && (
+              <label htmlFor={keyId} className='text-sm font-medium text-muted-foreground leading-none'>
+                {keyLabel}
+              </label>
+            )}
             <div className='pl-0.5'>
               <Input
                 required={required}
@@ -68,22 +74,28 @@ export default function WrapIfAdditionalTemplate<
                 name={keyId}
                 onBlur={!readonly ? onKeyRenameBlur : undefined}
                 type='text'
-                className='mt-1 w-full border shadow-sm'
+                className='w-full border shadow-sm'
               />
             </div>
+            {!!rawDescription && (
+              <span className='text-xs font-medium text-muted-foreground'>
+                <div className='text-sm text-muted-foreground'>&nbsp;</div>
+              </span>
+            )}
           </div>
-          <div className='flex-grow pr-0.5'>{children}</div>
         </div>
-
-        <RemoveButton
-          id={buttonId(id, 'remove')}
-          iconType='block'
-          className='rjsf-object-property-remove w-full'
-          disabled={disabled || readonly}
-          onClick={onRemoveProperty}
-          uiSchema={uiSchema}
-          registry={registry}
-        />
+        <div className='grid gap-2 col-span-6 pr-0.5'>{children}</div>
+        <div className='grid gap-2 col-span-1' style={{ marginTop: `${margin}px` }}>
+          <RemoveButton
+            id={buttonId(id, 'remove')}
+            iconType='block'
+            className='rjsf-object-property-remove w-full'
+            disabled={disabled || readonly}
+            onClick={onRemoveProperty}
+            uiSchema={uiSchema}
+            registry={registry}
+          />
+        </div>
       </div>
       <Separator dir='horizontal' className='mt-2' />
     </>

@@ -1,3 +1,4 @@
+import Ajv from 'ajv';
 import { CustomValidatorOptionsType } from '../../src';
 
 // NOTE these are the same as the CUSTOM_OPTIONS in `compileTestSchema.js`, keep them in sync
@@ -14,4 +15,5 @@ export const CUSTOM_OPTIONS: CustomValidatorOptionsType = {
   ajvFormatOptions: {
     mode: 'fast',
   },
+  extenderFn: (ajv: Ajv) => ajv,
 };

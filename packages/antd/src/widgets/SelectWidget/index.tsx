@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react';
 import { Select, SelectProps } from 'antd';
 import {
   ariaDescribedByIds,
@@ -11,7 +12,6 @@ import {
 } from '@rjsf/utils';
 import isString from 'lodash/isString';
 import { DefaultOptionType } from 'antd/es/select';
-import { useMemo } from 'react';
 
 const SELECT_STYLE = {
   width: '100%',
@@ -42,6 +42,7 @@ export default function SelectWidget<
   value,
   schema,
 }: WidgetProps<T, S, F>) {
+  const [open, setOpen] = useState(false);
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
@@ -61,7 +62,7 @@ export default function SelectWidget<
     return false;
   };
 
-  const getPopupContainer = (node: any) => node.parentNode;
+  const getPopupContainer = SelectWidget.getPopupContainerCallback();
 
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
 
@@ -92,6 +93,7 @@ export default function SelectWidget<
 
   return (
     <Select
+      open={open}
       autoFocus={autofocus}
       disabled={disabled || (readonlyAsDisabled && readonly)}
       getPopupContainer={getPopupContainer}
@@ -104,9 +106,17 @@ export default function SelectWidget<
       style={SELECT_STYLE}
       value={selectedIndexes}
       {...extraProps}
+      // When the open change is called, set the open state, needed so that the select opens properly in the playground
+      onOpenChange={setOpen}
       filterOption={filterOption}
       aria-describedby={ariaDescribedByIds(id)}
       options={selectOptions}
     />
   );
 }
+
+/** Give the playground a place to hook into the `getPopupContainer` callback generation function so that it can be
+ * disabled while in the playground. Since the callback is a simple function, it can be returned by this static
+ * "generator" function.
+ */
+SelectWidget.getPopupContainerCallback = () => (node: any) => node.parentElement;

@@ -23,8 +23,10 @@ export default function WrapIfAdditionalTemplate<
   disabled,
   id,
   label,
+  displayLabel,
   onRemoveProperty,
   onKeyRenameBlur,
+  rawDescription,
   readonly,
   required,
   schema,
@@ -36,6 +38,8 @@ export default function WrapIfAdditionalTemplate<
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
+  const descPadding = rawDescription ? 1 : 0;
+  const descMargin = rawDescription ? -24 : 0;
 
   if (!additional) {
     return (
@@ -46,12 +50,14 @@ export default function WrapIfAdditionalTemplate<
   }
 
   const keyId = `${id}-key`;
+  const margin = displayLabel ? 12 + descMargin : 0;
+  const padding = displayLabel ? 4 + descPadding : 1;
 
   return (
     <Row className={classNames} style={style} key={keyId}>
       <Col xs={5}>
         <Form.Group>
-          <Form.Label htmlFor={keyId}>{keyLabel}</Form.Label>
+          {displayLabel && <Form.Label htmlFor={keyId}>{keyLabel}</Form.Label>}
           <Form.Control
             required={required}
             defaultValue={label}
@@ -63,8 +69,8 @@ export default function WrapIfAdditionalTemplate<
           />
         </Form.Group>
       </Col>
-      <Col xs={5}>{children}</Col>
-      <Col xs={2} className='py-4 d-grid gap-2'>
+      <Col xs={6}>{children}</Col>
+      <Col xs={1} className={`py-${padding} d-grid gap-2`} style={{ marginTop: `${margin}px` }}>
         <RemoveButton
           id={buttonId(id, 'remove')}
           className='rjsf-object-property-remove w-100'

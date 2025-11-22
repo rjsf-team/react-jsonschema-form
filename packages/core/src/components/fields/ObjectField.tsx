@@ -367,9 +367,9 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
           required={isRequired<S>(schema, name)}
           schema={get(schema, [PROPERTIES_KEY, name], {}) as S}
           uiSchema={fieldUiSchema}
-          errorSchema={get(errorSchema, name)}
+          errorSchema={get(errorSchema, [name])}
           fieldPathId={childFieldPathId}
-          formData={get(formData, name)}
+          formData={get(formData, [name])}
           handleKeyRename={handleKeyRename}
           handleRemoveProperty={handleRemoveProperty}
           addedByAdditionalProperties={addedByAdditionalProperties}

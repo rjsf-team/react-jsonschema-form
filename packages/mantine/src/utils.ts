@@ -4,6 +4,7 @@ const uiOptionsKeys: Array<keyof UIOptionsType> = [
   'emptyValue',
   'classNames',
   'title',
+  'label',
   'help',
   'autocomplete',
   'disabled',

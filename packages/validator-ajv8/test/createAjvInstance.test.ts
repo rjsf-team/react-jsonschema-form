@@ -4,10 +4,13 @@ import addFormats from 'ajv-formats';
 
 import createAjvInstance, { AJV_CONFIG, COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from '../src/createAjvInstance';
 import { CUSTOM_OPTIONS } from './harness/testData';
+import { CustomValidatorOptionsType } from '../src';
 
 jest.mock('ajv');
 jest.mock('ajv/dist/2019');
 jest.mock('ajv-formats');
+
+const extender: CustomValidatorOptionsType['extenderFn'] = jest.fn((ajv: Ajv) => ajv);
 
 describe('createAjvInstance()', () => {
   describe('no additional meta schemas, custom formats, ajv options overrides or ajv format options', () => {
@@ -110,10 +113,10 @@ describe('createAjvInstance()', () => {
       expect(ajv.addMetaSchema).toHaveBeenCalledWith(CUSTOM_OPTIONS.additionalMetaSchemas);
     });
   });
-  describe('disables ajv format', () => {
+  describe('disables ajv format and calls extender when provided', () => {
     let ajv: Ajv;
     beforeAll(() => {
-      ajv = createAjvInstance(undefined, undefined, undefined, false);
+      ajv = createAjvInstance(undefined, undefined, undefined, false, undefined, extender);
     });
     afterAll(() => {
       (Ajv as unknown as jest.Mock).mockClear();
@@ -136,6 +139,9 @@ describe('createAjvInstance()', () => {
     });
     it('addMetaSchema was not called', () => {
       expect(ajv.addMetaSchema).not.toHaveBeenCalled();
+    });
+    it('calls the extender when provided', () => {
+      expect(extender).toHaveBeenCalledWith(ajv);
     });
   });
 });
