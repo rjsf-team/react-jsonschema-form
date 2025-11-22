@@ -1922,7 +1922,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ];
 
         test('getDefaultFormState', () => {
-          expect(getDefaultFormState(testValidator, schema, formData, schema, includeUndefinedValues)).toEqual(
+          expect(getDefaultFormState(testValidator, schema, formData, undefined, includeUndefinedValues)).toEqual(
             expected,
           );
         });
@@ -1930,7 +1930,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         test('computeDefaults', () => {
           expect(
             computeDefaults(testValidator, schema, {
-              rootSchema: schema,
               rawFormData: formData,
               includeUndefinedValues,
               shouldMergeDefaultsIntoFormData: true,
@@ -1944,7 +1943,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               testValidator,
               schema,
               {
-                rootSchema: schema,
                 includeUndefinedValues,
               },
               [
@@ -1962,7 +1960,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               testValidator,
               schema,
               {
-                rootSchema: schema,
                 includeUndefinedValues,
               },
               [
