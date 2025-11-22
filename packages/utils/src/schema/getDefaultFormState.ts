@@ -8,6 +8,7 @@ import {
   CONST_KEY,
   DEFAULT_KEY,
   DEPENDENCIES_KEY,
+  IF_KEY,
   ONE_OF_KEY,
   PROPERTIES_KEY,
   REF_KEY,
@@ -478,12 +479,16 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
   {
     const formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
     const schema: S = rawSchema;
-    // This is a custom addition that fixes this issue:
-    // https://github.com/rjsf-team/react-jsonschema-form/issues/3832
-    const retrievedSchema =
-      experimental_defaultFormStateBehavior?.allOf === 'populateDefaults' && ALL_OF_KEY in schema
-        ? retrieveSchema<T, S, F>(validator, schema, rootSchema, formData, experimental_customMergeAllOf)
-        : schema;
+    // Retrieve the schema:
+    // - If schema contains `allOf` AND `experimental_defaultFormStateBehavior.allOf` is set to `populateDefaults`
+    // - OR if schema contains an 'if' AND `emptyObjectFields` is not set to `skipEmptyDefaults`
+    // This ensures we compute defaults correctly for schemas with these keywords.
+    const shouldRetrieveSchema =
+      (experimental_defaultFormStateBehavior?.allOf === 'populateDefaults' && ALL_OF_KEY in schema) ||
+      (experimental_defaultFormStateBehavior?.emptyObjectFields !== 'skipEmptyDefaults' && IF_KEY in schema);
+    const retrievedSchema = shouldRetrieveSchema
+      ? retrieveSchema<T, S, F>(validator, schema, rootSchema, formData, experimental_customMergeAllOf)
+      : schema;
     const parentConst = retrievedSchema[CONST_KEY];
     const objectDefaults = Object.keys(retrievedSchema.properties || {}).reduce(
       (acc: GenericObjectType, key: string) => {

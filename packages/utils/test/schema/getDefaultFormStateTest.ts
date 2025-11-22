@@ -1641,6 +1641,83 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toEqual(expected);
         });
       });
+
+      describe('an nested object with if/then condition', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            wrappingObject: {
+              type: 'object',
+              properties: {
+                checkbox: {
+                  type: 'boolean',
+                },
+              },
+              if: {
+                properties: {
+                  checkbox: {
+                    const: true,
+                  },
+                },
+                required: ['checkbox'],
+              },
+              then: {
+                properties: {
+                  foo: {
+                    type: 'string',
+                    default: 'foo value',
+                  },
+                },
+                required: ['foo'],
+              },
+            },
+          },
+        };
+        const rawFormData = {
+          wrappingObject: {
+            checkbox: true,
+          },
+        };
+        const expected = {
+          wrappingObject: {
+            checkbox: true,
+            foo: 'foo value',
+          },
+        };
+        test('getDefaultFormState', () => {
+          expect(getDefaultFormState(testValidator, schema, rawFormData, schema)).toEqual(expected);
+        });
+
+        test('computeDefaults', () => {
+          expect(
+            computeDefaults(testValidator, schema, {
+              rootSchema: schema,
+              rawFormData,
+              shouldMergeDefaultsIntoFormData: true,
+            }),
+          ).toEqual(expected);
+        });
+
+        test('getDefaultBasedOnSchemaType', () => {
+          expect(
+            getDefaultBasedOnSchemaType(testValidator, schema, {
+              rootSchema: schema,
+              rawFormData,
+              shouldMergeDefaultsIntoFormData: true,
+            }),
+          ).toEqual(expected);
+        });
+
+        test('getObjectDefaults', () => {
+          expect(
+            getObjectDefaults(testValidator, schema, {
+              rootSchema: schema,
+              rawFormData,
+              shouldMergeDefaultsIntoFormData: true,
+            }),
+          ).toEqual(expected);
+        });
+      });
     });
 
     describe('array schemas', () => {
