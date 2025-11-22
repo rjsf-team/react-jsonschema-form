@@ -16,6 +16,13 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.1.3
+
+## @rjsf/utils
+
+- Fixed issue with schema array with nested dependent fixed-length, fixing [#3754](https://github.com/rjsf-team/react-jsonschema-form/issues/3754)
+
+
 # 6.1.2
 
 ## @rjsf/antd
