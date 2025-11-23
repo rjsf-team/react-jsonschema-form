@@ -1947,6 +1947,107 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
       });
 
+      describe('array with nested dependent fixed-length array schema', () => {
+        const schema: RJSFSchema = {
+          items: [
+            {
+              dependencies: {
+                checkbox: {
+                  if: {
+                    properties: {
+                      checkbox: {
+                        const: true,
+                      },
+                    },
+                  },
+                  then: {
+                    properties: {
+                      inner_array: {
+                        items: [
+                          {
+                            title: 'Fixed Item',
+                            type: 'string',
+                          },
+                        ],
+                        title: 'Inner Fixed-Length Array',
+                        type: 'array',
+                      },
+                    },
+                  },
+                },
+              },
+              properties: {
+                checkbox: {
+                  title: 'Dependency Checkbox',
+                  type: 'boolean',
+                },
+              },
+              title: 'Outer Item',
+              type: 'object',
+            },
+          ],
+          title: 'Outer Fixed Length Array',
+          type: 'array',
+        };
+        const formData = [{ checkbox: true }];
+        const includeUndefinedValues = 'excludeObjectChildren';
+        const expected = [
+          {
+            checkbox: true,
+            inner_array: [undefined],
+          },
+        ];
+
+        test('getDefaultFormState', () => {
+          expect(getDefaultFormState(testValidator, schema, formData, undefined, includeUndefinedValues)).toEqual(
+            expected,
+          );
+        });
+
+        test('computeDefaults', () => {
+          expect(
+            computeDefaults(testValidator, schema, {
+              rawFormData: formData,
+              includeUndefinedValues,
+              shouldMergeDefaultsIntoFormData: true,
+            }),
+          ).toEqual(expected);
+        });
+
+        test('getDefaultBasedOnSchemaType', () => {
+          expect(
+            getDefaultBasedOnSchemaType(
+              testValidator,
+              schema,
+              {
+                includeUndefinedValues,
+              },
+              [
+                {
+                  checkbox: true,
+                },
+              ],
+            ),
+          ).toEqual(expected);
+        });
+
+        test('getArrayDefaults', () => {
+          expect(
+            getArrayDefaults(
+              testValidator,
+              schema,
+              {
+                includeUndefinedValues,
+              },
+              [
+                {
+                  checkbox: true,
+                },
+              ],
+            ),
+          ).toEqual(expected);
+        });
+      });
       describe('an invalid array schema', () => {
         const schema: RJSFSchema = {
           type: 'array',

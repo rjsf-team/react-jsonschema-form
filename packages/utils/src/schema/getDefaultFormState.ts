@@ -619,12 +619,14 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
   if (Array.isArray(defaults)) {
     defaults = defaults.map((item, idx) => {
       const schemaItem: S = getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Fallback, idx);
+      const itemFormData = Array.isArray(rawFormData) ? rawFormData[idx] : undefined;
       return computeDefaults<T, S, F>(validator, schemaItem, {
         rootSchema,
         _recurseList,
         experimental_defaultFormStateBehavior,
         experimental_customMergeAllOf,
         parentDefaults: item,
+        rawFormData: itemFormData,
         required,
         shouldMergeDefaultsIntoFormData,
         initialDefaultsGenerated,
