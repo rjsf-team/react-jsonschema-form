@@ -1,7 +1,7 @@
 import type { ComponentType } from 'react';
 import { render, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { GenericObjectType } from '@rjsf/utils';
+import { GenericObjectType, ValidatorType } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import has from 'lodash/has';
 
@@ -35,8 +35,8 @@ export function createComponent(Component: ComponentType<FormProps>, theProps: F
   return { container, node, onChange, onError, onSubmit, rerender: rerenderFunction };
 }
 
-export function createFormComponent(props: Omit<FormProps, 'validator'>) {
-  return createComponent(Form, { validator, ...props });
+export function createFormComponent(props: Omit<FormProps, 'validator'>, v: ValidatorType = validator) {
+  return createComponent(Form, { validator: v, ...props });
 }
 
 // Use rerender function instead
