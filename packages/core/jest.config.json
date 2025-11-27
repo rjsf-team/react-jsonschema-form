@@ -1,7 +1,7 @@
 {
   "verbose": true,
   "testEnvironment": "jsdom",
-  "setupFilesAfterEnv": ["./test/setup-jest-env.js", "../../testing/testSetup.ts"],
+  "setupFilesAfterEnv": ["./test/setup-jest-env.ts", "../../testing/testSetup.ts"],
   "testMatch": ["**/test/**/*.test.[jt]s?(x)"],
   "transformIgnorePatterns": ["/node_modules/(?!(@x0k/json-schema-merge|deep-freeze-es6))"]
 }

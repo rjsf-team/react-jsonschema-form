@@ -1,21 +1,15 @@
-import * as React from 'react';
-import { expect } from 'chai';
-import { fireEvent, act } from '@testing-library/react';
-import sinon from 'sinon';
+import { createRef } from 'react';
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import { act, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import isEmpty from 'lodash/isEmpty';
 
-import { createFormComponent, createSandbox, getSelectedOptionValue, setProps, submitForm } from './test_utils';
+import Form from '../src';
+import { createFormComponent, getSelectedOptionValue, submitForm } from './testUtils';
+
+const user = userEvent.setup();
 
 describe('NumberField', () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
-
   describe('Number widget', () => {
     it('should use step to represent the multipleOf keyword', () => {
       const { node } = createFormComponent({
@@ -25,7 +19,7 @@ describe('NumberField', () => {
         },
       });
 
-      expect(node.querySelector('input').step).to.eql('5');
+      expect(node.querySelector('input')).toHaveAttribute('step', '5');
     });
 
     it('should use min to represent the minimum keyword', () => {
@@ -36,7 +30,7 @@ describe('NumberField', () => {
         },
       });
 
-      expect(node.querySelector('input').min).to.eql('0');
+      expect(node.querySelector('input')).toHaveAttribute('min', '0');
     });
 
     it('should use max to represent the maximum keyword', () => {
@@ -47,7 +41,7 @@ describe('NumberField', () => {
         },
       });
 
-      expect(node.querySelector('input').max).to.eql('100');
+      expect(node.querySelector('input')).toHaveAttribute('max', '100');
     });
 
     it('should use step to represent the multipleOf keyword', () => {
@@ -58,7 +52,7 @@ describe('NumberField', () => {
         },
       });
 
-      expect(node.querySelector('input').step).to.eql('5');
+      expect(node.querySelector('input')).toHaveAttribute('step', '5');
     });
 
     it('should use min to represent the minimum keyword', () => {
@@ -69,7 +63,7 @@ describe('NumberField', () => {
         },
       });
 
-      expect(node.querySelector('input').min).to.eql('0');
+      expect(node.querySelector('input')).toHaveAttribute('min', '0');
     });
 
     it('should use max to represent the maximum keyword', () => {
@@ -80,11 +74,11 @@ describe('NumberField', () => {
         },
       });
 
-      expect(node.querySelector('input').max).to.eql('100');
+      expect(node.querySelector('input')).toHaveAttribute('max', '100');
     });
   });
   describe('Number and text widget', () => {
-    let uiSchemas = [
+    const uiSchemas: UiSchema[] = [
       {},
       {
         'ui:options': {
@@ -92,7 +86,7 @@ describe('NumberField', () => {
         },
       },
     ];
-    for (let uiSchema of uiSchemas) {
+    for (const uiSchema of uiSchemas) {
       it('should render a string field with a label', () => {
         const { node } = createFormComponent({
           schema: {
@@ -102,7 +96,7 @@ describe('NumberField', () => {
           uiSchema,
         });
 
-        expect(node.querySelector('.rjsf-field label').textContent).eql('foo');
+        expect(node.querySelector('.rjsf-field label')).toHaveTextContent('foo');
       });
 
       it('should render a string field with a description', () => {
@@ -114,7 +108,7 @@ describe('NumberField', () => {
           uiSchema,
         });
 
-        expect(node.querySelector('.field-description').textContent).eql('bar');
+        expect(node.querySelector('.field-description')).toHaveTextContent('bar');
       });
 
       it('formData should default to undefined', () => {
@@ -125,9 +119,10 @@ describe('NumberField', () => {
         });
 
         submitForm(node);
-        sinon.assert.calledWithMatch(onSubmit.lastCall, {
-          formData: undefined,
-        });
+        expect(onSubmit).toHaveBeenLastCalledWith(
+          expect.objectContaining({ formData: undefined }),
+          expect.objectContaining({ type: 'submit' }),
+        );
       });
 
       it('should assign a default value', () => {
@@ -139,10 +134,10 @@ describe('NumberField', () => {
           uiSchema,
         });
 
-        expect(node.querySelector('.rjsf-field input').value).eql('2');
+        expect(node.querySelector('.rjsf-field input')).toHaveAttribute('value', '2');
       });
 
-      it('should handle a change event', () => {
+      it('should handle a change event', async () => {
         const { node, onChange } = createFormComponent({
           schema: {
             type: 'number',
@@ -150,23 +145,13 @@ describe('NumberField', () => {
           uiSchema,
         });
 
-        act(() => {
-          fireEvent.change(node.querySelector('input'), {
-            target: { value: '2' },
-          });
-        });
+        await user.type(node.querySelector('input')!, '2');
 
-        sinon.assert.calledWithMatch(
-          onChange.lastCall,
-          {
-            formData: 2,
-          },
-          'root',
-        );
+        expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 2 }), 'root');
       });
 
       it('should handle a blur event', () => {
-        const onBlur = sandbox.spy();
+        const onBlur = jest.fn();
         const { node } = createFormComponent({
           schema: {
             type: 'number',
@@ -176,15 +161,15 @@ describe('NumberField', () => {
         });
 
         const input = node.querySelector('input');
-        fireEvent.blur(input, {
+        fireEvent.blur(input!, {
           target: { value: '2' },
         });
 
-        expect(onBlur.calledWith(input.id, 2));
+        expect(onBlur).toHaveBeenCalledWith(input?.id, '2');
       });
 
       it('should handle a focus event', () => {
-        const onFocus = sandbox.spy();
+        const onFocus = jest.fn();
         const { node } = createFormComponent({
           schema: {
             type: 'number',
@@ -194,11 +179,11 @@ describe('NumberField', () => {
         });
 
         const input = node.querySelector('input');
-        fireEvent.focus(input, {
+        fireEvent.focus(input!, {
           target: { value: '2' },
         });
 
-        expect(onFocus.calledWith(input.id, 2));
+        expect(onFocus).toHaveBeenCalledWith(input?.id, '2');
       });
 
       it('should fill field with data', () => {
@@ -210,7 +195,7 @@ describe('NumberField', () => {
           formData: 2,
         });
 
-        expect(node.querySelector('.rjsf-field input').value).eql('2');
+        expect(node.querySelector('.rjsf-field input')).toHaveAttribute('value', '2');
       });
 
       describe('when inputting a number that ends with a dot and/or zero it should normalize it, without changing the input value', () => {
@@ -258,7 +243,7 @@ describe('NumberField', () => {
         ];
 
         tests.forEach((test) => {
-          it(`should work with an input value of ${test.input}`, () => {
+          it(`should work with an input value of ${test.input}`, async () => {
             const { node, onChange } = createFormComponent({
               schema: {
                 type: 'number',
@@ -268,29 +253,17 @@ describe('NumberField', () => {
 
             const $input = node.querySelector('input');
 
-            act(() => {
-              fireEvent.change($input, {
-                target: { value: test.input },
-              });
-            });
+            await user.type($input!, test.input);
 
-            setTimeout(() => {
-              sinon.assert.calledWithMatch(
-                onChange.lastCall,
-                {
-                  formData: test.output,
-                },
-                'root',
-              );
-              // "2." is not really a valid number in a input field of type number
-              // so we need to use getAttribute("value") instead since .value outputs the empty string
-              expect($input.getAttribute('value')).eql(test.input);
-            }, 0);
+            expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: test.output }), 'root');
+            // "2." is not really a valid number in a input field of type number
+            // so we need to use getAttribute("value") instead since .value outputs the empty string
+            expect($input).toHaveValue(isEmpty(uiSchema) ? test.output : test.input);
           });
         });
       });
 
-      it('should normalize values beginning with a decimal point', () => {
+      it('should normalize values beginning with a decimal point', async () => {
         const { node, onChange } = createFormComponent({
           schema: {
             type: 'number',
@@ -300,29 +273,20 @@ describe('NumberField', () => {
 
         const $input = node.querySelector('input');
 
-        act(() => {
-          fireEvent.change($input, {
-            target: { value: '.00' },
-          });
-        });
+        await user.type($input!, '.00');
 
-        sinon.assert.calledWithMatch(
-          onChange.lastCall,
-          {
-            formData: 0,
-          },
-          'root',
-        );
-        expect($input.value).eql('.00');
+        expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 0 }), 'root');
+        const expected = isEmpty(uiSchema) ? 0 : '.00';
+        expect($input).toHaveValue(expected);
       });
 
       it('should update input values correctly when formData prop changes', () => {
-        const schema = {
+        const schema: RJSFSchema = {
           type: 'number',
         };
 
-        const { comp, node } = createFormComponent({
-          ref: React.createRef(),
+        const { rerender, node } = createFormComponent({
+          ref: createRef(),
           schema,
           uiSchema,
           formData: 2.03,
@@ -330,48 +294,41 @@ describe('NumberField', () => {
 
         const $input = node.querySelector('input');
 
-        expect($input.value).eql('2.03');
+        expect($input).toHaveAttribute('value', '2.03');
 
-        setProps(comp, {
-          schema,
-          formData: 203,
-        });
+        rerender({ schema, formData: 203 });
 
-        expect($input.value).eql('203');
+        expect($input).toHaveAttribute('value', '203');
       });
 
-      it('form reset should work for a default value', () => {
-        const onChangeSpy = sinon.spy();
-        const schema = {
+      it('form reset should work for a default value', async () => {
+        const schema: RJSFSchema = {
           type: 'number',
           default: 1,
         };
 
-        const ref = React.createRef();
+        const ref = createRef<Form>();
 
-        const { node } = createFormComponent({
-          ref: ref,
+        const { node, onChange } = createFormComponent({
+          ref,
           schema,
           uiSchema,
-          onChange: onChangeSpy,
-        });
-
-        act(() => {
-          fireEvent.change(node.querySelector('input'), {
-            target: { value: '231' },
-          });
         });
 
         const $input = node.querySelector('input');
-        expect($input.value).eql('231');
-        sinon.assert.calledWithMatch(onChangeSpy.lastCall, { formData: 231 });
+
+        await user.type($input!, '231', { initialSelectionStart: 0, initialSelectionEnd: 1 });
+
+        expect($input).toHaveValue(isEmpty(uiSchema) ? 231 : '231');
+        expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 231 }), 'root');
 
         act(() => {
-          ref.current.reset();
+          ref.current?.reset();
         });
 
-        expect($input.value).eql('1');
-        sinon.assert.calledWithMatch(onChangeSpy.lastCall, { formData: 1 });
+        expect($input).toHaveValue(isEmpty(uiSchema) ? 1 : '1');
+        // No id on programmatic change
+        expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 1 }));
       });
 
       it('should render the widget with the expected id', () => {
@@ -382,10 +339,50 @@ describe('NumberField', () => {
           uiSchema,
         });
 
-        expect(node.querySelector('input').id).eql('root');
+        expect(node.querySelector('input')).toHaveAttribute('id', 'root');
       });
 
-      it('should render with trailing zeroes', () => {
+      it('should render with trailing zeroes', async () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'number',
+          },
+          uiSchema,
+        });
+        const isNumber = isEmpty(uiSchema);
+        await user.type(node.querySelector('input')!, '2.');
+
+        if (isNumber) {
+          // "2." is not really a valid number in a input field of type number
+          // so we need to use getAttribute("value") instead since .value outputs the empty string
+          expect(node.querySelector('.rjsf-field input')).toHaveValue(2);
+        } else {
+          expect(node.querySelector('.rjsf-field input')).toHaveValue('2.');
+        }
+
+        await user.type(node.querySelector('input')!, '0');
+        if (isNumber) {
+          expect(node.querySelector('.rjsf-field input')).toHaveValue(2.0);
+        } else {
+          expect(node.querySelector('.rjsf-field input')).toHaveValue('2.0');
+        }
+
+        await user.type(node.querySelector('input')!, '0');
+        if (isNumber) {
+          expect(node.querySelector('.rjsf-field input')).toHaveValue(2.0);
+        } else {
+          expect(node.querySelector('.rjsf-field input')).toHaveValue('2.00');
+        }
+
+        await user.type(node.querySelector('input')!, '0');
+        if (isNumber) {
+          expect(node.querySelector('.rjsf-field input')).toHaveValue(2.0);
+        } else {
+          expect(node.querySelector('.rjsf-field input')).toHaveValue('2.000');
+        }
+      });
+
+      it('should allow a zero to be input', async () => {
         const { node } = createFormComponent({
           schema: {
             type: 'number',
@@ -393,54 +390,9 @@ describe('NumberField', () => {
           uiSchema,
         });
 
-        act(() => {
-          fireEvent.change(node.querySelector('input'), {
-            target: { value: '2.' },
-          });
-        });
-
-        // "2." is not really a valid number in a input field of type number
-        // so we need to use getAttribute("value") instead since .value outputs the empty string
-        setTimeout(() => {
-          expect(node.querySelector('.rjsf-field input').getAttribute('value')).eql('2.');
-        });
-
-        act(() => {
-          fireEvent.change(node.querySelector('input'), {
-            target: { value: '2.0' },
-          });
-        });
-        expect(node.querySelector('.rjsf-field input').value).eql('2.0');
-
-        act(() => {
-          fireEvent.change(node.querySelector('input'), {
-            target: { value: '2.00' },
-          });
-        });
-        expect(node.querySelector('.rjsf-field input').value).eql('2.00');
-
-        act(() => {
-          fireEvent.change(node.querySelector('input'), {
-            target: { value: '2.000' },
-          });
-        });
-        expect(node.querySelector('.rjsf-field input').value).eql('2.000');
-      });
-
-      it('should allow a zero to be input', () => {
-        const { node } = createFormComponent({
-          schema: {
-            type: 'number',
-          },
-          uiSchema,
-        });
-
-        act(() => {
-          fireEvent.change(node.querySelector('input'), {
-            target: { value: '0' },
-          });
-        });
-        expect(node.querySelector('.rjsf-field input').value).eql('0');
+        await user.type(node.querySelector('input')!, '0');
+        const expected = isEmpty(uiSchema) ? 0 : '0';
+        expect(node.querySelector('.rjsf-field input')).toHaveValue(expected);
       });
 
       it('should render customized StringField', () => {
@@ -456,7 +408,7 @@ describe('NumberField', () => {
           },
         });
 
-        expect(node.querySelector('#custom')).to.exist;
+        expect(node.querySelector('#custom')).toBeInTheDocument();
       });
     }
   });
@@ -470,30 +422,27 @@ describe('NumberField', () => {
         },
       });
 
-      expect(node.querySelectorAll('.rjsf-field select')).to.have.length.of(1);
+      expect(node.querySelectorAll('.rjsf-field select')).toHaveLength(1);
     });
 
     it('should infer the value from an enum on change', () => {
-      const spy = sinon.spy();
-      const { node } = createFormComponent({
+      const { node, onChange } = createFormComponent({
         schema: {
           enum: [1, 2],
         },
-        onChange: spy,
       });
 
-      expect(node.querySelectorAll('.rjsf-field select')).to.have.length.of(1);
+      expect(node.querySelectorAll('.rjsf-field select')).toHaveLength(1);
       const $select = node.querySelector('.rjsf-field select');
-      expect($select.value).eql('');
+      expect($select).not.toHaveAttribute('value');
 
       act(() => {
-        fireEvent.change(node.querySelector('.rjsf-field select'), {
+        fireEvent.change(node.querySelector('.rjsf-field select')!, {
           target: { value: 0 }, // use index
         });
       });
-      expect(getSelectedOptionValue($select)).eql('1');
-      expect(spy.lastCall.args[0].formData).eql(1);
-      expect(spy.lastCall.args[1]).eql('root');
+      expect(getSelectedOptionValue($select as HTMLSelectElement)).toEqual('1');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 1 }), 'root');
     });
 
     it('should render a string field with a label', () => {
@@ -505,7 +454,7 @@ describe('NumberField', () => {
         },
       });
 
-      expect(node.querySelector('.rjsf-field label').textContent).eql('foo');
+      expect(node.querySelector('.rjsf-field label')).toHaveTextContent('foo');
     });
 
     it('should assign a default value', () => {
@@ -518,7 +467,8 @@ describe('NumberField', () => {
         noValidate: true,
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, { formData: 1 });
+      // No id on initial onChange
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 1 }));
     });
 
     it('should handle a change event', () => {
@@ -530,12 +480,12 @@ describe('NumberField', () => {
       });
 
       act(() => {
-        fireEvent.change(node.querySelector('select'), {
+        fireEvent.change(node.querySelector('select')!, {
           target: { value: 1 }, // useIndex
         });
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, { formData: 2 }, 'root');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 2 }), 'root');
     });
 
     it('should fill field with data', () => {
@@ -547,7 +497,10 @@ describe('NumberField', () => {
         formData: 2,
       });
       submitForm(node);
-      sinon.assert.calledWithMatch(onSubmit.lastCall, { formData: 2 });
+      expect(onSubmit).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: 2 }),
+        expect.objectContaining({ type: 'submit' }),
+      );
     });
 
     it('should render the widget with the expected id', () => {
@@ -558,11 +511,11 @@ describe('NumberField', () => {
         },
       });
 
-      expect(node.querySelector('select').id).eql('root');
+      expect(node.querySelector('select')).toHaveAttribute('id', 'root');
     });
 
     it('should render a select element with a blank option, when default value is not set.', () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         properties: {
           foo: {
@@ -577,15 +530,15 @@ describe('NumberField', () => {
       });
 
       const selects = node.querySelectorAll('select');
-      expect(selects[0].value).eql('');
+      expect(selects[0]).not.toHaveAttribute('value');
 
       const options = node.querySelectorAll('option');
-      expect(options.length).eql(2);
-      expect(options[0].innerHTML).eql('');
+      expect(options.length).toEqual(2);
+      expect(options[0].innerHTML).toEqual('');
     });
 
     it('should render a select element without a blank option, if a default value is set.', () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         properties: {
           foo: {
@@ -601,15 +554,15 @@ describe('NumberField', () => {
       });
 
       const selects = node.querySelectorAll('select');
-      expect(getSelectedOptionValue(selects[0])).eql('2');
+      expect(getSelectedOptionValue(selects[0])).toEqual('2');
 
       const options = node.querySelectorAll('option');
-      expect(options.length).eql(1);
-      expect(options[0].innerHTML).eql('2');
+      expect(options.length).toEqual(1);
+      expect(options[0].innerHTML).toEqual('2');
     });
 
     it('should render a select element without a blank option, if the default value is 0.', () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         properties: {
           foo: {
@@ -624,12 +577,13 @@ describe('NumberField', () => {
         schema,
       });
 
+      console.log(node.innerHTML);
       const selects = node.querySelectorAll('select');
-      expect(selects[0].value).eql('0');
+      expect(selects[0]).not.toHaveAttribute('value');
 
       const options = node.querySelectorAll('option');
-      expect(options.length).eql(1);
-      expect(options[0].innerHTML).eql('0');
+      expect(options.length).toEqual(1);
+      expect(options[0].innerHTML).toEqual('0');
     });
   });
 });

@@ -1,77 +1,66 @@
-import { expect } from 'chai';
+import { RJSFSchema } from '@rjsf/utils';
 
-import { createFormComponent, createSandbox } from './test_utils';
+import { createFormComponent } from './testUtils';
+const schema: RJSFSchema = {
+  type: 'object',
+  properties: {
+    street_address: {
+      type: 'string',
+    },
+    country: {
+      enum: ['United States of America', 'Canada'],
+    },
+  },
+  if: {
+    properties: { country: { const: 'United States of America' } },
+  },
+  then: {
+    properties: { zipcode: { type: 'string' } },
+  },
+  else: {
+    properties: { postal_code: { type: 'string' } },
+  },
+};
+
+const schemaWithRef: RJSFSchema = {
+  type: 'object',
+  properties: {
+    country: {
+      enum: ['United States of America', 'Canada'],
+    },
+  },
+  if: {
+    properties: {
+      country: {
+        const: 'United States of America',
+      },
+    },
+  },
+  then: {
+    $ref: '#/definitions/us',
+  },
+  else: {
+    $ref: '#/definitions/other',
+  },
+  definitions: {
+    us: {
+      properties: {
+        zip_code: {
+          type: 'string',
+        },
+      },
+    },
+    other: {
+      properties: {
+        postal_code: {
+          type: 'string',
+        },
+      },
+    },
+  },
+};
 
 describe('conditional items', () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
-
-  const schema = {
-    type: 'object',
-    properties: {
-      street_address: {
-        type: 'string',
-      },
-      country: {
-        enum: ['United States of America', 'Canada'],
-      },
-    },
-    if: {
-      properties: { country: { const: 'United States of America' } },
-    },
-    then: {
-      properties: { zipcode: { type: 'string' } },
-    },
-    else: {
-      properties: { postal_code: { type: 'string' } },
-    },
-  };
-
-  const schemaWithRef = {
-    type: 'object',
-    properties: {
-      country: {
-        enum: ['United States of America', 'Canada'],
-      },
-    },
-    if: {
-      properties: {
-        country: {
-          const: 'United States of America',
-        },
-      },
-    },
-    then: {
-      $ref: '#/definitions/us',
-    },
-    else: {
-      $ref: '#/definitions/other',
-    },
-    definitions: {
-      us: {
-        properties: {
-          zip_code: {
-            type: 'string',
-          },
-        },
-      },
-      other: {
-        properties: {
-          postal_code: {
-            type: 'string',
-          },
-        },
-      },
-    },
-  };
-
   it('should render then when condition is true', () => {
     const formData = {
       country: 'United States of America',
@@ -82,8 +71,8 @@ describe('conditional items', () => {
       formData,
     });
 
-    expect(node.querySelector('input[label=zipcode]')).not.eql(null);
-    expect(node.querySelector('input[label=postal_code]')).to.eql(null);
+    expect(node.querySelector('input[label=zipcode]')).not.toBeNull();
+    expect(node.querySelector('input[label=postal_code]')).toBeNull();
   });
 
   it('should render else when condition is false', () => {
@@ -96,8 +85,8 @@ describe('conditional items', () => {
       formData,
     });
 
-    expect(node.querySelector('input[label=zipcode]')).to.eql(null);
-    expect(node.querySelector('input[label=postal_code]')).not.eql(null);
+    expect(node.querySelector('input[label=zipcode]')).toBeNull();
+    expect(node.querySelector('input[label=postal_code]')).not.toBeNull();
   });
 
   it('should render control when data has not been filled in', () => {
@@ -110,8 +99,8 @@ describe('conditional items', () => {
 
     // An empty formData will make the conditional evaluate to true because no properties are required in the if statement
     // Please see https://github.com/epoberezkin/ajv/issues/913
-    expect(node.querySelector('input[label=zipcode]')).not.eql(null);
-    expect(node.querySelector('input[label=postal_code]')).to.eql(null);
+    expect(node.querySelector('input[label=zipcode]')).not.toBeNull();
+    expect(node.querySelector('input[label=postal_code]')).toBeNull();
   });
 
   it('should render then when condition is true with reference', () => {
@@ -124,8 +113,8 @@ describe('conditional items', () => {
       formData,
     });
 
-    expect(node.querySelector('input[label=zip_code]')).not.eql(null);
-    expect(node.querySelector('input[label=postal_code]')).to.eql(null);
+    expect(node.querySelector('input[label=zip_code]')).not.toBeNull();
+    expect(node.querySelector('input[label=postal_code]')).toBeNull();
   });
 
   it('should render else when condition is false with reference', () => {
@@ -138,12 +127,12 @@ describe('conditional items', () => {
       formData,
     });
 
-    expect(node.querySelector('input[label=zip_code]')).to.eql(null);
-    expect(node.querySelector('input[label=postal_code]')).not.eql(null);
+    expect(node.querySelector('input[label=zip_code]')).toBeNull();
+    expect(node.querySelector('input[label=postal_code]')).not.toBeNull();
   });
 
   describe('allOf if then else', () => {
-    const schemaWithAllOf = {
+    const schemaWithAllOf: RJSFSchema = {
       type: 'object',
       properties: {
         street_address: {
@@ -191,7 +180,7 @@ describe('conditional items', () => {
         formData,
       });
 
-      expect(node.querySelector('input[label=zipcode]')).not.eql(null);
+      expect(node.querySelector('input[label=zipcode]')).not.toBeNull();
     });
 
     it('should render correctly when condition is false in allOf (1)', () => {
@@ -204,7 +193,7 @@ describe('conditional items', () => {
         formData,
       });
 
-      expect(node.querySelector('input[label=zipcode]')).to.eql(null);
+      expect(node.querySelector('input[label=zipcode]')).toBeNull();
     });
 
     it('should render correctly when condition is true in allof (2)', () => {
@@ -217,9 +206,9 @@ describe('conditional items', () => {
         formData,
       });
 
-      expect(node.querySelector('input[label=postcode]')).not.eql(null);
-      expect(node.querySelector('input[label=zipcode]')).to.eql(null);
-      expect(node.querySelector('input[label=telephone]')).to.eql(null);
+      expect(node.querySelector('input[label=postcode]')).not.toBeNull();
+      expect(node.querySelector('input[label=zipcode]')).toBeNull();
+      expect(node.querySelector('input[label=telephone]')).toBeNull();
     });
 
     it('should render correctly when condition is true in allof (3)', () => {
@@ -232,12 +221,12 @@ describe('conditional items', () => {
         formData,
       });
 
-      expect(node.querySelector('input[label=postcode]')).to.eql(null);
-      expect(node.querySelector('input[label=zipcode]')).to.eql(null);
-      expect(node.querySelector('input[label=telephone]')).not.eql(null);
+      expect(node.querySelector('input[label=postcode]')).toBeNull();
+      expect(node.querySelector('input[label=zipcode]')).toBeNull();
+      expect(node.querySelector('input[label=telephone]')).not.toBeNull();
     });
 
-    const schemaWithAllOfRef = {
+    const schemaWithAllOfRef: RJSFSchema = {
       type: 'object',
       properties: {
         street_address: {
@@ -274,7 +263,7 @@ describe('conditional items', () => {
         formData,
       });
 
-      expect(node.querySelector('input[label=postcode]')).not.eql(null);
+      expect(node.querySelector('input[label=postcode]')).not.toBeNull();
     });
   });
 
@@ -298,10 +287,10 @@ describe('conditional items', () => {
     });
 
     // The zipcode field exists, but not as an additional property
-    expect(node.querySelector('input[label=zipcode]')).not.eql(null);
-    expect(node.querySelector('div.form-additional input[label=zipcode]')).to.eql(null);
+    expect(node.querySelector('input[label=zipcode]')).not.toBeNull();
+    expect(node.querySelector('div.form-additional input[label=zipcode]')).toBeNull();
 
     // The "otherKey" field exists as an additional property
-    expect(node.querySelector('div.form-additional input[label=otherKey]')).not.eql(null);
+    expect(node.querySelector('div.form-additional input[label=otherKey]')).not.toBeNull();
   });
 });

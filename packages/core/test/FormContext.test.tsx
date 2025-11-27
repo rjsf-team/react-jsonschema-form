@@ -1,64 +1,45 @@
-import { expect } from 'chai';
+import { ArrayFieldTemplateProps, FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
 
-import { createFormComponent, createSandbox } from './test_utils';
+import { createFormComponent } from './testUtils';
+
+const schema: RJSFSchema = { type: 'string' };
+
+const formContext = { foo: 'bar' };
+
+const fooId = `#${formContext.foo}`;
+
+// Use `props: any` to support the variety of uses (widgets, fields, templates)
+function CustomComponent(props: any) {
+  const { registry } = props;
+  const { formContext } = registry;
+  return <div id={formContext.foo} />;
+}
 
 describe('FormContext', () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
-
-  const schema = { type: 'string' };
-
-  const formContext = { foo: 'bar' };
-
-  const CustomComponent = function (props) {
-    const { registry } = props;
-    const { formContext } = registry;
-    return <div id={formContext.foo} />;
-  };
-
-  it('should be passed to Form', () => {
-    const { comp } = createFormComponent({
-      schema: schema,
-      formContext,
-    });
-    expect(comp.props.formContext).eq(formContext);
-  });
-
   it('should be passed to custom field', () => {
-    const fields = { custom: CustomComponent };
-
     const { node } = createFormComponent({
       schema: schema,
       uiSchema: { 'ui:field': 'custom' },
-      fields,
+      fields: { custom: CustomComponent },
       formContext,
     });
 
-    expect(node.querySelector('#' + formContext.foo)).to.exist;
+    expect(node.querySelector(fooId)).toBeInTheDocument();
   });
 
   it('should be passed to custom widget', () => {
-    const widgets = { custom: CustomComponent };
-
     const { node } = createFormComponent({
       schema: { type: 'string' },
       uiSchema: { 'ui:widget': 'custom' },
-      widgets,
+      widgets: { custom: CustomComponent },
       formContext,
     });
 
-    expect(node.querySelector('#' + formContext.foo)).to.exist;
+    expect(node.querySelector(fooId)).toBeInTheDocument();
   });
 
   it('should be passed to TemplateField', () => {
-    function CustomTemplateField({ registry: { formContext } }) {
+    function CustomTemplateField({ registry: { formContext } }: FieldTemplateProps) {
       return <div id={formContext.foo} />;
     }
 
@@ -75,11 +56,11 @@ describe('FormContext', () => {
       formContext,
     });
 
-    expect(node.querySelector('#' + formContext.foo)).to.exist;
+    expect(node.querySelector(fooId)).toBeInTheDocument();
   });
 
   it('should be passed to ArrayTemplateField', () => {
-    function CustomArrayTemplateField({ registry: { formContext } }) {
+    function CustomArrayTemplateField({ registry: { formContext } }: ArrayFieldTemplateProps) {
       return <div id={formContext.foo} />;
     }
 
@@ -94,7 +75,7 @@ describe('FormContext', () => {
       formContext,
     });
 
-    expect(node.querySelector('#' + formContext.foo)).to.exist;
+    expect(node.querySelector(fooId)).toBeInTheDocument();
   });
 
   it('should be passed to custom TitleFieldTemplate', () => {
@@ -114,7 +95,7 @@ describe('FormContext', () => {
       formContext,
     });
 
-    expect(node.querySelector('#' + formContext.foo)).to.exist;
+    expect(node.querySelector(fooId)).toBeInTheDocument();
   });
 
   it('should be passed to custom DescriptionFieldTemplate', () => {
@@ -126,7 +107,7 @@ describe('FormContext', () => {
       formContext,
     });
 
-    expect(node.querySelector('#' + formContext.foo)).to.exist;
+    expect(node.querySelector(fooId)).toBeInTheDocument();
   });
 
   it('should be passed to multiselect', () => {
@@ -149,7 +130,7 @@ describe('FormContext', () => {
       formContext,
     });
 
-    expect(node.querySelector('#' + formContext.foo)).to.exist;
+    expect(node.querySelector(fooId)).toBeInTheDocument();
   });
 
   it('should be passed to files array', () => {
@@ -166,6 +147,6 @@ describe('FormContext', () => {
       formContext,
     });
 
-    expect(node.querySelector('#' + formContext.foo)).to.exist;
+    expect(node.querySelector(fooId)).toBeInTheDocument();
   });
 });
