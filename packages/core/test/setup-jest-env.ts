@@ -5,7 +5,8 @@ import { setImmediate } from 'timers';
 global.atob = require('atob');
 
 // HTML debugging helper
-global.d = function d(node) {
+// @ts-expect-error TS7017 because we are avoiding an implicit any
+global.d = function d(node: any) {
   console.log(html.prettyPrint(node.outerHTML, { indent_size: 2 }));
 };
 
