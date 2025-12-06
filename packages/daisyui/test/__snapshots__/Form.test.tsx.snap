@@ -109,15 +109,19 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                               title
                                             </span>
                                           </label>
-                                          <input
-                                            aria-describedby="root_tasks_0_title__error root_tasks_0_title__description root_tasks_0_title__help"
-                                            class="input input-bordered w-full"
-                                            id="root_tasks_0_title"
-                                            name="root[tasks][0][title]"
-                                            placeholder=""
-                                            type="text"
-                                            value="Task 1"
-                                          />
+                                          <div
+                                            style="position: relative;"
+                                          >
+                                            <input
+                                              aria-describedby="root_tasks_0_title__error root_tasks_0_title__description root_tasks_0_title__help"
+                                              class="input input-bordered w-full"
+                                              id="root_tasks_0_title"
+                                              name="root[tasks][0][title]"
+                                              placeholder=""
+                                              type="text"
+                                              value="Task 1"
+                                            />
+                                          </div>
                                         </div>
                                         <div
                                           class="rjsf-field-error-template text-red-600"
@@ -316,15 +320,19 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                               title
                                             </span>
                                           </label>
-                                          <input
-                                            aria-describedby="root_tasks_1_title__error root_tasks_1_title__description root_tasks_1_title__help"
-                                            class="input input-bordered w-full"
-                                            id="root_tasks_1_title"
-                                            name="root[tasks][1][title]"
-                                            placeholder=""
-                                            type="text"
-                                            value="Task 2"
-                                          />
+                                          <div
+                                            style="position: relative;"
+                                          >
+                                            <input
+                                              aria-describedby="root_tasks_1_title__error root_tasks_1_title__description root_tasks_1_title__help"
+                                              class="input input-bordered w-full"
+                                              id="root_tasks_1_title"
+                                              name="root[tasks][1][title]"
+                                              placeholder=""
+                                              type="text"
+                                              value="Task 2"
+                                            />
+                                          </div>
                                         </div>
                                         <div
                                           class="rjsf-field-error-template text-red-600"
@@ -618,16 +626,20 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                                     tags-1
                                   </span>
                                 </label>
-                                <input
-                                  aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
-                                  class="input input-bordered w-full"
-                                  id="root_tags_0"
-                                  name="root[tags][0]"
-                                  placeholder=""
-                                  required=""
-                                  type="text"
-                                  value="foo"
-                                />
+                                <div
+                                  style="position: relative;"
+                                >
+                                  <input
+                                    aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
+                                    class="input input-bordered w-full"
+                                    id="root_tags_0"
+                                    name="root[tags][0]"
+                                    placeholder=""
+                                    required=""
+                                    type="text"
+                                    value="foo"
+                                  />
+                                </div>
                               </div>
                               <div
                                 class="rjsf-field-error-template text-red-600"
@@ -749,16 +761,20 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                                     tags-2
                                   </span>
                                 </label>
-                                <input
-                                  aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
-                                  class="input input-bordered w-full"
-                                  id="root_tags_1"
-                                  name="root[tags][1]"
-                                  placeholder=""
-                                  required=""
-                                  type="text"
-                                  value="bar"
-                                />
+                                <div
+                                  style="position: relative;"
+                                >
+                                  <input
+                                    aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
+                                    class="input input-bordered w-full"
+                                    id="root_tags_1"
+                                    name="root[tags][1]"
+                                    placeholder=""
+                                    required=""
+                                    type="text"
+                                    value="bar"
+                                  />
+                                </div>
                               </div>
                               <div
                                 class="rjsf-field-error-template text-red-600"
@@ -1114,15 +1130,19 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                   firstName
                                 </span>
                               </label>
-                              <input
-                                aria-describedby="root_person_firstName__error root_person_firstName__description root_person_firstName__help"
-                                class="input input-bordered w-full"
-                                id="root_person_firstName"
-                                name="root[person][firstName]"
-                                placeholder=""
-                                type="text"
-                                value=""
-                              />
+                              <div
+                                style="position: relative;"
+                              >
+                                <input
+                                  aria-describedby="root_person_firstName__error root_person_firstName__description root_person_firstName__help"
+                                  class="input input-bordered w-full"
+                                  id="root_person_firstName"
+                                  name="root[person][firstName]"
+                                  placeholder=""
+                                  type="text"
+                                  value=""
+                                />
+                              </div>
                             </div>
                             <div
                               class="rjsf-field-error-template text-red-600"
@@ -1167,15 +1187,19 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                   lastName
                                 </span>
                               </label>
-                              <input
-                                aria-describedby="root_person_lastName__error root_person_lastName__description root_person_lastName__help"
-                                class="input input-bordered w-full"
-                                id="root_person_lastName"
-                                name="root[person][lastName]"
-                                placeholder=""
-                                type="text"
-                                value=""
-                              />
+                              <div
+                                style="position: relative;"
+                              >
+                                <input
+                                  aria-describedby="root_person_lastName__error root_person_lastName__description root_person_lastName__help"
+                                  class="input input-bordered w-full"
+                                  id="root_person_lastName"
+                                  name="root[person][lastName]"
+                                  placeholder=""
+                                  type="text"
+                                  value=""
+                                />
+                              </div>
                             </div>
                             <div
                               class="rjsf-field-error-template text-red-600"
@@ -1248,15 +1272,19 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                             street
                                           </span>
                                         </label>
-                                        <input
-                                          aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
-                                          class="input input-bordered w-full"
-                                          id="root_person_address_street"
-                                          name="root[person][address][street]"
-                                          placeholder=""
-                                          type="text"
-                                          value=""
-                                        />
+                                        <div
+                                          style="position: relative;"
+                                        >
+                                          <input
+                                            aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
+                                            class="input input-bordered w-full"
+                                            id="root_person_address_street"
+                                            name="root[person][address][street]"
+                                            placeholder=""
+                                            type="text"
+                                            value=""
+                                          />
+                                        </div>
                                       </div>
                                       <div
                                         class="rjsf-field-error-template text-red-600"
@@ -1301,15 +1329,19 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                             city
                                           </span>
                                         </label>
-                                        <input
-                                          aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
-                                          class="input input-bordered w-full"
-                                          id="root_person_address_city"
-                                          name="root[person][address][city]"
-                                          placeholder=""
-                                          type="text"
-                                          value=""
-                                        />
+                                        <div
+                                          style="position: relative;"
+                                        >
+                                          <input
+                                            aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
+                                            class="input input-bordered w-full"
+                                            id="root_person_address_city"
+                                            name="root[person][address][city]"
+                                            placeholder=""
+                                            type="text"
+                                            value=""
+                                          />
+                                        </div>
                                       </div>
                                       <div
                                         class="rjsf-field-error-template text-red-600"
@@ -1666,15 +1698,19 @@ exports[`nameGenerator bracketNameGenerator simple fields 1`] = `
                         firstName
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
-                      class="input input-bordered w-full"
-                      id="root_firstName"
-                      name="root[firstName]"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
+                        class="input input-bordered w-full"
+                        id="root_firstName"
+                        name="root[firstName]"
+                        placeholder=""
+                        type="text"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -1719,16 +1755,20 @@ exports[`nameGenerator bracketNameGenerator simple fields 1`] = `
                         age
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_age__error root_age__description root_age__help"
-                      class="input input-bordered w-full"
-                      id="root_age"
-                      name="root[age]"
-                      placeholder=""
-                      step="any"
-                      type="number"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_age__error root_age__description root_age__help"
+                        class="input input-bordered w-full"
+                        id="root_age"
+                        name="root[age]"
+                        placeholder=""
+                        step="any"
+                        type="number"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -1993,15 +2033,19 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                               title
                                             </span>
                                           </label>
-                                          <input
-                                            aria-describedby="root_tasks_0_title__error root_tasks_0_title__description root_tasks_0_title__help"
-                                            class="input input-bordered w-full"
-                                            id="root_tasks_0_title"
-                                            name="root.tasks.0.title"
-                                            placeholder=""
-                                            type="text"
-                                            value="Task 1"
-                                          />
+                                          <div
+                                            style="position: relative;"
+                                          >
+                                            <input
+                                              aria-describedby="root_tasks_0_title__error root_tasks_0_title__description root_tasks_0_title__help"
+                                              class="input input-bordered w-full"
+                                              id="root_tasks_0_title"
+                                              name="root.tasks.0.title"
+                                              placeholder=""
+                                              type="text"
+                                              value="Task 1"
+                                            />
+                                          </div>
                                         </div>
                                         <div
                                           class="rjsf-field-error-template text-red-600"
@@ -2200,15 +2244,19 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                               title
                                             </span>
                                           </label>
-                                          <input
-                                            aria-describedby="root_tasks_1_title__error root_tasks_1_title__description root_tasks_1_title__help"
-                                            class="input input-bordered w-full"
-                                            id="root_tasks_1_title"
-                                            name="root.tasks.1.title"
-                                            placeholder=""
-                                            type="text"
-                                            value="Task 2"
-                                          />
+                                          <div
+                                            style="position: relative;"
+                                          >
+                                            <input
+                                              aria-describedby="root_tasks_1_title__error root_tasks_1_title__description root_tasks_1_title__help"
+                                              class="input input-bordered w-full"
+                                              id="root_tasks_1_title"
+                                              name="root.tasks.1.title"
+                                              placeholder=""
+                                              type="text"
+                                              value="Task 2"
+                                            />
+                                          </div>
                                         </div>
                                         <div
                                           class="rjsf-field-error-template text-red-600"
@@ -2502,16 +2550,20 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                                     tags-1
                                   </span>
                                 </label>
-                                <input
-                                  aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
-                                  class="input input-bordered w-full"
-                                  id="root_tags_0"
-                                  name="root.tags.0"
-                                  placeholder=""
-                                  required=""
-                                  type="text"
-                                  value="foo"
-                                />
+                                <div
+                                  style="position: relative;"
+                                >
+                                  <input
+                                    aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
+                                    class="input input-bordered w-full"
+                                    id="root_tags_0"
+                                    name="root.tags.0"
+                                    placeholder=""
+                                    required=""
+                                    type="text"
+                                    value="foo"
+                                  />
+                                </div>
                               </div>
                               <div
                                 class="rjsf-field-error-template text-red-600"
@@ -2633,16 +2685,20 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                                     tags-2
                                   </span>
                                 </label>
-                                <input
-                                  aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
-                                  class="input input-bordered w-full"
-                                  id="root_tags_1"
-                                  name="root.tags.1"
-                                  placeholder=""
-                                  required=""
-                                  type="text"
-                                  value="bar"
-                                />
+                                <div
+                                  style="position: relative;"
+                                >
+                                  <input
+                                    aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
+                                    class="input input-bordered w-full"
+                                    id="root_tags_1"
+                                    name="root.tags.1"
+                                    placeholder=""
+                                    required=""
+                                    type="text"
+                                    value="bar"
+                                  />
+                                </div>
                               </div>
                               <div
                                 class="rjsf-field-error-template text-red-600"
@@ -2873,15 +2929,19 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                   firstName
                                 </span>
                               </label>
-                              <input
-                                aria-describedby="root_person_firstName__error root_person_firstName__description root_person_firstName__help"
-                                class="input input-bordered w-full"
-                                id="root_person_firstName"
-                                name="root.person.firstName"
-                                placeholder=""
-                                type="text"
-                                value=""
-                              />
+                              <div
+                                style="position: relative;"
+                              >
+                                <input
+                                  aria-describedby="root_person_firstName__error root_person_firstName__description root_person_firstName__help"
+                                  class="input input-bordered w-full"
+                                  id="root_person_firstName"
+                                  name="root.person.firstName"
+                                  placeholder=""
+                                  type="text"
+                                  value=""
+                                />
+                              </div>
                             </div>
                             <div
                               class="rjsf-field-error-template text-red-600"
@@ -2926,15 +2986,19 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                   lastName
                                 </span>
                               </label>
-                              <input
-                                aria-describedby="root_person_lastName__error root_person_lastName__description root_person_lastName__help"
-                                class="input input-bordered w-full"
-                                id="root_person_lastName"
-                                name="root.person.lastName"
-                                placeholder=""
-                                type="text"
-                                value=""
-                              />
+                              <div
+                                style="position: relative;"
+                              >
+                                <input
+                                  aria-describedby="root_person_lastName__error root_person_lastName__description root_person_lastName__help"
+                                  class="input input-bordered w-full"
+                                  id="root_person_lastName"
+                                  name="root.person.lastName"
+                                  placeholder=""
+                                  type="text"
+                                  value=""
+                                />
+                              </div>
                             </div>
                             <div
                               class="rjsf-field-error-template text-red-600"
@@ -3007,15 +3071,19 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                             street
                                           </span>
                                         </label>
-                                        <input
-                                          aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
-                                          class="input input-bordered w-full"
-                                          id="root_person_address_street"
-                                          name="root.person.address.street"
-                                          placeholder=""
-                                          type="text"
-                                          value=""
-                                        />
+                                        <div
+                                          style="position: relative;"
+                                        >
+                                          <input
+                                            aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
+                                            class="input input-bordered w-full"
+                                            id="root_person_address_street"
+                                            name="root.person.address.street"
+                                            placeholder=""
+                                            type="text"
+                                            value=""
+                                          />
+                                        </div>
                                       </div>
                                       <div
                                         class="rjsf-field-error-template text-red-600"
@@ -3060,15 +3128,19 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                             city
                                           </span>
                                         </label>
-                                        <input
-                                          aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
-                                          class="input input-bordered w-full"
-                                          id="root_person_address_city"
-                                          name="root.person.address.city"
-                                          placeholder=""
-                                          type="text"
-                                          value=""
-                                        />
+                                        <div
+                                          style="position: relative;"
+                                        >
+                                          <input
+                                            aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
+                                            class="input input-bordered w-full"
+                                            id="root_person_address_city"
+                                            name="root.person.address.city"
+                                            placeholder=""
+                                            type="text"
+                                            value=""
+                                          />
+                                        </div>
                                       </div>
                                       <div
                                         class="rjsf-field-error-template text-red-600"
@@ -3314,15 +3386,19 @@ exports[`nameGenerator dotNotationNameGenerator simple fields 1`] = `
                         firstName
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
-                      class="input input-bordered w-full"
-                      id="root_firstName"
-                      name="root.firstName"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
+                        class="input input-bordered w-full"
+                        id="root_firstName"
+                        name="root.firstName"
+                        placeholder=""
+                        type="text"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -3367,16 +3443,20 @@ exports[`nameGenerator dotNotationNameGenerator simple fields 1`] = `
                         age
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_age__error root_age__description root_age__help"
-                      class="input input-bordered w-full"
-                      id="root_age"
-                      name="root.age"
-                      placeholder=""
-                      step="any"
-                      type="number"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_age__error root_age__description root_age__help"
+                        class="input input-bordered w-full"
+                        id="root_age"
+                        name="root.age"
+                        placeholder=""
+                        step="any"
+                        type="number"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -4150,15 +4230,19 @@ exports[`single fields field with description 1`] = `
                         my-field
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
-                      class="input input-bordered w-full"
-                      id="root_my-field"
-                      name="root_my-field"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                        class="input input-bordered w-full"
+                        id="root_my-field"
+                        name="root_my-field"
+                        placeholder=""
+                        type="text"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="description-field my-4"
@@ -4253,15 +4337,19 @@ exports[`single fields field with description in uiSchema 1`] = `
                         my-field
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
-                      class="input input-bordered w-full"
-                      id="root_my-field"
-                      name="root_my-field"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                        class="input input-bordered w-full"
+                        id="root_my-field"
+                        name="root_my-field"
+                        placeholder=""
+                        type="text"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="description-field my-4"
@@ -4356,15 +4444,19 @@ exports[`single fields field with markdown description 1`] = `
                         my-field
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
-                      class="input input-bordered w-full"
-                      id="root_my-field"
-                      name="root_my-field"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                        class="input input-bordered w-full"
+                        id="root_my-field"
+                        name="root_my-field"
+                        placeholder=""
+                        type="text"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="description-field my-4"
@@ -4465,15 +4557,19 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
                         my-field
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
-                      class="input input-bordered w-full"
-                      id="root_my-field"
-                      name="root_my-field"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                        class="input input-bordered w-full"
+                        id="root_my-field"
+                        name="root_my-field"
+                        placeholder=""
+                        type="text"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="description-field my-4"
@@ -4551,15 +4647,19 @@ exports[`single fields format color 1`] = `
               class="label-text"
             />
           </label>
-          <input
-            aria-describedby="root__error root__description root__help"
-            class="input input-bordered w-full"
-            id="root"
-            name="root"
-            placeholder=""
-            type="color"
-            value=""
-          />
+          <div
+            style="position: relative;"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              class="input input-bordered w-full"
+              id="root"
+              name="root"
+              placeholder=""
+              type="color"
+              value=""
+            />
+          </div>
         </div>
         <div
           class="rjsf-field-error-template text-red-600"
@@ -4822,15 +4922,19 @@ exports[`single fields help and error display 1`] = `
               class="label-text"
             />
           </label>
-          <input
-            aria-describedby="root__error root__description root__help"
-            class="input input-bordered w-full"
-            id="root"
-            name="root"
-            placeholder=""
-            type="text"
-            value=""
-          />
+          <div
+            style="position: relative;"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              class="input input-bordered w-full"
+              id="root"
+              name="root"
+              placeholder=""
+              type="text"
+              value=""
+            />
+          </div>
         </div>
         <div
           class="rjsf-field-error-template text-red-600"
@@ -4957,15 +5061,19 @@ exports[`single fields hidden label 1`] = `
               class="label-text"
             />
           </label>
-          <input
-            aria-describedby="root__error root__description root__help"
-            class="input input-bordered w-full"
-            id="root"
-            name="root"
-            placeholder=""
-            type="text"
-            value=""
-          />
+          <div
+            style="position: relative;"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              class="input input-bordered w-full"
+              id="root"
+              name="root"
+              placeholder=""
+              type="text"
+              value=""
+            />
+          </div>
         </div>
         <div
           class="rjsf-field-error-template text-red-600"
@@ -5059,16 +5167,20 @@ exports[`single fields number field 0 1`] = `
               class="label-text"
             />
           </label>
-          <input
-            aria-describedby="root__error root__description root__help"
-            class="input input-bordered w-full"
-            id="root"
-            name="root"
-            placeholder=""
-            step="any"
-            type="number"
-            value="0"
-          />
+          <div
+            style="position: relative;"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              class="input input-bordered w-full"
+              id="root"
+              name="root"
+              placeholder=""
+              step="any"
+              type="number"
+              value="0"
+            />
+          </div>
         </div>
         <div
           class="rjsf-field-error-template text-red-600"
@@ -5122,16 +5234,20 @@ exports[`single fields number field 1`] = `
               class="label-text"
             />
           </label>
-          <input
-            aria-describedby="root__error root__description root__help"
-            class="input input-bordered w-full"
-            id="root"
-            name="root"
-            placeholder=""
-            step="any"
-            type="number"
-            value=""
-          />
+          <div
+            style="position: relative;"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              class="input input-bordered w-full"
+              id="root"
+              name="root"
+              placeholder=""
+              step="any"
+              type="number"
+              value=""
+            />
+          </div>
         </div>
         <div
           class="rjsf-field-error-template text-red-600"
@@ -5245,15 +5361,19 @@ exports[`single fields optional data controls does not show optional controls wh
                                   test
                                 </span>
                               </label>
-                              <input
-                                aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
-                                class="input input-bordered w-full"
-                                id="root_nestedObjectOptional_test"
-                                name="root_nestedObjectOptional_test"
-                                placeholder=""
-                                type="text"
-                                value=""
-                              />
+                              <div
+                                style="position: relative;"
+                              >
+                                <input
+                                  aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
+                                  class="input input-bordered w-full"
+                                  id="root_nestedObjectOptional_test"
+                                  name="root_nestedObjectOptional_test"
+                                  placeholder=""
+                                  type="text"
+                                  value=""
+                                />
+                              </div>
                             </div>
                             <div
                               class="rjsf-field-error-template text-red-600"
@@ -5326,15 +5446,19 @@ exports[`single fields optional data controls does not show optional controls wh
                                             deepTest
                                           </span>
                                         </label>
-                                        <input
-                                          aria-describedby="root_nestedObjectOptional_deepObjectOptional_deepTest__error root_nestedObjectOptional_deepObjectOptional_deepTest__description root_nestedObjectOptional_deepObjectOptional_deepTest__help"
-                                          class="input input-bordered w-full"
-                                          id="root_nestedObjectOptional_deepObjectOptional_deepTest"
-                                          name="root_nestedObjectOptional_deepObjectOptional_deepTest"
-                                          placeholder=""
-                                          type="text"
-                                          value=""
-                                        />
+                                        <div
+                                          style="position: relative;"
+                                        >
+                                          <input
+                                            aria-describedby="root_nestedObjectOptional_deepObjectOptional_deepTest__error root_nestedObjectOptional_deepObjectOptional_deepTest__description root_nestedObjectOptional_deepObjectOptional_deepTest__help"
+                                            class="input input-bordered w-full"
+                                            id="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                                            name="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                                            placeholder=""
+                                            type="text"
+                                            value=""
+                                          />
+                                        </div>
                                       </div>
                                       <div
                                         class="rjsf-field-error-template text-red-600"
@@ -5419,15 +5543,19 @@ exports[`single fields optional data controls does not show optional controls wh
                                             deepTest
                                           </span>
                                         </label>
-                                        <input
-                                          aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
-                                          class="input input-bordered w-full"
-                                          id="root_nestedObjectOptional_deepObject_deepTest"
-                                          name="root_nestedObjectOptional_deepObject_deepTest"
-                                          placeholder=""
-                                          type="text"
-                                          value=""
-                                        />
+                                        <div
+                                          style="position: relative;"
+                                        >
+                                          <input
+                                            aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
+                                            class="input input-bordered w-full"
+                                            id="root_nestedObjectOptional_deepObject_deepTest"
+                                            name="root_nestedObjectOptional_deepObject_deepTest"
+                                            placeholder=""
+                                            type="text"
+                                            value=""
+                                          />
+                                        </div>
                                       </div>
                                       <div
                                         class="rjsf-field-error-template text-red-600"
@@ -5852,15 +5980,19 @@ exports[`single fields optional data controls does not show optional controls wh
                                   test
                                 </span>
                               </label>
-                              <input
-                                aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
-                                class="input input-bordered w-full"
-                                id="root_nestedObject_test"
-                                name="root_nestedObject_test"
-                                placeholder=""
-                                type="text"
-                                value=""
-                              />
+                              <div
+                                style="position: relative;"
+                              >
+                                <input
+                                  aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
+                                  class="input input-bordered w-full"
+                                  id="root_nestedObject_test"
+                                  name="root_nestedObject_test"
+                                  placeholder=""
+                                  type="text"
+                                  value=""
+                                />
+                              </div>
                             </div>
                             <div
                               class="rjsf-field-error-template text-red-600"
@@ -6120,16 +6252,20 @@ exports[`single fields optional data controls does not show optional controls wh
                                         name
                                       </span>
                                     </label>
-                                    <input
-                                      aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
-                                      class="input input-bordered w-full"
-                                      disabled=""
-                                      id="root_optionalObjectWithOneofs_name"
-                                      name="root_optionalObjectWithOneofs_name"
-                                      placeholder=""
-                                      type="text"
-                                      value=""
-                                    />
+                                    <div
+                                      style="position: relative;"
+                                    >
+                                      <input
+                                        aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
+                                        class="input input-bordered w-full"
+                                        disabled=""
+                                        id="root_optionalObjectWithOneofs_name"
+                                        name="root_optionalObjectWithOneofs_name"
+                                        placeholder=""
+                                        type="text"
+                                        value=""
+                                      />
+                                    </div>
                                   </div>
                                   <div
                                     class="rjsf-field-error-template text-red-600"
@@ -6448,16 +6584,20 @@ exports[`single fields optional data controls does not show optional controls wh
                                   test
                                 </span>
                               </label>
-                              <input
-                                aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
-                                class="input input-bordered w-full"
-                                disabled=""
-                                id="root_nestedObjectOptional_test"
-                                name="root_nestedObjectOptional_test"
-                                placeholder=""
-                                type="text"
-                                value=""
-                              />
+                              <div
+                                style="position: relative;"
+                              >
+                                <input
+                                  aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
+                                  class="input input-bordered w-full"
+                                  disabled=""
+                                  id="root_nestedObjectOptional_test"
+                                  name="root_nestedObjectOptional_test"
+                                  placeholder=""
+                                  type="text"
+                                  value=""
+                                />
+                              </div>
                             </div>
                             <div
                               class="rjsf-field-error-template text-red-600"
@@ -6530,16 +6670,20 @@ exports[`single fields optional data controls does not show optional controls wh
                                             deepTest
                                           </span>
                                         </label>
-                                        <input
-                                          aria-describedby="root_nestedObjectOptional_deepObjectOptional_deepTest__error root_nestedObjectOptional_deepObjectOptional_deepTest__description root_nestedObjectOptional_deepObjectOptional_deepTest__help"
-                                          class="input input-bordered w-full"
-                                          disabled=""
-                                          id="root_nestedObjectOptional_deepObjectOptional_deepTest"
-                                          name="root_nestedObjectOptional_deepObjectOptional_deepTest"
-                                          placeholder=""
-                                          type="text"
-                                          value=""
-                                        />
+                                        <div
+                                          style="position: relative;"
+                                        >
+                                          <input
+                                            aria-describedby="root_nestedObjectOptional_deepObjectOptional_deepTest__error root_nestedObjectOptional_deepObjectOptional_deepTest__description root_nestedObjectOptional_deepObjectOptional_deepTest__help"
+                                            class="input input-bordered w-full"
+                                            disabled=""
+                                            id="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                                            name="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                                            placeholder=""
+                                            type="text"
+                                            value=""
+                                          />
+                                        </div>
                                       </div>
                                       <div
                                         class="rjsf-field-error-template text-red-600"
@@ -6624,16 +6768,20 @@ exports[`single fields optional data controls does not show optional controls wh
                                             deepTest
                                           </span>
                                         </label>
-                                        <input
-                                          aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
-                                          class="input input-bordered w-full"
-                                          disabled=""
-                                          id="root_nestedObjectOptional_deepObject_deepTest"
-                                          name="root_nestedObjectOptional_deepObject_deepTest"
-                                          placeholder=""
-                                          type="text"
-                                          value=""
-                                        />
+                                        <div
+                                          style="position: relative;"
+                                        >
+                                          <input
+                                            aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
+                                            class="input input-bordered w-full"
+                                            disabled=""
+                                            id="root_nestedObjectOptional_deepObject_deepTest"
+                                            name="root_nestedObjectOptional_deepObject_deepTest"
+                                            placeholder=""
+                                            type="text"
+                                            value=""
+                                          />
+                                        </div>
                                       </div>
                                       <div
                                         class="rjsf-field-error-template text-red-600"
@@ -7062,16 +7210,20 @@ exports[`single fields optional data controls does not show optional controls wh
                                   test
                                 </span>
                               </label>
-                              <input
-                                aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
-                                class="input input-bordered w-full"
-                                disabled=""
-                                id="root_nestedObject_test"
-                                name="root_nestedObject_test"
-                                placeholder=""
-                                type="text"
-                                value=""
-                              />
+                              <div
+                                style="position: relative;"
+                              >
+                                <input
+                                  aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
+                                  class="input input-bordered w-full"
+                                  disabled=""
+                                  id="root_nestedObject_test"
+                                  name="root_nestedObject_test"
+                                  placeholder=""
+                                  type="text"
+                                  value=""
+                                />
+                              </div>
                             </div>
                             <div
                               class="rjsf-field-error-template text-red-600"
@@ -7332,16 +7484,20 @@ exports[`single fields optional data controls does not show optional controls wh
                                         name
                                       </span>
                                     </label>
-                                    <input
-                                      aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
-                                      class="input input-bordered w-full"
-                                      disabled=""
-                                      id="root_optionalObjectWithOneofs_name"
-                                      name="root_optionalObjectWithOneofs_name"
-                                      placeholder=""
-                                      type="text"
-                                      value=""
-                                    />
+                                    <div
+                                      style="position: relative;"
+                                    >
+                                      <input
+                                        aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
+                                        class="input input-bordered w-full"
+                                        disabled=""
+                                        id="root_optionalObjectWithOneofs_name"
+                                        name="root_optionalObjectWithOneofs_name"
+                                        placeholder=""
+                                        type="text"
+                                        value=""
+                                      />
+                                    </div>
                                   </div>
                                   <div
                                     class="rjsf-field-error-template text-red-600"
@@ -7694,15 +7850,19 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                   test
                                 </span>
                               </label>
-                              <input
-                                aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
-                                class="input input-bordered w-full"
-                                id="root_nestedObjectOptional_test"
-                                name="root_nestedObjectOptional_test"
-                                placeholder=""
-                                type="text"
-                                value="foo"
-                              />
+                              <div
+                                style="position: relative;"
+                              >
+                                <input
+                                  aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
+                                  class="input input-bordered w-full"
+                                  id="root_nestedObjectOptional_test"
+                                  name="root_nestedObjectOptional_test"
+                                  placeholder=""
+                                  type="text"
+                                  value="foo"
+                                />
+                              </div>
                             </div>
                             <div
                               class="rjsf-field-error-template text-red-600"
@@ -7847,15 +8007,19 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                             deepTest
                                           </span>
                                         </label>
-                                        <input
-                                          aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
-                                          class="input input-bordered w-full"
-                                          id="root_nestedObjectOptional_deepObject_deepTest"
-                                          name="root_nestedObjectOptional_deepObject_deepTest"
-                                          placeholder=""
-                                          type="text"
-                                          value=""
-                                        />
+                                        <div
+                                          style="position: relative;"
+                                        >
+                                          <input
+                                            aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
+                                            class="input input-bordered w-full"
+                                            id="root_nestedObjectOptional_deepObject_deepTest"
+                                            name="root_nestedObjectOptional_deepObject_deepTest"
+                                            placeholder=""
+                                            type="text"
+                                            value=""
+                                          />
+                                        </div>
                                       </div>
                                       <div
                                         class="rjsf-field-error-template text-red-600"
@@ -8233,16 +8397,20 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                     nestedArrayOptional-1
                                   </span>
                                 </label>
-                                <input
-                                  aria-describedby="root_nestedArrayOptional_0__error root_nestedArrayOptional_0__description root_nestedArrayOptional_0__help"
-                                  class="input input-bordered w-full"
-                                  id="root_nestedArrayOptional_0"
-                                  name="root_nestedArrayOptional_0"
-                                  placeholder=""
-                                  required=""
-                                  type="text"
-                                  value="bar"
-                                />
+                                <div
+                                  style="position: relative;"
+                                >
+                                  <input
+                                    aria-describedby="root_nestedArrayOptional_0__error root_nestedArrayOptional_0__description root_nestedArrayOptional_0__help"
+                                    class="input input-bordered w-full"
+                                    id="root_nestedArrayOptional_0"
+                                    name="root_nestedArrayOptional_0"
+                                    placeholder=""
+                                    required=""
+                                    type="text"
+                                    value="bar"
+                                  />
+                                </div>
                               </div>
                               <div
                                 class="rjsf-field-error-template text-red-600"
@@ -8386,15 +8554,19 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                   test
                                 </span>
                               </label>
-                              <input
-                                aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
-                                class="input input-bordered w-full"
-                                id="root_nestedObject_test"
-                                name="root_nestedObject_test"
-                                placeholder=""
-                                type="text"
-                                value=""
-                              />
+                              <div
+                                style="position: relative;"
+                              >
+                                <input
+                                  aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
+                                  class="input input-bordered w-full"
+                                  id="root_nestedObject_test"
+                                  name="root_nestedObject_test"
+                                  placeholder=""
+                                  type="text"
+                                  value=""
+                                />
+                              </div>
                             </div>
                             <div
                               class="rjsf-field-error-template text-red-600"
@@ -8792,16 +8964,20 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                   test
                                 </span>
                               </label>
-                              <input
-                                aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
-                                class="input input-bordered w-full"
-                                disabled=""
-                                id="root_nestedObjectOptional_test"
-                                name="root_nestedObjectOptional_test"
-                                placeholder=""
-                                type="text"
-                                value="foo"
-                              />
+                              <div
+                                style="position: relative;"
+                              >
+                                <input
+                                  aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
+                                  class="input input-bordered w-full"
+                                  disabled=""
+                                  id="root_nestedObjectOptional_test"
+                                  name="root_nestedObjectOptional_test"
+                                  placeholder=""
+                                  type="text"
+                                  value="foo"
+                                />
+                              </div>
                             </div>
                             <div
                               class="rjsf-field-error-template text-red-600"
@@ -8919,16 +9095,20 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                             deepTest
                                           </span>
                                         </label>
-                                        <input
-                                          aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
-                                          class="input input-bordered w-full"
-                                          disabled=""
-                                          id="root_nestedObjectOptional_deepObject_deepTest"
-                                          name="root_nestedObjectOptional_deepObject_deepTest"
-                                          placeholder=""
-                                          type="text"
-                                          value=""
-                                        />
+                                        <div
+                                          style="position: relative;"
+                                        >
+                                          <input
+                                            aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
+                                            class="input input-bordered w-full"
+                                            disabled=""
+                                            id="root_nestedObjectOptional_deepObject_deepTest"
+                                            name="root_nestedObjectOptional_deepObject_deepTest"
+                                            placeholder=""
+                                            type="text"
+                                            value=""
+                                          />
+                                        </div>
                                       </div>
                                       <div
                                         class="rjsf-field-error-template text-red-600"
@@ -9247,17 +9427,21 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                     nestedArrayOptional-1
                                   </span>
                                 </label>
-                                <input
-                                  aria-describedby="root_nestedArrayOptional_0__error root_nestedArrayOptional_0__description root_nestedArrayOptional_0__help"
-                                  class="input input-bordered w-full"
-                                  disabled=""
-                                  id="root_nestedArrayOptional_0"
-                                  name="root_nestedArrayOptional_0"
-                                  placeholder=""
-                                  required=""
-                                  type="text"
-                                  value="bar"
-                                />
+                                <div
+                                  style="position: relative;"
+                                >
+                                  <input
+                                    aria-describedby="root_nestedArrayOptional_0__error root_nestedArrayOptional_0__description root_nestedArrayOptional_0__help"
+                                    class="input input-bordered w-full"
+                                    disabled=""
+                                    id="root_nestedArrayOptional_0"
+                                    name="root_nestedArrayOptional_0"
+                                    placeholder=""
+                                    required=""
+                                    type="text"
+                                    value="bar"
+                                  />
+                                </div>
                               </div>
                               <div
                                 class="rjsf-field-error-template text-red-600"
@@ -9403,16 +9587,20 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                   test
                                 </span>
                               </label>
-                              <input
-                                aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
-                                class="input input-bordered w-full"
-                                disabled=""
-                                id="root_nestedObject_test"
-                                name="root_nestedObject_test"
-                                placeholder=""
-                                type="text"
-                                value=""
-                              />
+                              <div
+                                style="position: relative;"
+                              >
+                                <input
+                                  aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
+                                  class="input input-bordered w-full"
+                                  disabled=""
+                                  id="root_nestedObject_test"
+                                  name="root_nestedObject_test"
+                                  placeholder=""
+                                  type="text"
+                                  value=""
+                                />
+                              </div>
                             </div>
                             <div
                               class="rjsf-field-error-template text-red-600"
@@ -9904,15 +10092,19 @@ exports[`single fields optional data controls shows "add" optional controls when
                                   test
                                 </span>
                               </label>
-                              <input
-                                aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
-                                class="input input-bordered w-full"
-                                id="root_nestedObject_test"
-                                name="root_nestedObject_test"
-                                placeholder=""
-                                type="text"
-                                value=""
-                              />
+                              <div
+                                style="position: relative;"
+                              >
+                                <input
+                                  aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
+                                  class="input input-bordered w-full"
+                                  id="root_nestedObject_test"
+                                  name="root_nestedObject_test"
+                                  placeholder=""
+                                  type="text"
+                                  value=""
+                                />
+                              </div>
                             </div>
                             <div
                               class="rjsf-field-error-template text-red-600"
@@ -10408,16 +10600,20 @@ exports[`single fields optional data controls shows "add" optional controls when
                                   test
                                 </span>
                               </label>
-                              <input
-                                aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
-                                class="input input-bordered w-full"
-                                disabled=""
-                                id="root_nestedObject_test"
-                                name="root_nestedObject_test"
-                                placeholder=""
-                                type="text"
-                                value=""
-                              />
+                              <div
+                                style="position: relative;"
+                              >
+                                <input
+                                  aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
+                                  class="input input-bordered w-full"
+                                  disabled=""
+                                  id="root_nestedObject_test"
+                                  name="root_nestedObject_test"
+                                  placeholder=""
+                                  type="text"
+                                  value=""
+                                />
+                              </div>
                             </div>
                             <div
                               class="rjsf-field-error-template text-red-600"
@@ -10707,15 +10903,19 @@ exports[`single fields password field 1`] = `
               class="label-text"
             />
           </label>
-          <input
-            aria-describedby="root__error root__description root__help"
-            class="input input-bordered w-full"
-            id="root"
-            name="root"
-            placeholder=""
-            type="password"
-            value=""
-          />
+          <div
+            style="position: relative;"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              class="input input-bordered w-full"
+              id="root"
+              name="root"
+              placeholder=""
+              type="password"
+              value=""
+            />
+          </div>
         </div>
         <div
           class="rjsf-field-error-template text-red-600"
@@ -10927,16 +11127,20 @@ exports[`single fields schema examples 1`] = `
               class="label-text"
             />
           </label>
-          <input
-            aria-describedby="root__error root__description root__help root__examples"
-            class="input input-bordered w-full"
-            id="root"
-            list="root__examples"
-            name="root"
-            placeholder=""
-            type="text"
-            value=""
-          />
+          <div
+            style="position: relative;"
+          >
+            <input
+              aria-describedby="root__error root__description root__help root__examples"
+              class="input input-bordered w-full"
+              id="root"
+              list="root__examples"
+              name="root"
+              placeholder=""
+              type="text"
+              value=""
+            />
+          </div>
         </div>
         <datalist
           id="root__examples"
@@ -12379,15 +12583,19 @@ exports[`single fields string field field with markdown help and description 1`]
               Markdown Help and Description
             </span>
           </label>
-          <input
-            aria-describedby="root__error root__description root__help"
-            class="input input-bordered w-full"
-            id="root"
-            name="root"
-            placeholder=""
-            type="text"
-            value=""
-          />
+          <div
+            style="position: relative;"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              class="input input-bordered w-full"
+              id="root"
+              name="root"
+              placeholder=""
+              type="text"
+              value=""
+            />
+          </div>
         </div>
         <div
           class="description-field my-4"
@@ -12472,15 +12680,19 @@ exports[`single fields string field field with markdown help text 1`] = `
               Markdown Help Test
             </span>
           </label>
-          <input
-            aria-describedby="root__error root__description root__help"
-            class="input input-bordered w-full"
-            id="root"
-            name="root"
-            placeholder=""
-            type="text"
-            value=""
-          />
+          <div
+            style="position: relative;"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              class="input input-bordered w-full"
+              id="root"
+              name="root"
+              placeholder=""
+              type="text"
+              value=""
+            />
+          </div>
         </div>
         <div
           class="description-field my-4"
@@ -12565,15 +12777,19 @@ exports[`single fields string field field with markdown help text without enabli
               Raw Help Test
             </span>
           </label>
-          <input
-            aria-describedby="root__error root__description root__help"
-            class="input input-bordered w-full"
-            id="root"
-            name="root"
-            placeholder=""
-            type="text"
-            value=""
-          />
+          <div
+            style="position: relative;"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              class="input input-bordered w-full"
+              id="root"
+              name="root"
+              placeholder=""
+              type="text"
+              value=""
+            />
+          </div>
         </div>
         <div
           class="description-field my-4"
@@ -12644,15 +12860,19 @@ exports[`single fields string field format data-url 1`] = `
                 class="label-text"
               />
             </label>
-            <input
-              aria-describedby="root__error root__description root__help"
-              class="file-input"
-              id="root"
-              name="root"
-              placeholder=""
-              type="file"
-              value=""
-            />
+            <div
+              style="position: relative;"
+            >
+              <input
+                aria-describedby="root__error root__description root__help"
+                class="file-input"
+                id="root"
+                name="root"
+                placeholder=""
+                type="file"
+                value=""
+              />
+            </div>
           </div>
         </div>
         <div
@@ -12707,15 +12927,19 @@ exports[`single fields string field format email 1`] = `
               class="label-text"
             />
           </label>
-          <input
-            aria-describedby="root__error root__description root__help"
-            class="input input-bordered w-full"
-            id="root"
-            name="root"
-            placeholder=""
-            type="email"
-            value=""
-          />
+          <div
+            style="position: relative;"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              class="input input-bordered w-full"
+              id="root"
+              name="root"
+              placeholder=""
+              type="email"
+              value=""
+            />
+          </div>
         </div>
         <div
           class="rjsf-field-error-template text-red-600"
@@ -12769,15 +12993,19 @@ exports[`single fields string field format uri 1`] = `
               class="label-text"
             />
           </label>
-          <input
-            aria-describedby="root__error root__description root__help"
-            class="input input-bordered w-full"
-            id="root"
-            name="root"
-            placeholder=""
-            type="url"
-            value=""
-          />
+          <div
+            style="position: relative;"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              class="input input-bordered w-full"
+              id="root"
+              name="root"
+              placeholder=""
+              type="url"
+              value=""
+            />
+          </div>
         </div>
         <div
           class="rjsf-field-error-template text-red-600"
@@ -12831,15 +13059,19 @@ exports[`single fields string field regular 1`] = `
               class="label-text"
             />
           </label>
-          <input
-            aria-describedby="root__error root__description root__help"
-            class="input input-bordered w-full"
-            id="root"
-            name="root"
-            placeholder=""
-            type="text"
-            value=""
-          />
+          <div
+            style="position: relative;"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              class="input input-bordered w-full"
+              id="root"
+              name="root"
+              placeholder=""
+              type="text"
+              value=""
+            />
+          </div>
         </div>
         <div
           class="rjsf-field-error-template text-red-600"
@@ -12897,15 +13129,19 @@ exports[`single fields string field required field with markdown help 1`] = `
               Required Field with Markdown Help
             </span>
           </label>
-          <input
-            aria-describedby="root__error root__description root__help"
-            class="input input-bordered w-full"
-            id="root"
-            name="root"
-            placeholder=""
-            type="text"
-            value="[object Object]"
-          />
+          <div
+            style="position: relative;"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              class="input input-bordered w-full"
+              id="root"
+              name="root"
+              placeholder=""
+              type="text"
+              value="[object Object]"
+            />
+          </div>
         </div>
         <div
           class="description-field my-4"
@@ -12981,15 +13217,19 @@ exports[`single fields string field with placeholder 1`] = `
               class="label-text"
             />
           </label>
-          <input
-            aria-describedby="root__error root__description root__help"
-            class="input input-bordered w-full"
-            id="root"
-            name="root"
-            placeholder="placeholder"
-            type="text"
-            value=""
-          />
+          <div
+            style="position: relative;"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              class="input input-bordered w-full"
+              id="root"
+              name="root"
+              placeholder="placeholder"
+              type="text"
+              value=""
+            />
+          </div>
         </div>
         <div
           class="rjsf-field-error-template text-red-600"
@@ -13125,15 +13365,19 @@ exports[`single fields title field 1`] = `
                         Titre 2
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_title__error root_title__description root_title__help"
-                      class="input input-bordered w-full"
-                      id="root_title"
-                      name="root_title"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_title__error root_title__description root_title__help"
+                        class="input input-bordered w-full"
+                        id="root_title"
+                        name="root_title"
+                        placeholder=""
+                        type="text"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -13259,15 +13503,19 @@ exports[`single fields up/down field 1`] = `
               class="label-text"
             />
           </label>
-          <input
-            aria-describedby="root__error root__description root__help"
-            class="input input-bordered w-full"
-            id="root"
-            name="root"
-            placeholder=""
-            type="number"
-            value=""
-          />
+          <div
+            style="position: relative;"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              class="input input-bordered w-full"
+              id="root"
+              name="root"
+              placeholder=""
+              type="number"
+              value=""
+            />
+          </div>
         </div>
         <div
           class="rjsf-field-error-template text-red-600"
@@ -13321,15 +13569,19 @@ exports[`single fields using custom tagName 1`] = `
               class="label-text"
             />
           </label>
-          <input
-            aria-describedby="root__error root__description root__help"
-            class="input input-bordered w-full"
-            id="root"
-            name="root"
-            placeholder=""
-            type="text"
-            value=""
-          />
+          <div
+            style="position: relative;"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              class="input input-bordered w-full"
+              id="root"
+              name="root"
+              placeholder=""
+              type="text"
+              value=""
+            />
+          </div>
         </div>
         <div
           class="rjsf-field-error-template text-red-600"

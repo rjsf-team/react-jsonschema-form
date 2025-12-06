@@ -9,6 +9,8 @@ import {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 
+import { X } from 'lucide-react';
+
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
  * It can be customized/overridden for other themes or individual implementations as needed.
@@ -91,6 +93,25 @@ export default function BaseInputTemplate<
         onFocus={_onFocus}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
+      {options.allowClear && !readonly && !disabled && inputValue && (
+        <button
+          type='button'
+          onClick={() => onChange('')}
+          aria-label='Clear input'
+          style={{
+            position: 'absolute',
+            left: '97%',
+            transform: 'translateY(-120%)',
+            backgroundColor: 'transparent',
+            cursor: 'pointer',
+            border: '2px solid #ccc',
+            zIndex: 1,
+            borderRadius: '50%',
+          }}
+        >
+          <X size={12} />
+        </button>
+      )}
       {Array.isArray(schema.examples) && (
         <datalist key={`datalist_${id}`} id={examplesId(id)}>
           {(schema.examples as string[])

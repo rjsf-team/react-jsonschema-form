@@ -12,6 +12,7 @@ import {
 import { TextInput, NumberInput } from '@mantine/core';
 
 import { cleanupOptions } from '../utils';
+import { X } from 'lucide-react';
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
@@ -117,6 +118,25 @@ export default function BaseInputTemplate<
   return (
     <>
       {input}
+      {options.allowClear && !readonly && !disabled && value && (
+        <button
+          type='button'
+          onClick={() => onChange('')}
+          aria-label='Clear input'
+          style={{
+            position: 'absolute',
+            left: '97%',
+            transform: 'translate(-300%,-112%)',
+            backgroundColor: 'transparent',
+            cursor: 'pointer',
+            border: '2px solid #ccc',
+            zIndex: 1,
+            borderRadius: '50%',
+          }}
+        >
+          <X size={12} />
+        </button>
+      )}
       {children}
       {Array.isArray(schema.examples) && (
         <datalist id={examplesId(id)}>

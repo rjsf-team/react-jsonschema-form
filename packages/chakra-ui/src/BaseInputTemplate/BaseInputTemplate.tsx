@@ -13,6 +13,7 @@ import {
 
 import { Field } from '../components/ui/field';
 import { getChakra } from '../utils';
+import { X } from 'lucide-react';
 
 export default function BaseInputTemplate<
   T = any,
@@ -72,6 +73,25 @@ export default function BaseInputTemplate<
         list={schema.examples ? examplesId(id) : undefined}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
+      {options.allowClear && !readonly && !disabled && value && (
+        <button
+          type='button'
+          onClick={() => onChange('')}
+          aria-label='Clear input'
+          style={{
+            backgroundColor: 'transparent',
+            cursor: 'pointer',
+            border: '2px solid #ccc',
+            position: 'absolute',
+            left: '97%',
+            transform: 'translateY(250%)',
+            zIndex: 1,
+            borderRadius: '50%',
+          }}
+        >
+          <X size={12} />
+        </button>
+      )}
       {Array.isArray(schema.examples) ? (
         <datalist id={examplesId(id)}>
           {(schema.examples as string[])
