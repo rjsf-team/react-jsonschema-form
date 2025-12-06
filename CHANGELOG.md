@@ -18,8 +18,53 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.1.3
 
+## @rjsf/antd
+
+- Updated `BaseInputTemplate` to support the `allowClear` feature for input fields
+
+## @rjsf/chakra-ui
+
+- Updated `BaseInputTemplate` to support the `allowClear` feature for input fields
+
+## @rjsf/core
+
+- Updated `BaseInputTemplate` to support the `allowClear` feature for input fields
+
+## @rjsf/daisyui
+
+- Updated `BaseInputTemplate` to support the `allowClear` feature for input fields
+
+## @rjsf/fluent-ui
+
+- Updated `BaseInputTemplate` to support the `allowClear` feature for input fields
+
+## @rjsf/mantine
+
+- Updated `BaseInputTemplate` to support the `allowClear` feature for input fields
+
+## @rjsf/mui
+
+- Updated `BaseInputTemplate` to support the `allowClear` feature for input fields
+
+## @rjsf/primereact
+
+- Updated `BaseInputTemplate` to support the `allowClear` feature for input fields
+
+## @rjsf/react-bootstrap
+
+- Updated `BaseInputTemplate` to support the `allowClear` feature for input fields
+
+## @rjsf/semantic-ui
+
+- Updated `BaseInputTemplate` to support the `allowClear` feature for input fields
+
+## @rjsf/shadcn
+
+- Updated `BaseInputTemplate` to support the `allowClear` feature for input fields
+
 ## @rjsf/utils
 
+- Fixed issue by adding new `allowClear` option to `UIOptionsBaseType` type, fixing [#4671](https://github.com/rjsf-team/react-jsonschema-form/issues/4671)
 - Fixed issue with default value not being prefilled when object with if/then is nested inside another object, fixing [#4222](https://github.com/rjsf-team/react-jsonschema-form/issues/4222)
 - Fixed issue with schema array with nested dependent fixed-length, fixing [#3754](https://github.com/rjsf-team/react-jsonschema-form/issues/3754)
 

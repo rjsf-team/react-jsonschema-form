@@ -137,16 +137,20 @@ exports[`array fields array icons 1`] = `
                           class="label-text"
                         />
                       </label>
-                      <input
-                        aria-describedby="root_0__error root_0__description root_0__help"
-                        class="input input-bordered w-full"
-                        id="root_0"
-                        name="root_0"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value="a"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_0__error root_0__description root_0__help"
+                          class="input input-bordered w-full"
+                          id="root_0"
+                          name="root_0"
+                          placeholder=""
+                          required=""
+                          type="text"
+                          value="a"
+                        />
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -286,16 +290,20 @@ exports[`array fields array icons 1`] = `
                           class="label-text"
                         />
                       </label>
-                      <input
-                        aria-describedby="root_1__error root_1__description root_1__help"
-                        class="input input-bordered w-full"
-                        id="root_1"
-                        name="root_1"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value="b"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_1__error root_1__description root_1__help"
+                          class="input input-bordered w-full"
+                          id="root_1"
+                          name="root_1"
+                          placeholder=""
+                          required=""
+                          type="text"
+                          value="b"
+                        />
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -632,15 +640,19 @@ exports[`array fields empty errors array 1`] = `
                         name
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_name__error root_name__description root_name__help"
-                      class="input input-bordered w-full"
-                      id="root_name"
-                      name="root_name"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_name__error root_name__description root_name__help"
+                        class="input input-bordered w-full"
+                        id="root_name"
+                        name="root_name"
+                        placeholder=""
+                        type="text"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -730,16 +742,20 @@ exports[`array fields fixed array 1`] = `
                           class="label-text"
                         />
                       </label>
-                      <input
-                        aria-describedby="root_0__error root_0__description root_0__help"
-                        class="input input-bordered w-full"
-                        id="root_0"
-                        name="root_0"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value=""
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_0__error root_0__description root_0__help"
+                          class="input input-bordered w-full"
+                          id="root_0"
+                          name="root_0"
+                          placeholder=""
+                          required=""
+                          type="text"
+                          value=""
+                        />
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -786,17 +802,21 @@ exports[`array fields fixed array 1`] = `
                           class="label-text"
                         />
                       </label>
-                      <input
-                        aria-describedby="root_1__error root_1__description root_1__help"
-                        class="input input-bordered w-full"
-                        id="root_1"
-                        name="root_1"
-                        placeholder=""
-                        required=""
-                        step="any"
-                        type="number"
-                        value=""
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_1__error root_1__description root_1__help"
+                          class="input input-bordered w-full"
+                          id="root_1"
+                          name="root_1"
+                          placeholder=""
+                          required=""
+                          step="any"
+                          type="number"
+                          value=""
+                        />
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -893,15 +913,19 @@ exports[`array fields has errors 1`] = `
                         name
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_name__error root_name__description root_name__help"
-                      class="input input-bordered w-full"
-                      id="root_name"
-                      name="root_name"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_name__error root_name__description root_name__help"
+                        class="input input-bordered w-full"
+                        id="root_name"
+                        name="root_name"
+                        placeholder=""
+                        type="text"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -990,15 +1014,19 @@ exports[`array fields no errors 1`] = `
                         name
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_name__error root_name__description root_name__help"
-                      class="input input-bordered w-full"
-                      id="root_name"
-                      name="root_name"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_name__error root_name__description root_name__help"
+                        class="input input-bordered w-full"
+                        id="root_name"
+                        name="root_name"
+                        placeholder=""
+                        type="text"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -1101,15 +1129,19 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                     name
                                   </span>
                                 </label>
-                                <input
-                                  aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
-                                  class="input input-bordered w-full"
-                                  id="root_0_name"
-                                  name="root[0][name]"
-                                  placeholder=""
-                                  type="text"
-                                  value="Item 1"
-                                />
+                                <div
+                                  style="position: relative;"
+                                >
+                                  <input
+                                    aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
+                                    class="input input-bordered w-full"
+                                    id="root_0_name"
+                                    name="root[0][name]"
+                                    placeholder=""
+                                    type="text"
+                                    value="Item 1"
+                                  />
+                                </div>
                               </div>
                               <div
                                 class="rjsf-field-error-template text-red-600"
@@ -1154,16 +1186,20 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                     value
                                   </span>
                                 </label>
-                                <input
-                                  aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
-                                  class="input input-bordered w-full"
-                                  id="root_0_value"
-                                  name="root[0][value]"
-                                  placeholder=""
-                                  step="any"
-                                  type="number"
-                                  value="10"
-                                />
+                                <div
+                                  style="position: relative;"
+                                >
+                                  <input
+                                    aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
+                                    class="input input-bordered w-full"
+                                    id="root_0_value"
+                                    name="root[0][value]"
+                                    placeholder=""
+                                    step="any"
+                                    type="number"
+                                    value="10"
+                                  />
+                                </div>
                               </div>
                               <div
                                 class="rjsf-field-error-template text-red-600"
@@ -1307,15 +1343,19 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                     name
                                   </span>
                                 </label>
-                                <input
-                                  aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
-                                  class="input input-bordered w-full"
-                                  id="root_1_name"
-                                  name="root[1][name]"
-                                  placeholder=""
-                                  type="text"
-                                  value="Item 2"
-                                />
+                                <div
+                                  style="position: relative;"
+                                >
+                                  <input
+                                    aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
+                                    class="input input-bordered w-full"
+                                    id="root_1_name"
+                                    name="root[1][name]"
+                                    placeholder=""
+                                    type="text"
+                                    value="Item 2"
+                                  />
+                                </div>
                               </div>
                               <div
                                 class="rjsf-field-error-template text-red-600"
@@ -1360,16 +1400,20 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                     value
                                   </span>
                                 </label>
-                                <input
-                                  aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
-                                  class="input input-bordered w-full"
-                                  id="root_1_value"
-                                  name="root[1][value]"
-                                  placeholder=""
-                                  step="any"
-                                  type="number"
-                                  value="20"
-                                />
+                                <div
+                                  style="position: relative;"
+                                >
+                                  <input
+                                    aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
+                                    class="input input-bordered w-full"
+                                    id="root_1_value"
+                                    name="root[1][value]"
+                                    placeholder=""
+                                    step="any"
+                                    type="number"
+                                    value="20"
+                                  />
+                                </div>
                               </div>
                               <div
                                 class="rjsf-field-error-template text-red-600"
@@ -1577,16 +1621,20 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                           class="label-text"
                         />
                       </label>
-                      <input
-                        aria-describedby="root_0__error root_0__description root_0__help"
-                        class="input input-bordered w-full"
-                        id="root_0"
-                        name="root[0]"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value="foo"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_0__error root_0__description root_0__help"
+                          class="input input-bordered w-full"
+                          id="root_0"
+                          name="root[0]"
+                          placeholder=""
+                          required=""
+                          type="text"
+                          value="foo"
+                        />
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -1705,16 +1753,20 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                           class="label-text"
                         />
                       </label>
-                      <input
-                        aria-describedby="root_1__error root_1__description root_1__help"
-                        class="input input-bordered w-full"
-                        id="root_1"
-                        name="root[1]"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value="bar"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_1__error root_1__description root_1__help"
+                          class="input input-bordered w-full"
+                          id="root_1"
+                          name="root[1]"
+                          placeholder=""
+                          required=""
+                          type="text"
+                          value="bar"
+                        />
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -2035,16 +2087,20 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
                           class="label-text"
                         />
                       </label>
-                      <input
-                        aria-describedby="root_0__error root_0__description root_0__help"
-                        class="input input-bordered w-full"
-                        id="root_0"
-                        name="root[0]"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value="text"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_0__error root_0__description root_0__help"
+                          class="input input-bordered w-full"
+                          id="root_0"
+                          name="root[0]"
+                          placeholder=""
+                          required=""
+                          type="text"
+                          value="text"
+                        />
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -2091,17 +2147,21 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
                           class="label-text"
                         />
                       </label>
-                      <input
-                        aria-describedby="root_1__error root_1__description root_1__help"
-                        class="input input-bordered w-full"
-                        id="root_1"
-                        name="root[1]"
-                        placeholder=""
-                        required=""
-                        step="any"
-                        type="number"
-                        value="42"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_1__error root_1__description root_1__help"
+                          class="input input-bordered w-full"
+                          id="root_1"
+                          name="root[1]"
+                          placeholder=""
+                          required=""
+                          step="any"
+                          type="number"
+                          value="42"
+                        />
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -2241,16 +2301,20 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                       class="label-text"
                                     />
                                   </label>
-                                  <input
-                                    aria-describedby="root_0_0__error root_0_0__description root_0_0__help"
-                                    class="input input-bordered w-full"
-                                    id="root_0_0"
-                                    name="root[0][0]"
-                                    placeholder=""
-                                    required=""
-                                    type="text"
-                                    value="a"
-                                  />
+                                  <div
+                                    style="position: relative;"
+                                  >
+                                    <input
+                                      aria-describedby="root_0_0__error root_0_0__description root_0_0__help"
+                                      class="input input-bordered w-full"
+                                      id="root_0_0"
+                                      name="root[0][0]"
+                                      placeholder=""
+                                      required=""
+                                      type="text"
+                                      value="a"
+                                    />
+                                  </div>
                                 </div>
                                 <div
                                   class="rjsf-field-error-template text-red-600"
@@ -2369,16 +2433,20 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                       class="label-text"
                                     />
                                   </label>
-                                  <input
-                                    aria-describedby="root_0_1__error root_0_1__description root_0_1__help"
-                                    class="input input-bordered w-full"
-                                    id="root_0_1"
-                                    name="root[0][1]"
-                                    placeholder=""
-                                    required=""
-                                    type="text"
-                                    value="b"
-                                  />
+                                  <div
+                                    style="position: relative;"
+                                  >
+                                    <input
+                                      aria-describedby="root_0_1__error root_0_1__description root_0_1__help"
+                                      class="input input-bordered w-full"
+                                      id="root_0_1"
+                                      name="root[0][1]"
+                                      placeholder=""
+                                      required=""
+                                      type="text"
+                                      value="b"
+                                    />
+                                  </div>
                                 </div>
                                 <div
                                   class="rjsf-field-error-template text-red-600"
@@ -2633,16 +2701,20 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                       class="label-text"
                                     />
                                   </label>
-                                  <input
-                                    aria-describedby="root_1_0__error root_1_0__description root_1_0__help"
-                                    class="input input-bordered w-full"
-                                    id="root_1_0"
-                                    name="root[1][0]"
-                                    placeholder=""
-                                    required=""
-                                    type="text"
-                                    value="c"
-                                  />
+                                  <div
+                                    style="position: relative;"
+                                  >
+                                    <input
+                                      aria-describedby="root_1_0__error root_1_0__description root_1_0__help"
+                                      class="input input-bordered w-full"
+                                      id="root_1_0"
+                                      name="root[1][0]"
+                                      placeholder=""
+                                      required=""
+                                      type="text"
+                                      value="c"
+                                    />
+                                  </div>
                                 </div>
                                 <div
                                   class="rjsf-field-error-template text-red-600"
@@ -2761,16 +2833,20 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                       class="label-text"
                                     />
                                   </label>
-                                  <input
-                                    aria-describedby="root_1_1__error root_1_1__description root_1_1__help"
-                                    class="input input-bordered w-full"
-                                    id="root_1_1"
-                                    name="root[1][1]"
-                                    placeholder=""
-                                    required=""
-                                    type="text"
-                                    value="d"
-                                  />
+                                  <div
+                                    style="position: relative;"
+                                  >
+                                    <input
+                                      aria-describedby="root_1_1__error root_1_1__description root_1_1__help"
+                                      class="input input-bordered w-full"
+                                      id="root_1_1"
+                                      name="root[1][1]"
+                                      placeholder=""
+                                      required=""
+                                      type="text"
+                                      value="d"
+                                    />
+                                  </div>
                                 </div>
                                 <div
                                   class="rjsf-field-error-template text-red-600"
@@ -3097,15 +3173,19 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                     name
                                   </span>
                                 </label>
-                                <input
-                                  aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
-                                  class="input input-bordered w-full"
-                                  id="root_0_name"
-                                  name="root.0.name"
-                                  placeholder=""
-                                  type="text"
-                                  value="Item 1"
-                                />
+                                <div
+                                  style="position: relative;"
+                                >
+                                  <input
+                                    aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
+                                    class="input input-bordered w-full"
+                                    id="root_0_name"
+                                    name="root.0.name"
+                                    placeholder=""
+                                    type="text"
+                                    value="Item 1"
+                                  />
+                                </div>
                               </div>
                               <div
                                 class="rjsf-field-error-template text-red-600"
@@ -3150,16 +3230,20 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                     value
                                   </span>
                                 </label>
-                                <input
-                                  aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
-                                  class="input input-bordered w-full"
-                                  id="root_0_value"
-                                  name="root.0.value"
-                                  placeholder=""
-                                  step="any"
-                                  type="number"
-                                  value="10"
-                                />
+                                <div
+                                  style="position: relative;"
+                                >
+                                  <input
+                                    aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
+                                    class="input input-bordered w-full"
+                                    id="root_0_value"
+                                    name="root.0.value"
+                                    placeholder=""
+                                    step="any"
+                                    type="number"
+                                    value="10"
+                                  />
+                                </div>
                               </div>
                               <div
                                 class="rjsf-field-error-template text-red-600"
@@ -3303,15 +3387,19 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                     name
                                   </span>
                                 </label>
-                                <input
-                                  aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
-                                  class="input input-bordered w-full"
-                                  id="root_1_name"
-                                  name="root.1.name"
-                                  placeholder=""
-                                  type="text"
-                                  value="Item 2"
-                                />
+                                <div
+                                  style="position: relative;"
+                                >
+                                  <input
+                                    aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
+                                    class="input input-bordered w-full"
+                                    id="root_1_name"
+                                    name="root.1.name"
+                                    placeholder=""
+                                    type="text"
+                                    value="Item 2"
+                                  />
+                                </div>
                               </div>
                               <div
                                 class="rjsf-field-error-template text-red-600"
@@ -3356,16 +3444,20 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                     value
                                   </span>
                                 </label>
-                                <input
-                                  aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
-                                  class="input input-bordered w-full"
-                                  id="root_1_value"
-                                  name="root.1.value"
-                                  placeholder=""
-                                  step="any"
-                                  type="number"
-                                  value="20"
-                                />
+                                <div
+                                  style="position: relative;"
+                                >
+                                  <input
+                                    aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
+                                    class="input input-bordered w-full"
+                                    id="root_1_value"
+                                    name="root.1.value"
+                                    placeholder=""
+                                    step="any"
+                                    type="number"
+                                    value="20"
+                                  />
+                                </div>
                               </div>
                               <div
                                 class="rjsf-field-error-template text-red-600"
@@ -3573,16 +3665,20 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                           class="label-text"
                         />
                       </label>
-                      <input
-                        aria-describedby="root_0__error root_0__description root_0__help"
-                        class="input input-bordered w-full"
-                        id="root_0"
-                        name="root.0"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value="foo"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_0__error root_0__description root_0__help"
+                          class="input input-bordered w-full"
+                          id="root_0"
+                          name="root.0"
+                          placeholder=""
+                          required=""
+                          type="text"
+                          value="foo"
+                        />
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -3701,16 +3797,20 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                           class="label-text"
                         />
                       </label>
-                      <input
-                        aria-describedby="root_1__error root_1__description root_1__help"
-                        class="input input-bordered w-full"
-                        id="root_1"
-                        name="root.1"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value="bar"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_1__error root_1__description root_1__help"
+                          class="input input-bordered w-full"
+                          id="root_1"
+                          name="root.1"
+                          placeholder=""
+                          required=""
+                          type="text"
+                          value="bar"
+                        />
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -4037,16 +4137,20 @@ exports[`with title and description array icons 1`] = `
                           Test field-1
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_0__error root_0__description root_0__help"
-                        class="input input-bordered w-full"
-                        id="root_0"
-                        name="root_0"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value="a"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_0__error root_0__description root_0__help"
+                          class="input input-bordered w-full"
+                          id="root_0"
+                          name="root_0"
+                          placeholder=""
+                          required=""
+                          type="text"
+                          value="a"
+                        />
+                      </div>
                     </div>
                     <div
                       class="description-field my-4"
@@ -4199,16 +4303,20 @@ exports[`with title and description array icons 1`] = `
                           Test field-2
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_1__error root_1__description root_1__help"
-                        class="input input-bordered w-full"
-                        id="root_1"
-                        name="root_1"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value="b"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_1__error root_1__description root_1__help"
+                          class="input input-bordered w-full"
+                          id="root_1"
+                          name="root_1"
+                          placeholder=""
+                          required=""
+                          type="text"
+                          value="b"
+                        />
+                      </div>
                     </div>
                     <div
                       class="description-field my-4"
@@ -4598,16 +4706,20 @@ exports[`with title and description fixed array 1`] = `
                           Test field-1
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_0__error root_0__description root_0__help"
-                        class="input input-bordered w-full"
-                        id="root_0"
-                        name="root_0"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value=""
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_0__error root_0__description root_0__help"
+                          class="input input-bordered w-full"
+                          id="root_0"
+                          name="root_0"
+                          placeholder=""
+                          required=""
+                          type="text"
+                          value=""
+                        />
+                      </div>
                     </div>
                     <div
                       class="description-field my-4"
@@ -4667,17 +4779,21 @@ exports[`with title and description fixed array 1`] = `
                           Test field-2
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_1__error root_1__description root_1__help"
-                        class="input input-bordered w-full"
-                        id="root_1"
-                        name="root_1"
-                        placeholder=""
-                        required=""
-                        step="any"
-                        type="number"
-                        value=""
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_1__error root_1__description root_1__help"
+                          class="input input-bordered w-full"
+                          id="root_1"
+                          name="root_1"
+                          placeholder=""
+                          required=""
+                          step="any"
+                          type="number"
+                          value=""
+                        />
+                      </div>
                     </div>
                     <div
                       class="description-field my-4"
@@ -4909,16 +5025,20 @@ exports[`with title and description from both array icons 1`] = `
                           My Item
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_0__error root_0__description root_0__help"
-                        class="input input-bordered w-full"
-                        id="root_0"
-                        name="root_0"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value="a"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_0__error root_0__description root_0__help"
+                          class="input input-bordered w-full"
+                          id="root_0"
+                          name="root_0"
+                          placeholder=""
+                          required=""
+                          type="text"
+                          value="a"
+                        />
+                      </div>
                     </div>
                     <div
                       class="description-field my-4"
@@ -5071,16 +5191,20 @@ exports[`with title and description from both array icons 1`] = `
                           My Item
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_1__error root_1__description root_1__help"
-                        class="input input-bordered w-full"
-                        id="root_1"
-                        name="root_1"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value="b"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_1__error root_1__description root_1__help"
+                          class="input input-bordered w-full"
+                          id="root_1"
+                          name="root_1"
+                          placeholder=""
+                          required=""
+                          type="text"
+                          value="b"
+                        />
+                      </div>
                     </div>
                     <div
                       class="description-field my-4"
@@ -5470,16 +5594,20 @@ exports[`with title and description from both fixed array 1`] = `
                           My Item
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_0__error root_0__description root_0__help"
-                        class="input input-bordered w-full"
-                        id="root_0"
-                        name="root_0"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value=""
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_0__error root_0__description root_0__help"
+                          class="input input-bordered w-full"
+                          id="root_0"
+                          name="root_0"
+                          placeholder=""
+                          required=""
+                          type="text"
+                          value=""
+                        />
+                      </div>
                     </div>
                     <div
                       class="description-field my-4"
@@ -5539,17 +5667,21 @@ exports[`with title and description from both fixed array 1`] = `
                           My Item
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_1__error root_1__description root_1__help"
-                        class="input input-bordered w-full"
-                        id="root_1"
-                        name="root_1"
-                        placeholder=""
-                        required=""
-                        step="any"
-                        type="number"
-                        value=""
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_1__error root_1__description root_1__help"
+                          class="input input-bordered w-full"
+                          id="root_1"
+                          name="root_1"
+                          placeholder=""
+                          required=""
+                          step="any"
+                          type="number"
+                          value=""
+                        />
+                      </div>
                     </div>
                     <div
                       class="description-field my-4"
@@ -5781,16 +5913,20 @@ exports[`with title and description from uiSchema array icons 1`] = `
                           My Item
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_0__error root_0__description root_0__help"
-                        class="input input-bordered w-full"
-                        id="root_0"
-                        name="root_0"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value="a"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_0__error root_0__description root_0__help"
+                          class="input input-bordered w-full"
+                          id="root_0"
+                          name="root_0"
+                          placeholder=""
+                          required=""
+                          type="text"
+                          value="a"
+                        />
+                      </div>
                     </div>
                     <div
                       class="description-field my-4"
@@ -5943,16 +6079,20 @@ exports[`with title and description from uiSchema array icons 1`] = `
                           My Item
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_1__error root_1__description root_1__help"
-                        class="input input-bordered w-full"
-                        id="root_1"
-                        name="root_1"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value="b"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_1__error root_1__description root_1__help"
+                          class="input input-bordered w-full"
+                          id="root_1"
+                          name="root_1"
+                          placeholder=""
+                          required=""
+                          type="text"
+                          value="b"
+                        />
+                      </div>
                     </div>
                     <div
                       class="description-field my-4"
@@ -6342,16 +6482,20 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                           My Item
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_0__error root_0__description root_0__help"
-                        class="input input-bordered w-full"
-                        id="root_0"
-                        name="root_0"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value=""
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_0__error root_0__description root_0__help"
+                          class="input input-bordered w-full"
+                          id="root_0"
+                          name="root_0"
+                          placeholder=""
+                          required=""
+                          type="text"
+                          value=""
+                        />
+                      </div>
                     </div>
                     <div
                       class="description-field my-4"
@@ -6411,17 +6555,21 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                           My Item
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_1__error root_1__description root_1__help"
-                        class="input input-bordered w-full"
-                        id="root_1"
-                        name="root_1"
-                        placeholder=""
-                        required=""
-                        step="any"
-                        type="number"
-                        value=""
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_1__error root_1__description root_1__help"
+                          class="input input-bordered w-full"
+                          id="root_1"
+                          name="root_1"
+                          placeholder=""
+                          required=""
+                          step="any"
+                          type="number"
+                          value=""
+                        />
+                      </div>
                     </div>
                     <div
                       class="description-field my-4"
@@ -6592,16 +6740,20 @@ exports[`with title and description with global label off array icons 1`] = `
                           Test field-1
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_0__error root_0__description root_0__help"
-                        class="input input-bordered w-full"
-                        id="root_0"
-                        name="root_0"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value="a"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_0__error root_0__description root_0__help"
+                          class="input input-bordered w-full"
+                          id="root_0"
+                          name="root_0"
+                          placeholder=""
+                          required=""
+                          type="text"
+                          value="a"
+                        />
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -6729,16 +6881,20 @@ exports[`with title and description with global label off array icons 1`] = `
                           Test field-2
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_1__error root_1__description root_1__help"
-                        class="input input-bordered w-full"
-                        id="root_1"
-                        name="root_1"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value="b"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_1__error root_1__description root_1__help"
+                          class="input input-bordered w-full"
+                          id="root_1"
+                          name="root_1"
+                          placeholder=""
+                          required=""
+                          type="text"
+                          value="b"
+                        />
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -7060,16 +7216,20 @@ exports[`with title and description with global label off fixed array 1`] = `
                           Test field-1
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_0__error root_0__description root_0__help"
-                        class="input input-bordered w-full"
-                        id="root_0"
-                        name="root_0"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value=""
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_0__error root_0__description root_0__help"
+                          class="input input-bordered w-full"
+                          id="root_0"
+                          name="root_0"
+                          placeholder=""
+                          required=""
+                          type="text"
+                          value=""
+                        />
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -7104,17 +7264,21 @@ exports[`with title and description with global label off fixed array 1`] = `
                           Test field-2
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_1__error root_1__description root_1__help"
-                        class="input input-bordered w-full"
-                        id="root_1"
-                        name="root_1"
-                        placeholder=""
-                        required=""
-                        step="any"
-                        type="number"
-                        value=""
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_1__error root_1__description root_1__help"
+                          class="input input-bordered w-full"
+                          id="root_1"
+                          name="root_1"
+                          placeholder=""
+                          required=""
+                          step="any"
+                          type="number"
+                          value=""
+                        />
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"

@@ -8,6 +8,7 @@ import {
   ariaDescribedByIds,
   examplesId,
 } from '@rjsf/utils';
+import { X } from 'lucide-react';
 
 /** The `BaseInputTemplate` component is a template for rendering basic input elements
  * with DaisyUI styling. It's used as the foundation for various input types in forms.
@@ -80,23 +81,45 @@ export default function BaseInputTemplate<
         <label htmlFor={id} className='label hidden' style={{ display: 'none' }}>
           <span className='label-text'>{label}</span>
         </label>
-        <input
-          id={id}
-          name={htmlName || id}
-          value={value || value === 0 ? value : ''}
-          placeholder={placeholder}
-          required={required}
-          disabled={disabled || readonly}
-          autoFocus={autofocus}
-          className={className}
-          multiple={isMulti}
-          {...rest}
-          {...htmlInputProps}
-          onChange={onChangeOverride || _onChange}
-          onBlur={_onBlur}
-          onFocus={_onFocus}
-          aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
-        />
+        <div style={{ position: 'relative' }}>
+          <input
+            id={id}
+            name={htmlName || id}
+            value={value || value === 0 ? value : ''}
+            placeholder={placeholder}
+            required={required}
+            disabled={disabled || readonly}
+            autoFocus={autofocus}
+            className={className}
+            multiple={isMulti}
+            {...rest}
+            {...htmlInputProps}
+            onChange={onChangeOverride || _onChange}
+            onBlur={_onBlur}
+            onFocus={_onFocus}
+            aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+          />
+          {options.allowClear && !readonly && !disabled && value && (
+            <button
+              type='button'
+              onClick={() => onChange('')}
+              aria-label='Clear input'
+              style={{
+                backgroundColor: 'transparent',
+                cursor: 'pointer',
+                border: '2px solid #ccc',
+                position: 'absolute',
+                left: '97%',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                zIndex: 1,
+                borderRadius: '50%',
+              }}
+            >
+              <X size={12} />
+            </button>
+          )}
+        </div>
       </div>
       {Array.isArray(schema.examples) && (
         <datalist id={examplesId(id)}>

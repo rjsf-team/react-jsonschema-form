@@ -1083,6 +1083,8 @@ type UIOptionsBaseType<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     rows?: number;
     /** If submitButtonOptions is provided it should match the `UISchemaSubmitButtonOptions` type */
     submitButtonOptions?: UISchemaSubmitButtonOptions;
+    /** Flag, if set to `true`, will allow the input to be cleared */
+    allowClear?: boolean;
     /** Allows RJSF to override the default widget implementation by specifying either the name of a widget that is used
      * to look up an implementation from the `widgets` list or an actual one-off widget implementation itself
      */

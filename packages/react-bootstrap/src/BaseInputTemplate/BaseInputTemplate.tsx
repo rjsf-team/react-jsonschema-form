@@ -9,6 +9,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
+import { X } from 'lucide-react';
 
 export default function BaseInputTemplate<
   T = any,
@@ -63,6 +64,25 @@ export default function BaseInputTemplate<
         onFocus={_onFocus}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
+      {options.allowClear && !readonly && !disabled && value && (
+        <button
+          type='button'
+          onClick={() => onChange('')}
+          aria-label='Clear input'
+          style={{
+            position: 'absolute',
+            left: '97%',
+            transform: 'translate(-40%,-112%)',
+            backgroundColor: 'transparent',
+            cursor: 'pointer',
+            border: '2px solid #ccc',
+            zIndex: 1,
+            borderRadius: '50%',
+          }}
+        >
+          <X size={13} />
+        </button>
+      )}
       {children}
       {Array.isArray(schema.examples) ? (
         <datalist id={examplesId(id)}>
