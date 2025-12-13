@@ -185,7 +185,7 @@ export default function processRawValidationErrors<
   // Include form data with undefined values, which is required for custom validation.
   const newFormData = getDefaultFormState<T, S, F>(validator, schema, formData, schema, true) as T;
 
-  const errorHandler = customValidate(newFormData, createErrorHandler<T>(newFormData), uiSchema);
+  const errorHandler = customValidate(newFormData, createErrorHandler<T>(newFormData), uiSchema, errorSchema);
   const userErrorSchema = unwrapErrorHandler<T>(errorHandler);
   return validationDataMerge<T>({ errors, errorSchema }, userErrorSchema);
 }
