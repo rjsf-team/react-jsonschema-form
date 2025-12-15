@@ -70,11 +70,11 @@
     "jsonpointer": "^5.0.1",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
-    "react-is": "^18.3.1"
+    "react-is": "^19.2.3"
   },
   "devDependencies": {
     "@types/json-schema": "^7.0.15",
-    "@types/react-is": "^18.3.1",
+    "@types/react-is": "^19.2.0",
     "deep-freeze-es6": "^4.0.1",
     "eslint": "^8.57.1"
   },
