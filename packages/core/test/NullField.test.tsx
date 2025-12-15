@@ -1,18 +1,6 @@
-import { expect } from 'chai';
-import { createFormComponent, createSandbox, submitForm } from './test_utils';
-import sinon from 'sinon';
+import { createFormComponent, submitForm } from './testUtils';
 
 describe('NullField', () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
-
   describe('No widget', () => {
     it('should render a null field', () => {
       const { node } = createFormComponent({
@@ -21,7 +9,7 @@ describe('NullField', () => {
         },
       });
 
-      expect(node.querySelectorAll('.rjsf-field')).to.have.length.of(1);
+      expect(node.querySelectorAll('.rjsf-field')).toHaveLength(1);
     });
 
     it('should render a null field with a label', () => {
@@ -32,7 +20,7 @@ describe('NullField', () => {
         },
       });
 
-      expect(node.querySelector('.rjsf-field label').textContent).eql('foo');
+      expect(node.querySelector('.rjsf-field label')).toHaveTextContent('foo');
     });
 
     it('should assign a default value', () => {
@@ -43,7 +31,7 @@ describe('NullField', () => {
         },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, { formData: null });
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: null }));
     });
 
     it('should not overwrite existing data', () => {
@@ -56,7 +44,10 @@ describe('NullField', () => {
       });
 
       submitForm(node);
-      sinon.assert.calledWithMatch(onSubmit.lastCall, { formData: 3 });
+      expect(onSubmit).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: 3 }),
+        expect.objectContaining({ type: 'submit' }),
+      );
     });
   });
 });

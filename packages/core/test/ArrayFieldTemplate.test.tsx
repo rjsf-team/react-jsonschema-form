@@ -1,25 +1,14 @@
 import { PureComponent } from 'react';
-import { expect } from 'chai';
-import { Simulate } from 'react-dom/test-utils';
-import { getUiOptions } from '@rjsf/utils';
+import { ArrayFieldTemplateProps, ArrayFieldItemTemplateProps, RJSFSchema, getUiOptions } from '@rjsf/utils';
+import { fireEvent } from '@testing-library/react';
 
-import { createFormComponent, createSandbox } from './test_utils';
+import { createFormComponent } from './testUtils';
+
+const formData = ['one', 'two', 'three'];
 
 describe('ArrayFieldTemplate', () => {
-  let sandbox;
-
-  const formData = ['one', 'two', 'three'];
-
-  beforeEach(() => {
-    sandbox = createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
-
   describe('Custom ArrayFieldTemplate of string array', () => {
-    function ArrayFieldTemplate(props) {
+    function ArrayFieldTemplate(props: ArrayFieldTemplateProps) {
       const { classNames } = getUiOptions(props.uiSchema);
       return (
         <div className={classNames}>
@@ -28,7 +17,7 @@ describe('ArrayFieldTemplate', () => {
         </div>
       );
     }
-    function ArrayFieldItemTemplate(props) {
+    function ArrayFieldItemTemplate(props: ArrayFieldItemTemplateProps) {
       return (
         <div className='custom-array-item'>
           {props.buttonsProps.hasMoveUp && <button className='custom-array-item-move-up' />}
@@ -40,13 +29,13 @@ describe('ArrayFieldTemplate', () => {
     }
 
     describe('Stateful ArrayFieldTemplate', () => {
-      class ArrayFieldTemplate extends PureComponent {
+      class ArrayFieldTemplate extends PureComponent<ArrayFieldTemplateProps> {
         render() {
           return <div className='field-content'>{this.props.items}</div>;
         }
       }
 
-      class ArrayFieldItemTemplate extends PureComponent {
+      class ArrayFieldItemTemplate extends PureComponent<ArrayFieldItemTemplateProps> {
         render() {
           return <div>this.props.children</div>;
         }
@@ -60,7 +49,7 @@ describe('ArrayFieldTemplate', () => {
             templates: { ArrayFieldTemplate, ArrayFieldItemTemplate },
           });
 
-          expect(node.querySelectorAll('.rjsf-field-array .field-content div')).to.have.length.of(3);
+          expect(node.querySelectorAll('.rjsf-field-array .field-content div')).toHaveLength(3);
         });
       });
       describe('with template configured in ui:ArrayFieldTemplate', () => {
@@ -74,7 +63,7 @@ describe('ArrayFieldTemplate', () => {
             },
           });
 
-          expect(node.querySelectorAll('.rjsf-field-array .field-content div')).to.have.length.of(3);
+          expect(node.querySelectorAll('.rjsf-field-array .field-content div')).toHaveLength(3);
         });
       });
       describe('with template configured globally being overriden in ui:ArrayFieldTemplate', () => {
@@ -90,20 +79,20 @@ describe('ArrayFieldTemplate', () => {
             templates: { ArrayFieldTemplate: () => <div /> },
           });
 
-          expect(node.querySelectorAll('.rjsf-field-array .field-content div')).to.have.length.of(3);
+          expect(node.querySelectorAll('.rjsf-field-array .field-content div')).toHaveLength(3);
         });
       });
     });
 
     describe('not fixed items', () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'array',
         title: 'my list',
         description: 'my description',
         items: { type: 'string' },
       };
 
-      let node;
+      let node: Element;
 
       describe('with template globally configured', () => {
         const uiSchema = {
@@ -157,42 +146,42 @@ describe('ArrayFieldTemplate', () => {
       });
       function sharedIts() {
         it('should render one root element for the array', () => {
-          expect(node.querySelectorAll('.custom-array')).to.have.length.of(1);
+          expect(node.querySelectorAll('.custom-array')).toHaveLength(1);
         });
 
         it('should render one add button', () => {
-          expect(node.querySelectorAll('.custom-array-add')).to.have.length.of(1);
+          expect(node.querySelectorAll('.custom-array-add')).toHaveLength(1);
         });
 
         it('should render one child for each array item', () => {
-          expect(node.querySelectorAll('.custom-array-item')).to.have.length.of(formData.length);
+          expect(node.querySelectorAll('.custom-array-item')).toHaveLength(formData.length);
         });
 
         it('should render text input for each array item', () => {
-          expect(node.querySelectorAll('.custom-array-item .rjsf-field input[type=text]')).to.have.length.of(
+          expect(node.querySelectorAll('.custom-array-item .rjsf-field input[type=text]')).toHaveLength(
             formData.length,
           );
         });
 
         it('should render move up button for all but one array items', () => {
-          expect(node.querySelectorAll('.custom-array-item-move-up')).to.have.length.of(formData.length - 1);
+          expect(node.querySelectorAll('.custom-array-item-move-up')).toHaveLength(formData.length - 1);
         });
 
         it('should render move down button for all but one array items', () => {
-          expect(node.querySelectorAll('.custom-array-item-move-down')).to.have.length.of(formData.length - 1);
+          expect(node.querySelectorAll('.custom-array-item-move-down')).toHaveLength(formData.length - 1);
         });
       }
     });
 
     describe('fixed items', () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'array',
         title: 'my list',
         description: 'my description',
         items: [{ type: 'string' }, { type: 'string' }, { type: 'string' }],
       };
 
-      let node;
+      let node: Element;
 
       describe('with template globally configured', () => {
         const uiSchema = {
@@ -243,42 +232,42 @@ describe('ArrayFieldTemplate', () => {
       });
       function sharedIts() {
         it('should render one root element for the array', () => {
-          expect(node.querySelectorAll('.custom-array')).to.have.length.of(1);
+          expect(node.querySelectorAll('.custom-array')).toHaveLength(1);
         });
 
         it('should not render an add button', () => {
-          expect(node.querySelectorAll('.custom-array-add')).to.have.length.of(0);
+          expect(node.querySelectorAll('.custom-array-add')).toHaveLength(0);
         });
 
         it('should render one child for each array item', () => {
-          expect(node.querySelectorAll('.custom-array-item')).to.have.length.of(formData.length);
+          expect(node.querySelectorAll('.custom-array-item')).toHaveLength(formData.length);
         });
 
         it('should render text input for each array item', () => {
-          expect(node.querySelectorAll('.custom-array-item .rjsf-field input[type=text]')).to.have.length.of(
+          expect(node.querySelectorAll('.custom-array-item .rjsf-field input[type=text]')).toHaveLength(
             formData.length,
           );
         });
 
         it('should not render any move up buttons', () => {
-          expect(node.querySelectorAll('.custom-array-item-move-up')).to.have.length.of(0);
+          expect(node.querySelectorAll('.custom-array-item-move-up')).toHaveLength(0);
         });
 
         it('should not render any move down buttons', () => {
-          expect(node.querySelectorAll('.custom-array-item-move-down')).to.have.length.of(0);
+          expect(node.querySelectorAll('.custom-array-item-move-down')).toHaveLength(0);
         });
       }
     });
   });
 
   describe('Stateful ArrayFieldTemplate', () => {
-    class ArrayFieldTemplate extends PureComponent {
+    class ArrayFieldTemplate extends PureComponent<ArrayFieldTemplateProps> {
       render() {
         return <div className='field-content'>{this.props.items}</div>;
       }
     }
 
-    class ArrayFieldItemTemplate extends PureComponent {
+    class ArrayFieldItemTemplate extends PureComponent<ArrayFieldItemTemplateProps> {
       render() {
         return <div>this.props.children</div>;
       }
@@ -290,13 +279,13 @@ describe('ArrayFieldTemplate', () => {
         formData,
         templates: { ArrayFieldTemplate, ArrayFieldItemTemplate },
       });
-      expect(node.querySelectorAll('.rjsf-field-array .field-content div')).to.have.length.of(3);
+      expect(node.querySelectorAll('.rjsf-field-array .field-content div')).toHaveLength(3);
     });
   });
 
   describe('pass right props to ArrayFieldTemplate', () => {
     it('should pass registry prop', () => {
-      const ArrayFieldTemplate = ({ registry }) => {
+      const ArrayFieldTemplate = ({ registry }: ArrayFieldTemplateProps) => {
         if (!registry) {
           throw 'Error';
         }
@@ -309,15 +298,17 @@ describe('ArrayFieldTemplate', () => {
       });
     });
 
-    it('should pass formData so it is in sync with items', () => {
-      const ArrayFieldTemplate = ({ formData, items, onAddClick }) => {
+    it.only('should pass formData so it is in sync with items', () => {
+      const ArrayFieldTemplate = ({ formData, items, onAddClick }: ArrayFieldTemplateProps) => {
         if (formData.length !== items.length) {
           throw 'Error';
         }
         return (
           <div>
-            {items.map((item, i) => (
-              <span key={i}>value: {formData[i]}</span>
+            {items.map((_, i) => (
+              <span key={i} className='test-data'>
+                {formData[i]}
+              </span>
             ))}
             <button className='rjsf-array-item-add' onClick={onAddClick} />
           </div>
@@ -328,7 +319,13 @@ describe('ArrayFieldTemplate', () => {
         formData,
         templates: { ArrayFieldTemplate },
       });
-      Simulate.click(node.querySelector('.rjsf-array-item-add'));
+      let data = node.querySelectorAll('.test-data');
+      expect(data).toHaveLength(formData.length);
+      const button = node.querySelector('.rjsf-array-item-add');
+      expect(button).toBeInTheDocument();
+      fireEvent.click(button!);
+      data = node.querySelectorAll('.test-data');
+      expect(data).toHaveLength(formData.length + 1);
     });
   });
 });

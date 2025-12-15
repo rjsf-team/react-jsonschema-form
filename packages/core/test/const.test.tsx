@@ -1,20 +1,10 @@
-import { expect } from 'chai';
+import { RJSFSchema } from '@rjsf/utils';
 
-import { createFormComponent, createSandbox } from './test_utils';
+import { createFormComponent } from './testUtils';
 
 describe('const', () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
-
   it('should render a schema that uses const with a string value', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'object',
       properties: {
         foo: { const: 'bar' },
@@ -25,11 +15,11 @@ describe('const', () => {
       schema,
     });
 
-    expect(node.querySelector('input#root_foo')).not.eql(null);
+    expect(node.querySelector('input#root_foo')).not.toBeNull();
   });
 
   it('should render a schema that uses const with a number value', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'object',
       properties: {
         foo: { const: 123 },
@@ -40,11 +30,11 @@ describe('const', () => {
       schema,
     });
 
-    expect(node.querySelector('input#root_foo')).not.eql(null);
+    expect(node.querySelector('input#root_foo')).not.toBeNull();
   });
 
   it('should render a schema that uses const with a boolean value', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'object',
       properties: {
         foo: { const: true },
@@ -55,6 +45,6 @@ describe('const', () => {
       schema,
     });
 
-    expect(node.querySelector("input#root_foo[type='checkbox']")).not.eql(null);
+    expect(node.querySelector("input#root_foo[type='checkbox']")).not.toBeNull();
   });
 });
