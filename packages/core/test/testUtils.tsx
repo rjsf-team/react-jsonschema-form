@@ -39,13 +39,6 @@ export function createFormComponent(props: Omit<FormProps, 'validator'>, v: Vali
   return createComponent(Form, { validator: v, ...props });
 }
 
-// Use rerender function instead
-// export function setProps(comp: Form, newProps: Omit<FormProps, 'validator'>) {
-//   render(createElement(Form, { validator, ...newProps }), {
-//     container: comp.ref.current.formElement.current.parentNode,
-//   });
-// }
-
 // eslint-disable-next-line no-unused-vars
 type CreatorFn = (creatorFn: typeof createFormComponent) => void;
 

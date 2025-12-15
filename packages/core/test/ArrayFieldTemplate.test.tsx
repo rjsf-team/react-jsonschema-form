@@ -298,7 +298,7 @@ describe('ArrayFieldTemplate', () => {
       });
     });
 
-    it('should pass formData so it is in sync with items', () => {
+    it.only('should pass formData so it is in sync with items', () => {
       const ArrayFieldTemplate = ({ formData, items, onAddClick }: ArrayFieldTemplateProps) => {
         if (formData.length !== items.length) {
           throw 'Error';
@@ -306,7 +306,9 @@ describe('ArrayFieldTemplate', () => {
         return (
           <div>
             {items.map((_, i) => (
-              <span key={i}>value: {formData[i]}</span>
+              <span key={i} className='test-data'>
+                {formData[i]}
+              </span>
             ))}
             <button className='rjsf-array-item-add' onClick={onAddClick} />
           </div>
@@ -317,9 +319,13 @@ describe('ArrayFieldTemplate', () => {
         formData,
         templates: { ArrayFieldTemplate },
       });
+      let data = node.querySelectorAll('.test-data');
+      expect(data).toHaveLength(formData.length);
       const button = node.querySelector('.rjsf-array-item-add');
       expect(button).toBeInTheDocument();
       fireEvent.click(button!);
+      data = node.querySelectorAll('.test-data');
+      expect(data).toHaveLength(formData.length + 1);
     });
   });
 });
