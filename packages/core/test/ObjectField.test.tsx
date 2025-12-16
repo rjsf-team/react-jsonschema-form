@@ -1,22 +1,28 @@
-import { expect } from 'chai';
-import { Simulate } from 'react-dom/test-utils';
+import {
+  UI_GLOBAL_OPTIONS_KEY,
+  RJSFSchema,
+  FieldProps,
+  FieldPathList,
+  ErrorSchema,
+  TitleFieldProps,
+  DescriptionFieldProps,
+  GenericObjectType,
+} from '@rjsf/utils';
 import { fireEvent, act } from '@testing-library/react';
-import sinon from 'sinon';
-import { UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
 
 import SchemaField from '../src/components/fields/SchemaField';
 import ObjectField from '../src/components/fields/ObjectField';
 import { TextWidgetTest } from './StringField.test';
-import { createFormComponent, createSandbox, submitForm } from './test_utils';
+import { createFormComponent, submitForm } from './testUtils';
 
-const ObjectFieldTest = (props) => {
-  const onChangeTest = (newFormData, path, errorSchema, id) => {
+const ObjectFieldTest = (props: FieldProps) => {
+  const onChangeTest = (newFormData: any, path: FieldPathList, errorSchema?: ErrorSchema, id?: string) => {
     let newErrorSchema = errorSchema;
     if (newFormData !== 'test') {
       newErrorSchema = {
         ...errorSchema,
         __errors: ['Value must be "test"'],
-      };
+      } as ErrorSchema;
     }
     props.onChange(newFormData, path, newErrorSchema, id);
   };
@@ -24,18 +30,8 @@ const ObjectFieldTest = (props) => {
 };
 
 describe('ObjectField', () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
-
   describe('schema', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'object',
       title: 'my object',
       description: 'my description',
@@ -59,8 +55,8 @@ describe('ObjectField', () => {
       const { node } = createFormComponent({ schema });
 
       const fieldset = node.querySelectorAll('fieldset');
-      expect(fieldset).to.have.length.of(1);
-      expect(fieldset[0].id).eql('root');
+      expect(fieldset).toHaveLength(1);
+      expect(fieldset[0]).toHaveAttribute('id', 'root');
     });
 
     it('should render a fieldset legend', () => {
@@ -68,8 +64,8 @@ describe('ObjectField', () => {
 
       const legend = node.querySelector('fieldset > legend');
 
-      expect(legend.textContent).eql('my object');
-      expect(legend.id).eql('root__title');
+      expect(legend).toHaveTextContent('my object');
+      expect(legend).toHaveAttribute('id', 'root__title');
     });
 
     it('should render a hidden object', () => {
@@ -79,11 +75,11 @@ describe('ObjectField', () => {
           'ui:widget': 'hidden',
         },
       });
-      expect(node.querySelector('div.hidden > fieldset')).to.exist;
+      expect(node.querySelector('div.hidden > fieldset')).toBeInTheDocument();
     });
 
     it('should render a customized title', () => {
-      const CustomTitleField = ({ title }) => <div id='custom'>{title}</div>;
+      const CustomTitleField = ({ title }: TitleFieldProps) => <div id='custom'>{title}</div>;
 
       const { node } = createFormComponent({
         schema,
@@ -91,50 +87,50 @@ describe('ObjectField', () => {
           TitleFieldTemplate: CustomTitleField,
         },
       });
-      expect(node.querySelector('fieldset > #custom').textContent).to.eql('my object');
+      expect(node.querySelector('fieldset > #custom')).toHaveTextContent('my object');
     });
 
     it('should render a customized description', () => {
-      const CustomDescriptionField = ({ description }) => <div id='custom'>{description}</div>;
+      const CustomDescriptionField = ({ description }: DescriptionFieldProps) => <div id='custom'>{description}</div>;
 
       const { node } = createFormComponent({
         schema,
         templates: { DescriptionFieldTemplate: CustomDescriptionField },
       });
-      expect(node.querySelector('fieldset > #custom').textContent).to.eql('my description');
+      expect(node.querySelector('fieldset > #custom')).toHaveTextContent('my description');
     });
 
     it('should render a default property label', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelector('.rjsf-field-boolean label').textContent).eql('bar');
+      expect(node.querySelector('.rjsf-field-boolean label')).toHaveTextContent('bar');
     });
 
     it('should render a string property', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll('.rjsf-field input[type=text]')).to.have.length.of(1);
+      expect(node.querySelectorAll('.rjsf-field input[type=text]')).toHaveLength(1);
     });
 
     it('should render a boolean property', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll('.rjsf-field input[type=checkbox]')).to.have.length.of(1);
+      expect(node.querySelectorAll('.rjsf-field input[type=checkbox]')).toHaveLength(1);
     });
 
     it('should handle a default object value', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelector('.rjsf-field input[type=text]').value).eql('hey');
-      expect(node.querySelector('.rjsf-field input[type=checkbox]').checked).eql(true);
+      expect(node.querySelector('.rjsf-field input[type=text]')).toHaveValue('hey');
+      expect(node.querySelector('.rjsf-field input[type=checkbox]')).toBeChecked();
     });
 
     it('should handle required values', () => {
       const { node } = createFormComponent({ schema });
 
       // Required field is <input type="text" required="">
-      expect(node.querySelector('input[type=text]').getAttribute('required')).eql('');
-      expect(node.querySelector('.rjsf-field-string label').textContent).eql('Foo*');
+      expect(node.querySelector('input[type=text]')).toHaveAttribute('required', '');
+      expect(node.querySelector('.rjsf-field-string label')).toHaveTextContent('Foo*');
     });
 
     it('should fill fields with form data', () => {
@@ -146,64 +142,63 @@ describe('ObjectField', () => {
         },
       });
 
-      expect(node.querySelector('.rjsf-field input[type=text]').value).eql('hey');
-      expect(node.querySelector('.rjsf-field input[type=checkbox]').checked).eql(true);
+      expect(node.querySelector('.rjsf-field input[type=text]')).toHaveValue('hey');
+      expect(node.querySelector('.rjsf-field input[type=checkbox]')).toBeChecked();
     });
 
     it('should handle object fields change events', () => {
       const { node, onChange } = createFormComponent({ schema });
 
-      fireEvent.change(node.querySelector('input[type=text]'), {
+      fireEvent.change(node.querySelector('input[type=text]')!, {
         target: { value: 'changed' },
       });
 
-      sinon.assert.calledWithMatch(
-        onChange.lastCall,
-        {
-          formData: { foo: 'changed' },
-        },
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          formData: expect.objectContaining({ foo: 'changed' }),
+        }),
         'root_foo',
       );
     });
 
     it('should handle object fields with blur events', () => {
-      const onBlur = sandbox.spy();
+      const onBlur = jest.fn();
       const { node } = createFormComponent({ schema, onBlur });
 
       const input = node.querySelector('input[type=text]');
-      fireEvent.blur(input, {
+      fireEvent.blur(input!, {
         target: { value: 'changed' },
       });
 
-      expect(onBlur.calledWith(input.id, 'changed')).to.be.true;
+      expect(onBlur).toHaveBeenCalledWith(input?.id, 'changed');
     });
 
     it('should handle object fields with focus events', () => {
-      const onFocus = sandbox.spy();
+      const onFocus = jest.fn();
       const { node } = createFormComponent({ schema, onFocus });
 
       const input = node.querySelector('input[type=text]');
-      fireEvent.focus(input, {
+      fireEvent.focus(input!, {
         target: { value: 'changed' },
       });
 
-      expect(onFocus.calledWith(input.id, 'changed')).to.be.true;
+      expect(onFocus).toHaveBeenCalledWith(input?.id, 'changed');
     });
 
     it('should render the widget with the expected id', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelector('input[type=text]').id).eql('root_foo');
-      expect(node.querySelector('input[type=checkbox]').id).eql('root_bar');
+      expect(node.querySelector('input[type=text]')).toHaveAttribute('id', 'root_foo');
+      expect(node.querySelector('input[type=checkbox]')).toHaveAttribute('id', 'root_bar');
     });
 
     it('should pass form context to schema field', () => {
-      const formContext = {
+      const formContext: GenericObjectType = {
         root: 'root-id',
         root_foo: 'foo-id',
         root_bar: 'bar-id',
       };
-      function CustomSchemaField(props) {
+      function CustomSchemaField(props: FieldProps) {
         const {
           registry: { formContext },
           fieldPathId,
@@ -222,14 +217,14 @@ describe('ObjectField', () => {
       });
 
       const codeBlocks = node.querySelectorAll('code');
-      expect(codeBlocks).to.have.length(3);
+      expect(codeBlocks).toHaveLength(3);
       Object.keys(formContext).forEach((key) => {
-        expect(node.querySelector(`code#${formContext[key]}`)).to.exist;
+        expect(node.querySelector(`code#${formContext[key]}`)).toBeInTheDocument();
       });
     });
 
     it('Check schema with if/then/else conditions and activate the then/else subschemas, the onChange event should reflect the actual validation errors', () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         _const: 'test',
         required: ['checkbox'],
@@ -265,21 +260,20 @@ describe('ObjectField', () => {
       });
 
       // Uncheck the checkbox
-      fireEvent.click(node.querySelector('input[type=checkbox]'));
+      fireEvent.click(node.querySelector('input[type=checkbox]')!);
 
-      sinon.assert.calledWithMatch(
-        onChange.lastCall,
-        {
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
           formData: { checkbox: false },
           errorSchema: {},
           errors: [],
-        },
+        }),
         'root_checkbox',
       );
     });
 
     it('should validate AJV $data reference ', () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         properties: {
           email: {
@@ -310,7 +304,7 @@ describe('ObjectField', () => {
       submitForm(node);
 
       const errorMessages = node.querySelectorAll('#root_emailConfirm__error');
-      expect(errorMessages).to.have.length(1);
+      expect(errorMessages).toHaveLength(1);
 
       rerender({
         schema,
@@ -321,7 +315,7 @@ describe('ObjectField', () => {
         liveValidate: true,
       });
 
-      expect(node.querySelectorAll('#root_foo__error')).to.have.length(0);
+      expect(node.querySelectorAll('#root_foo__error')).toHaveLength(0);
     });
 
     it('Check that when formData changes, the form should re-validate', () => {
@@ -337,13 +331,13 @@ describe('ObjectField', () => {
       submitForm(node);
 
       const errorMessages = node.querySelectorAll('#root_foo__error');
-      expect(errorMessages).to.have.length(1);
-      const errorMessageContent = node.querySelector('#root_foo__error .text-danger').textContent;
-      expect(errorMessageContent).to.contain('must be string');
+      expect(errorMessages).toHaveLength(1);
+      const errorMessageContent = node.querySelector('#root_foo__error .text-danger');
+      expect(errorMessageContent).toHaveTextContent('must be string');
 
       rerender({ schema, formData: { foo: 'test' }, liveValidate: true });
 
-      expect(node.querySelectorAll('#root_foo__error')).to.have.length(0);
+      expect(node.querySelectorAll('#root_foo__error')).toHaveLength(0);
     });
 
     it('raise an error and check if the error is displayed', () => {
@@ -360,9 +354,9 @@ describe('ObjectField', () => {
       });
 
       const errorMessages = node.querySelectorAll('#root_foo__error');
-      expect(errorMessages).to.have.length(1);
-      const errorMessageContent = node.querySelector('#root_foo__error .text-danger').textContent;
-      expect(errorMessageContent).to.contain('Value must be "test"');
+      expect(errorMessages).toHaveLength(1);
+      const errorMessageContent = node.querySelector('#root_foo__error .text-danger');
+      expect(errorMessageContent).toHaveTextContent('Value must be "test"');
     });
 
     it('should not raise an error if value is correct', () => {
@@ -379,7 +373,7 @@ describe('ObjectField', () => {
       });
 
       const errorMessages = node.querySelectorAll('#root_foo__error');
-      expect(errorMessages).to.have.length(0);
+      expect(errorMessages).toHaveLength(0);
     });
 
     it('should clear an error if value is entered correctly', () => {
@@ -396,16 +390,16 @@ describe('ObjectField', () => {
       });
 
       let errorMessages = node.querySelectorAll('#root_foo__error');
-      expect(errorMessages).to.have.length(1);
-      const errorMessageContent = node.querySelector('#root_foo__error .text-danger').textContent;
-      expect(errorMessageContent).to.contain('Value must be "test"');
+      expect(errorMessages).toHaveLength(1);
+      const errorMessageContent = node.querySelector('#root_foo__error .text-danger');
+      expect(errorMessageContent).toHaveTextContent('Value must be "test"');
 
       act(() => {
         fireEvent.change(inputs[0], { target: { value: 'test' } });
       });
 
       errorMessages = node.querySelectorAll('#root_foo__error');
-      expect(errorMessages).to.have.length(0);
+      expect(errorMessages).toHaveLength(0);
     });
 
     it('raise an error and check if the error is displayed using custom text widget', () => {
@@ -422,9 +416,9 @@ describe('ObjectField', () => {
       });
 
       const errorMessages = node.querySelectorAll('#root_foo__error');
-      expect(errorMessages).to.have.length(1);
-      const errorMessageContent = node.querySelector('#root_foo__error .text-danger').textContent;
-      expect(errorMessageContent).to.contain('Value must be "test"');
+      expect(errorMessages).toHaveLength(1);
+      const errorMessageContent = node.querySelector('#root_foo__error .text-danger');
+      expect(errorMessageContent).toHaveTextContent('Value must be "test"');
     });
 
     it('should not raise an error if value is correct using custom text widget', () => {
@@ -441,7 +435,7 @@ describe('ObjectField', () => {
       });
 
       const errorMessages = node.querySelectorAll('#root_foo__error');
-      expect(errorMessages).to.have.length(0);
+      expect(errorMessages).toHaveLength(0);
     });
 
     it('should clear an error if value is entered correctly using custom text widget', () => {
@@ -458,19 +452,19 @@ describe('ObjectField', () => {
       });
 
       let errorMessages = node.querySelectorAll('#root_foo__error');
-      expect(errorMessages).to.have.length(1);
-      const errorMessageContent = node.querySelector('#root_foo__error .text-danger').textContent;
-      expect(errorMessageContent).to.contain('Value must be "test"');
+      expect(errorMessages).toHaveLength(1);
+      const errorMessageContent = node.querySelector('#root_foo__error .text-danger');
+      expect(errorMessageContent).toHaveTextContent('Value must be "test"');
       act(() => {
         fireEvent.change(inputs[0], { target: { value: 'test' } });
       });
 
       errorMessages = node.querySelectorAll('#root_foo__error');
-      expect(errorMessages).to.have.length(0);
+      expect(errorMessages).toHaveLength(0);
     });
 
     it('should not copy errors when name has dotted-path similar to real property', () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         properties: {
           'Foo.Bar': {
@@ -499,14 +493,14 @@ describe('ObjectField', () => {
       submitForm(node);
       console.log(node.innerHTML);
       const fooDotBarErrors = node.querySelectorAll('#root_Foo.Bar__error');
-      expect(fooDotBarErrors).to.have.length(0);
+      expect(fooDotBarErrors).toHaveLength(0);
       const fooBarErrors = node.querySelectorAll('#root_Foo_Bar__error');
-      expect(fooBarErrors).to.have.length(1);
+      expect(fooBarErrors).toHaveLength(1);
     });
   });
 
   describe('fields ordering', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'object',
       properties: {
         foo: { type: 'string' },
@@ -523,9 +517,9 @@ describe('ObjectField', () => {
           'ui:order': ['baz', 'qux', 'bar', 'foo'],
         },
       });
-      const labels = [].map.call(node.querySelectorAll('.rjsf-field > label'), (l) => l.textContent);
+      const labels = [].map.call(node.querySelectorAll('.rjsf-field > label'), (l: Element) => l.textContent);
 
-      expect(labels).eql(['baz', 'qux', 'bar', 'foo']);
+      expect(labels).toEqual(['baz', 'qux', 'bar', 'foo']);
     });
 
     it('should insert unordered properties at wildcard position', () => {
@@ -535,9 +529,9 @@ describe('ObjectField', () => {
           'ui:order': ['baz', '*', 'foo'],
         },
       });
-      const labels = [].map.call(node.querySelectorAll('.rjsf-field > label'), (l) => l.textContent);
+      const labels = [].map.call(node.querySelectorAll('.rjsf-field > label'), (l: Element) => l.textContent);
 
-      expect(labels).eql(['baz', 'bar', 'qux', 'foo']);
+      expect(labels).toEqual(['baz', 'bar', 'qux', 'foo']);
     });
 
     it('should use provided order also if order list contains extraneous properties', () => {
@@ -548,9 +542,9 @@ describe('ObjectField', () => {
         },
       });
 
-      const labels = [].map.call(node.querySelectorAll('.rjsf-field > label'), (l) => l.textContent);
+      const labels = [].map.call(node.querySelectorAll('.rjsf-field > label'), (l: Element) => l.textContent);
 
-      expect(labels).eql(['baz', 'qux', 'bar', 'foo']);
+      expect(labels).toEqual(['baz', 'qux', 'bar', 'foo']);
     });
 
     it('should throw when order list misses an existing property', () => {
@@ -561,7 +555,7 @@ describe('ObjectField', () => {
         },
       });
 
-      expect(node.querySelector('.rjsf-config-error').textContent).to.match(/does not contain properties 'foo', 'qux'/);
+      expect(node.querySelector('.rjsf-config-error')).toHaveTextContent(/does not contain properties 'foo', 'qux'/);
     });
 
     it('should throw when more than one wildcard is present', () => {
@@ -572,11 +566,11 @@ describe('ObjectField', () => {
         },
       });
 
-      expect(node.querySelector('.rjsf-config-error').textContent).to.match(/contains more than one wildcard/);
+      expect(node.querySelector('.rjsf-config-error')).toHaveTextContent(/contains more than one wildcard/);
     });
 
     it('should order referenced schema definitions', () => {
-      const refSchema = {
+      const refSchema: RJSFSchema = {
         definitions: {
           testdef: { type: 'string' },
         },
@@ -593,13 +587,13 @@ describe('ObjectField', () => {
           'ui:order': ['bar', 'foo'],
         },
       });
-      const labels = [].map.call(node.querySelectorAll('.rjsf-field > label'), (l) => l.textContent);
+      const labels = [].map.call(node.querySelectorAll('.rjsf-field > label'), (l: Element) => l.textContent);
 
-      expect(labels).eql(['bar', 'foo']);
+      expect(labels).toEqual(['bar', 'foo']);
     });
 
     it('should order referenced object schema definition properties', () => {
-      const refSchema = {
+      const refSchema: RJSFSchema = {
         definitions: {
           testdef: {
             type: 'object',
@@ -623,13 +617,13 @@ describe('ObjectField', () => {
           },
         },
       });
-      const labels = [].map.call(node.querySelectorAll('.rjsf-field > label'), (l) => l.textContent);
+      const labels = [].map.call(node.querySelectorAll('.rjsf-field > label'), (l: Element) => l.textContent);
 
-      expect(labels).eql(['bar', 'foo']);
+      expect(labels).toEqual(['bar', 'foo']);
     });
 
     it('should render the widget with the expected id', () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         properties: {
           foo: { type: 'string' },
@@ -644,18 +638,18 @@ describe('ObjectField', () => {
         },
       });
 
-      const ids = [].map.call(node.querySelectorAll('input[type=text]'), (node) => node.id);
-      expect(ids).eql(['root_bar', 'root_foo']);
+      const ids = [].map.call(node.querySelectorAll('input[type=text]'), (node: Element) => node.id);
+      expect(ids).toEqual(['root_bar', 'root_foo']);
     });
   });
 
   describe('Title', () => {
-    const TitleFieldTemplate = (props) => <div id={`title-${props.title}`} />;
+    const TitleFieldTemplate = (props: TitleFieldProps) => <div id={`title-${props.title}`} />;
 
     const templates = { TitleFieldTemplate };
 
     it('should pass field name to TitleFieldTemplate if there is no title', () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         properties: {
           object: {
@@ -666,33 +660,33 @@ describe('ObjectField', () => {
       };
 
       const { node } = createFormComponent({ schema, templates });
-      expect(node.querySelector('#title-object')).to.not.be.null;
+      expect(node.querySelector('#title-object')).not.toBeNull();
     });
 
     it('should pass schema title to TitleFieldTemplate', () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         properties: {},
         title: 'test',
       };
 
       const { node } = createFormComponent({ schema, templates });
-      expect(node.querySelector('#title-test')).to.not.be.null;
+      expect(node.querySelector('#title-test')).not.toBeNull();
     });
 
     it('should pass empty schema title to TitleFieldTemplate', () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         properties: {},
         title: '',
       };
       const { node } = createFormComponent({ schema, templates });
-      expect(node.querySelector('#title-')).to.be.null;
+      expect(node.querySelector('#title-')).toBeNull();
     });
   });
 
   describe('additionalProperties', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'object',
       additionalProperties: {
         type: 'string',
@@ -705,7 +699,7 @@ describe('ObjectField', () => {
         formData: { first: 1 },
       });
 
-      expect(node.querySelectorAll('.rjsf-field-string')).to.have.length.of(1);
+      expect(node.querySelectorAll('.rjsf-field-string')).toHaveLength(1);
     });
 
     it('uiSchema title should not affect additionalProperties', () => {
@@ -721,12 +715,12 @@ describe('ObjectField', () => {
         },
       });
       const labels = node.querySelectorAll('label.control-label');
-      expect(labels[0].textContent).eql('property1 Key');
-      expect(labels[1].textContent).eql('property1');
+      expect(labels[0]).toHaveTextContent('property1 Key');
+      expect(labels[1]).toHaveTextContent('property1');
     });
 
     it('uiSchema title should update additionalProperties object title', () => {
-      const objectSchema = {
+      const objectSchema: RJSFSchema = {
         type: 'object',
         properties: {
           main: {
@@ -764,13 +758,13 @@ describe('ObjectField', () => {
         },
       });
       const labels = [...node.querySelectorAll('label.control-label')].map((n) => n.textContent);
-      expect(labels).to.include('property1 Key');
+      expect(labels).toContain('property1 Key');
       const objectTitle = node.querySelector('.form-additional > fieldset > legend');
-      expect(objectTitle.textContent).eql('CustomName');
+      expect(objectTitle).toHaveTextContent('CustomName');
     });
 
     it('should not throw validation errors if additionalProperties is undefined', () => {
-      const undefinedAPSchema = {
+      const undefinedAPSchema: RJSFSchema = {
         ...schema,
         properties: { second: { type: 'string' } },
       };
@@ -781,11 +775,14 @@ describe('ObjectField', () => {
       });
 
       submitForm(node);
-      sinon.assert.calledWithMatch(onSubmit.lastCall, {
-        formData: { nonschema: 1 },
-      });
+      expect(onSubmit).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          formData: { nonschema: 1 },
+        }),
+        expect.objectContaining({ type: 'submit' }),
+      );
 
-      sinon.assert.notCalled(onError);
+      expect(onError).not.toHaveBeenCalled();
     });
 
     it('should throw a validation error if additionalProperties is false', () => {
@@ -798,8 +795,8 @@ describe('ObjectField', () => {
         formData: { nonschema: 1 },
       });
       submitForm(node);
-      sinon.assert.notCalled(onSubmit);
-      sinon.assert.calledWithMatch(onError.lastCall, [
+      expect(onSubmit).not.toHaveBeenCalled();
+      expect(onError).toHaveBeenLastCalledWith([
         {
           message: 'must NOT have additional properties',
           name: 'additionalProperties',
@@ -824,7 +821,7 @@ describe('ObjectField', () => {
         },
       });
 
-      expect(node.querySelectorAll('.rjsf-field-string')).to.have.length.of(1);
+      expect(node.querySelectorAll('.rjsf-field-string')).toHaveLength(1);
     });
 
     it('should render a label for the additional property key', () => {
@@ -833,7 +830,7 @@ describe('ObjectField', () => {
         formData: { first: 1 },
       });
 
-      expect(node.querySelector("[for='root_first-key']").textContent).eql('first Key');
+      expect(node.querySelector("[for='root_first-key']")).toHaveTextContent('first Key');
     });
 
     it('should render a label for the additional property key if additionalProperties is true', () => {
@@ -842,7 +839,7 @@ describe('ObjectField', () => {
         formData: { first: 1 },
       });
 
-      expect(node.querySelector("[for='root_first-key']").textContent).eql('first Key');
+      expect(node.querySelector("[for='root_first-key']")).toHaveTextContent('first Key');
     });
 
     it('should not render a label for the additional property key if additionalProperties is false', () => {
@@ -851,7 +848,7 @@ describe('ObjectField', () => {
         formData: { first: 1 },
       });
 
-      expect(node.querySelector("[for='root_first-key']")).eql(null);
+      expect(node.querySelector("[for='root_first-key']")).toBeNull();
     });
 
     it('should render a text input for the additional property key', () => {
@@ -860,7 +857,7 @@ describe('ObjectField', () => {
         formData: { first: 1 },
       });
 
-      expect(node.querySelector('#root_first-key').value).eql('first');
+      expect(node.querySelector('#root_first-key')).toHaveValue('first');
     });
 
     it('should render a label for the additional property value', () => {
@@ -869,7 +866,7 @@ describe('ObjectField', () => {
         formData: { first: 1 },
       });
 
-      expect(node.querySelector("[for='root_first']").textContent).eql('first');
+      expect(node.querySelector("[for='root_first']")).toHaveTextContent('first');
     });
 
     it('should render a text input for the additional property value', () => {
@@ -878,7 +875,7 @@ describe('ObjectField', () => {
         formData: { first: 1 },
       });
 
-      expect(node.querySelector('#root_first').value).eql('1');
+      expect(node.querySelector('#root_first')).toHaveValue('1');
     });
 
     it('should rename formData key if key input is renamed', () => {
@@ -888,15 +885,14 @@ describe('ObjectField', () => {
       });
 
       const textNode = node.querySelector('#root_first-key');
-      fireEvent.blur(textNode, {
+      fireEvent.blur(textNode!, {
         target: { value: 'newFirst' },
       });
 
-      sinon.assert.calledWithMatch(
-        onChange.lastCall,
-        {
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
           formData: { newFirst: 1, first: undefined },
-        },
+        }),
         'root',
       );
     });
@@ -914,23 +910,22 @@ describe('ObjectField', () => {
       });
 
       const textNode = node.querySelector('#root_Custom\\ title-key');
-      fireEvent.blur(textNode, {
+      fireEvent.blur(textNode!, {
         target: { value: 'Renamed custom title' },
       });
 
-      sinon.assert.calledWithMatch(
-        onChange.lastCall,
-        {
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
           formData: { 'Renamed custom title': 1 },
-        },
+        }),
         'root',
       );
 
       const keyInput = node.querySelector('#root_Renamed\\ custom\\ title-key');
-      expect(keyInput.value).eql('Renamed custom title');
+      expect(keyInput).toHaveValue('Renamed custom title');
 
       const keyInputLabel = node.querySelector('label[for="root_Renamed\\ custom\\ title-key"]');
-      expect(keyInputLabel.textContent).eql('Renamed custom title Key');
+      expect(keyInputLabel).toHaveTextContent('Renamed custom title Key');
     });
 
     it('should retain object title when renaming key', () => {
@@ -946,12 +941,12 @@ describe('ObjectField', () => {
       });
 
       const textNode = node.querySelector('#root_Custom\\ title-key');
-      fireEvent.blur(textNode, {
+      fireEvent.blur(textNode!, {
         target: { value: 'Renamed custom title' },
       });
 
       const title = node.querySelector('#root__title');
-      expect(title.textContent).eql('Object title');
+      expect(title).toHaveTextContent('Object title');
     });
 
     it('should keep order of renamed key-value pairs while renaming key', () => {
@@ -961,19 +956,16 @@ describe('ObjectField', () => {
       });
 
       const textNode = node.querySelector('#root_second-key');
-      fireEvent.blur(textNode, {
+      fireEvent.blur(textNode!, {
         target: { value: 'newSecond' },
       });
 
-      sinon.assert.calledWithMatch(
-        onChange.lastCall,
-        {
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
           formData: { first: 1, newSecond: 2, third: 3 },
-        },
+        }),
         'root',
       );
-
-      expect(Object.keys(onChange.lastCall.args[0].formData)).eql(['first', 'newSecond', 'third']);
     });
 
     it('should attach suffix to formData key if new key already exists when key input is renamed', () => {
@@ -987,15 +979,14 @@ describe('ObjectField', () => {
       });
 
       const textNode = node.querySelector('#root_first-key');
-      fireEvent.blur(textNode, {
+      fireEvent.blur(textNode!, {
         target: { value: 'second' },
       });
 
-      sinon.assert.calledWithMatch(
-        onChange.lastCall,
-        {
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
           formData: { second: 2, 'second-1': 1 },
-        },
+        }),
         'root',
       );
     });
@@ -1014,15 +1005,14 @@ describe('ObjectField', () => {
       });
 
       const textNode = node.querySelector('#root_first-key');
-      fireEvent.blur(textNode, {
+      fireEvent.blur(textNode!, {
         target: { value: 'second' },
       });
 
-      sinon.assert.calledWithMatch(
-        onChange.lastCall,
-        {
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
           formData: { second: 2, second_1: 1 },
-        },
+        }),
         'root',
       );
     });
@@ -1043,15 +1033,14 @@ describe('ObjectField', () => {
       });
 
       const textNode = node.querySelector('#root_first-key');
-      fireEvent.blur(textNode, {
+      fireEvent.blur(textNode!, {
         target: { value: 'second' },
       });
 
-      sinon.assert.calledWithMatch(
-        onChange.lastCall,
-        {
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
           formData: { second: 2, second_1: 1 },
-        },
+        }),
         'root',
       );
     });
@@ -1066,9 +1055,9 @@ describe('ObjectField', () => {
       });
 
       const textNode = node.querySelector('#root_first-key');
-      fireEvent.blur(textNode);
+      fireEvent.blur(textNode!);
 
-      sinon.assert.notCalled(onChange);
+      expect(onChange).not.toHaveBeenCalled();
     });
 
     it('should continue incrementing suffix to formData key until that key name is unique after a key input collision', () => {
@@ -1088,28 +1077,31 @@ describe('ObjectField', () => {
       });
 
       const textNode = node.querySelector('#root_first-key');
-      fireEvent.blur(textNode, {
+      fireEvent.blur(textNode!, {
         target: { value: 'second' },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: {
-          second: 2,
-          'second-1': 2,
-          'second-2': 2,
-          'second-3': 2,
-          'second-4': 2,
-          'second-5': 2,
-          'second-6': 2,
-          'second-7': 1,
-        },
-      });
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          formData: {
+            second: 2,
+            'second-1': 2,
+            'second-2': 2,
+            'second-3': 2,
+            'second-4': 2,
+            'second-5': 2,
+            'second-6': 2,
+            'second-7': 1,
+          },
+        }),
+        'root',
+      );
     });
 
     it('should have an expand button', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelector('.rjsf-object-property-expand button')).not.eql(null);
+      expect(node.querySelector('.rjsf-object-property-expand button')).not.toBeNull();
     });
 
     it('should not have an expand button if expandable is false', () => {
@@ -1118,19 +1110,22 @@ describe('ObjectField', () => {
         uiSchema: { 'ui:options': { expandable: false } },
       });
 
-      expect(node.querySelector('.rjsf-object-property-expand button')).to.be.null;
+      expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
     });
 
     it('should add a new property when clicking the expand button', () => {
       const { node, onChange } = createFormComponent({ schema });
 
-      fireEvent.click(node.querySelector('.rjsf-object-property-expand button'));
+      fireEvent.click(node.querySelector('.rjsf-object-property-expand button')!);
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: {
-          newKey: 'New Value',
-        },
-      });
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          formData: {
+            newKey: 'New Value',
+          },
+        }),
+        'root',
+      );
     });
 
     it("should add a new property with suffix when clicking the expand button and 'newKey' already exists", () => {
@@ -1139,17 +1134,21 @@ describe('ObjectField', () => {
         formData: { newKey: 1 },
       });
 
-      fireEvent.click(node.querySelector('.rjsf-object-property-expand button'));
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: {
-          'newKey-1': 'New Value',
-        },
-      });
+      fireEvent.click(node.querySelector('.rjsf-object-property-expand button')!);
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          formData: {
+            newKey: 1,
+            'newKey-1': 'New Value',
+          },
+        }),
+        'root',
+      );
     });
 
     it('should add a property matching the additionalProperties schema', () => {
       // Specify that additionalProperties must be an array of strings
-      const additionalPropertiesArraySchema = {
+      const additionalPropertiesArraySchema: RJSFSchema = {
         ...schema,
         additionalProperties: {
           type: 'array',
@@ -1163,18 +1162,21 @@ describe('ObjectField', () => {
         formData: {},
       });
 
-      fireEvent.click(node.querySelector('.rjsf-object-property-expand button'));
+      fireEvent.click(node.querySelector('.rjsf-object-property-expand button')!);
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: {
-          newKey: [],
-        },
-      });
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          formData: {
+            newKey: [],
+          },
+        }),
+        'root',
+      );
     });
 
     it('should add a string item if additionalProperties is true', () => {
       // Specify that additionalProperties is true
-      const customSchema = {
+      const customSchema: RJSFSchema = {
         ...schema,
         additionalProperties: true,
       };
@@ -1183,17 +1185,20 @@ describe('ObjectField', () => {
         formData: {},
       });
 
-      fireEvent.click(node.querySelector('.rjsf-object-property-expand button'));
+      fireEvent.click(node.querySelector('.rjsf-object-property-expand button')!);
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: {
-          newKey: 'New Value',
-        },
-      });
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          formData: {
+            newKey: 'New Value',
+          },
+        }),
+        'root',
+      );
     });
 
     it("should add a new default item if default is provided in the additionalProperties' schema", () => {
-      const customSchema = {
+      const customSchema: RJSFSchema = {
         ...schema,
         additionalProperties: {
           type: 'string',
@@ -1205,17 +1210,20 @@ describe('ObjectField', () => {
         formData: {},
       });
 
-      fireEvent.click(node.querySelector('.rjsf-object-property-expand button'));
+      fireEvent.click(node.querySelector('.rjsf-object-property-expand button')!);
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: {
-          newKey: 'default value',
-        },
-      });
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          formData: {
+            newKey: 'default value',
+          },
+        }),
+        'root',
+      );
     });
 
     it('should add a new default item even if the schema of default value is invalid', () => {
-      const customSchema = {
+      const customSchema: RJSFSchema = {
         ...schema,
         additionalProperties: {
           type: 'string',
@@ -1227,17 +1235,20 @@ describe('ObjectField', () => {
         formData: {},
       });
 
-      fireEvent.click(node.querySelector('.rjsf-object-property-expand button'));
+      fireEvent.click(node.querySelector('.rjsf-object-property-expand button')!);
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: {
-          newKey: 1,
-        },
-      });
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          formData: {
+            newKey: 1,
+          },
+        }),
+        'root',
+      );
     });
 
     it('should generate the specified default key and value inputs if default is provided outside of additionalProperties schema', () => {
-      const customSchema = {
+      const customSchema: RJSFSchema = {
         ...schema,
         default: {
           defaultKey: 'defaultValue',
@@ -1248,15 +1259,17 @@ describe('ObjectField', () => {
         formData: {},
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: {
-          defaultKey: 'defaultValue',
-        },
-      });
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          formData: {
+            defaultKey: 'defaultValue',
+          },
+        }),
+      );
     });
 
     it('should generate the specified default key/value input with custom formData provided', () => {
-      const customSchema = {
+      const customSchema: RJSFSchema = {
         ...schema,
         default: {
           defaultKey: 'defaultValue',
@@ -1269,16 +1282,18 @@ describe('ObjectField', () => {
         },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: {
-          defaultKey: 'defaultValue',
-          someData: 'someValue',
-        },
-      });
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          formData: {
+            defaultKey: 'defaultValue',
+            someData: 'someValue',
+          },
+        }),
+      );
     });
 
     it('should edit the specified default key without duplicating', () => {
-      const customSchema = {
+      const customSchema: RJSFSchema = {
         ...schema,
         default: {
           defaultKey: 'defaultValue',
@@ -1289,17 +1304,20 @@ describe('ObjectField', () => {
         formData: {},
       });
 
-      fireEvent.blur(node.querySelector('#root_defaultKey-key'), { target: { value: 'newDefaultKey' } });
+      fireEvent.blur(node.querySelector('#root_defaultKey-key')!, { target: { value: 'newDefaultKey' } });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: {
-          newDefaultKey: 'defaultValue',
-        },
-      });
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          formData: {
+            newDefaultKey: 'defaultValue',
+          },
+        }),
+        'root',
+      );
     });
 
     it('should remove the specified default key/value input item', () => {
-      const customSchema = {
+      const customSchema: RJSFSchema = {
         ...schema,
         default: {
           defaultKey: 'defaultValue',
@@ -1310,15 +1328,18 @@ describe('ObjectField', () => {
         formData: {},
       });
 
-      fireEvent.click(node.querySelector('.rjsf-object-property-remove'));
+      fireEvent.click(node.querySelector('.rjsf-object-property-remove')!);
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: {},
-      });
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          formData: {},
+        }),
+        'root',
+      );
     });
 
     it('should handle nested additional property default key/value input generation', () => {
-      const customSchema = {
+      const customSchema: RJSFSchema = {
         ...schema,
         default: {
           defaultKey: 'defaultValue',
@@ -1346,20 +1367,22 @@ describe('ObjectField', () => {
         formData: {},
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: {
-          defaultKey: 'defaultValue',
-          nested: {
-            bar: {
-              baz: 'value',
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          formData: {
+            defaultKey: 'defaultValue',
+            nested: {
+              bar: {
+                baz: 'value',
+              },
             },
           },
-        },
-      });
+        }),
+      );
     });
 
     it('should remove nested additional property default key/value input', () => {
-      const customSchema = {
+      const customSchema: RJSFSchema = {
         ...schema,
         properties: {
           nested: {
@@ -1384,15 +1407,18 @@ describe('ObjectField', () => {
         formData: {},
       });
 
-      fireEvent.click(node.querySelector('.rjsf-object-property-remove'));
+      fireEvent.click(node.querySelector('.rjsf-object-property-remove')!);
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: {
-          nested: {
-            bar: {},
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          formData: {
+            nested: {
+              bar: {},
+            },
           },
-        },
-      });
+        }),
+        'root_nested_bar',
+      );
     });
 
     it('should not provide an expand button if length equals maxProperties', () => {
@@ -1401,7 +1427,7 @@ describe('ObjectField', () => {
         formData: { first: 1 },
       });
 
-      expect(node.querySelector('.rjsf-object-property-expand button')).to.be.null;
+      expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
     });
 
     it('should provide an expand button if length is less than maxProperties', () => {
@@ -1410,7 +1436,7 @@ describe('ObjectField', () => {
         formData: { first: 1 },
       });
 
-      expect(node.querySelector('.rjsf-object-property-expand button')).not.eql(null);
+      expect(node.querySelector('.rjsf-object-property-expand button')).not.toBeNull();
     });
 
     it('should not provide an expand button if expandable is expliclty false regardless of maxProperties value', () => {
@@ -1424,7 +1450,7 @@ describe('ObjectField', () => {
         },
       });
 
-      expect(node.querySelector('.rjsf-object-property-expand button')).to.be.null;
+      expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
     });
 
     it('should ignore expandable value if maxProperties constraint is not satisfied', () => {
@@ -1438,13 +1464,13 @@ describe('ObjectField', () => {
         },
       });
 
-      expect(node.querySelector('.rjsf-object-property-expand button')).to.be.null;
+      expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
     });
 
     it('should not have delete button if expand button has not been clicked', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelector('.form-group > .btn-danger')).eql(null);
+      expect(node.querySelector('.form-group > .btn-danger')).toBeNull();
     });
 
     it('should have delete button if expand button has been clicked', () => {
@@ -1452,11 +1478,13 @@ describe('ObjectField', () => {
         schema,
       });
 
-      expect(node.querySelector('.form-group > .form-additional > .form-additional + .col-xs-2 .btn-danger')).eql(null);
+      expect(
+        node.querySelector('.form-group > .form-additional > .form-additional + .col-xs-2 .btn-danger'),
+      ).toBeNull();
 
-      fireEvent.click(node.querySelector('.rjsf-object-property-expand button'));
+      fireEvent.click(node.querySelector('.rjsf-object-property-expand button')!);
 
-      expect(node.querySelector('.form-group > .row > .form-additional + .col-xs-2 > .btn-danger')).to.not.be.null;
+      expect(node.querySelector('.form-group > .row > .form-additional + .col-xs-2 > .btn-danger')).not.toBeNull();
     });
 
     it('delete button should delete key-value pair', () => {
@@ -1464,9 +1492,9 @@ describe('ObjectField', () => {
         schema,
         formData: { first: 1 },
       });
-      expect(node.querySelector('#root_first-key').value).to.eql('first');
-      fireEvent.click(node.querySelector('.form-group > .row > .form-additional + .col-xs-2 > .btn-danger'));
-      expect(node.querySelector('#root_first-key')).to.not.exist;
+      expect(node.querySelector('#root_first-key')).toHaveValue('first');
+      fireEvent.click(node.querySelector('.form-group > .row > .form-additional + .col-xs-2 > .btn-danger')!);
+      expect(node.querySelector('#root_first-key')).not.toBeInTheDocument();
     });
 
     it('delete button should delete correct pair', () => {
@@ -1475,10 +1503,10 @@ describe('ObjectField', () => {
         formData: { first: 1, second: 2, third: 3 },
       });
       const selector = '.form-group > .row > .form-additional + .col-xs-2 > .btn-danger';
-      expect(node.querySelectorAll(selector).length).to.eql(3);
+      expect(node.querySelectorAll(selector)).toHaveLength(3);
       fireEvent.click(node.querySelectorAll(selector)[1]);
-      expect(node.querySelector('#root_second-key')).to.not.exist;
-      expect(node.querySelectorAll(selector).length).to.eql(2);
+      expect(node.querySelector('#root_second-key')).not.toBeInTheDocument();
+      expect(node.querySelectorAll(selector)).toHaveLength(2);
     });
 
     it('deleting content of value input should not delete pair', () => {
@@ -1487,13 +1515,16 @@ describe('ObjectField', () => {
         formData: { first: 1 },
       });
 
-      fireEvent.change(node.querySelector('#root_first'), {
+      fireEvent.change(node.querySelector('#root_first')!, {
         target: { value: '' },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: { first: '' },
-      });
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          formData: { first: '' },
+        }),
+        'root_first',
+      );
     });
 
     it('should change content of value input to boolean false', () => {
@@ -1506,12 +1537,15 @@ describe('ObjectField', () => {
       });
 
       act(() => {
-        fireEvent.click(node.querySelector('#root_first'));
+        fireEvent.click(node.querySelector('#root_first')!);
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: { first: false },
-      });
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          formData: { first: false },
+        }),
+        'root_first',
+      );
     });
 
     it('should change content of value input to number 0', () => {
@@ -1523,13 +1557,16 @@ describe('ObjectField', () => {
         formData: { first: 1 },
       });
 
-      fireEvent.change(node.querySelector('#root_first'), {
+      fireEvent.change(node.querySelector('#root_first')!, {
         target: { value: 0 },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: { first: 0 },
-      });
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          formData: { first: 0 },
+        }),
+        'root_first',
+      );
     });
 
     it('should change content of value input to null', () => {
@@ -1539,18 +1576,21 @@ describe('ObjectField', () => {
       });
 
       act(() => {
-        Simulate.change(node.querySelector('#root_first'), {
+        fireEvent.change(node.querySelector('#root_first')!, {
           target: { value: null },
         });
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: { first: null },
-      });
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          formData: { first: '' },
+        }),
+        'root_first',
+      );
     });
   });
   describe('markdown', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       title: 'A list of tasks',
       type: 'object',
       properties: {
@@ -1589,34 +1629,26 @@ describe('ObjectField', () => {
     it('should render markdown in description when enableMarkdownInDescription is set to true', () => {
       const { node } = createFormComponent({ schema, uiSchema });
 
-      const { innerHTML: rootInnerHTML } = node.querySelector('form .form-group .form-group .field-description');
-      expect(rootInnerHTML).to.contains('New <em>description</em>, with some Markdown.');
+      const field = node.querySelector('form .form-group .form-group .field-description');
+      expect(field).toContainHTML('New <em>description</em>, with some Markdown.');
 
-      const { innerHTML: detailsInnerHTML } = node.querySelector(
-        'form .form-group .form-group .rjsf-field-string .field-description',
-      );
-      expect(detailsInnerHTML).to.contains('Description to renders Markdown <strong>correctly</strong>.');
+      const details = node.querySelector('form .form-group .form-group .rjsf-field-string .field-description');
+      expect(details).toContainHTML('Description to renders Markdown <strong>correctly</strong>.');
 
-      const { innerHTML: checkboxInnerHTML } = node.querySelector(
-        'form .form-group .form-group .rjsf-field-boolean .field-description',
-      );
-      expect(checkboxInnerHTML).to.contains('Checkbox with some <code>markdown</code>!');
+      const checkbox = node.querySelector('form .form-group .form-group .rjsf-field-boolean .field-description');
+      expect(checkbox).toContainHTML('Checkbox with some <code>markdown</code>!');
     });
     it('should not render markdown in description when enableMarkdownInDescription is not present in uiSchema', () => {
       const { node } = createFormComponent({ schema });
 
-      const { innerHTML: rootInnerHTML } = node.querySelector('form .form-group .form-group .field-description');
-      expect(rootInnerHTML).to.contains('New *description*, with some Markdown.');
+      const field = node.querySelector('form .form-group .form-group .field-description');
+      expect(field).toContainHTML('New *description*, with some Markdown.');
 
-      const { innerHTML: detailsInnerHTML } = node.querySelector(
-        'form .form-group .form-group .rjsf-field-string .field-description',
-      );
-      expect(detailsInnerHTML).to.contains('Description to renders Markdown **correctly**.');
+      const details = node.querySelector('form .form-group .form-group .rjsf-field-string .field-description');
+      expect(details).toContainHTML('Description to renders Markdown **correctly**.');
 
-      const { innerHTML: checkboxInnerHTML } = node.querySelector(
-        'form .form-group .form-group .rjsf-field-boolean .field-description',
-      );
-      expect(checkboxInnerHTML).to.contains('Checkbox with some `markdown`!');
+      const checkbox = node.querySelector('form .form-group .form-group .rjsf-field-boolean .field-description');
+      expect(checkbox).toContainHTML('Checkbox with some `markdown`!');
     });
   });
 });
