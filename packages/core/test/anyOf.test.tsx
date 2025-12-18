@@ -1,24 +1,13 @@
-import * as React from 'react';
-import { expect } from 'chai';
+import { createRef } from 'react';
 import { fireEvent, act } from '@testing-library/react';
-import sinon from 'sinon';
+import { FormValidation, RJSFSchema, WidgetProps } from '@rjsf/utils';
 
-import { createFormComponent, createSandbox, setProps, getSelectedOptionValue } from './test_utils';
+import { createFormComponent, getSelectedOptionValue } from './testUtils';
 import SelectWidget from '../src/components/widgets/SelectWidget';
 
 describe('anyOf', () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
-
   it('should not render a select element if the anyOf keyword is not present', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'object',
       properties: {
         foo: { type: 'string' },
@@ -26,15 +15,15 @@ describe('anyOf', () => {
     };
 
     const { node } = createFormComponent({
-      ref: React.createRef(),
+      ref: createRef(),
       schema,
     });
 
-    expect(node.querySelectorAll('select')).to.have.length.of(0);
+    expect(node.querySelectorAll('select')).toHaveLength(0);
   });
 
   it('should render a select element if the anyOf keyword is present, merges top level required', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'object',
       required: ['baz'],
       properties: {
@@ -56,19 +45,19 @@ describe('anyOf', () => {
     };
 
     const { node } = createFormComponent({
-      ref: React.createRef(),
+      ref: createRef(),
       schema,
     });
 
-    expect(node.querySelectorAll('select')).to.have.length.of(1);
-    expect(node.querySelector('select').id).eql('root__anyof_select');
-    expect(node.querySelectorAll('span.required')).to.have.length.of(1);
-    expect(node.querySelectorAll('#root_XxxOf__description')).to.have.length.of(1);
-    expect(node.querySelectorAll('#root_baz')).to.have.length.of(1);
+    expect(node.querySelectorAll('select')).toHaveLength(1);
+    expect(node.querySelector('select')).toHaveAttribute('id', 'root__anyof_select');
+    expect(node.querySelectorAll('span.required')).toHaveLength(1);
+    expect(node.querySelectorAll('#root_XxxOf__description')).toHaveLength(1);
+    expect(node.querySelectorAll('#root_baz')).toHaveLength(1);
   });
 
   it('should render a select element if the anyOf keyword is present, merges top level and anyOf required', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'object',
       required: ['baz'],
       properties: {
@@ -93,14 +82,14 @@ describe('anyOf', () => {
       schema,
     });
 
-    expect(node.querySelectorAll('select')).to.have.length.of(1);
-    expect(node.querySelector('select').id).eql('root__anyof_select');
-    expect(node.querySelectorAll('span.required')).to.have.length.of(2);
+    expect(node.querySelectorAll('select')).toHaveLength(1);
+    expect(node.querySelector('select')).toHaveAttribute('id', 'root__anyof_select');
+    expect(node.querySelectorAll('span.required')).toHaveLength(2);
   });
 
   it('should render a root select element with default value', () => {
     const formData = { foo: 'b' };
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'object',
       anyOf: [
         {
@@ -122,7 +111,7 @@ describe('anyOf', () => {
       schema,
       formData,
     });
-    expect(node.querySelector('select').value).eql('1');
+    expect(node.querySelector('select')).toHaveValue('1');
   });
 
   it('should assign a default value and set defaults on option change', () => {
@@ -144,23 +133,24 @@ describe('anyOf', () => {
         ],
       },
     });
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { foo: 'defaultfoo' },
-    });
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        formData: { foo: 'defaultfoo' },
+      }),
+    );
 
     const $select = node.querySelector('select');
 
     act(() => {
-      fireEvent.change($select, {
-        target: { value: $select.options[1].value },
+      fireEvent.change($select!, {
+        target: { value: $select?.options[1].value },
       });
     });
 
-    sinon.assert.calledWithMatch(
-      onChange.lastCall,
-      {
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
         formData: { foo: 'defaultbar' },
-      },
+      }),
       'root__anyof_select',
     );
   });
@@ -179,21 +169,26 @@ describe('anyOf', () => {
         },
       },
     });
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { foo: 'defaultfoo' },
-    });
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        formData: { foo: 'defaultfoo' },
+      }),
+    );
 
     const $select = node.querySelector('select');
 
     act(() => {
-      fireEvent.change($select, {
-        target: { value: $select.options[1].value },
+      fireEvent.change($select!, {
+        target: { value: $select?.options[1].value },
       });
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { foo: true },
-    });
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        formData: { foo: true },
+      }),
+      'root_foo__anyof_select',
+    );
   });
 
   it('should assign a default value and set defaults on option change when using references', () => {
@@ -220,23 +215,24 @@ describe('anyOf', () => {
         },
       },
     });
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { foo: 'defaultfoo' },
-    });
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        formData: { foo: 'defaultfoo' },
+      }),
+    );
 
     const $select = node.querySelector('select');
 
     act(() => {
-      fireEvent.change($select, {
-        target: { value: $select.options[1].value },
+      fireEvent.change($select!, {
+        target: { value: $select?.options[1].value },
       });
     });
 
-    sinon.assert.calledWithMatch(
-      onChange.lastCall,
-      {
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
         formData: { foo: 'defaultbar' },
-      },
+      }),
       'root__anyof_select',
     );
   });
@@ -260,29 +256,30 @@ describe('anyOf', () => {
       },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { foo: 'defaultfoo' },
-    });
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        formData: { foo: 'defaultfoo' },
+      }),
+    );
 
     const $select = node.querySelector('select');
 
     act(() => {
-      fireEvent.change($select, {
-        target: { value: $select.options[1].value },
+      fireEvent.change($select!, {
+        target: { value: $select?.options[1].value },
       });
     });
 
-    sinon.assert.calledWithMatch(
-      onChange.lastCall,
-      {
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
         formData: { foo: 'defaultbar' },
-      },
+      }),
       'root__anyof_select',
     );
   });
 
   it('should render a custom widget', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'object',
       anyOf: [
         {
@@ -308,11 +305,11 @@ describe('anyOf', () => {
       widgets,
     });
 
-    expect(node.querySelector('#CustomSelect')).to.exist;
+    expect(node.querySelector('#CustomSelect')).toBeInTheDocument();
   });
 
   it('should change the rendered form when the select value is changed', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'object',
       anyOf: [
         {
@@ -332,23 +329,23 @@ describe('anyOf', () => {
       schema,
     });
 
-    expect(node.querySelectorAll('#root_foo')).to.have.length.of(1);
-    expect(node.querySelectorAll('#root_bar')).to.have.length.of(0);
+    expect(node.querySelectorAll('#root_foo')).toHaveLength(1);
+    expect(node.querySelectorAll('#root_bar')).toHaveLength(0);
 
     const $select = node.querySelector('select');
 
     act(() => {
-      fireEvent.change($select, {
-        target: { value: $select.options[1].value },
+      fireEvent.change($select!, {
+        target: { value: $select?.options[1].value },
       });
     });
 
-    expect(node.querySelectorAll('#root_foo')).to.have.length.of(0);
-    expect(node.querySelectorAll('#root_bar')).to.have.length.of(1);
+    expect(node.querySelectorAll('#root_foo')).toHaveLength(0);
+    expect(node.querySelectorAll('#root_bar')).toHaveLength(1);
   });
 
   it('should handle change events', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'object',
       anyOf: [
         {
@@ -369,22 +366,21 @@ describe('anyOf', () => {
     });
 
     act(() => {
-      fireEvent.change(node.querySelector('input#root_foo'), {
+      fireEvent.change(node.querySelector('input#root_foo')!, {
         target: { value: 'Lorem ipsum dolor sit amet' },
       });
     });
 
-    sinon.assert.calledWithMatch(
-      onChange.lastCall,
-      {
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
         formData: { foo: 'Lorem ipsum dolor sit amet' },
-      },
+      }),
       'root_foo',
     );
   });
 
   it('should clear previous data when changing options', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'object',
       properties: {
         buzz: { type: 'string' },
@@ -408,56 +404,57 @@ describe('anyOf', () => {
     });
 
     act(() => {
-      fireEvent.change(node.querySelector('input#root_buzz'), {
+      fireEvent.change(node.querySelector('input#root_buzz')!, {
         target: { value: 'Lorem ipsum dolor sit amet' },
       });
     });
 
-    sinon.assert.calledWithMatch(
-      onChange.lastCall,
-      {
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
         formData: {
           buzz: 'Lorem ipsum dolor sit amet',
         },
-      },
+      }),
       'root_buzz',
     );
 
     act(() => {
-      fireEvent.change(node.querySelector('input#root_foo'), {
+      fireEvent.change(node.querySelector('input#root_foo')!, {
         target: { value: 'Consectetur adipiscing elit' },
       });
     });
 
-    sinon.assert.calledWithMatch(
-      onChange.lastCall,
-      {
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
         formData: {
           buzz: 'Lorem ipsum dolor sit amet',
           foo: 'Consectetur adipiscing elit',
         },
-      },
+      }),
       'root_foo',
     );
 
     const $select = node.querySelector('select');
 
     act(() => {
-      fireEvent.change($select, {
-        target: { value: $select.options[1].value },
+      fireEvent.change($select!, {
+        target: { value: $select?.options[1].value },
       });
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: {
-        buzz: 'Lorem ipsum dolor sit amet',
-        foo: undefined,
-      },
-    });
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        formData: {
+          buzz: 'Lorem ipsum dolor sit amet',
+          foo: undefined,
+        },
+      }),
+      'root__anyof_select',
+    );
   });
 
   it('should support options with different types', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'object',
       properties: {
         userId: {
@@ -478,52 +475,49 @@ describe('anyOf', () => {
     });
 
     act(() => {
-      fireEvent.change(node.querySelector('input#root_userId'), {
+      fireEvent.change(node.querySelector('input#root_userId')!, {
         target: { value: 12345 },
       });
     });
 
-    sinon.assert.calledWithMatch(
-      onChange.lastCall,
-      {
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
         formData: { userId: 12345 },
-      },
+      }),
       'root_userId',
     );
 
     const $select = node.querySelector('select');
 
     act(() => {
-      fireEvent.change($select, {
-        target: { value: $select.options[1].value },
+      fireEvent.change($select!, {
+        target: { value: $select?.options[1].value },
       });
     });
 
-    sinon.assert.calledWithMatch(
-      onChange.lastCall,
-      {
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
         formData: { userId: undefined },
-      },
-      'root_userId',
+      }),
+      'root_userId__anyof_select',
     );
 
     act(() => {
-      fireEvent.change(node.querySelector('input#root_userId'), {
+      fireEvent.change(node.querySelector('input#root_userId')!, {
         target: { value: 'Lorem ipsum dolor sit amet' },
       });
     });
 
-    sinon.assert.calledWithMatch(
-      onChange.lastCall,
-      {
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
         formData: { userId: 'Lorem ipsum dolor sit amet' },
-      },
+      }),
       'root_userId',
     );
   });
 
   it('should support custom fields', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'object',
       properties: {
         userId: {
@@ -550,11 +544,11 @@ describe('anyOf', () => {
       },
     });
 
-    expect(node.querySelectorAll('#custom-anyof-field')).to.have.length(1);
+    expect(node.querySelectorAll('#custom-anyof-field')).toHaveLength(1);
   });
 
   it('should support custom widget', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'object',
       properties: {
         choice: {
@@ -576,7 +570,7 @@ describe('anyOf', () => {
       },
     };
 
-    function CustomSelectWidget(props) {
+    function CustomSelectWidget(props: WidgetProps) {
       const { schema, value } = props;
       // Remove the default so that we can select an empty value to clear the selection
       const schemaNoDefault = { ...schema, default: undefined };
@@ -594,23 +588,26 @@ describe('anyOf', () => {
     });
 
     const select = node.querySelector('select');
-    expect(select.value).eql(select.options[1].value);
+    expect(select).toHaveValue(select?.options[1].value);
 
     act(() => {
-      fireEvent.change(select, {
-        target: { value: select.options[0].value },
+      fireEvent.change(select!, {
+        target: { value: select?.options[0].value },
       });
     });
 
-    expect(select.value).eql(select.options[0].value);
+    expect(select).toHaveValue(select?.options[0].value);
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { choice: undefined },
-    });
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        formData: { choice: undefined },
+      }),
+      'root_choice__anyof_select',
+    );
   });
 
   it('should select the correct field when the form is rendered from existing data', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'object',
       properties: {
         userId: {
@@ -633,11 +630,11 @@ describe('anyOf', () => {
       },
     });
 
-    expect(node.querySelector('select').value).eql('1');
+    expect(node.querySelector('select')).toHaveValue('1');
   });
 
   it('should select the correct field when the formData property is updated', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'object',
       properties: {
         userId: {
@@ -653,26 +650,20 @@ describe('anyOf', () => {
       },
     };
 
-    const { comp, node } = createFormComponent({
-      ref: React.createRef(),
+    const { rerender, node } = createFormComponent({
+      ref: createRef(),
       schema,
     });
 
-    expect(node.querySelector('select').value).eql('0');
+    expect(node.querySelector('select')).toHaveValue('0');
 
-    setProps(comp, {
-      ref: comp.ref,
-      schema,
-      formData: {
-        userId: 'foobarbaz',
-      },
-    });
+    rerender({ schema, formData: { userId: 'foobarbaz' } });
 
-    expect(node.querySelector('select').value).eql('1');
+    expect(node.querySelector('select')).toHaveValue('1');
   });
 
   it('should not change the selected option when entering values', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'object',
       anyOf: [
         {
@@ -703,27 +694,27 @@ describe('anyOf', () => {
 
     const $select = node.querySelector('select');
 
-    expect($select.value).eql('0');
+    expect($select).toHaveValue('0');
 
     act(() => {
-      fireEvent.change($select, {
-        target: { value: $select.options[1].value },
+      fireEvent.change($select!, {
+        target: { value: $select?.options[1].value },
       });
     });
 
-    expect($select.value).eql('1');
+    expect($select).toHaveValue('1');
 
     act(() => {
-      fireEvent.change(node.querySelector('input#root_idCode'), {
+      fireEvent.change(node.querySelector('input#root_idCode')!, {
         target: { value: 'Lorem ipsum dolor sit amet' },
       });
     });
 
-    expect($select.value).eql('1');
+    expect($select).toHaveValue('1');
   });
 
   it('should not change the selected option when entering values and the subschema uses `anyOf`', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'object',
       anyOf: [
         {
@@ -770,27 +761,27 @@ describe('anyOf', () => {
 
     const $select = node.querySelector('select');
 
-    expect($select.value).eql('0');
+    expect($select).toHaveValue('0');
 
     act(() => {
-      fireEvent.change($select, {
-        target: { value: $select.options[1].value },
+      fireEvent.change($select!, {
+        target: { value: $select?.options[1].value },
       });
     });
 
-    expect($select.value).eql('1');
+    expect($select).toHaveValue('1');
 
     act(() => {
-      fireEvent.change(node.querySelector('input#root_idCode'), {
+      fireEvent.change(node.querySelector('input#root_idCode')!, {
         target: { value: 'Lorem ipsum dolor sit amet' },
       });
     });
 
-    expect($select.value).eql('1');
+    expect($select).toHaveValue('1');
   });
 
   it('should not change the selected option when entering values and the subschema uses `allOf`', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'object',
       anyOf: [
         {
@@ -837,27 +828,27 @@ describe('anyOf', () => {
 
     const $select = node.querySelector('select');
 
-    expect($select.value).eql('0');
+    expect($select).toHaveValue('0');
 
     act(() => {
-      fireEvent.change($select, {
-        target: { value: $select.options[1].value },
+      fireEvent.change($select!, {
+        target: { value: $select?.options[1].value },
       });
     });
 
-    expect($select.value).eql('1');
+    expect($select).toHaveValue('1');
 
     act(() => {
-      fireEvent.change(node.querySelector('input#root_idCode'), {
+      fireEvent.change(node.querySelector('input#root_idCode')!, {
         target: { value: 'Lorem ipsum dolor sit amet' },
       });
     });
 
-    expect($select.value).eql('1');
+    expect($select).toHaveValue('1');
   });
 
   it('should not mutate a schema that contains nested anyOf and allOf', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'object',
       anyOf: [
         {
@@ -886,7 +877,7 @@ describe('anyOf', () => {
       schema,
     });
 
-    expect(schema).to.eql({
+    expect(schema).toEqual({
       type: 'object',
       anyOf: [
         {
@@ -913,7 +904,7 @@ describe('anyOf', () => {
   });
 
   it('should use title from refs schema before using fallback generated value as title', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       definitions: {
         address: {
           title: 'Address',
@@ -953,13 +944,13 @@ describe('anyOf', () => {
       schema,
     });
 
-    let options = node.querySelectorAll('option');
-    expect(options[0].firstChild.nodeValue).eql('Address');
-    expect(options[1].firstChild.nodeValue).eql('Person');
+    const options = node.querySelectorAll('option');
+    expect(options[0].firstChild?.nodeValue).toEqual('Address');
+    expect(options[1].firstChild?.nodeValue).toEqual('Person');
   });
 
   it('should collect schema from $ref even when ref is within properties', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       properties: {
         address: {
           title: 'Address',
@@ -999,13 +990,13 @@ describe('anyOf', () => {
       schema,
     });
 
-    let options = node.querySelectorAll('option');
-    expect(options[0].firstChild.nodeValue).eql('Address');
-    expect(options[1].firstChild.nodeValue).eql('Person');
+    const options = node.querySelectorAll('option');
+    expect(options[0].firstChild?.nodeValue).toEqual('Address');
+    expect(options[1].firstChild?.nodeValue).toEqual('Person');
   });
 
   it('should select anyOf in additionalProperties with anyOf', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'object',
       properties: {
         testProperty: {
@@ -1050,28 +1041,31 @@ describe('anyOf', () => {
       formData: { testProperty: { newKey: { prop2: 'foo' } } },
     });
 
-    const $select = node.querySelector('select#root_testProperty_newKey__anyof_select');
+    const $select: HTMLSelectElement | null = node.querySelector('select#root_testProperty_newKey__anyof_select');
 
-    expect($select.value).eql('1');
+    expect($select).toHaveValue('1');
 
     act(() => {
-      fireEvent.change($select, {
-        target: { value: $select.options[0].value },
+      fireEvent.change($select!, {
+        target: { value: $select?.options[0].value },
       });
     });
 
-    expect($select.value).eql('0');
+    expect($select).toHaveValue('0');
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: {
-        testProperty: { newKey: { prop1: undefined, prop2: undefined } },
-      },
-    });
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        formData: {
+          testProperty: { newKey: { prop1: undefined, prop2: undefined } },
+        },
+      }),
+      'root_testProperty_newKey__anyof_select',
+    );
   });
 
   describe('Arrays', () => {
     it('should correctly render form inputs for anyOf inside array items', () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         properties: {
           items: {
@@ -1103,19 +1097,19 @@ describe('anyOf', () => {
         schema,
       });
 
-      expect(node.querySelector('.rjsf-array-item-add button')).not.eql(null);
+      expect(node.querySelector('.rjsf-array-item-add button')).not.toBeNull();
 
       act(() => {
-        fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
+        fireEvent.click(node.querySelector('.rjsf-array-item-add button')!);
       });
 
-      expect(node.querySelectorAll('select')).to.have.length.of(1);
+      expect(node.querySelectorAll('select')).toHaveLength(1);
 
-      expect(node.querySelectorAll('input#root_items_0_foo')).to.have.length.of(1);
+      expect(node.querySelectorAll('input#root_items_0_foo')).toHaveLength(1);
     });
 
     it('should not change the selected option when switching order of items for anyOf inside array items', () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         properties: {
           items: {
@@ -1156,8 +1150,8 @@ describe('anyOf', () => {
       });
 
       let selects = node.querySelectorAll('select');
-      expect(selects[0].value).eql('0');
-      expect(selects[1].value).eql('1');
+      expect(selects[0]).toHaveValue('0');
+      expect(selects[1]).toHaveValue('1');
 
       const moveUpBtns = node.querySelectorAll('.rjsf-array-item-move-up');
 
@@ -1166,12 +1160,12 @@ describe('anyOf', () => {
       });
 
       selects = node.querySelectorAll('select');
-      expect(selects[0].value).eql('1');
-      expect(selects[1].value).eql('0');
+      expect(selects[0]).toHaveValue('1');
+      expect(selects[1]).toHaveValue('0');
     });
 
     it('should correctly update inputs for anyOf inside array items after being moved down', () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         properties: {
           items: {
@@ -1216,10 +1210,10 @@ describe('anyOf', () => {
       act(() => {
         fireEvent.change(strInputs[1], { target: { value: 'bar' } });
       });
-      expect(strInputs[1].value).eql('bar');
+      expect(strInputs[1]).toHaveValue('bar');
     });
     it('should correctly render mixed types for anyOf inside array items', () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         properties: {
           items: {
@@ -1250,36 +1244,28 @@ describe('anyOf', () => {
         schema,
       });
 
-      expect(node.querySelector('.rjsf-array-item-add button')).not.eql(null);
+      expect(node.querySelector('.rjsf-array-item-add button')).not.toBeNull();
 
       act(() => {
-        fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
+        fireEvent.click(node.querySelector('.rjsf-array-item-add button')!);
       });
 
       const $select = node.querySelector('select');
-      expect($select).not.eql(null);
+      expect($select).not.toBeNull();
       act(() => {
-        fireEvent.change($select, {
-          target: { value: $select.options[1].value },
+        fireEvent.change($select!, {
+          target: { value: $select?.options[1].value },
         });
       });
 
-      expect(node.querySelectorAll('input#root_items_0_foo')).to.have.length.of(1);
-      expect(node.querySelectorAll('input#root_items_0_bar')).to.have.length.of(1);
+      expect(node.querySelectorAll('input#root_items_0_foo')).toHaveLength(1);
+      expect(node.querySelectorAll('input#root_items_0_bar')).toHaveLength(1);
     });
   });
 
   describe('definitions', () => {
-    beforeEach(() => {
-      sandbox = createSandbox();
-      sandbox.stub(console, 'warn');
-    });
-    afterEach(() => {
-      sandbox.restore();
-    });
-
     it('should correctly set the label of the options', () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         anyOf: [
           {
@@ -1313,13 +1299,13 @@ describe('anyOf', () => {
 
       const $select = node.querySelector('select');
 
-      expect($select.options[0].text).eql('Foo');
-      expect($select.options[1].text).eql('Option 2');
-      expect($select.options[2].text).eql('Baz');
+      expect($select?.options[0].text).toEqual('Foo');
+      expect($select?.options[1].text).toEqual('Option 2');
+      expect($select?.options[2].text).toEqual('Baz');
     });
 
     it('should correctly set the label of the options, with schema title prefix', () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         title: 'Root Title',
         anyOf: [
@@ -1354,13 +1340,13 @@ describe('anyOf', () => {
 
       const $select = node.querySelector('select');
 
-      expect($select.options[0].text).eql('Foo');
-      expect($select.options[1].text).eql('Root Title option 2');
-      expect($select.options[2].text).eql('Baz');
+      expect($select?.options[0].text).toEqual('Foo');
+      expect($select?.options[1].text).toEqual('Root Title option 2');
+      expect($select?.options[2].text).toEqual('Baz');
     });
 
     it('should correctly set the label of the options, with uiSchema title prefix', () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         anyOf: [
           {
@@ -1395,13 +1381,13 @@ describe('anyOf', () => {
 
       const $select = node.querySelector('select');
 
-      expect($select.options[0].text).eql('Foo');
-      expect($select.options[1].text).eql('My Title option 2');
-      expect($select.options[2].text).eql('Baz');
+      expect($select?.options[0].text).toEqual('Foo');
+      expect($select?.options[1].text).toEqual('My Title option 2');
+      expect($select?.options[2].text).toEqual('Baz');
     });
 
     it('should correctly set the label of the options, with uiSchema-based titles, for each anyOf option', () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         anyOf: [
           {
@@ -1447,19 +1433,20 @@ describe('anyOf', () => {
       });
       const $select = node.querySelector('select');
 
-      expect($select.options[0].text).eql('Custom foo');
-      expect($select.options[1].text).eql('Custom bar');
-      expect($select.options[2].text).eql('Custom baz');
+      expect($select?.options[0].text).toEqual('Custom foo');
+      expect($select?.options[1].text).toEqual('Custom bar');
+      expect($select?.options[2].text).toEqual('Custom baz');
 
       // Also verify the uiSchema was passed down to the underlying widget by confirming the lable (in the legend)
       // matches the selected option's title
-      expect($select.value).eql('0');
+      expect($select).toHaveValue('0');
       const inputLabel = node.querySelector('legend#root__title');
-      expect(inputLabel.innerHTML).eql($select.options[$select.value].text);
+      expect(inputLabel?.innerHTML).toEqual($select?.options[0].text);
     });
 
     it('should warn when the anyOf in the uiSchema is not an array, and pass the base uiSchema down', () => {
-      const schema = {
+      const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+      const schema: RJSFSchema = {
         type: 'object',
         anyOf: [
           {
@@ -1495,19 +1482,20 @@ describe('anyOf', () => {
         },
       });
 
-      expect(console.warn.calledWithMatch(/uiSchema.anyOf is not an array for "My Title"/)).to.be.true;
+      expect(consoleWarnSpy).toHaveBeenCalledWith('uiSchema.anyOf is not an array for "My Title"');
+      consoleWarnSpy.mockRestore();
 
       const $select = node.querySelector('select');
 
       // Also verify the base uiSchema was passed down to the underlying widget by confirming the label (in the legend)
       // matches the selected option's title
-      expect($select.value).eql('0');
+      expect($select).toHaveValue('0');
       const inputLabel = node.querySelector('legend#root__title');
-      expect(inputLabel.innerHTML).eql('My Title');
+      expect(inputLabel?.innerHTML).toEqual('My Title');
     });
 
     it('should correctly infer the selected option based on value', () => {
-      const schema = {
+      const schema: RJSFSchema = {
         $ref: '#/definitions/any',
         definitions: {
           chain: {
@@ -1582,20 +1570,20 @@ describe('anyOf', () => {
         },
       });
 
-      const rootId = node.querySelector('select#root_id');
-      expect(getSelectedOptionValue(rootId)).eql('chain');
-      const componentId = node.querySelector('select#root_components_0_id');
-      expect(getSelectedOptionValue(componentId)).eql('map');
+      const rootId = node.querySelector<HTMLSelectElement>('select#root_id');
+      expect(getSelectedOptionValue(rootId!)).toEqual('chain');
+      const componentId = node.querySelector<HTMLSelectElement>('select#root_components_0_id');
+      expect(getSelectedOptionValue(componentId!)).toEqual('map');
 
-      const fnId = node.querySelector('select#root_components_0_fn_id');
-      expect(getSelectedOptionValue(fnId)).eql('transform');
+      const fnId = node.querySelector<HTMLSelectElement>('select#root_components_0_fn_id');
+      expect(getSelectedOptionValue(fnId!)).toEqual('transform');
 
-      const transformerId = node.querySelector('select#root_components_0_fn_transformer_id');
-      expect(getSelectedOptionValue(transformerId)).eql('to_absolute');
+      const transformerId = node.querySelector<HTMLSelectElement>('select#root_components_0_fn_transformer_id');
+      expect(getSelectedOptionValue(transformerId!)).toEqual('to_absolute');
     });
   });
   describe('hideError works with anyOf', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'object',
       properties: {
         userId: {
@@ -1610,8 +1598,8 @@ describe('anyOf', () => {
         },
       },
     };
-    function customValidate(formData, errors) {
-      errors.userId.addError('test');
+    function customValidate(_: any, errors: FormValidation) {
+      errors.userId?.addError('test');
       return errors;
     }
 
@@ -1622,7 +1610,7 @@ describe('anyOf', () => {
       });
 
       act(() => {
-        fireEvent.change(node.querySelector('input#root_userId'), {
+        fireEvent.change(node.querySelector('input#root_userId')!, {
           target: { value: 12345 },
         });
       });
@@ -1631,18 +1619,18 @@ describe('anyOf', () => {
       });
 
       let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=number]');
-      expect(inputs[0].id).eql('root_userId');
+      expect(inputs[0]).toHaveAttribute('id', 'root_userId');
 
       const $select = node.querySelector('select');
 
       act(() => {
-        fireEvent.change($select, {
-          target: { value: $select.options[1].value },
+        fireEvent.change($select!, {
+          target: { value: $select?.options[1].value },
         });
       });
 
       act(() => {
-        fireEvent.change(node.querySelector('input#root_userId'), {
+        fireEvent.change(node.querySelector('input#root_userId')!, {
           target: { value: 'Lorem ipsum dolor sit amet' },
         });
       });
@@ -1651,7 +1639,7 @@ describe('anyOf', () => {
       });
 
       inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
-      expect(inputs[0].id).eql('root_userId');
+      expect(inputs[0]).toHaveAttribute('id', 'root_userId');
     });
 
     it('should NOT show error on options with different types when hideError: true', () => {
@@ -1664,7 +1652,7 @@ describe('anyOf', () => {
       });
 
       act(() => {
-        fireEvent.change(node.querySelector('input#root_userId'), {
+        fireEvent.change(node.querySelector('input#root_userId')!, {
           target: { value: 12345 },
         });
       });
@@ -1674,18 +1662,18 @@ describe('anyOf', () => {
       });
 
       let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=number]');
-      expect(inputs).to.have.length.of(0);
+      expect(inputs).toHaveLength(0);
 
       const $select = node.querySelector('select');
 
       act(() => {
-        fireEvent.change($select, {
-          target: { value: $select.options[1].value },
+        fireEvent.change($select!, {
+          target: { value: $select?.options[1].value },
         });
       });
 
       act(() => {
-        fireEvent.change(node.querySelector('input#root_userId'), {
+        fireEvent.change(node.querySelector('input#root_userId')!, {
           target: { value: 'Lorem ipsum dolor sit amet' },
         });
       });
@@ -1694,11 +1682,11 @@ describe('anyOf', () => {
       });
 
       inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
-      expect(inputs).to.have.length.of(0);
+      expect(inputs).toHaveLength(0);
     });
   });
   describe('OpenAPI discriminator support', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'object',
       definitions: {
         Foo: {
@@ -1733,19 +1721,12 @@ describe('anyOf', () => {
       },
       anyOf: [{ $ref: '#/definitions/Foo' }, { $ref: '#/definitions/Bar' }, { $ref: '#/definitions/Baz' }],
     };
-    beforeEach(() => {
-      sandbox = createSandbox();
-      sandbox.stub(console, 'warn');
-    });
-    afterEach(() => {
-      sandbox.restore();
-    });
     it('Selects the first node by default when there is no formData', () => {
       const { node } = createFormComponent({
         schema,
       });
       const select = node.querySelector('select#root__anyof_select');
-      expect(select.value).eql('0');
+      expect(select).toHaveValue('0');
     });
     it('Selects the 3rd node by default when there is formData that points to it', () => {
       const { node } = createFormComponent({
@@ -1753,21 +1734,23 @@ describe('anyOf', () => {
         formData: { code: 'baz_coding' },
       });
       const select = node.querySelector('select#root__anyof_select');
-      expect(select.value).eql('2');
+      expect(select).toHaveValue('2');
     });
     it('warns when discriminator.propertyName is not a string', () => {
+      const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
       const badSchema = { ...schema, discriminator: { propertyName: 5 } };
       const { node } = createFormComponent({
         schema: badSchema,
       });
       const select = node.querySelector('select#root__anyof_select');
-      expect(select.value).eql('0');
-      expect(console.warn.calledWithMatch(/Expecting discriminator to be a string, got "number" instead/)).to.be.true;
+      expect(select).toHaveValue('0');
+      expect(consoleWarnSpy).toHaveBeenCalledWith('Expecting discriminator to be a string, got "number" instead');
+      consoleWarnSpy.mockRestore();
     });
   });
 
   describe('Custom Field without ui:fieldReplacesAnyOrOneOf', function () {
-    const schema = {
+    const schema: RJSFSchema = {
       anyOf: [
         {
           type: 'number',
@@ -1783,17 +1766,17 @@ describe('anyOf', () => {
     it('should be rendered twice', function () {
       const { node } = createFormComponent({ schema, uiSchema });
       const fields = node.querySelectorAll('.custom-field');
-      expect(fields).to.have.length.of(2);
+      expect(fields).toHaveLength(2);
     });
     it('should render <select>', function () {
       const { node } = createFormComponent({ schema, uiSchema });
       const selects = node.querySelectorAll('select');
-      expect(selects).to.have.length.of(1);
+      expect(selects).toHaveLength(1);
     });
   });
 
   describe('Custom Field with ui:fieldReplacesAnyOrOneOf', function () {
-    const schema = {
+    const schema: RJSFSchema = {
       anyOf: [
         {
           type: 'number',
@@ -1810,18 +1793,18 @@ describe('anyOf', () => {
     it('should be rendered once', function () {
       const { node } = createFormComponent({ schema, uiSchema });
       const fields = node.querySelectorAll('.custom-field');
-      expect(fields).to.have.length.of(1);
+      expect(fields).toHaveLength(1);
     });
     it('should not render <select>', function () {
       const { node } = createFormComponent({ schema, uiSchema });
       const selects = node.querySelectorAll('select');
-      expect(selects).to.have.length.of(0);
+      expect(selects).toHaveLength(0);
     });
   });
 
   describe('Boolean field value preservation', () => {
-    it('should preserve boolean values when switching between anyOf options with shared properties', () => {
-      const schema = {
+    it('should preserve boolean values when switching between anyOf options with shared properties', async () => {
+      const schema: RJSFSchema = {
         type: 'object',
         properties: {
           items: {
@@ -1859,13 +1842,6 @@ describe('anyOf', () => {
         },
       });
 
-      // Wait for initial form setup to complete
-      if (onChange.lastCall) {
-        // Initial state - should have showField = true
-        let lastFormData = onChange.lastCall.args[0].formData;
-        expect(lastFormData.items[0].showField).to.equal(true);
-      }
-
       // Switch to typeB
       const dropdown = node.querySelector('select[id="root_items_0__anyof_select"]');
       if (dropdown) {
@@ -1874,16 +1850,15 @@ describe('anyOf', () => {
         });
 
         // After switching, the boolean value should be preserved, not converted to {}
-        if (onChange.lastCall) {
-          const lastFormData = onChange.lastCall.args[0].formData;
-          expect(lastFormData.items[0].type).to.equal('typeB');
-          expect(lastFormData.items[0].showField).to.equal(true); // Should still be true, not {}
-        }
+        expect(onChange).toHaveBeenLastCalledWith(
+          expect.objectContaining({ formData: { items: [{ type: 'typeB', showField: true }] } }),
+          'root_items_0__anyof_select',
+        );
       }
     });
 
     it('should handle undefined boolean fields correctly when switching anyOf options', () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         properties: {
           items: {
@@ -1928,19 +1903,15 @@ describe('anyOf', () => {
           fireEvent.change(dropdown, { target: { value: '1' } });
         });
 
-        // After switching, undefined boolean should remain undefined, not become {}
-        const lastFormData = onChange.lastCall.args[0].formData;
-        expect(lastFormData.items[0].type).to.equal('typeB');
-
-        // showField should be undefined, not {} (the bug we fixed)
-        if ('showField' in lastFormData.items[0]) {
-          expect(lastFormData.items[0].showField).to.not.deep.equal({});
-        }
+        expect(onChange).toHaveBeenLastCalledWith(
+          expect.objectContaining({ formData: { items: [{ type: 'typeB', showField: undefined }] } }),
+          'root_items_0__anyof_select',
+        );
       }
     });
 
     it('should handle boolean field values correctly in direct anyOf schemas', () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         anyOf: [
           {
@@ -1975,12 +1946,10 @@ describe('anyOf', () => {
           fireEvent.change(dropdown, { target: { value: '1' } });
         });
 
-        // After switching, the boolean value should be preserved, not converted to {}
-        if (onChange.lastCall) {
-          const lastFormData = onChange.lastCall.args[0].formData;
-          expect(lastFormData.type).to.equal('optionB');
-          expect(lastFormData.enabled).to.equal(false); // Should still be false, not {}
-        }
+        expect(onChange).toHaveBeenLastCalledWith(
+          expect.objectContaining({ formData: { type: 'optionB', enabled: false } }),
+          'root__anyof_select',
+        );
       }
     });
   });
