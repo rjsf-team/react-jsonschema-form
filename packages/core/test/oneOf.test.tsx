@@ -1587,16 +1587,16 @@ describe('oneOf', () => {
         },
       });
 
-      const rootId = node.querySelector('select#root_id');
-      expect(getSelectedOptionValue(rootId as HTMLSelectElement)).toEqual('chain');
-      const componentId = node.querySelector('select#root_components_0_id');
-      expect(getSelectedOptionValue(componentId as HTMLSelectElement)).toEqual('map');
+      const rootId = node.querySelector<HTMLSelectElement>('select#root_id');
+      expect(getSelectedOptionValue(rootId!)).toEqual('chain');
+      const componentId = node.querySelector<HTMLSelectElement>('select#root_components_0_id');
+      expect(getSelectedOptionValue(componentId!)).toEqual('map');
 
-      const fnId = node.querySelector('select#root_components_0_fn_id');
-      expect(getSelectedOptionValue(fnId as HTMLSelectElement)).toEqual('transform');
+      const fnId = node.querySelector<HTMLSelectElement>('select#root_components_0_fn_id');
+      expect(getSelectedOptionValue(fnId!)).toEqual('transform');
 
-      const transformerId = node.querySelector('select#root_components_0_fn_transformer_id');
-      expect(getSelectedOptionValue(transformerId as HTMLSelectElement)).toEqual('to_absolute');
+      const transformerId = node.querySelector<HTMLSelectElement>('select#root_components_0_fn_transformer_id');
+      expect(getSelectedOptionValue(transformerId!)).toEqual('to_absolute');
     });
 
     it('should update formData to remove unnecessary data when oneOf option changes', () => {
