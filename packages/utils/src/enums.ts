@@ -90,4 +90,6 @@ export enum TranslatableString {
    * provided by FileWidget
    */
   FilesInfo = '**%1** (%2, %3 bytes)',
+  /** Clear button title, used by IconButton */
+  ClearButton = 'clear',
 }

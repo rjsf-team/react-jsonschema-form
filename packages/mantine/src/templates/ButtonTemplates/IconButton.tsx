@@ -85,3 +85,15 @@ export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
     />
   );
 }
+
+export function ClearButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: MantineIconButtonProps<T, S, F>,
+) {
+  const {
+    registry: { translateString },
+  } = props;
+
+  return (
+    <IconButton title={translateString(TranslatableString.ClearButton)} variant='subtle' {...props} icon={<X />} />
+  );
+}

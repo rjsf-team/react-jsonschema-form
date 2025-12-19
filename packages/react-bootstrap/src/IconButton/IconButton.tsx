@@ -4,6 +4,7 @@ import { IoIosCopy } from '@react-icons/all-files/io/IoIosCopy';
 import { IoIosRemove } from '@react-icons/all-files/io/IoIosRemove';
 import { AiOutlineArrowUp } from '@react-icons/all-files/ai/AiOutlineArrowUp';
 import { AiOutlineArrowDown } from '@react-icons/all-files/ai/AiOutlineArrowDown';
+import { IoMdClose } from '@react-icons/all-files/io/IoMdClose';
 
 export type BootstrapIconButtonProps<
   T = any,
@@ -65,4 +66,13 @@ export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
       icon={<IoIosRemove />}
     />
   );
+}
+
+export function ClearButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: BootstrapIconButtonProps<T, S, F>,
+) {
+  const {
+    registry: { translateString },
+  } = props;
+  return <IconButton title={translateString(TranslatableString.ClearButton)} {...props} icon={<IoMdClose />} />;
 }

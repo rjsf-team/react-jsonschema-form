@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent } from 'react';
+import { ChangeEvent, FocusEvent, useCallback } from 'react';
 import { Input } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
@@ -13,7 +13,7 @@ import {
 
 import { Field } from '../components/ui/field';
 import { getChakra } from '../utils';
-import { X } from 'lucide-react';
+import { ClearButton } from '../IconButton';
 
 export default function BaseInputTemplate<
   T = any,
@@ -40,6 +40,7 @@ export default function BaseInputTemplate<
     placeholder,
     disabled,
     uiSchema,
+    registry,
   } = props;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
 
@@ -47,6 +48,14 @@ export default function BaseInputTemplate<
     onChange(value === '' ? options.emptyValue : value);
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
+  const onClear = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onChange(options.emptyValue ?? '');
+    },
+    [onChange, options.emptyValue],
+  );
 
   const chakraProps = getChakra({ uiSchema });
 
@@ -73,24 +82,8 @@ export default function BaseInputTemplate<
         list={schema.examples ? examplesId(id) : undefined}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
-      {options.allowClear && !readonly && !disabled && value && (
-        <button
-          type='button'
-          onClick={() => onChange('')}
-          aria-label='Clear input'
-          style={{
-            backgroundColor: 'transparent',
-            cursor: 'pointer',
-            border: '2px solid #ccc',
-            position: 'absolute',
-            left: '97%',
-            transform: 'translateY(250%)',
-            zIndex: 1,
-            borderRadius: '50%',
-          }}
-        >
-          <X size={12} />
-        </button>
+      {options.allowClearTextInputs && !readonly && !disabled && value && (
+        <ClearButton registry={registry} onClick={onClear} />
       )}
       {Array.isArray(schema.examples) ? (
         <datalist id={examplesId(id)}>
