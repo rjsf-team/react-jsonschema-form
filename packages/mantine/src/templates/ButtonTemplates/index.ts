@@ -1,7 +1,7 @@
 import { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } from '@rjsf/utils';
 import SubmitButton from './SubmitButton';
 import AddButton from './AddButton';
-import { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } from './IconButton';
+import { CopyButton, MoveDownButton, MoveUpButton, RemoveButton, ClearButton } from './IconButton';
 
 function buttonTemplates<
   T = any,
@@ -15,6 +15,7 @@ function buttonTemplates<
     MoveDownButton,
     MoveUpButton,
     RemoveButton,
+    ClearButton,
   };
 }
 

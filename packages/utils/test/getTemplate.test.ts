@@ -34,6 +34,7 @@ const registry: Registry = {
       MoveUpButton: FakeTemplate,
       RemoveButton: FakeTemplate,
       SubmitButton: FakeTemplate,
+      ClearButton: FakeTemplate,
     },
     DescriptionFieldTemplate: FakeTemplate,
     ErrorListTemplate: FakeTemplate,

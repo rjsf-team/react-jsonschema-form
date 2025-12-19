@@ -8,7 +8,7 @@ import {
   ariaDescribedByIds,
   examplesId,
 } from '@rjsf/utils';
-import { X } from 'lucide-react';
+import { ClearButton } from '../ButtonTemplates/IconButton';
 
 /** The `BaseInputTemplate` component is a template for rendering basic input elements
  * with DaisyUI styling. It's used as the foundation for various input types in forms.
@@ -47,6 +47,7 @@ export default function BaseInputTemplate<
     type,
     label,
     placeholder,
+    registry,
   } = props;
 
   const inputProps = getInputProps<T, S, F>(schema, type, options);
@@ -75,6 +76,15 @@ export default function BaseInputTemplate<
     [onFocus, id],
   );
 
+  const _onClear = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onChange(options.emptyValue ?? '');
+    },
+    [onChange, options.emptyValue],
+  );
+
   return (
     <>
       <div className='form-control'>
@@ -99,25 +109,8 @@ export default function BaseInputTemplate<
             onFocus={_onFocus}
             aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
           />
-          {options.allowClear && !readonly && !disabled && value && (
-            <button
-              type='button'
-              onClick={() => onChange('')}
-              aria-label='Clear input'
-              style={{
-                backgroundColor: 'transparent',
-                cursor: 'pointer',
-                border: '2px solid #ccc',
-                position: 'absolute',
-                left: '97%',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                zIndex: 1,
-                borderRadius: '50%',
-              }}
-            >
-              <X size={12} />
-            </button>
+          {options.allowClearTextInputs && !readonly && !disabled && value && (
+            <ClearButton registry={registry} onClick={_onClear} />
           )}
         </div>
       </div>

@@ -7,11 +7,11 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { ChangeEvent, FocusEvent } from 'react';
+import { ChangeEvent, FocusEvent, useCallback } from 'react';
 
 import { Input } from '../components/ui/input';
 import { cn } from '../lib/utils';
-import { X } from 'lucide-react';
+import { ClearButton } from '../IconButton';
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
@@ -43,6 +43,7 @@ export default function BaseInputTemplate<
   children,
   extraProps,
   className,
+  registry,
 }: BaseInputTemplateProps<T, S, F>) {
   const inputProps = {
     ...extraProps,
@@ -52,6 +53,14 @@ export default function BaseInputTemplate<
     onChange(value === '' ? options.emptyValue : value);
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
+  const _onClear = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onChange(options.emptyValue ?? '');
+    },
+    [onChange, options.emptyValue],
+  );
 
   return (
     <div className='p-0.5'>
@@ -73,24 +82,8 @@ export default function BaseInputTemplate<
         onFocus={_onFocus}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
-      {options.allowClear && !readonly && !disabled && value && (
-        <button
-          type='button'
-          onClick={() => onChange('')}
-          aria-label='Clear input'
-          style={{
-            position: 'absolute',
-            left: '97%',
-            transform: 'translate(-50%,-160%)',
-            backgroundColor: 'transparent',
-            cursor: 'pointer',
-            border: '2px solid #ccc',
-            zIndex: 1,
-            borderRadius: '50%',
-          }}
-        >
-          <X size={13} />
-        </button>
+      {options.allowClearTextInputs && !readonly && !disabled && value && (
+        <ClearButton onClick={_onClear} aria-label='Clear input' registry={registry} />
       )}
       {children}
       {Array.isArray(schema.examples) ? (

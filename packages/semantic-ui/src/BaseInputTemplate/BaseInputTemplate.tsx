@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useCallback } from 'react';
 import { Form } from 'semantic-ui-react';
 import { getSemanticProps } from '../util';
 import {
@@ -11,7 +11,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { X } from 'lucide-react';
+import ClearButton from '../IconButton';
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
@@ -56,6 +56,14 @@ export default function BaseInputTemplate<
     onChange(value === '' ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
+  const _onClear = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onChange(options.emptyValue ?? '');
+    },
+    [onChange, options.emptyValue],
+  );
 
   return (
     <>
@@ -78,24 +86,8 @@ export default function BaseInputTemplate<
         onFocus={_onFocus}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
-      {options.allowClear && !readonly && !disabled && value && (
-        <button
-          type='button'
-          onClick={() => onChange('')}
-          aria-label='Clear input'
-          style={{
-            position: 'absolute',
-            left: '97%',
-            transform: 'translate(-50%,-160%)',
-            backgroundColor: 'transparent',
-            cursor: 'pointer',
-            border: '2px solid #ccc',
-            zIndex: 1,
-            borderRadius: '50%',
-          }}
-        >
-          <X size={13} />
-        </button>
+      {options.allowClearTextInputs && !readonly && !disabled && value && (
+        <ClearButton registry={registry} onClick={_onClear} />
       )}
       {Array.isArray(schema.examples) && (
         <datalist id={examplesId(id)}>

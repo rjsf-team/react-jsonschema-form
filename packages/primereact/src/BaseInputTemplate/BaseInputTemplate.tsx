@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useCallback } from 'react';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -9,7 +9,7 @@ import {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import { InputText } from 'primereact/inputtext';
-import { X } from 'lucide-react';
+import { ClearButton } from '../IconButton';
 
 /** The `BaseInputTemplate` is the template the fallback if no widget is specified.
  */
@@ -37,6 +37,15 @@ export default function BaseInputTemplate<
     registry,
     rawErrors = [],
   } = props;
+
+  const _onClear = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onChange(options.emptyValue ?? '');
+    },
+    [onChange, options.emptyValue],
+  );
 
   const { AutoCompleteWidget } = registry.widgets;
 
@@ -70,24 +79,8 @@ export default function BaseInputTemplate<
         onFocus={_onFocus}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
-      {options.allowClear && !readonly && !disabled && value && (
-        <button
-          type='button'
-          onClick={() => onChange('')}
-          aria-label='Clear input'
-          style={{
-            position: 'absolute',
-            left: '97%',
-            transform: 'translate(-90%,140%)',
-            backgroundColor: 'transparent',
-            cursor: 'pointer',
-            border: '2px solid #ccc',
-            zIndex: 1,
-            borderRadius: '50%',
-          }}
-        >
-          <X size={13} />
-        </button>
+      {options.allowClearTextInputs && !readonly && !disabled && value && (
+        <ClearButton registry={registry} onClick={_onClear} />
       )}
     </>
   );

@@ -1,5 +1,7 @@
-import { ChangeEvent, FocusEvent } from 'react';
+import { ChangeEvent, FocusEvent, useCallback } from 'react';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -10,7 +12,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { X } from 'lucide-react';
+import { ClearButton } from '../IconButton';
 
 const TYPES_THAT_SHRINK_LABEL = ['date', 'datetime-local', 'file', 'time'];
 
@@ -66,6 +68,14 @@ export default function BaseInputTemplate<
         shrink: true,
       }
     : InputLabelProps;
+  const _onClear = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onChange(options.emptyValue ?? '');
+    },
+    [onChange, options.emptyValue],
+  );
 
   return (
     <>
@@ -86,26 +96,16 @@ export default function BaseInputTemplate<
         onFocus={_onFocus}
         {...(textFieldProps as TextFieldProps)}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+        InputProps={{
+          ...textFieldProps.InputProps,
+          endAdornment:
+            options.allowClearTextInputs && value && !readonly && !disabled ? (
+              <InputAdornment position='end'>
+                <ClearButton registry={registry} onClick={_onClear} />
+              </InputAdornment>
+            ) : undefined,
+        }}
       />
-      {options.allowClear && !readonly && !disabled && value && (
-        <button
-          type='button'
-          onClick={() => onChange('')}
-          aria-label='Clear input'
-          style={{
-            position: 'absolute',
-            left: '97%',
-            transform: 'translateY(70%)',
-            backgroundColor: 'transparent',
-            cursor: 'pointer',
-            border: '2px solid #ccc',
-            zIndex: 1,
-            borderRadius: '50%',
-          }}
-        >
-          <X size={13} />
-        </button>
-      )}
       {Array.isArray(schema.examples) && (
         <datalist id={examplesId(id)}>
           {(schema.examples as string[])

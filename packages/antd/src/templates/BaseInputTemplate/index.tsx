@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent } from 'react';
+import { ChangeEvent, FocusEvent, useCallback } from 'react';
 import { Input, InputNumber } from 'antd';
 import {
   ariaDescribedByIds,
@@ -10,6 +10,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
+import ClearButton from '../IconButton';
 
 const INPUT_STYLE = {
   width: '100%',
@@ -58,6 +59,15 @@ export default function BaseInputTemplate<
 
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
 
+  const handleClear = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onChange(options.emptyValue ?? '');
+    },
+    [onChange, options.emptyValue],
+  );
+
   const input =
     inputProps.type === 'number' || inputProps.type === 'integer' ? (
       <InputNumber
@@ -94,6 +104,9 @@ export default function BaseInputTemplate<
   return (
     <>
       {input}
+      {options.allowClearTextInputs && !readonly && !disabled && value && (
+        <ClearButton registry={registry} onClick={handleClear} />
+      )}
       {Array.isArray(schema.examples) && (
         <datalist id={examplesId(id)}>
           {(schema.examples as string[])

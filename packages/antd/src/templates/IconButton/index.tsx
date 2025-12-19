@@ -4,6 +4,7 @@ import ArrowUpOutlined from '@ant-design/icons/ArrowUpOutlined';
 import CopyOutlined from '@ant-design/icons/CopyOutlined';
 import DeleteOutlined from '@ant-design/icons/DeleteOutlined';
 import PlusCircleOutlined from '@ant-design/icons/PlusCircleOutlined';
+import CloseOutlined from '@ant-design/icons/CloseOutlined';
 import {
   getUiOptions,
   FormContextType,
@@ -99,6 +100,22 @@ export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
       iconType='primary'
       {...props}
       icon={<DeleteOutlined />}
+    />
+  );
+}
+
+export function ClearButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: AntdIconButtonProps<T, S, F>,
+) {
+  const {
+    registry: { translateString },
+  } = props;
+  return (
+    <IconButton
+      title={translateString(TranslatableString.ClearButton)}
+      {...props}
+      iconType='link'
+      icon={<CloseOutlined />}
     />
   );
 }

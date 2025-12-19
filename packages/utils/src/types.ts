@@ -380,6 +380,8 @@ export type TemplatesType<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     MoveUpButton: ComponentType<IconButtonProps<T, S, F>>;
     /** The template to use for the Remove button used for AdditionalProperties and Array items */
     RemoveButton: ComponentType<IconButtonProps<T, S, F>>;
+    /** The template to use for the Clear button used for input fields */
+    ClearButton: ComponentType<IconButtonProps<T, S, F>>;
   };
 } & {
   /** Allow this to support any named `ComponentType` or an object of named `ComponentType`s */
@@ -1083,8 +1085,8 @@ type UIOptionsBaseType<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     rows?: number;
     /** If submitButtonOptions is provided it should match the `UISchemaSubmitButtonOptions` type */
     submitButtonOptions?: UISchemaSubmitButtonOptions;
-    /** Flag, if set to `true`, will allow the input to be cleared */
-    allowClear?: boolean;
+    /** Flag, if set to `true`, will allow the text input fields to be cleared */
+    allowClearTextInputs?: boolean;
     /** Allows RJSF to override the default widget implementation by specifying either the name of a widget that is used
      * to look up an implementation from the `widgets` list or an actual one-off widget implementation itself
      */
