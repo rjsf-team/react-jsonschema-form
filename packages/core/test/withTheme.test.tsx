@@ -1,30 +1,20 @@
-import { expect } from 'chai';
 import { Component, createRef } from 'react';
+import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
-import { withTheme } from '../src';
-import { createComponent, createSandbox } from './test_utils';
+import Form, { FormProps, ThemeProps, withTheme } from '../src';
+import { createComponent } from './testUtils';
 
-const WrapperClassComponent = (...args) => {
-  return class extends Component {
+function WrapperClassComponent(props: ThemeProps) {
+  return class extends Component<FormProps> {
     render() {
-      const Cmp = withTheme(...args);
+      const Cmp = withTheme(props);
       return <Cmp {...this.props} />;
     }
   };
-};
+}
 
 describe('withTheme', () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
-
   describe('With fields', () => {
     it('should use the withTheme field', () => {
       const fields = {
@@ -32,7 +22,7 @@ describe('withTheme', () => {
           return <div className='string-field' />;
         },
       };
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         properties: {
           fieldA: {
@@ -44,12 +34,12 @@ describe('withTheme', () => {
         },
       };
       const uiSchema = {};
-      let { node } = createComponent(WrapperClassComponent({ fields }), {
+      const { node } = createComponent(WrapperClassComponent({ fields }), {
         schema,
         uiSchema,
         validator,
       });
-      expect(node.querySelectorAll('.string-field')).to.have.length.of(2);
+      expect(node.querySelectorAll('.string-field')).toHaveLength(2);
     });
 
     it('should use withTheme field and the user defined field', () => {
@@ -63,7 +53,7 @@ describe('withTheme', () => {
           return <div className='number-field' />;
         },
       };
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         properties: {
           fieldA: {
@@ -75,14 +65,14 @@ describe('withTheme', () => {
         },
       };
       const uiSchema = {};
-      let { node } = createComponent(WrapperClassComponent({ fields: themeFields }), {
+      const { node } = createComponent(WrapperClassComponent({ fields: themeFields }), {
         schema,
         uiSchema,
         fields: userFields,
         validator,
       });
-      expect(node.querySelectorAll('.string-field')).to.have.length.of(1);
-      expect(node.querySelectorAll('.number-field')).to.have.length.of(1);
+      expect(node.querySelectorAll('.string-field')).toHaveLength(1);
+      expect(node.querySelectorAll('.number-field')).toHaveLength(1);
     });
 
     it('should use only the user defined field', () => {
@@ -96,7 +86,7 @@ describe('withTheme', () => {
           return <div className='form-control' />;
         },
       };
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         properties: {
           fieldA: {
@@ -108,14 +98,14 @@ describe('withTheme', () => {
         },
       };
       const uiSchema = {};
-      let { node } = createComponent(WrapperClassComponent({ fields: themeFields }), {
+      const { node } = createComponent(WrapperClassComponent({ fields: themeFields }), {
         schema,
         uiSchema,
         fields: userFields,
         validator,
       });
-      expect(node.querySelectorAll('.string-field')).to.have.length.of(0);
-      expect(node.querySelectorAll('.form-control')).to.have.length.of(2);
+      expect(node.querySelectorAll('.string-field')).toHaveLength(0);
+      expect(node.querySelectorAll('.form-control')).toHaveLength(2);
     });
   });
 
@@ -124,16 +114,16 @@ describe('withTheme', () => {
       const widgets = {
         TextWidget: () => <div id='test' />,
       };
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'string',
       };
       const uiSchema = {};
-      let { node } = createComponent(WrapperClassComponent({ widgets }), {
+      const { node } = createComponent(WrapperClassComponent({ widgets }), {
         schema,
         uiSchema,
         validator,
       });
-      expect(node.querySelectorAll('#test')).to.have.length.of(1);
+      expect(node.querySelectorAll('#test')).toHaveLength(1);
     });
 
     it('should use the withTheme widget as well as user defined widget', () => {
@@ -143,7 +133,7 @@ describe('withTheme', () => {
       const userWidgets = {
         DateWidget: () => <div id='test-user-widget' />,
       };
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         properties: {
           fieldA: {
@@ -156,14 +146,14 @@ describe('withTheme', () => {
         },
       };
       const uiSchema = {};
-      let { node } = createComponent(WrapperClassComponent({ widgets: themeWidgets }), {
+      const { node } = createComponent(WrapperClassComponent({ widgets: themeWidgets }), {
         schema,
         uiSchema,
         widgets: userWidgets,
         validator,
       });
-      expect(node.querySelectorAll('#test-theme-widget')).to.have.length.of(1);
-      expect(node.querySelectorAll('#test-user-widget')).to.have.length.of(1);
+      expect(node.querySelectorAll('#test-theme-widget')).toHaveLength(1);
+      expect(node.querySelectorAll('#test-user-widget')).toHaveLength(1);
     });
 
     it('should use only the user defined widget', () => {
@@ -173,7 +163,7 @@ describe('withTheme', () => {
       const userWidgets = {
         TextWidget: () => <div id='test-user-widget' />,
       };
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         properties: {
           fieldA: {
@@ -182,14 +172,14 @@ describe('withTheme', () => {
         },
       };
       const uiSchema = {};
-      let { node } = createComponent(WrapperClassComponent({ widgets: themeWidgets }), {
+      const { node } = createComponent(WrapperClassComponent({ widgets: themeWidgets }), {
         schema,
         uiSchema,
         widgets: userWidgets,
         validator,
       });
-      expect(node.querySelectorAll('#test-theme-widget')).to.have.length.of(0);
-      expect(node.querySelectorAll('#test-user-widget')).to.have.length.of(1);
+      expect(node.querySelectorAll('#test-theme-widget')).toHaveLength(0);
+      expect(node.querySelectorAll('#test-user-widget')).toHaveLength(1);
     });
   });
 
@@ -200,7 +190,7 @@ describe('withTheme', () => {
           return <div className='with-theme-field-template' />;
         },
       };
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         properties: {
           fieldA: {
@@ -212,12 +202,12 @@ describe('withTheme', () => {
         },
       };
       const uiSchema = {};
-      let { node } = createComponent(WrapperClassComponent({ templates: themeTemplates }), {
+      const { node } = createComponent(WrapperClassComponent({ templates: themeTemplates }), {
         schema,
         uiSchema,
         validator,
       });
-      expect(node.querySelectorAll('.with-theme-field-template')).to.have.length.of(1);
+      expect(node.querySelectorAll('.with-theme-field-template')).toHaveLength(1);
     });
 
     it('should use only the user defined template', () => {
@@ -232,17 +222,17 @@ describe('withTheme', () => {
         },
       };
 
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         properties: { foo: { type: 'string' }, bar: { type: 'string' } },
       };
-      let { node } = createComponent(WrapperClassComponent({ templates: themeTemplates }), {
+      const { node } = createComponent(WrapperClassComponent({ templates: themeTemplates }), {
         schema,
         templates: userTemplates,
         validator,
       });
-      expect(node.querySelectorAll('.with-theme-field-template')).to.have.length.of(0);
-      expect(node.querySelectorAll('.user-field-template')).to.have.length.of(1);
+      expect(node.querySelectorAll('.with-theme-field-template')).toHaveLength(0);
+      expect(node.querySelectorAll('.user-field-template')).toHaveLength(1);
     });
 
     it('should use the withTheme submit button template', () => {
@@ -253,7 +243,7 @@ describe('withTheme', () => {
           },
         },
       };
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         properties: {
           fieldA: {
@@ -265,12 +255,12 @@ describe('withTheme', () => {
         },
       };
       const uiSchema = {};
-      let { node } = createComponent(WrapperClassComponent({ templates: themeTemplates }), {
+      const { node } = createComponent(WrapperClassComponent({ templates: themeTemplates }), {
         schema,
         uiSchema,
         validator,
       });
-      expect(node.querySelectorAll('.with-theme-button-template')).to.have.length.of(1);
+      expect(node.querySelectorAll('.with-theme-button-template')).toHaveLength(1);
     });
 
     it('should use only the user defined submit button', () => {
@@ -289,23 +279,23 @@ describe('withTheme', () => {
         },
       };
 
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         properties: { foo: { type: 'string' }, bar: { type: 'string' } },
       };
-      let { node } = createComponent(WrapperClassComponent({ templates: themeTemplates }), {
+      const { node } = createComponent(WrapperClassComponent({ templates: themeTemplates }), {
         schema,
         templates: userTemplates,
         validator,
       });
-      expect(node.querySelectorAll('.with-theme-button-template')).to.have.length.of(0);
-      expect(node.querySelectorAll('.user-button-template')).to.have.length.of(1);
+      expect(node.querySelectorAll('.with-theme-button-template')).toHaveLength(0);
+      expect(node.querySelectorAll('.user-button-template')).toHaveLength(1);
     });
   });
 
   it('should forward the ref', () => {
-    const ref = createRef();
-    const schema = {};
+    const ref = createRef<Form>();
+    const schema: RJSFSchema = {};
     const uiSchema = {};
 
     createComponent(withTheme({}), {
@@ -315,6 +305,6 @@ describe('withTheme', () => {
       ref,
     });
 
-    expect(ref.current.submit).not.eql(undefined);
+    expect(ref.current?.submit).not.toBeUndefined();
   });
 });

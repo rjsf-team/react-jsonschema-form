@@ -28,6 +28,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `processRawValidationErrors` to pass `errorSchema` to `customValidate` function ([#4898](https://github.com/rjsf-team/react-jsonschema-form/pull/4899))
 
+## Dev / docs / playground
+
+- Updated unit tests for `@rjsf/core` to convert them to typescript and jest
+
 # 6.1.2
 
 ## @rjsf/antd

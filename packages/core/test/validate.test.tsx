@@ -1,25 +1,15 @@
-import { expect } from 'chai';
-import sinon from 'sinon';
 import { fireEvent, act } from '@testing-library/react';
-
-import { createFormComponent, submitForm } from './test_utils';
+import { ErrorListProps, FormValidation, GenericObjectType, RJSFSchema } from '@rjsf/utils';
 import { customizeValidator as customizeV8Validator } from '@rjsf/validator-ajv8';
+
+import { FormProps } from '../src';
+import { createFormComponent, submitForm } from './testUtils';
 
 describe('Validation', () => {
   describe('Form integration, v8 validator', () => {
-    let sandbox;
-
-    beforeEach(() => {
-      sandbox = sinon.createSandbox();
-    });
-
-    afterEach(() => {
-      sandbox.restore();
-    });
-
     describe('JSONSchema validation', () => {
       describe('Required fields', () => {
-        const schema = {
+        const schema: RJSFSchema = {
           type: 'object',
           required: ['foo'],
           properties: {
@@ -28,7 +18,8 @@ describe('Validation', () => {
           },
         };
 
-        let onError, node;
+        let onError: jest.Mock;
+        let node: Element;
         beforeEach(() => {
           const compInfo = createFormComponent({
             schema,
@@ -42,7 +33,7 @@ describe('Validation', () => {
         });
 
         it('should trigger onError call', () => {
-          sinon.assert.calledWithMatch(onError.lastCall, [
+          expect(onError).toHaveBeenLastCalledWith([
             {
               message: "must have required property 'foo'",
               name: 'required',
@@ -56,13 +47,13 @@ describe('Validation', () => {
         });
 
         it('should render errors', () => {
-          expect(node.querySelectorAll('.errors li')).to.have.length.of(1);
-          expect(node.querySelector('.errors li').textContent).eql("must have required property 'foo'");
+          expect(node.querySelectorAll('.errors li')).toHaveLength(1);
+          expect(node.querySelector('.errors li')).toHaveTextContent("must have required property 'foo'");
         });
       });
 
       describe('Min length', () => {
-        const schema = {
+        const schema: RJSFSchema = {
           type: 'object',
           required: ['foo'],
           properties: {
@@ -73,29 +64,29 @@ describe('Validation', () => {
           },
         };
 
-        let node, onError;
+        let onError: jest.Mock;
+        let node: Element;
 
         beforeEach(() => {
-          onError = sandbox.spy();
           const compInfo = createFormComponent({
             schema,
             formData: {
               foo: '123456789',
             },
-            onError,
           });
           node = compInfo.node;
+          onError = compInfo.onError;
 
           submitForm(node);
         });
 
         it('should render errors', () => {
-          expect(node.querySelectorAll('.errors li')).to.have.length.of(1);
-          expect(node.querySelector('.errors li').textContent).eql('.foo must NOT have fewer than 10 characters');
+          expect(node.querySelectorAll('.errors li')).toHaveLength(1);
+          expect(node.querySelector('.errors li')).toHaveTextContent('.foo must NOT have fewer than 10 characters');
         });
 
         it('should trigger the onError handler', () => {
-          sinon.assert.calledWithMatch(onError.lastCall, [
+          expect(onError).toHaveBeenLastCalledWith([
             {
               message: 'must NOT have fewer than 10 characters',
               name: 'minLength',
@@ -112,10 +103,10 @@ describe('Validation', () => {
 
     describe('Custom Form validation', () => {
       it('should validate a simple string value', () => {
-        const schema = { type: 'string' };
+        const schema: RJSFSchema = { type: 'string' };
         const formData = 'a';
 
-        function customValidate(formData, errors) {
+        function customValidate(formData: FormProps['formData'], errors: FormValidation) {
           if (formData !== 'hello') {
             errors.addError('Invalid');
           }
@@ -129,14 +120,14 @@ describe('Validation', () => {
         });
 
         submitForm(node);
-        sinon.assert.calledWithMatch(onError.lastCall, [{ property: '.', message: 'Invalid', stack: '. Invalid' }]);
+        expect(onError).toHaveBeenLastCalledWith([{ property: '.', message: 'Invalid', stack: '. Invalid' }]);
       });
 
       it('should live validate a simple string value when liveValidate is set to true', () => {
-        const schema = { type: 'string' };
+        const schema: RJSFSchema = { type: 'string' };
         const formData = 'a';
 
-        function customValidate(formData, errors) {
+        function customValidate(formData: FormProps['formData'], errors: FormValidation) {
           if (formData !== 'hello') {
             errors.addError('Invalid');
           }
@@ -151,28 +142,27 @@ describe('Validation', () => {
         });
 
         act(() => {
-          fireEvent.change(node.querySelector('input'), {
+          fireEvent.change(node.querySelector('input')!, {
             target: { value: '1234' },
           });
         });
 
-        sinon.assert.calledWithMatch(
-          onChange.lastCall,
-          {
+        expect(onChange).toHaveBeenLastCalledWith(
+          expect.objectContaining({
             errorSchema: { __errors: ['Invalid'] },
             errors: [{ property: '.', message: 'Invalid', stack: '. Invalid' }],
             formData: '1234',
-          },
+          }),
           'root',
         );
       });
 
       it('should submit form on valid data', () => {
-        const schema = { type: 'string' };
+        const schema: RJSFSchema = { type: 'string' };
         const formData = 'hello';
-        const onSubmit = sandbox.spy();
+        const onSubmit = jest.fn();
 
-        function customValidate(formData, errors) {
+        function customValidate(formData: FormProps['formData'], errors: FormValidation) {
           if (formData !== 'hello') {
             errors.addError('Invalid');
           }
@@ -188,16 +178,16 @@ describe('Validation', () => {
 
         submitForm(node);
 
-        sinon.assert.called(onSubmit);
+        expect(onSubmit).toHaveBeenCalled();
       });
 
       it('should prevent form submission on invalid data', () => {
-        const schema = { type: 'string' };
+        const schema: RJSFSchema = { type: 'string' };
         const formData = 'a';
-        const onSubmit = sandbox.spy();
-        const onError = sandbox.spy();
+        const onSubmit = jest.fn();
+        const onError = jest.fn();
 
-        function customValidate(formData, errors) {
+        function customValidate(formData: FormProps['formData'], errors: FormValidation) {
           if (formData !== 'hello') {
             errors.addError('Invalid');
           }
@@ -214,12 +204,12 @@ describe('Validation', () => {
 
         submitForm(node);
 
-        sinon.assert.notCalled(onSubmit);
-        sinon.assert.called(onError);
+        expect(onSubmit).not.toHaveBeenCalled();
+        expect(onError).toHaveBeenCalled();
       });
 
       it('should validate a simple object', () => {
-        const schema = {
+        const schema: RJSFSchema = {
           type: 'object',
           properties: {
             pass1: { type: 'string', minLength: 3 },
@@ -229,10 +219,10 @@ describe('Validation', () => {
 
         const formData = { pass1: 'aaa', pass2: 'b' };
 
-        function customValidate(formData, errors) {
+        function customValidate(formData: FormProps['formData'], errors: FormValidation) {
           const { pass1, pass2 } = formData;
           if (pass1 !== pass2) {
-            errors.pass2.addError("Passwords don't match");
+            (errors.pass2 as FormValidation).addError("Passwords don't match");
           }
           return errors;
         }
@@ -243,7 +233,7 @@ describe('Validation', () => {
           formData,
         });
         submitForm(node);
-        sinon.assert.calledWithMatch(onError.lastCall, [
+        expect(onError).toHaveBeenLastCalledWith([
           {
             message: 'must NOT have fewer than 3 characters',
             name: 'minLength',
@@ -262,7 +252,7 @@ describe('Validation', () => {
       });
 
       it('should validate an array of object', () => {
-        const schema = {
+        const schema: RJSFSchema = {
           type: 'array',
           items: {
             type: 'object',
@@ -278,10 +268,11 @@ describe('Validation', () => {
           { pass1: 'a', pass2: 'a' },
         ];
 
-        function customValidate(formData, errors) {
-          formData.forEach(({ pass1, pass2 }, i) => {
+        function customValidate(formData: FormProps['formData'], errors: FormValidation) {
+          formData.forEach(({ pass1, pass2 }: GenericObjectType, i: number) => {
+            console.log(pass1, pass2, errors);
             if (pass1 !== pass2) {
-              errors[i].pass2.addError("Passwords don't match");
+              (errors as GenericObjectType)[i].pass2.addError("Passwords don't match");
             }
           });
           return errors;
@@ -294,7 +285,7 @@ describe('Validation', () => {
         });
 
         submitForm(node);
-        sinon.assert.calledWithMatch(onError.lastCall, [
+        expect(onError).toHaveBeenLastCalledWith([
           {
             property: '.0.pass2',
             message: "Passwords don't match",
@@ -304,7 +295,7 @@ describe('Validation', () => {
       });
 
       it('should validate a simple array', () => {
-        const schema = {
+        const schema: RJSFSchema = {
           type: 'array',
           items: {
             type: 'string',
@@ -313,7 +304,7 @@ describe('Validation', () => {
 
         const formData = ['aaa', 'bbb', 'ccc'];
 
-        function customValidate(formData, errors) {
+        function customValidate(formData: FormProps['formData'], errors: FormValidation) {
           if (formData.indexOf('bbb') !== -1) {
             errors.addError('Forbidden value: bbb');
           }
@@ -326,7 +317,7 @@ describe('Validation', () => {
           formData,
         });
         submitForm(node);
-        sinon.assert.calledWithMatch(onError.lastCall, [
+        expect(onError).toHaveBeenLastCalledWith([
           {
             property: '.',
             message: 'Forbidden value: bbb',
@@ -338,7 +329,7 @@ describe('Validation', () => {
 
     describe('showErrorList prop validation', () => {
       describe('Required fields', () => {
-        const schema = {
+        const schema: RJSFSchema = {
           type: 'object',
           required: ['foo'],
           properties: {
@@ -347,7 +338,8 @@ describe('Validation', () => {
           },
         };
 
-        let node, onError;
+        let onError: jest.Mock;
+        let node: Element;
         beforeEach(() => {
           const compInfo = createFormComponent({
             schema,
@@ -363,11 +355,11 @@ describe('Validation', () => {
         });
 
         it('should not render error list if showErrorList prop true', () => {
-          expect(node.querySelectorAll('.errors li')).to.have.length.of(0);
+          expect(node.querySelectorAll('.errors li')).toHaveLength(0);
         });
 
         it('should trigger onError call', () => {
-          sinon.assert.calledWithMatch(onError.lastCall, [
+          expect(onError).toHaveBeenLastCalledWith([
             {
               message: "must have required property 'foo'",
               name: 'required',
@@ -383,7 +375,7 @@ describe('Validation', () => {
     });
 
     describe('Custom ErrorList', () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'string',
         minLength: 1,
       };
@@ -402,12 +394,12 @@ describe('Validation', () => {
         registry: {
           formContext: { className },
         },
-      }) => (
+      }: ErrorListProps) => (
         <div>
           <div className='CustomErrorList'>{errors.length} custom</div>
-          <div className={'ErrorSchema'}>{errorSchema.__errors[0]}</div>
+          <div className={'ErrorSchema'}>{errorSchema.__errors?.[0]}</div>
           <div className={'Schema'}>{schema.type}</div>
-          <div className={'UiSchema'}>{uiSchema.foo}</div>
+          <div className={'UiSchema'}>{uiSchema?.foo}</div>
           <div className={className} />
         </div>
       );
@@ -424,24 +416,25 @@ describe('Validation', () => {
 
         // trigger the errors by submitting the form since initial render no longer shows them
         submitForm(node);
-        expect(node.querySelectorAll('.CustomErrorList')).to.have.length.of(1);
-        expect(node.querySelector('.CustomErrorList').textContent).eql('1 custom');
-        expect(node.querySelectorAll('.ErrorSchema')).to.have.length.of(1);
-        expect(node.querySelector('.ErrorSchema').textContent).eql('must be string');
-        expect(node.querySelectorAll('.Schema')).to.have.length.of(1);
-        expect(node.querySelector('.Schema').textContent).eql('string');
-        expect(node.querySelectorAll('.UiSchema')).to.have.length.of(1);
-        expect(node.querySelector('.UiSchema').textContent).eql('bar');
-        expect(node.querySelectorAll('.foo')).to.have.length.of(1);
+        expect(node.querySelectorAll('.CustomErrorList')).toHaveLength(1);
+        expect(node.querySelector('.CustomErrorList')).toHaveTextContent('1 custom');
+        expect(node.querySelectorAll('.ErrorSchema')).toHaveLength(1);
+        expect(node.querySelector('.ErrorSchema')).toHaveTextContent('must be string');
+        expect(node.querySelectorAll('.Schema')).toHaveLength(1);
+        expect(node.querySelector('.Schema')).toHaveTextContent('string');
+        expect(node.querySelectorAll('.UiSchema')).toHaveLength(1);
+        expect(node.querySelector('.UiSchema')).toHaveTextContent('bar');
+        expect(node.querySelectorAll('.foo')).toHaveLength(1);
       });
     });
     describe('Custom meta schema', () => {
-      let onError, node;
+      let onError: jest.Mock;
+      let node: Element;
       const formData = {
         datasetId: 'no err',
       };
 
-      const schema = {
+      const schema: RJSFSchema = {
         $ref: '#/definitions/Dataset',
         $schema: 'http://json-schema.org/draft-06/schema#',
         definitions: {
@@ -462,19 +455,21 @@ describe('Validation', () => {
         const validator = customizeV8Validator({
           additionalMetaSchemas: [require('ajv/lib/refs/json-schema-draft-06.json')],
         });
-        const withMetaSchema = createFormComponent({
-          schema,
-          formData,
-          liveValidate: true,
+        const withMetaSchema = createFormComponent(
+          {
+            schema,
+            formData,
+            liveValidate: true,
+          },
           validator,
-        });
+        );
         node = withMetaSchema.node;
         onError = withMetaSchema.onError;
         submitForm(node);
       });
       it('should be used to validate schema', () => {
-        expect(node.querySelectorAll('.errors li')).to.have.length.of(1);
-        sinon.assert.calledWithMatch(onError.lastCall, [
+        expect(node.querySelectorAll('.errors li')).toHaveLength(1);
+        expect(onError).toHaveBeenLastCalledWith([
           {
             message: 'must match pattern "\\d+"',
             name: 'pattern',
@@ -485,15 +480,15 @@ describe('Validation', () => {
             title: '',
           },
         ]);
-        onError.resetHistory();
+        onError.mockClear();
 
         act(() => {
-          fireEvent.change(node.querySelector('input'), {
+          fireEvent.change(node.querySelector('input')!, {
             target: { value: '1234' },
           });
         });
-        expect(node.querySelectorAll('.errors li')).to.have.length.of(0);
-        sinon.assert.notCalled(onError);
+        expect(node.querySelectorAll('.errors li')).toHaveLength(0);
+        expect(onError).not.toHaveBeenCalled();
       });
     });
   });
