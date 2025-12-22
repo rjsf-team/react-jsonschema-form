@@ -415,7 +415,7 @@ describe('AJV8Validator', () => {
             expect(errorSchema.pass2!.__errors![0]).toEqual('passwords don`t match.');
           });
           it('validate function was called with uiSchema', () => {
-            expect(validate).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), uiSchema);
+            expect(validate).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), uiSchema, expect.any(Object));
           });
         });
         describe('formData is missing data', () => {
@@ -439,6 +439,47 @@ describe('AJV8Validator', () => {
           it('should return an errorSchema', () => {
             expect(errorSchema.pass2!.__errors).toHaveLength(1);
             expect(errorSchema.pass2!.__errors![0]).toEqual('passwords don`t match.');
+          });
+        });
+        describe('formData does not pass ajv validation', () => {
+          let validate: jest.Mock;
+          let errorSchema: ErrorSchema;
+
+          beforeAll(() => {
+            validate = jest.fn(
+              (_formData: any, errors: any, _uiSchema?: any, errorSchema?: ErrorSchema<{ pass1: string }>) => {
+                if (errorSchema?.pass1?.__errors?.length ?? 0 > 0) {
+                  errors.pass1!.addError('custom error from customValidate');
+                }
+                return errors;
+              },
+            );
+
+            const schema: RJSFSchema = {
+              type: 'object',
+              required: ['pass1'],
+              properties: {
+                pass1: { type: 'string' },
+              },
+            };
+
+            const formData = {};
+            const result = validator.validateFormData(formData, schema, validate, undefined, {});
+            errorSchema = result.errorSchema;
+          });
+
+          it('validate function was called with errorSchema', () => {
+            expect(validate).toHaveBeenCalledTimes(1);
+            const passedErrorSchema = validate.mock.calls[0][3];
+            expect(passedErrorSchema).toBeDefined();
+            expect(passedErrorSchema.pass1.__errors).toEqual(["must have required property 'pass1'"]);
+          });
+
+          it('returns merged errorSchema including customValidate errors', () => {
+            expect(errorSchema.pass1!.__errors).toEqual([
+              "must have required property 'pass1'",
+              'custom error from customValidate',
+            ]);
           });
         });
       });
@@ -852,7 +893,7 @@ describe('AJV8Validator', () => {
             expect(errorSchema.pass2!.__errors![0]).toEqual('passwords don`t match.');
           });
           it('validate function was called with uiSchema', () => {
-            expect(validate).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), uiSchema);
+            expect(validate).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), uiSchema, expect.any(Object));
           });
         });
         describe('formData is missing data', () => {
@@ -876,6 +917,47 @@ describe('AJV8Validator', () => {
           it('should return an errorSchema', () => {
             expect(errorSchema.pass2!.__errors).toHaveLength(1);
             expect(errorSchema.pass2!.__errors![0]).toEqual('passwords don`t match.');
+          });
+        });
+        describe('formData does not pass ajv validation', () => {
+          let validate: jest.Mock;
+          let errorSchema: ErrorSchema;
+
+          beforeAll(() => {
+            validate = jest.fn(
+              (_formData: any, errors: any, _uiSchema?: any, errorSchema?: ErrorSchema<{ pass1: string }>) => {
+                if (errorSchema?.pass1?.__errors?.length ?? 0 > 0) {
+                  errors.pass1!.addError('custom error from customValidate');
+                }
+                return errors;
+              },
+            );
+
+            const schema: RJSFSchema = {
+              type: 'object',
+              required: ['pass1'],
+              properties: {
+                pass1: { type: 'string' },
+              },
+            };
+
+            const formData = {};
+            const result = validator.validateFormData(formData, schema, validate, undefined, {});
+            errorSchema = result.errorSchema;
+          });
+
+          it('validate function was called with errorSchema', () => {
+            expect(validate).toHaveBeenCalledTimes(1);
+            const passedErrorSchema = validate.mock.calls[0][3];
+            expect(passedErrorSchema).toBeDefined();
+            expect(passedErrorSchema.pass1.__errors).toEqual(["must have required property 'pass1'"]);
+          });
+
+          it('returns merged errorSchema including customValidate errors', () => {
+            expect(errorSchema.pass1!.__errors).toEqual([
+              "must have required property 'pass1'",
+              'custom error from customValidate',
+            ]);
           });
         });
       });
@@ -1789,7 +1871,7 @@ describe('AJV8Validator', () => {
             expect(errorSchema.pass2!.__errors![0]).toEqual('passwords don`t match.');
           });
           it('validate function was called with uiSchema', () => {
-            expect(validate).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), uiSchema);
+            expect(validate).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), uiSchema, expect.any(Object));
           });
         });
         describe('formData is missing data', () => {
@@ -1813,6 +1895,47 @@ describe('AJV8Validator', () => {
           it('should return an errorSchema', () => {
             expect(errorSchema.pass2!.__errors).toHaveLength(1);
             expect(errorSchema.pass2!.__errors![0]).toEqual('passwords don`t match.');
+          });
+        });
+        describe('formData does not pass ajv validation', () => {
+          let validate: jest.Mock;
+          let errorSchema: ErrorSchema;
+
+          beforeAll(() => {
+            validate = jest.fn(
+              (_formData: any, errors: any, _uiSchema?: any, errorSchema?: ErrorSchema<{ pass1: string }>) => {
+                if (errorSchema?.pass1?.__errors?.length ?? 0 > 0) {
+                  errors.pass1!.addError('custom error from customValidate');
+                }
+                return errors;
+              },
+            );
+
+            const schema: RJSFSchema = {
+              type: 'object',
+              required: ['pass1'],
+              properties: {
+                pass1: { type: 'string' },
+              },
+            };
+
+            const formData = {};
+            const result = validator.validateFormData(formData, schema, validate, undefined, {});
+            errorSchema = result.errorSchema;
+          });
+
+          it('validate function was called with errorSchema', () => {
+            expect(validate).toHaveBeenCalledTimes(1);
+            const passedErrorSchema = validate.mock.calls[0][3];
+            expect(passedErrorSchema).toBeDefined();
+            expect(passedErrorSchema.pass1.__errors).toEqual(["must have required property 'pass1'"]);
+          });
+
+          it('returns merged errorSchema including customValidate errors', () => {
+            expect(errorSchema.pass1!.__errors).toEqual([
+              "must have required property 'pass1'",
+              'custom error from customValidate',
+            ]);
           });
         });
       });

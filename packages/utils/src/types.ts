@@ -1143,13 +1143,14 @@ export type UiSchema<
       | ((itemData: ArrayElement<T>, index: number, formContext?: F) => UiSchema<ArrayElement<T>, S, F>);
   };
 
-/** A `CustomValidator` function takes in a `formData`, `errors` and `uiSchema` objects and returns the given `errors`
+/** A `CustomValidator` function takes in a `formData`, `errors`, `uiSchema` and `errorSchema` objects and returns the given `errors`
  * object back, while potentially adding additional messages to the `errors`
  */
 export type CustomValidator<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = (
   formData: T | undefined,
   errors: FormValidation<T>,
   uiSchema?: UiSchema<T, S, F>,
+  errorSchema?: ErrorSchema<T>,
 ) => FormValidation<T>;
 
 /** An `ErrorTransformer` function will take in a list of `errors` & a `uiSchema` and potentially return a
