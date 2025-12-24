@@ -314,7 +314,7 @@ describe('AJV8PrecompiledValidator', () => {
             expect(errors).toHaveLength(0);
           });
           it('validate function was called with uiSchema', () => {
-            expect(validate).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), uiSchema);
+            expect(validate).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), uiSchema, expect.any(Object));
           });
         });
         describe('formData is provided, but fails custom validation', () => {
@@ -333,7 +333,7 @@ describe('AJV8PrecompiledValidator', () => {
             expect(errorSchema.passwords!.pass2!.__errors![0]).toEqual('passwords don`t match.');
           });
           it('validate function was called with uiSchema', () => {
-            expect(validate).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), uiSchema);
+            expect(validate).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), uiSchema, expect.any(Object));
           });
         });
         describe('formData is missing data', () => {

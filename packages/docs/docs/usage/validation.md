@@ -311,7 +311,7 @@ import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
-function customValidate(formData, errors, uiSchema) {
+function customValidate(formData, errors, uiSchema, errorSchema) {
   if (formData.pass1 !== formData.pass2) {
     errors.pass2.addError("Passwords don't match");
   }
@@ -335,6 +335,7 @@ render(<Form schema={schema} validator={validator} customValidate={customValidat
 > - The `customValidate()` function must **always** return the `errors` object received as second argument.
 > - The `customValidate()` function is called **after** the JSON schema validation.
 > - The `customValidate()` function is passed the `uiSchema` as the third argument. This allows the `customValidate()` function to be able to derive additional information from it for generating errors.
+> - The `customValidate()` function is passed the `errorSchema` as the fourth argument. This allows the `customValidate()` function to be able to access errors raised by JSON schema validation.
 
 ## Custom error messages
 
