@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent } from 'react';
+import { ChangeEvent, FocusEvent, useCallback } from 'react';
 import { Input, InputProps, Label, makeStyles } from '@fluentui/react-components';
 import {
   ariaDescribedByIds,
@@ -10,6 +10,7 @@ import {
   StrictRJSFSchema,
   labelValue,
 } from '@rjsf/utils';
+import { ClearButton } from '../IconButton';
 
 const useStyles = makeStyles({
   input: {
@@ -51,6 +52,7 @@ export default function BaseInputTemplate<
     autofocus,
     options,
     schema,
+    registry,
   } = props;
   const classes = useStyles();
   const inputProps = getInputProps<T, S, F>(schema, type, options);
@@ -59,6 +61,14 @@ export default function BaseInputTemplate<
     onChange(value === '' ? options.emptyValue : value);
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
+  const _onClear = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onChange(options.emptyValue ?? '');
+    },
+    [onChange, options.emptyValue],
+  );
   return (
     <>
       {labelValue(
@@ -86,6 +96,9 @@ export default function BaseInputTemplate<
         onBlur={_onBlur}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
+      {options.allowClearTextInputs && !readonly && !disabled && value && (
+        <ClearButton registry={registry} onClick={_onClear} />
+      )}
       {Array.isArray(schema.examples) && (
         <datalist id={examplesId(id)}>
           {(schema.examples as string[])

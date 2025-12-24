@@ -9,7 +9,7 @@ import FieldErrorTemplate from '../FieldErrorTemplate';
 import FieldHelpTemplate from '../FieldHelpTemplate';
 import FieldTemplate from '../FieldTemplate';
 import GridTemplate from '../GridTemplate';
-import { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } from '../IconButton';
+import { CopyButton, MoveDownButton, MoveUpButton, RemoveButton, ClearButton } from '../IconButton';
 import MultiSchemaFieldTemplate from '../MultiSchemaFieldTemplate';
 import ObjectFieldTemplate from '../ObjectFieldTemplate';
 import OptionalDataControlsTemplate from '../OptionalDataControlsTemplate';
@@ -33,6 +33,7 @@ export function generateTemplates<
       MoveUpButton,
       RemoveButton,
       SubmitButton,
+      ClearButton,
     },
     DescriptionFieldTemplate: DescriptionField,
     ErrorListTemplate: ErrorList,

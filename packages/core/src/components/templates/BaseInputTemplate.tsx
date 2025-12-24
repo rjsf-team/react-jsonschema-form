@@ -9,6 +9,8 @@ import {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 
+import { ClearButton } from '../templates/ButtonTemplates/IconButton';
+
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
  * It can be customized/overridden for other themes or individual implementations as needed.
@@ -73,6 +75,14 @@ export default function BaseInputTemplate<
     ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value),
     [onFocus, id],
   );
+  const _onClear = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onChange(options.emptyValue ?? '');
+    },
+    [onChange, options.emptyValue],
+  );
 
   return (
     <>
@@ -91,6 +101,9 @@ export default function BaseInputTemplate<
         onFocus={_onFocus}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
+      {options.allowClearTextInputs && !readonly && !disabled && inputValue && (
+        <ClearButton registry={registry} onClick={_onClear} />
+      )}
       {Array.isArray(schema.examples) && (
         <datalist key={`datalist_${id}`} id={examplesId(id)}>
           {(schema.examples as string[])

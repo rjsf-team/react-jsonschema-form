@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useCallback } from 'react';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -9,6 +9,7 @@ import {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import { InputText } from 'primereact/inputtext';
+import { ClearButton } from '../IconButton';
 
 /** The `BaseInputTemplate` is the template the fallback if no widget is specified.
  */
@@ -37,6 +38,15 @@ export default function BaseInputTemplate<
     rawErrors = [],
   } = props;
 
+  const _onClear = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onChange(options.emptyValue ?? '');
+    },
+    [onChange, options.emptyValue],
+  );
+
   const { AutoCompleteWidget } = registry.widgets;
 
   if (Array.isArray(schema.examples)) {
@@ -51,22 +61,27 @@ export default function BaseInputTemplate<
   const _onFocus = () => onFocus && onFocus(id, value);
 
   return (
-    <InputText
-      id={id}
-      name={htmlName || id}
-      placeholder={placeholder}
-      {...primeProps}
-      {...inputProps}
-      required={required}
-      autoFocus={autofocus}
-      disabled={disabled || readonly}
-      list={schema.examples ? examplesId(id) : undefined}
-      value={value || value === 0 ? value : ''}
-      invalid={rawErrors.length > 0}
-      onChange={onChangeOverride || _onChange}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
-      aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
-    />
+    <>
+      <InputText
+        id={id}
+        name={htmlName || id}
+        placeholder={placeholder}
+        {...primeProps}
+        {...inputProps}
+        required={required}
+        autoFocus={autofocus}
+        disabled={disabled || readonly}
+        list={schema.examples ? examplesId(id) : undefined}
+        value={value || value === 0 ? value : ''}
+        invalid={rawErrors.length > 0}
+        onChange={onChangeOverride || _onChange}
+        onBlur={_onBlur}
+        onFocus={_onFocus}
+        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+      />
+      {options.allowClearTextInputs && !readonly && !disabled && value && (
+        <ClearButton registry={registry} onClick={_onClear} />
+      )}
+    </>
   );
 }

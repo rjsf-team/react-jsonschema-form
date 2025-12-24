@@ -3,6 +3,7 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import CopyIcon from '@mui/icons-material/ContentCopy';
 import RemoveIcon from '@mui/icons-material/Remove';
+import ClearIcon from '@mui/icons-material/Clear';
 import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
 
 export default function MuiIconButton<
@@ -76,6 +77,22 @@ export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
       {...otherProps}
       color='error'
       icon={<RemoveIcon fontSize={iconType === 'default' ? undefined : 'small'} />}
+    />
+  );
+}
+
+export function ClearButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: IconButtonProps<T, S, F>,
+) {
+  const { iconType, ...otherProps } = props;
+  const {
+    registry: { translateString },
+  } = otherProps;
+  return (
+    <MuiIconButton
+      title={translateString(TranslatableString.ClearButton)}
+      {...otherProps}
+      icon={<ClearIcon fontSize={iconType === 'default' ? undefined : 'small'} />}
     />
   );
 }
