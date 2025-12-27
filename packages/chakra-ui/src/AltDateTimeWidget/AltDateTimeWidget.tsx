@@ -1,16 +1,11 @@
-import _AltDateWidget from '../AltDateWidget';
 import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 
-function AltDateTimeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>,
-) {
+function AltDateTimeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+  time = true,
+  ...props
+}: WidgetProps<T, S, F>) {
   const { AltDateWidget } = props.registry.widgets;
-  return <AltDateWidget {...props} time />;
+  return <AltDateWidget {...props} time={time} />;
 }
-
-AltDateTimeWidget.defaultProps = {
-  ..._AltDateWidget.defaultProps,
-  time: true,
-};
 
 export default AltDateTimeWidget;
