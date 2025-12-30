@@ -136,12 +136,13 @@ describe('uiSchema', () => {
       let uiSchema: UiSchema;
 
       beforeEach(() => {
-        widget = ({ label, options }) => <div id={label} style={options as CSSProperties} />;
-        widget.defaultProps = {
-          options: {
+        widget = ({ label, options }) => {
+          const realOptions: CSSProperties = {
             background: 'yellow',
             color: 'green',
-          },
+            ...(options as CSSProperties),
+          };
+          return <div id={label} style={realOptions} />;
         };
 
         widgets = {
