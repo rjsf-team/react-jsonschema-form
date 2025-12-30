@@ -63,8 +63,8 @@ export function ClearButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
       id={id}
       iconType='default'
       icon='remove'
-      className='btn-add col-xs-12'
-      title={translateString(TranslatableString.AddButton)}
+      className='btn-clear'
+      title={translateString(TranslatableString.ClearButton)}
       onClick={onClick}
       disabled={disabled}
       registry={registry}

@@ -12,7 +12,6 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { ClearButton } from '../IconButton';
 
 const TYPES_THAT_SHRINK_LABEL = ['date', 'datetime-local', 'file', 'time'];
 
@@ -76,6 +75,7 @@ export default function BaseInputTemplate<
     },
     [onChange, options.emptyValue],
   );
+  const { ClearButton } = registry.templates.ButtonTemplates;
 
   return (
     <>

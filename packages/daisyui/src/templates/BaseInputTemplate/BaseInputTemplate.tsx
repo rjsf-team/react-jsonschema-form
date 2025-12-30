@@ -8,7 +8,6 @@ import {
   ariaDescribedByIds,
   examplesId,
 } from '@rjsf/utils';
-import { ClearButton } from '../ButtonTemplates/IconButton';
 
 /** The `BaseInputTemplate` component is a template for rendering basic input elements
  * with DaisyUI styling. It's used as the foundation for various input types in forms.
@@ -84,6 +83,8 @@ export default function BaseInputTemplate<
     },
     [onChange, options.emptyValue],
   );
+
+  const { ClearButton } = registry.templates.ButtonTemplates;
 
   return (
     <>

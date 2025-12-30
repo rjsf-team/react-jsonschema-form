@@ -9,7 +9,6 @@ import {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import { InputText } from 'primereact/inputtext';
-import { ClearButton } from '../IconButton';
 
 /** The `BaseInputTemplate` is the template the fallback if no widget is specified.
  */
@@ -59,6 +58,7 @@ export default function BaseInputTemplate<
     onChange(value === '' ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
+  const { ClearButton } = registry.templates.ButtonTemplates;
 
   return (
     <>

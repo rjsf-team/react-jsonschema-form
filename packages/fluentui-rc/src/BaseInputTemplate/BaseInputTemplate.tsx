@@ -10,7 +10,6 @@ import {
   StrictRJSFSchema,
   labelValue,
 } from '@rjsf/utils';
-import { ClearButton } from '../IconButton';
 
 const useStyles = makeStyles({
   input: {
@@ -69,6 +68,7 @@ export default function BaseInputTemplate<
     },
     [onChange, options.emptyValue],
   );
+  const { ClearButton } = registry.templates.ButtonTemplates;
   return (
     <>
       {labelValue(

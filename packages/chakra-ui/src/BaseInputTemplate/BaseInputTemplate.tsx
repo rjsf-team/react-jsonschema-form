@@ -13,7 +13,6 @@ import {
 
 import { Field } from '../components/ui/field';
 import { getChakra } from '../utils';
-import { ClearButton } from '../IconButton';
 
 export default function BaseInputTemplate<
   T = any,
@@ -58,6 +57,7 @@ export default function BaseInputTemplate<
   );
 
   const chakraProps = getChakra({ uiSchema });
+  const { ClearButton } = registry.templates.ButtonTemplates;
 
   return (
     <Field

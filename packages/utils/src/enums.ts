@@ -91,5 +91,5 @@ export enum TranslatableString {
    */
   FilesInfo = '**%1** (%2, %3 bytes)',
   /** Clear button title, used by IconButton */
-  ClearButton = 'clear',
+  ClearButton = 'clear input',
 }

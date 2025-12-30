@@ -11,7 +11,6 @@ import { ChangeEvent, FocusEvent, useCallback } from 'react';
 
 import { Input } from '../components/ui/input';
 import { cn } from '../lib/utils';
-import { ClearButton } from '../IconButton';
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
@@ -61,6 +60,7 @@ export default function BaseInputTemplate<
     },
     [onChange, options.emptyValue],
   );
+  const { ClearButton } = registry.templates.ButtonTemplates;
 
   return (
     <div className='p-0.5'>
@@ -83,7 +83,7 @@ export default function BaseInputTemplate<
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
       {options.allowClearTextInputs && !readonly && !disabled && value && (
-        <ClearButton onClick={_onClear} aria-label='Clear input' registry={registry} />
+        <ClearButton onClick={_onClear} registry={registry} />
       )}
       {children}
       {Array.isArray(schema.examples) ? (

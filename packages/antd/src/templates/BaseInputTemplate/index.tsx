@@ -10,7 +10,6 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import ClearButton from '../IconButton';
 
 const INPUT_STYLE = {
   width: '100%',
@@ -48,6 +47,7 @@ export default function BaseInputTemplate<
   // through its own props. The step prop in Ant Design expects a number, not the string "any"
   const inputProps = getInputProps<T, S, F>(schema, type, options, false);
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
+  const { ClearButton } = registry.templates.ButtonTemplates;
 
   const handleNumberChange = (nextValue: number | null) => onChange(nextValue);
 

@@ -9,7 +9,6 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { ClearButton } from '../IconButton';
 
 export default function BaseInputTemplate<
   T = any,
@@ -52,6 +51,7 @@ export default function BaseInputTemplate<
     },
     [onChange, options.emptyValue],
   );
+  const { ClearButton } = registry.templates.ButtonTemplates;
 
   // const classNames = [rawErrors.length > 0 ? "is-invalid" : "", type === 'file' ? 'custom-file-label': ""]
   return (

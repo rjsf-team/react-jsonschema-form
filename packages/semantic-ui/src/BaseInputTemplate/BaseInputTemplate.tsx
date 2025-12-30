@@ -11,7 +11,6 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import ClearButton from '../IconButton';
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
@@ -64,6 +63,7 @@ export default function BaseInputTemplate<
     },
     [onChange, options.emptyValue],
   );
+  const { ClearButton } = registry.templates.ButtonTemplates;
 
   return (
     <>
