@@ -433,7 +433,7 @@ describe('NumberField', () => {
       });
 
       expect(node.querySelectorAll('.rjsf-field select')).toHaveLength(1);
-      const $select = node.querySelector('.rjsf-field select');
+      const $select = node.querySelector<HTMLSelectElement>('.rjsf-field select');
       expect($select).not.toHaveAttribute('value');
 
       act(() => {
@@ -441,7 +441,7 @@ describe('NumberField', () => {
           target: { value: 0 }, // use index
         });
       });
-      expect(getSelectedOptionValue($select as HTMLSelectElement)).toEqual('1');
+      expect(getSelectedOptionValue($select!)).toEqual('1');
       expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 1 }), 'root');
     });
 

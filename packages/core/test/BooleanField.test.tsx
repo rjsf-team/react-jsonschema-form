@@ -712,7 +712,7 @@ describe('BooleanField', () => {
       });
 
       expect(node.querySelectorAll('.rjsf-field select')).toHaveLength(1);
-      const $select = node.querySelector('.rjsf-field select');
+      const $select = node.querySelector<HTMLSelectElement>('.rjsf-field select');
       expect($select).toHaveValue('');
 
       act(() => {
@@ -720,7 +720,7 @@ describe('BooleanField', () => {
           target: { value: 0 }, // use index
         });
       });
-      expect(getSelectedOptionValue($select as HTMLSelectElement)).toEqual('true');
+      expect(getSelectedOptionValue($select!)).toEqual('true');
       expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: true }), 'root');
     });
 

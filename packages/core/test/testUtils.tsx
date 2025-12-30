@@ -78,3 +78,8 @@ export function getSelectedOptionValue(selectNode: HTMLSelectElement) {
   }
   return selectedOptions;
 }
+
+export function expectToHaveBeenCalledWithFormData(mock: any, formData: any, secondValue?: string | true) {
+  const secondParam = typeof secondValue === 'boolean' ? expect.objectContaining({ type: 'submit' }) : secondValue;
+  expect(mock).toHaveBeenLastCalledWith(expect.objectContaining({ formData }), secondParam);
+}
