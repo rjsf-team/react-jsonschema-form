@@ -55,6 +55,8 @@ export enum TranslatableString {
   Type = 'Type',
   /** Label for the 'value' field, used by FallbackField */
   Value = 'Value',
+  /** Clear button title, used by IconButton */
+  ClearButton = 'clear input',
   // Strings with replaceable parameters
   /** Unknown field type reason, where %1 will be replaced with the type as provided by SchemaField */
   UnknownFieldType = 'Unknown field type %1',
@@ -90,6 +92,4 @@ export enum TranslatableString {
    * provided by FileWidget
    */
   FilesInfo = '**%1** (%2, %3 bytes)',
-  /** Clear button title, used by IconButton */
-  ClearButton = 'clear input',
 }
