@@ -1360,12 +1360,7 @@ describe('uiSchema', () => {
         });
 
         await waitFor(() => {
-          expect(onChange).toHaveBeenLastCalledWith(
-            expect.objectContaining({
-              formData: { foo: 1.4142 },
-            }),
-            'root_foo',
-          );
+          expectToHaveBeenCalledWithFormData(onChange, { foo: 1.4142 }, 'root_foo');
         });
       });
     });
