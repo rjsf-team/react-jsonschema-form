@@ -20,15 +20,15 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/antd
 
-- Removed deprecated `defaultProps` from `AltDateTimeWidget` and `AltDateWidget` components, preserving all existing behavior ([#4904](https://github.com/rjsf-team/react-jsonschema-form/pull/4904))
+- Removed deprecated `defaultProps` from `AltDateTimeWidget` and `AltDateWidget` components, preserving all existing behavior
 
 ## @rjsf/chakra-ui
 
-- Removed deprecated `defaultProps` from `AltDateTimeWidget` and `AltDateWidget` components, preserving all existing behavior ([#4904](https://github.com/rjsf-team/react-jsonschema-form/pull/4904))
+- Removed deprecated `defaultProps` from `AltDateTimeWidget` and `AltDateWidget` components, preserving all existing behavior
 
 ## @rjsf/core
 
-- Removed deprecated `defaultProps` from `TextareaWidget` component, preserving all existing behavior ([#4904](https://github.com/rjsf-team/react-jsonschema-form/pull/4904))
+- Removed deprecated `defaultProps` from `TextareaWidget` component, preserving all existing behavior
 
 ## @rjsf/utils
 
