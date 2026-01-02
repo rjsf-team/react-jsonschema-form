@@ -16,14 +16,16 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
   disabled = false,
   readonly = false,
   time = false,
-  options = {
-    yearsRange: [1900, new Date().getFullYear() + 2],
-  },
+  options,
   ...props
 }: WidgetProps<T, S, F>) {
   const { id, onBlur, onFocus, registry } = props;
   const { translateString } = registry;
-  const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps({ ...props, options });
+  const realOptions = { yearsRange: [1900, new Date().getFullYear() + 2], ...options };
+  const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps({
+    ...props,
+    options: realOptions,
+  });
 
   const chakraProps = getChakra({ uiSchema: props.uiSchema });
 
@@ -65,15 +67,5 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     </FieldsetRoot>
   );
 }
-
-// AltDateWidget.defaultProps = {
-//   autofocus: false,
-//   disabled: false,
-//   readonly: false,
-//   time: false,
-//   options: {
-//     yearsRange: [1900, new Date().getFullYear() + 2],
-//   },
-// };
 
 export default AltDateWidget;

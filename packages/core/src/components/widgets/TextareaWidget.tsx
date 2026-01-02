@@ -54,9 +54,4 @@ function TextareaWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
   );
 }
 
-// TextareaWidget.defaultProps = {
-//   autofocus: false,
-//   options: {},
-// };
-
 export default TextareaWidget;
