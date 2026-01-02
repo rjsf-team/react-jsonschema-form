@@ -44,6 +44,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated unit tests for `@rjsf/core` to convert them to typescript and jest
 
+## @rjsf/shadcn
+
+- Fixed issue `"ui:rows"` option for `textarea` elements, fixing [#4903](https://github.com/rjsf-team/react-jsonschema-form/issues/4903).
+
 # 6.1.2
 
 ## @rjsf/antd
