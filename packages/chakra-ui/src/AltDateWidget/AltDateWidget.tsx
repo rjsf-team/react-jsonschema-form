@@ -11,12 +11,21 @@ import {
 } from '@rjsf/utils';
 import { getChakra } from '../utils';
 
-function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>,
-) {
-  const { autofocus, disabled, id, onBlur, onFocus, options, readonly, registry } = props;
+function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+  autofocus = false,
+  disabled = false,
+  readonly = false,
+  time = false,
+  options,
+  ...props
+}: WidgetProps<T, S, F>) {
+  const { id, onBlur, onFocus, registry } = props;
   const { translateString } = registry;
-  const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
+  const realOptions = { yearsRange: [1900, new Date().getFullYear() + 2], ...options };
+  const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps({
+    ...props,
+    options: realOptions,
+  });
 
   const chakraProps = getChakra({ uiSchema: props.uiSchema });
 
@@ -58,15 +67,5 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     </FieldsetRoot>
   );
 }
-
-AltDateWidget.defaultProps = {
-  autofocus: false,
-  disabled: false,
-  readonly: false,
-  time: false,
-  options: {
-    yearsRange: [1900, new Date().getFullYear() + 2],
-  },
-};
 
 export default AltDateWidget;

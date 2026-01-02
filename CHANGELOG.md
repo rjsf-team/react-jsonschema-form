@@ -18,6 +18,18 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.1.3
 
+## @rjsf/antd
+
+- Removed deprecated `defaultProps` from `AltDateTimeWidget` and `AltDateWidget` components, preserving all existing behavior
+
+## @rjsf/chakra-ui
+
+- Removed deprecated `defaultProps` from `AltDateTimeWidget` and `AltDateWidget` components, preserving all existing behavior
+
+## @rjsf/core
+
+- Removed deprecated `defaultProps` from `TextareaWidget` component, preserving all existing behavior
+
 ## @rjsf/utils
 
 - Fixed issue with default value not being prefilled when object with if/then is nested inside another object, fixing [#4222](https://github.com/rjsf-team/react-jsonschema-form/issues/4222)
