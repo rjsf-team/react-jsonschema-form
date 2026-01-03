@@ -7,7 +7,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { ChangeEvent, FocusEvent } from 'react';
+import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
 
 import { Input } from '../components/ui/input';
 import { cn } from '../lib/utils';
@@ -42,7 +42,9 @@ export default function BaseInputTemplate<
   children,
   extraProps,
   className,
+  registry,
 }: BaseInputTemplateProps<T, S, F>) {
+  const { ClearButton } = registry.templates.ButtonTemplates;
   const inputProps = {
     ...extraProps,
     ...getInputProps<T, S, F>(schema, type, options),
@@ -51,6 +53,14 @@ export default function BaseInputTemplate<
     onChange(value === '' ? options.emptyValue : value);
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
+  const _onClear = useCallback(
+    (e: MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onChange(options.emptyValue ?? '');
+    },
+    [onChange, options.emptyValue],
+  );
 
   return (
     <div className='p-0.5'>
@@ -72,6 +82,9 @@ export default function BaseInputTemplate<
         onFocus={_onFocus}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
+      {options.allowClearTextInputs && !readonly && !disabled && value && (
+        <ClearButton onClick={_onClear} registry={registry} />
+      )}
       {children}
       {Array.isArray(schema.examples) ? (
         <datalist id={examplesId(id)}>

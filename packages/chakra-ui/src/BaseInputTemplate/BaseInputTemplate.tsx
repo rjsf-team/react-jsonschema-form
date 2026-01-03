@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent } from 'react';
+import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
 import { Input } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
@@ -39,13 +39,23 @@ export default function BaseInputTemplate<
     placeholder,
     disabled,
     uiSchema,
+    registry,
   } = props;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
+  const { ClearButton } = registry.templates.ButtonTemplates;
 
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange(value === '' ? options.emptyValue : value);
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
+  const onClear = useCallback(
+    (e: MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onChange(options.emptyValue ?? '');
+    },
+    [onChange, options.emptyValue],
+  );
 
   const chakraProps = getChakra({ uiSchema });
 
@@ -72,6 +82,9 @@ export default function BaseInputTemplate<
         list={schema.examples ? examplesId(id) : undefined}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
+      {options.allowClearTextInputs && !readonly && !disabled && value && (
+        <ClearButton registry={registry} onClick={onClear} />
+      )}
       {Array.isArray(schema.examples) ? (
         <datalist id={examplesId(id)}>
           {(schema.examples as string[])

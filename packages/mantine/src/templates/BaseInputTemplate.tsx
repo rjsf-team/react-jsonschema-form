@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent, useCallback } from 'react';
+import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -44,7 +44,9 @@ export default function BaseInputTemplate<
     options,
     rawErrors,
     children,
+    registry,
   } = props;
+  const { ClearButton } = registry.templates.ButtonTemplates;
 
   const inputProps = getInputProps<T, S, F>(schema, type, options, false);
   const description = hideLabel ? undefined : options.description || schema.description;
@@ -73,6 +75,15 @@ export default function BaseInputTemplate<
       onFocus(id, e.target && e.target.value);
     },
     [onFocus, id],
+  );
+
+  const handleClear = useCallback(
+    (e: MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onChange(options.emptyValue ?? '');
+    },
+    [onChange, options.emptyValue],
   );
 
   const componentProps = {
@@ -117,6 +128,9 @@ export default function BaseInputTemplate<
   return (
     <>
       {input}
+      {options.allowClearTextInputs && !readonly && !disabled && value && (
+        <ClearButton registry={registry} onClick={handleClear} />
+      )}
       {children}
       {Array.isArray(schema.examples) && (
         <datalist id={examplesId(id)}>

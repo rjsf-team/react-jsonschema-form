@@ -1,5 +1,7 @@
-import { ChangeEvent, FocusEvent } from 'react';
+import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -51,6 +53,7 @@ export default function BaseInputTemplate<
     InputLabelProps,
     ...textFieldProps
   } = props;
+  const { ClearButton } = registry.templates.ButtonTemplates;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   // Now we need to pull out the step, min, max into an inner `inputProps` for material-ui
   const { step, min, max, accept, ...rest } = inputProps;
@@ -65,6 +68,14 @@ export default function BaseInputTemplate<
         shrink: true,
       }
     : InputLabelProps;
+  const _onClear = useCallback(
+    (e: MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onChange(options.emptyValue ?? '');
+    },
+    [onChange, options.emptyValue],
+  );
 
   return (
     <>
@@ -85,6 +96,15 @@ export default function BaseInputTemplate<
         onFocus={_onFocus}
         {...(textFieldProps as TextFieldProps)}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+        InputProps={{
+          ...textFieldProps.InputProps,
+          endAdornment:
+            options.allowClearTextInputs && value && !readonly && !disabled ? (
+              <InputAdornment position='end'>
+                <ClearButton registry={registry} onClick={_onClear} />
+              </InputAdornment>
+            ) : undefined,
+        }}
       />
       {Array.isArray(schema.examples) && (
         <datalist id={examplesId(id)}>

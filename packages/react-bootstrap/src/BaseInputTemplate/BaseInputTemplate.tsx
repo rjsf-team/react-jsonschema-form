@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent } from 'react';
+import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
 import Form from 'react-bootstrap/Form';
 import {
   ariaDescribedByIds,
@@ -33,7 +33,9 @@ export default function BaseInputTemplate<
   rawErrors = [],
   children,
   extraProps,
+  registry,
 }: BaseInputTemplateProps<T, S, F>) {
+  const { ClearButton } = registry.templates.ButtonTemplates;
   const inputProps = {
     ...extraProps,
     ...getInputProps<T, S, F>(schema, type, options),
@@ -42,6 +44,14 @@ export default function BaseInputTemplate<
     onChange(value === '' ? options.emptyValue : value);
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
+  const _onClear = useCallback(
+    (e: MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onChange(options.emptyValue ?? '');
+    },
+    [onChange, options.emptyValue],
+  );
 
   // const classNames = [rawErrors.length > 0 ? "is-invalid" : "", type === 'file' ? 'custom-file-label': ""]
   return (
@@ -63,6 +73,9 @@ export default function BaseInputTemplate<
         onFocus={_onFocus}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
+      {options.allowClearTextInputs && !readonly && !disabled && value && (
+        <ClearButton registry={registry} onClick={_onClear} />
+      )}
       {children}
       {Array.isArray(schema.examples) ? (
         <datalist id={examplesId(id)}>

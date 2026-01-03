@@ -78,15 +78,19 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                   name
                                 </span>
                               </label>
-                              <input
-                                aria-describedby="root_person_name__error root_person_name__description root_person_name__help"
-                                class="input input-bordered w-full"
-                                id="root_person_name"
-                                name="root[person][name]"
-                                placeholder=""
-                                type="text"
-                                value=""
-                              />
+                              <div
+                                style="position: relative;"
+                              >
+                                <input
+                                  aria-describedby="root_person_name__error root_person_name__description root_person_name__help"
+                                  class="input input-bordered w-full"
+                                  id="root_person_name"
+                                  name="root[person][name]"
+                                  placeholder=""
+                                  type="text"
+                                  value=""
+                                />
+                              </div>
                             </div>
                             <div
                               class="rjsf-field-error-template text-red-600"
@@ -159,15 +163,19 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                             street
                                           </span>
                                         </label>
-                                        <input
-                                          aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
-                                          class="input input-bordered w-full"
-                                          id="root_person_address_street"
-                                          name="root[person][address][street]"
-                                          placeholder=""
-                                          type="text"
-                                          value=""
-                                        />
+                                        <div
+                                          style="position: relative;"
+                                        >
+                                          <input
+                                            aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
+                                            class="input input-bordered w-full"
+                                            id="root_person_address_street"
+                                            name="root[person][address][street]"
+                                            placeholder=""
+                                            type="text"
+                                            value=""
+                                          />
+                                        </div>
                                       </div>
                                       <div
                                         class="rjsf-field-error-template text-red-600"
@@ -212,15 +220,19 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                             city
                                           </span>
                                         </label>
-                                        <input
-                                          aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
-                                          class="input input-bordered w-full"
-                                          id="root_person_address_city"
-                                          name="root[person][address][city]"
-                                          placeholder=""
-                                          type="text"
-                                          value=""
-                                        />
+                                        <div
+                                          style="position: relative;"
+                                        >
+                                          <input
+                                            aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
+                                            class="input input-bordered w-full"
+                                            id="root_person_address_city"
+                                            name="root[person][address][city]"
+                                            placeholder=""
+                                            type="text"
+                                            value=""
+                                          />
+                                        </div>
                                       </div>
                                       <div
                                         class="rjsf-field-error-template text-red-600"
@@ -265,15 +277,19 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
                                             country
                                           </span>
                                         </label>
-                                        <input
-                                          aria-describedby="root_person_address_country__error root_person_address_country__description root_person_address_country__help"
-                                          class="input input-bordered w-full"
-                                          id="root_person_address_country"
-                                          name="root[person][address][country]"
-                                          placeholder=""
-                                          type="text"
-                                          value=""
-                                        />
+                                        <div
+                                          style="position: relative;"
+                                        >
+                                          <input
+                                            aria-describedby="root_person_address_country__error root_person_address_country__description root_person_address_country__help"
+                                            class="input input-bordered w-full"
+                                            id="root_person_address_country"
+                                            name="root[person][address][country]"
+                                            placeholder=""
+                                            type="text"
+                                            value=""
+                                          />
+                                        </div>
                                       </div>
                                       <div
                                         class="rjsf-field-error-template text-red-600"
@@ -382,15 +398,19 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                         name
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_name__error root_name__description root_name__help"
-                      class="input input-bordered w-full"
-                      id="root_name"
-                      name="root[name]"
-                      placeholder=""
-                      type="text"
-                      value="John"
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_name__error root_name__description root_name__help"
+                        class="input input-bordered w-full"
+                        id="root_name"
+                        name="root[name]"
+                        placeholder=""
+                        type="text"
+                        value="John"
+                      />
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -457,15 +477,19 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                           customField
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_customField__error root_customField__description root_customField__help"
-                        class="input input-bordered w-full"
-                        id="root_customField"
-                        name="root[customField]"
-                        placeholder=""
-                        type="text"
-                        value="customValue"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_customField__error root_customField__description root_customField__help"
+                          class="input input-bordered w-full"
+                          id="root_customField"
+                          name="root[customField]"
+                          placeholder=""
+                          type="text"
+                          value="customValue"
+                        />
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -610,15 +634,19 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                         name
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_name__error root_name__description root_name__help"
-                      class="input input-bordered w-full"
-                      id="root_name"
-                      name="root[name]"
-                      placeholder=""
-                      type="text"
-                      value="Alice"
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_name__error root_name__description root_name__help"
+                        class="input input-bordered w-full"
+                        id="root_name"
+                        name="root[name]"
+                        placeholder=""
+                        type="text"
+                        value="Alice"
+                      />
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -663,16 +691,20 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                         age
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_age__error root_age__description root_age__help"
-                      class="input input-bordered w-full"
-                      id="root_age"
-                      name="root[age]"
-                      placeholder=""
-                      step="any"
-                      type="number"
-                      value="30"
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_age__error root_age__description root_age__help"
+                        class="input input-bordered w-full"
+                        id="root_age"
+                        name="root[age]"
+                        placeholder=""
+                        step="any"
+                        type="number"
+                        value="30"
+                      />
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -796,16 +828,20 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                                     tags-1
                                   </span>
                                 </label>
-                                <input
-                                  aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
-                                  class="input input-bordered w-full"
-                                  id="root_tags_0"
-                                  name="root[tags][0]"
-                                  placeholder=""
-                                  required=""
-                                  type="text"
-                                  value="developer"
-                                />
+                                <div
+                                  style="position: relative;"
+                                >
+                                  <input
+                                    aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
+                                    class="input input-bordered w-full"
+                                    id="root_tags_0"
+                                    name="root[tags][0]"
+                                    placeholder=""
+                                    required=""
+                                    type="text"
+                                    value="developer"
+                                  />
+                                </div>
                               </div>
                               <div
                                 class="rjsf-field-error-template text-red-600"
@@ -927,16 +963,20 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                                     tags-2
                                   </span>
                                 </label>
-                                <input
-                                  aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
-                                  class="input input-bordered w-full"
-                                  id="root_tags_1"
-                                  name="root[tags][1]"
-                                  placeholder=""
-                                  required=""
-                                  type="text"
-                                  value="designer"
-                                />
+                                <div
+                                  style="position: relative;"
+                                >
+                                  <input
+                                    aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
+                                    class="input input-bordered w-full"
+                                    id="root_tags_1"
+                                    name="root[tags][1]"
+                                    placeholder=""
+                                    required=""
+                                    type="text"
+                                    value="designer"
+                                  />
+                                </div>
                               </div>
                               <div
                                 class="rjsf-field-error-template text-red-600"
@@ -1139,15 +1179,19 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
                         firstName
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
-                      class="input input-bordered w-full"
-                      id="root_firstName"
-                      name="root[firstName]"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
+                        class="input input-bordered w-full"
+                        id="root_firstName"
+                        name="root[firstName]"
+                        placeholder=""
+                        type="text"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -1192,15 +1236,19 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
                         lastName
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_lastName__error root_lastName__description root_lastName__help"
-                      class="input input-bordered w-full"
-                      id="root_lastName"
-                      name="root[lastName]"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_lastName__error root_lastName__description root_lastName__help"
+                        class="input input-bordered w-full"
+                        id="root_lastName"
+                        name="root[lastName]"
+                        placeholder=""
+                        type="text"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -1245,16 +1293,20 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
                         age
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_age__error root_age__description root_age__help"
-                      class="input input-bordered w-full"
-                      id="root_age"
-                      name="root[age]"
-                      placeholder=""
-                      step="any"
-                      type="number"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_age__error root_age__description root_age__help"
+                        class="input input-bordered w-full"
+                        id="root_age"
+                        name="root[age]"
+                        placeholder=""
+                        step="any"
+                        type="number"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -1367,15 +1419,19 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                   name
                                 </span>
                               </label>
-                              <input
-                                aria-describedby="root_person_name__error root_person_name__description root_person_name__help"
-                                class="input input-bordered w-full"
-                                id="root_person_name"
-                                name="root.person.name"
-                                placeholder=""
-                                type="text"
-                                value=""
-                              />
+                              <div
+                                style="position: relative;"
+                              >
+                                <input
+                                  aria-describedby="root_person_name__error root_person_name__description root_person_name__help"
+                                  class="input input-bordered w-full"
+                                  id="root_person_name"
+                                  name="root.person.name"
+                                  placeholder=""
+                                  type="text"
+                                  value=""
+                                />
+                              </div>
                             </div>
                             <div
                               class="rjsf-field-error-template text-red-600"
@@ -1448,15 +1504,19 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                             street
                                           </span>
                                         </label>
-                                        <input
-                                          aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
-                                          class="input input-bordered w-full"
-                                          id="root_person_address_street"
-                                          name="root.person.address.street"
-                                          placeholder=""
-                                          type="text"
-                                          value=""
-                                        />
+                                        <div
+                                          style="position: relative;"
+                                        >
+                                          <input
+                                            aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
+                                            class="input input-bordered w-full"
+                                            id="root_person_address_street"
+                                            name="root.person.address.street"
+                                            placeholder=""
+                                            type="text"
+                                            value=""
+                                          />
+                                        </div>
                                       </div>
                                       <div
                                         class="rjsf-field-error-template text-red-600"
@@ -1501,15 +1561,19 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
                                             city
                                           </span>
                                         </label>
-                                        <input
-                                          aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
-                                          class="input input-bordered w-full"
-                                          id="root_person_address_city"
-                                          name="root.person.address.city"
-                                          placeholder=""
-                                          type="text"
-                                          value=""
-                                        />
+                                        <div
+                                          style="position: relative;"
+                                        >
+                                          <input
+                                            aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
+                                            class="input input-bordered w-full"
+                                            id="root_person_address_city"
+                                            name="root.person.address.city"
+                                            placeholder=""
+                                            type="text"
+                                            value=""
+                                          />
+                                        </div>
                                       </div>
                                       <div
                                         class="rjsf-field-error-template text-red-600"
@@ -1618,15 +1682,19 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                         name
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_name__error root_name__description root_name__help"
-                      class="input input-bordered w-full"
-                      id="root_name"
-                      name="root.name"
-                      placeholder=""
-                      type="text"
-                      value="Test"
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_name__error root_name__description root_name__help"
+                        class="input input-bordered w-full"
+                        id="root_name"
+                        name="root.name"
+                        placeholder=""
+                        type="text"
+                        value="Test"
+                      />
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -1671,16 +1739,20 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                         count
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_count__error root_count__description root_count__help"
-                      class="input input-bordered w-full"
-                      id="root_count"
-                      name="root.count"
-                      placeholder=""
-                      step="any"
-                      type="number"
-                      value="5"
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_count__error root_count__description root_count__help"
+                        class="input input-bordered w-full"
+                        id="root_count"
+                        name="root.count"
+                        placeholder=""
+                        step="any"
+                        type="number"
+                        value="5"
+                      />
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -1761,16 +1833,20 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                                     items-1
                                   </span>
                                 </label>
-                                <input
-                                  aria-describedby="root_items_0__error root_items_0__description root_items_0__help"
-                                  class="input input-bordered w-full"
-                                  id="root_items_0"
-                                  name="root.items.0"
-                                  placeholder=""
-                                  required=""
-                                  type="text"
-                                  value="a"
-                                />
+                                <div
+                                  style="position: relative;"
+                                >
+                                  <input
+                                    aria-describedby="root_items_0__error root_items_0__description root_items_0__help"
+                                    class="input input-bordered w-full"
+                                    id="root_items_0"
+                                    name="root.items.0"
+                                    placeholder=""
+                                    required=""
+                                    type="text"
+                                    value="a"
+                                  />
+                                </div>
                               </div>
                               <div
                                 class="rjsf-field-error-template text-red-600"
@@ -1892,16 +1968,20 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                                     items-2
                                   </span>
                                 </label>
-                                <input
-                                  aria-describedby="root_items_1__error root_items_1__description root_items_1__help"
-                                  class="input input-bordered w-full"
-                                  id="root_items_1"
-                                  name="root.items.1"
-                                  placeholder=""
-                                  required=""
-                                  type="text"
-                                  value="b"
-                                />
+                                <div
+                                  style="position: relative;"
+                                >
+                                  <input
+                                    aria-describedby="root_items_1__error root_items_1__description root_items_1__help"
+                                    class="input input-bordered w-full"
+                                    id="root_items_1"
+                                    name="root.items.1"
+                                    placeholder=""
+                                    required=""
+                                    type="text"
+                                    value="b"
+                                  />
+                                </div>
                               </div>
                               <div
                                 class="rjsf-field-error-template text-red-600"
@@ -2104,15 +2184,19 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
                         firstName
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
-                      class="input input-bordered w-full"
-                      id="root_firstName"
-                      name="root.firstName"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
+                        class="input input-bordered w-full"
+                        id="root_firstName"
+                        name="root.firstName"
+                        placeholder=""
+                        type="text"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -2157,15 +2241,19 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
                         lastName
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_lastName__error root_lastName__description root_lastName__help"
-                      class="input input-bordered w-full"
-                      id="root_lastName"
-                      name="root.lastName"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_lastName__error root_lastName__description root_lastName__help"
+                        class="input input-bordered w-full"
+                        id="root_lastName"
+                        name="root.lastName"
+                        placeholder=""
+                        type="text"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -2210,16 +2298,20 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
                         age
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_age__error root_age__description root_age__help"
-                      class="input input-bordered w-full"
-                      id="root_age"
-                      name="root.age"
-                      placeholder=""
-                      step="any"
-                      type="number"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_age__error root_age__description root_age__help"
+                        class="input input-bordered w-full"
+                        id="root_age"
+                        name="root.age"
+                        placeholder=""
+                        step="any"
+                        type="number"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -2326,15 +2418,19 @@ exports[`object fields additionalProperties 1`] = `
                           foo
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_foo__error root_foo__description root_foo__help"
-                        class="input input-bordered w-full"
-                        id="root_foo"
-                        name="root_foo"
-                        placeholder=""
-                        type="text"
-                        value="foo"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_foo__error root_foo__description root_foo__help"
+                          class="input input-bordered w-full"
+                          id="root_foo"
+                          name="root_foo"
+                          placeholder=""
+                          type="text"
+                          value="foo"
+                        />
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -2715,15 +2811,19 @@ exports[`object fields additionalProperties, description 1`] = `
                           foo
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_foo__error root_foo__description root_foo__help"
-                        class="input input-bordered w-full"
-                        id="root_foo"
-                        name="root_foo"
-                        placeholder=""
-                        type="text"
-                        value="foo"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_foo__error root_foo__description root_foo__help"
+                          class="input input-bordered w-full"
+                          id="root_foo"
+                          name="root_foo"
+                          placeholder=""
+                          type="text"
+                          value="foo"
+                        />
+                      </div>
                     </div>
                     <div
                       class="description-field my-4"
@@ -2900,15 +3000,19 @@ exports[`object fields additionalProperties, label off 1`] = `
                           foo
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_foo__error root_foo__description root_foo__help"
-                        class="input input-bordered w-full"
-                        id="root_foo"
-                        name="root_foo"
-                        placeholder=""
-                        type="text"
-                        value="foo"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_foo__error root_foo__description root_foo__help"
+                          class="input input-bordered w-full"
+                          id="root_foo"
+                          name="root_foo"
+                          placeholder=""
+                          type="text"
+                          value="foo"
+                        />
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -3113,15 +3217,19 @@ exports[`object fields additionalProperties, object type 1`] = `
                                     foo
                                   </span>
                                 </label>
-                                <input
-                                  aria-describedby="root_foo_foo__error root_foo_foo__description root_foo_foo__help"
-                                  class="input input-bordered w-full"
-                                  id="root_foo_foo"
-                                  name="root_foo_foo"
-                                  placeholder=""
-                                  type="text"
-                                  value=""
-                                />
+                                <div
+                                  style="position: relative;"
+                                >
+                                  <input
+                                    aria-describedby="root_foo_foo__error root_foo_foo__description root_foo_foo__help"
+                                    class="input input-bordered w-full"
+                                    id="root_foo_foo"
+                                    name="root_foo_foo"
+                                    placeholder=""
+                                    type="text"
+                                    value=""
+                                  />
+                                </div>
                               </div>
                               <div
                                 class="rjsf-field-error-template text-red-600"
@@ -3278,15 +3386,19 @@ exports[`object fields object 1`] = `
                         A
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_a__error root_a__description root_a__help"
-                      class="input input-bordered w-full"
-                      id="root_a"
-                      name="root_a"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_a__error root_a__description root_a__help"
+                        class="input input-bordered w-full"
+                        id="root_a"
+                        name="root_a"
+                        placeholder=""
+                        type="text"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -3331,16 +3443,20 @@ exports[`object fields object 1`] = `
                         B
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_b__error root_b__description root_b__help"
-                      class="input input-bordered w-full"
-                      id="root_b"
-                      name="root_b"
-                      placeholder=""
-                      step="any"
-                      type="number"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_b__error root_b__description root_b__help"
+                        class="input input-bordered w-full"
+                        id="root_b"
+                        name="root_b"
+                        placeholder=""
+                        step="any"
+                        type="number"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -3447,15 +3563,19 @@ exports[`object fields show add button and fields if additionalProperties is tru
                           additionalProperty
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
-                        class="input input-bordered w-full"
-                        id="root_additionalProperty"
-                        name="root_additionalProperty"
-                        placeholder=""
-                        type="text"
-                        value="should appear"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                          class="input input-bordered w-full"
+                          id="root_additionalProperty"
+                          name="root_additionalProperty"
+                          placeholder=""
+                          type="text"
+                          value="should appear"
+                        />
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -3645,15 +3765,19 @@ exports[`object fields with title and description additionalProperties 1`] = `
                           foo
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_foo__error root_foo__description root_foo__help"
-                        class="input input-bordered w-full"
-                        id="root_foo"
-                        name="root_foo"
-                        placeholder=""
-                        type="text"
-                        value="foo"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_foo__error root_foo__description root_foo__help"
+                          class="input input-bordered w-full"
+                          id="root_foo"
+                          name="root_foo"
+                          placeholder=""
+                          type="text"
+                          value="foo"
+                        />
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -3843,15 +3967,19 @@ exports[`object fields with title and description from both additionalProperties
                           foo
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_foo__error root_foo__description root_foo__help"
-                        class="input input-bordered w-full"
-                        id="root_foo"
-                        name="root_foo"
-                        placeholder=""
-                        type="text"
-                        value="foo"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_foo__error root_foo__description root_foo__help"
+                          class="input input-bordered w-full"
+                          id="root_foo"
+                          name="root_foo"
+                          placeholder=""
+                          type="text"
+                          value="foo"
+                        />
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -4019,15 +4147,19 @@ exports[`object fields with title and description from both object 1`] = `
                         My Item A
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_a__error root_a__description root_a__help"
-                      class="input input-bordered w-full"
-                      id="root_a"
-                      name="root_a"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_a__error root_a__description root_a__help"
+                        class="input input-bordered w-full"
+                        id="root_a"
+                        name="root_a"
+                        placeholder=""
+                        type="text"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="description-field my-4"
@@ -4082,16 +4214,20 @@ exports[`object fields with title and description from both object 1`] = `
                         My Item B
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_b__error root_b__description root_b__help"
-                      class="input input-bordered w-full"
-                      id="root_b"
-                      name="root_b"
-                      placeholder=""
-                      step="any"
-                      type="number"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_b__error root_b__description root_b__help"
+                        class="input input-bordered w-full"
+                        id="root_b"
+                        name="root_b"
+                        placeholder=""
+                        step="any"
+                        type="number"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="description-field my-4"
@@ -4231,15 +4367,19 @@ exports[`object fields with title and description from uiSchema additionalProper
                           foo
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_foo__error root_foo__description root_foo__help"
-                        class="input input-bordered w-full"
-                        id="root_foo"
-                        name="root_foo"
-                        placeholder=""
-                        type="text"
-                        value="foo"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_foo__error root_foo__description root_foo__help"
+                          class="input input-bordered w-full"
+                          id="root_foo"
+                          name="root_foo"
+                          placeholder=""
+                          type="text"
+                          value="foo"
+                        />
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -4407,15 +4547,19 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                         My Item A
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_a__error root_a__description root_a__help"
-                      class="input input-bordered w-full"
-                      id="root_a"
-                      name="root_a"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_a__error root_a__description root_a__help"
+                        class="input input-bordered w-full"
+                        id="root_a"
+                        name="root_a"
+                        placeholder=""
+                        type="text"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="description-field my-4"
@@ -4470,16 +4614,20 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                         My Item B
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_b__error root_b__description root_b__help"
-                      class="input input-bordered w-full"
-                      id="root_b"
-                      name="root_b"
-                      placeholder=""
-                      step="any"
-                      type="number"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_b__error root_b__description root_b__help"
+                        class="input input-bordered w-full"
+                        id="root_b"
+                        name="root_b"
+                        placeholder=""
+                        step="any"
+                        type="number"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="description-field my-4"
@@ -4619,15 +4767,19 @@ exports[`object fields with title and description from uiSchema show add button 
                           additionalProperty
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
-                        class="input input-bordered w-full"
-                        id="root_additionalProperty"
-                        name="root_additionalProperty"
-                        placeholder=""
-                        type="text"
-                        value="should appear"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                          class="input input-bordered w-full"
+                          id="root_additionalProperty"
+                          name="root_additionalProperty"
+                          placeholder=""
+                          type="text"
+                          value="should appear"
+                        />
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -4795,15 +4947,19 @@ exports[`object fields with title and description object 1`] = `
                         A
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_a__error root_a__description root_a__help"
-                      class="input input-bordered w-full"
-                      id="root_a"
-                      name="root_a"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_a__error root_a__description root_a__help"
+                        class="input input-bordered w-full"
+                        id="root_a"
+                        name="root_a"
+                        placeholder=""
+                        type="text"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="description-field my-4"
@@ -4858,16 +5014,20 @@ exports[`object fields with title and description object 1`] = `
                         B
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_b__error root_b__description root_b__help"
-                      class="input input-bordered w-full"
-                      id="root_b"
-                      name="root_b"
-                      placeholder=""
-                      step="any"
-                      type="number"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_b__error root_b__description root_b__help"
+                        class="input input-bordered w-full"
+                        id="root_b"
+                        name="root_b"
+                        placeholder=""
+                        step="any"
+                        type="number"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="description-field my-4"
@@ -5007,15 +5167,19 @@ exports[`object fields with title and description show add button and fields if 
                           additionalProperty
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
-                        class="input input-bordered w-full"
-                        id="root_additionalProperty"
-                        name="root_additionalProperty"
-                        placeholder=""
-                        type="text"
-                        value="should appear"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                          class="input input-bordered w-full"
+                          id="root_additionalProperty"
+                          name="root_additionalProperty"
+                          placeholder=""
+                          type="text"
+                          value="should appear"
+                        />
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -5162,15 +5326,19 @@ exports[`object fields with title and description with global label off addition
                           foo
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_foo__error root_foo__description root_foo__help"
-                        class="input input-bordered w-full"
-                        id="root_foo"
-                        name="root_foo"
-                        placeholder=""
-                        type="text"
-                        value="foo"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_foo__error root_foo__description root_foo__help"
+                          class="input input-bordered w-full"
+                          id="root_foo"
+                          name="root_foo"
+                          placeholder=""
+                          type="text"
+                          value="foo"
+                        />
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"
@@ -5305,15 +5473,19 @@ exports[`object fields with title and description with global label off object 1
                         A
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_a__error root_a__description root_a__help"
-                      class="input input-bordered w-full"
-                      id="root_a"
-                      name="root_a"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_a__error root_a__description root_a__help"
+                        class="input input-bordered w-full"
+                        id="root_a"
+                        name="root_a"
+                        placeholder=""
+                        type="text"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -5348,16 +5520,20 @@ exports[`object fields with title and description with global label off object 1
                         B
                       </span>
                     </label>
-                    <input
-                      aria-describedby="root_b__error root_b__description root_b__help"
-                      class="input input-bordered w-full"
-                      id="root_b"
-                      name="root_b"
-                      placeholder=""
-                      step="any"
-                      type="number"
-                      value=""
-                    />
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_b__error root_b__description root_b__help"
+                        class="input input-bordered w-full"
+                        id="root_b"
+                        name="root_b"
+                        placeholder=""
+                        step="any"
+                        type="number"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -5444,15 +5620,19 @@ exports[`object fields with title and description with global label off show add
                           additionalProperty
                         </span>
                       </label>
-                      <input
-                        aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
-                        class="input input-bordered w-full"
-                        id="root_additionalProperty"
-                        name="root_additionalProperty"
-                        placeholder=""
-                        type="text"
-                        value="should appear"
-                      />
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                          class="input input-bordered w-full"
+                          id="root_additionalProperty"
+                          name="root_additionalProperty"
+                          placeholder=""
+                          type="text"
+                          value="should appear"
+                        />
+                      </div>
                     </div>
                     <div
                       class="rjsf-field-error-template text-red-600"

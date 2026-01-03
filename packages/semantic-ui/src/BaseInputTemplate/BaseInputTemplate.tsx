@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, MouseEvent, useCallback } from 'react';
 import { Form } from 'semantic-ui-react';
 import { getSemanticProps } from '../util';
 import {
@@ -45,6 +45,7 @@ export default function BaseInputTemplate<
     type,
     rawErrors = [],
   } = props;
+  const { ClearButton } = registry.templates.ButtonTemplates;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   const semanticProps = getSemanticProps<T, S, F>({
     uiSchema,
@@ -55,6 +56,14 @@ export default function BaseInputTemplate<
     onChange(value === '' ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
+  const _onClear = useCallback(
+    (e: MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onChange(options.emptyValue ?? '');
+    },
+    [onChange, options.emptyValue],
+  );
 
   return (
     <>
@@ -77,6 +86,9 @@ export default function BaseInputTemplate<
         onFocus={_onFocus}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
+      {options.allowClearTextInputs && !readonly && !disabled && value && (
+        <ClearButton registry={registry} onClick={_onClear} />
+      )}
       {Array.isArray(schema.examples) && (
         <datalist id={examplesId(id)}>
           {(schema.examples as string[])

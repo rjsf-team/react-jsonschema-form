@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent, useCallback } from 'react';
+import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -42,6 +42,7 @@ export default function BaseInputTemplate<
     hideError, // remove this from ...rest
     ...rest
   } = props;
+  const { ClearButton } = registry.templates.ButtonTemplates;
 
   // Note: since React 15.2.0 we can't forward unknown element attributes, so we
   // exclude the "options" and "schema" ones here.
@@ -73,6 +74,14 @@ export default function BaseInputTemplate<
     ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value),
     [onFocus, id],
   );
+  const _onClear = useCallback(
+    (e: MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onChange(options.emptyValue ?? '');
+    },
+    [onChange, options.emptyValue],
+  );
 
   return (
     <>
@@ -91,6 +100,9 @@ export default function BaseInputTemplate<
         onFocus={_onFocus}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
+      {options.allowClearTextInputs && !readonly && !disabled && inputValue && (
+        <ClearButton registry={registry} onClick={_onClear} />
+      )}
       {Array.isArray(schema.examples) && (
         <datalist key={`datalist_${id}`} id={examplesId(id)}>
           {(schema.examples as string[])

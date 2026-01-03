@@ -48,3 +48,27 @@ export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
     <IconButton title={translateString(TranslatableString.RemoveButton)} {...props} iconType='danger' icon='remove' />
   );
 }
+
+export function ClearButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+  id,
+  className,
+  onClick,
+  disabled,
+  registry,
+  ...props
+}: IconButtonProps<T, S, F>) {
+  const { translateString } = registry;
+  return (
+    <IconButton
+      id={id}
+      iconType='default'
+      icon='remove'
+      className='btn-clear col-xs-12'
+      title={translateString(TranslatableString.ClearButton)}
+      onClick={onClick}
+      disabled={disabled}
+      registry={registry}
+      {...props}
+    />
+  );
+}

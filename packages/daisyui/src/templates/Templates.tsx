@@ -4,7 +4,15 @@ import ArrayFieldItemButtonsTemplate from './ArrayFieldItemButtonsTemplate';
 import ArrayFieldItemTemplate from './ArrayFieldItemTemplate';
 import ArrayFieldTemplate from './ArrayFieldTemplate/ArrayFieldTemplate';
 import BaseInputTemplate from './BaseInputTemplate/BaseInputTemplate';
-import { AddButton, CopyButton, MoveDownButton, MoveUpButton, RemoveButton, SubmitButton } from './ButtonTemplates';
+import {
+  AddButton,
+  CopyButton,
+  MoveDownButton,
+  MoveUpButton,
+  RemoveButton,
+  SubmitButton,
+  ClearButton,
+} from './ButtonTemplates';
 import DescriptionField from './DescriptionField';
 import ErrorList from './ErrorList';
 import FieldErrorTemplate from './FieldErrorTemplate';
@@ -48,6 +56,7 @@ export function generateTemplates<
       MoveDownButton,
       MoveUpButton,
       RemoveButton,
+      ClearButton,
     },
     DescriptionFieldTemplate: DescriptionField,
     ErrorListTemplate: ErrorList,

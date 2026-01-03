@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent } from 'react';
+import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
 import { Input, InputNumber } from 'antd';
 import {
   ariaDescribedByIds,
@@ -47,6 +47,7 @@ export default function BaseInputTemplate<
   // through its own props. The step prop in Ant Design expects a number, not the string "any"
   const inputProps = getInputProps<T, S, F>(schema, type, options, false);
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
+  const { ClearButton } = registry.templates.ButtonTemplates;
 
   const handleNumberChange = (nextValue: number | null) => onChange(nextValue);
 
@@ -57,6 +58,15 @@ export default function BaseInputTemplate<
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
 
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
+
+  const handleClear = useCallback(
+    (e: MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onChange(options.emptyValue ?? '');
+    },
+    [onChange, options.emptyValue],
+  );
 
   const input =
     inputProps.type === 'number' || inputProps.type === 'integer' ? (
@@ -94,6 +104,9 @@ export default function BaseInputTemplate<
   return (
     <>
       {input}
+      {options.allowClearTextInputs && !readonly && !disabled && value && (
+        <ClearButton registry={registry} onClick={handleClear} />
+      )}
       {Array.isArray(schema.examples) && (
         <datalist id={examplesId(id)}>
           {(schema.examples as string[])

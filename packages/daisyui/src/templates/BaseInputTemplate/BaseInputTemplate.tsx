@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent, useCallback } from 'react';
+import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
 import {
   WidgetProps,
   StrictRJSFSchema,
@@ -46,7 +46,9 @@ export default function BaseInputTemplate<
     type,
     label,
     placeholder,
+    registry,
   } = props;
+  const { ClearButton } = registry.templates.ButtonTemplates;
 
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   let className = 'input input-bordered w-full';
@@ -74,29 +76,43 @@ export default function BaseInputTemplate<
     [onFocus, id],
   );
 
+  const _onClear = useCallback(
+    (e: MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onChange(options.emptyValue ?? '');
+    },
+    [onChange, options.emptyValue],
+  );
+
   return (
     <>
       <div className='form-control'>
         <label htmlFor={id} className='label hidden' style={{ display: 'none' }}>
           <span className='label-text'>{label}</span>
         </label>
-        <input
-          id={id}
-          name={htmlName || id}
-          value={value || value === 0 ? value : ''}
-          placeholder={placeholder}
-          required={required}
-          disabled={disabled || readonly}
-          autoFocus={autofocus}
-          className={className}
-          multiple={isMulti}
-          {...rest}
-          {...htmlInputProps}
-          onChange={onChangeOverride || _onChange}
-          onBlur={_onBlur}
-          onFocus={_onFocus}
-          aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
-        />
+        <div style={{ position: 'relative' }}>
+          <input
+            id={id}
+            name={htmlName || id}
+            value={value || value === 0 ? value : ''}
+            placeholder={placeholder}
+            required={required}
+            disabled={disabled || readonly}
+            autoFocus={autofocus}
+            className={className}
+            multiple={isMulti}
+            {...rest}
+            {...htmlInputProps}
+            onChange={onChangeOverride || _onChange}
+            onBlur={_onBlur}
+            onFocus={_onFocus}
+            aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+          />
+          {options.allowClearTextInputs && !readonly && !disabled && value && (
+            <ClearButton registry={registry} onClick={_onClear} />
+          )}
+        </div>
       </div>
       {Array.isArray(schema.examples) && (
         <datalist id={examplesId(id)}>

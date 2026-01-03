@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, MouseEvent, useCallback } from 'react';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -37,11 +37,8 @@ export default function BaseInputTemplate<
     rawErrors = [],
   } = props;
 
+  const { ClearButton } = registry.templates.ButtonTemplates;
   const { AutoCompleteWidget } = registry.widgets;
-
-  if (Array.isArray(schema.examples)) {
-    return <AutoCompleteWidget {...props} />;
-  }
 
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   const primeProps = (options.prime || {}) as object;
@@ -49,24 +46,41 @@ export default function BaseInputTemplate<
     onChange(value === '' ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
+  const _onClear = useCallback(
+    (e: MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onChange(options.emptyValue ?? '');
+    },
+    [onChange, options.emptyValue],
+  );
+
+  if (Array.isArray(schema.examples)) {
+    return <AutoCompleteWidget {...props} />;
+  }
 
   return (
-    <InputText
-      id={id}
-      name={htmlName || id}
-      placeholder={placeholder}
-      {...primeProps}
-      {...inputProps}
-      required={required}
-      autoFocus={autofocus}
-      disabled={disabled || readonly}
-      list={schema.examples ? examplesId(id) : undefined}
-      value={value || value === 0 ? value : ''}
-      invalid={rawErrors.length > 0}
-      onChange={onChangeOverride || _onChange}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
-      aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
-    />
+    <>
+      <InputText
+        id={id}
+        name={htmlName || id}
+        placeholder={placeholder}
+        {...primeProps}
+        {...inputProps}
+        required={required}
+        autoFocus={autofocus}
+        disabled={disabled || readonly}
+        list={schema.examples ? examplesId(id) : undefined}
+        value={value || value === 0 ? value : ''}
+        invalid={rawErrors.length > 0}
+        onChange={onChangeOverride || _onChange}
+        onBlur={_onBlur}
+        onFocus={_onFocus}
+        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+      />
+      {options.allowClearTextInputs && !readonly && !disabled && value && (
+        <ClearButton registry={registry} onClick={_onClear} />
+      )}
+    </>
   );
 }

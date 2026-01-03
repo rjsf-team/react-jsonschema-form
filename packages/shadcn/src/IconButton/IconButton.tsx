@@ -1,5 +1,5 @@
 import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
-import { ChevronDown, ChevronUp, Copy, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronUp, Copy, Trash2, X } from 'lucide-react';
 import type { VariantProps } from 'class-variance-authority';
 
 import { Button, buttonVariants } from '../components/ui/button';
@@ -108,4 +108,13 @@ export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
       icon={<Trash2 className='h-4 w-4 stroke-destructive' />}
     />
   );
+}
+
+export function ClearButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: ShadIconButtonProps<T, S, F>,
+) {
+  const {
+    registry: { translateString },
+  } = props;
+  return <IconButton title={translateString(TranslatableString.ClearButton)} {...props} icon={<X />} />;
 }
