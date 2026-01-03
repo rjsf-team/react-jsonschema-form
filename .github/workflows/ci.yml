@@ -54,12 +54,12 @@ jobs:
     needs: [build]
     steps:
       - name: Download built playground
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: playground
           path: dist
       - name: Download built docs
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: docs
           path: dist/docs
