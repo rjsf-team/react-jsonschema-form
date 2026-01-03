@@ -30,8 +30,8 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 
-- Removed deprecated `defaultProps` from `AltDateTimeWidget` and `AltDateWidget` components, preserving all existing behavior
 - Updated `BaseInputTemplate` to support the `allowClearTextInputs` feature for input fields
+- Removed deprecated `defaultProps` from `AltDateTimeWidget` and `AltDateWidget` components, preserving all existing behavior
 
 ## @rjsf/daisyui
 
