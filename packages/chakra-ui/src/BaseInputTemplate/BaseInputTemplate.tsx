@@ -42,6 +42,7 @@ export default function BaseInputTemplate<
     registry,
   } = props;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
+  const { ClearButton } = registry.templates.ButtonTemplates;
 
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange(value === '' ? options.emptyValue : value);
@@ -57,7 +58,6 @@ export default function BaseInputTemplate<
   );
 
   const chakraProps = getChakra({ uiSchema });
-  const { ClearButton } = registry.templates.ButtonTemplates;
 
   return (
     <Field
