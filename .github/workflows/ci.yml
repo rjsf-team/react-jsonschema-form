@@ -36,12 +36,12 @@ jobs:
           NODE_OPTIONS: --max_old_space_size=4096
 
       - if: matrix.node-version == '22.x'
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: playground
           path: packages/playground/dist
       - if: matrix.node-version == '22.x'
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: docs
           path: packages/docs/build
