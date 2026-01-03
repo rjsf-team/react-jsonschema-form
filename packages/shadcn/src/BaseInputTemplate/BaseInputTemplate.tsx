@@ -7,7 +7,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { ChangeEvent, FocusEvent, useCallback } from 'react';
+import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
 
 import { Input } from '../components/ui/input';
 import { cn } from '../lib/utils';
@@ -44,6 +44,7 @@ export default function BaseInputTemplate<
   className,
   registry,
 }: BaseInputTemplateProps<T, S, F>) {
+  const { ClearButton } = registry.templates.ButtonTemplates;
   const inputProps = {
     ...extraProps,
     ...getInputProps<T, S, F>(schema, type, options),
@@ -53,14 +54,13 @@ export default function BaseInputTemplate<
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
   const _onClear = useCallback(
-    (e: React.MouseEvent) => {
+    (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
       onChange(options.emptyValue ?? '');
     },
     [onChange, options.emptyValue],
   );
-  const { ClearButton } = registry.templates.ButtonTemplates;
 
   return (
     <div className='p-0.5'>

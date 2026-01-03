@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent, useCallback } from 'react';
+import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
 import { Input, InputProps, Label, makeStyles } from '@fluentui/react-components';
 import {
   ariaDescribedByIds,
@@ -53,6 +53,7 @@ export default function BaseInputTemplate<
     schema,
     registry,
   } = props;
+  const { ClearButton } = registry.templates.ButtonTemplates;
   const classes = useStyles();
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   // Now we need to pull out the step, min, max into an inner `inputProps` for fluentui-rc
@@ -61,14 +62,13 @@ export default function BaseInputTemplate<
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
   const _onClear = useCallback(
-    (e: React.MouseEvent) => {
+    (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
       onChange(options.emptyValue ?? '');
     },
     [onChange, options.emptyValue],
   );
-  const { ClearButton } = registry.templates.ButtonTemplates;
   return (
     <>
       {labelValue(

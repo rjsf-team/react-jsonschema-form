@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent, useCallback } from 'react';
+import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
 import { Input, InputNumber } from 'antd';
 import {
   ariaDescribedByIds,
@@ -60,7 +60,7 @@ export default function BaseInputTemplate<
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
 
   const handleClear = useCallback(
-    (e: React.MouseEvent) => {
+    (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
       onChange(options.emptyValue ?? '');

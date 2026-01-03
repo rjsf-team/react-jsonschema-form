@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent, useCallback } from 'react';
+import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -42,6 +42,7 @@ export default function BaseInputTemplate<
     hideError, // remove this from ...rest
     ...rest
   } = props;
+  const { ClearButton } = registry.templates.ButtonTemplates;
 
   // Note: since React 15.2.0 we can't forward unknown element attributes, so we
   // exclude the "options" and "schema" ones here.
@@ -74,15 +75,13 @@ export default function BaseInputTemplate<
     [onFocus, id],
   );
   const _onClear = useCallback(
-    (e: React.MouseEvent) => {
+    (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
       onChange(options.emptyValue ?? '');
     },
     [onChange, options.emptyValue],
   );
-
-  const { ClearButton } = registry.templates.ButtonTemplates;
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent, useCallback } from 'react';
+import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
 import { Input } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
@@ -48,7 +48,7 @@ export default function BaseInputTemplate<
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
   const onClear = useCallback(
-    (e: React.MouseEvent) => {
+    (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
       onChange(options.emptyValue ?? '');

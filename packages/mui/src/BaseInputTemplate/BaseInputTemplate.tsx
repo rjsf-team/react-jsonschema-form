@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent, useCallback } from 'react';
+import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 
@@ -53,6 +53,7 @@ export default function BaseInputTemplate<
     InputLabelProps,
     ...textFieldProps
   } = props;
+  const { ClearButton } = registry.templates.ButtonTemplates;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   // Now we need to pull out the step, min, max into an inner `inputProps` for material-ui
   const { step, min, max, accept, ...rest } = inputProps;
@@ -68,14 +69,13 @@ export default function BaseInputTemplate<
       }
     : InputLabelProps;
   const _onClear = useCallback(
-    (e: React.MouseEvent) => {
+    (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
       onChange(options.emptyValue ?? '');
     },
     [onChange, options.emptyValue],
   );
-  const { ClearButton } = registry.templates.ButtonTemplates;
 
   return (
     <>

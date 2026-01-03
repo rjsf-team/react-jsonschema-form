@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent, useCallback } from 'react';
+import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
 import {
   WidgetProps,
   StrictRJSFSchema,
@@ -48,6 +48,7 @@ export default function BaseInputTemplate<
     placeholder,
     registry,
   } = props;
+  const { ClearButton } = registry.templates.ButtonTemplates;
 
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   let className = 'input input-bordered w-full';
@@ -76,15 +77,13 @@ export default function BaseInputTemplate<
   );
 
   const _onClear = useCallback(
-    (e: React.MouseEvent) => {
+    (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
       onChange(options.emptyValue ?? '');
     },
     [onChange, options.emptyValue],
   );
-
-  const { ClearButton } = registry.templates.ButtonTemplates;
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback } from 'react';
+import { ChangeEvent, MouseEvent, useCallback } from 'react';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -37,20 +37,8 @@ export default function BaseInputTemplate<
     rawErrors = [],
   } = props;
 
-  const _onClear = useCallback(
-    (e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      onChange(options.emptyValue ?? '');
-    },
-    [onChange, options.emptyValue],
-  );
-
+  const { ClearButton } = registry.templates.ButtonTemplates;
   const { AutoCompleteWidget } = registry.widgets;
-
-  if (Array.isArray(schema.examples)) {
-    return <AutoCompleteWidget {...props} />;
-  }
 
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   const primeProps = (options.prime || {}) as object;
@@ -58,7 +46,18 @@ export default function BaseInputTemplate<
     onChange(value === '' ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
-  const { ClearButton } = registry.templates.ButtonTemplates;
+  const _onClear = useCallback(
+    (e: MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onChange(options.emptyValue ?? '');
+    },
+    [onChange, options.emptyValue],
+  );
+
+  if (Array.isArray(schema.examples)) {
+    return <AutoCompleteWidget {...props} />;
+  }
 
   return (
     <>

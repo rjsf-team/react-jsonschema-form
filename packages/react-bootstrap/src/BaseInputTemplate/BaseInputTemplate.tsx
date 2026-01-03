@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent, useCallback } from 'react';
+import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
 import Form from 'react-bootstrap/Form';
 import {
   ariaDescribedByIds,
@@ -35,6 +35,7 @@ export default function BaseInputTemplate<
   extraProps,
   registry,
 }: BaseInputTemplateProps<T, S, F>) {
+  const { ClearButton } = registry.templates.ButtonTemplates;
   const inputProps = {
     ...extraProps,
     ...getInputProps<T, S, F>(schema, type, options),
@@ -44,14 +45,13 @@ export default function BaseInputTemplate<
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
   const _onClear = useCallback(
-    (e: React.MouseEvent) => {
+    (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
       onChange(options.emptyValue ?? '');
     },
     [onChange, options.emptyValue],
   );
-  const { ClearButton } = registry.templates.ButtonTemplates;
 
   // const classNames = [rawErrors.length > 0 ? "is-invalid" : "", type === 'file' ? 'custom-file-label': ""]
   return (

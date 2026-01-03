@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback } from 'react';
+import { ChangeEvent, MouseEvent, useCallback } from 'react';
 import { Form } from 'semantic-ui-react';
 import { getSemanticProps } from '../util';
 import {
@@ -45,6 +45,7 @@ export default function BaseInputTemplate<
     type,
     rawErrors = [],
   } = props;
+  const { ClearButton } = registry.templates.ButtonTemplates;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   const semanticProps = getSemanticProps<T, S, F>({
     uiSchema,
@@ -56,14 +57,13 @@ export default function BaseInputTemplate<
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
   const _onClear = useCallback(
-    (e: React.MouseEvent) => {
+    (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
       onChange(options.emptyValue ?? '');
     },
     [onChange, options.emptyValue],
   );
-  const { ClearButton } = registry.templates.ButtonTemplates;
 
   return (
     <>

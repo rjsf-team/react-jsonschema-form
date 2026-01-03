@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent, useCallback } from 'react';
+import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -46,6 +46,7 @@ export default function BaseInputTemplate<
     children,
     registry,
   } = props;
+  const { ClearButton } = registry.templates.ButtonTemplates;
 
   const inputProps = getInputProps<T, S, F>(schema, type, options, false);
   const description = hideLabel ? undefined : options.description || schema.description;
@@ -77,15 +78,13 @@ export default function BaseInputTemplate<
   );
 
   const handleClear = useCallback(
-    (e: React.MouseEvent) => {
+    (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
       onChange(options.emptyValue ?? '');
     },
     [onChange, options.emptyValue],
   );
-
-  const { ClearButton } = registry.templates.ButtonTemplates;
 
   const componentProps = {
     id,
