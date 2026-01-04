@@ -42,27 +42,23 @@ const TestRefWidget: Widget = forwardRef<HTMLSpanElement, Partial<WidgetProps>>(
   );
 });
 
-TestRefWidget.defaultProps = {
-  options: { id: 'test-id' },
-};
+// React 19+: Use defaultOptions instead of defaultProps.options
+(TestRefWidget as any).defaultOptions = { id: 'test-id' };
 
 function TestWidget(props: WidgetProps) {
   const { options } = props;
   return <div {...options}>test</div>;
 }
 
-TestWidget.defaultProps = {
-  id: 'foo',
-};
+// Note: This widget has no defaultOptions, testing fallback behavior
 
 function TestWidgetDefaults(props: WidgetProps) {
   const { options } = props;
   return <div {...options}>test</div>;
 }
 
-TestWidgetDefaults.defaultProps = {
-  options: { color: 'yellow' },
-};
+// React 19+: Use defaultOptions instead of defaultProps.options
+(TestWidgetDefaults as any).defaultOptions = { color: 'yellow' };
 
 const widgetProps: WidgetProps = {
   id: '',
