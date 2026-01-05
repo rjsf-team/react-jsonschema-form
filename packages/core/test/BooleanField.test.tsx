@@ -1,7 +1,12 @@
 import { fireEvent, act } from '@testing-library/react';
 import { RJSFSchema, WidgetProps } from '@rjsf/utils';
 
-import { createFormComponent, getSelectedOptionValue, submitForm } from './testUtils';
+import {
+  createFormComponent,
+  expectToHaveBeenCalledWithFormData,
+  getSelectedOptionValue,
+  submitForm,
+} from './testUtils';
 
 const CustomWidget = () => <div id='custom' />;
 
@@ -230,10 +235,7 @@ describe('BooleanField', () => {
       noValidate: true,
     });
     submitForm(node);
-    expect(onSubmit).toHaveBeenLastCalledWith(
-      expect.objectContaining({ formData: undefined }),
-      expect.objectContaining({ type: 'submit' }),
-    );
+    expectToHaveBeenCalledWithFormData(onSubmit, undefined, true);
   });
 
   it('should focus on required radio missing data when focusOnFirstField and shows error', () => {
@@ -312,7 +314,7 @@ describe('BooleanField', () => {
       fireEvent.click(node.querySelector('input')!);
     });
 
-    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: true }), 'root');
+    expectToHaveBeenCalledWithFormData(onChange, true, 'root');
   });
 
   it('should fill field with data', () => {
@@ -712,7 +714,7 @@ describe('BooleanField', () => {
       });
 
       expect(node.querySelectorAll('.rjsf-field select')).toHaveLength(1);
-      const $select = node.querySelector('.rjsf-field select');
+      const $select = node.querySelector<HTMLSelectElement>('.rjsf-field select');
       expect($select).toHaveValue('');
 
       act(() => {
@@ -720,8 +722,8 @@ describe('BooleanField', () => {
           target: { value: 0 }, // use index
         });
       });
-      expect(getSelectedOptionValue($select as HTMLSelectElement)).toEqual('true');
-      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: true }), 'root');
+      expect(getSelectedOptionValue($select!)).toEqual('true');
+      expectToHaveBeenCalledWithFormData(onChange, true, 'root');
     });
 
     it('should render a string field with a label', () => {
@@ -742,7 +744,7 @@ describe('BooleanField', () => {
           default: true,
         },
       });
-      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: true }));
+      expectToHaveBeenCalledWithFormData(onChange, true);
     });
 
     it('should handle a change event', () => {
@@ -758,7 +760,7 @@ describe('BooleanField', () => {
         });
       });
 
-      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: false }), 'root');
+      expectToHaveBeenCalledWithFormData(onChange, false, 'root');
     });
 
     it('should render the widget with the expected id', () => {

@@ -5,7 +5,12 @@ import userEvent from '@testing-library/user-event';
 import isEmpty from 'lodash/isEmpty';
 
 import Form from '../src';
-import { createFormComponent, getSelectedOptionValue, submitForm } from './testUtils';
+import {
+  createFormComponent,
+  expectToHaveBeenCalledWithFormData,
+  getSelectedOptionValue,
+  submitForm,
+} from './testUtils';
 
 const user = userEvent.setup();
 
@@ -119,10 +124,7 @@ describe('NumberField', () => {
         });
 
         submitForm(node);
-        expect(onSubmit).toHaveBeenLastCalledWith(
-          expect.objectContaining({ formData: undefined }),
-          expect.objectContaining({ type: 'submit' }),
-        );
+        expectToHaveBeenCalledWithFormData(onSubmit, undefined, true);
       });
 
       it('should assign a default value', () => {
@@ -147,7 +149,7 @@ describe('NumberField', () => {
 
         await user.type(node.querySelector('input')!, '2');
 
-        expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 2 }), 'root');
+        expectToHaveBeenCalledWithFormData(onChange, 2, 'root');
       });
 
       it('should handle a blur event', () => {
@@ -255,7 +257,7 @@ describe('NumberField', () => {
 
             await user.type($input!, test.input);
 
-            expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: test.output }), 'root');
+            expectToHaveBeenCalledWithFormData(onChange, test.output, 'root');
             // "2." is not really a valid number in a input field of type number
             // so we need to use getAttribute("value") instead since .value outputs the empty string
             expect($input).toHaveValue(isEmpty(uiSchema) ? test.output : test.input);
@@ -275,7 +277,7 @@ describe('NumberField', () => {
 
         await user.type($input!, '.00');
 
-        expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 0 }), 'root');
+        expectToHaveBeenCalledWithFormData(onChange, 0, 'root');
         const expected = isEmpty(uiSchema) ? 0 : '.00';
         expect($input).toHaveValue(expected);
       });
@@ -320,7 +322,7 @@ describe('NumberField', () => {
         await user.type($input!, '231', { initialSelectionStart: 0, initialSelectionEnd: 1 });
 
         expect($input).toHaveValue(isEmpty(uiSchema) ? 231 : '231');
-        expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 231 }), 'root');
+        expectToHaveBeenCalledWithFormData(onChange, 231, 'root');
 
         act(() => {
           ref.current?.reset();
@@ -328,7 +330,7 @@ describe('NumberField', () => {
 
         expect($input).toHaveValue(isEmpty(uiSchema) ? 1 : '1');
         // No id on programmatic change
-        expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 1 }));
+        expectToHaveBeenCalledWithFormData(onChange, 1);
       });
 
       it('should render the widget with the expected id', () => {
@@ -433,7 +435,7 @@ describe('NumberField', () => {
       });
 
       expect(node.querySelectorAll('.rjsf-field select')).toHaveLength(1);
-      const $select = node.querySelector('.rjsf-field select');
+      const $select = node.querySelector<HTMLSelectElement>('.rjsf-field select');
       expect($select).not.toHaveAttribute('value');
 
       act(() => {
@@ -441,8 +443,8 @@ describe('NumberField', () => {
           target: { value: 0 }, // use index
         });
       });
-      expect(getSelectedOptionValue($select as HTMLSelectElement)).toEqual('1');
-      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 1 }), 'root');
+      expect(getSelectedOptionValue($select!)).toEqual('1');
+      expectToHaveBeenCalledWithFormData(onChange, 1, 'root');
     });
 
     it('should render a string field with a label', () => {
@@ -468,7 +470,7 @@ describe('NumberField', () => {
       });
 
       // No id on initial onChange
-      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 1 }));
+      expectToHaveBeenCalledWithFormData(onChange, 1);
     });
 
     it('should handle a change event', () => {
@@ -485,7 +487,7 @@ describe('NumberField', () => {
         });
       });
 
-      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 2 }), 'root');
+      expectToHaveBeenCalledWithFormData(onChange, 2, 'root');
     });
 
     it('should fill field with data', () => {
@@ -497,10 +499,7 @@ describe('NumberField', () => {
         formData: 2,
       });
       submitForm(node);
-      expect(onSubmit).toHaveBeenLastCalledWith(
-        expect.objectContaining({ formData: 2 }),
-        expect.objectContaining({ type: 'submit' }),
-      );
+      expectToHaveBeenCalledWithFormData(onSubmit, 2, true);
     });
 
     it('should render the widget with the expected id', () => {

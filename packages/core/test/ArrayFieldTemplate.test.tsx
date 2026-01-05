@@ -298,7 +298,7 @@ describe('ArrayFieldTemplate', () => {
       });
     });
 
-    it.only('should pass formData so it is in sync with items', () => {
+    it('should pass formData so it is in sync with items', () => {
       const ArrayFieldTemplate = ({ formData, items, onAddClick }: ArrayFieldTemplateProps) => {
         if (formData.length !== items.length) {
           throw 'Error';
