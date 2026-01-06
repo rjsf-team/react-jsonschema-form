@@ -778,86 +778,6 @@ describe('StringField', () => {
       expect(node.querySelector('[type=datetime-local]')).toHaveAttribute('id', 'root');
     });
 
-    // These two tests no longer work with @testing-utils/react's fireEvent since the input field does not accept
-    // invalid data, unlike when `Simulate` was being used
-    //
-    // it('should reject an invalid entered datetime and shows error', () => {
-    //   const { node, onChange } = createFormComponent({
-    //     schema: {
-    //       type: 'string',
-    //       format: 'date-time',
-    //     },
-    //     liveValidate: true,
-    //   });
-    //   let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=datetime-local]');
-    //   expect(inputs).toHaveLength(0);
-    //   act(() => {
-    //     fireEvent.change(node.querySelector('[type=datetime-local]')!, {
-    //       target: { value: 'invalid' },
-    //     });
-    //   });
-    //   expect(onChange).toHaveBeenLastCalledWith(
-    //     expect.objectContaining({
-    //       errorSchema: { __errors: ['must be string'] },
-    //       errors: [
-    //         {
-    //           message: 'must be string',
-    //           name: 'type',
-    //           params: { type: 'string' },
-    //           property: '',
-    //           schemaPath: '#/type',
-    //           stack: 'must be string',
-    //           title: '',
-    //         },
-    //       ],
-    //     }),
-    //     'root',
-    //   );
-    //   inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=datetime-local]');
-    //   expect(inputs).toHaveLength(1);
-    // });
-    //
-    // it('should reject an invalid entered datetime and hides error', () => {
-    //   const { node, onChange } = createFormComponent({
-    //     schema: {
-    //       type: 'string',
-    //       format: 'date-time',
-    //     },
-    //     uiSchema: {
-    //       'ui:hideError': true,
-    //     },
-    //     liveValidate: true,
-    //   });
-    //   console.log(node.innerHTML);
-    //   let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=datetime-local]');
-    //
-    //   expect(inputs).toHaveLength(0);
-    //   act(() => {
-    //     fireEvent.change(node.querySelector('[type=datetime-local]')!, {
-    //       target: { value: 'invalid' },
-    //     });
-    //   });
-    //   expect(onChange).toHaveBeenLastCalledWith(
-    //     expect.objectContaining({
-    //       errorSchema: { __errors: ['must be string'] },
-    //       errors: [
-    //         {
-    //           message: 'must be string',
-    //           name: 'type',
-    //           params: { type: 'string' },
-    //           property: '',
-    //           schemaPath: '#/type',
-    //           stack: 'must be string',
-    //           title: '',
-    //         },
-    //       ],
-    //     }),
-    //     'root',
-    //   );
-    //   inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=datetime-local]');
-    //   expect(inputs).toHaveLength(0);
-    // });
-
     it('should render customized DateTimeWidget', () => {
       const { node } = createFormComponent({
         schema: {
@@ -985,44 +905,6 @@ describe('StringField', () => {
       expectToHaveBeenCalledWithFormData(onChange, '2012-12-12', 'root');
     });
 
-    // This test no longer works with @testing-utils/react's fireEvent since the input field does not accept
-    // invalid data, unlike when `Simulate` was being used
-    //
-    // it('should reject an invalid entered date', () => {
-    //   const { node, onChange } = createFormComponent({
-    //     schema: {
-    //       type: 'string',
-    //       format: 'date',
-    //     },
-    //     uiSchema,
-    //     liveValidate: true,
-    //   });
-    //
-    //   act(() => {
-    //     fireEvent.change(node.querySelector('[type=date]')!, {
-    //       target: { value: 'invalid' },
-    //     });
-    //   });
-    //
-    //   expect(onChange).toHaveBeenLastCalledWith(
-    //     expect.objectContaining({
-    //       errorSchema: { __errors: ['must match format "date"'] },
-    //       errors: [
-    //         {
-    //           message: 'must match format "date"',
-    //           name: 'format',
-    //           params: { format: 'date' },
-    //           property: '',
-    //           schemaPath: '#/format',
-    //           stack: 'must match format "date"',
-    //           title: '',
-    //         },
-    //       ],
-    //     }),
-    //     'root',
-    //   );
-    // });
-
     it('should render customized DateWidget', () => {
       const { node } = createFormComponent({
         schema: {
@@ -1119,43 +1001,6 @@ describe('StringField', () => {
 
       expect(node.querySelector('[type=time]')).toHaveAttribute('id', 'root');
     });
-
-    // This test no longer works with @testing-utils/react's fireEvent since the input field does not accept
-    // invalid data, unlike when `Simulate` was being used
-    //
-    // it('should reject an invalid entered time', () => {
-    //   const { node, onChange } = createFormComponent({
-    //     schema: {
-    //       type: 'string',
-    //       format: 'time',
-    //     },
-    //     liveValidate: true,
-    //   });
-    //
-    //   act(() => {
-    //     fireEvent.change(node.querySelector('[type=time]')!, {
-    //       target: { value: 'invalid' },
-    //     });
-    //   });
-    //
-    //   expect(onChange).toHaveBeenLastCalledWith(
-    //     expect.objectContaining({
-    //       errorSchema: { __errors: ['must match format "time"'] },
-    //       errors: [
-    //         {
-    //           message: 'must match format "time"',
-    //           name: 'format',
-    //           params: { format: 'time' },
-    //           property: '',
-    //           schemaPath: '#/format',
-    //           stack: 'must match format "time"',
-    //           title: '',
-    //         },
-    //       ],
-    //     }),
-    //     'root',
-    //   );
-    // });
 
     it('should render customized TimeWidget', () => {
       const { node } = createFormComponent({
