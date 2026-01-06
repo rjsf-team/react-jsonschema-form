@@ -22,6 +22,38 @@ describe('anyOf', () => {
     expect(node.querySelectorAll('select')).toHaveLength(0);
   });
 
+  it('should not render an empty fieldset for pure anyOf schemas without properties', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      anyOf: [
+        {
+          properties: {
+            foo: { type: 'string' },
+          },
+        },
+        {
+          properties: {
+            bar: { type: 'string' },
+          },
+        },
+      ],
+    };
+
+    const { node } = createFormComponent({
+      schema,
+    });
+
+    // The root element should NOT be a fieldset#root with empty content.
+    // Instead, the form should render the anyOf select and selected variant directly.
+    // There should be only ONE fieldset (from the selected variant), not a nested empty wrapper.
+    const fieldsets = node.querySelectorAll('fieldset');
+    expect(fieldsets.length).toBeLessThanOrEqual(1);
+
+    // The anyOf select should still be rendered
+    const anyOfSelect = node.querySelector('select[id="root__anyof_select"]');
+    expect(anyOfSelect).not.toBeNull();
+  });
+
   it('should render a select element if the anyOf keyword is present, merges top level required', () => {
     const schema: RJSFSchema = {
       type: 'object',
