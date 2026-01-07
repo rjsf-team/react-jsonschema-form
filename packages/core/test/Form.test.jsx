@@ -1623,6 +1623,117 @@ describeRepeated('Form common', (createFormComponent) => {
 
       expect(node.querySelector(secondInputID).value).to.equal('changed!');
     });
+    it('should not revert anyOf field changes in controlled forms when parent updates formData prop', () => {
+      // This test verifies the fix for a bug where anyOf/oneOf field changes would revert
+      // when the form is controlled (formData prop managed by parent).
+      //
+      // The bug requires:
+      // 1. anyOf with [object, null]
+      // 2. A property inside the object with both $ref AND default
+      // 3. The top-level anyOf default contains an extra property not in the schema
+      // 4. An enum field inside the referenced schema
+      const schema = {
+        $defs: {
+          InnerConfig: {
+            properties: {
+              name: {
+                enum: ['option_a', 'option_b'],
+                type: 'string',
+                default: 'option_a',
+              },
+            },
+            type: 'object',
+          },
+        },
+        properties: {
+          config: {
+            anyOf: [
+              {
+                title: 'Active',
+                type: 'object',
+                properties: {
+                  inner: {
+                    $ref: '#/$defs/InnerConfig',
+                    default: { name: 'option_a' },
+                  },
+                },
+              },
+              { type: 'null', title: 'Deactivated' },
+            ],
+            default: {
+              inner: {
+                extra: {}, // Extra property not in schema - triggers the bug
+                name: 'option_a',
+              },
+            },
+          },
+        },
+        type: 'object',
+      };
+
+      // Track all onChange calls
+      const onChangeCalls = [];
+      let compRef = null;
+
+      // Create onChange handler that updates props (simulates controlled form pattern)
+      const onChange = (event, id) => {
+        onChangeCalls.push({ event, id });
+        if (compRef) {
+          act(() => {
+            setProps(compRef, {
+              ref: compRef.ref,
+              schema,
+              formData: event.formData,
+              onChange,
+            });
+          });
+        }
+      };
+
+      // Initial formData with the extra property (like in the playground)
+      const initialFormData = {
+        config: {
+          inner: {
+            extra: {},
+            name: 'option_a',
+          },
+        },
+      };
+
+      const { comp, node } = createFormComponent({
+        ref: createRef(),
+        schema,
+        formData: initialFormData,
+        onChange,
+        // Use legacy default behavior - this is where the bug manifests
+        experimental_defaultFormStateBehavior: {
+          emptyObjectFields: 'populateAllDefaults',
+        },
+      });
+      compRef = comp;
+
+      // Find the enum select for the name field
+      // RJSF uses indices as values: 0 = option_a, 1 = option_b
+      const nameSelect = node.querySelector('#root_config_inner_name');
+      expect(nameSelect).to.exist;
+      expect(nameSelect.value).to.equal('0'); // option_a is index 0
+
+      // Change from option_a (0) to option_b (1)
+      act(() => {
+        fireEvent.change(nameSelect, { target: { value: '1' } });
+      });
+
+      // Verify onChange was called
+      expect(onChangeCalls.length).to.be.greaterThan(0);
+
+      // Check that the FINAL onChange call has option_b
+      // BUG: Without the fix, onChange is called with option_a (reverted value)
+      const lastFormData = onChangeCalls[onChangeCalls.length - 1].event.formData;
+      expect(lastFormData.config.inner.name).to.equal('option_b');
+
+      // The DOM should also reflect the change
+      expect(node.querySelector('#root_config_inner_name').value).to.equal('1');
+    });
     it('Should modify anyOf definition references when the defaults are set.', () => {
       const schema = {
         definitions: {
