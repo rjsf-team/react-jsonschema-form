@@ -34,6 +34,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Removed deprecated `defaultProps` from `AltDateTimeWidget` and `AltDateWidget` components, preserving all existing behavior
 - Fixed `ObjectFieldTemplate` rendering an empty fieldset for pure oneOf/anyOf schemas (schemas with `type: "object"` and oneOf/anyOf but no properties at root level)
 - Fixed anyOf/oneOf field changes reverting in controlled forms when parent updates formData prop
+- Fixed defaults not being restored when switching from null back to object option in oneOf
 
 ## @rjsf/daisyui
 

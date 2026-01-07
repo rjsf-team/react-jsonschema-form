@@ -1734,6 +1734,123 @@ describeRepeated('Form common', (createFormComponent) => {
       // The DOM should also reflect the change
       expect(node.querySelector('#root_config_inner_name').value).to.equal('1');
     });
+    it('should restore defaults when switching from null back to object option in oneOf', () => {
+      // This test verifies that when switching from a null oneOf option back to an object option,
+      // the defaults are correctly restored. Without the fix, the form would show empty/undefined values.
+      const schema = {
+        type: 'object',
+        title: 'Configuration',
+        oneOf: [
+          {
+            title: 'Default Configuration',
+            type: 'object',
+            properties: {
+              types: {
+                const: 'default',
+                title: 'Types',
+              },
+              content: {
+                type: 'string',
+                title: 'Content',
+              },
+            },
+            required: ['types'],
+          },
+          {
+            title: 'Advanced Configuration',
+            type: 'object',
+            properties: {
+              types: {
+                const: 'advanced',
+                title: 'Types',
+              },
+              content: {
+                type: 'string',
+                title: 'Content',
+              },
+            },
+            required: ['types'],
+          },
+          {
+            title: 'No Configuration',
+            type: 'null',
+          },
+        ],
+        default: {
+          types: 'advanced',
+          content: 'placeholder',
+        },
+      };
+
+      // Track all onChange calls
+      const onChangeCalls = [];
+      let compRef = null;
+
+      // Create onChange handler that updates props (simulates controlled form pattern)
+      const onChange = (event, id) => {
+        onChangeCalls.push({ event, id });
+        if (compRef) {
+          act(() => {
+            setProps(compRef, {
+              ref: compRef.ref,
+              schema,
+              formData: event.formData,
+              onChange,
+            });
+          });
+        }
+      };
+
+      const { comp, node } = createFormComponent({
+        ref: createRef(),
+        schema,
+        onChange,
+        experimental_defaultFormStateBehavior: {
+          emptyObjectFields: 'populateAllDefaults',
+        },
+      });
+      compRef = comp;
+
+      // Verify initial state has defaults
+      const oneOfSelect = node.querySelector('#root__oneof_select');
+      expect(oneOfSelect).to.exist;
+      // Should start with "Advanced Configuration" (index 1) based on default
+      expect(oneOfSelect.value).to.equal('1');
+
+      // The content field should have the default value
+      let contentInput = node.querySelector('#root_content');
+      expect(contentInput).to.exist;
+      expect(contentInput.value).to.equal('placeholder');
+
+      // Switch to "No Configuration" (null option, index 2)
+      act(() => {
+        fireEvent.change(oneOfSelect, { target: { value: '2' } });
+      });
+
+      // Verify we're now on null option
+      expect(node.querySelector('#root__oneof_select').value).to.equal('2');
+      // Content field should not exist for null option
+      expect(node.querySelector('#root_content')).to.not.exist;
+
+      // Switch back to "Advanced Configuration" (index 1)
+      act(() => {
+        fireEvent.change(node.querySelector('#root__oneof_select'), { target: { value: '1' } });
+      });
+
+      // Verify we're back on Advanced Configuration
+      expect(node.querySelector('#root__oneof_select').value).to.equal('1');
+
+      // The content field should be restored with defaults
+      contentInput = node.querySelector('#root_content');
+      expect(contentInput).to.exist;
+      // BUG: Without the fix, this would be empty string or undefined
+      expect(contentInput.value).to.equal('placeholder');
+
+      // Also verify types field has the correct const value
+      const lastFormData = onChangeCalls[onChangeCalls.length - 1].event.formData;
+      expect(lastFormData.types).to.equal('advanced');
+      expect(lastFormData.content).to.equal('placeholder');
+    });
     it('Should modify anyOf definition references when the defaults are set.', () => {
       const schema = {
         definitions: {
