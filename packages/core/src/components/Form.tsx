@@ -897,6 +897,16 @@ export default class Form<
     const isRootPath = !path || path.length === 0 || (path.length === 1 && path[0] === rootPathId);
     let retrievedSchema = this.state.retrievedSchema;
     let formData = isRootPath ? newValue : _cloneDeep(oldFormData);
+
+    // When formData has only undefined values (e.g., {types: undefined, content: undefined}),
+    // pass undefined to getStateFromProps to trigger fresh default computation.
+    // This happens when switching from null to an object option in oneOf - MultiSchemaField
+    // sends an object with property names but undefined values.
+    const hasOnlyUndefinedValues =
+      isObject(formData) &&
+      Object.keys(formData as object).length > 0 &&
+      Object.values(formData as object).every((v) => v === undefined);
+    const inputForDefaults = hasOnlyUndefinedValues ? undefined : formData;
     if (isObject(formData) || Array.isArray(formData)) {
       if (newValue === ADDITIONAL_PROPERTY_KEY_REMOVE) {
         // For additional properties, we were given the special remove this key value, so unset it
@@ -906,7 +916,7 @@ export default class Form<
         _set(formData, path, newValue);
       }
       // Pass true to skip live validation in `getStateFromProps()` since we will do it a bit later
-      const newState = this.getStateFromProps(this.props, formData, undefined, undefined, undefined, true);
+      const newState = this.getStateFromProps(this.props, inputForDefaults, undefined, undefined, undefined, true);
       // Merge newState.formData into formData, preserving user's changes but adding new fields
       // (dependency defaults). getStateFromProps can incorrectly revert anyOf/oneOf changes.
       if (newState.formData !== undefined) {
@@ -1015,17 +1025,26 @@ export default class Form<
    * @returns Merged formData preserving user changes but adding new fields
    */
   private mergeFormDataPreservingUserChanges<D>(existing: D, computed: D): D {
-    // Handle non-object cases
-    if (!isObject(existing) || !isObject(computed)) {
+    // If existing is null/undefined, use computed (applying defaults for new option)
+    if (existing === null || existing === undefined) {
+      return computed;
+    }
+    // If existing is not an object, keep it (user selected a primitive)
+    if (!isObject(existing)) {
+      return existing;
+    }
+    // If computed is not an object, keep existing
+    if (!isObject(computed)) {
       return existing;
     }
 
+    // Both are objects - merge recursively
     const result = { ...existing } as GenericObjectType;
     const computedObj = computed as GenericObjectType;
 
     for (const key of Object.keys(computedObj)) {
-      if (!(key in result)) {
-        // New field from computed - add it (this handles dependency defaults)
+      if (!(key in result) || result[key] === undefined) {
+        // New field or undefined value - use computed (handles dependency defaults and null→object transitions)
         result[key] = computedObj[key];
       } else if (isObject(result[key]) && isObject(computedObj[key])) {
         // Both are objects - recursively merge
