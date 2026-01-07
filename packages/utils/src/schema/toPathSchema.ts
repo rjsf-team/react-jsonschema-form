@@ -6,6 +6,7 @@ import {
   ALL_OF_KEY,
   ANY_OF_KEY,
   DEPENDENCIES_KEY,
+  IF_KEY,
   ITEMS_KEY,
   NAME_KEY,
   ONE_OF_KEY,
@@ -48,7 +49,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
   _recurseList: S[] = [],
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): PathSchema<T> {
-  if (REF_KEY in schema || DEPENDENCIES_KEY in schema || ALL_OF_KEY in schema) {
+  if (REF_KEY in schema || DEPENDENCIES_KEY in schema || ALL_OF_KEY in schema || IF_KEY in schema) {
     const _schema = retrieveSchema<T, S, F>(validator, schema, rootSchema, formData, experimental_customMergeAllOf);
     const sameSchemaIndex = _recurseList.findIndex((item) => deepEquals(item, _schema));
     if (sameSchemaIndex === -1) {

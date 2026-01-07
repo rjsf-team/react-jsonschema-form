@@ -4469,6 +4469,54 @@ describe('Form omitExtraData and liveOmit', () => {
     });
   });
 
+  it('should not omit conditionally displayed fields with nested if/then when omitExtraData=true and liveOmit=true', () => {
+    const { node, onChange } = createFormComponent(
+      {
+        schema: {
+          type: 'object',
+          properties: {
+            nested: {
+              type: 'object',
+              properties: {
+                booleanProperty: { type: 'boolean', default: true },
+              },
+              if: {
+                properties: { booleanProperty: { const: true } },
+              },
+              then: {
+                properties: {
+                  otherProperty: { type: 'string' },
+                },
+              },
+            },
+          },
+        },
+        formData: {
+          nested: {
+            booleanProperty: true,
+            otherProperty: 'initial value',
+          },
+        },
+      },
+      { omitExtraData: true, liveOmit: true },
+    );
+
+    const textNode = node.querySelector('#root_nested_otherProperty');
+    fireEvent.change(textNode, {
+      target: { value: 'new value' },
+    });
+
+    // The otherProperty should NOT be omitted because it's a valid conditional field
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: {
+        nested: {
+          booleanProperty: true,
+          otherProperty: 'new value',
+        },
+      },
+    });
+  });
+
   it('should keep schema errors when extraErrors set after submit and liveValidate is false', () => {
     const schema = {
       type: 'object',
