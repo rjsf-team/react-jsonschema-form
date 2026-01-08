@@ -880,6 +880,18 @@ export default class Form<
     const isRootPath = !path || path.length === 0 || (path.length === 1 && path[0] === rootPathId);
     let retrievedSchema = this.state.retrievedSchema;
     let formData = isRootPath ? newValue : _cloneDeep(oldFormData);
+
+    // When switching from null to an object option in oneOf, MultiSchemaField sends
+    // an object with property names but undefined values (e.g., {types: undefined, content: undefined}).
+    // In this case, pass undefined to getStateFromProps to trigger fresh default computation.
+    // Only do this when the previous formData was null/undefined (switching FROM null).
+    const hasOnlyUndefinedValues =
+      isObject(formData) &&
+      Object.keys(formData as object).length > 0 &&
+      Object.values(formData as object).every((v) => v === undefined);
+    const wasPreviouslyNull = oldFormData === null || oldFormData === undefined;
+    const inputForDefaults = hasOnlyUndefinedValues && wasPreviouslyNull ? undefined : formData;
+
     if (isObject(formData) || Array.isArray(formData)) {
       if (newValue === ADDITIONAL_PROPERTY_KEY_REMOVE) {
         // For additional properties, we were given the special remove this key value, so unset it
@@ -889,7 +901,7 @@ export default class Form<
         _set(formData, path, newValue);
       }
       // Pass true to skip live validation in `getStateFromProps()` since we will do it a bit later
-      const newState = this.getStateFromProps(this.props, formData, undefined, undefined, undefined, true);
+      const newState = this.getStateFromProps(this.props, inputForDefaults, undefined, undefined, undefined, true);
       formData = newState.formData;
       retrievedSchema = newState.retrievedSchema;
     }

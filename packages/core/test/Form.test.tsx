@@ -1433,6 +1433,80 @@ describeRepeated('Form common', (createFormComponent) => {
 
       expect(node.querySelector(secondInputID)).toHaveAttribute('value', 'changed!');
     });
+    it('should restore defaults when switching from null back to object option in oneOf', () => {
+      // This test verifies that when switching from a null oneOf option back to an object option,
+      // the defaults are correctly restored. Without the fix, the form would show empty/undefined values.
+      const schema = {
+        type: 'object',
+        title: 'Configuration',
+        oneOf: [
+          {
+            title: 'Default Configuration',
+            type: 'object',
+            properties: {
+              types: { const: 'default', title: 'Types' },
+              content: { type: 'string', title: 'Content' },
+            },
+            required: ['types'],
+          },
+          {
+            title: 'Advanced Configuration',
+            type: 'object',
+            properties: {
+              types: { const: 'advanced', title: 'Types' },
+              content: { type: 'string', title: 'Content' },
+            },
+            required: ['types'],
+          },
+          { title: 'No Configuration', type: 'null' },
+        ],
+        default: { types: 'advanced', content: 'placeholder' },
+      };
+
+      const onChangeCalls = [];
+
+      const { node } = createFormComponent({
+        schema,
+        onChange: (event, id) => onChangeCalls.push({ event, id }),
+        experimental_defaultFormStateBehavior: { emptyObjectFields: 'populateAllDefaults' },
+      });
+
+      // Should start with "Advanced Configuration" (index 1) based on default
+      const oneOfSelect = node.querySelector('#root__oneof_select');
+      expect(oneOfSelect).to.exist;
+      expect(oneOfSelect.value).to.equal('1');
+
+      // The content field should have the default value
+      let contentInput = node.querySelector('#root_content');
+      expect(contentInput).to.exist;
+      expect(contentInput.value).to.equal('placeholder');
+
+      // Switch to "No Configuration" (null option, index 2)
+      act(() => {
+        fireEvent.change(oneOfSelect, { target: { value: '2' } });
+      });
+
+      // Verify we're now on null option - content field should not exist
+      expect(node.querySelector('#root__oneof_select').value).to.equal('2');
+      expect(node.querySelector('#root_content')).to.not.exist;
+
+      // Switch back to "Advanced Configuration" (index 1)
+      act(() => {
+        fireEvent.change(node.querySelector('#root__oneof_select'), { target: { value: '1' } });
+      });
+
+      // The content field should be restored with defaults
+      expect(node.querySelector('#root__oneof_select').value).to.equal('1');
+      contentInput = node.querySelector('#root_content');
+      expect(contentInput).to.exist;
+      // BUG: Without the fix, this would be empty string or undefined
+      expect(contentInput.value).to.equal('placeholder');
+
+      // Also verify the final formData has correct values
+      const lastFormData = onChangeCalls[onChangeCalls.length - 1].event.formData;
+      expect(lastFormData.types).to.equal('advanced');
+      expect(lastFormData.content).to.equal('placeholder');
+    });
     it('Should modify anyOf definition references when the defaults are set.', () => {
       const schema: RJSFSchema = {
         definitions: {
