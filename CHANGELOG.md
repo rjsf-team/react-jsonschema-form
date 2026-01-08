@@ -33,6 +33,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `BaseInputTemplate` to support the `allowClearTextInputs` feature for input fields
 - Removed deprecated `defaultProps` from `AltDateTimeWidget` and `AltDateWidget` components, preserving all existing behavior
 - Fixed `ObjectFieldTemplate` rendering an empty fieldset for pure oneOf/anyOf schemas (schemas with `type: "object"` and oneOf/anyOf but no properties at root level)
+- Fixed oneOf/anyOf option switches reverting in controlled forms
 - Fixed defaults not being restored when switching from null back to object option in oneOf/anyOf
 - Added `fieldPathId` to `FieldTemplate` props in `SchemaField` and `LayoutMultiSchemaField`, fixing [#4897](https://github.com/rjsf-team/react-jsonschema-form/issues/4897)
 
