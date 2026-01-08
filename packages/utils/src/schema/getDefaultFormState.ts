@@ -252,9 +252,9 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     !constIsAjvDataReference(schema)
   ) {
     defaults = schema[CONST_KEY] as unknown as T;
-  } else if (isObject(defaults) && isObject(schema.default)) {
+  } else if (isObject(defaults) && isObject(schema.default) && !schema[ANY_OF_KEY] && !schema[ONE_OF_KEY] && !schema[REF_KEY]) {
     // For object defaults, only override parent defaults that are defined in
-    // schema.default.
+    // schema.default. Skip this for anyOf/oneOf/$ref schemas - they need special handling.
     defaults = mergeObjects(defaults!, schema.default as GenericObjectType) as T;
   } else if (DEFAULT_KEY in schema && !schema[ANY_OF_KEY] && !schema[ONE_OF_KEY] && !schema[REF_KEY]) {
     // If the schema has a default value, then we should use it as the default.
@@ -269,8 +269,11 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     }
 
     // If the referenced schema exists and parentDefaults is not set
-    // Then set the defaults from the current schema for the referenced schema
-    if (schemaToCompute && !defaults) {
+    // Then set the defaults from the current schema for the referenced schema.
+    // Only do this if rawFormData has no meaningful data - we don't want to override user's existing values.
+    // Check for undefined OR empty object (which can come from the fallback on line 241).
+    const hasNoExistingData = rawFormData === undefined || (isObject(rawFormData) && isEmpty(rawFormData));
+    if (schemaToCompute && !defaults && hasNoExistingData) {
       defaults = schema.default as T | undefined;
     }
 
