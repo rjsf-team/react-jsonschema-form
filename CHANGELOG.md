@@ -75,6 +75,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed issue with default value not being prefilled when object with if/then is nested inside another object, fixing [#4222](https://github.com/rjsf-team/react-jsonschema-form/issues/4222)
 - Fixed issue with schema array with nested dependent fixed-length, fixing [#3754](https://github.com/rjsf-team/react-jsonschema-form/issues/3754)
 - Updated `CustomValidator` type to accept `errorSchema`, so its implementation can be based on result of ajv validation ([#4898](https://github.com/rjsf-team/react-jsonschema-form/pull/4899))
+- Fixed user formData being overwritten with defaults in schemas combining `anyOf`/`oneOf` with `$ref` and `default` at multiple levels
 - Added `fieldPathId` to `FieldTemplateProps` to enable proper use of `onChange` with the required `path` parameter, fixing [#4897](https://github.com/rjsf-team/react-jsonschema-form/issues/4897)
 
 ## @rjsf/validator-ajv8
