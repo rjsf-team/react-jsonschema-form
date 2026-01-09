@@ -252,7 +252,13 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     !constIsAjvDataReference(schema)
   ) {
     defaults = schema[CONST_KEY] as unknown as T;
-  } else if (isObject(defaults) && isObject(schema.default) && !schema[ANY_OF_KEY] && !schema[ONE_OF_KEY] && !schema[REF_KEY]) {
+  } else if (
+    isObject(defaults) &&
+    isObject(schema.default) &&
+    !schema[ANY_OF_KEY] &&
+    !schema[ONE_OF_KEY] &&
+    !schema[REF_KEY]
+  ) {
     // For object defaults, only override parent defaults that are defined in
     // schema.default. Skip this for anyOf/oneOf/$ref schemas - they need special handling.
     defaults = mergeObjects(defaults!, schema.default as GenericObjectType) as T;
