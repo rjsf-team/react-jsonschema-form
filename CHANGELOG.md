@@ -32,6 +32,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `BaseInputTemplate` to support the `allowClearTextInputs` feature for input fields
 - Removed deprecated `defaultProps` from `AltDateTimeWidget` and `AltDateWidget` components, preserving all existing behavior
+- Fixed `ObjectFieldTemplate` rendering an empty fieldset for pure oneOf/anyOf schemas (schemas with `type: "object"` and oneOf/anyOf but no properties at root level)
 
 ## @rjsf/daisyui
 
@@ -64,6 +65,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/shadcn
 
 - Updated `BaseInputTemplate` to support the `allowClearTextInputs` feature for input fields
+- Fixed issue `"ui:rows"` option for `textarea` elements, fixing [#4903](https://github.com/rjsf-team/react-jsonschema-form/issues/4903).
 
 ## @rjsf/utils
 

@@ -1,4 +1,4 @@
-import { createFormComponent, submitForm } from './testUtils';
+import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils';
 
 describe('NullField', () => {
   describe('No widget', () => {
@@ -31,7 +31,7 @@ describe('NullField', () => {
         },
       });
 
-      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: null }));
+      expectToHaveBeenCalledWithFormData(onChange, null);
     });
 
     it('should not overwrite existing data', () => {
@@ -44,10 +44,7 @@ describe('NullField', () => {
       });
 
       submitForm(node);
-      expect(onSubmit).toHaveBeenLastCalledWith(
-        expect.objectContaining({ formData: 3 }),
-        expect.objectContaining({ type: 'submit' }),
-      );
+      expectToHaveBeenCalledWithFormData(onSubmit, 3, true);
     });
   });
 });
