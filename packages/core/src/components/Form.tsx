@@ -758,14 +758,13 @@ export default class Form<
    * @param formData - The data for the `Form`
    * @param fields - The fields to keep while filtering
    */
-  getUsedFormData = (formData: T | undefined, fields: string[][]): T | undefined => {
+  getUsedFormData = (formData: T | undefined, fields: string[]): T | undefined => {
     // For the case of a single input form
     if (fields.length === 0 && typeof formData !== 'object') {
       return formData;
     }
 
-    // _pick has incorrect type definition, it works with string[][], because lodash/hasIn supports it
-    const data: GenericObjectType = _pick(formData, fields as unknown as string[]);
+    const data: GenericObjectType = _pick(formData, fields);
     if (Array.isArray(formData)) {
       return Object.keys(data).map((key: string) => data[key]) as unknown as T;
     }
@@ -823,7 +822,10 @@ export default class Form<
     const retrievedSchema = schemaUtils.retrieveSchema(schema, formData);
     const pathSchema = schemaUtils.toPathSchema(retrievedSchema, '', formData);
     const fieldNames = this.getFieldNames(pathSchema, formData);
-    return this.getUsedFormData(formData, fieldNames);
+    const lodashFieldNames = fieldNames.map((fieldPaths: string[]) =>
+      Array.isArray(fieldPaths) ? fieldPaths.join('.') : fieldPaths,
+    );
+    return this.getUsedFormData(formData, lodashFieldNames);
   };
 
   /** Allows a user to set a value for the provided `fieldPath`, which must be either a dotted path to the field OR a

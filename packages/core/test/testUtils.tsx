@@ -3,9 +3,13 @@ import { render, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { GenericObjectType, ValidatorType } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import has from 'lodash/has';
 
 import Form, { FormProps } from '../src';
+
+export type NoValFormProps = Omit<FormProps, 'validator'>;
+
+// eslint-disable-next-line no-unused-vars
+export type RerenderType = (newProps: NoValFormProps, v?: ValidatorType) => void;
 
 export function renderNode(Component: ComponentType<any>, props: GenericObjectType) {
   const { container } = render(<Component {...props} />);
@@ -21,10 +25,9 @@ export function createComponent(Component: ComponentType<FormProps>, theProps: F
     <Component onSubmit={onSubmit} onError={onError} onChange={onChange} {...theProps} />,
   );
 
-  const rerenderFunction = (newProps: Omit<FormProps, 'validator'>) => {
+  const rerenderFunction: RerenderType = (newProps: NoValFormProps, v: ValidatorType = validator) => {
     // For Form components, ensure validator is always passed
-    const propsWithValidator: FormProps =
-      Component === Form && !has(newProps, 'validator') ? { ...newProps, validator } : (newProps as FormProps);
+    const propsWithValidator: FormProps = { ...newProps, validator: v };
     return rerender(<Component onSubmit={onSubmit} onError={onError} onChange={onChange} {...propsWithValidator} />);
   };
   const node = container.firstElementChild;
@@ -35,7 +38,7 @@ export function createComponent(Component: ComponentType<FormProps>, theProps: F
   return { container, node, onChange, onError, onSubmit, rerender: rerenderFunction };
 }
 
-export function createFormComponent(props: Omit<FormProps, 'validator'>, v: ValidatorType = validator) {
+export function createFormComponent(props: NoValFormProps, v: ValidatorType = validator) {
   return createComponent(Form, { validator: v, ...props });
 }
 
@@ -52,8 +55,7 @@ export function describeRepeated(title: string, fn: CreatorFn) {
     { omitExtraData: true, liveOmit: 'onBlur' },
   ];
   for (const formExtraProps of formExtraPropsList) {
-    const createFormComponentFn = (props: Omit<FormProps, 'validator'>) =>
-      createFormComponent({ ...props, ...formExtraProps });
+    const createFormComponentFn = (props: NoValFormProps) => createFormComponent({ ...props, ...formExtraProps });
     describe(`${title} ${JSON.stringify(formExtraProps)}`, () => fn(createFormComponentFn));
   }
 }
