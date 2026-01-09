@@ -183,6 +183,7 @@ export default function LayoutMultiSchemaField<
 
   return (
     <FieldTemplate
+      fieldPathId={fieldPathId}
       id={id}
       schema={schema}
       label={(title || schema.title) ?? ''}

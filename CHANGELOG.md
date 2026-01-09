@@ -33,10 +33,12 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `BaseInputTemplate` to support the `allowClearTextInputs` feature for input fields
 - Removed deprecated `defaultProps` from `AltDateTimeWidget` and `AltDateWidget` components, preserving all existing behavior
 - Fixed `ObjectFieldTemplate` rendering an empty fieldset for pure oneOf/anyOf schemas (schemas with `type: "object"` and oneOf/anyOf but no properties at root level)
+- Added `fieldPathId` to `FieldTemplate` props in `SchemaField` and `LayoutMultiSchemaField`, fixing [#4897](https://github.com/rjsf-team/react-jsonschema-form/issues/4897)
 
 ## @rjsf/daisyui
 
 - Updated `BaseInputTemplate` to support the `allowClearTextInputs` feature for input fields
+- Updated `FieldTemplate` to destructure `fieldPathId` to prevent passing it to DOM elements, fixing [#4897](https://github.com/rjsf-team/react-jsonschema-form/issues/4897)
 
 ## @rjsf/fluent-ui
 
@@ -73,6 +75,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed issue with default value not being prefilled when object with if/then is nested inside another object, fixing [#4222](https://github.com/rjsf-team/react-jsonschema-form/issues/4222)
 - Fixed issue with schema array with nested dependent fixed-length, fixing [#3754](https://github.com/rjsf-team/react-jsonschema-form/issues/3754)
 - Updated `CustomValidator` type to accept `errorSchema`, so its implementation can be based on result of ajv validation ([#4898](https://github.com/rjsf-team/react-jsonschema-form/pull/4899))
+- Added `fieldPathId` to `FieldTemplateProps` to enable proper use of `onChange` with the required `path` parameter, fixing [#4897](https://github.com/rjsf-team/react-jsonschema-form/issues/4897)
 
 ## @rjsf/validator-ajv8
 
