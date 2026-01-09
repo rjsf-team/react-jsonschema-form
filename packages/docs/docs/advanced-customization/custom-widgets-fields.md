@@ -253,21 +253,21 @@ This is useful if you expose the `uiSchema` as pure JSON, which can't carry func
 If you need to pass options to your custom widget, you can add a `ui:options` object containing those properties. If the widget has a static `defaultOptions` property, the options will be merged with the options object from `defaultOptions`:
 
 ```tsx
-import { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import { RJSFSchema, UiSchema, WidgetProps, WidgetWithDefaultOptions } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
   type: 'string',
 };
 
-function MyCustomWidget(props: WidgetProps) {
+const MyCustomWidget: WidgetWithDefaultOptions = (props: WidgetProps) => {
   const { options } = props;
   const { color, backgroundColor } = options;
   return <input style={{ color, backgroundColor }} />;
-}
+};
 
 // React 19+: Use defaultOptions instead of defaultProps.options
-(MyCustomWidget as any).defaultOptions = {
+MyCustomWidget.defaultOptions = {
   color: 'red',
 };
 

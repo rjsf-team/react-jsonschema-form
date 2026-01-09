@@ -1,7 +1,7 @@
 import { forwardRef, memo, ForwardedRef } from 'react';
 import { render } from '@testing-library/react';
 
-import { FieldPathId, Registry, RJSFSchema, WidgetProps, getWidget, Widget } from '../src';
+import { FieldPathId, Registry, RJSFSchema, WidgetProps, getWidget, WidgetWithDefaultOptions } from '../src';
 
 const subschema: RJSFSchema = {
   type: 'boolean',
@@ -30,20 +30,19 @@ const schema: RJSFSchema = {
 };
 const schemaStr = JSON.stringify(schema);
 
-const TestRefWidget: Widget = forwardRef<HTMLSpanElement, Partial<WidgetProps>>(function TestRefWidget(
-  props: Partial<WidgetProps>,
-  ref: ForwardedRef<HTMLSpanElement>,
-) {
-  const { options } = props;
-  return (
-    <span {...options} ref={ref}>
-      test
-    </span>
-  );
-});
+const TestRefWidget: WidgetWithDefaultOptions = forwardRef<HTMLSpanElement, Partial<WidgetProps>>(
+  function TestRefWidget(props: Partial<WidgetProps>, ref: ForwardedRef<HTMLSpanElement>) {
+    const { options } = props;
+    return (
+      <span {...options} ref={ref}>
+        test
+      </span>
+    );
+  },
+) as WidgetWithDefaultOptions;
 
 // React 19+: Use defaultOptions instead of defaultProps.options
-(TestRefWidget as any).defaultOptions = { id: 'test-id' };
+TestRefWidget.defaultOptions = { id: 'test-id' };
 
 function TestWidget(props: WidgetProps) {
   const { options } = props;
@@ -52,13 +51,13 @@ function TestWidget(props: WidgetProps) {
 
 // Note: This widget has no defaultOptions, testing fallback behavior
 
-function TestWidgetDefaults(props: WidgetProps) {
+const TestWidgetDefaults: WidgetWithDefaultOptions = (props: WidgetProps) => {
   const { options } = props;
   return <div {...options}>test</div>;
-}
+};
 
 // React 19+: Use defaultOptions instead of defaultProps.options
-(TestWidgetDefaults as any).defaultOptions = { color: 'yellow' };
+TestWidgetDefaults.defaultOptions = { color: 'yellow' };
 
 const widgetProps: WidgetProps = {
   id: '',
