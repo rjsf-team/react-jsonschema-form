@@ -948,6 +948,30 @@ export type Widget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends F
   WidgetProps<T, S, F>
 >;
 
+/** The definition of a Widget component that can have default options.
+ * Use this type when defining a custom widget that needs to specify default options
+ * that will be merged with the options passed via `ui:options` in the uiSchema.
+ *
+ * @example
+ * ```tsx
+ * const MyWidget: WidgetWithDefaultOptions = (props) => {
+ *   const { options } = props;
+ *   return <input style={{ color: options.color }} />;
+ * };
+ * MyWidget.defaultOptions = { color: 'red' };
+ * ```
+ */
+export type WidgetWithDefaultOptions<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> = Widget<T, S, F> & {
+  /** Optional default options that will be merged with the options from `ui:options` in the uiSchema.
+   * This is the React 19 compatible replacement for the deprecated `defaultProps.options` pattern.
+   */
+  defaultOptions?: GenericObjectType;
+};
+
 /** The properties that are passed to the BaseInputTemplate */
 export interface BaseInputTemplateProps<
   T = any,

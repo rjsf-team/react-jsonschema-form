@@ -1,9 +1,9 @@
-import { createElement } from 'react';
+// Note: createElement was removed as ReactIs.isForwardRef() is deprecated in React 19
 import ReactIs from 'react-is';
 import get from 'lodash/get';
 import set from 'lodash/set';
 
-import { FormContextType, RJSFSchema, Widget, RegistryWidgetsType, StrictRJSFSchema } from './types';
+import { FormContextType, GenericObjectType, RJSFSchema, Widget, RegistryWidgetsType, StrictRJSFSchema } from './types';
 import getSchemaType from './getSchemaType';
 
 /** The map of schema types to widget type to widget name
@@ -61,9 +61,12 @@ const widgetMap: { [k: string]: { [j: string]: string } } = {
   },
 };
 
-/** Wraps the given widget with stateless functional component that will merge any `defaultProps.options` with the
+/** Wraps the given widget with stateless functional component that will merge any `defaultOptions` with the
  * `options` that are provided in the props. It will add the wrapper component as a `MergedWidget` property onto the
  * `Widget` so that future attempts to wrap `AWidget` will return the already existing wrapper.
+ *
+ * NOTE: In React 19, `defaultProps` is deprecated for function components. Widgets should now define default options
+ * using a static `defaultOptions` property instead of `defaultProps.options`.
  *
  * @param AWidget - A widget that will be wrapped or one that is already wrapped
  * @returns - The wrapper widget
@@ -74,7 +77,15 @@ function mergeWidgetOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   let MergedWidget: Widget<T, S, F> | undefined = get(AWidget, 'MergedWidget');
   // cache return value as property of widget for proper react reconciliation
   if (!MergedWidget) {
-    const defaultOptions = (AWidget.defaultProps && AWidget.defaultProps.options) || {};
+    // Support both new `defaultOptions` (React 19+) and legacy `defaultProps.options` for backwards compatibility
+    const widgetWithDefaults = AWidget as Widget<T, S, F> & {
+      defaultOptions?: GenericObjectType;
+      defaultProps?: { options?: GenericObjectType };
+    };
+    const defaultOptions =
+      widgetWithDefaults.defaultOptions ||
+      (widgetWithDefaults.defaultProps && widgetWithDefaults.defaultProps.options) ||
+      {};
     MergedWidget = ({ options, ...props }) => {
       return <AWidget options={{ ...defaultOptions, ...options }} {...props} />;
     };
@@ -101,11 +112,9 @@ export default function getWidget<T = any, S extends StrictRJSFSchema = RJSFSche
 ): Widget<T, S, F> {
   const type = getSchemaType(schema);
 
-  if (
-    typeof widget === 'function' ||
-    (widget && ReactIs.isForwardRef(createElement(widget))) ||
-    ReactIs.isMemo(widget)
-  ) {
+  // Check if widget is a valid React component.
+  // We exclude strings because in RJSF, string widgets are keys in the registry, not HTML elements.
+  if (ReactIs.isValidElementType(widget) && typeof widget !== 'string') {
     return mergeWidgetOptions<T, S, F>(widget as Widget<T, S, F>);
   }
 
