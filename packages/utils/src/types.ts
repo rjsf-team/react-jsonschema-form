@@ -1367,6 +1367,16 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    * @returns - True if schema contains a select, otherwise false
    */
   isSelect(schema: S): boolean;
+  /**
+   * The function takes a `schema` and `formData` and returns a copy of the formData with any fields not defined in the schema removed.
+   * This is useful for ensuring that only data that is relevant to the schema is preserved. Objects with `additionalProperties`
+   * keyword set to `true` will not have their extra fields removed.
+   *
+   * @param schema - The schema to use for filtering the `formData`
+   * @param [formData] - The formData to filter
+   * @returns The new form data, with any fields not defined in the schema removed
+   */
+  omitExtraData(schema: S, formData?: T): T | undefined;
   /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and
    * dependencies resolved and merged into the `schema` given a `rawFormData` that is used to do the potentially
    * recursive resolution.
