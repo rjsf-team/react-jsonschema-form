@@ -890,5 +890,114 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
         'Unable to generate path schema for ".arr.1". No schema defined for it',
       );
     });
+    it('should return a pathSchema for a schema with if/then when condition is true', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          booleanProperty: { type: 'boolean' },
+        },
+        if: {
+          properties: { booleanProperty: { const: true } },
+        },
+        then: {
+          properties: { otherProperty: { type: 'string' } },
+        },
+      };
+
+      const formData = {
+        booleanProperty: true,
+        otherProperty: 'test value',
+      };
+
+      // The if condition evaluates to true, so the then branch is applied
+      testValidator.setReturnValues({ isValid: [true] });
+
+      expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual({
+        $name: '',
+        booleanProperty: {
+          $name: 'booleanProperty',
+        },
+        otherProperty: {
+          $name: 'otherProperty',
+        },
+      });
+    });
+    it('should return a pathSchema for a schema with if/then/else when condition is false', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          booleanProperty: { type: 'boolean' },
+        },
+        if: {
+          properties: { booleanProperty: { const: true } },
+        },
+        then: {
+          properties: { thenProperty: { type: 'string' } },
+        },
+        else: {
+          properties: { elseProperty: { type: 'string' } },
+        },
+      };
+
+      const formData = {
+        booleanProperty: false,
+        elseProperty: 'else value',
+      };
+
+      // The if condition evaluates to false, so the else branch is applied
+      testValidator.setReturnValues({ isValid: [false] });
+
+      expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual({
+        $name: '',
+        booleanProperty: {
+          $name: 'booleanProperty',
+        },
+        elseProperty: {
+          $name: 'elseProperty',
+        },
+      });
+    });
+    it('should return a pathSchema for a nested object with if/then', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          nested: {
+            type: 'object',
+            properties: {
+              booleanProperty: { type: 'boolean' },
+            },
+            if: {
+              properties: { booleanProperty: { const: true } },
+            },
+            then: {
+              properties: { otherProperty: { type: 'string' } },
+            },
+          },
+        },
+      };
+
+      const formData = {
+        nested: {
+          booleanProperty: true,
+          otherProperty: 'test value',
+        },
+      };
+
+      // The if condition evaluates to true for the nested object
+      testValidator.setReturnValues({ isValid: [true] });
+
+      expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual({
+        $name: '',
+        nested: {
+          $name: 'nested',
+          booleanProperty: {
+            $name: 'nested.booleanProperty',
+          },
+          otherProperty: {
+            $name: 'nested.otherProperty',
+          },
+        },
+      });
+    });
   });
 }

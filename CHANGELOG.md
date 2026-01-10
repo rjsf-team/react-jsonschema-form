@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.2.2
+
+## @rjsf/utils
+
+- Fixed issue where nested `if/then/else` conditions lost values with `liveOmit` and `omitExtraData` enabled, fixing [#4450](https://github.com/rjsf-team/react-jsonschema-form/issues/4450)
+
 # 6.2.0
 
 ## @rjsf/antd
