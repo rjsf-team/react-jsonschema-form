@@ -526,6 +526,8 @@ export type FieldTemplateProps<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 > = RJSFBaseProps<T, S, F> & {
+  /** The FieldPathId containing the id and path for this field */
+  fieldPathId: FieldPathId;
   /** The id of the field in the hierarchy. You can use it to render a label targeting the wrapped widget */
   id: string;
   /** A string containing the base CSS classes, merged with any custom ones defined in your uiSchema */

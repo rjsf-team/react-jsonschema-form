@@ -264,6 +264,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     rawHelp: typeof help === 'string' ? help : undefined,
     errors: errorsComponent,
     rawErrors: hideError ? undefined : __errors,
+    fieldPathId,
     id,
     label,
     hidden,
