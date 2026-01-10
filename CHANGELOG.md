@@ -16,6 +16,20 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.3.0
+
+## @rjsf/core
+
+- Refactored the `omitExtraData()` function to `schemaUtils`, fixing [#4081](https://github.com/rjsf-team/react-jsonschema-form/issues/4081)
+
+## @rjsf/utils
+
+- Refactored the `omitExtraData()` function and its helpers from `Form` into a new `schema/omitExtraData.ts`, fixing [#4081](https://github.com/rjsf-team/react-jsonschema-form/issues/4081)
+
+## Dev / docs / playground
+
+- Updated the `utility-functions.md` documentation for the `omitExtraData()` function
+
 # 6.2.0
 
 ## @rjsf/antd

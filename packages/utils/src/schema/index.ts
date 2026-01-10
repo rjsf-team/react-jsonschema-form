@@ -8,6 +8,7 @@ import getFromSchema from './getFromSchema';
 import isFilesArray from './isFilesArray';
 import isMultiSelect from './isMultiSelect';
 import isSelect from './isSelect';
+import omitExtraData from './omitExtraData';
 import retrieveSchema from './retrieveSchema';
 import sanitizeDataForNewSchema from './sanitizeDataForNewSchema';
 import toPathSchema from './toPathSchema';
@@ -23,6 +24,7 @@ export {
   isFilesArray,
   isMultiSelect,
   isSelect,
+  omitExtraData,
   retrieveSchema,
   sanitizeDataForNewSchema,
   toPathSchema,
