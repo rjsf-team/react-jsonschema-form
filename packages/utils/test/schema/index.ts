@@ -8,6 +8,7 @@ import getFromSchemaTest from './getFromSchemaTest';
 import isFilesArrayTest from './isFilesArrayTest';
 import isMultiSelectTest from './isMultiSelectTest';
 import isSelectTest from './isSelectTest';
+import omitExtraDataTest from './omitExtraDataTest';
 import retrieveSchemaTest from './retrieveSchemaTest';
 import sanitizeDataForNewSchemaTest from './sanitizeDataForNewSchemaTest';
 import toPathSchemaTest from './toPathSchemaTest';
@@ -25,6 +26,7 @@ export {
   isFilesArrayTest,
   isMultiSelectTest,
   isSelectTest,
+  omitExtraDataTest,
   retrieveSchemaTest,
   sanitizeDataForNewSchemaTest,
   toPathSchemaTest,

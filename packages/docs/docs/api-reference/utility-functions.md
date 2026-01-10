@@ -1311,6 +1311,69 @@ potentially recursive resolution.
 
 - RJSFSchema: The schema having its conditions, additional properties, references and dependencies resolved
 
+### omitExtraData&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+
+Takes a schema and formData and returns a copy of the formData with any fields not defined in the schema removed.
+This is useful for ensuring that only data that is relevant to the schema is preserved.
+Objects with `additionalProperties` keyword set to `true` will not have their extra fields removed.
+
+```ts
+const schema = {
+  type: 'object',
+  properties: {
+    child1: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+      },
+    },
+    child2: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+      },
+      additionalProperties: true,
+    },
+  },
+};
+
+const formData = {
+  child1: {
+    name: 'John Doe',
+    extraField: 'This should be removed',
+  },
+  child2: {
+    name: 'Jane Doe',
+    extraField: 'This should NOT be removed',
+  },
+};
+
+const filteredFormData = omitExtraData(validator, schema, schema, formData);
+console.log(filteredFormData);
+/*
+{
+  child1: {
+    name: "John Doe",
+  },
+  child2: {
+    name: "Jane Doe",
+    extraField: "This should NOT be removed",
+  },
+}
+*/
+```
+
+#### Parameters
+
+- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- schema: S - The schema to use for filtering the formData
+- [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
+- [formData]: T | undefined - The formData to filter
+
+#### Returns
+
+- T: The new form data, with any fields not defined in the schema removed
+
 ### sanitizeDataForNewSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`.

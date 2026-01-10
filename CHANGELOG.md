@@ -36,6 +36,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Added `fieldPathId` to `FieldTemplate` props in `SchemaField` and `LayoutMultiSchemaField`, fixing [#4897](https://github.com/rjsf-team/react-jsonschema-form/issues/4897)
 - Fixed oneOf/anyOf option switches reverting in controlled forms, fixing [#4918](https://github.com/rjsf-team/react-jsonschema-form/issues/4918)
 - Fixed null option not being selectable and defaults not being restored when switching from null back to object option in oneOf/anyOf, fixing [#4896](https://github.com/rjsf-team/react-jsonschema-form/issues/4896) and [#4380](https://github.com/rjsf-team/react-jsonschema-form/issues/4380)
+- Refactored the `omitExtraData()` function to `schemaUtils`, fixing [#4081](https://github.com/rjsf-team/react-jsonschema-form/issues/4081)
 
 ## @rjsf/daisyui
 
@@ -80,6 +81,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Added `fieldPathId` to `FieldTemplateProps` to enable proper use of `onChange` with the required `path` parameter, fixing [#4897](https://github.com/rjsf-team/react-jsonschema-form/issues/4897)
 - Fixed user formData being overwritten with defaults in schemas combining `anyOf`/`oneOf` with `$ref` and `default` at multiple levels, fixing [#4918](https://github.com/rjsf-team/react-jsonschema-form/issues/4918)
 - Fixed issue where nested `if/then/else` conditions lost values with `liveOmit` and `omitExtraData` enabled, fixing [#4450](https://github.com/rjsf-team/react-jsonschema-form/issues/4450)
+- Refactored the `omitExtraData()` function and its helpers from `Form` into a new `schema/omitExtraData.ts`, fixing [#4081](https://github.com/rjsf-team/react-jsonschema-form/issues/4081)
 
 ## @rjsf/validator-ajv8
 
@@ -88,6 +90,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Updated unit tests for `@rjsf/core` to convert them to typescript and jest
+- Updated the `utility-functions.md` documentation for the `omitExtraData()` function
 
 # 6.1.2
 
