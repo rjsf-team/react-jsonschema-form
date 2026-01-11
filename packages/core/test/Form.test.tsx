@@ -4257,6 +4257,57 @@ describe('Form omitExtraData and liveOmit', () => {
     expectToHaveBeenCalledWithFormData(onChange, { ipsum: '12' }, 'root_ipsum');
   });
 
+  it('should not omit conditionally displayed fields with nested if/then when omitExtraData=true and liveOmit=true', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        nested: {
+          type: 'object',
+          properties: {
+            booleanProperty: { type: 'boolean', default: true },
+          },
+          if: {
+            properties: { booleanProperty: { const: true } },
+          },
+          then: {
+            properties: {
+              otherProperty: { type: 'string' },
+            },
+          },
+        },
+      },
+    };
+    const formData = {
+      nested: {
+        booleanProperty: true,
+        otherProperty: 'initial value',
+      },
+    };
+    const { node, onChange } = createFormComponent({
+      ref: createRef(),
+      schema,
+      formData,
+      omitExtraData: true,
+      liveOmit: true,
+    });
+
+    fireEvent.change(node.querySelector('#root_nested_otherProperty')!, {
+      target: { value: 'new value' },
+    });
+
+    // The otherProperty should NOT be omitted because it's a valid conditional field
+    expectToHaveBeenCalledWithFormData(
+      onChange,
+      {
+        nested: {
+          booleanProperty: true,
+          otherProperty: 'new value',
+        },
+      },
+      'root_nested_otherProperty',
+    );
+  });
+
   it('should keep schema errors when extraErrors set after submit and liveValidate is false', () => {
     const schema: RJSFSchema = {
       type: 'object',
