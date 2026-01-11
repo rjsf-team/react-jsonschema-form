@@ -277,7 +277,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     // If the referenced schema exists and parentDefaults is not set
     // Then set the defaults from the current schema for the referenced schema.
     // Only do this if rawFormData has no meaningful data - we don't want to override user's existing values.
-    // Check for undefined OR empty object (which can come from the fallback on line 241).
+    // Check for undefined OR empty object - rawFormData may be coerced to {} when not an object.
     const hasNoExistingData = rawFormData === undefined || (isObject(rawFormData) && isEmpty(rawFormData));
     if (schemaToCompute && !defaults && hasNoExistingData) {
       defaults = schema.default as T | undefined;
