@@ -311,7 +311,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                 </div>
                 <div
                   class="py-4 d-grid gap-2 col-1"
-                  style="margin-top: 12px;"
+                  style="margin-top: 12px; max-height: 2rem;"
                 >
                   <button
                     class="btn btn-danger btn-sm"
@@ -1672,7 +1672,7 @@ exports[`object fields additionalProperties 1`] = `
                 </div>
                 <div
                   class="py-4 d-grid gap-2 col-1"
-                  style="margin-top: 12px;"
+                  style="margin-top: 12px; max-height: 2rem;"
                 >
                   <button
                     class="btn btn-danger btn-sm"
@@ -1874,7 +1874,7 @@ exports[`object fields additionalProperties, array type 1`] = `
                 </div>
                 <div
                   class="py-4 d-grid gap-2 col-1"
-                  style="margin-top: 12px;"
+                  style="margin-top: 12px; max-height: 2rem;"
                 >
                   <button
                     class="btn btn-danger btn-sm"
@@ -2028,7 +2028,7 @@ exports[`object fields additionalProperties, description 1`] = `
                 </div>
                 <div
                   class="py-5 d-grid gap-2 col-1"
-                  style="margin-top: -12px;"
+                  style="margin-top: -12px; max-height: 2rem;"
                 >
                   <button
                     class="btn btn-danger btn-sm"
@@ -2170,7 +2170,7 @@ exports[`object fields additionalProperties, label off 1`] = `
                 </div>
                 <div
                   class="py-4 d-grid gap-2 col-1"
-                  style="margin-top: 12px;"
+                  style="margin-top: 12px; max-height: 2rem;"
                 >
                   <button
                     class="btn btn-danger btn-sm"
@@ -2350,7 +2350,7 @@ exports[`object fields additionalProperties, object type 1`] = `
                 </div>
                 <div
                   class="py-4 d-grid gap-2 col-1"
-                  style="margin-top: 12px;"
+                  style="margin-top: 12px; max-height: 2rem;"
                 >
                   <button
                     class="btn btn-danger btn-sm"
@@ -2582,7 +2582,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                 </div>
                 <div
                   class="py-4 d-grid gap-2 col-1"
-                  style="margin-top: 12px;"
+                  style="margin-top: 12px; max-height: 2rem;"
                 >
                   <button
                     class="btn btn-danger btn-sm"
@@ -2744,7 +2744,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                 </div>
                 <div
                   class="py-4 d-grid gap-2 col-1"
-                  style="margin-top: 12px;"
+                  style="margin-top: 12px; max-height: 2rem;"
                 >
                   <button
                     class="btn btn-danger btn-sm"
@@ -2906,7 +2906,7 @@ exports[`object fields with title and description from both additionalProperties
                 </div>
                 <div
                   class="py-4 d-grid gap-2 col-1"
-                  style="margin-top: 12px;"
+                  style="margin-top: 12px; max-height: 2rem;"
                 >
                   <button
                     class="btn btn-danger btn-sm"
@@ -3202,7 +3202,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                 </div>
                 <div
                   class="py-4 d-grid gap-2 col-1"
-                  style="margin-top: 12px;"
+                  style="margin-top: 12px; max-height: 2rem;"
                 >
                   <button
                     class="btn btn-danger btn-sm"
@@ -3498,7 +3498,7 @@ exports[`object fields with title and description from uiSchema show add button 
                 </div>
                 <div
                   class="py-4 d-grid gap-2 col-1"
-                  style="margin-top: 12px;"
+                  style="margin-top: 12px; max-height: 2rem;"
                 >
                   <button
                     class="btn btn-danger btn-sm"
@@ -3794,7 +3794,7 @@ exports[`object fields with title and description show add button and fields if 
                 </div>
                 <div
                   class="py-4 d-grid gap-2 col-1"
-                  style="margin-top: 12px;"
+                  style="margin-top: 12px; max-height: 2rem;"
                 >
                   <button
                     class="btn btn-danger btn-sm"
@@ -3924,7 +3924,7 @@ exports[`object fields with title and description with global label off addition
                 </div>
                 <div
                   class="py-1 d-grid gap-2 col-1"
-                  style="margin-top: 0px;"
+                  style="margin-top: 0px; max-height: 2rem;"
                 >
                   <button
                     class="btn btn-danger btn-sm"
@@ -4132,7 +4132,7 @@ exports[`object fields with title and description with global label off show add
                 </div>
                 <div
                   class="py-1 d-grid gap-2 col-1"
-                  style="margin-top: 0px;"
+                  style="margin-top: 0px; max-height: 2rem;"
                 >
                   <button
                     class="btn btn-danger btn-sm"
