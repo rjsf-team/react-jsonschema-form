@@ -1436,7 +1436,7 @@ describeRepeated('Form common', (createFormComponent) => {
     it('should restore defaults when switching from null back to object option in oneOf', () => {
       // This test verifies that when switching from a null oneOf option back to an object option,
       // the defaults are correctly restored. Without the fix, the form would show empty/undefined values.
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         title: 'Configuration',
         oneOf: [
@@ -1463,55 +1463,55 @@ describeRepeated('Form common', (createFormComponent) => {
         default: { types: 'advanced', content: 'placeholder' },
       };
 
-      const onChangeCalls = [];
+      const onChangeCalls: Array<{ event: IChangeEvent; id?: string }> = [];
 
       const { node } = createFormComponent({
         schema,
-        onChange: (event, id) => onChangeCalls.push({ event, id }),
+        onChange: (event: IChangeEvent, id?: string) => onChangeCalls.push({ event, id }),
         experimental_defaultFormStateBehavior: { emptyObjectFields: 'populateAllDefaults' },
       });
 
       // Should start with "Advanced Configuration" (index 1) based on default
-      const oneOfSelect = node.querySelector('#root__oneof_select');
-      expect(oneOfSelect).to.exist;
-      expect(oneOfSelect.value).to.equal('1');
+      const oneOfSelect = node.querySelector<HTMLSelectElement>('#root__oneof_select');
+      expect(oneOfSelect).toBeInTheDocument();
+      expect(oneOfSelect!.value).toEqual('1');
 
       // The content field should have the default value
-      let contentInput = node.querySelector('#root_content');
-      expect(contentInput).to.exist;
-      expect(contentInput.value).to.equal('placeholder');
+      let contentInput = node.querySelector<HTMLInputElement>('#root_content');
+      expect(contentInput).toBeInTheDocument();
+      expect(contentInput!.value).toEqual('placeholder');
 
       // Switch to "No Configuration" (null option, index 2)
       act(() => {
-        fireEvent.change(oneOfSelect, { target: { value: '2' } });
+        fireEvent.change(oneOfSelect!, { target: { value: '2' } });
       });
 
       // Verify we're now on null option - content field should not exist
-      expect(node.querySelector('#root__oneof_select').value).to.equal('2');
-      expect(node.querySelector('#root_content')).to.not.exist;
+      expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')!.value).toEqual('2');
+      expect(node.querySelector('#root_content')).not.toBeInTheDocument();
 
       // Switch back to "Advanced Configuration" (index 1)
       act(() => {
-        fireEvent.change(node.querySelector('#root__oneof_select'), { target: { value: '1' } });
+        fireEvent.change(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, { target: { value: '1' } });
       });
 
       // The content field should be restored with defaults
-      expect(node.querySelector('#root__oneof_select').value).to.equal('1');
-      contentInput = node.querySelector('#root_content');
-      expect(contentInput).to.exist;
+      expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')!.value).toEqual('1');
+      contentInput = node.querySelector<HTMLInputElement>('#root_content');
+      expect(contentInput).toBeInTheDocument();
       // BUG: Without the fix, this would be empty string or undefined
-      expect(contentInput.value).to.equal('placeholder');
+      expect(contentInput!.value).toEqual('placeholder');
 
       // Also verify the final formData has correct values
       const lastFormData = onChangeCalls[onChangeCalls.length - 1].event.formData;
-      expect(lastFormData.types).to.equal('advanced');
-      expect(lastFormData.content).to.equal('placeholder');
+      expect(lastFormData.types).toEqual('advanced');
+      expect(lastFormData.content).toEqual('placeholder');
     });
     it('should allow switching to null option in oneOf', () => {
       // This test verifies that switching to a null option in oneOf works correctly.
       // Without the fix, the form would revert back to the previous option.
       // NOTE: This bug only manifests in controlled forms where parent updates formData prop.
-      const schema = {
+      const schema: RJSFSchema = {
         type: 'object',
         title: 'Configuration',
         oneOf: [
@@ -1538,48 +1538,44 @@ describeRepeated('Form common', (createFormComponent) => {
         default: { types: 'advanced', content: 'placeholder' },
       };
 
-      const onChangeCalls = [];
-      let compRef = null;
+      const onChangeCalls: Array<{ event: IChangeEvent; id?: string }> = [];
+      let currentFormData: unknown = undefined;
 
-      const onChange = (event, id) => {
-        onChangeCalls.push({ event, id });
-        if (compRef) {
-          act(() => {
-            setProps(compRef, {
-              ref: compRef.ref,
-              schema,
-              formData: event.formData,
-              onChange,
-            });
-          });
-        }
-      };
-
-      const { comp, node } = createFormComponent({
+      const { node, rerender } = createFormComponent({
         ref: createRef(),
         schema,
-        onChange,
+        onChange: (event: IChangeEvent, id?: string) => {
+          onChangeCalls.push({ event, id });
+          currentFormData = event.formData;
+        },
         experimental_defaultFormStateBehavior: { emptyObjectFields: 'populateAllDefaults' },
       });
-      compRef = comp;
 
       // Should start with "Advanced Configuration" (index 1)
-      expect(node.querySelector('#root__oneof_select').value).to.equal('1');
-      expect(node.querySelector('#root_content')).to.exist;
+      expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')!.value).toEqual('1');
+      expect(node.querySelector('#root_content')).toBeInTheDocument();
 
       // Switch to "No Configuration" (null option, index 2)
       act(() => {
-        fireEvent.change(node.querySelector('#root__oneof_select'), { target: { value: '2' } });
+        fireEvent.change(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, { target: { value: '2' } });
+      });
+
+      // Simulate controlled form behavior by re-rendering with new formData
+      rerender({
+        ref: createRef(),
+        schema,
+        formData: currentFormData,
+        experimental_defaultFormStateBehavior: { emptyObjectFields: 'populateAllDefaults' },
       });
 
       // BUG: Without the fix, the form would revert back to index 1
-      expect(node.querySelector('#root__oneof_select').value).to.equal('2');
+      expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')!.value).toEqual('2');
       // Content field should not exist for null option
-      expect(node.querySelector('#root_content')).to.not.exist;
+      expect(node.querySelector('#root_content')).not.toBeInTheDocument();
 
       // Verify formData is null or undefined (both valid for null option)
       const lastFormData = onChangeCalls[onChangeCalls.length - 1].event.formData;
-      expect(lastFormData == null).to.be.true;
+      expect(lastFormData == null).toBe(true);
     });
     it('Should modify anyOf definition references when the defaults are set.', () => {
       const schema: RJSFSchema = {
