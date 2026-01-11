@@ -4152,15 +4152,13 @@ describe('Form omitExtraData and liveOmit', () => {
     });
 
     // The otherProperty should NOT be omitted because it's a valid conditional field
-    expect(onChange).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        formData: {
-          nested: {
-            booleanProperty: true,
-            otherProperty: 'new value',
-          },
+    expectToHaveBeenCalledWithFormData(onChange,
+      {
+        nested: {
+          booleanProperty: true,
+          otherProperty: 'new value',
         },
-      }),
+      },
       'root_nested_otherProperty',
     );
   });
