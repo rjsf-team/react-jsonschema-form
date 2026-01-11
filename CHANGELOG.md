@@ -62,6 +62,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/react-bootstrap
 
 - Updated `BaseInputTemplate` to support the `allowClearTextInputs` feature for input fields
+- Updated `WrapIfAdditionalTemplate` to add `maxHeight` for the Remove button column, fixing [#4684](https://github.com/rjsf-team/react-jsonschema-form/issues/4684)
 
 ## @rjsf/semantic-ui
 

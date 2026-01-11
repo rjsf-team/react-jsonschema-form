@@ -70,7 +70,7 @@ export default function WrapIfAdditionalTemplate<
         </Form.Group>
       </Col>
       <Col xs={6}>{children}</Col>
-      <Col xs={1} className={`py-${padding} d-grid gap-2`} style={{ marginTop: `${margin}px` }}>
+      <Col xs={1} className={`py-${padding} d-grid gap-2`} style={{ marginTop: `${margin}px`, maxHeight: `2rem` }}>
         <RemoveButton
           id={buttonId(id, 'remove')}
           className='rjsf-object-property-remove w-100'
