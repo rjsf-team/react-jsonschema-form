@@ -4296,7 +4296,8 @@ describe('Form omitExtraData and liveOmit', () => {
     });
 
     // The otherProperty should NOT be omitted because it's a valid conditional field
-    expectToHaveBeenCalledWithFormData(onChange,
+    expectToHaveBeenCalledWithFormData(
+      onChange,
       {
         nested: {
           booleanProperty: true,
