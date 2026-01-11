@@ -403,6 +403,9 @@ export type GlobalUISchemaOptions = GenericObjectType & {
   removable?: boolean;
   /** Field labels are rendered by default. Labels may be omitted by setting the `label` option to `false` */
   label?: boolean;
+  /** Flag, if set to `true`, will allow the text input fields to be cleared
+   */
+  allowClearTextInputs?: boolean;
   /** When using `additionalProperties`, key collision is prevented by appending a unique integer to the duplicate key.
    * This option allows you to change the separator between the original key name and the integer. Default is "-"
    */
@@ -1087,8 +1090,6 @@ type UIOptionsBaseType<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     rows?: number;
     /** If submitButtonOptions is provided it should match the `UISchemaSubmitButtonOptions` type */
     submitButtonOptions?: UISchemaSubmitButtonOptions;
-    /** Flag, if set to `true`, will allow the text input fields to be cleared */
-    allowClearTextInputs?: boolean;
     /** Allows RJSF to override the default widget implementation by specifying either the name of a widget that is used
      * to look up an implementation from the `widgets` list or an actual one-off widget implementation itself
      */
