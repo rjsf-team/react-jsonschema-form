@@ -16,6 +16,17 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.2.2
+
+## @rjsf/core
+
+- Fixed oneOf/anyOf option switches reverting in controlled forms, fixing [#4918](https://github.com/rjsf-team/react-jsonschema-form/issues/4918)
+- Fixed null option not being selectable and defaults not being restored when switching from null back to object option in oneOf/anyOf, fixing [#4896](https://github.com/rjsf-team/react-jsonschema-form/issues/4896) and [#4380](https://github.com/rjsf-team/react-jsonschema-form/issues/4380)
+
+## @rjsf/utils
+
+- Fixed user formData being overwritten with defaults in schemas combining `anyOf`/`oneOf` with `$ref` and `default` at multiple levels, fixing [#4918](https://github.com/rjsf-team/react-jsonschema-form/issues/4918)
+
 # 6.2.0
 
 ## @rjsf/antd
