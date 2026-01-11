@@ -365,6 +365,11 @@ export default class Form<
    */
   pendingChanges: PendingChange<T>[] = [];
 
+  /** Flag to track when we're processing a user-initiated field change.
+   * This prevents componentDidUpdate from reverting oneOf/anyOf option switches.
+   */
+  private _isProcessingUserChange = false;
+
   /** Constructs the `Form` from the `props`. Will setup the initial state from the props. It will also call the
    * `onChange` handler if the initially provided `formData` is modified to add missing default values as part of the
    * state construction.
@@ -459,11 +464,19 @@ export default class Form<
   ) {
     if (snapshot.shouldUpdate) {
       const { nextState } = snapshot;
-      if (
-        !deepEquals(nextState.formData, this.props.formData) &&
-        !deepEquals(nextState.formData, prevState.formData) &&
-        this.props.onChange
-      ) {
+
+      // Prevent oneOf/anyOf option switches from reverting when getStateFromProps
+      // re-evaluates and produces stale formData.
+      const nextStateDiffersFromProps = !deepEquals(nextState.formData, this.props.formData);
+      const wasProcessingUserChange = this._isProcessingUserChange;
+      this._isProcessingUserChange = false;
+
+      if (wasProcessingUserChange && nextStateDiffersFromProps) {
+        // Skip - the user's option switch is already applied via processPendingChange
+        return;
+      }
+
+      if (nextStateDiffersFromProps && !deepEquals(nextState.formData, prevState.formData) && this.props.onChange) {
         this.props.onChange(toIChangeEvent(nextState));
       }
       this.setState(nextState);
@@ -870,6 +883,9 @@ export default class Form<
     if (this.pendingChanges.length === 0) {
       return;
     }
+    // Mark that we're processing a user-initiated change.
+    // This prevents componentDidUpdate from reverting oneOf/anyOf option switches.
+    this._isProcessingUserChange = true;
     const { newValue, path, id } = this.pendingChanges[0];
     const { newErrorSchema } = this.pendingChanges[0];
     const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, onChange } = this.props;
@@ -880,6 +896,18 @@ export default class Form<
     const isRootPath = !path || path.length === 0 || (path.length === 1 && path[0] === rootPathId);
     let retrievedSchema = this.state.retrievedSchema;
     let formData = isRootPath ? newValue : _cloneDeep(oldFormData);
+
+    // When switching from null to an object option in oneOf, MultiSchemaField sends
+    // an object with property names but undefined values (e.g., {types: undefined, content: undefined}).
+    // In this case, pass undefined to getStateFromProps to trigger fresh default computation.
+    // Only do this when the previous formData was null/undefined (switching FROM null).
+    const hasOnlyUndefinedValues =
+      isObject(formData) &&
+      Object.keys(formData as object).length > 0 &&
+      Object.values(formData as object).every((v) => v === undefined);
+    const wasPreviouslyNull = oldFormData === null || oldFormData === undefined;
+    const inputForDefaults = hasOnlyUndefinedValues && wasPreviouslyNull ? undefined : formData;
+
     if (isObject(formData) || Array.isArray(formData)) {
       if (newValue === ADDITIONAL_PROPERTY_KEY_REMOVE) {
         // For additional properties, we were given the special remove this key value, so unset it
@@ -889,7 +917,7 @@ export default class Form<
         _set(formData, path, newValue);
       }
       // Pass true to skip live validation in `getStateFromProps()` since we will do it a bit later
-      const newState = this.getStateFromProps(this.props, formData, undefined, undefined, undefined, true);
+      const newState = this.getStateFromProps(this.props, inputForDefaults, undefined, undefined, undefined, true);
       formData = newState.formData;
       retrievedSchema = newState.retrievedSchema;
     }
