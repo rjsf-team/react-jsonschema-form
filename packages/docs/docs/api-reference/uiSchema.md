@@ -603,6 +603,18 @@ const uiSchema: UiSchema = {
 };
 ```
 
+## allowClearTextInputs
+
+The`ui:allowClearTextInputs`uiSchema directive enables a clear/reset button for text-based input widgets. When set to true, a clear button will be displayed when the input field has a value and is not readonly or disabled. This flag is optional. When omitted, no clear button will be displayed for text input fields.
+
+```tsx
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+const schema: RJSFSchema = { type: 'string' };
+const uiSchema: UiSchema = {
+  'ui:allowClearTextInputs': true,
+};
+```
+
 ## `duplicateKeySuffixSeparator` option
 
 When using `additionalProperties`, key collision is prevented by appending a unique integer suffix to the duplicate key.
