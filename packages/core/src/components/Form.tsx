@@ -9,13 +9,11 @@ import {
   FieldPathId,
   FieldPathList,
   FormContextType,
-  GenericObjectType,
   getChangedFields,
   getTemplate,
   getUiOptions,
   isObject,
   mergeObjects,
-  NAME_KEY,
   PathSchema,
   StrictRJSFSchema,
   Registry,
@@ -23,7 +21,6 @@ import {
   RegistryWidgetsType,
   RJSFSchema,
   RJSFValidationError,
-  RJSF_ADDITIONAL_PROPERTIES_FLAG,
   SchemaUtilsType,
   shouldRender,
   SUBMIT_BTN_OPTIONS_KEY,
@@ -44,6 +41,8 @@ import {
   ERRORS_KEY,
   ID_KEY,
   NameGeneratorFunction,
+  getUsedFormData,
+  getFieldNames,
 } from '@rjsf/utils';
 import _cloneDeep from 'lodash/cloneDeep';
 import _get from 'lodash/get';
@@ -770,75 +769,32 @@ export default class Form<
    *
    * @param formData - The data for the `Form`
    * @param fields - The fields to keep while filtering
+   * @deprecated - To be removed as an exported `Form` function in a future release; there isn't a planned replacement
    */
   getUsedFormData = (formData: T | undefined, fields: string[]): T | undefined => {
-    // For the case of a single input form
-    if (fields.length === 0 && typeof formData !== 'object') {
-      return formData;
-    }
-
-    const data: GenericObjectType = _pick(formData, fields);
-    if (Array.isArray(formData)) {
-      return Object.keys(data).map((key: string) => data[key]) as unknown as T;
-    }
-
-    return data as T;
+    return getUsedFormData(formData, fields);
   };
 
   /** Returns the list of field names from inspecting the `pathSchema` as well as using the `formData`
    *
    * @param pathSchema - The `PathSchema` object for the form
    * @param [formData] - The form data to use while checking for empty objects/arrays
+   * @deprecated - To be removed as an exported `Form` function in a future release; there isn't a planned replacement
    */
   getFieldNames = (pathSchema: PathSchema<T>, formData?: T): string[][] => {
-    const formValueHasData = (value: T, isLeaf: boolean) =>
-      typeof value !== 'object' || _isEmpty(value) || (isLeaf && !_isEmpty(value));
-    const getAllPaths = (_obj: GenericObjectType, acc: string[][] = [], paths: string[][] = [[]]) => {
-      const objKeys = Object.keys(_obj);
-      objKeys.forEach((key: string) => {
-        const data = _obj[key];
-        if (typeof data === 'object') {
-          const newPaths = paths.map((path) => [...path, key]);
-          // If an object is marked with additionalProperties, all its keys are valid
-          if (data[RJSF_ADDITIONAL_PROPERTIES_FLAG] && data[NAME_KEY] !== '') {
-            acc.push(data[NAME_KEY]);
-          } else {
-            getAllPaths(data, acc, newPaths);
-          }
-        } else if (key === NAME_KEY && data !== '') {
-          paths.forEach((path) => {
-            const formValue = _get(formData, path);
-            const isLeaf = objKeys.length === 1;
-            // adds path to fieldNames if it points to a value or an empty object/array which is not a leaf
-            if (
-              formValueHasData(formValue, isLeaf) ||
-              (Array.isArray(formValue) && formValue.every((val) => formValueHasData(val, isLeaf)))
-            ) {
-              acc.push(path);
-            }
-          });
-        }
-      });
-      return acc;
-    };
-
-    return getAllPaths(pathSchema);
+    return getFieldNames(pathSchema, formData);
   };
 
   /** Returns the `formData` after filtering to remove any extra data not in a form field
    *
    * @param formData - The data for the `Form`
    * @returns The `formData` after omitting extra data
+   * @deprecated - To be removed as an exported `Form` function in a future release, use `SchemaUtils.omitExtraData`
+   *               instead.
    */
   omitExtraData = (formData?: T): T | undefined => {
     const { schema, schemaUtils } = this.state;
-    const retrievedSchema = schemaUtils.retrieveSchema(schema, formData);
-    const pathSchema = schemaUtils.toPathSchema(retrievedSchema, '', formData);
-    const fieldNames = this.getFieldNames(pathSchema, formData);
-    const lodashFieldNames = fieldNames.map((fieldPaths: string[]) =>
-      Array.isArray(fieldPaths) ? fieldPaths.join('.') : fieldPaths,
-    );
-    return this.getUsedFormData(formData, lodashFieldNames);
+    return schemaUtils.omitExtraData(schema, formData);
   };
 
   /** Allows a user to set a value for the provided `fieldPath`, which must be either a dotted path to the field OR a

@@ -403,6 +403,9 @@ export type GlobalUISchemaOptions = GenericObjectType & {
   removable?: boolean;
   /** Field labels are rendered by default. Labels may be omitted by setting the `label` option to `false` */
   label?: boolean;
+  /** Flag, if set to `true`, will allow the text input fields to be cleared
+   */
+  allowClearTextInputs?: boolean;
   /** When using `additionalProperties`, key collision is prevented by appending a unique integer to the duplicate key.
    * This option allows you to change the separator between the original key name and the integer. Default is "-"
    */
@@ -1087,8 +1090,6 @@ type UIOptionsBaseType<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     rows?: number;
     /** If submitButtonOptions is provided it should match the `UISchemaSubmitButtonOptions` type */
     submitButtonOptions?: UISchemaSubmitButtonOptions;
-    /** Flag, if set to `true`, will allow the text input fields to be cleared */
-    allowClearTextInputs?: boolean;
     /** Allows RJSF to override the default widget implementation by specifying either the name of a widget that is used
      * to look up an implementation from the `widgets` list or an actual one-off widget implementation itself
      */
@@ -1367,6 +1368,16 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    * @returns - True if schema contains a select, otherwise false
    */
   isSelect(schema: S): boolean;
+  /**
+   * The function takes a `schema` and `formData` and returns a copy of the formData with any fields not defined in the schema removed.
+   * This is useful for ensuring that only data that is relevant to the schema is preserved. Objects with `additionalProperties`
+   * keyword set to `true` will not have their extra fields removed.
+   *
+   * @param schema - The schema to use for filtering the `formData`
+   * @param [formData] - The formData to filter
+   * @returns The new form data, with any fields not defined in the schema removed
+   */
+  omitExtraData(schema: S, formData?: T): T | undefined;
   /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and
    * dependencies resolved and merged into the `schema` given a `rawFormData` that is used to do the potentially
    * recursive resolution.
