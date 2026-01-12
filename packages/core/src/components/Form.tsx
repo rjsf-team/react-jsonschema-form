@@ -14,6 +14,7 @@ import {
   getUiOptions,
   isObject,
   mergeObjects,
+  PathSchema,
   StrictRJSFSchema,
   Registry,
   RegistryFieldsType,
@@ -40,6 +41,8 @@ import {
   ERRORS_KEY,
   ID_KEY,
   NameGeneratorFunction,
+  getUsedFormData,
+  getFieldNames,
 } from '@rjsf/utils';
 import _cloneDeep from 'lodash/cloneDeep';
 import _get from 'lodash/get';
@@ -762,10 +765,32 @@ export default class Form<
     return { ...mergedErrors, schemaValidationErrors, schemaValidationErrorSchema };
   }
 
+  /** Returns the `formData` with only the elements specified in the `fields` list
+   *
+   * @param formData - The data for the `Form`
+   * @param fields - The fields to keep while filtering
+   * @deprecated - To be removed as an exported `Form` function in a future release; there isn't a planned replacement
+   */
+  getUsedFormData = (formData: T | undefined, fields: string[]): T | undefined => {
+    return getUsedFormData(formData, fields);
+  };
+
+  /** Returns the list of field names from inspecting the `pathSchema` as well as using the `formData`
+   *
+   * @param pathSchema - The `PathSchema` object for the form
+   * @param [formData] - The form data to use while checking for empty objects/arrays
+   * @deprecated - To be removed as an exported `Form` function in a future release; there isn't a planned replacement
+   */
+  getFieldNames = (pathSchema: PathSchema<T>, formData?: T): string[][] => {
+    return getFieldNames(pathSchema, formData);
+  };
+
   /** Returns the `formData` after filtering to remove any extra data not in a form field
    *
    * @param formData - The data for the `Form`
    * @returns The `formData` after omitting extra data
+   * @deprecated - To be removed as an exported `Form` function in a future release, use `SchemaUtils.omitExtraData`
+   *               instead.
    */
   omitExtraData = (formData?: T): T | undefined => {
     const { schema, schemaUtils } = this.state;

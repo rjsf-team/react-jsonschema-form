@@ -11,6 +11,7 @@ import toPathSchema from './toPathSchema';
  *
  * @param formData - The data for the `Form`
  * @param fields - The fields to keep while filtering
+ * @deprecated - To be removed as an exported `@rjsf/utils` function in a future release
  */
 export function getUsedFormData<T = any>(formData: T | undefined, fields: string[]): T | undefined {
   // For the case of a single input form
@@ -30,6 +31,7 @@ export function getUsedFormData<T = any>(formData: T | undefined, fields: string
  *
  * @param pathSchema - The `PathSchema` object for the form
  * @param [formData] - The form data to use while checking for empty objects/arrays
+ * @deprecated - To be removed as an exported `@rjsf/utils` function in a future release
  */
 export function getFieldNames<T = any>(pathSchema: PathSchema<T>, formData?: T): string[][] {
   const formValueHasData = (value: T, isLeaf: boolean) =>
