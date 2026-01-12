@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.2.1
+
+## Dev / docs / playground
+
+- Updated peer dependencies to `^6.2.x` due to type changes in `@rjsf/utils` that are required in the other libraries
+
 # 6.2.0
 
 ## @rjsf/antd
@@ -75,7 +81,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/utils
 
-- Fixed issue by adding new `allowClearTextInputs` option to `UIOptionsBaseType` type, fixing [#4671](https://github.com/rjsf-team/react-jsonschema-form/issues/4671)
+- Fixed issue by adding new `allowClearTextInputs` option to `GlobalUISchemaOptions` type, fixing [#4671](https://github.com/rjsf-team/react-jsonschema-form/issues/4671)
 - Fixed issue with default value not being prefilled when object with if/then is nested inside another object, fixing [#4222](https://github.com/rjsf-team/react-jsonschema-form/issues/4222)
 - Fixed issue with schema array with nested dependent fixed-length, fixing [#3754](https://github.com/rjsf-team/react-jsonschema-form/issues/3754)
 - Updated `CustomValidator` type to accept `errorSchema`, so its implementation can be based on result of ajv validation ([#4898](https://github.com/rjsf-team/react-jsonschema-form/pull/4899))
