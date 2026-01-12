@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/mantine",
-  "version": "6.2.0",
+  "version": "6.2.1",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -64,8 +64,8 @@
     "@mantine/core": ">=8",
     "@mantine/dates": ">=8",
     "@mantine/hooks": ">=8",
-    "@rjsf/core": "^6.x",
-    "@rjsf/utils": "^6.x",
+    "@rjsf/core": "^6.2.x",
+    "@rjsf/utils": "^6.2.x",
     "react": ">=18"
   },
   "devDependencies": {
@@ -74,10 +74,10 @@
     "@mantine/hooks": "^8.3.6",
     "@restart/hooks": "^0.6.2",
     "@restart/ui": "^1.9.4",
-    "@rjsf/core": "^6.x",
-    "@rjsf/snapshot-tests": "^6.x",
-    "@rjsf/utils": "^6.x",
-    "@rjsf/validator-ajv8": "^6.x",
+    "@rjsf/core": "^6.2.0",
+    "@rjsf/snapshot-tests": "^6.2.0",
+    "@rjsf/utils": "^6.2.0",
+    "@rjsf/validator-ajv8": "^6.2.0",
     "eslint": "^8.57.1",
     "uncontrollable": "^9.0.0"
   },
