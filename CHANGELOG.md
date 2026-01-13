@@ -16,6 +16,13 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.2.2
+
+## Dev / docs / playground
+
+- Updated the `release.yml` to switch to NPM Trusted Publishing so that we can actually publish the changes
+- Updated the `SECURITY.md` to add v6
+
 # 6.2.1
 
 ## Dev / docs / playground
