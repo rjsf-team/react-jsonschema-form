@@ -3,6 +3,9 @@ on:
   release:
     types: [published]
 
+permissions:
+  id-token: write
+
 jobs:
   release_to_npm:
     name: Release to npm
