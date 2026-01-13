@@ -9124,7 +9124,6 @@ exports[`with title and description with global label off checkboxes 1`] = `
                 autocomplete="off"
                 class="mantine-MultiSelect-inputField m_45c4369d mantine-PillsInputField-field"
                 data-type="visible"
-                globaloptions="[object Object]"
                 id="root"
                 type="text"
                 value=""

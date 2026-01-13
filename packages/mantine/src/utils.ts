@@ -25,6 +25,8 @@ const uiOptionsKeys: Array<keyof UIOptionsType> = [
   'duplicateKeySuffixSeparator',
   'enumOptions',
   'enableMarkdownInDescription',
+  'enableMarkdownInHelp',
+  'globalOptions',
 ];
 
 export function cleanupOptions<T extends object>(options: T): Omit<T, keyof UIOptionsType> {

@@ -27,7 +27,6 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
               class="rjsf-field rjsf-field-array rjsf-field-array-of-object sortable-form-fields p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              formdata="[object Object],[object Object]"
               id="root_tasks"
             >
               <div
@@ -459,7 +458,6 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
               class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              formdata="foo,bar"
               id="root_tags"
             >
               <div
@@ -1412,7 +1410,6 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
               class="rjsf-field rjsf-field-array rjsf-field-array-of-object sortable-form-fields p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              formdata="[object Object],[object Object]"
               id="root_tasks"
             >
               <div
@@ -1844,7 +1841,6 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
               class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              formdata="foo,bar"
               id="root_tags"
             >
               <div
@@ -4259,7 +4255,6 @@ exports[`single fields optional data controls does not show optional controls wh
                   class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
                   data-pc-name="fieldset"
                   data-pc-section="root"
-                  formdata=""
                   id="root_nestedObjectOptional_deepArrayOptional"
                 >
                   <div
@@ -4319,7 +4314,6 @@ exports[`single fields optional data controls does not show optional controls wh
                   class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
                   data-pc-name="fieldset"
                   data-pc-section="root"
-                  formdata=""
                   id="root_nestedObjectOptional_deepArrayOptional2"
                 >
                   <div
@@ -4379,7 +4373,6 @@ exports[`single fields optional data controls does not show optional controls wh
                   class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
                   data-pc-name="fieldset"
                   data-pc-section="root"
-                  formdata=""
                   id="root_nestedObjectOptional_deepArray"
                 >
                   <div
@@ -4441,7 +4434,6 @@ exports[`single fields optional data controls does not show optional controls wh
               class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              formdata=""
               id="root_nestedArrayOptional"
             >
               <div
@@ -4555,7 +4547,6 @@ exports[`single fields optional data controls does not show optional controls wh
               class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              formdata=""
               id="root_nestedArray"
             >
               <div
@@ -4751,7 +4742,6 @@ exports[`single fields optional data controls does not show optional controls wh
                         class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
                         data-pc-name="fieldset"
                         data-pc-section="root"
-                        formdata=""
                         id="root_optionalArrayWithAnyofs"
                       >
                         <div
@@ -5032,7 +5022,6 @@ exports[`single fields optional data controls does not show optional controls wh
                   class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
                   data-pc-name="fieldset"
                   data-pc-section="root"
-                  formdata=""
                   id="root_nestedObjectOptional_deepArrayOptional"
                 >
                   <div
@@ -5093,7 +5082,6 @@ exports[`single fields optional data controls does not show optional controls wh
                   class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
                   data-pc-name="fieldset"
                   data-pc-section="root"
-                  formdata=""
                   id="root_nestedObjectOptional_deepArrayOptional2"
                 >
                   <div
@@ -5154,7 +5142,6 @@ exports[`single fields optional data controls does not show optional controls wh
                   class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
                   data-pc-name="fieldset"
                   data-pc-section="root"
-                  formdata=""
                   id="root_nestedObjectOptional_deepArray"
                 >
                   <div
@@ -5217,7 +5204,6 @@ exports[`single fields optional data controls does not show optional controls wh
               class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              formdata=""
               id="root_nestedArrayOptional"
             >
               <div
@@ -5333,7 +5319,6 @@ exports[`single fields optional data controls does not show optional controls wh
               class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              formdata=""
               id="root_nestedArray"
             >
               <div
@@ -5532,7 +5517,6 @@ exports[`single fields optional data controls does not show optional controls wh
                         class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
                         data-pc-name="fieldset"
                         data-pc-section="root"
-                        formdata=""
                         id="root_optionalArrayWithAnyofs"
                       >
                         <div
@@ -5849,7 +5833,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
                   data-pc-name="fieldset"
                   data-pc-section="root"
-                  formdata=""
                   id="root_nestedObjectOptional_deepArrayOptional"
                 >
                   <div
@@ -5938,7 +5921,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field sortable-form-fields p-fieldset p-component"
                   data-pc-name="fieldset"
                   data-pc-section="root"
-                  formdata=""
                   id="root_nestedObjectOptional_deepArrayOptional2"
                 >
                   <div
@@ -5976,7 +5958,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
                   data-pc-name="fieldset"
                   data-pc-section="root"
-                  formdata=""
                   id="root_nestedObjectOptional_deepArray"
                 >
                   <div
@@ -6067,7 +6048,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field sortable-form-fields p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              formdata="bar"
               id="root_nestedArrayOptional"
             >
               <div
@@ -6237,7 +6217,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              formdata=""
               id="root_nestedArray"
             >
               <div
@@ -6444,7 +6423,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field sortable-form-fields p-fieldset p-component"
                         data-pc-name="fieldset"
                         data-pc-section="root"
-                        formdata=""
                         id="root_optionalArrayWithAnyofs"
                       >
                         <div
@@ -6683,7 +6661,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
                   data-pc-name="fieldset"
                   data-pc-section="root"
-                  formdata=""
                   id="root_nestedObjectOptional_deepArrayOptional"
                 >
                   <div
@@ -6744,7 +6721,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field sortable-form-fields p-fieldset p-component"
                   data-pc-name="fieldset"
                   data-pc-section="root"
-                  formdata=""
                   id="root_nestedObjectOptional_deepArrayOptional2"
                 >
                   <div
@@ -6788,7 +6764,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
                   data-pc-name="fieldset"
                   data-pc-section="root"
-                  formdata=""
                   id="root_nestedObjectOptional_deepArray"
                 >
                   <div
@@ -6851,7 +6826,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field sortable-form-fields p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              formdata="bar"
               id="root_nestedArrayOptional"
             >
               <div
@@ -7025,7 +6999,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              formdata=""
               id="root_nestedArray"
             >
               <div
@@ -7178,7 +7151,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field sortable-form-fields p-fieldset p-component"
                         data-pc-name="fieldset"
                         data-pc-section="root"
-                        formdata=""
                         id="root_optionalArrayWithAnyofs"
                       >
                         <div
@@ -7370,7 +7342,6 @@ exports[`single fields optional data controls shows "add" optional controls when
               class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field sortable-form-fields p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              formdata=""
               id="root_nestedArrayOptional"
             >
               <div
@@ -7462,7 +7433,6 @@ exports[`single fields optional data controls shows "add" optional controls when
               class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              formdata=""
               id="root_nestedArray"
             >
               <div
@@ -7669,7 +7639,6 @@ exports[`single fields optional data controls shows "add" optional controls when
                         class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field sortable-form-fields p-fieldset p-component"
                         data-pc-name="fieldset"
                         data-pc-section="root"
-                        formdata=""
                         id="root_optionalArrayWithAnyofs"
                       >
                         <div
@@ -7800,7 +7769,6 @@ exports[`single fields optional data controls shows "add" optional controls when
               class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field sortable-form-fields p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              formdata=""
               id="root_nestedArrayOptional"
             >
               <div
@@ -7899,7 +7867,6 @@ exports[`single fields optional data controls shows "add" optional controls when
               class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              formdata=""
               id="root_nestedArray"
             >
               <div
@@ -8052,7 +8019,6 @@ exports[`single fields optional data controls shows "add" optional controls when
                         class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field sortable-form-fields p-fieldset p-component"
                         data-pc-name="fieldset"
                         data-pc-section="root"
-                        formdata=""
                         id="root_optionalArrayWithAnyofs"
                       >
                         <div

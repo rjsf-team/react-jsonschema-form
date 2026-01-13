@@ -2,20 +2,22 @@ name: Release
 on:
   release:
     types: [published]
-
-permissions:
-  id-token: write
-
+  push:
+    tags:
+      - 'v*' # Triggers for tags starting with 'v', such as v1.0
 jobs:
   release_to_npm:
     name: Release to npm
     runs-on: ubuntu-latest
+    permissions:
+      content: read
+      id-token: write
     steps:
       - uses: actions/checkout@v6
-      - name: Use Node.js 22.x
+      - name: Use Node.js 24.x
         uses: actions/setup-node@v6
         with:
-          node-version: 22.x
+          node-version: 24.x
           cache: 'npm'
           cache-dependency-path: 'package-lock.json'
       - run: npm i -g npm@9
@@ -37,4 +39,4 @@ jobs:
           
           echo "NPM_TAG=${NPM_TAG_VALUE}" >> $GITHUB_ENV
           echo "Determined NPM_TAG: ${NPM_TAG_VALUE}"
-      - run: npx nx release publish --tag=$NPM_TAG
+      - run: npx nx release publish --tag=$NPM_TAG --provenance

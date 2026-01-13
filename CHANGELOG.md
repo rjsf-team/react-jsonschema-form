@@ -16,6 +16,20 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.2.3
+
+## @rjsf/mantine
+
+- Updated `cleanupOptions()` to add `enableMarkdownInHelp` and `globalOptions` to avoid DOM errors
+
+## @rjsf/primereact
+
+- Updated `ArrayFieldTemplate` to destructure additional fields to avoid DOM errors
+
+## Dev / docs / playground
+
+- Updated the `release.yml` to move the permissions within the job, switch to node 24 and add push checking
+
 # 6.2.2
 
 ## Dev / docs / playground

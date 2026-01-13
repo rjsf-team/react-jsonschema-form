@@ -467,7 +467,6 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
               class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              formdata="developer,designer"
               id="root_tags"
             >
               <div
@@ -1059,7 +1058,6 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
               class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              formdata="a,b"
               id="root_items"
             >
               <div
@@ -1590,7 +1588,6 @@ exports[`object fields additionalProperties, array type 1`] = `
                 class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
                 data-pc-name="fieldset"
                 data-pc-section="root"
-                formdata=""
                 id="root_foo"
               >
                 <div
