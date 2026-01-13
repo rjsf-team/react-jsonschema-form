@@ -2,10 +2,6 @@ name: Release
 on:
   release:
     types: [published]
-  push:
-    tags:
-      - 'v*' # Triggers for tags starting with 'v', such as v1.0
-  workflow_dispatch: # Allows you to manually trigger the fix
 
 jobs:
   release_to_npm:

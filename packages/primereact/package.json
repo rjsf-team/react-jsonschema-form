@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/primereact",
-  "version": "6.2.3",
+  "version": "6.2.4",
   "description": "PrimeReact theme, fields and widgets for react-jsonschema-form",
   "main": "dist/index.js",
   "module": "lib/index.js",

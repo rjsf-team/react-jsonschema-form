@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/chakra-ui",
-  "version": "6.2.3",
+  "version": "6.2.4",
   "description": "Chakra UI theme, fields, and widgets for react-jsonschema-form",
   "main": "dist/index.js",
   "module": "lib/index.js",
@@ -79,6 +79,10 @@
     "U.M Andrew <me@andrewmiracle.com>",
     "Heath Chiavettone <heath.chiavettone@freenome.com"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
+  },
   "license": "Apache-2.0",
   "devDependencies": {
     "@chakra-ui/cli": "^3.28.0",

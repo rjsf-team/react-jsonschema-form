@@ -16,6 +16,13 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.2.4
+
+## Dev / docs / playground
+
+- Updated the `package.json` for `chakra-ui` to add the `repository` information so that publishing works for it
+- Updated the `release.yml` to remove the push tag stuff as it isn't needed
+
 # 6.2.3
 
 ## @rjsf/mantine
