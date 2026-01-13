@@ -10,7 +10,7 @@ jobs:
     name: Release to npm
     runs-on: ubuntu-latest
     permissions:
-      content: read
+      contents: read
       id-token: write
     steps:
       - uses: actions/checkout@v6
