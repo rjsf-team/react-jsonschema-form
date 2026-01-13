@@ -5,6 +5,8 @@ on:
   push:
     tags:
       - 'v*' # Triggers for tags starting with 'v', such as v1.0
+  workflow_dispatch: # Allows you to manually trigger the fix
+
 jobs:
   release_to_npm:
     name: Release to npm
@@ -14,8 +16,9 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v6
-      - name: Use Node.js 24.x
-        uses: actions/setup-node@v6
+        with:
+          fetch-depth: 0 # Ensures it gets the tags and history correctly      - name: Use Node.js 24.x
+      - uses: actions/setup-node@v6
         with:
           node-version: 24.x
           cache: 'npm'
