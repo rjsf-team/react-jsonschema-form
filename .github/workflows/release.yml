@@ -44,3 +44,8 @@ jobs:
           echo "NPM_TAG=${NPM_TAG_VALUE}" >> $GITHUB_ENV
           echo "Determined NPM_TAG: ${NPM_TAG_VALUE}"
       - run: npx nx release publish --tag=$NPM_TAG --provenance
+        env:
+          # This ensures the npm CLI knows which registry to authenticate against using OIDC
+          NPM_CONFIG_REGISTRY: "https://registry.npmjs.org/"
+          # If using Nx, it also needs the GitHub token for the release side
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
