@@ -34,6 +34,9 @@ export default function ArrayFieldTemplate<
     title,
     registry,
     required,
+    // Destructure the following props out so that they aren't put into the DOM
+    formData,
+    rawErrors,
     ...rest
   } = props;
 

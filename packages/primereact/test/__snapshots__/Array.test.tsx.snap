@@ -21,7 +21,6 @@ exports[`array fields array 1`] = `
           class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
           data-pc-name="fieldset"
           data-pc-section="root"
-          formdata=""
           id="root"
         >
           <div
@@ -104,7 +103,6 @@ exports[`array fields array icons 1`] = `
           class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
           data-pc-name="fieldset"
           data-pc-section="root"
-          formdata="a,b"
           id="root"
         >
           <div
@@ -494,7 +492,6 @@ exports[`array fields fixed array 1`] = `
           data-pc-name="fieldset"
           data-pc-section="root"
           errorschema="[object Object]"
-          formdata=","
           id="root"
         >
           <div
@@ -797,7 +794,6 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
           class="rjsf-field rjsf-field-array rjsf-field-array-of-object sortable-form-fields p-fieldset p-component"
           data-pc-name="fieldset"
           data-pc-section="root"
-          formdata="[object Object],[object Object]"
           id="root"
         >
           <div
@@ -1129,7 +1125,6 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
           class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
           data-pc-name="fieldset"
           data-pc-section="root"
-          formdata="foo,bar"
           id="root"
         >
           <div
@@ -1428,7 +1423,6 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
           data-pc-name="fieldset"
           data-pc-section="root"
           errorschema="[object Object]"
-          formdata="text,42,true"
           id="root"
         >
           <div
@@ -1595,7 +1589,6 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
           class="rjsf-field rjsf-field-array rjsf-field-array-of-array sortable-form-fields p-fieldset p-component"
           data-pc-name="fieldset"
           data-pc-section="root"
-          formdata="a,b,c,d"
           id="root"
         >
           <div
@@ -1693,7 +1686,6 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                           class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
                           data-pc-name="fieldset"
                           data-pc-section="root"
-                          formdata="a,b"
                           id="root_0"
                         >
                           <div
@@ -1995,7 +1987,6 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                           class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
                           data-pc-name="fieldset"
                           data-pc-section="root"
-                          formdata="c,d"
                           id="root_1"
                         >
                           <div
@@ -2283,7 +2274,6 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
           class="rjsf-field rjsf-field-array rjsf-field-array-of-object sortable-form-fields p-fieldset p-component"
           data-pc-name="fieldset"
           data-pc-section="root"
-          formdata="[object Object],[object Object]"
           id="root"
         >
           <div
@@ -2615,7 +2605,6 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
           class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
           data-pc-name="fieldset"
           data-pc-section="root"
-          formdata="foo,bar"
           id="root"
         >
           <div
@@ -2873,7 +2862,6 @@ exports[`with title and description array 1`] = `
           class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
           data-pc-name="fieldset"
           data-pc-section="root"
-          formdata=""
           id="root"
         >
           <div
@@ -2961,7 +2949,6 @@ exports[`with title and description array icons 1`] = `
           class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
           data-pc-name="fieldset"
           data-pc-section="root"
-          formdata="a,b"
           id="root"
         >
           <div
@@ -3337,7 +3324,6 @@ exports[`with title and description fixed array 1`] = `
           data-pc-name="fieldset"
           data-pc-section="root"
           errorschema="[object Object]"
-          formdata=","
           id="root"
         >
           <div
@@ -3477,7 +3463,6 @@ exports[`with title and description from both array 1`] = `
           class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
           data-pc-name="fieldset"
           data-pc-section="root"
-          formdata=""
           id="root"
         >
           <div
@@ -3565,7 +3550,6 @@ exports[`with title and description from both array icons 1`] = `
           class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
           data-pc-name="fieldset"
           data-pc-section="root"
-          formdata="a,b"
           id="root"
         >
           <div
@@ -3941,7 +3925,6 @@ exports[`with title and description from both fixed array 1`] = `
           data-pc-name="fieldset"
           data-pc-section="root"
           errorschema="[object Object]"
-          formdata=","
           id="root"
         >
           <div
@@ -4081,7 +4064,6 @@ exports[`with title and description from uiSchema array 1`] = `
           class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
           data-pc-name="fieldset"
           data-pc-section="root"
-          formdata=""
           id="root"
         >
           <div
@@ -4169,7 +4151,6 @@ exports[`with title and description from uiSchema array icons 1`] = `
           class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
           data-pc-name="fieldset"
           data-pc-section="root"
-          formdata="a,b"
           id="root"
         >
           <div
@@ -4545,7 +4526,6 @@ exports[`with title and description from uiSchema fixed array 1`] = `
           data-pc-name="fieldset"
           data-pc-section="root"
           errorschema="[object Object]"
-          formdata=","
           id="root"
         >
           <div
@@ -4685,7 +4665,6 @@ exports[`with title and description with global label off array 1`] = `
           class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
           data-pc-name="fieldset"
           data-pc-section="root"
-          formdata=""
           id="root"
         >
           <div
@@ -4768,7 +4747,6 @@ exports[`with title and description with global label off array icons 1`] = `
           class="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
           data-pc-name="fieldset"
           data-pc-section="root"
-          formdata="a,b"
           id="root"
         >
           <div
@@ -5103,7 +5081,6 @@ exports[`with title and description with global label off fixed array 1`] = `
           data-pc-name="fieldset"
           data-pc-section="root"
           errorschema="[object Object]"
-          formdata=","
           id="root"
         >
           <div
