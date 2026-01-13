@@ -5,22 +5,25 @@ on:
   push:
     tags:
       - 'v*' # Triggers for tags starting with 'v', such as v1.0
+  workflow_dispatch: # Allows you to manually trigger the fix
+
 jobs:
   release_to_npm:
     name: Release to npm
     runs-on: ubuntu-latest
     permissions:
-      content: read
+      contents: read
       id-token: write
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # Ensures it gets the tags and history correctly
       - name: Use Node.js 24.x
         uses: actions/setup-node@v6
         with:
           node-version: 24.x
           cache: 'npm'
           cache-dependency-path: 'package-lock.json'
-      - run: npm i -g npm@9
       - run: npm ci
       - run: npm run build-serial
         env:
@@ -40,3 +43,10 @@ jobs:
           echo "NPM_TAG=${NPM_TAG_VALUE}" >> $GITHUB_ENV
           echo "Determined NPM_TAG: ${NPM_TAG_VALUE}"
       - run: npx nx release publish --tag=$NPM_TAG --provenance
+        env:
+          # This ensures the npm CLI knows which registry to authenticate against using OIDC
+          NPM_CONFIG_REGISTRY: "https://registry.npmjs.org/"
+          # If using Nx, it also needs the GitHub token for the release side
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # This tells npm to use the OIDC token for the registry
+          NODE_AUTH_TOKEN: ${{ steps.get_id_token.outputs.token }}
