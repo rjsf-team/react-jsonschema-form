@@ -49,3 +49,5 @@ jobs:
           NPM_CONFIG_REGISTRY: "https://registry.npmjs.org/"
           # If using Nx, it also needs the GitHub token for the release side
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # This tells npm to use the OIDC token for the registry
+          NODE_AUTH_TOKEN: ${{ steps.get_id_token.outputs.token }}
