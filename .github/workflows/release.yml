@@ -3,6 +3,9 @@ on:
   release:
     types: [published]
 
+permissions:
+  id-token: write
+
 jobs:
   release_to_npm:
     name: Release to npm
@@ -22,10 +25,6 @@ jobs:
           NODE_OPTIONS: --max_old_space_size=4096
       - run: npm test
       - run: npm run lint
-      - run: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: git update-index --assume-unchanged .npmrc
       - name: Determine npm tag based on release version
         id: get_npm_tag
         run: |
@@ -39,5 +38,3 @@ jobs:
           echo "NPM_TAG=${NPM_TAG_VALUE}" >> $GITHUB_ENV
           echo "Determined NPM_TAG: ${NPM_TAG_VALUE}"
       - run: npx nx release publish --tag=$NPM_TAG
-      - if: always()
-        run: rm .npmrc
