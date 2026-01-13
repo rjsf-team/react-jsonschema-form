@@ -18,6 +18,14 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.2.2
 
+## @rjsf/mantine
+
+- Updated `cleanupOptions()` to add `enableMarkdownInHelp` and `globalOptions` to avoid DOM errors
+
+## @rjsf/primereact
+
+- Updated `ArrayFieldTemplate` to destructure additional fields to avoid DOM errors
+
 ## Dev / docs / playground
 
 - Updated the `release.yml` to switch to NPM Trusted Publishing so that we can actually publish the changes
