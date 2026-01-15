@@ -18,6 +18,46 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.2.4
 
+## @rjsf/core
+
+- Fixed duplicate React keys in datalist when schema examples and default have different types ([#4927](https://github.com/rjsf-team/react-jsonschema-form/pull/4927))
+
+## @rjsf/antd
+
+- Fixed duplicate React keys in datalist when schema examples and default have different types ([#4927](https://github.com/rjsf-team/react-jsonschema-form/pull/4927))
+
+## @rjsf/chakra-ui
+
+- Fixed duplicate React keys in datalist when schema examples and default have different types ([#4927](https://github.com/rjsf-team/react-jsonschema-form/pull/4927))
+
+## @rjsf/daisyui
+
+- Fixed duplicate React keys in datalist when schema examples and default have different types ([#4927](https://github.com/rjsf-team/react-jsonschema-form/pull/4927))
+
+## @rjsf/fluentui-rc
+
+- Fixed duplicate React keys in datalist when schema examples and default have different types ([#4927](https://github.com/rjsf-team/react-jsonschema-form/pull/4927))
+
+## @rjsf/mantine
+
+- Fixed duplicate React keys in datalist when schema examples and default have different types ([#4927](https://github.com/rjsf-team/react-jsonschema-form/pull/4927))
+
+## @rjsf/mui
+
+- Fixed duplicate React keys in datalist when schema examples and default have different types ([#4927](https://github.com/rjsf-team/react-jsonschema-form/pull/4927))
+
+## @rjsf/react-bootstrap
+
+- Fixed duplicate React keys in datalist when schema examples and default have different types ([#4927](https://github.com/rjsf-team/react-jsonschema-form/pull/4927))
+
+## @rjsf/semantic-ui
+
+- Fixed duplicate React keys in datalist when schema examples and default have different types ([#4927](https://github.com/rjsf-team/react-jsonschema-form/pull/4927))
+
+## @rjsf/shadcn
+
+- Fixed duplicate React keys in datalist when schema examples and default have different types ([#4927](https://github.com/rjsf-team/react-jsonschema-form/pull/4927))
+
 ## Dev / docs / playground
 
 - Updated the `package.json` for `chakra-ui` to add the `repository` information so that publishing works for it

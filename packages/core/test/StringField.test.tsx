@@ -150,6 +150,34 @@ describe('StringField', () => {
       expect(node.querySelector('.rjsf-field input')).toHaveAttribute('list', datalistId);
     });
 
+    it('should render without duplicate keys when examples are strings and default is a number', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'integer',
+          default: 5432,
+          examples: ['5432', '3306', '1433'],
+        },
+      });
+      // Should have 3 options (not 4), since default 5432 matches example '5432'
+      expect(node.querySelectorAll('.rjsf-field datalist > option')).toHaveLength(3);
+      const datalistId = node.querySelector('.rjsf-field datalist')?.id;
+      expect(node.querySelector('.rjsf-field input')).toHaveAttribute('list', datalistId);
+    });
+
+    it('should include default in datalist when types mismatch and values differ', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'integer',
+          default: 8080,
+          examples: ['5432', '3306', '1433'],
+        },
+      });
+      // Should have 4 options (examples + default)
+      expect(node.querySelectorAll('.rjsf-field datalist > option')).toHaveLength(4);
+      const datalistId = node.querySelector('.rjsf-field datalist')?.id;
+      expect(node.querySelector('.rjsf-field input')).toHaveAttribute('list', datalistId);
+    });
+
     it('should default submit value to undefined', () => {
       const { node, onSubmit } = createFormComponent({
         schema: { type: 'string' },
