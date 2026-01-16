@@ -10095,7 +10095,99 @@ exports[`single fields string field required field with markdown help 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields string field with placeholder 1`] = `
+exports[`single fields string field string field with allowClearTextInputs and readonly 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div>
+        <label
+          class="form-label"
+          for="root"
+        />
+        <input
+          aria-describedby="root__error root__description root__help"
+          class="form-control"
+          id="root"
+          name="root"
+          placeholder=""
+          readonly=""
+          type="text"
+          value="foo"
+        />
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields string field string field with allowClearTextInputs and value 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div>
+        <label
+          class="form-label"
+          for="root"
+        />
+        <input
+          aria-describedby="root__error root__description root__help"
+          class="form-control"
+          id="root"
+          name="root"
+          placeholder=""
+          type="text"
+          value="foo"
+        />
+        <button
+          class="btn btn-light btn-sm"
+          title="clear input"
+          type="button"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 512 512"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M405 136.798L375.202 107 256 226.202 136.798 107 107 136.798 226.202 256 107 375.202 136.798 405 256 285.798 375.202 405 405 375.202 285.798 256z"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields string field string field with placeholder 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"

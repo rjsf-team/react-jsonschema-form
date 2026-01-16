@@ -16,6 +16,17 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.2.5
+
+## @rjsf/mui
+
+- Updated `BaseInputTemplate` to properly handle `slotProps` and `InputProps` (deprecated by MUI) with existing `endAdornment`s when the `allowClearTextInputs` flag is true, fixing [#4938](https://github.com/rjsf-team/react-jsonschema-form/issues/4938) 
+
+## Dev / docs / playground
+
+- Updated `uiSchema.md` to add documentation for `allowClearTextInputs`
+- Updated the `formTests.tsx` in `snapshot-tests` to render string fields with the `allowClearTextInputs` flag enabled, with data and readonly to test the new feature
+
 # 6.2.4
 
 ## Dev / docs / playground

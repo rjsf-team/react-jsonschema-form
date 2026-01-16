@@ -6542,7 +6542,79 @@ exports[`single fields string field required field with markdown help 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields string field with placeholder 1`] = `
+exports[`single fields string field string field with allowClearTextInputs and readonly 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="form-group rjsf-field rjsf-field-string"
+    >
+      <input
+        aria-describedby="root__error root__description root__help"
+        class="form-control"
+        id="root"
+        label=""
+        name="root"
+        placeholder=""
+        readonly=""
+        type="text"
+        value="foo"
+      />
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields string field string field with allowClearTextInputs and value 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="form-group rjsf-field rjsf-field-string"
+    >
+      <input
+        aria-describedby="root__error root__description root__help"
+        class="form-control"
+        id="root"
+        label=""
+        name="root"
+        placeholder=""
+        type="text"
+        value="foo"
+      />
+      <button
+        class="btn btn-default btn-clear col-xs-12"
+        title="clear input"
+        type="button"
+      >
+        <i
+          class="glyphicon glyphicon-remove"
+        />
+      </button>
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields string field string field with placeholder 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"

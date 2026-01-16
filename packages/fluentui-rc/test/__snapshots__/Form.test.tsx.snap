@@ -1286,8 +1286,8 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
                 >
                   <label
                     class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                    for="field-r9k__control"
-                    id="field-r9k__label"
+                    for="field-r9m__control"
+                    id="field-r9m__label"
                   >
                     color
                   </label>
@@ -1297,7 +1297,7 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
                     <button
                       aria-describedby="root_color__error root_color__description root_color__help"
                       aria-expanded="false"
-                      aria-labelledby="field-r9k__label"
+                      aria-labelledby="field-r9m__label"
                       class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                       id="root_color"
                       name="root[color]"
@@ -2627,8 +2627,8 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
                 >
                   <label
                     class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                    for="field-rb4__control"
-                    id="field-rb4__label"
+                    for="field-rb6__control"
+                    id="field-rb6__label"
                   >
                     color
                   </label>
@@ -2638,7 +2638,7 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
                     <button
                       aria-describedby="root_color__error root_color__description root_color__help"
                       aria-expanded="false"
-                      aria-labelledby="field-rb4__label"
+                      aria-labelledby="field-rb6__label"
                       class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                       id="root_color"
                       name="root.color"
@@ -4843,8 +4843,8 @@ exports[`single fields optional data controls does not show optional controls wh
                     >
                       <label
                         class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                        for="field-r47__control"
-                        id="field-r47__label"
+                        for="field-r49__control"
+                        id="field-r49__label"
                       >
                         optionalObjectWithOneofs
                       </label>
@@ -4854,7 +4854,7 @@ exports[`single fields optional data controls does not show optional controls wh
                         <button
                           aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
                           aria-expanded="false"
-                          aria-labelledby="field-r47__label"
+                          aria-labelledby="field-r49__label"
                           class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                           id="root_optionalObjectWithOneofs__oneof_select"
                           name="root_optionalObjectWithOneofs__oneof_select"
@@ -4990,8 +4990,8 @@ exports[`single fields optional data controls does not show optional controls wh
                     >
                       <label
                         class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                        for="field-r4d__control"
-                        id="field-r4d__label"
+                        for="field-r4f__control"
+                        id="field-r4f__label"
                       >
                         optionalArrayWithAnyofs
                       </label>
@@ -5001,7 +5001,7 @@ exports[`single fields optional data controls does not show optional controls wh
                         <button
                           aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
                           aria-expanded="false"
-                          aria-labelledby="field-r4d__label"
+                          aria-labelledby="field-r4f__label"
                           class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                           id="root_optionalArrayWithAnyofs__anyof_select"
                           name="root_optionalArrayWithAnyofs__anyof_select"
@@ -5759,8 +5759,8 @@ exports[`single fields optional data controls does not show optional controls wh
                     >
                       <label
                         class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                        for="field-r6p__control"
-                        id="field-r6p__label"
+                        for="field-r6r__control"
+                        id="field-r6r__label"
                       >
                         optionalObjectWithOneofs
                       </label>
@@ -5770,7 +5770,7 @@ exports[`single fields optional data controls does not show optional controls wh
                         <button
                           aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
                           aria-expanded="false"
-                          aria-labelledby="field-r6p__label"
+                          aria-labelledby="field-r6r__label"
                           class="fui-Dropdown__button ___b67tb00_4t2umz0 f122n59 f1c21dwh f3bhgqh f1ewtqcl f1s2aq7o f14mj54c fdrzuqr f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                           disabled=""
                           id="root_optionalObjectWithOneofs__oneof_select"
@@ -5906,8 +5906,8 @@ exports[`single fields optional data controls does not show optional controls wh
                     >
                       <label
                         class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                        for="field-r6v__control"
-                        id="field-r6v__label"
+                        for="field-r71__control"
+                        id="field-r71__label"
                       >
                         optionalArrayWithAnyofs
                       </label>
@@ -5917,7 +5917,7 @@ exports[`single fields optional data controls does not show optional controls wh
                         <button
                           aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
                           aria-expanded="false"
-                          aria-labelledby="field-r6v__label"
+                          aria-labelledby="field-r71__label"
                           class="fui-Dropdown__button ___b67tb00_4t2umz0 f122n59 f1c21dwh f3bhgqh f1ewtqcl f1s2aq7o f14mj54c fdrzuqr f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                           disabled=""
                           id="root_optionalArrayWithAnyofs__anyof_select"
@@ -8867,8 +8867,8 @@ exports[`single fields select field 1`] = `
         >
           <label
             class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-            for="field-rl__control"
-            id="field-rl__label"
+            for="field-rn__control"
+            id="field-rn__label"
           />
           <div
             class="fui-Dropdown form-control ___y239tk0_6yts2b0 ft85np5 f1ewtqcl ftuwxu6 f1exfvgq f10pi13n fmrv4ls f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f1mnjydx f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 f132nw8t f1htdosj fxugw4r f1c1zstj fhz96rm fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi fvs00aa f1assf6x f1z0osm6 f4ruux4 f1b473iu f381qr8 f1qzcrsd ft4skwv"
@@ -8876,7 +8876,7 @@ exports[`single fields select field 1`] = `
             <button
               aria-describedby="root__error root__description root__help"
               aria-expanded="false"
-              aria-labelledby="field-rl__label"
+              aria-labelledby="field-rn__label"
               class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
               id="root"
               name="root"
@@ -8958,8 +8958,8 @@ exports[`single fields select field multiple choice 1`] = `
         >
           <label
             class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-            for="field-ro__control"
-            id="field-ro__label"
+            for="field-rq__control"
+            id="field-rq__label"
           />
           <div
             class="fui-Dropdown form-control ___y239tk0_6yts2b0 ft85np5 f1ewtqcl ftuwxu6 f1exfvgq f10pi13n fmrv4ls f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f1mnjydx f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 f132nw8t f1htdosj fxugw4r f1c1zstj fhz96rm fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi fvs00aa f1assf6x f1z0osm6 f4ruux4 f1b473iu f381qr8 f1qzcrsd ft4skwv"
@@ -8967,7 +8967,7 @@ exports[`single fields select field multiple choice 1`] = `
             <button
               aria-describedby="root__error root__description root__help"
               aria-expanded="false"
-              aria-labelledby="field-ro__label"
+              aria-labelledby="field-rq__label"
               class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
               id="root"
               name="root"
@@ -9029,8 +9029,8 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
         >
           <label
             class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-            for="field-r1d__control"
-            id="field-r1d__label"
+            for="field-r1f__control"
+            id="field-r1f__label"
           />
           <div
             class="fui-Dropdown form-control ___y239tk0_6yts2b0 ft85np5 f1ewtqcl ftuwxu6 f1exfvgq f10pi13n fmrv4ls f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f1mnjydx f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 f132nw8t f1htdosj fxugw4r f1c1zstj fhz96rm fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi fvs00aa f1assf6x f1z0osm6 f4ruux4 f1b473iu f381qr8 f1qzcrsd ft4skwv"
@@ -9038,7 +9038,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
             <button
               aria-describedby="root__error root__description root__help"
               aria-expanded="false"
-              aria-labelledby="field-r1d__label"
+              aria-labelledby="field-r1f__label"
               class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
               id="root"
               name="root"
@@ -9220,8 +9220,8 @@ exports[`single fields select field multiple choice formData 1`] = `
         >
           <label
             class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-            for="field-r20__control"
-            id="field-r20__label"
+            for="field-r22__control"
+            id="field-r22__label"
           />
           <div
             class="fui-Dropdown form-control ___y239tk0_6yts2b0 ft85np5 f1ewtqcl ftuwxu6 f1exfvgq f10pi13n fmrv4ls f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f1mnjydx f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 f132nw8t f1htdosj fxugw4r f1c1zstj fhz96rm fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi fvs00aa f1assf6x f1z0osm6 f4ruux4 f1b473iu f381qr8 f1qzcrsd ft4skwv"
@@ -9229,7 +9229,7 @@ exports[`single fields select field multiple choice formData 1`] = `
             <button
               aria-describedby="root__error root__description root__help"
               aria-expanded="false"
-              aria-labelledby="field-r20__label"
+              aria-labelledby="field-r22__label"
               class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
               id="root"
               name="root"
@@ -9292,8 +9292,8 @@ exports[`single fields select field multiple choice with labels 1`] = `
         >
           <label
             class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-            for="field-rr__control"
-            id="field-rr__label"
+            for="field-rt__control"
+            id="field-rt__label"
           />
           <div
             class="fui-Dropdown form-control ___y239tk0_6yts2b0 ft85np5 f1ewtqcl ftuwxu6 f1exfvgq f10pi13n fmrv4ls f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f1mnjydx f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 f132nw8t f1htdosj fxugw4r f1c1zstj fhz96rm fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi fvs00aa f1assf6x f1z0osm6 f4ruux4 f1b473iu f381qr8 f1qzcrsd ft4skwv"
@@ -9301,7 +9301,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
             <button
               aria-describedby="root__error root__description root__help"
               aria-expanded="false"
-              aria-labelledby="field-rr__label"
+              aria-labelledby="field-rt__label"
               class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
               id="root"
               name="root"
@@ -9363,8 +9363,8 @@ exports[`single fields select field single choice enumDisabled 1`] = `
         >
           <label
             class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-            for="field-ru__control"
-            id="field-ru__label"
+            for="field-r10__control"
+            id="field-r10__label"
           />
           <div
             class="fui-Dropdown form-control ___y239tk0_6yts2b0 ft85np5 f1ewtqcl ftuwxu6 f1exfvgq f10pi13n fmrv4ls f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f1mnjydx f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 f132nw8t f1htdosj fxugw4r f1c1zstj fhz96rm fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi fvs00aa f1assf6x f1z0osm6 f4ruux4 f1b473iu f381qr8 f1qzcrsd ft4skwv"
@@ -9372,7 +9372,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
             <button
               aria-describedby="root__error root__description root__help"
               aria-expanded="false"
-              aria-labelledby="field-ru__label"
+              aria-labelledby="field-r10__label"
               class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
               id="root"
               name="root"
@@ -9622,8 +9622,8 @@ exports[`single fields select field single choice formData 1`] = `
         >
           <label
             class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-            for="field-r1t__control"
-            id="field-r1t__label"
+            for="field-r1v__control"
+            id="field-r1v__label"
           />
           <div
             class="fui-Dropdown form-control ___y239tk0_6yts2b0 ft85np5 f1ewtqcl ftuwxu6 f1exfvgq f10pi13n fmrv4ls f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f1mnjydx f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 f132nw8t f1htdosj fxugw4r f1c1zstj fhz96rm fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi fvs00aa f1assf6x f1z0osm6 f4ruux4 f1b473iu f381qr8 f1qzcrsd ft4skwv"
@@ -9631,7 +9631,7 @@ exports[`single fields select field single choice formData 1`] = `
             <button
               aria-describedby="root__error root__description root__help"
               aria-expanded="false"
-              aria-labelledby="field-r1t__label"
+              aria-labelledby="field-r1v__label"
               class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
               id="root"
               name="root"
@@ -9798,8 +9798,8 @@ exports[`single fields select widget with description in schema and FieldTemplat
         >
           <label
             class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-            for="field-r2h__control"
-            id="field-r2h__label"
+            for="field-r2j__control"
+            id="field-r2j__label"
           >
             test
           </label>
@@ -9809,7 +9809,7 @@ exports[`single fields select widget with description in schema and FieldTemplat
             <button
               aria-describedby="root__error root__description root__help"
               aria-expanded="false"
-              aria-labelledby="field-r2h__label"
+              aria-labelledby="field-r2j__label"
               class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
               id="root"
               name="root"
@@ -10396,7 +10396,120 @@ exports[`single fields string field required field with markdown help 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields string field with placeholder 1`] = `
+exports[`single fields string field string field with allowClearTextInputs and readonly 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
+    >
+      <div
+        class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+      >
+        <label
+          class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+          for="root"
+        />
+        <span
+          class="fui-Input r1oeeo9n ___yxsf370_rc74k80 fdrzuqr f1c21dwh f1jj8ep1 f15xbau f4ikngz fy0fskl fg455y9 f1rvyvqg f1cwzwz f14g86mu fhr9occ f99w1ws"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            class="fui-Input__input r12stul0 ___yujd800_1sg4u0d f1s2aq7o f1c21dwh fdrzuqr fahhnxm fly5x3f"
+            disabled=""
+            id="root"
+            name="root"
+            placeholder=""
+            type="text"
+            value="foo"
+          />
+        </span>
+      </div>
+    </div>
+    <div
+      class="___fko12g0_0000000 f1wswflg"
+    >
+      <button
+        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields string field string field with allowClearTextInputs and value 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
+    >
+      <div
+        class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+      >
+        <label
+          class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+          for="root"
+        />
+        <span
+          class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
+            id="root"
+            name="root"
+            placeholder=""
+            type="text"
+            value="foo"
+          />
+        </span>
+        <button
+          class="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+          title="clear input"
+          type="button"
+        >
+          <span
+            class="fui-Button__icon rywnvv2"
+          >
+            <svg
+              aria-hidden="true"
+              class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+              fill="currentColor"
+              height="1em"
+              viewBox="0 0 20 20"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m4.09 4.22.06-.07a.5.5 0 0 1 .63-.06l.07.06L10 9.29l5.15-5.14a.5.5 0 0 1 .63-.06l.07.06c.18.17.2.44.06.63l-.06.07L10.71 10l5.14 5.15c.18.17.2.44.06.63l-.06.07a.5.5 0 0 1-.63.06l-.07-.06L10 10.71l-5.15 5.14a.5.5 0 0 1-.63.06l-.07-.06a.5.5 0 0 1-.06-.63l.06-.07L9.29 10 4.15 4.85a.5.5 0 0 1-.06-.63l.06-.07-.06.07Z"
+                fill="currentColor"
+              />
+            </svg>
+          </span>
+        </button>
+      </div>
+    </div>
+    <div
+      class="___fko12g0_0000000 f1wswflg"
+    >
+      <button
+        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields string field string field with placeholder 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
