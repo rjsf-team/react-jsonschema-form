@@ -107,16 +107,41 @@ export function formTests(Form: ComponentType<FormProps>) {
         const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} formData={{}} />);
         expect(asFragment()).toMatchSnapshot();
       });
-    });
-    test('string field with placeholder', async () => {
-      const schema: RJSFSchema = {
-        type: 'string',
-      };
-      const uiSchema = {
-        'ui:placeholder': 'placeholder',
-      };
-      const { asFragment } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
-      expect(asFragment()).toMatchSnapshot();
+      test('string field with placeholder', async () => {
+        const schema: RJSFSchema = {
+          type: 'string',
+        };
+        const uiSchema = {
+          'ui:placeholder': 'placeholder',
+        };
+        const { asFragment } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+        expect(asFragment()).toMatchSnapshot();
+      });
+      test('string field with allowClearTextInputs and value', async () => {
+        const schema: RJSFSchema = {
+          type: 'string',
+        };
+        const uiSchema = {
+          'ui:allowClearTextInputs': true,
+        };
+        const { asFragment } = render(
+          <Form schema={schema} validator={validator} uiSchema={uiSchema} formData='foo' />,
+        );
+        expect(asFragment()).toMatchSnapshot();
+      });
+      test('string field with allowClearTextInputs and readonly', async () => {
+        const schema: RJSFSchema = {
+          type: 'string',
+        };
+        const uiSchema = {
+          'ui:readonly': true,
+          'ui:allowClearTextInputs': true,
+        };
+        const { asFragment } = render(
+          <Form schema={schema} validator={validator} uiSchema={uiSchema} formData='foo' />,
+        );
+        expect(asFragment()).toMatchSnapshot();
+      });
     });
     test('number field', async () => {
       const schema: RJSFSchema = {
