@@ -11,6 +11,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
+import { SchemaExamples } from '@rjsf/core';
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
@@ -89,19 +90,7 @@ export default function BaseInputTemplate<
       {options.allowClearTextInputs && !readonly && !disabled && value && (
         <ClearButton registry={registry} onClick={_onClear} />
       )}
-      {Array.isArray(schema.examples) && (
-        <datalist id={examplesId(id)}>
-          {(schema.examples as string[])
-            .concat(
-              schema.default !== undefined && !schema.examples.map(String).includes(String(schema.default))
-                ? ([schema.default] as string[])
-                : [],
-            )
-            .map((example: any) => {
-              return <option key={String(example)} value={example} />;
-            })}
-        </datalist>
-      )}
+      <SchemaExamples id={id} schema={schema} />
     </>
   );
 }
