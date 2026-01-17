@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/mantine",
-  "version": "6.2.4",
+  "version": "6.2.5",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
