@@ -13186,7 +13186,159 @@ exports[`single fields string field required field with markdown help 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields string field with placeholder 1`] = `
+exports[`single fields string field string field with allowClearTextInputs and readonly 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-string"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-string"
+      >
+        <label
+          class="label"
+          for="root"
+        >
+          <span
+            class="label-text font-medium"
+          />
+        </label>
+        <div
+          class="form-control"
+        >
+          <label
+            class="label hidden"
+            for="root"
+            style="display: none;"
+          >
+            <span
+              class="label-text"
+            />
+          </label>
+          <div
+            style="position: relative;"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              class="input input-bordered w-full"
+              disabled=""
+              id="root"
+              name="root"
+              placeholder=""
+              type="text"
+              value="foo"
+            />
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields string field string field with allowClearTextInputs and value 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-string"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-string"
+      >
+        <label
+          class="label"
+          for="root"
+        >
+          <span
+            class="label-text font-medium"
+          />
+        </label>
+        <div
+          class="form-control"
+        >
+          <label
+            class="label hidden"
+            for="root"
+            style="display: none;"
+          >
+            <span
+              class="label-text"
+            />
+          </label>
+          <div
+            style="position: relative;"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              class="input input-bordered w-full"
+              id="root"
+              name="root"
+              placeholder=""
+              type="text"
+              value="foo"
+            />
+            <button
+              aria-label="clear input"
+              title="clear input"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="svg-inline--fa fa-xmark h-5 w-5"
+                data-icon="xmark"
+                data-prefix="fas"
+                role="img"
+                viewBox="0 0 384 512"
+              >
+                <path
+                  d="M55.1 73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L147.2 256 9.9 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192.5 301.3 329.9 438.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.8 256 375.1 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192.5 210.7 55.1 73.4z"
+                  fill="currentColor"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields string field string field with placeholder 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"

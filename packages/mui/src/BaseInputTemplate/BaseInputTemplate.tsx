@@ -52,23 +52,28 @@ export default function BaseInputTemplate<
     errorSchema,
     registry,
     InputLabelProps,
+    InputProps,
+    slotProps,
     ...textFieldProps
   } = props;
   const { ClearButton } = registry.templates.ButtonTemplates;
-  const inputProps = getInputProps<T, S, F>(schema, type, options);
   // Now we need to pull out the step, min, max into an inner `inputProps` for material-ui
-  const { step, min, max, accept, ...rest } = inputProps;
-  const htmlInputProps = { step, min, max, accept, ...(schema.examples ? { list: examplesId(id) } : undefined) };
+  const { step, min, max, accept, ...rest } = getInputProps<T, S, F>(schema, type, options);
+  const htmlInputProps = {
+    ...slotProps?.htmlInput,
+    step,
+    min,
+    max,
+    accept,
+    ...(schema.examples ? { list: examplesId(id) } : undefined),
+  };
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange(value === '' ? options.emptyValue : value);
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
   const DisplayInputLabelProps = TYPES_THAT_SHRINK_LABEL.includes(type)
-    ? {
-        ...InputLabelProps,
-        shrink: true,
-      }
-    : InputLabelProps;
+    ? { ...slotProps?.inputLabel, ...InputLabelProps, shrink: true }
+    : { ...slotProps?.inputLabel, ...InputLabelProps };
   const _onClear = useCallback(
     (e: MouseEvent) => {
       e.preventDefault();
@@ -77,6 +82,22 @@ export default function BaseInputTemplate<
     },
     [onChange, options.emptyValue],
   );
+  const inputProps = { ...InputProps, ...slotProps?.input };
+  if (options.allowClearTextInputs && value && !readonly && !disabled) {
+    const clearAdornment = (
+      <InputAdornment position='end'>
+        <ClearButton registry={registry} onClick={_onClear} />
+      </InputAdornment>
+    );
+    inputProps.endAdornment = !inputProps.endAdornment ? (
+      clearAdornment
+    ) : (
+      <>
+        {inputProps.endAdornment}
+        {clearAdornment}
+      </>
+    );
+  }
 
   return (
     <>
@@ -88,7 +109,12 @@ export default function BaseInputTemplate<
         autoFocus={autofocus}
         required={required}
         disabled={disabled || readonly}
-        slotProps={{ htmlInput: htmlInputProps, inputLabel: DisplayInputLabelProps }}
+        slotProps={{
+          ...slotProps,
+          input: inputProps,
+          htmlInput: htmlInputProps,
+          inputLabel: DisplayInputLabelProps,
+        }}
         {...rest}
         value={value || value === 0 ? value : ''}
         error={rawErrors.length > 0}
@@ -97,15 +123,6 @@ export default function BaseInputTemplate<
         onFocus={_onFocus}
         {...(textFieldProps as TextFieldProps)}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
-        InputProps={{
-          ...textFieldProps.InputProps,
-          endAdornment:
-            options.allowClearTextInputs && value && !readonly && !disabled ? (
-              <InputAdornment position='end'>
-                <ClearButton registry={registry} onClick={_onClear} />
-              </InputAdornment>
-            ) : undefined,
-        }}
       />
       <SchemaExamples id={id} schema={schema} />
     </>

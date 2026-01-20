@@ -161,6 +161,36 @@ Will result in:
 </div>
 ```
 
+### allowClearTextInputs
+
+The optional `ui:allowClearTextInputs` uiSchema directive enables a clear/reset button for text-based input widgets.
+When set to true, a clear button will be displayed when the input field has a value and is not readonly or disabled.
+When omitted, no clear button will be displayed for text input fields.
+
+```tsx
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+const schema: RJSFSchema = { type: 'string' };
+const uiSchema: UiSchema = {
+  'ui:allowClearTextInputs': true,
+};
+```
+
+It can also be enabled globally by setting the `allowClearTextInputs` option to `true` in the `ui:globalOptions`
+uiSchema directive.
+
+```tsx
+import { Form } from '@rjsf/core';
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = { type: 'string' };
+const uiSchema: UiSchema = {
+  'ui:globalOptions': {
+    allowClearTextInputs: true,
+  },
+};
+```
+
 ### autocomplete
 
 If you want to mark a text input, select or textarea input to use the HTML autocomplete feature, set the `ui:autocomplete` uiSchema directive to a valid [HTML autocomplete value](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete#values).
