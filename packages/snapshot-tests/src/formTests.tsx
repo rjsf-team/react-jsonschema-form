@@ -636,6 +636,15 @@ export function formTests(Form: ComponentType<FormProps>) {
       const { asFragment } = render(<Form schema={schema} validator={validator} />);
       expect(asFragment()).toMatchSnapshot();
     });
+    test('schema examples with mixed types (string examples and number default)', async () => {
+      const schema: RJSFSchema = {
+        type: 'integer',
+        default: 5432,
+        examples: ['5432', '3306', '1433'],
+      };
+      const { asFragment } = render(<Form schema={schema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
+    });
     test('help and error display', async () => {
       const schema: RJSFSchema = {
         type: 'string',
