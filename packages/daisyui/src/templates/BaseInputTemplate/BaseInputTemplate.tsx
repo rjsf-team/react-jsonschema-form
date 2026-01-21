@@ -8,6 +8,7 @@ import {
   ariaDescribedByIds,
   examplesId,
 } from '@rjsf/utils';
+import { SchemaExamples } from '@rjsf/core';
 
 /** The `BaseInputTemplate` component is a template for rendering basic input elements
  * with DaisyUI styling. It's used as the foundation for various input types in forms.
@@ -114,15 +115,7 @@ export default function BaseInputTemplate<
           )}
         </div>
       </div>
-      {Array.isArray(schema.examples) && (
-        <datalist id={examplesId(id)}>
-          {(schema.examples as string[])
-            .concat(schema.default && !schema.examples.includes(schema.default) ? ([schema.default] as string[]) : [])
-            .map((example: any) => {
-              return <option key={example} value={example} />;
-            })}
-        </datalist>
-      )}
+      <SchemaExamples id={id} schema={schema} />
     </>
   );
 }

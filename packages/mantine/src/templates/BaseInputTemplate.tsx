@@ -10,6 +10,7 @@ import {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import { TextInput, NumberInput } from '@mantine/core';
+import { SchemaExamples } from '@rjsf/core';
 
 import { cleanupOptions } from '../utils';
 
@@ -132,15 +133,7 @@ export default function BaseInputTemplate<
         <ClearButton registry={registry} onClick={handleClear} />
       )}
       {children}
-      {Array.isArray(schema.examples) && (
-        <datalist id={examplesId(id)}>
-          {(schema.examples as string[])
-            .concat(schema.default && !schema.examples.includes(schema.default) ? ([schema.default] as string[]) : [])
-            .map((example) => {
-              return <option key={example} value={example} />;
-            })}
-        </datalist>
-      )}
+      <SchemaExamples id={id} schema={schema} />
     </>
   );
 }

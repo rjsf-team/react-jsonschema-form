@@ -4605,13 +4605,13 @@ exports[`single fields optional data controls does not show optional controls wh
               class="p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              id="pr_id_21"
+              id="pr_id_23"
             >
               <div
-                aria-labelledby="pr_id_21_header"
+                aria-labelledby="pr_id_23_header"
                 class="p-toggleable-content"
                 data-pc-section="toggleablecontent"
-                id="pr_id_21_content"
+                id="pr_id_23_content"
                 role="region"
               >
                 <div
@@ -4703,13 +4703,13 @@ exports[`single fields optional data controls does not show optional controls wh
               class="p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              id="pr_id_22"
+              id="pr_id_24"
             >
               <div
-                aria-labelledby="pr_id_22_header"
+                aria-labelledby="pr_id_24_header"
                 class="p-toggleable-content"
                 data-pc-section="toggleablecontent"
-                id="pr_id_22_content"
+                id="pr_id_24_content"
                 role="region"
               >
                 <div
@@ -5378,13 +5378,13 @@ exports[`single fields optional data controls does not show optional controls wh
               class="p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              id="pr_id_71"
+              id="pr_id_73"
             >
               <div
-                aria-labelledby="pr_id_71_header"
+                aria-labelledby="pr_id_73_header"
                 class="p-toggleable-content"
                 data-pc-section="toggleablecontent"
-                id="pr_id_71_content"
+                id="pr_id_73_content"
                 role="region"
               >
                 <div
@@ -5477,13 +5477,13 @@ exports[`single fields optional data controls does not show optional controls wh
               class="p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              id="pr_id_72"
+              id="pr_id_74"
             >
               <div
-                aria-labelledby="pr_id_72_header"
+                aria-labelledby="pr_id_74_header"
                 class="p-toggleable-content"
                 data-pc-section="toggleablecontent"
-                id="pr_id_72_content"
+                id="pr_id_74_content"
                 role="region"
               >
                 <div
@@ -6270,13 +6270,13 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               class="p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              id="pr_id_52"
+              id="pr_id_54"
             >
               <div
-                aria-labelledby="pr_id_52_header"
+                aria-labelledby="pr_id_54_header"
                 class="p-toggleable-content"
                 data-pc-section="toggleablecontent"
-                id="pr_id_52_content"
+                id="pr_id_54_content"
                 role="region"
               >
                 <div
@@ -6362,13 +6362,13 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               class="p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              id="pr_id_53"
+              id="pr_id_55"
             >
               <div
-                aria-labelledby="pr_id_53_header"
+                aria-labelledby="pr_id_55_header"
                 class="p-toggleable-content"
                 data-pc-section="toggleablecontent"
-                id="pr_id_53_content"
+                id="pr_id_55_content"
                 role="region"
               >
                 <div
@@ -7053,13 +7053,13 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               class="p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              id="pr_id_88"
+              id="pr_id_90"
             >
               <div
-                aria-labelledby="pr_id_88_header"
+                aria-labelledby="pr_id_90_header"
                 class="p-toggleable-content"
                 data-pc-section="toggleablecontent"
-                id="pr_id_88_content"
+                id="pr_id_90_content"
                 role="region"
               >
                 <div
@@ -7119,13 +7119,13 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               class="p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              id="pr_id_89"
+              id="pr_id_91"
             >
               <div
-                aria-labelledby="pr_id_89_header"
+                aria-labelledby="pr_id_91_header"
                 class="p-toggleable-content"
                 data-pc-section="toggleablecontent"
-                id="pr_id_89_content"
+                id="pr_id_91_content"
                 role="region"
               >
                 <div
@@ -7486,13 +7486,13 @@ exports[`single fields optional data controls shows "add" optional controls when
               class="p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              id="pr_id_34"
+              id="pr_id_36"
             >
               <div
-                aria-labelledby="pr_id_34_header"
+                aria-labelledby="pr_id_36_header"
                 class="p-toggleable-content"
                 data-pc-section="toggleablecontent"
-                id="pr_id_34_content"
+                id="pr_id_36_content"
                 role="region"
               >
                 <div
@@ -7578,13 +7578,13 @@ exports[`single fields optional data controls shows "add" optional controls when
               class="p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              id="pr_id_35"
+              id="pr_id_37"
             >
               <div
-                aria-labelledby="pr_id_35_header"
+                aria-labelledby="pr_id_37_header"
                 class="p-toggleable-content"
                 data-pc-section="toggleablecontent"
-                id="pr_id_35_content"
+                id="pr_id_37_content"
                 role="region"
               >
                 <div
@@ -7921,13 +7921,13 @@ exports[`single fields optional data controls shows "add" optional controls when
               class="p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              id="pr_id_80"
+              id="pr_id_82"
             >
               <div
-                aria-labelledby="pr_id_80_header"
+                aria-labelledby="pr_id_82_header"
                 class="p-toggleable-content"
                 data-pc-section="toggleablecontent"
-                id="pr_id_80_content"
+                id="pr_id_82_content"
                 role="region"
               >
                 <div
@@ -7987,13 +7987,13 @@ exports[`single fields optional data controls shows "add" optional controls when
               class="p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              id="pr_id_81"
+              id="pr_id_83"
             >
               <div
-                aria-labelledby="pr_id_81_header"
+                aria-labelledby="pr_id_83_header"
                 class="p-toggleable-content"
                 data-pc-section="toggleablecontent"
-                id="pr_id_81_content"
+                id="pr_id_83_content"
                 role="region"
               >
                 <div
@@ -8375,6 +8375,87 @@ exports[`single fields schema examples 1`] = `
             role="combobox"
             type="text"
             value=""
+          />
+          <button
+            aria-label="Choose"
+            class="p-autocomplete-dropdown p-button p-component p-button-icon-only p-button-text p-button-secondary"
+            data-pc-name="button"
+            data-pc-section="root"
+            type="button"
+          >
+            <svg
+              class="p-icon"
+              fill="none"
+              height="14"
+              viewBox="0 0 14 14"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7.01744 10.398C6.91269 10.3985 6.8089 10.378 6.71215 10.3379C6.61541 10.2977 6.52766 10.2386 6.45405 10.1641L1.13907 4.84913C1.03306 4.69404 0.985221 4.5065 1.00399 4.31958C1.02276 4.13266 1.10693 3.95838 1.24166 3.82747C1.37639 3.69655 1.55301 3.61742 1.74039 3.60402C1.92777 3.59062 2.11386 3.64382 2.26584 3.75424L7.01744 8.47394L11.769 3.75424C11.9189 3.65709 12.097 3.61306 12.2748 3.62921C12.4527 3.64535 12.6199 3.72073 12.7498 3.84328C12.8797 3.96582 12.9647 4.12842 12.9912 4.30502C13.0177 4.48162 12.9841 4.662 12.8958 4.81724L7.58083 10.1322C7.50996 10.2125 7.42344 10.2775 7.32656 10.3232C7.22968 10.3689 7.12449 10.3944 7.01744 10.398Z"
+                fill="currentColor"
+              />
+            </svg>
+            <span
+              class="p-button-label p-c"
+              data-pc-section="label"
+            >
+               
+            </span>
+          </button>
+        </span>
+      </div>
+    </div>
+    <button
+      aria-label="Submit"
+      class="p-button p-component"
+      data-pc-name="button"
+      data-pc-section="root"
+      type="submit"
+    >
+      <span
+        class="p-button-label p-c"
+        data-pc-section="label"
+      >
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields schema examples with mixed types (string examples and number default) 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-integer"
+    >
+      <div
+        style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+      >
+        <span
+          class="p-autocomplete p-component p-inputwrapper p-autocomplete-dd p-inputwrapper-filled p-dropdown"
+          data-pc-name="autocomplete"
+          data-pc-section="root"
+          id="root"
+          step="1"
+        >
+          <input
+            aria-autocomplete="list"
+            aria-describedby="root__error root__description root__help root__examples"
+            aria-expanded="false"
+            aria-haspopup="listbox"
+            autocomplete="off"
+            class="p-autocomplete-input p-autocomplete-dd-input p-inputtext p-component p-filled"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            name="root"
+            placeholder=""
+            role="combobox"
+            type="number"
+            value="5432"
           />
           <button
             aria-label="Choose"

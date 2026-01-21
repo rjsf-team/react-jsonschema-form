@@ -10,6 +10,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
+import { SchemaExamples } from '@rjsf/core';
 
 const INPUT_STYLE = {
   width: '100%',
@@ -107,15 +108,7 @@ export default function BaseInputTemplate<
       {options.allowClearTextInputs && !readonly && !disabled && value && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
-      {Array.isArray(schema.examples) && (
-        <datalist id={examplesId(id)}>
-          {(schema.examples as string[])
-            .concat(schema.default && !schema.examples.includes(schema.default) ? ([schema.default] as string[]) : [])
-            .map((example) => {
-              return <option key={example} value={example} />;
-            })}
-        </datalist>
-      )}
+      <SchemaExamples id={id} schema={schema} />
     </>
   );
 }

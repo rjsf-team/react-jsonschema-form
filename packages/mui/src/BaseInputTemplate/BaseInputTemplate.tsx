@@ -12,6 +12,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
+import { SchemaExamples } from '@rjsf/core';
 
 const TYPES_THAT_SHRINK_LABEL = ['date', 'datetime-local', 'file', 'time'];
 
@@ -123,15 +124,7 @@ export default function BaseInputTemplate<
         {...(textFieldProps as TextFieldProps)}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
-      {Array.isArray(schema.examples) && (
-        <datalist id={examplesId(id)}>
-          {(schema.examples as string[])
-            .concat(schema.default && !schema.examples.includes(schema.default) ? ([schema.default] as string[]) : [])
-            .map((example: any) => {
-              return <option key={example} value={example} />;
-            })}
-        </datalist>
-      )}
+      <SchemaExamples id={id} schema={schema} />
     </>
   );
 }

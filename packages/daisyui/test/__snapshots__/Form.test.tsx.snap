@@ -11182,6 +11182,87 @@ exports[`single fields schema examples 1`] = `
 </DocumentFragment>
 `;
 
+exports[`single fields schema examples with mixed types (string examples and number default) 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-integer"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-integer"
+      >
+        <label
+          class="label"
+          for="root"
+        >
+          <span
+            class="label-text font-medium"
+          />
+        </label>
+        <div
+          class="form-control"
+        >
+          <label
+            class="label hidden"
+            for="root"
+            style="display: none;"
+          >
+            <span
+              class="label-text"
+            />
+          </label>
+          <div
+            style="position: relative;"
+          >
+            <input
+              aria-describedby="root__error root__description root__help root__examples"
+              class="input input-bordered w-full"
+              id="root"
+              list="root__examples"
+              name="root"
+              placeholder=""
+              step="1"
+              type="number"
+              value="5432"
+            />
+          </div>
+        </div>
+        <datalist
+          id="root__examples"
+        >
+          <option
+            value="5432"
+          />
+          <option
+            value="3306"
+          />
+          <option
+            value="1433"
+          />
+        </datalist>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields select field 1`] = `
 <DocumentFragment>
   <form
