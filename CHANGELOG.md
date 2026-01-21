@@ -57,12 +57,6 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/shadcn
 
 - Fixed duplicate React keys in datalist when schema examples and default have different types, fixing ([#4927](https://github.com/rjsf-team/react-jsonschema-form/issues/4927))
-
-## Dev / docs / playground
-
-- Updated the `package.json` for `chakra-ui` to add the `repository` information so that publishing works for it
-- Updated the `release.yml` to remove the push tag stuff as it isn't needed
-
 # 6.2.5
 
 ## @rjsf/mui
@@ -75,6 +69,11 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated the `formTests.tsx` in `snapshot-tests` to render string fields with the `allowClearTextInputs` flag enabled, with data and readonly to test the new feature
 
 # 6.2.4
+
+## Dev / docs / playground
+
+- Updated the `package.json` for `chakra-ui` to add the `repository` information so that publishing works for it
+- Updated the `release.yml` to remove the push tag stuff as it isn't needed
 
 # 6.2.3
 
