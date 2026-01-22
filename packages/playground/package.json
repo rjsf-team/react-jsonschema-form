@@ -68,7 +68,7 @@
     "react-bootstrap": "^2.10.10",
     "react-dom": "^18.3.1",
     "react-frame-component": "^5.2.7",
-    "react-is": "^18.3.1",
+    "react-is": "^19.2.3",
     "semantic-ui-react": "^2.1.5"
   },
   "devDependencies": {
