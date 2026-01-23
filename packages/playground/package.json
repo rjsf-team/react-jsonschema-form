@@ -61,7 +61,7 @@
     "dayjs": "^1.11.18",
     "deep-freeze-es6": "^4.0.1",
     "jss": "^10.10.0",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "lucide-react": "^0.548.0",
     "monaco-editor": "^0.54.0",
     "react": "^18.3.1",

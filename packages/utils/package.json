@@ -68,7 +68,7 @@
     "@x0k/json-schema-merge": "^1.0.2",
     "fast-uri": "^3.1.0",
     "jsonpointer": "^5.0.1",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "lodash-es": "^4.17.23",
     "react-is": "^18.3.1"
   },

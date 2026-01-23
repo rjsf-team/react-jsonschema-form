@@ -70,7 +70,7 @@
     "react": ">=18"
   },
   "dependencies": {
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "lodash-es": "^4.17.23",
     "markdown-to-jsx": "^8.0.0",
     "prop-types": "^15.8.1"
