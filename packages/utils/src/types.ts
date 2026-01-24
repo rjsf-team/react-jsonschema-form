@@ -192,15 +192,15 @@ export type FieldPath = {
 /** Type describing a recursive structure of `FieldPath`s for an object with a non-empty set of keys */
 export type PathSchema<T = any> =
   T extends Array<infer U>
-    ? FieldPath & {
-        [i: number]: PathSchema<U>;
-      }
-    : T extends GenericObjectType
-      ? FieldPath & {
-          /** The set of names for fields in the recursive object structure */
-          [key in keyof T]?: PathSchema<T[key]>;
-        }
-      : FieldPath;
+  ? FieldPath & {
+    [i: number]: PathSchema<U>;
+  }
+  : T extends GenericObjectType
+  ? FieldPath & {
+    /** The set of names for fields in the recursive object structure */
+    [key in keyof T]?: PathSchema<T[key]>;
+  }
+  : FieldPath;
 
 /** The type for error produced by RJSF schema validation */
 export type RJSFValidationError = {
@@ -480,8 +480,8 @@ export interface Registry<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
 /** The properties that are passed to a `Field` implementation */
 export interface FieldProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
   extends GenericObjectType,
-    RJSFBaseProps<T, S, F>,
-    Pick<HTMLAttributes<HTMLElement>, Exclude<keyof HTMLAttributes<HTMLElement>, 'onBlur' | 'onFocus' | 'onChange'>> {
+  RJSFBaseProps<T, S, F>,
+  Pick<HTMLAttributes<HTMLElement>, Exclude<keyof HTMLAttributes<HTMLElement>, 'onBlur' | 'onFocus' | 'onChange'>> {
   /** The FieldPathId of the field in the hierarchy */
   fieldPathId: FieldPathId;
   /** The data for this field */
@@ -857,25 +857,25 @@ export type WrapIfAdditionalTemplateProps<
   /** The field or widget component instance for this field row */
   children: ReactNode;
 } & Pick<
-    FieldTemplateProps<T, S, F>,
-    | 'id'
-    | 'classNames'
-    | 'hideError'
-    | 'rawDescription'
-    | 'rawErrors'
-    | 'style'
-    | 'displayLabel'
-    | 'label'
-    | 'required'
-    | 'readonly'
-    | 'disabled'
-    | 'schema'
-    | 'uiSchema'
-    | 'onKeyRename'
-    | 'onKeyRenameBlur'
-    | 'onRemoveProperty'
-    | 'registry'
-  >;
+  FieldTemplateProps<T, S, F>,
+  | 'id'
+  | 'classNames'
+  | 'hideError'
+  | 'rawDescription'
+  | 'rawErrors'
+  | 'style'
+  | 'displayLabel'
+  | 'label'
+  | 'required'
+  | 'readonly'
+  | 'disabled'
+  | 'schema'
+  | 'uiSchema'
+  | 'onKeyRename'
+  | 'onKeyRenameBlur'
+  | 'onRemoveProperty'
+  | 'registry'
+>;
 
 /** The properties that are passed to a MultiSchemaFieldTemplate implementation */
 export interface MultiSchemaFieldTemplateProps<
@@ -892,8 +892,8 @@ export interface MultiSchemaFieldTemplateProps<
 /** The properties that are passed to a `Widget` implementation */
 export interface WidgetProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
   extends GenericObjectType,
-    RJSFBaseProps<T, S, F>,
-    Pick<HTMLAttributes<HTMLElement>, Exclude<keyof HTMLAttributes<HTMLElement>, 'onBlur' | 'onFocus' | 'onChange'>> {
+  RJSFBaseProps<T, S, F>,
+  Pick<HTMLAttributes<HTMLElement>, Exclude<keyof HTMLAttributes<HTMLElement>, 'onBlur' | 'onFocus' | 'onChange'>> {
   /** The generated id for this widget, used to provide unique `name`s and `id`s for the HTML field elements rendered by
    * widgets
    */
@@ -948,29 +948,6 @@ export type Widget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends F
   WidgetProps<T, S, F>
 >;
 
-/** The definition of a Widget component that can have default options.
- * Use this type when defining a custom widget that needs to specify default options
- * that will be merged with the options passed via `ui:options` in the uiSchema.
- *
- * @example
- * ```tsx
- * const MyWidget: WidgetWithDefaultOptions = (props) => {
- *   const { options } = props;
- *   return <input style={{ color: options.color }} />;
- * };
- * MyWidget.defaultOptions = { color: 'red' };
- * ```
- */
-export type WidgetWithDefaultOptions<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-> = Widget<T, S, F> & {
-  /** Optional default options that will be merged with the options from `ui:options` in the uiSchema.
-   * This is the React 19 compatible replacement for the deprecated `defaultProps.options` pattern.
-   */
-  defaultOptions?: GenericObjectType;
-};
 
 /** The properties that are passed to the BaseInputTemplate */
 export interface BaseInputTemplateProps<
@@ -1167,8 +1144,8 @@ export type UiSchema<
      * When using a function, it receives the item data, index, and optionally the form context as parameters.
      */
     items?:
-      | UiSchema<ArrayElement<T>, S, F>
-      | ((itemData: ArrayElement<T>, index: number, formContext?: F) => UiSchema<ArrayElement<T>, S, F>);
+    | UiSchema<ArrayElement<T>, S, F>
+    | ((itemData: ArrayElement<T>, index: number, formContext?: F) => UiSchema<ArrayElement<T>, S, F>);
   };
 
 /** A `CustomValidator` function takes in a `formData`, `errors`, `uiSchema` and `errorSchema` objects and returns the given `errors`

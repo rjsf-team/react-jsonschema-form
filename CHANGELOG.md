@@ -73,7 +73,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed issue with default value not being prefilled when object with if/then is nested inside another object, fixing [#4222](https://github.com/rjsf-team/react-jsonschema-form/issues/4222)
 - Fixed issue with schema array with nested dependent fixed-length, fixing [#3754](https://github.com/rjsf-team/react-jsonschema-form/issues/3754)
 - Updated `CustomValidator` type to accept `errorSchema`, so its implementation can be based on result of ajv validation ([#4898](https://github.com/rjsf-team/react-jsonschema-form/pull/4899))
-- Updated `getWidget.tsx` to support a new static `defaultOptions` property for widget default options (recommended for React 19 compatibility), while maintaining backwards compatibility with the legacy `defaultProps.options` pattern, fixing [#4907](https://github.com/rjsf-team/react-jsonschema-form/issues/4907). Also replaced `react-is.isForwardRef()` with a more general component detection check.
+- Updated `getWidget.tsx` to replace `react-is.isForwardRef()` with `ReactIs.isValidElementType()` for React 19 compatibility, fixing [#4907](https://github.com/rjsf-team/react-jsonschema-form/issues/4907)
 
 ## @rjsf/validator-ajv8
 
