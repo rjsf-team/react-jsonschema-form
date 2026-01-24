@@ -20,43 +20,44 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/antd
 
-- Fixed duplicate React keys in datalist when schema examples and default have different types, fixing ([#4927](https://github.com/rjsf-team/react-jsonschema-form/issues/4927))
+- Fixed duplicate React keys in datalist when schema examples and default have different types, fixing [#4927](https://github.com/rjsf-team/react-jsonschema-form/issues/4927)
 
 ## @rjsf/chakra-ui
 
-- Fixed duplicate React keys in datalist when schema examples and default have different types, fixing ([#4927](https://github.com/rjsf-team/react-jsonschema-form/issues/4927))
+- Fixed duplicate React keys in datalist when schema examples and default have different types, fixing [#4927](https://github.com/rjsf-team/react-jsonschema-form/issues/4927)
+- Updated `NativeSelectWidget` so that is properly renders a placeholder, fixing [#4942](https://github.com/rjsf-team/react-jsonschema-form/issues/4942)
 
 ## @rjsf/core
 
-- Fixed duplicate React keys in datalist when schema examples and default have different types, fixing ([#4927](https://github.com/rjsf-team/react-jsonschema-form/issues/4927))
+- Fixed duplicate React keys in datalist when schema examples and default have different types, fixing [#4927](https://github.com/rjsf-team/react-jsonschema-form/issues/4927)
 
 ## @rjsf/daisyui
 
-- Fixed duplicate React keys in datalist when schema examples and default have different types, fixing ([#4927](https://github.com/rjsf-team/react-jsonschema-form/issues/4927))
+- Fixed duplicate React keys in datalist when schema examples and default have different types, fixing [#4927](https://github.com/rjsf-team/react-jsonschema-form/issues/4927)
 
 ## @rjsf/fluentui-rc
 
-- Fixed duplicate React keys in datalist when schema examples and default have different types, fixing ([#4927](https://github.com/rjsf-team/react-jsonschema-form/issues/4927))
+- Fixed duplicate React keys in datalist when schema examples and default have different types, fixing [#4927](https://github.com/rjsf-team/react-jsonschema-form/issues/4927)
 
 ## @rjsf/mantine
 
-- Fixed duplicate React keys in datalist when schema examples and default have different types, fixing ([#4927](https://github.com/rjsf-team/react-jsonschema-form/issues/4927))
+- Fixed duplicate React keys in datalist when schema examples and default have different types, fixing [#4927](https://github.com/rjsf-team/react-jsonschema-form/issues/4927)
 
 ## @rjsf/mui
 
-- Fixed duplicate React keys in datalist when schema examples and default have different types, fixing ([#4927](https://github.com/rjsf-team/react-jsonschema-form/issues/4927))
+- Fixed duplicate React keys in datalist when schema examples and default have different types, fixing [#4927](https://github.com/rjsf-team/react-jsonschema-form/issues/4927)
 
 ## @rjsf/react-bootstrap
 
-- Fixed duplicate React keys in datalist when schema examples and default have different types, fixing ([#4927](https://github.com/rjsf-team/react-jsonschema-form/issues/4927))
+- Fixed duplicate React keys in datalist when schema examples and default have different types, fixing [#4927](https://github.com/rjsf-team/react-jsonschema-form/issues/4927)
 
 ## @rjsf/semantic-ui
 
-- Fixed duplicate React keys in datalist when schema examples and default have different types, fixing ([#4927](https://github.com/rjsf-team/react-jsonschema-form/issues/4927))
+- Fixed duplicate React keys in datalist when schema examples and default have different types, fixing [#4927](https://github.com/rjsf-team/react-jsonschema-form/issues/4927)
 
 ## @rjsf/shadcn
 
-- Fixed duplicate React keys in datalist when schema examples and default have different types, fixing ([#4927](https://github.com/rjsf-team/react-jsonschema-form/issues/4927))
+- Fixed duplicate React keys in datalist when schema examples and default have different types, fixing [#4927](https://github.com/rjsf-team/react-jsonschema-form/issues/4927)
 # 6.2.5
 
 ## @rjsf/mui

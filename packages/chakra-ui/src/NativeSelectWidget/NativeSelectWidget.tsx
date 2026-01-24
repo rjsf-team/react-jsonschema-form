@@ -11,7 +11,7 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 import { OptionsOrGroups } from 'chakra-react-select';
-import { createListCollection, NativeSelect as ChakraSelect } from '@chakra-ui/react';
+import { createListCollection, NativeSelect } from '@chakra-ui/react';
 
 import { Field } from '../components/ui/field';
 import { getChakra } from '../utils';
@@ -79,12 +79,9 @@ export default function NativeSelectWidget<
           disabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1,
         };
       });
-      if (showPlaceholderOption) {
-        (displayEnumOptions as any[]).unshift({ value: '', label: placeholder || '' });
-      }
     }
     return { valueLabelMap: valueLabelMap, displayEnumOptions: displayEnumOptions };
-  }, [enumDisabled, enumOptions, placeholder, showPlaceholderOption]);
+  }, [enumDisabled, enumOptions]);
 
   const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions, false);
 
@@ -116,8 +113,8 @@ export default function NativeSelectWidget<
       label={labelValue(label, hideLabel || !label)}
       {...chakraProps}
     >
-      <ChakraSelect.Root>
-        <ChakraSelect.Field
+      <NativeSelect.Root>
+        <NativeSelect.Field
           id={id}
           onBlur={_onBlur}
           onChange={_onChange}
@@ -126,14 +123,19 @@ export default function NativeSelectWidget<
           value={formValue}
           aria-describedby={ariaDescribedByIds(id)}
         >
+          {showPlaceholderOption ? (
+            <option value='' disabled hidden>
+              {placeholder || ''}
+            </option>
+          ) : undefined}
           {selectOptions.items.map((item) => (
             <option key={item.value} value={item.value}>
               {item.label}
             </option>
           ))}
-        </ChakraSelect.Field>
-        <ChakraSelect.Indicator />
-      </ChakraSelect.Root>
+        </NativeSelect.Field>
+        <NativeSelect.Indicator />
+      </NativeSelect.Root>
     </Field>
   );
 }
