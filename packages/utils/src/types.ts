@@ -478,6 +478,10 @@ export interface Registry<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   readonly globalFormOptions: GlobalFormOptions;
   /** The optional global UI Options that are available for all templates, fields and widgets to access */
   globalUiOptions?: GlobalUISchemaOptions;
+  /** The optional uiSchema definitions extracted from the root uiSchema, keyed by `$ref` paths.
+   * Used to automatically apply uiSchema when a schema with a matching `$ref` is resolved.
+   */
+  uiSchemaDefinitions?: UiSchemaDefinitions<T, S, F>;
 }
 
 /** The properties that are passed to a `Field` implementation */
@@ -1113,6 +1117,15 @@ export type UIOptionsType<
  */
 export type ArrayElement<A> = A extends readonly (infer E)[] ? E : A;
 
+/** Type describing the uiSchema definitions that can be applied to schemas referenced by `$ref`.
+ * Keys are the full `$ref` path (e.g., '#/$defs/node', '#/definitions/address').
+ * When a schema with a matching `$ref` is resolved, the corresponding uiSchema definition
+ * is automatically applied and merged with any local uiSchema overrides.
+ */
+export type UiSchemaDefinitions<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = {
+  [refPath: string]: UiSchema<T, S, F>;
+};
+
 /** Type describing the well-known properties of the `UiSchema` while also supporting all user defined properties,
  * starting with `ui:`.
  */
@@ -1148,6 +1161,12 @@ export type UiSchema<
     items?:
       | UiSchema<ArrayElement<T>, S, F>
       | ((itemData: ArrayElement<T>, index: number, formContext?: F) => UiSchema<ArrayElement<T>, S, F>);
+    /** An object containing uiSchema definitions keyed by JSON Schema `$ref` paths.
+     * When a schema with a `$ref` is resolved, the corresponding uiSchema definition is automatically
+     * applied and merged with any local uiSchema overrides at that path.
+     * Keys must be full `$ref` paths (e.g., '#/$defs/node', '#/definitions/address').
+     */
+    'ui:definitions'?: UiSchemaDefinitions<T, S, F>;
   };
 
 /** A `CustomValidator` function takes in a `formData`, `errors`, `uiSchema` and `errorSchema` objects and returns the given `errors`
