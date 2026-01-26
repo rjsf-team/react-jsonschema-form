@@ -88,7 +88,7 @@ describe('expandUiSchemaDefinitions()', () => {
     });
   });
 
-  it('embeds ui:definitions at recursion points for recursive schemas', () => {
+  it('stops expansion at recursion points for recursive schemas', () => {
     const schema: RJSFSchema = { $ref: '#/$defs/node' };
     const rootSchema: RJSFSchema = {
       $defs: {
@@ -108,8 +108,10 @@ describe('expandUiSchemaDefinitions()', () => {
 
     // First level should have the definition applied
     expect(result.name).toEqual({ 'ui:placeholder': 'Node name' });
-    // children.items should have embedded ui:definitions for runtime resolution
-    expect(result.children?.items?.['ui:definitions']).toEqual(definitions);
+    // children.items should have definition applied but no embedded ui:definitions
+    // (runtime resolution uses registry.uiSchemaDefinitions instead)
+    expect(result.children?.items?.name).toEqual({ 'ui:placeholder': 'Node name' });
+    expect(result.children?.items?.['ui:definitions']).toBeUndefined();
   });
 
   it('handles failed $ref resolution gracefully', () => {
@@ -347,22 +349,16 @@ describe('resolveUiSchema()', () => {
     expect(resolveUiSchema({ $ref: '#/$defs/node' }, local, registry)).toEqual(local);
   });
 
-  it('returns definition with embedded ui:definitions when $ref matches and no local uiSchema', () => {
+  it('returns definition when $ref matches and no local uiSchema', () => {
     const definitions = { '#/$defs/node': { name: { 'ui:placeholder': 'Node name' } } };
     const reg = { ...registry, uiSchemaDefinitions: definitions };
-    expect(resolveUiSchema({ $ref: '#/$defs/node' }, undefined, reg)).toEqual({
-      ...definitions['#/$defs/node'],
-      'ui:definitions': definitions,
-    });
+    expect(resolveUiSchema({ $ref: '#/$defs/node' }, undefined, reg)).toEqual(definitions['#/$defs/node']);
   });
 
-  it('returns definition with embedded ui:definitions when $ref matches and local uiSchema is empty object', () => {
+  it('returns definition when $ref matches and local uiSchema is empty object', () => {
     const definitions = { '#/$defs/node': { name: { 'ui:placeholder': 'Node name' } } };
     const reg = { ...registry, uiSchemaDefinitions: definitions };
-    expect(resolveUiSchema({ $ref: '#/$defs/node' }, {}, reg)).toEqual({
-      ...definitions['#/$defs/node'],
-      'ui:definitions': definitions,
-    });
+    expect(resolveUiSchema({ $ref: '#/$defs/node' }, {}, reg)).toEqual(definitions['#/$defs/node']);
   });
 
   it('returns local uiSchema when schema has no $ref', () => {
@@ -385,7 +381,7 @@ describe('resolveUiSchema()', () => {
     expect(resolveUiSchema({ $ref: '#/$defs/node' }, undefined, reg)).toEqual({});
   });
 
-  it('merges local override on top of definition with embedded ui:definitions', () => {
+  it('merges local override on top of definition', () => {
     const definitions = {
       '#/$defs/node': { name: { 'ui:placeholder': 'Default' }, children: { 'ui:orderable': false } },
     };
@@ -395,11 +391,10 @@ describe('resolveUiSchema()', () => {
     expect(resolveUiSchema({ $ref: '#/$defs/node' }, local, reg)).toEqual({
       name: { 'ui:placeholder': 'Override', 'ui:autofocus': true },
       children: { 'ui:orderable': false },
-      'ui:definitions': definitions,
     });
   });
 
-  it('deep merges nested properties preserving unoverridden values with embedded ui:definitions', () => {
+  it('deep merges nested properties preserving unoverridden values', () => {
     const definitions = {
       '#/$defs/node': {
         name: { 'ui:placeholder': 'Default', 'ui:disabled': true },
@@ -412,16 +407,6 @@ describe('resolveUiSchema()', () => {
     expect(resolveUiSchema({ $ref: '#/$defs/node' }, local, reg)).toEqual({
       name: { 'ui:placeholder': 'Override', 'ui:disabled': true },
       'ui:order': ['name', 'children'],
-      'ui:definitions': definitions,
-    });
-  });
-
-  it('uses embedded ui:definitions from local uiSchema when registry has none', () => {
-    const embeddedDefs = { '#/$defs/node': { name: { 'ui:placeholder': 'Embedded' } } };
-    const local: UiSchema = { 'ui:definitions': embeddedDefs };
-    expect(resolveUiSchema({ $ref: '#/$defs/node' }, local, registry)).toEqual({
-      name: { 'ui:placeholder': 'Embedded' },
-      'ui:definitions': embeddedDefs,
     });
   });
 });

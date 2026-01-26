@@ -29,7 +29,8 @@ const ARRAY_KEYWORDS = [ONE_OF_KEY, ANY_OF_KEY, ALL_OF_KEY] as const;
 /** Expands `ui:definitions` into the uiSchema by walking the schema tree and finding all `$ref`s.
  * Called once at form initialization to pre-expand definitions into the uiSchema structure.
  *
- * For recursive schemas, definitions are embedded at recursion points for runtime lookup.
+ * For recursive schemas, expansion stops at recursion points to avoid infinite loops.
+ * Runtime resolution via `resolveUiSchema` handles these cases using registry definitions.
  *
  * @param currentSchema - The current schema node being processed
  * @param rootSchema - The root JSON schema (for resolving `$ref`s)
@@ -63,7 +64,6 @@ export function expandUiSchemaDefinitions<
     }
 
     if (isRecursive) {
-      result['ui:definitions'] = definitions;
       return result;
     }
 
@@ -162,31 +162,16 @@ export default function resolveUiSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(schema: S, localUiSchema: UiSchema<T, S, F> | undefined, registry: Registry<T, S, F>): UiSchema<T, S, F> {
-  const embeddedDefinitions = localUiSchema?.['ui:definitions'] as UiSchemaDefinitions<T, S, F> | undefined;
-  const definitions = embeddedDefinitions || registry.uiSchemaDefinitions;
-
-  if (!definitions) {
-    return localUiSchema || {};
-  }
-
   const ref = schema[REF_KEY] as string | undefined;
-  if (!ref || !(ref in definitions)) {
+  const definitionUiSchema = ref ? registry.uiSchemaDefinitions?.[ref] : undefined;
+
+  if (!definitionUiSchema) {
     return localUiSchema || {};
   }
-
-  const definitionUiSchema = definitions[ref];
-  let result: UiSchema<T, S, F>;
 
   if (!localUiSchema || Object.keys(localUiSchema).length === 0) {
-    result = { ...definitionUiSchema };
-  } else {
-    result = mergeObjects(definitionUiSchema as GenericObjectType, localUiSchema as GenericObjectType) as UiSchema<
-      T,
-      S,
-      F
-    >;
+    return { ...definitionUiSchema };
   }
 
-  result['ui:definitions'] = definitions;
-  return result;
+  return mergeObjects(definitionUiSchema as GenericObjectType, localUiSchema as GenericObjectType) as UiSchema<T, S, F>;
 }
