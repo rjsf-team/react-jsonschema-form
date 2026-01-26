@@ -63,6 +63,106 @@ const uiSchema: UiSchema = {
 };
 ```
 
+### ui:definitions
+
+The `ui:definitions` property allows you to define reusable UI customizations for schema `$ref` references. This is particularly useful for:
+
+- **Recursive schemas** - Define uiSchema once for a self-referencing schema node
+- **Reused definitions** - Apply consistent UI to schemas used in multiple places
+- **oneOf/anyOf branches** - Provide different uiSchema for branches that reference different definitions
+
+The keys in `ui:definitions` must match the exact `$ref` path used in the schema (e.g., `#/definitions/address` or `#/$defs/node`).
+
+```tsx
+import { Form } from '@rjsf/core';
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  definitions: {
+    address: {
+      type: 'object',
+      properties: {
+        street_address: { type: 'string' },
+        city: { type: 'string' },
+      },
+    },
+    node: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        children: {
+          type: 'array',
+          items: { $ref: '#/definitions/node' }, // Recursive reference
+        },
+      },
+    },
+  },
+  type: 'object',
+  properties: {
+    billing_address: { $ref: '#/definitions/address' },
+    shipping_address: { $ref: '#/definitions/address' },
+    tree: { $ref: '#/definitions/node' },
+  },
+};
+
+const uiSchema: UiSchema = {
+  'ui:definitions': {
+    '#/definitions/address': {
+      street_address: { 'ui:placeholder': 'Street and number' },
+      city: { 'ui:placeholder': 'City name' },
+    },
+    '#/definitions/node': {
+      name: { 'ui:placeholder': 'Enter node name' },
+      children: { 'ui:options': { orderable: false } },
+    },
+  },
+  // Local overrides take precedence over ui:definitions
+  shipping_address: {
+    street_address: { 'ui:placeholder': 'Shipping street (overrides definition)' },
+  },
+};
+
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+```
+
+#### Local Overrides
+
+You can override specific properties from `ui:definitions` by providing values at the field path. Local values are merged with definitions, with local values taking precedence.
+
+#### oneOf/anyOf with Same Property Names
+
+When using `oneOf` or `anyOf` with branches that have properties with the same name, each branch's `$ref` maps to its own entry in `ui:definitions`, ensuring correct UI is applied:
+
+```tsx
+const schema: RJSFSchema = {
+  definitions: {
+    person: { type: 'object', properties: { name: { type: 'string' } } },
+    company: { type: 'object', properties: { name: { type: 'string' } } },
+  },
+  type: 'object',
+  properties: {
+    contact: {
+      oneOf: [
+        { title: 'Person', $ref: '#/definitions/person' },
+        { title: 'Company', $ref: '#/definitions/company' },
+      ],
+    },
+  },
+};
+
+const uiSchema: UiSchema = {
+  'ui:definitions': {
+    '#/definitions/person': {
+      name: { 'ui:placeholder': 'Full name (e.g., John Doe)' },
+    },
+    '#/definitions/company': {
+      name: { 'ui:placeholder': 'Company name (e.g., Acme Inc.)' },
+    },
+  },
+};
+```
+
 ### ui:rootFieldId (deprecated)
 
 > DEPRECATED: Use `Form.idPrefix` instead, will be removed in a future major version

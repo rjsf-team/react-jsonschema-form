@@ -6,6 +6,7 @@ import {
   ErrorSchema,
   ErrorSchemaBuilder,
   ErrorTransformer,
+  expandUiSchemaDefinitions,
   FieldPathId,
   FieldPathList,
   FormContextType,
@@ -28,6 +29,7 @@ import {
   toErrorList,
   toFieldPathId,
   UiSchema,
+  UI_DEFINITIONS_KEY,
   UI_GLOBAL_OPTIONS_KEY,
   UI_OPTIONS_KEY,
   ValidationData,
@@ -538,6 +540,12 @@ export default class Form<
 
     const rootSchema = schemaUtils.getRootSchema();
 
+    // Pre-expand ui:definitions into the uiSchema structure
+    const uiDefinitions = uiSchema[UI_DEFINITIONS_KEY];
+    const expandedUiSchema: UiSchema<T, S, F> = uiDefinitions
+      ? expandUiSchemaDefinitions<T, S, F>(rootSchema, rootSchema, uiSchema, uiDefinitions)
+      : uiSchema;
+
     // Compute the formData for getDefaultFormState() function based on the inputFormData, isUncontrolled and state
     let defaultsFormData = inputFormData;
     if (inputFormData === IS_RESET) {
@@ -628,7 +636,7 @@ export default class Form<
     const nextState: FormState<T, S, F> = {
       schemaUtils,
       schema: rootSchema,
-      uiSchema,
+      uiSchema: expandedUiSchema,
       fieldPathId,
       formData,
       edit,
@@ -1149,6 +1157,7 @@ export default class Form<
       translateString: customTranslateString || translateString,
       globalUiOptions: uiSchema[UI_GLOBAL_OPTIONS_KEY],
       globalFormOptions: this.getGlobalFormOptions(props),
+      uiSchemaDefinitions: uiSchema[UI_DEFINITIONS_KEY],
     };
   }
 
