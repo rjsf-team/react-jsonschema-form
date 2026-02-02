@@ -69,7 +69,7 @@
     "react": ">=18"
   },
   "devDependencies": {
-    "@mantine/core": "^8.3.6",
+    "@mantine/core": "^8.3.14",
     "@mantine/dates": "^8.3.6",
     "@mantine/hooks": "^8.3.6",
     "@restart/hooks": "^0.6.2",

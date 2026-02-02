@@ -38,7 +38,7 @@
     "@babel/runtime": "^7.28.4",
     "@chakra-ui/react": "^3.28.0",
     "@emotion/react": "^11.14.0",
-    "@mantine/core": "^8.3.6",
+    "@mantine/core": "^8.3.14",
     "@mantine/dates": "^8.3.6",
     "@mantine/hooks": "^8.3.6",
     "@mui/material": "^7.3.4",
