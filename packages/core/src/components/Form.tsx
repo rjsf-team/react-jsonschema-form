@@ -1157,7 +1157,7 @@ export default class Form<
       translateString: customTranslateString || translateString,
       globalUiOptions: uiSchema[UI_GLOBAL_OPTIONS_KEY],
       globalFormOptions: this.getGlobalFormOptions(props),
-      uiSchemaDefinitions: uiSchema[UI_DEFINITIONS_KEY],
+      uiSchemaDefinitions: uiSchema[UI_DEFINITIONS_KEY] ?? {},
     };
   }
 
