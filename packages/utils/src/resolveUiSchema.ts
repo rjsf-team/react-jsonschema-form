@@ -10,15 +10,7 @@ import {
 import findSchemaDefinition from './findSchemaDefinition';
 import isObject from './isObject';
 import mergeObjects from './mergeObjects';
-import {
-  FormContextType,
-  GenericObjectType,
-  Registry,
-  RJSFSchema,
-  StrictRJSFSchema,
-  UiSchema,
-  UiSchemaDefinitions,
-} from './types';
+import { FormContextType, GenericObjectType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from './types';
 
 // Keywords where child schemas map to uiSchema at the SAME key
 const SAME_KEY_KEYWORDS = [ITEMS_KEY, ADDITIONAL_PROPERTIES_KEY] as const;
@@ -33,9 +25,8 @@ const ARRAY_KEYWORDS = [ONE_OF_KEY, ANY_OF_KEY, ALL_OF_KEY] as const;
  * Runtime resolution via `resolveUiSchema` handles these cases using registry definitions.
  *
  * @param currentSchema - The current schema node being processed
- * @param rootSchema - The root JSON schema (for resolving `$ref`s)
  * @param uiSchema - The uiSchema at the current path
- * @param definitions - The ui:definitions to expand
+ * @param registry - The registry containing rootSchema and uiSchemaDefinitions
  * @param visited - Set of $refs already visited (to detect recursion)
  * @returns - The expanded uiSchema with definitions merged in
  */
@@ -45,11 +36,11 @@ export function expandUiSchemaDefinitions<
   F extends FormContextType = any,
 >(
   currentSchema: S,
-  rootSchema: S,
   uiSchema: UiSchema<T, S, F>,
-  definitions: UiSchemaDefinitions<T, S, F>,
+  registry: Registry<T, S, F>,
   visited: Set<string> = new Set(),
 ): UiSchema<T, S, F> {
+  const { rootSchema, uiSchemaDefinitions: definitions } = registry;
   let result = { ...uiSchema };
   let resolvedSchema = currentSchema;
 
@@ -59,7 +50,7 @@ export function expandUiSchemaDefinitions<
   if (ref) {
     visited.add(ref);
 
-    if (ref in definitions) {
+    if (definitions && ref in definitions) {
       result = mergeObjects(definitions[ref] as GenericObjectType, result as GenericObjectType) as UiSchema<T, S, F>;
     }
 
@@ -68,7 +59,7 @@ export function expandUiSchemaDefinitions<
     }
 
     try {
-      resolvedSchema = findSchemaDefinition<S>(ref, rootSchema);
+      resolvedSchema = findSchemaDefinition<S>(ref, rootSchema as S);
     } catch {
       resolvedSchema = currentSchema;
     }
@@ -79,7 +70,7 @@ export function expandUiSchemaDefinitions<
   if (properties && isObject(properties)) {
     for (const [propName, propSchema] of Object.entries(properties as Record<string, S>)) {
       const propUiSchema = (result[propName] || {}) as UiSchema<T, S, F>;
-      const expanded = expandUiSchemaDefinitions(propSchema, rootSchema, propUiSchema, definitions, new Set(visited));
+      const expanded = expandUiSchemaDefinitions(propSchema, propUiSchema, registry, new Set(visited));
       if (Object.keys(expanded).length > 0) {
         result[propName] = expanded;
       }
@@ -93,13 +84,7 @@ export function expandUiSchemaDefinitions<
       const currentUiSchema = result[keyword];
       if (typeof currentUiSchema !== 'function') {
         const subUiSchema = ((currentUiSchema as GenericObjectType) || {}) as UiSchema<T, S, F>;
-        const expanded = expandUiSchemaDefinitions(
-          subSchema as S,
-          rootSchema,
-          subUiSchema,
-          definitions,
-          new Set(visited),
-        );
+        const expanded = expandUiSchemaDefinitions(subSchema as S, subUiSchema, registry, new Set(visited));
         if (Object.keys(expanded).length > 0) {
           (result as GenericObjectType)[keyword] = expanded;
         }
@@ -118,13 +103,7 @@ export function expandUiSchemaDefinitions<
       for (let i = 0; i < schemaOptions.length; i++) {
         const optionSchema = schemaOptions[i] as S;
         const optionUiSchema = (uiSchemaArray[i] || {}) as UiSchema<T, S, F>;
-        const expanded = expandUiSchemaDefinitions(
-          optionSchema,
-          rootSchema,
-          optionUiSchema,
-          definitions,
-          new Set(visited),
-        );
+        const expanded = expandUiSchemaDefinitions(optionSchema, optionUiSchema, registry, new Set(visited));
         if (Object.keys(expanded).length > 0) {
           uiSchemaArray[i] = expanded;
           hasExpanded = true;

@@ -540,12 +540,6 @@ export default class Form<
 
     const rootSchema = schemaUtils.getRootSchema();
 
-    // Pre-expand ui:definitions into the uiSchema structure
-    const uiDefinitions = uiSchema[UI_DEFINITIONS_KEY];
-    const expandedUiSchema: UiSchema<T, S, F> = uiDefinitions
-      ? expandUiSchemaDefinitions<T, S, F>(rootSchema, rootSchema, uiSchema, uiDefinitions)
-      : uiSchema;
-
     // Compute the formData for getDefaultFormState() function based on the inputFormData, isUncontrolled and state
     let defaultsFormData = inputFormData;
     if (inputFormData === IS_RESET) {
@@ -628,6 +622,12 @@ export default class Form<
     // Only store a new registry when the props cause a different one to be created
     const newRegistry = this.getRegistry(props, rootSchema, schemaUtils);
     const registry = deepEquals(state.registry, newRegistry) ? state.registry : newRegistry;
+
+    // Pre-expand ui:definitions into the uiSchema structure (must happen after registry is created)
+    const expandedUiSchema: UiSchema<T, S, F> = registry.uiSchemaDefinitions
+      ? expandUiSchemaDefinitions<T, S, F>(rootSchema, uiSchema, registry)
+      : uiSchema;
+
     // Only compute a new `fieldPathId` when the `idPrefix` is different than the existing fieldPathId's ID_KEY
     const fieldPathId =
       state.fieldPathId && state.fieldPathId?.[ID_KEY] === registry.globalFormOptions.idPrefix
