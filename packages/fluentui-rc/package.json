@@ -73,13 +73,13 @@
     "react": ">=18"
   },
   "devDependencies": {
-    "@fluentui/react-components": "^9.72.4",
-    "@fluentui/react-icons": "^2.0.313",
-    "@fluentui/react-migration-v0-v9": "^9.6.12",
-    "@rjsf/core": "^6.2.0",
-    "@rjsf/snapshot-tests": "^6.2.0",
-    "@rjsf/utils": "^6.2.0",
-    "@rjsf/validator-ajv8": "^6.2.0",
+    "@fluentui/react-components": "^9.72.11",
+    "@fluentui/react-icons": "^2.0.318",
+    "@fluentui/react-migration-v0-v9": "^9.6.19",
+    "@rjsf/core": "^6.2.5",
+    "@rjsf/snapshot-tests": "^6.2.5",
+    "@rjsf/utils": "^6.2.5",
+    "@rjsf/validator-ajv8": "^6.2.5",
     "eslint": "^8.57.1"
   },
   "directories": {

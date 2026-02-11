@@ -86,7 +86,7 @@
     "@rjsf/utils": "^6.2.x"
   },
   "devDependencies": {
-    "@rjsf/utils": "^6.2.0",
+    "@rjsf/utils": "^6.2.5",
     "@types/json-schema": "^7.0.15",
     "ajv-i18n": "^4.2.0",
     "eslint": "^8.57.1"

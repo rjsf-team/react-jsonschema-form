@@ -337,6 +337,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
+    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -576,7 +577,8 @@ exports[`Complex grid renders person and address and employment in a complex gri
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    z-index: var(--chakra-z-index-dropdown);
+    --select-z-index: var(--chakra-z-index-popover);
+    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -792,6 +794,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
+    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-red-500);
   }
 
@@ -3849,7 +3852,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <div
                               aria-describedby="root_employment__error root_employment__description root_employment__help"
-                              aria-labelledby="radio-group::r3s::label"
+                              aria-labelledby="fieldset:::r3q:::legend"
                               aria-orientation="vertical"
                               class="chakra-radio-group__root"
                               data-orientation="vertical"
@@ -6633,6 +6636,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
+    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -6872,7 +6876,8 @@ exports[`Complex grid renders person and address and employment in a complex gri
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    z-index: var(--chakra-z-index-dropdown);
+    --select-z-index: var(--chakra-z-index-popover);
+    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -7088,6 +7093,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
+    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-red-500);
   }
 
@@ -10145,7 +10151,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <div
                               aria-describedby="root_employment__error root_employment__description root_employment__help"
-                              aria-labelledby="radio-group::r55::label"
+                              aria-labelledby="fieldset:::r53:::legend"
                               aria-orientation="vertical"
                               class="chakra-radio-group__root"
                               data-orientation="vertical"
@@ -12976,6 +12982,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
+    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -13215,7 +13222,8 @@ exports[`Complex grid renders person and address and employment in a complex gri
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    z-index: var(--chakra-z-index-dropdown);
+    --select-z-index: var(--chakra-z-index-popover);
+    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -13431,6 +13439,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
+    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-red-500);
   }
 
@@ -16533,7 +16542,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <div
                               aria-describedby="root_employment__error root_employment__description root_employment__help"
-                              aria-labelledby="radio-group::r6g::label"
+                              aria-labelledby="fieldset:::r6e:::legend"
                               aria-orientation="vertical"
                               class="chakra-radio-group__root"
                               data-orientation="vertical"
@@ -17105,6 +17114,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
+    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -17344,7 +17354,8 @@ exports[`Complex grid renders person and address and employment in a complex gri
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    z-index: var(--chakra-z-index-dropdown);
+    --select-z-index: var(--chakra-z-index-popover);
+    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -17560,6 +17571,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
+    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-red-500);
   }
 
@@ -20617,7 +20629,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <div
                               aria-describedby="root_employment__error root_employment__description root_employment__help"
-                              aria-labelledby="radio-group::r2j::label"
+                              aria-labelledby="fieldset:::r2h:::legend"
                               aria-orientation="vertical"
                               class="chakra-radio-group__root"
                               data-orientation="vertical"
@@ -23385,6 +23397,7 @@ exports[`Three even column grid renders person and address in three columns, no 
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
+    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -23618,7 +23631,8 @@ exports[`Three even column grid renders person and address in three columns, no 
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    z-index: var(--chakra-z-index-dropdown);
+    --select-z-index: var(--chakra-z-index-popover);
+    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -26982,6 +26996,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
+    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -27215,7 +27230,8 @@ exports[`Two even column grid renders person and address in two columns, no empl
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    z-index: var(--chakra-z-index-dropdown);
+    --select-z-index: var(--chakra-z-index-popover);
+    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);

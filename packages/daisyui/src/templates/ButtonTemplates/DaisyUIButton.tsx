@@ -4,8 +4,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
 /** Interface for props specific to DaisyUIButton, extending IconButtonProps but with stricter icon typing */
-interface DaisyUIButtonProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
-  extends Omit<IconButtonProps<T, S, F>, 'icon'> {
+interface DaisyUIButtonProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> extends Omit<IconButtonProps<T, S, F>, 'icon'> {
   /** The FontAwesome icon to display in the button */
   icon: IconDefinition;
 }

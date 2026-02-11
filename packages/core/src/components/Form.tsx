@@ -313,11 +313,14 @@ export interface FormState<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
 /** The event data passed when changes have been made to the form, includes everything from the `FormState` except
  * the schema validation errors. An additional `status` is added when returned from `onSubmit`
  */
-export interface IChangeEvent<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
-  extends Pick<
-    FormState<T, S, F>,
-    'schema' | 'uiSchema' | 'fieldPathId' | 'schemaUtils' | 'formData' | 'edit' | 'errors' | 'errorSchema'
-  > {
+export interface IChangeEvent<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> extends Pick<
+  FormState<T, S, F>,
+  'schema' | 'uiSchema' | 'fieldPathId' | 'schemaUtils' | 'formData' | 'edit' | 'errors' | 'errorSchema'
+> {
   /** The status of the form when submitted */
   status?: 'submitted';
 }

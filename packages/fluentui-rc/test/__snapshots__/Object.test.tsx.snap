@@ -215,7 +215,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
       class="___fko12g0_0000000 f1wswflg"
     >
       <button
-        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
         type="submit"
       >
         Submit
@@ -285,7 +285,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
                   <label
-                    class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+                    class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
                     for="field-r2g__control"
                     id="field-r2g__label"
                   >
@@ -336,7 +336,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                 class="___1r36s8v_0000000 fpydfdc f9c4gz4"
               >
                 <button
-                  class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                  class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_customField__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -347,7 +347,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
                   >
                     <svg
                       aria-hidden="true"
-                      class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -368,7 +368,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
           >
             <button
-              class="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+              class="fui-Button r1f29ykk rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               id="root__add"
               title="Add Item"
               type="button"
@@ -378,7 +378,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
               >
                 <svg
                   aria-hidden="true"
-                  class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -400,7 +400,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
       class="___fko12g0_0000000 f1wswflg"
     >
       <button
-        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
         type="submit"
       >
         Submit
@@ -516,7 +516,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                   >
                     <svg
                       aria-hidden="true"
-                      class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                       fill="currentColor"
                       height="12"
                       viewBox="0 0 12 12"
@@ -614,7 +614,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                       style="margin-left: 8px; margin-top: 26px;"
                     >
                       <button
-                        class="fui-Button r1alrhcs rjsf-array-item-move-up ___7dg0yg0_z1vqji0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fuigjrg fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f4dhi0o f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x fequ9m0 f18ktai2 fwbmr0d f44c6la"
+                        class="fui-Button r1f29ykk rjsf-array-item-move-up ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
                         disabled=""
                         id="root_tags_0__moveUp"
                         title="Move up"
@@ -625,7 +625,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                             fill="currentColor"
                             height="1em"
                             viewBox="0 0 20 20"
@@ -640,7 +640,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                         </span>
                       </button>
                       <button
-                        class="fui-Button r1alrhcs rjsf-array-item-move-down ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                        class="fui-Button r1f29ykk rjsf-array-item-move-down ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                         id="root_tags_0__moveDown"
                         title="Move down"
                         type="button"
@@ -650,7 +650,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                             fill="currentColor"
                             height="1em"
                             viewBox="0 0 20 20"
@@ -665,7 +665,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                         </span>
                       </button>
                       <button
-                        class="fui-Button r1alrhcs rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                        class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                         id="root_tags_0__remove"
                         title="Remove"
                         type="button"
@@ -675,7 +675,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                             fill="currentColor"
                             height="1em"
                             viewBox="0 0 20 20"
@@ -737,7 +737,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                       style="margin-left: 8px; margin-top: 26px;"
                     >
                       <button
-                        class="fui-Button r1alrhcs rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                        class="fui-Button r1f29ykk rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                         id="root_tags_1__moveUp"
                         title="Move up"
                         type="button"
@@ -747,7 +747,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                             fill="currentColor"
                             height="1em"
                             viewBox="0 0 20 20"
@@ -762,7 +762,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                         </span>
                       </button>
                       <button
-                        class="fui-Button r1alrhcs rjsf-array-item-move-down ___7dg0yg0_z1vqji0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fuigjrg fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f4dhi0o f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x fequ9m0 f18ktai2 fwbmr0d f44c6la"
+                        class="fui-Button r1f29ykk rjsf-array-item-move-down ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
                         disabled=""
                         id="root_tags_1__moveDown"
                         title="Move down"
@@ -773,7 +773,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                             fill="currentColor"
                             height="1em"
                             viewBox="0 0 20 20"
@@ -788,7 +788,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                         </span>
                       </button>
                       <button
-                        class="fui-Button r1alrhcs rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                        class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                         id="root_tags_1__remove"
                         title="Remove"
                         type="button"
@@ -798,7 +798,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                             fill="currentColor"
                             height="1em"
                             viewBox="0 0 20 20"
@@ -818,7 +818,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                     class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
                   >
                     <button
-                      class="fui-Button r1alrhcs rjsf-array-item-add ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                      class="fui-Button r1f29ykk rjsf-array-item-add ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                       id="root_tags__add"
                       title="Add Item"
                       type="button"
@@ -828,7 +828,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                       >
                         <svg
                           aria-hidden="true"
-                          class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                          class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                           fill="currentColor"
                           height="1em"
                           viewBox="0 0 20 20"
@@ -854,7 +854,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
       class="___fko12g0_0000000 f1wswflg"
     >
       <button
-        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
         type="submit"
       >
         Submit
@@ -982,7 +982,7 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
       class="___fko12g0_0000000 f1wswflg"
     >
       <button
-        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
         type="submit"
       >
         Submit
@@ -1175,7 +1175,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
       class="___fko12g0_0000000 f1wswflg"
     >
       <button
-        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
         type="submit"
       >
         Submit
@@ -1339,7 +1339,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                       style="margin-left: 8px; margin-top: 26px;"
                     >
                       <button
-                        class="fui-Button r1alrhcs rjsf-array-item-move-up ___7dg0yg0_z1vqji0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fuigjrg fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f4dhi0o f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x fequ9m0 f18ktai2 fwbmr0d f44c6la"
+                        class="fui-Button r1f29ykk rjsf-array-item-move-up ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
                         disabled=""
                         id="root_items_0__moveUp"
                         title="Move up"
@@ -1350,7 +1350,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                             fill="currentColor"
                             height="1em"
                             viewBox="0 0 20 20"
@@ -1365,7 +1365,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                         </span>
                       </button>
                       <button
-                        class="fui-Button r1alrhcs rjsf-array-item-move-down ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                        class="fui-Button r1f29ykk rjsf-array-item-move-down ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                         id="root_items_0__moveDown"
                         title="Move down"
                         type="button"
@@ -1375,7 +1375,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                             fill="currentColor"
                             height="1em"
                             viewBox="0 0 20 20"
@@ -1390,7 +1390,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                         </span>
                       </button>
                       <button
-                        class="fui-Button r1alrhcs rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                        class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                         id="root_items_0__remove"
                         title="Remove"
                         type="button"
@@ -1400,7 +1400,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                             fill="currentColor"
                             height="1em"
                             viewBox="0 0 20 20"
@@ -1462,7 +1462,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                       style="margin-left: 8px; margin-top: 26px;"
                     >
                       <button
-                        class="fui-Button r1alrhcs rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                        class="fui-Button r1f29ykk rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                         id="root_items_1__moveUp"
                         title="Move up"
                         type="button"
@@ -1472,7 +1472,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                             fill="currentColor"
                             height="1em"
                             viewBox="0 0 20 20"
@@ -1487,7 +1487,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                         </span>
                       </button>
                       <button
-                        class="fui-Button r1alrhcs rjsf-array-item-move-down ___7dg0yg0_z1vqji0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fuigjrg fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f4dhi0o f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x fequ9m0 f18ktai2 fwbmr0d f44c6la"
+                        class="fui-Button r1f29ykk rjsf-array-item-move-down ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
                         disabled=""
                         id="root_items_1__moveDown"
                         title="Move down"
@@ -1498,7 +1498,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                             fill="currentColor"
                             height="1em"
                             viewBox="0 0 20 20"
@@ -1513,7 +1513,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                         </span>
                       </button>
                       <button
-                        class="fui-Button r1alrhcs rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                        class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                         id="root_items_1__remove"
                         title="Remove"
                         type="button"
@@ -1523,7 +1523,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                             fill="currentColor"
                             height="1em"
                             viewBox="0 0 20 20"
@@ -1543,7 +1543,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                     class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
                   >
                     <button
-                      class="fui-Button r1alrhcs rjsf-array-item-add ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                      class="fui-Button r1f29ykk rjsf-array-item-add ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                       id="root_items__add"
                       title="Add Item"
                       type="button"
@@ -1553,7 +1553,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                       >
                         <svg
                           aria-hidden="true"
-                          class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                          class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                           fill="currentColor"
                           height="1em"
                           viewBox="0 0 20 20"
@@ -1579,7 +1579,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
       class="___fko12g0_0000000 f1wswflg"
     >
       <button
-        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
         type="submit"
       >
         Submit
@@ -1707,7 +1707,7 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
       class="___fko12g0_0000000 f1wswflg"
     >
       <button
-        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
         type="submit"
       >
         Submit
@@ -1745,7 +1745,7 @@ exports[`object fields additionalProperties 1`] = `
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
                   <label
-                    class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+                    class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
                     for="field-r4__control"
                     id="field-r4__label"
                   >
@@ -1796,7 +1796,7 @@ exports[`object fields additionalProperties 1`] = `
                 class="___1r36s8v_0000000 fpydfdc f9c4gz4"
               >
                 <button
-                  class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                  class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_foo__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -1807,7 +1807,7 @@ exports[`object fields additionalProperties 1`] = `
                   >
                     <svg
                       aria-hidden="true"
-                      class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -1828,7 +1828,7 @@ exports[`object fields additionalProperties 1`] = `
             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
           >
             <button
-              class="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+              class="fui-Button r1f29ykk rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               id="root__add"
               title="Add Item"
               type="button"
@@ -1838,7 +1838,7 @@ exports[`object fields additionalProperties 1`] = `
               >
                 <svg
                   aria-hidden="true"
-                  class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -1860,7 +1860,7 @@ exports[`object fields additionalProperties 1`] = `
       class="___fko12g0_0000000 f1wswflg"
     >
       <button
-        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
         type="submit"
       >
         Submit
@@ -1898,7 +1898,7 @@ exports[`object fields additionalProperties, array type 1`] = `
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
                   <label
-                    class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+                    class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
                     for="field-ri__control"
                     id="field-ri__label"
                   >
@@ -1947,7 +1947,7 @@ exports[`object fields additionalProperties, array type 1`] = `
                       class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
                     >
                       <button
-                        class="fui-Button r1alrhcs rjsf-array-item-add ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                        class="fui-Button r1f29ykk rjsf-array-item-add ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                         id="root_foo__add"
                         title="Add Item"
                         type="button"
@@ -1957,7 +1957,7 @@ exports[`object fields additionalProperties, array type 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                             fill="currentColor"
                             height="1em"
                             viewBox="0 0 20 20"
@@ -1979,7 +1979,7 @@ exports[`object fields additionalProperties, array type 1`] = `
                 class="___1r36s8v_0000000 fpydfdc f9c4gz4"
               >
                 <button
-                  class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                  class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_foo__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -1990,7 +1990,7 @@ exports[`object fields additionalProperties, array type 1`] = `
                   >
                     <svg
                       aria-hidden="true"
-                      class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -2011,7 +2011,7 @@ exports[`object fields additionalProperties, array type 1`] = `
             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
           >
             <button
-              class="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+              class="fui-Button r1f29ykk rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               id="root__add"
               title="Add Item"
               type="button"
@@ -2021,7 +2021,7 @@ exports[`object fields additionalProperties, array type 1`] = `
               >
                 <svg
                   aria-hidden="true"
-                  class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -2043,7 +2043,7 @@ exports[`object fields additionalProperties, array type 1`] = `
       class="___fko12g0_0000000 f1wswflg"
     >
       <button
-        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
         type="submit"
       >
         Submit
@@ -2081,7 +2081,7 @@ exports[`object fields additionalProperties, description 1`] = `
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
                   <label
-                    class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+                    class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
                     for="field-ra__control"
                     id="field-ra__label"
                   >
@@ -2143,7 +2143,7 @@ exports[`object fields additionalProperties, description 1`] = `
                 class="___1qeev60_0000000 f7nlbp4 f14t6dee f9c4gz4"
               >
                 <button
-                  class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                  class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_foo__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -2154,7 +2154,7 @@ exports[`object fields additionalProperties, description 1`] = `
                   >
                     <svg
                       aria-hidden="true"
-                      class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -2175,7 +2175,7 @@ exports[`object fields additionalProperties, description 1`] = `
             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
           >
             <button
-              class="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+              class="fui-Button r1f29ykk rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               id="root__add"
               title="Add Item"
               type="button"
@@ -2185,7 +2185,7 @@ exports[`object fields additionalProperties, description 1`] = `
               >
                 <svg
                   aria-hidden="true"
-                  class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -2207,7 +2207,7 @@ exports[`object fields additionalProperties, description 1`] = `
       class="___fko12g0_0000000 f1wswflg"
     >
       <button
-        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
         type="submit"
       >
         Submit
@@ -2245,7 +2245,7 @@ exports[`object fields additionalProperties, label off 1`] = `
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
                   <label
-                    class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+                    class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
                     for="field-r7__control"
                     id="field-r7__label"
                   >
@@ -2296,7 +2296,7 @@ exports[`object fields additionalProperties, label off 1`] = `
                 class="___1r36s8v_0000000 fpydfdc f9c4gz4"
               >
                 <button
-                  class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                  class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_foo__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -2307,7 +2307,7 @@ exports[`object fields additionalProperties, label off 1`] = `
                   >
                     <svg
                       aria-hidden="true"
-                      class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -2328,7 +2328,7 @@ exports[`object fields additionalProperties, label off 1`] = `
             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
           >
             <button
-              class="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+              class="fui-Button r1f29ykk rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               id="root__add"
               title="Add Item"
               type="button"
@@ -2338,7 +2338,7 @@ exports[`object fields additionalProperties, label off 1`] = `
               >
                 <svg
                   aria-hidden="true"
-                  class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -2360,7 +2360,7 @@ exports[`object fields additionalProperties, label off 1`] = `
       class="___fko12g0_0000000 f1wswflg"
     >
       <button
-        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
         type="submit"
       >
         Submit
@@ -2398,7 +2398,7 @@ exports[`object fields additionalProperties, object type 1`] = `
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
                   <label
-                    class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+                    class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
                     for="field-rd__control"
                     id="field-rd__label"
                   >
@@ -2482,7 +2482,7 @@ exports[`object fields additionalProperties, object type 1`] = `
                 class="___1r36s8v_0000000 fpydfdc f9c4gz4"
               >
                 <button
-                  class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                  class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_foo__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -2493,7 +2493,7 @@ exports[`object fields additionalProperties, object type 1`] = `
                   >
                     <svg
                       aria-hidden="true"
-                      class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -2514,7 +2514,7 @@ exports[`object fields additionalProperties, object type 1`] = `
             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
           >
             <button
-              class="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+              class="fui-Button r1f29ykk rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               id="root__add"
               title="Add Item"
               type="button"
@@ -2524,7 +2524,7 @@ exports[`object fields additionalProperties, object type 1`] = `
               >
                 <svg
                   aria-hidden="true"
-                  class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -2546,7 +2546,7 @@ exports[`object fields additionalProperties, object type 1`] = `
       class="___fko12g0_0000000 f1wswflg"
     >
       <button
-        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
         type="submit"
       >
         Submit
@@ -2642,7 +2642,7 @@ exports[`object fields object 1`] = `
       class="___fko12g0_0000000 f1wswflg"
     >
       <button
-        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
         type="submit"
       >
         Submit
@@ -2680,7 +2680,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
                   <label
-                    class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+                    class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
                     for="field-rm__control"
                     id="field-rm__label"
                   >
@@ -2731,7 +2731,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                 class="___1r36s8v_0000000 fpydfdc f9c4gz4"
               >
                 <button
-                  class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                  class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_additionalProperty__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -2742,7 +2742,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                   >
                     <svg
                       aria-hidden="true"
-                      class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -2763,7 +2763,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
           >
             <button
-              class="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+              class="fui-Button r1f29ykk rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               id="root__add"
               title="Add Item"
               type="button"
@@ -2773,7 +2773,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
               >
                 <svg
                   aria-hidden="true"
-                  class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -2795,7 +2795,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
       class="___fko12g0_0000000 f1wswflg"
     >
       <button
-        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
         type="submit"
       >
         Submit
@@ -2855,7 +2855,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
                   <label
-                    class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+                    class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
                     for="field-ru__control"
                     id="field-ru__label"
                   >
@@ -2906,7 +2906,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                 class="___1r36s8v_0000000 fpydfdc f9c4gz4"
               >
                 <button
-                  class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                  class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_foo__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -2917,7 +2917,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                   >
                     <svg
                       aria-hidden="true"
-                      class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -2938,7 +2938,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
           >
             <button
-              class="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+              class="fui-Button r1f29ykk rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               id="root__add"
               title="Add Item"
               type="button"
@@ -2948,7 +2948,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
               >
                 <svg
                   aria-hidden="true"
-                  class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -2970,7 +2970,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
       class="___fko12g0_0000000 f1wswflg"
     >
       <button
-        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
         type="submit"
       >
         Submit
@@ -3030,7 +3030,7 @@ exports[`object fields with title and description from both additionalProperties
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
                   <label
-                    class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+                    class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
                     for="field-r1m__control"
                     id="field-r1m__label"
                   >
@@ -3081,7 +3081,7 @@ exports[`object fields with title and description from both additionalProperties
                 class="___1r36s8v_0000000 fpydfdc f9c4gz4"
               >
                 <button
-                  class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                  class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_foo__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -3092,7 +3092,7 @@ exports[`object fields with title and description from both additionalProperties
                   >
                     <svg
                       aria-hidden="true"
-                      class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -3113,7 +3113,7 @@ exports[`object fields with title and description from both additionalProperties
             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
           >
             <button
-              class="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+              class="fui-Button r1f29ykk rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               id="root__add"
               title="Add Item"
               type="button"
@@ -3123,7 +3123,7 @@ exports[`object fields with title and description from both additionalProperties
               >
                 <svg
                   aria-hidden="true"
-                  class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -3145,7 +3145,7 @@ exports[`object fields with title and description from both additionalProperties
       class="___fko12g0_0000000 f1wswflg"
     >
       <button
-        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
         type="submit"
       >
         Submit
@@ -3285,7 +3285,7 @@ exports[`object fields with title and description from both object 1`] = `
       class="___fko12g0_0000000 f1wswflg"
     >
       <button
-        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
         type="submit"
       >
         Submit
@@ -3345,7 +3345,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
                   <label
-                    class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+                    class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
                     for="field-r1a__control"
                     id="field-r1a__label"
                   >
@@ -3396,7 +3396,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                 class="___1r36s8v_0000000 fpydfdc f9c4gz4"
               >
                 <button
-                  class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                  class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_foo__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -3407,7 +3407,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                   >
                     <svg
                       aria-hidden="true"
-                      class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -3428,7 +3428,7 @@ exports[`object fields with title and description from uiSchema additionalProper
             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
           >
             <button
-              class="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+              class="fui-Button r1f29ykk rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               id="root__add"
               title="Add Item"
               type="button"
@@ -3438,7 +3438,7 @@ exports[`object fields with title and description from uiSchema additionalProper
               >
                 <svg
                   aria-hidden="true"
-                  class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -3460,7 +3460,7 @@ exports[`object fields with title and description from uiSchema additionalProper
       class="___fko12g0_0000000 f1wswflg"
     >
       <button
-        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
         type="submit"
       >
         Submit
@@ -3600,7 +3600,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
       class="___fko12g0_0000000 f1wswflg"
     >
       <button
-        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
         type="submit"
       >
         Submit
@@ -3660,7 +3660,7 @@ exports[`object fields with title and description from uiSchema show add button 
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
                   <label
-                    class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+                    class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
                     for="field-r1e__control"
                     id="field-r1e__label"
                   >
@@ -3711,7 +3711,7 @@ exports[`object fields with title and description from uiSchema show add button 
                 class="___1r36s8v_0000000 fpydfdc f9c4gz4"
               >
                 <button
-                  class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                  class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_additionalProperty__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -3722,7 +3722,7 @@ exports[`object fields with title and description from uiSchema show add button 
                   >
                     <svg
                       aria-hidden="true"
-                      class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -3743,7 +3743,7 @@ exports[`object fields with title and description from uiSchema show add button 
             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
           >
             <button
-              class="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+              class="fui-Button r1f29ykk rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               id="root__add"
               title="Add Item"
               type="button"
@@ -3753,7 +3753,7 @@ exports[`object fields with title and description from uiSchema show add button 
               >
                 <svg
                   aria-hidden="true"
-                  class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -3775,7 +3775,7 @@ exports[`object fields with title and description from uiSchema show add button 
       class="___fko12g0_0000000 f1wswflg"
     >
       <button
-        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
         type="submit"
       >
         Submit
@@ -3915,7 +3915,7 @@ exports[`object fields with title and description object 1`] = `
       class="___fko12g0_0000000 f1wswflg"
     >
       <button
-        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
         type="submit"
       >
         Submit
@@ -3975,7 +3975,7 @@ exports[`object fields with title and description show add button and fields if 
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
                   <label
-                    class="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+                    class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
                     for="field-r12__control"
                     id="field-r12__label"
                   >
@@ -4026,7 +4026,7 @@ exports[`object fields with title and description show add button and fields if 
                 class="___1r36s8v_0000000 fpydfdc f9c4gz4"
               >
                 <button
-                  class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                  class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_additionalProperty__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -4037,7 +4037,7 @@ exports[`object fields with title and description show add button and fields if 
                   >
                     <svg
                       aria-hidden="true"
-                      class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -4058,7 +4058,7 @@ exports[`object fields with title and description show add button and fields if 
             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
           >
             <button
-              class="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+              class="fui-Button r1f29ykk rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               id="root__add"
               title="Add Item"
               type="button"
@@ -4068,7 +4068,7 @@ exports[`object fields with title and description show add button and fields if 
               >
                 <svg
                   aria-hidden="true"
-                  class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -4090,7 +4090,7 @@ exports[`object fields with title and description show add button and fields if 
       class="___fko12g0_0000000 f1wswflg"
     >
       <button
-        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
         type="submit"
       >
         Submit
@@ -4165,7 +4165,7 @@ exports[`object fields with title and description with global label off addition
                 class="___1r36s8v_0000000 fpydfdc f9c4gz4"
               >
                 <button
-                  class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                  class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_foo__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -4176,7 +4176,7 @@ exports[`object fields with title and description with global label off addition
                   >
                     <svg
                       aria-hidden="true"
-                      class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -4197,7 +4197,7 @@ exports[`object fields with title and description with global label off addition
             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
           >
             <button
-              class="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+              class="fui-Button r1f29ykk rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               id="root__add"
               title="Add Item"
               type="button"
@@ -4207,7 +4207,7 @@ exports[`object fields with title and description with global label off addition
               >
                 <svg
                   aria-hidden="true"
-                  class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -4229,7 +4229,7 @@ exports[`object fields with title and description with global label off addition
       class="___fko12g0_0000000 f1wswflg"
     >
       <button
-        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
         type="submit"
       >
         Submit
@@ -4313,7 +4313,7 @@ exports[`object fields with title and description with global label off object 1
       class="___fko12g0_0000000 f1wswflg"
     >
       <button
-        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
         type="submit"
       >
         Submit
@@ -4388,7 +4388,7 @@ exports[`object fields with title and description with global label off show add
                 class="___1r36s8v_0000000 fpydfdc f9c4gz4"
               >
                 <button
-                  class="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                  class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   id="root_additionalProperty__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -4399,7 +4399,7 @@ exports[`object fields with title and description with global label off show add
                   >
                     <svg
                       aria-hidden="true"
-                      class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -4420,7 +4420,7 @@ exports[`object fields with title and description with global label off show add
             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
           >
             <button
-              class="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+              class="fui-Button r1f29ykk rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               id="root__add"
               title="Add Item"
               type="button"
@@ -4430,7 +4430,7 @@ exports[`object fields with title and description with global label off show add
               >
                 <svg
                   aria-hidden="true"
-                  class="___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -4452,7 +4452,7 @@ exports[`object fields with title and description with global label off show add
       class="___fko12g0_0000000 f1wswflg"
     >
       <button
-        class="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
         type="submit"
       >
         Submit

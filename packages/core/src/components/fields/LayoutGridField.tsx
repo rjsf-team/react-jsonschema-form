@@ -83,8 +83,11 @@ export type GridSchemaType = {
  */
 export type LayoutGridSchemaType = GridSchemaType | ConfigObject | string;
 
-export interface LayoutGridFieldProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
-  extends FieldProps<T, S, F> {
+export interface LayoutGridFieldProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> extends FieldProps<T, S, F> {
   /** Optional string or object used to describe the current level of the `LayoutGridField`
    */
   layoutGridSchema?: LayoutGridSchemaType;

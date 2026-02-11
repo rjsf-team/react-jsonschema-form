@@ -77,14 +77,14 @@
   },
   "devDependencies": {
     "@ant-design/icons": "^6.1.0",
-    "@rjsf/core": "^6.2.0",
-    "@rjsf/snapshot-tests": "^6.2.0",
-    "@rjsf/utils": "^6.2.0",
-    "@rjsf/validator-ajv8": "^6.x",
+    "@rjsf/core": "^6.2.5",
+    "@rjsf/snapshot-tests": "^6.2.5",
+    "@rjsf/utils": "^6.2.5",
+    "@rjsf/validator-ajv8": "^6.2.5",
     "@rollup/plugin-replace": "^6.0.3",
-    "antd": "^5.27.6",
+    "antd": "^5.29.3",
     "atob": "^2.1.2",
-    "dayjs": "^1.11.18",
+    "dayjs": "^1.11.19",
     "eslint": "^8.57.1"
   },
   "repository": {

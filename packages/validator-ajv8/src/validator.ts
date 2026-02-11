@@ -21,9 +21,11 @@ import processRawValidationErrors, { RawValidationErrorsType } from './processRa
 
 /** `ValidatorType` implementation that uses the AJV 8 validation mechanism.
  */
-export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
-  implements ValidatorType<T, S, F>
-{
+export default class AJV8Validator<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> implements ValidatorType<T, S, F> {
   /** The AJV instance to use for all validations
    *
    * @private

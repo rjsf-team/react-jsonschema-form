@@ -166,8 +166,11 @@ function getNewFormDataRow<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
 }
 
 /** Props used for ArrayAsXxxx type components*/
-interface ArrayAsFieldProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
-  extends FieldProps<T, S, F> {
+interface ArrayAsFieldProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> extends FieldProps<T, S, F> {
   /** The callback used to update the array when the selector changes */
   onSelectChange: (value: T) => void;
 }
@@ -522,8 +525,11 @@ function ArrayFieldItem<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
 }
 
 /** The properties required by the stateless components that render the items using the `ArrayFieldItem` */
-interface InternalArrayFieldProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
-  extends FieldProps<T[], S, F> {
+interface InternalArrayFieldProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> extends FieldProps<T[], S, F> {
   /** The keyedFormData from the `ArrayField` state */
   keyedFormData: KeyedFormDataType<T>[];
   /** The callback used to handle the adding of an item at the given index (or the end, if missing) */

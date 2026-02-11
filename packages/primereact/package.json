@@ -68,10 +68,10 @@
     "react": ">=18"
   },
   "devDependencies": {
-    "@rjsf/core": "^6.2.0",
-    "@rjsf/snapshot-tests": "^6.2.0",
-    "@rjsf/utils": "^6.2.0",
-    "@rjsf/validator-ajv8": "^6.2.0",
+    "@rjsf/core": "^6.2.5",
+    "@rjsf/snapshot-tests": "^6.2.5",
+    "@rjsf/utils": "^6.2.5",
+    "@rjsf/validator-ajv8": "^6.2.5",
     "@rollup/plugin-replace": "^6.0.3",
     "eslint": "^8.57.1",
     "primeflex": "^4.0.0",

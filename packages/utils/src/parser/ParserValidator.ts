@@ -29,9 +29,11 @@ export type SchemaMap<S extends StrictRJSFSchema = RJSFSchema> = {
  * the hashed value of the schema. NOTE: After hashing the schema, an $id with the hash value is added to the
  * schema IF that schema doesn't already have an $id, prior to putting the schema into the map.
  */
-export default class ParserValidator<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
-  implements ValidatorType<T, S, F>
-{
+export default class ParserValidator<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> implements ValidatorType<T, S, F> {
   /** The rootSchema provided during construction of the class */
   readonly rootSchema: S;
 

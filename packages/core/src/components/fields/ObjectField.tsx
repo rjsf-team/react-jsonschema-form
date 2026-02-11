@@ -69,8 +69,11 @@ function getDefaultValue<T = any, S extends StrictRJSFSchema = RJSFSchema, F ext
 }
 
 /** Props for the `ObjectFieldProperty` component */
-interface ObjectFieldPropertyProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
-  extends Omit<FieldProps<T, S, F>, 'name'> {
+interface ObjectFieldPropertyProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> extends Omit<FieldProps<T, S, F>, 'name'> {
   /** The name of the property within the parent object */
   propertyName: string;
   /** Flag indicating whether this property was added by the additionalProperties UI */
