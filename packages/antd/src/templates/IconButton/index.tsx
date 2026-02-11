@@ -1,10 +1,12 @@
 import { Button, ButtonProps } from 'antd';
-import ArrowDownOutlined from '@ant-design/icons/ArrowDownOutlined';
-import ArrowUpOutlined from '@ant-design/icons/ArrowUpOutlined';
-import CopyOutlined from '@ant-design/icons/CopyOutlined';
-import DeleteOutlined from '@ant-design/icons/DeleteOutlined';
-import PlusCircleOutlined from '@ant-design/icons/PlusCircleOutlined';
-import CloseOutlined from '@ant-design/icons/CloseOutlined';
+import {
+  ArrowDownOutlined,
+  ArrowUpOutlined,
+  CopyOutlined,
+  DeleteOutlined,
+  PlusCircleOutlined,
+  CloseOutlined,
+} from '@ant-design/icons';
 import {
   getUiOptions,
   FormContextType,
