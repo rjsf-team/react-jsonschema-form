@@ -58,6 +58,7 @@ describe('SchemaField', () => {
           idSeparator: DEFAULT_ID_SEPARATOR,
           useFallbackUiForUnsupportedType: false,
         },
+        uiSchemaDefinitions: {},
       });
     });
     it('should provide expected registry with globalUiOptions as prop', () => {
@@ -98,6 +99,7 @@ describe('SchemaField', () => {
           idSeparator: DEFAULT_ID_SEPARATOR,
           useFallbackUiForUnsupportedType: false,
         },
+        uiSchemaDefinitions: {},
       });
     });
   });

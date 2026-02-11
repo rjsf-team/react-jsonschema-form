@@ -30,6 +30,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Fixed duplicate React keys in datalist when schema examples and default have different types, fixing [#4927](https://github.com/rjsf-team/react-jsonschema-form/issues/4927)
+- Integrated `ui:definitions` support for recursive and reusable uiSchema ([#4947](https://github.com/rjsf-team/react-jsonschema-form/pull/4947))
 
 ## @rjsf/daisyui
 
@@ -58,6 +59,16 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/shadcn
 
 - Fixed duplicate React keys in datalist when schema examples and default have different types, fixing [#4927](https://github.com/rjsf-team/react-jsonschema-form/issues/4927)
+
+## @rjsf/utils
+
+- Added `expandUiSchemaDefinitions()` and `resolveUiSchema()` functions, and `UiSchemaDefinitions` type to support defining reusable uiSchema for schema `$ref` references ([#4947](https://github.com/rjsf-team/react-jsonschema-form/pull/4947))
+
+## Dev / docs / playground
+
+- Updated References sample in playground to demonstrate `ui:definitions` feature ([#4947](https://github.com/rjsf-team/react-jsonschema-form/pull/4947))
+- Added documentation for `ui:definitions` in `uiSchema.md` and `definitions.md` ([#4947](https://github.com/rjsf-team/react-jsonschema-form/pull/4947))
+
 # 6.2.5
 
 ## @rjsf/mui

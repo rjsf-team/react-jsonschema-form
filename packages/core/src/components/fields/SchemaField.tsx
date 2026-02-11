@@ -17,6 +17,7 @@ import {
   isFormDataAvailable,
   ONE_OF_KEY,
   Registry,
+  resolveUiSchema,
   RJSFSchema,
   shouldRender,
   shouldRenderOptionalField,
@@ -93,7 +94,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   const {
     schema: _schema,
     fieldPathId,
-    uiSchema,
+    uiSchema: _uiSchema,
     formData,
     errorSchema,
     name,
@@ -107,6 +108,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   } = props;
   const { schemaUtils, globalFormOptions, globalUiOptions, fields } = registry;
   const { AnyOfField: _AnyOfField, OneOfField: _OneOfField } = fields;
+  const uiSchema = resolveUiSchema<T, S, F>(_schema, _uiSchema, registry);
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const FieldTemplate = getTemplate<'FieldTemplate', T, S, F>('FieldTemplate', registry, uiOptions);
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
