@@ -15,6 +15,12 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 6.3.1
+
+## Dev / docs / playground
+
+- Changed all `@rjsf/*` dev dependencies from `^6.3.0` to `6.3.0` so that the latest version of `nx` keeps automatically updating them
+- Updated peer dependencies to `^6.3.x` due to type changes in `@rjsf/utils` that are required in the other libraries
 
 # 6.3.0
 

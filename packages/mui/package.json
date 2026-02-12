@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/mui",
-  "version": "6.3.0",
+  "version": "6.3.1",
   "main": "./dist/index.cjs",
   "module": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -64,8 +64,8 @@
     "@emotion/styled": "^11.6.0",
     "@mui/icons-material": "^7.0.0",
     "@mui/material": "^7.0.0",
-    "@rjsf/core": "^6.2.x",
-    "@rjsf/utils": "^6.2.x",
+    "@rjsf/core": "^6.3.x",
+    "@rjsf/utils": "^6.3.x",
     "react": ">=18"
   },
   "devDependencies": {
@@ -74,10 +74,10 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.7",
     "@mui/material": "^7.3.7",
-    "@rjsf/core": "^6.2.5",
-    "@rjsf/snapshot-tests": "^6.2.5",
-    "@rjsf/utils": "^6.2.5",
-    "@rjsf/validator-ajv8": "^6.2.5",
+    "@rjsf/core": "6.3.1",
+    "@rjsf/snapshot-tests": "6.3.1",
+    "@rjsf/utils": "6.3.1",
+    "@rjsf/validator-ajv8": "6.3.1",
     "eslint": "^8.57.1"
   },
   "publishConfig": {

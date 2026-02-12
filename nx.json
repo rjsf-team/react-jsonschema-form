@@ -49,6 +49,11 @@
   "defaultBase": "main",
   "useLegacyCache": true,
   "release": {
-    "projects": ["*"]
+    "projects": ["*"],
+    "version": {
+      "generatorOptions": {
+        "updateDependents": "always"
+      }
+    }
   }
 }
