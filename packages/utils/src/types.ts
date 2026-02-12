@@ -486,7 +486,8 @@ export interface Registry<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
 
 /** The properties that are passed to a `Field` implementation */
 export interface FieldProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
-  extends GenericObjectType,
+  extends
+    GenericObjectType,
     RJSFBaseProps<T, S, F>,
     Pick<HTMLAttributes<HTMLElement>, Exclude<keyof HTMLAttributes<HTMLElement>, 'onBlur' | 'onFocus' | 'onChange'>> {
   /** The FieldPathId of the field in the hierarchy */
@@ -900,7 +901,8 @@ export interface MultiSchemaFieldTemplateProps<
 
 /** The properties that are passed to a `Widget` implementation */
 export interface WidgetProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
-  extends GenericObjectType,
+  extends
+    GenericObjectType,
     RJSFBaseProps<T, S, F>,
     Pick<HTMLAttributes<HTMLElement>, Exclude<keyof HTMLAttributes<HTMLElement>, 'onBlur' | 'onFocus' | 'onChange'>> {
   /** The generated id for this widget, used to provide unique `name`s and `id`s for the HTML field elements rendered by

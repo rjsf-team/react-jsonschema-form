@@ -35,9 +35,9 @@
     "react": ">=18"
   },
   "devDependencies": {
-    "@rjsf/core": "^6.2.0",
-    "@rjsf/utils": "^6.2.0",
-    "@rjsf/validator-ajv8": "^6.2.0"
+    "@rjsf/core": "^6.2.5",
+    "@rjsf/utils": "^6.2.5",
+    "@rjsf/validator-ajv8": "^6.2.5"
   },
   "repository": {
     "type": "git",

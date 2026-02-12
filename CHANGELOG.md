@@ -16,7 +16,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-# 6.2.6
+# 6.3.0
 
 ## @rjsf/antd
 
@@ -68,6 +68,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated References sample in playground to demonstrate `ui:definitions` feature ([#4947](https://github.com/rjsf-team/react-jsonschema-form/pull/4947))
 - Added documentation for `ui:definitions` in `uiSchema.md` and `definitions.md` ([#4947](https://github.com/rjsf-team/react-jsonschema-form/pull/4947))
+- Updated the libraries via the `npm run bump-all-libraries` command, fixing new lint errors and updating the snapshots due to fixes in the theme libraries
 
 # 6.2.5
 

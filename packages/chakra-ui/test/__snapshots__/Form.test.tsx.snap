@@ -3411,7 +3411,7 @@ exports[`nameGenerator bracketNameGenerator radio field 1`] = `
                       </label>
                       <div
                         aria-describedby="root_option__error root_option__description root_option__help"
-                        aria-labelledby="radio-group::r9s::label"
+                        aria-labelledby="fieldset:::r9q:::legend"
                         aria-orientation="vertical"
                         class="chakra-radio-group__root"
                         data-orientation="vertical"
@@ -25868,7 +25868,7 @@ exports[`single fields radio field 1`] = `
           >
             <div
               aria-describedby="root__error root__description root__help"
-              aria-labelledby="radio-group::r3m::label"
+              aria-labelledby="fieldset:::r3k:::legend"
               aria-orientation="vertical"
               class="chakra-radio-group__root"
               data-orientation="vertical"
@@ -26340,7 +26340,7 @@ exports[`single fields radio widget with description in schema and FieldTemplate
             </label>
             <div
               aria-describedby="root__error root__description root__help"
-              aria-labelledby="radio-group::r3a::label"
+              aria-labelledby="fieldset:::r38:::legend"
               aria-orientation="vertical"
               class="chakra-radio-group__root"
               data-orientation="vertical"
@@ -32025,7 +32025,7 @@ exports[`single fields select field single choice enumDisabled using radio widge
           >
             <div
               aria-describedby="root__error root__description root__help"
-              aria-labelledby="radio-group::r1p::label"
+              aria-labelledby="fieldset:::r1n:::legend"
               aria-orientation="vertical"
               class="chakra-radio-group__root"
               data-orientation="vertical"
@@ -32435,9 +32435,11 @@ exports[`single fields select field single choice form disabled using radio widg
           >
             <div
               aria-describedby="root__error root__description root__help"
-              aria-labelledby="radio-group::r1v::label"
+              aria-disabled="true"
+              aria-labelledby="fieldset:::r1t:::legend"
               aria-orientation="vertical"
               class="chakra-radio-group__root"
+              data-disabled=""
               data-orientation="vertical"
               data-part="root"
               data-scope="radio-group"
@@ -33510,9 +33512,11 @@ exports[`single fields select field single choice uiSchema disabled using radio 
           >
             <div
               aria-describedby="root__error root__description root__help"
-              aria-labelledby="radio-group::r1s::label"
+              aria-disabled="true"
+              aria-labelledby="fieldset:::r1q:::legend"
               aria-orientation="vertical"
               class="chakra-radio-group__root"
+              data-disabled=""
               data-orientation="vertical"
               data-part="root"
               data-scope="radio-group"

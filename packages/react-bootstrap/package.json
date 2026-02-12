@@ -71,10 +71,10 @@
     "node": ">=20"
   },
   "devDependencies": {
-    "@rjsf/core": "^6.2.0",
-    "@rjsf/snapshot-tests": "^6.2.0",
-    "@rjsf/utils": "^6.2.0",
-    "@rjsf/validator-ajv8": "^6.2.0",
+    "@rjsf/core": "^6.2.5",
+    "@rjsf/snapshot-tests": "^6.2.5",
+    "@rjsf/utils": "^6.2.5",
+    "@rjsf/validator-ajv8": "^6.2.5",
     "eslint": "^8.57.1",
     "react-bootstrap": "^2.10.10"
   },

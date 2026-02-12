@@ -69,15 +69,15 @@
     "react": ">=18"
   },
   "devDependencies": {
-    "@mantine/core": "^8.3.6",
-    "@mantine/dates": "^8.3.6",
-    "@mantine/hooks": "^8.3.6",
+    "@mantine/core": "^8.3.14",
+    "@mantine/dates": "^8.3.14",
+    "@mantine/hooks": "^8.3.14",
     "@restart/hooks": "^0.6.2",
     "@restart/ui": "^1.9.4",
-    "@rjsf/core": "^6.2.0",
-    "@rjsf/snapshot-tests": "^6.2.0",
-    "@rjsf/utils": "^6.2.0",
-    "@rjsf/validator-ajv8": "^6.2.0",
+    "@rjsf/core": "^6.2.5",
+    "@rjsf/snapshot-tests": "^6.2.5",
+    "@rjsf/utils": "^6.2.5",
+    "@rjsf/validator-ajv8": "^6.2.5",
     "eslint": "^8.57.1",
     "uncontrollable": "^9.0.0"
   },

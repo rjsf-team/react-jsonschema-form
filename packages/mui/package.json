@@ -69,15 +69,15 @@
     "react": ">=18"
   },
   "devDependencies": {
-    "@emotion/jest": "^11.13.0",
+    "@emotion/jest": "^11.14.2",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
-    "@mui/icons-material": "^7.3.4",
-    "@mui/material": "^7.3.4",
-    "@rjsf/core": "^6.2.0",
-    "@rjsf/snapshot-tests": "^6.2.0",
-    "@rjsf/utils": "^6.2.0",
-    "@rjsf/validator-ajv8": "^6.2.0",
+    "@mui/icons-material": "^7.3.7",
+    "@mui/material": "^7.3.7",
+    "@rjsf/core": "^6.2.5",
+    "@rjsf/snapshot-tests": "^6.2.5",
+    "@rjsf/utils": "^6.2.5",
+    "@rjsf/validator-ajv8": "^6.2.5",
     "eslint": "^8.57.1"
   },
   "publishConfig": {

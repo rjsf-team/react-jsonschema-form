@@ -38,9 +38,11 @@ import get from 'lodash/get';
  * providing a simplified set of APIs to the `@rjsf/core` components and the various themes as well. This class
  * implements the `SchemaUtilsType` interface.
  */
-class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
-  implements SchemaUtilsType<T, S, F>
-{
+class SchemaUtils<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> implements SchemaUtilsType<T, S, F> {
   rootSchema: S;
   validator: ValidatorType<T, S, F>;
   experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior;

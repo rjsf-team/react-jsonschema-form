@@ -26,8 +26,7 @@ export default class AJV8PrecompiledValidator<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
-> implements ValidatorType<T, S, F>
-{
+> implements ValidatorType<T, S, F> {
   /** The root schema object used to construct this validator
    *
    * @private
