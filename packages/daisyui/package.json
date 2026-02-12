@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/daisyui",
-  "version": "6.3.0",
+  "version": "6.3.1",
   "description": "Daisy UI components for react-jsonschema-form",
   "main": "dist/index.js",
   "module": "lib/index.js",
@@ -71,16 +71,16 @@
     "tailwindcss": "^4.1.18"
   },
   "peerDependencies": {
-    "@rjsf/core": "^6.2.x",
-    "@rjsf/utils": "^6.2.x",
+    "@rjsf/core": "^6.3.x",
+    "@rjsf/utils": "^6.3.x",
     "daisyui": "^5.0.29",
     "react": ">=18"
   },
   "devDependencies": {
-    "@rjsf/core": "^6.2.5",
-    "@rjsf/snapshot-tests": "^6.2.5",
-    "@rjsf/utils": "^6.2.5",
-    "@rjsf/validator-ajv8": "^6.2.5",
+    "@rjsf/core": "6.3.1",
+    "@rjsf/snapshot-tests": "6.3.1",
+    "@rjsf/utils": "6.3.1",
+    "@rjsf/validator-ajv8": "6.3.1",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",

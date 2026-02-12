@@ -1,12 +1,12 @@
-const fs = require('fs');
-const path = require('path');
-const os = require('os');
+const fs = require('node:fs');
+const path = require('node:path');
+const os = require('node:os');
 const lodash = require('lodash');
 
 const { forEach } = lodash;
 
 // Regex to find the major and minor versions of dependency
-const MAJOR_MINOR_REGEX = /^\^(\d+.\d+).\d+$/;
+const MAJOR_MINOR_REGEX = /^(\d+.\d+).\d+$/;
 
 // Since this file is in the `scripts` directory, the root dir of the repo is up one level
 const rootDir = path.resolve(__dirname, '../');
@@ -47,7 +47,9 @@ dirs.forEach((dir) => {
   // Now write the package.json file with the update packageObject, maintaining the 2 character spacing and remembering
   // to add the OS end of line character
   fs.writeFileSync(fileName, JSON.stringify(packageObject, null, 2) + os.EOL, function handleError(err) {
-    if (err) return console.log(err);
+    if (err) {
+      return console.log(err);
+    }
     console.log(`Writing peerDep changes to ${fileName}`);
-  })
+  });
 });
