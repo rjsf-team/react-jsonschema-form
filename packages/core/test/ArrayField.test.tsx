@@ -1345,6 +1345,30 @@ describe('ArrayField', () => {
 
         expect(node.querySelector("option[value='1']")).toBeDisabled(); // use index
       });
+
+      it('should use ui:enumNames from items uiSchema as option labels', () => {
+        const enumSchema: RJSFSchema = {
+          title: 'Demo',
+          type: 'array',
+          items: {
+            type: 'integer',
+            enum: [1, 2, 3],
+          },
+          uniqueItems: true,
+        };
+        const enumUiSchema: UiSchema = {
+          items: {
+            'ui:enumNames': ['A', 'B', 'C'],
+          },
+        };
+        const { node } = createFormComponent({ schema: enumSchema, uiSchema: enumUiSchema });
+
+        const options = node.querySelectorAll('select option');
+        expect(options).toHaveLength(3);
+        expect(options[0]).toHaveTextContent('A');
+        expect(options[1]).toHaveTextContent('B');
+        expect(options[2]).toHaveTextContent('C');
+      });
     });
 
     describe('CheckboxesWidget', () => {

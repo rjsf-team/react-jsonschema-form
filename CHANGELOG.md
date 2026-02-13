@@ -15,6 +15,13 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+
+# 6.3.2
+
+## @rjsf/core
+
+- Updated multi-select ArrayFields to properly use the `items` uiSchema for enumerated options, fixing [#4955](https://github.com/rjsf-team/react-jsonschema-form/issues/4955)
+
 # 6.3.1
 
 ## Dev / docs / playground
@@ -80,7 +87,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/mui
 
-- Updated `BaseInputTemplate` to properly handle `slotProps` and `InputProps` (deprecated by MUI) with existing `endAdornment`s when the `allowClearTextInputs` flag is true, fixing [#4938](https://github.com/rjsf-team/react-jsonschema-form/issues/4938) 
+- Updated `BaseInputTemplate` to properly handle `slotProps` and `InputProps` (deprecated by MUI) with existing `endAdornment`s when the `allowClearTextInputs` flag is true, fixing [#4938](https://github.com/rjsf-team/react-jsonschema-form/issues/4938)
 
 ## Dev / docs / playground
 

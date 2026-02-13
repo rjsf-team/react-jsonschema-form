@@ -199,7 +199,8 @@ function ArrayAsMultiSelect<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   } = props;
   const { widgets, schemaUtils, globalFormOptions, globalUiOptions } = registry;
   const itemsSchema = schemaUtils.retrieveSchema(schema.items as S, items);
-  const enumOptions = optionsList<T[], S, F>(itemsSchema, uiSchema);
+  const itemsUiSchema = (uiSchema?.items ?? {}) as UiSchema<T[], S, F>;
+  const enumOptions = optionsList<T[], S, F>(itemsSchema, itemsUiSchema);
   const { widget = 'select', title: uiTitle, ...options } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
   const Widget = getWidget<T[], S, F>(schema, widget, widgets);
   const label = uiTitle ?? schema.title ?? name;
