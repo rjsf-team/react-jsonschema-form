@@ -1527,6 +1527,16 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated the playground to add a selector for the `constAsDefaults` option
 
+# 5.23.0
+
+## @rjsf/core
+
+- Updated `SelectWidget` to support `<optgroup>` through `ui:options` `optgroup`. Fixes [#1813]
+
+## Dev / docs / playground
+
+- Updated `samples/widgets` to show `optgroup` usage (`selectWidgetOptions3`)
+
 # 5.22.4
 
 ## @rjsf/utils
