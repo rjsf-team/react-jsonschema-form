@@ -44,6 +44,89 @@ describe('optionsList()', () => {
         }),
       );
     });
+    it('should generate options for an enum schema with map-based enumNames', () => {
+      const enumSchema: RJSFSchema = {
+        type: 'string',
+        enum: ['person', 'phone', 'video'],
+      };
+      const uiSchema: UiSchema = {
+        'ui:enumNames': {
+          person: 'In person',
+          phone: 'By phone',
+          video: 'Via video',
+        },
+      };
+      expect(optionsList(enumSchema, uiSchema)).toEqual([
+        { label: 'In person', value: 'person' },
+        { label: 'By phone', value: 'phone' },
+        { label: 'Via video', value: 'video' },
+      ]);
+    });
+    it('should fall back to String(value) for values missing from map-based enumNames', () => {
+      const enumSchema: RJSFSchema = {
+        type: 'number',
+        enum: [1, 2, 3],
+      };
+      const uiSchema: UiSchema = {
+        'ui:enumNames': { '1': 'One', '3': 'Three' },
+      };
+      expect(optionsList(enumSchema, uiSchema)).toEqual([
+        { label: 'One', value: 1 },
+        { label: '2', value: 2 },
+        { label: 'Three', value: 3 },
+      ]);
+    });
+    it('should reorder options using enumOrder with wildcard', () => {
+      const enumSchema: RJSFSchema = {
+        type: 'string',
+        enum: ['a', 'b', 'c', 'd'],
+      };
+      const uiSchema: UiSchema = {
+        'ui:enumOrder': ['d', '*', 'a'],
+      };
+      expect(optionsList(enumSchema, uiSchema)).toEqual([
+        { label: 'd', value: 'd' },
+        { label: 'b', value: 'b' },
+        { label: 'c', value: 'c' },
+        { label: 'a', value: 'a' },
+      ]);
+    });
+    it('should drop unlisted options when enumOrder has no wildcard', () => {
+      const enumSchema: RJSFSchema = {
+        type: 'string',
+        enum: ['a', 'b', 'c'],
+      };
+      const uiSchema: UiSchema = {
+        'ui:enumOrder': ['c', 'a'],
+      };
+      expect(optionsList(enumSchema, uiSchema)).toEqual([
+        { label: 'c', value: 'c' },
+        { label: 'a', value: 'a' },
+      ]);
+    });
+    it('should support combined map-based enumNames and enumOrder', () => {
+      const enumSchema: RJSFSchema = {
+        type: 'number',
+        enum: [0, 1, 2, 3, 4],
+      };
+      const uiSchema: UiSchema = {
+        'ui:enumNames': {
+          '0': "Didn't like it",
+          '1': 'Meh',
+          '2': 'OK',
+          '3': 'Liked it',
+          '4': 'Loved it',
+        },
+        'ui:enumOrder': [4, 3, 2, 1, 0],
+      };
+      expect(optionsList(enumSchema, uiSchema)).toEqual([
+        { label: 'Loved it', value: 4 },
+        { label: 'Liked it', value: 3 },
+        { label: 'OK', value: 2 },
+        { label: 'Meh', value: 1 },
+        { label: "Didn't like it", value: 0 },
+      ]);
+    });
   });
   describe('anyOf', () => {
     it('should generate options for an anyOf schema', () => {

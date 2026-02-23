@@ -1072,8 +1072,14 @@ type UIOptionsBaseType<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     emptyValue?: any;
     /** Will disable any of the enum options specified in the array (by value) */
     enumDisabled?: Array<string | number | boolean>;
-    /** Allows a user to provide a list of labels for enum values in the schema */
-    enumNames?: string[];
+    /** Allows a user to provide a list of labels for enum values in the schema.
+     * Can be an array (positional, matched by index) or a Record mapping enum values to labels (matched by value).
+     */
+    enumNames?: string[] | Record<string | number, string>;
+    /** Controls the display order of enum options, following the same pattern as `ui:order` for object properties.
+     * Supports a `'*'` wildcard to represent all remaining values in their original schema order.
+     */
+    enumOrder?: Array<string | number | boolean | '*'>;
     /** Provides an optional field within a schema to be used as the oneOf/anyOf selector when there isn't a
      * discriminator
      */
