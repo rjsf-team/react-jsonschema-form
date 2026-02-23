@@ -16,7 +16,11 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-# 6.3.2
+# 6.4.0
+
+## @rjsf/utils
+
+- Added support for map-based `ui:enumNames` and `ui:enumOrder` for controlling enum display labels and ordering, fixing [#4969](https://github.com/rjsf-team/react-jsonschema-form/issues/4969)
 
 ## @rjsf/core
 
@@ -27,6 +31,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Fixed `resolveAllReferences` to preserve `$ref` on resolved schemas, enabling `ui:definitions` beyond the first recursion level, fixing [#4966](https://github.com/rjsf-team/react-jsonschema-form/issues/4966)
 - Fixed `omitExtraData` stripping `additionalProperties` inside oneOf/anyOf options, fixing [#4366](https://github.com/rjsf-team/react-jsonschema-form/issues/4366)
+
+## Dev / docs / playground
+
+- Added documentation and playground examples for map-based `ui:enumNames` and `ui:enumOrder`
 
 # 6.3.1
 
