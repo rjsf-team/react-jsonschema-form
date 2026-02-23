@@ -91,6 +91,33 @@ describe('optionsList()', () => {
         { label: 'a', value: 'a' },
       ]);
     });
+    it('should ignore unknown values in enumOrder', () => {
+      const enumSchema: RJSFSchema = {
+        type: 'string',
+        enum: ['a', 'b'],
+      };
+      const uiSchema: UiSchema = {
+        'ui:enumOrder': ['b', 'nonexistent', 'a'],
+      };
+      expect(optionsList(enumSchema, uiSchema)).toEqual([
+        { label: 'b', value: 'b' },
+        { label: 'a', value: 'a' },
+      ]);
+    });
+    it('should fall back to String(value) for missing entries in array enumNames', () => {
+      const enumSchema: RJSFSchema = {
+        type: 'number',
+        enum: [1, 2, 3],
+      };
+      const uiSchema: UiSchema = {
+        'ui:enumNames': ['One'],
+      };
+      expect(optionsList(enumSchema, uiSchema)).toEqual([
+        { label: 'One', value: 1 },
+        { label: '2', value: 2 },
+        { label: '3', value: 3 },
+      ]);
+    });
     it('should drop unlisted options when enumOrder has no wildcard', () => {
       const enumSchema: RJSFSchema = {
         type: 'string',
