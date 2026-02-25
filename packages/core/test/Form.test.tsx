@@ -2567,7 +2567,7 @@ describeRepeated('Form common', (createFormComponent) => {
           onError,
           focusOnFirstError,
           extraErrors,
-          extraErrorsBlockSubmit: true,
+          extraErrorsAreWarnings: false,
         });
 
         const input = node.querySelector<HTMLInputElement>('input[type=text]')!;
@@ -4471,9 +4471,29 @@ describe('Async errors', () => {
       },
     } as unknown as ErrorSchema;
 
-    const { node, onSubmit } = createFormComponent({ schema, extraErrors });
+    const { node, onSubmit } = createFormComponent({ schema, extraErrors, extraErrorsAreWarnings: true });
     fireEvent.submit(node);
     expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  it('should block submit by default when extraErrors are present', () => {
+    const onError = jest.fn();
+    const onSubmit = jest.fn();
+    const extraErrors = {
+      __errors: ['blocking error'],
+    } as ErrorSchema;
+
+    const { node } = createFormComponent({
+      schema: {},
+      onError,
+      onSubmit,
+      extraErrors,
+      // No extraErrorsAreWarnings prop, so should block by default
+    });
+
+    fireEvent.submit(node);
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(onError).toHaveBeenCalled();
   });
 
   it('should reset when props extraErrors changes and noValidate is true', () => {
