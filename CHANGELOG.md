@@ -22,6 +22,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated multi-select ArrayFields to properly use the `items` uiSchema for enumerated options, fixing [#4955](https://github.com/rjsf-team/react-jsonschema-form/issues/4955)
 
+## @rjsf/utils
+
+- Fixed `resolveAllReferences` to preserve `$ref` on resolved schemas, enabling `ui:definitions` beyond the first recursion level, fixing [#4966](https://github.com/rjsf-team/react-jsonschema-form/issues/4966)
+
 # 6.3.1
 
 ## Dev / docs / playground

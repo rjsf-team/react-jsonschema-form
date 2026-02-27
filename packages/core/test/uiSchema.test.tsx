@@ -2696,4 +2696,173 @@ describe('uiSchema', () => {
       });
     });
   });
+
+  describe('ui:definitions', () => {
+    it('should apply ui:definitions to a simple $ref property', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          address: { $ref: '#/$defs/address' },
+        },
+        $defs: {
+          address: {
+            type: 'object',
+            properties: {
+              street: { type: 'string' },
+              city: { type: 'string' },
+            },
+          },
+        },
+      };
+      const uiSchema: UiSchema = {
+        'ui:definitions': {
+          '#/$defs/address': {
+            street: { 'ui:placeholder': 'Enter street' },
+            city: { 'ui:widget': 'textarea' },
+          },
+        },
+      };
+
+      const { node } = createFormComponent({ schema, uiSchema });
+
+      expect(node.querySelector("input[placeholder='Enter street']")).toBeInTheDocument();
+      expect(node.querySelectorAll('textarea')).toHaveLength(1);
+    });
+
+    it('should apply ui:definitions to multiple properties sharing the same $ref', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          home: { $ref: '#/$defs/address' },
+          work: { $ref: '#/$defs/address' },
+        },
+        $defs: {
+          address: {
+            type: 'object',
+            properties: {
+              street: { type: 'string' },
+            },
+          },
+        },
+      };
+      const uiSchema: UiSchema = {
+        'ui:definitions': {
+          '#/$defs/address': {
+            street: { 'ui:placeholder': 'Enter street' },
+          },
+        },
+      };
+
+      const { node } = createFormComponent({ schema, uiSchema });
+
+      expect(node.querySelectorAll("input[placeholder='Enter street']")).toHaveLength(2);
+    });
+
+    it('should allow local uiSchema to override ui:definitions', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          address: { $ref: '#/$defs/address' },
+        },
+        $defs: {
+          address: {
+            type: 'object',
+            properties: {
+              street: { type: 'string' },
+            },
+          },
+        },
+      };
+      const uiSchema: UiSchema = {
+        'ui:definitions': {
+          '#/$defs/address': {
+            street: { 'ui:placeholder': 'Default street' },
+          },
+        },
+        address: {
+          street: { 'ui:placeholder': 'Custom street' },
+        },
+      };
+
+      const { node } = createFormComponent({ schema, uiSchema });
+
+      expect(node.querySelector("input[placeholder='Custom street']")).toBeInTheDocument();
+      expect(node.querySelector("input[placeholder='Default street']")).not.toBeInTheDocument();
+    });
+
+    it('should apply ui:definitions to array items with $ref', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          people: {
+            type: 'array',
+            items: { $ref: '#/$defs/person' },
+          },
+        },
+        $defs: {
+          person: {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+            },
+          },
+        },
+      };
+      const uiSchema: UiSchema = {
+        'ui:definitions': {
+          '#/$defs/person': {
+            name: { 'ui:placeholder': 'Enter name' },
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+        uiSchema,
+        formData: { people: [{ name: 'Alice' }, { name: 'Bob' }] },
+      });
+
+      expect(node.querySelectorAll("input[placeholder='Enter name']")).toHaveLength(2);
+    });
+
+    it('should apply ui:definitions at 5 levels of recursive $ref depth', () => {
+      const schema: RJSFSchema = {
+        $ref: '#/$defs/node',
+        $defs: {
+          node: {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+              children: {
+                type: 'array',
+                items: { $ref: '#/$defs/node' },
+              },
+            },
+          },
+        },
+      };
+      const uiSchema: UiSchema = {
+        'ui:definitions': {
+          '#/$defs/node': {
+            name: { 'ui:placeholder': 'Node name' },
+          },
+        },
+      };
+
+      // Build 5-level deep formData: each level has one child
+      const formData: GenericObjectType = {
+        name: 'L0',
+        children: [
+          {
+            name: 'L1',
+            children: [{ name: 'L2', children: [{ name: 'L3', children: [{ name: 'L4', children: [] }] }] }],
+          },
+        ],
+      };
+
+      const { node } = createFormComponent({ schema, uiSchema, formData });
+
+      expect(node.querySelectorAll("input[placeholder='Node name']")).toHaveLength(5);
+    });
+  });
 });

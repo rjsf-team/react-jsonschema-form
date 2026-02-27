@@ -296,6 +296,91 @@ describe('expandUiSchemaDefinitions()', () => {
     expect(result.oneOf[1]).toEqual({ name: { 'ui:placeholder': 'Name for B' } });
   });
 
+  it('parent definition overrides child definition for nested $ref', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { home: { $ref: '#/$defs/address' } },
+    };
+    const rootSchema: RJSFSchema = {
+      ...schema,
+      $defs: {
+        address: {
+          type: 'object',
+          properties: {
+            street: { type: 'string' },
+            city: { $ref: '#/$defs/city' },
+          },
+        },
+        city: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            zip: { type: 'string' },
+          },
+        },
+      },
+    };
+    const uiSchema: UiSchema = {};
+    const definitions = {
+      '#/$defs/address': {
+        street: { 'ui:widget': 'textarea' },
+        city: { name: { 'ui:placeholder': 'From address def' } },
+      },
+      '#/$defs/city': {
+        name: { 'ui:widget': 'select', 'ui:placeholder': 'From city def' },
+        zip: { 'ui:help': '5 digits' },
+      },
+    };
+
+    const result = expandUiSchemaDefinitions(schema, uiSchema, makeRegistry(rootSchema, definitions));
+
+    expect(result.home).toEqual({
+      street: { 'ui:widget': 'textarea' },
+      city: {
+        name: { 'ui:widget': 'select', 'ui:placeholder': 'From address def' },
+        zip: { 'ui:help': '5 digits' },
+      },
+    });
+  });
+
+  it('direct uiSchema overrides both parent and child definitions for nested $ref', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { home: { $ref: '#/$defs/address' } },
+    };
+    const rootSchema: RJSFSchema = {
+      ...schema,
+      $defs: {
+        address: {
+          type: 'object',
+          properties: {
+            city: { $ref: '#/$defs/city' },
+          },
+        },
+        city: {
+          type: 'object',
+          properties: { name: { type: 'string' } },
+        },
+      },
+    };
+    const uiSchema: UiSchema = {
+      home: { city: { name: { 'ui:widget': 'input' } } },
+    };
+    const definitions = {
+      '#/$defs/address': { city: { name: { 'ui:placeholder': 'From address def' } } },
+      '#/$defs/city': { name: { 'ui:widget': 'select', 'ui:placeholder': 'From city def' } },
+    };
+
+    const result = expandUiSchemaDefinitions(schema, uiSchema, makeRegistry(rootSchema, definitions));
+
+    // Direct "input" wins over city def "select"; address def "From address def" wins over city def "From city def"
+    expect(result.home).toEqual({
+      city: {
+        name: { 'ui:widget': 'input', 'ui:placeholder': 'From address def' },
+      },
+    });
+  });
+
   it('does not add empty oneOf array when no matching definitions', () => {
     const schema: RJSFSchema = {
       oneOf: [{ type: 'string' }, { type: 'number' }],
