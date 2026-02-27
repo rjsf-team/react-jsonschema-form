@@ -143,7 +143,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
             <SelectValueText placeholder={placeholder} />
           </SelectTrigger>
         </ChakraSelect.Control>
-        <ChakraSelect.Positioner minWidth='100% !important' zIndex='2 !important' top='calc(100% + 5px) !important'>
+        <ChakraSelect.Positioner>
           <ChakraSelect.Content>
             {selectOptions.items.map((item) => (
               <ChakraSelect.Item item={item} key={item.value}>
