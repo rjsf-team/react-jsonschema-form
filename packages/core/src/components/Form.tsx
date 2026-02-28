@@ -1223,7 +1223,7 @@ export default class Form<
     let errorSchema = schemaValidation.errorSchema;
     const schemaValidationErrors = errors;
     const schemaValidationErrorSchema = errorSchema;
-    const hasError = errors.length > 0 || (extraErrors && extraErrorsAreWarnings !== true);
+    const hasError = errors.length > 0 || (extraErrors && !extraErrorsAreWarnings);
     if (hasError) {
       if (extraErrors) {
         const merged = validationDataMerge(schemaValidation, extraErrors);
