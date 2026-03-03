@@ -4,7 +4,7 @@ import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY } from './constants';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema';
 import getUiOptions from './getUiOptions';
 import toConstant from './toConstant';
-import { RJSFSchema, EnumOptionsType, StrictRJSFSchema, FormContextType, UiSchema } from './types';
+import { RJSFSchema, EnumOptionsType, EnumValue, StrictRJSFSchema, FormContextType, UiSchema } from './types';
 
 /** Reorders `options` according to `order`, which may contain a `'*'` wildcard representing all
  * remaining options in their original order. Options not listed in `order` (and not covered by
@@ -12,7 +12,7 @@ import { RJSFSchema, EnumOptionsType, StrictRJSFSchema, FormContextType, UiSchem
  */
 function applyEnumOrder<S extends StrictRJSFSchema = RJSFSchema>(
   options: EnumOptionsType<S>[],
-  order: Array<string | number | boolean | '*'>,
+  order: Array<EnumValue>,
 ): EnumOptionsType<S>[] {
   const optionsByValue = new Map(options.map((opt) => [String(opt.value), opt]));
   const orderedKeys = new Set(order.filter((v) => v !== '*').map(String));
@@ -46,7 +46,7 @@ export default function optionsList<T = any, S extends StrictRJSFSchema = RJSFSc
 ): EnumOptionsType<S>[] | undefined {
   if (schema.enum) {
     let enumNames: string[] | Record<string | number, string> | undefined;
-    let enumOrder: Array<string | number | boolean | '*'> | undefined;
+    let enumOrder: Array<EnumValue> | undefined;
     if (uiSchema) {
       const { enumNames: uiEnumNames, enumOrder: uiEnumOrder } = getUiOptions<T, S, F>(uiSchema);
       enumNames = uiEnumNames;

@@ -1008,6 +1008,9 @@ export type UISchemaSubmitButtonOptions = {
   };
 };
 
+/** Represents a primitive JSON Schema enum value */
+export type EnumValue = string | number | boolean;
+
 /** This type represents an element used to render an enum option */
 export type EnumOptionsType<S extends StrictRJSFSchema = RJSFSchema> = {
   /** The value for the enum option */
@@ -1071,7 +1074,7 @@ type UIOptionsBaseType<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     /** The default value to use when an input for a field is empty */
     emptyValue?: any;
     /** Will disable any of the enum options specified in the array (by value) */
-    enumDisabled?: Array<string | number | boolean>;
+    enumDisabled?: Array<EnumValue>;
     /** Allows a user to provide a list of labels for enum values in the schema.
      * Can be an array (positional, matched by index) or a Record mapping enum values to labels (matched by value).
      */
@@ -1079,7 +1082,7 @@ type UIOptionsBaseType<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     /** Controls the display order of enum options, following the same pattern as `ui:order` for object properties.
      * Supports a `'*'` wildcard to represent all remaining values in their original schema order.
      */
-    enumOrder?: Array<string | number | boolean | '*'>;
+    enumOrder?: Array<EnumValue>;
     /** Provides an optional field within a schema to be used as the oneOf/anyOf selector when there isn't a
      * discriminator
      */
