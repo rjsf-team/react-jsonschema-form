@@ -6,6 +6,7 @@ import {
   ONE_OF_KEY,
   PROPERTIES_KEY,
   REF_KEY,
+  RJSF_REF_KEY,
 } from './constants';
 import findSchemaDefinition from './findSchemaDefinition';
 import isObject from './isObject';
@@ -141,7 +142,7 @@ export default function resolveUiSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(schema: S, localUiSchema: UiSchema<T, S, F> | undefined, registry: Registry<T, S, F>): UiSchema<T, S, F> {
-  const ref = schema[REF_KEY] as string | undefined;
+  const ref = ((schema as GenericObjectType)[RJSF_REF_KEY] ?? schema[REF_KEY]) as string | undefined;
   const definitionUiSchema = ref ? registry.uiSchemaDefinitions?.[ref] : undefined;
 
   if (!definitionUiSchema) {

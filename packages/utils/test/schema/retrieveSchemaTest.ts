@@ -54,7 +54,10 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       };
       const rootSchema: RJSFSchema = { definitions: { address } };
 
-      expect(retrieveSchema(testValidator, schema, rootSchema)).toEqual(address);
+      expect(retrieveSchema(testValidator, schema, rootSchema)).toEqual({
+        ...address,
+        __rjsf_ref: '#/definitions/address',
+      });
     });
     it('should `resolve` a schema which contains definitions not in `#/definitions`', () => {
       const address: RJSFSchema = {
@@ -74,6 +77,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       expect(retrieveSchema(testValidator, schema, schema)).toEqual({
         definitions: { address },
         ...address,
+        __rjsf_ref: '#/definitions/address',
       });
     });
     it('should give an error when JSON pointer is not in a URI encoded format', () => {
@@ -108,7 +112,10 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         definitions: { 'a~complex/name': address },
       };
 
-      expect(retrieveSchema(testValidator, schema, rootSchema)).toEqual(address);
+      expect(retrieveSchema(testValidator, schema, rootSchema)).toEqual({
+        ...address,
+        __rjsf_ref: '#/definitions/a~0complex~1name',
+      });
     });
     it('should `resolve` and stub out a schema which contains an `additionalProperties` with a definition', () => {
       const schema: RJSFSchema = {
@@ -136,6 +143,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         properties: {
           newKey: {
             ...address,
+            __rjsf_ref: '#/definitions/address',
             [ADDITIONAL_PROPERTY_FLAG]: true,
           },
         },
@@ -161,6 +169,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         properties: {
           newKey: {
             ...number,
+            __rjsf_ref: '#/definitions/number',
             [ADDITIONAL_PROPERTY_FLAG]: true,
           },
         },
@@ -250,6 +259,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       expect(retrieveSchema(testValidator, schema, rootSchema)).toEqual({
         ...address,
         title: 'foo',
+        __rjsf_ref: '#/definitions/address',
       });
     });
     it('recursive ref should resolve once', () => {
@@ -257,6 +267,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       expect(result).toEqual({
         definitions: RECURSIVE_REF.definitions,
         ...(RECURSIVE_REF.definitions!['@enum'] as RJSFSchema),
+        __rjsf_ref: '#/definitions/@enum',
       });
     });
     it('recursive allof ref should resolve once', () => {
@@ -267,6 +278,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       );
       expect(result).toEqual({
         ...(RECURSIVE_REF_ALLOF.definitions!['@enum'] as RJSFSchema),
+        __rjsf_ref: '#/definitions/@enum',
       });
     });
     it('should `resolve` refs inside of a properties key with bad property', () => {
@@ -305,6 +317,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         properties: {
           entity: {
             ...entity,
+            __rjsf_ref: '#/definitions/entity',
           },
         },
       });
@@ -330,6 +343,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         type: 'array',
         items: {
           ...entity,
+          __rjsf_ref: '#/definitions/entity',
         },
       });
     });
@@ -359,6 +373,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         $defs: definitions,
         minimum: 0,
         type: 'integer',
+        __rjsf_ref: 'https://jsonschema.dev/schemas/mixins/non-negative-integer',
       });
     });
     describe('property dependencies', () => {
@@ -530,6 +545,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
                 a: { type: 'string' },
                 b: { type: 'integer' },
               },
+              __rjsf_ref: '#/definitions/needsB',
             });
           });
         });
@@ -577,6 +593,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
                 a: { enum: ['typeA', 'typeB'] },
                 c: { type: 'boolean' },
               },
+              __rjsf_ref: '#/definitions/needsB',
             });
           });
         });
@@ -622,6 +639,8 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
                 a: { type: 'string', enum: ['int', 'bool'] },
                 b: { type: 'integer' },
               },
+              definitions: undefined,
+              __rjsf_ref: '#/definitions/needsA',
             });
           });
 
@@ -644,6 +663,8 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
                 a: { type: 'string', enum: ['int', 'bool'] },
                 b: { type: 'boolean' },
               },
+              definitions: undefined,
+              __rjsf_ref: '#/definitions/needsB',
             });
           });
 
@@ -771,6 +792,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
                 a: { type: 'string', enum: ['int', 'bool'] },
                 b: { type: 'boolean' },
               },
+              __rjsf_ref: '#/definitions/typedInput',
             });
           });
         });
@@ -901,6 +923,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({
           type: 'string',
           minLength: 5,
+          __rjsf_ref: '#/definitions/1',
         });
       });
       it('should properly merge schemas with nested allOf`s', () => {
@@ -1263,6 +1286,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             food: { type: 'string', enum: ['meat', 'grass', 'fish'] },
           },
           required: ['food', 'animal'],
+          __rjsf_ref: '#/definitions/cat',
         });
       });
       it('handles nested if then else', () => {
@@ -1575,6 +1599,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             bar: {
               type: 'string',
               [ADDITIONAL_PROPERTY_FLAG]: true,
+              __rjsf_ref: '#/definitions/foo',
             },
           },
         });
@@ -1805,6 +1830,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           {
             ...(SUPER_SCHEMA.definitions?.foo as RJSFSchema),
             title: 'multi',
+            __rjsf_ref: '#/definitions/foo',
           },
         ]);
       });
@@ -1814,10 +1840,12 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           {
             ...(SUPER_SCHEMA.definitions?.choice1 as RJSFSchema),
             required: ['choice', 'more'],
+            __rjsf_ref: '#/definitions/choice1',
           },
           {
             ...(SUPER_SCHEMA.definitions?.choice2 as RJSFSchema),
             required: ['choice'],
+            __rjsf_ref: '#/definitions/choice2',
           },
         ]);
       });
@@ -1865,6 +1893,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
                   a: { enum: ['typeA'] },
                   b: { type: 'number' },
                 },
+                __rjsf_ref: '#/definitions/aObject',
               },
             },
           },
@@ -1875,6 +1904,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
                 a: { enum: ['typeB'] },
                 c: { type: 'boolean' },
               },
+              __rjsf_ref: '#/definitions/bObject',
             },
           },
         ]);
@@ -2093,6 +2123,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             additional: { type: 'boolean' },
           },
           allOf: undefined,
+          __rjsf_ref: '#/definitions/baseSchema',
         });
       });
       it('should handle experimental_customMergeAllOf with nested $ref resolution', () => {
@@ -2173,6 +2204,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           properties: {
             base: { type: 'string' },
           },
+          __rjsf_ref: '#/definitions/testRef',
         });
       });
       it('should handle experimental_customMergeAllOf that throws an error', () => {
@@ -2267,6 +2299,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             additional: { type: 'number' },
           },
           allOf: undefined,
+          __rjsf_ref: '#/definitions/level1',
         });
       });
     });
@@ -2275,12 +2308,14 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const priceSchema: RJSFSchema = SUPER_SCHEMA.properties?.price as RJSFSchema;
         expect(retrieveSchema(testValidator, priceSchema, SUPER_SCHEMA, {}, undefined)).toEqual({
           ...(SUPER_SCHEMA.definitions?.price as RJSFSchema),
+          __rjsf_ref: '#/definitions/price',
         });
       });
       it('resolves simple ref with no anyOf or oneOfs when true', () => {
         const priceSchema: RJSFSchema = SUPER_SCHEMA.properties?.price as RJSFSchema;
         expect(retrieveSchema(testValidator, priceSchema, SUPER_SCHEMA, {}, undefined, true)).toEqual({
           ...(SUPER_SCHEMA.definitions?.price as RJSFSchema),
+          __rjsf_ref: '#/definitions/price',
         });
       });
       it('does not resolves the references inside of anyOfs when false', () => {
@@ -2294,6 +2329,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           anyOf: [
             {
               ...(SUPER_SCHEMA.definitions?.foo as RJSFSchema),
+              __rjsf_ref: '#/definitions/foo',
             },
           ],
         });
@@ -2309,9 +2345,11 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           oneOf: [
             {
               ...(SUPER_SCHEMA.definitions?.choice1 as RJSFSchema),
+              __rjsf_ref: '#/definitions/choice1',
             },
             {
               ...(SUPER_SCHEMA.definitions?.choice2 as RJSFSchema),
+              __rjsf_ref: '#/definitions/choice2',
             },
           ],
         });
