@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.4.2
+
+## @rjsf/core
+
+- Passed `parentUiSchema` to `ArrayFieldItem` to maintain `uiSchema`, this prop was introduced recently but was not being passed
+
 # 6.4.1
 
 ## Dev / docs / playground
