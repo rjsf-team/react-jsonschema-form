@@ -24,6 +24,8 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/utils
 
+- Fixed `resolveAllReferences` to preserve `$ref` on resolved schemas, enabling `ui:definitions` beyond the first recursion level, fixing [#4966](https://github.com/rjsf-team/react-jsonschema-form/issues/4966)
+
 - Fixed `omitExtraData` stripping `additionalProperties` inside oneOf/anyOf options, fixing [#4366](https://github.com/rjsf-team/react-jsonschema-form/issues/4366)
 
 # 6.3.1

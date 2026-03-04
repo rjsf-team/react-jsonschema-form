@@ -22,6 +22,7 @@ import {
   PATTERN_PROPERTIES_KEY,
   PROPERTIES_KEY,
   REF_KEY,
+  RJSF_REF_KEY,
 } from '../constants';
 import findSchemaDefinition, { splitKeyElementFromObject } from '../findSchemaDefinition';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
@@ -371,7 +372,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
     recurseList.push($ref!);
     // Retrieve the referenced schema definition.
     const refSchema = findSchemaDefinition<S>($ref, rootSchema, baseURI);
-    resolvedSchema = { ...refSchema, ...localSchema };
+    resolvedSchema = { ...refSchema, ...localSchema, [RJSF_REF_KEY]: $ref };
     if (ID_KEY in resolvedSchema) {
       baseURI = resolvedSchema[ID_KEY];
     }

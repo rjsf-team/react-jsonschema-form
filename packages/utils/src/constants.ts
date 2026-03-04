@@ -25,6 +25,7 @@ export const READONLY_KEY = 'readonly';
 export const REQUIRED_KEY = 'required';
 export const SUBMIT_BTN_OPTIONS_KEY = 'submitButtonOptions';
 export const REF_KEY = '$ref';
+export const RJSF_REF_KEY = '__rjsf_ref';
 export const SCHEMA_KEY = '$schema';
 export const DEFAULT_ID_PREFIX = 'root';
 export const DEFAULT_ID_SEPARATOR = '_';
