@@ -377,6 +377,34 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
       expect(schemaUtils.omitExtraData(schema, formData)).toEqual(expectedFormData);
     });
 
+    it('should keep or strip additional properties in oneOf based on the matched option', () => {
+      const schema: RJSFSchema = {
+        oneOf: [
+          {
+            type: 'object',
+            properties: {
+              discriminator: { type: 'string', const: 'foo' },
+            },
+            additionalProperties: true,
+          },
+          {
+            type: 'object',
+            properties: {
+              discriminator: { type: 'string', const: 'bar' },
+            },
+            additionalProperties: false,
+          },
+        ],
+      };
+      const schemaUtils = createSchemaUtils(testValidator, schema);
+
+      const keptData = { discriminator: 'foo', extra: 'should be kept' };
+      expect(schemaUtils.omitExtraData(schema, keptData)).toEqual(keptData);
+
+      const strippedData = { discriminator: 'bar', extra: 'should be stripped' };
+      expect(schemaUtils.omitExtraData(schema, strippedData)).toEqual({ discriminator: 'bar' });
+    });
+
     it('should strip extras from within additional property values with strict schemas', () => {
       const schema: RJSFSchema = {
         oneOf: [
