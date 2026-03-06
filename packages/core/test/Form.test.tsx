@@ -4909,7 +4909,7 @@ describe('validateForm()', () => {
     // extraErrors should remain visible in state
     expect(formRef.current!.state.errors).toHaveLength(1);
     expect(formRef.current!.state.errors[0].message).toBe('async error for foo');
-    expect(formRef.current!.state.errorSchema).toMatchObject({ foo: { __errors: ['async error for foo'] } });
+    expect(formRef.current!.state.errorSchema).toEqual(extraErrors);
     // onError should NOT be called for non-blocking errors
     expect(onError).not.toHaveBeenCalled();
   });
