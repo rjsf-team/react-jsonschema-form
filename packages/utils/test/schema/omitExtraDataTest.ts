@@ -311,6 +311,128 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
       expect(schemaUtils.omitExtraData(schema, formData)).toEqual(formData);
     });
 
+    it('should not omit additional properties when root schema has additionalProperties', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        additionalProperties: {
+          type: 'string',
+        },
+      };
+      const formData = {
+        key1: 'val1',
+        key2: 'val2',
+      };
+      const schemaUtils = createSchemaUtils(testValidator, schema);
+
+      expect(schemaUtils.omitExtraData(schema, formData)).toEqual(formData);
+    });
+
+    it('should not omit additional properties within oneOf', () => {
+      const schema: RJSFSchema = {
+        oneOf: [
+          {
+            type: 'object',
+            additionalProperties: {
+              type: 'string',
+            },
+          },
+        ],
+      };
+      const formData = {
+        key1: 'val1',
+        key2: 'val2',
+      };
+      const schemaUtils = createSchemaUtils(testValidator, schema);
+
+      expect(schemaUtils.omitExtraData(schema, formData)).toEqual(formData);
+    });
+
+    it('should keep additional properties but strip extras from defined properties within oneOf', () => {
+      const schema: RJSFSchema = {
+        oneOf: [
+          {
+            type: 'object',
+            properties: {
+              config: {
+                type: 'object',
+                properties: {
+                  name: { type: 'string' },
+                },
+              },
+            },
+            additionalProperties: true,
+          },
+        ],
+      };
+      const formData = {
+        config: { name: 'test', extraField: 'should be stripped' },
+        dynamicKey: 'should be kept',
+      };
+      const expectedFormData = {
+        config: { name: 'test' },
+        dynamicKey: 'should be kept',
+      };
+      const schemaUtils = createSchemaUtils(testValidator, schema);
+
+      expect(schemaUtils.omitExtraData(schema, formData)).toEqual(expectedFormData);
+    });
+
+    it('should keep or strip additional properties in oneOf based on the matched option', () => {
+      const schema: RJSFSchema = {
+        oneOf: [
+          {
+            type: 'object',
+            properties: {
+              discriminator: { type: 'string', const: 'foo' },
+            },
+            additionalProperties: true,
+          },
+          {
+            type: 'object',
+            properties: {
+              discriminator: { type: 'string', const: 'bar' },
+            },
+            additionalProperties: false,
+          },
+        ],
+      };
+      const schemaUtils = createSchemaUtils(testValidator, schema);
+
+      const keptData = { discriminator: 'foo', extra: 'should be kept' };
+      expect(schemaUtils.omitExtraData(schema, keptData)).toEqual(keptData);
+
+      const strippedData = { discriminator: 'bar', extra: 'should be stripped' };
+      expect(schemaUtils.omitExtraData(schema, strippedData)).toEqual({ discriminator: 'bar' });
+    });
+
+    it('should strip extras from within additional property values with strict schemas', () => {
+      const schema: RJSFSchema = {
+        oneOf: [
+          {
+            type: 'object',
+            additionalProperties: {
+              type: 'object',
+              properties: {
+                name: { type: 'string' },
+              },
+              additionalProperties: false,
+            },
+          },
+        ],
+      };
+      const formData = {
+        server1: { name: 'prod', secret: 'oops' },
+        server2: { name: 'staging' },
+      };
+      const expectedFormData = {
+        server1: { name: 'prod' },
+        server2: { name: 'staging' },
+      };
+      const schemaUtils = createSchemaUtils(testValidator, schema);
+
+      expect(schemaUtils.omitExtraData(schema, formData)).toEqual(expectedFormData);
+    });
+
     it('No form data or RootSchema returns empty object', () => {
       const schema: RJSFSchema = {
         type: 'object',

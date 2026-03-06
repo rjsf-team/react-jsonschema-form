@@ -53,6 +53,16 @@ const enumObjects: Sample = {
           $ref: '#/definitions/locations',
         },
       },
+      rating: {
+        title: 'Rating (map-based enumNames)',
+        type: 'number',
+        enum: [1, 2, 3, 4, 5],
+      },
+      priority: {
+        title: 'Priority (enumOrder)',
+        type: 'string',
+        enum: ['low', 'medium', 'high', 'critical'],
+      },
     },
   },
   uiSchema: {
@@ -67,6 +77,24 @@ const enumObjects: Sample = {
     checkboxes: {
       'ui:widget': 'CheckboxesWidget',
       ...ENUM_NAMES,
+    },
+    rating: {
+      'ui:enumNames': {
+        1: 'Terrible',
+        2: 'Poor',
+        3: 'Average',
+        4: 'Good',
+        5: 'Excellent',
+      },
+    },
+    priority: {
+      'ui:enumNames': {
+        low: 'Low priority',
+        medium: 'Medium priority',
+        high: 'High priority',
+        critical: 'Critical priority',
+      },
+      'ui:enumOrder': ['critical', 'high', '*'],
     },
   },
   formData: {

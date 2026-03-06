@@ -763,7 +763,7 @@ Return a consistent `id` for the `optionIndex`s of a `Radio` or `Checkboxes` wid
 ### optionsList&lt;T = any, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = any>()
 
 Gets the list of options from the `schema`. If the schema has an enum list, then those enum values are returned.
-The labels for the options will be extracted from the non-standard, RJSF-deprecated `enumNames` if it exists, otherwise the label will be the same as the `value`.
+The labels for the options will be extracted from `ui:enumNames` in the `uiSchema` if provided, otherwise the label will be the same as the `value`. If `ui:enumOrder` is provided, the options will be reordered accordingly.
 
 If the schema has a `oneOf` or `anyOf`, then the value is the list of either:
 
@@ -772,8 +772,6 @@ If the schema has a `oneOf` or `anyOf`, then the value is the list of either:
 - If the schema has a discriminator and the label using either the `schema.title` or the value. If a `uiSchema` is
   provided, and it has the `ui:enumNames` matched with `enum` or it has an associated `oneOf` or `anyOf` with a list of
   objects containing `ui:title` then the UI schema values will replace the values from the schema.
-
-- NOTE: `enumNames` is deprecated and will be removed in a future major version of RJSF. Use the "ui:enumNames" property in the uiSchema instead.
 
 #### Parameters
 

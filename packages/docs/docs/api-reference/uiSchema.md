@@ -506,7 +506,7 @@ const uiSchema: UiSchema = {
 
 ### enumNames
 
-Allows a user to provide a list of labels for enum values in the schema.
+Allows a user to provide labels for enum values in the schema. Can be an array (matched by index) or a map (matched by value).
 
 ```tsx
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
@@ -515,8 +515,32 @@ const schema: RJSFSchema = {
   type: 'number',
   enum: [1, 2, 3],
 };
+
+// Array form (matched by index)
 const uiSchema: UiSchema = {
   'ui:enumNames': ['one', 'two', 'three'],
+};
+
+// Map form (matched by value)
+const uiSchema: UiSchema = {
+  'ui:enumNames': { 1: 'one', 2: 'two', 3: 'three' },
+};
+```
+
+### enumOrder
+
+Controls the display order of enum options. Use `'*'` to represent remaining values in their original schema order. Unlisted values not covered by `'*'` are dropped.
+
+```tsx
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+
+const schema: RJSFSchema = {
+  type: 'string',
+  enum: ['apple', 'banana', 'cherry', 'date'],
+};
+
+const uiSchema: UiSchema = {
+  'ui:enumOrder': ['cherry', '*', 'apple'],
 };
 ```
 
