@@ -308,6 +308,8 @@ export interface FormState<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   initialDefaultsGenerated: boolean;
   /** The registry (re)computed only when props changed */
   registry: Registry<T, S, F>;
+  /** Tracks the previous `extraErrors` prop reference so that `getDerivedStateFromProps` can detect changes */
+  _prevExtraErrors?: ErrorSchema<T>;
 }
 
 /** The event data passed when changes have been made to the form, includes everything from the `FormState` except
@@ -374,6 +376,38 @@ export default class Form<
    */
   private _isProcessingUserChange = false;
 
+  /** When the `extraErrors` prop changes, re-merges `schemaValidationErrors` + `extraErrors` + `customErrors` into
+   * state before render, ensuring the updated errors are visible immediately in a single render cycle.
+   *
+   * @param props - The current props
+   * @param state - The current state
+   * @returns Partial state with re-merged errors if `extraErrors` changed, or `null` if no update is needed
+   */
+  static getDerivedStateFromProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+    props: FormProps<T, S, F>,
+    state: FormState<T, S, F>,
+  ): Partial<FormState<T, S, F>> | null {
+    if (props.extraErrors !== state._prevExtraErrors) {
+      const baseErrors: ValidationData<T> = {
+        errors: state.schemaValidationErrors || [],
+        errorSchema: (state.schemaValidationErrorSchema || {}) as ErrorSchema<T>,
+      };
+      let { errors, errorSchema } = baseErrors;
+      if (props.extraErrors) {
+        ({ errors, errorSchema } = validationDataMerge<T>(baseErrors, props.extraErrors));
+      }
+      if (state.customErrors) {
+        ({ errors, errorSchema } = validationDataMerge<T>(
+          { errors, errorSchema },
+          state.customErrors.ErrorSchema,
+          true,
+        ));
+      }
+      return { _prevExtraErrors: props.extraErrors, errors, errorSchema };
+    }
+    return null;
+  }
+
   /** Constructs the `Form` from the `props`. Will setup the initial state from the props. It will also call the
    * `onChange` handler if the initially provided `formData` is modified to add missing default values as part of the
    * state construction.
@@ -389,7 +423,10 @@ export default class Form<
 
     const { formData: propsFormData, initialFormData, onChange } = props;
     const formData = propsFormData ?? initialFormData;
-    this.state = this.getStateFromProps(props, formData, undefined, undefined, undefined, true);
+    this.state = {
+      ...this.getStateFromProps(props, formData, undefined, undefined, undefined, true),
+      _prevExtraErrors: props.extraErrors,
+    };
     if (onChange && !deepEquals(this.state.formData, formData)) {
       onChange(toIChangeEvent(this.state));
     }

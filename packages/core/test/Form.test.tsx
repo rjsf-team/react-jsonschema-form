@@ -4507,12 +4507,8 @@ describe('Async errors', () => {
       extraErrors: {},
     });
 
-    setTimeout(() => {
-      expect(formRef.current!.state.errorSchema).toEqual({});
-      expect(formRef.current!.state.errors).toEqual([]);
-    }, 0);
-    // We use setTimeout with a delay of 0ms to allow all asynchronous operations to complete in the React component.
-    // Despite this being a workaround, it turned out to be the only effective method to handle this test case.
+    expect(formRef.current!.state.errorSchema).toEqual({});
+    expect(formRef.current!.state.errors).toEqual([]);
   });
 
   it('should reset when props extraErrors changes and liveValidate is false', () => {
@@ -4545,12 +4541,8 @@ describe('Async errors', () => {
       extraErrors: {},
     });
 
-    setTimeout(() => {
-      expect(formRef.current!.state.errorSchema).toEqual({});
-      expect(formRef.current!.state.errors).toEqual([]);
-    }, 0);
-    // We use setTimeout with a delay of 0ms to allow all asynchronous operations to complete in the React component.
-    // Despite this being a workaround, it turned out to be the only effective method to handle this test case.
+    expect(formRef.current!.state.errorSchema).toEqual({});
+    expect(formRef.current!.state.errors).toEqual([]);
   });
 
   it('should reset when schema changes', () => {
@@ -5651,5 +5643,138 @@ describe('initialFormData feature to prevent form reset', () => {
 
     input = container.querySelector('input');
     expect(input).toHaveAttribute('value', 'new value');
+  });
+});
+
+describe('extraErrors set after submit (#4965)', () => {
+  it('should show extraErrors when set for the first time via onSubmit callback', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+      },
+    };
+
+    const sampleErrors: ErrorSchema = {
+      foo: {
+        __errors: ['Sample error on field foo'],
+      },
+    } as unknown as ErrorSchema;
+
+    function Wrapper() {
+      const [extraErrors, setExtraErrors] = useState<ErrorSchema>({} as ErrorSchema);
+
+      const onSubmit = useCallback(() => {
+        setExtraErrors({} as ErrorSchema);
+        setTimeout(() => {
+          setExtraErrors(sampleErrors);
+        }, 50);
+      }, []);
+
+      return <Form schema={schema} validator={validator} onSubmit={onSubmit} extraErrors={extraErrors} />;
+    }
+
+    const { container } = render(<Wrapper />);
+    const form = container.querySelector('form')!;
+
+    await act(async () => {
+      fireEvent.submit(form);
+    });
+
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 100));
+    });
+
+    expect(container.querySelectorAll('.error-detail li')).toHaveLength(1);
+  });
+
+  it('should show extraErrors when set for the first time via async onSubmit callback', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      required: ['a', 'b'],
+      properties: {
+        a: { type: 'integer', title: 'A', default: 10 },
+        b: { type: 'integer', title: 'B' },
+      },
+    };
+
+    const sampleErrors: ErrorSchema = {
+      __errors: ['Simulated submit failure.'],
+      a: { __errors: ['Sample error on field a'] },
+      b: { __errors: ['Sample error on field b'] },
+    } as unknown as ErrorSchema;
+
+    function Wrapper() {
+      const [extraErrors, setExtraErrors] = useState<ErrorSchema>({} as ErrorSchema);
+
+      const onSubmit = useCallback(async () => {
+        setExtraErrors({} as ErrorSchema);
+        await new Promise((r) => setTimeout(r, 100));
+        setExtraErrors(sampleErrors);
+      }, []);
+
+      return <Form schema={schema} validator={validator} onSubmit={onSubmit} extraErrors={extraErrors} noValidate />;
+    }
+
+    const { container } = render(<Wrapper />);
+    const form = container.querySelector('form')!;
+
+    await act(async () => {
+      fireEvent.submit(form);
+    });
+
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 200));
+    });
+
+    const errorItems = container.querySelectorAll('.error-detail li');
+    expect(errorItems.length).toBeGreaterThan(0);
+  });
+
+  it('should show extraErrors after successful validation and async onSubmit', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+      },
+    };
+
+    const sampleErrors: ErrorSchema = {
+      foo: { __errors: ['Server-side error'] },
+    } as unknown as ErrorSchema;
+
+    const formRef = createRef<Form>();
+
+    function Wrapper() {
+      const [extraErrors, setExtraErrors] = useState<ErrorSchema>({} as ErrorSchema);
+
+      const onSubmit = useCallback(async () => {
+        setExtraErrors({} as ErrorSchema);
+        await new Promise((r) => setTimeout(r, 100));
+        setExtraErrors(sampleErrors);
+      }, []);
+
+      return <Form ref={formRef} schema={schema} validator={validator} onSubmit={onSubmit} extraErrors={extraErrors} />;
+    }
+
+    const { container } = render(<Wrapper />);
+    const form = container.querySelector('form')!;
+
+    await act(async () => {
+      fireEvent.submit(form);
+    });
+
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 200));
+    });
+
+    // Check the form state directly
+    const state = formRef.current!.state;
+    expect(state.errors.length).toBeGreaterThan(0);
+    expect(state.errorSchema).toEqual(sampleErrors);
+
+    // Also check DOM
+    const errorItems = container.querySelectorAll('.error-detail li');
+    expect(errorItems.length).toBeGreaterThan(0);
   });
 });
