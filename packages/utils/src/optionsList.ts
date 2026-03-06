@@ -12,7 +12,7 @@ import { RJSFSchema, EnumOptionsType, EnumValue, StrictRJSFSchema, FormContextTy
  */
 function applyEnumOrder<S extends StrictRJSFSchema = RJSFSchema>(
   options: EnumOptionsType<S>[],
-  order: Array<EnumValue>,
+  order: EnumValue[],
 ): EnumOptionsType<S>[] {
   const optionsByValue = new Map(options.map((opt) => [String(opt.value), opt]));
   const orderedKeys = new Set(order.filter((v) => v !== '*').map(String));
@@ -46,7 +46,7 @@ export default function optionsList<T = any, S extends StrictRJSFSchema = RJSFSc
 ): EnumOptionsType<S>[] | undefined {
   if (schema.enum) {
     let enumNames: string[] | Record<string | number, string> | undefined;
-    let enumOrder: Array<EnumValue> | undefined;
+    let enumOrder: EnumValue[] | undefined;
     if (uiSchema) {
       const { enumNames: uiEnumNames, enumOrder: uiEnumOrder } = getUiOptions<T, S, F>(uiSchema);
       enumNames = uiEnumNames;
