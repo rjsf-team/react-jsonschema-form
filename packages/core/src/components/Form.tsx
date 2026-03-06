@@ -173,8 +173,8 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * still submit the form when these are the only errors displayed to the user.
    */
   extraErrors?: ErrorSchema<T>;
-  /** If set to true, causes the `extraErrors` to become blocking when the form is submitted */
-  extraErrorsBlockSubmit?: boolean;
+  /** If set to true, treats `extraErrors` as warnings instead of blocking form submission */
+  extraErrorsAreWarnings?: boolean;
   /** If set to true, turns off HTML5 validation on the form; Set to `false` by default */
   noHtml5Validate?: boolean;
   /** If set to true, turns off all validation. Set to `false` by default
@@ -1253,14 +1253,14 @@ export default class Form<
    * @returns - True if the form is valid, false otherwise.
    */
   validateFormWithFormData = (formData?: T): boolean => {
-    const { extraErrors, extraErrorsBlockSubmit, focusOnFirstError, onError } = this.props;
+    const { extraErrors, focusOnFirstError, onError, extraErrorsAreWarnings } = this.props;
     const { errors: prevErrors } = this.state;
     const schemaValidation = this.validate(formData);
     let errors = schemaValidation.errors;
     let errorSchema = schemaValidation.errorSchema;
     const schemaValidationErrors = errors;
     const schemaValidationErrorSchema = errorSchema;
-    const hasError = errors.length > 0 || (extraErrors && extraErrorsBlockSubmit);
+    const hasError = errors.length > 0 || (extraErrors && !extraErrorsAreWarnings);
     if (hasError) {
       if (extraErrors) {
         const merged = validationDataMerge(schemaValidation, extraErrors);
