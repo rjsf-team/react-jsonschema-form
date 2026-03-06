@@ -1,4 +1,5 @@
 import get from 'lodash/get';
+import isObject from 'lodash/isObject';
 import set from 'lodash/set';
 
 import {
@@ -98,8 +99,9 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
 
   if (ADDITIONAL_PROPERTIES_KEY in schema && schema[ADDITIONAL_PROPERTIES_KEY] !== false) {
     set(pathSchema, RJSF_ADDITIONAL_PROPERTIES_FLAG, true);
-    const additionalSchema =
-      typeof schema[ADDITIONAL_PROPERTIES_KEY] === 'object' ? (schema[ADDITIONAL_PROPERTIES_KEY] as S) : ({} as S);
+    const additionalSchema = (
+      isObject(schema[ADDITIONAL_PROPERTIES_KEY]) ? schema[ADDITIONAL_PROPERTIES_KEY] : {}
+    ) as S;
     const definedProperties = get(schema, PROPERTIES_KEY, {});
     for (const key of Object.keys((formData ?? {}) as GenericObjectType)) {
       if (!(key in definedProperties)) {
