@@ -21,6 +21,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Updated peer dependencies to 6.4.x
+
 # 6.4.0
 
 ## @rjsf/core
