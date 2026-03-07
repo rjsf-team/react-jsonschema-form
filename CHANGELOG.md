@@ -26,6 +26,8 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Fixed `extraErrors` not displaying on first async set after submit, fixing [#4965](https://github.com/rjsf-team/react-jsonschema-form/issues/4965)
 - Updated multi-select ArrayFields to properly use the `items` uiSchema for enumerated options, fixing [#4955](https://github.com/rjsf-team/react-jsonschema-form/issues/4955)
+- Fixed `validateForm()` clearing `extraErrors` from state when schema validation passes, fixing [#4962](https://github.com/rjsf-team/react-jsonschema-form/issues/4962)
+
 
 ## @rjsf/utils
 

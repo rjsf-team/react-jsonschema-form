@@ -4877,6 +4877,154 @@ describe('validateForm()', () => {
     errors = node.querySelectorAll('.error-detail');
     expect(errors).toHaveLength(0);
   });
+
+  it('Should keep non-blocking extraErrors in state when schema is valid and extraErrorsBlockSubmit is not set', () => {
+    const formRef = createRef<Form>();
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+      },
+    };
+    const extraErrors = {
+      foo: {
+        __errors: ['async error for foo'],
+      },
+    } as unknown as ErrorSchema;
+    const props: NoValFormProps = {
+      ref: formRef,
+      schema,
+      formData: { foo: 'valid' },
+      extraErrors,
+    };
+    const { onError } = createFormComponent(props);
+
+    let result: boolean | undefined;
+    act(() => {
+      result = formRef.current!.validateForm();
+    });
+
+    // Should return true (non-blocking)
+    expect(result).toBe(true);
+    // extraErrors should remain visible in state
+    expect(formRef.current!.state.errors).toHaveLength(1);
+    expect(formRef.current!.state.errors[0].message).toBe('async error for foo');
+    expect(formRef.current!.state.errorSchema).toEqual(extraErrors);
+    // onError should NOT be called for non-blocking errors
+    expect(onError).not.toHaveBeenCalled();
+  });
+
+  it('Should return false and call onError when extraErrors are present with extraErrorsBlockSubmit set', () => {
+    const formRef = createRef<Form>();
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+      },
+    };
+    const extraErrors = {
+      foo: {
+        __errors: ['blocking async error'],
+      },
+    } as unknown as ErrorSchema;
+    const props: NoValFormProps = {
+      ref: formRef,
+      schema,
+      formData: { foo: 'valid' },
+      extraErrors,
+      extraErrorsBlockSubmit: true,
+    };
+    const { onError } = createFormComponent(props);
+
+    let result: boolean | undefined;
+    act(() => {
+      result = formRef.current!.validateForm();
+    });
+
+    // Should return false (blocking)
+    expect(result).toBe(false);
+    // Merged errors should be in state
+    expect(formRef.current!.state.errors).toHaveLength(1);
+    expect(formRef.current!.state.errors[0].message).toBe('blocking async error');
+    // onError SHOULD be called
+    expect(onError).toHaveBeenCalledWith(
+      expect.arrayContaining([expect.objectContaining({ message: 'blocking async error' })]),
+    );
+  });
+
+  it('Should show both schema and extraErrors in state when schema is invalid regardless of extraErrorsBlockSubmit', () => {
+    const formRef = createRef<Form>();
+    const schema: RJSFSchema = {
+      type: 'object',
+      required: ['foo'],
+      properties: {
+        foo: { type: 'string' },
+      },
+    };
+    const extraErrors = {
+      foo: {
+        __errors: ['async error for foo'],
+      },
+    } as unknown as ErrorSchema;
+    const props: NoValFormProps = {
+      ref: formRef,
+      schema,
+      formData: {},
+      extraErrors,
+      // extraErrorsBlockSubmit intentionally omitted
+    };
+    createFormComponent(props);
+
+    let result: boolean | undefined;
+    act(() => {
+      result = formRef.current!.validateForm();
+    });
+
+    // Schema error blocks submission → false
+    expect(result).toBe(false);
+    // Both schema error and extra error should be in state
+    const errorMessages = formRef.current!.state.errors.map((e) => e.message);
+    expect(errorMessages).toContain("must have required property 'foo'");
+    expect(errorMessages).toContain('async error for foo');
+  });
+
+  it('Should clear extraErrors from state when extraErrors prop is removed and validateForm is called again', () => {
+    const formRef = createRef<Form>();
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+      },
+    };
+    const extraErrors = {
+      foo: {
+        __errors: ['async error for foo'],
+      },
+    } as unknown as ErrorSchema;
+    const props: NoValFormProps = {
+      ref: formRef,
+      schema,
+      formData: { foo: 'valid' },
+      extraErrors,
+    };
+    const { rerender } = createFormComponent(props);
+
+    // First call: extraErrors should appear in state
+    act(() => {
+      formRef.current!.validateForm();
+    });
+    expect(formRef.current!.state.errors).toHaveLength(1);
+
+    // Rerender without extraErrors
+    rerender({ ...props, extraErrors: undefined });
+
+    // Second call: no extraErrors, no schema errors → state should be cleared
+    act(() => {
+      formRef.current!.validateForm();
+    });
+    expect(formRef.current!.state.errors).toHaveLength(0);
+    expect(formRef.current!.state.errorSchema).toEqual({});
+  });
 });
 
 describe('setFieldValue()', () => {

@@ -1256,17 +1256,12 @@ export default class Form<
     const { extraErrors, extraErrorsBlockSubmit, focusOnFirstError, onError } = this.props;
     const { errors: prevErrors } = this.state;
     const schemaValidation = this.validate(formData);
-    let errors = schemaValidation.errors;
-    let errorSchema = schemaValidation.errorSchema;
-    const schemaValidationErrors = errors;
-    const schemaValidationErrorSchema = errorSchema;
-    const hasError = errors.length > 0 || (extraErrors && extraErrorsBlockSubmit);
+    // Always merge extraErrors so they remain visible in state regardless of extraErrorsBlockSubmit.
+    const { errors, errorSchema } = extraErrors ? this.mergeErrors(schemaValidation, extraErrors) : schemaValidation;
+    // hasError gates submission: schema errors always block; extraErrors only block when
+    // extraErrorsBlockSubmit is set (non-breaking default: extraErrors are informational only).
+    const hasError = schemaValidation.errors.length > 0 || (extraErrors && extraErrorsBlockSubmit);
     if (hasError) {
-      if (extraErrors) {
-        const merged = validationDataMerge(schemaValidation, extraErrors);
-        errorSchema = merged.errorSchema;
-        errors = merged.errors;
-      }
       if (focusOnFirstError) {
         if (typeof focusOnFirstError === 'function') {
           focusOnFirstError(errors[0]);
@@ -1278,8 +1273,8 @@ export default class Form<
         {
           errors,
           errorSchema,
-          schemaValidationErrors,
-          schemaValidationErrorSchema,
+          schemaValidationErrors: schemaValidation.errors,
+          schemaValidationErrorSchema: schemaValidation.errorSchema,
         },
         () => {
           if (onError) {
@@ -1289,6 +1284,14 @@ export default class Form<
           }
         },
       );
+    } else if (errors.length > 0) {
+      // Non-blocking extraErrors are present — update display state without triggering onError.
+      this.setState({
+        errors,
+        errorSchema,
+        schemaValidationErrors: [],
+        schemaValidationErrorSchema: {},
+      });
     } else if (prevErrors.length > 0) {
       this.setState({
         errors: [],
