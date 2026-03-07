@@ -16,16 +16,20 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.4.1
+
+## Dev / docs / playground
+
+- Updated peer dependencies to 6.4.x
+
+
 # 6.4.0
-
-## @rjsf/utils
-
-- Added support for map-based `ui:enumNames` and `ui:enumOrder` for controlling enum display labels and ordering, fixing [#4969](https://github.com/rjsf-team/react-jsonschema-form/issues/4969)
 
 ## @rjsf/core
 
 - Fixed `extraErrors` not displaying on first async set after submit, fixing [#4965](https://github.com/rjsf-team/react-jsonschema-form/issues/4965)
 - Updated multi-select ArrayFields to properly use the `items` uiSchema for enumerated options, fixing [#4955](https://github.com/rjsf-team/react-jsonschema-form/issues/4955)
+
 - Fixed `validateForm()` clearing `extraErrors` from state when schema validation passes, fixing [#4962](https://github.com/rjsf-team/react-jsonschema-form/issues/4962)
 
 
@@ -33,6 +37,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Fixed `resolveAllReferences` to preserve `$ref` on resolved schemas, enabling `ui:definitions` beyond the first recursion level, fixing [#4966](https://github.com/rjsf-team/react-jsonschema-form/issues/4966)
 - Fixed `omitExtraData` stripping `additionalProperties` inside oneOf/anyOf options, fixing [#4366](https://github.com/rjsf-team/react-jsonschema-form/issues/4366)
+- Added support for map-based `ui:enumNames` and `ui:enumOrder` for controlling enum display labels and ordering, fixing [#4969](https://github.com/rjsf-team/react-jsonschema-form/issues/4969)
 
 ## Dev / docs / playground
 
