@@ -1,12 +1,4 @@
-import {
-  expandUiSchemaDefinitions,
-  Registry,
-  RJSFSchema,
-  resolveUiSchema,
-  TemplatesType,
-  UiSchema,
-  UiSchemaDefinitions,
-} from '../src';
+import { Registry, RJSFSchema, resolveUiSchema, TemplatesType, UiSchema, UiSchemaDefinitions } from '../src';
 
 const baseRegistry: Registry = {
   formContext: {},
@@ -23,375 +15,6 @@ const baseRegistry: Registry = {
 function makeRegistry(rootSchema: RJSFSchema, uiSchemaDefinitions: UiSchemaDefinitions = {}): Registry {
   return { ...baseRegistry, rootSchema, uiSchemaDefinitions };
 }
-
-describe('expandUiSchemaDefinitions()', () => {
-  it('returns uiSchema unchanged when no matching definitions', () => {
-    const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } } };
-    const uiSchema: UiSchema = { name: { 'ui:widget': 'textarea' } };
-    const definitions = { '#/$defs/other': { 'ui:title': 'Other' } };
-
-    expect(expandUiSchemaDefinitions(schema, uiSchema, makeRegistry(schema, definitions))).toEqual(uiSchema);
-  });
-
-  it('expands definitions for $ref at root level', () => {
-    const schema: RJSFSchema = { $ref: '#/$defs/address' };
-    const rootSchema: RJSFSchema = {
-      $defs: { address: { type: 'object', properties: { street: { type: 'string' } } } },
-    };
-    const uiSchema: UiSchema = {};
-    const definitions = { '#/$defs/address': { street: { 'ui:placeholder': 'Enter street' } } };
-
-    expect(expandUiSchemaDefinitions(schema, uiSchema, makeRegistry(rootSchema, definitions))).toEqual({
-      street: { 'ui:placeholder': 'Enter street' },
-    });
-  });
-
-  it('expands definitions for nested $ref in properties', () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        home: { $ref: '#/$defs/address' },
-      },
-    };
-    const rootSchema: RJSFSchema = {
-      ...schema,
-      $defs: { address: { type: 'object', properties: { street: { type: 'string' } } } },
-    };
-    const uiSchema: UiSchema = {};
-    const definitions = { '#/$defs/address': { street: { 'ui:placeholder': 'Enter street' } } };
-
-    expect(expandUiSchemaDefinitions(schema, uiSchema, makeRegistry(rootSchema, definitions))).toEqual({
-      home: { street: { 'ui:placeholder': 'Enter street' } },
-    });
-  });
-
-  it('merges local uiSchema overrides on top of definitions', () => {
-    const schema: RJSFSchema = { $ref: '#/$defs/address' };
-    const rootSchema: RJSFSchema = {
-      $defs: { address: { type: 'object', properties: { street: { type: 'string' }, city: { type: 'string' } } } },
-    };
-    const uiSchema: UiSchema = { street: { 'ui:placeholder': 'Local override' } };
-    const definitions = {
-      '#/$defs/address': {
-        street: { 'ui:placeholder': 'Default', 'ui:help': 'Help text' },
-        city: { 'ui:widget': 'select' },
-      },
-    };
-
-    expect(expandUiSchemaDefinitions(schema, uiSchema, makeRegistry(rootSchema, definitions))).toEqual({
-      street: { 'ui:placeholder': 'Local override', 'ui:help': 'Help text' },
-      city: { 'ui:widget': 'select' },
-    });
-  });
-
-  it('expands definitions for array items with $ref', () => {
-    const schema: RJSFSchema = {
-      type: 'array',
-      items: { $ref: '#/$defs/item' },
-    };
-    const rootSchema: RJSFSchema = {
-      ...schema,
-      $defs: { item: { type: 'object', properties: { name: { type: 'string' } } } },
-    };
-    const uiSchema: UiSchema = {};
-    const definitions = { '#/$defs/item': { name: { 'ui:placeholder': 'Item name' } } };
-
-    expect(expandUiSchemaDefinitions(schema, uiSchema, makeRegistry(rootSchema, definitions))).toEqual({
-      items: { name: { 'ui:placeholder': 'Item name' } },
-    });
-  });
-
-  it('stops expansion at recursion points for recursive schemas', () => {
-    const schema: RJSFSchema = { $ref: '#/$defs/node' };
-    const rootSchema: RJSFSchema = {
-      $defs: {
-        node: {
-          type: 'object',
-          properties: {
-            name: { type: 'string' },
-            children: { type: 'array', items: { $ref: '#/$defs/node' } },
-          },
-        },
-      },
-    };
-    const uiSchema: UiSchema = {};
-    const definitions = { '#/$defs/node': { name: { 'ui:placeholder': 'Node name' } } };
-
-    const result = expandUiSchemaDefinitions(schema, uiSchema, makeRegistry(rootSchema, definitions));
-
-    // First level should have the definition applied
-    expect(result.name).toEqual({ 'ui:placeholder': 'Node name' });
-    // children.items should have definition applied but no embedded ui:definitions
-    // (runtime resolution uses registry.uiSchemaDefinitions instead)
-    expect(result.children?.items?.name).toEqual({ 'ui:placeholder': 'Node name' });
-    expect(result.children?.items?.['ui:definitions']).toBeUndefined();
-  });
-
-  it('handles failed $ref resolution gracefully', () => {
-    const schema: RJSFSchema = { $ref: '#/$defs/nonexistent' };
-    const rootSchema: RJSFSchema = { $defs: {} };
-    const uiSchema: UiSchema = { 'ui:title': 'Test' };
-    const definitions = { '#/$defs/nonexistent': { 'ui:help': 'Help' } };
-
-    // Should not throw, should return merged result
-    const result = expandUiSchemaDefinitions(schema, uiSchema, makeRegistry(rootSchema, definitions));
-    expect(result).toEqual({ 'ui:title': 'Test', 'ui:help': 'Help' });
-  });
-
-  it('does not process function-type items uiSchema', () => {
-    const schema: RJSFSchema = {
-      type: 'array',
-      items: { type: 'string' },
-    };
-    const uiSchema: UiSchema = { items: () => ({ 'ui:widget': 'textarea' }) };
-
-    const result = expandUiSchemaDefinitions(schema, uiSchema as UiSchema, makeRegistry(schema, {}));
-    // The function should be preserved as-is
-    expect(typeof result.items).toBe('function');
-  });
-
-  it('handles $ref with no matching definition', () => {
-    const schema: RJSFSchema = { $ref: '#/$defs/address' };
-    const rootSchema: RJSFSchema = {
-      $defs: { address: { type: 'object', properties: { street: { type: 'string' } } } },
-    };
-    const uiSchema: UiSchema = { 'ui:title': 'Local title' };
-    const definitions = { '#/$defs/other': { 'ui:help': 'Other help' } };
-
-    // Should preserve uiSchema but not merge anything from definitions
-    const result = expandUiSchemaDefinitions(schema, uiSchema, makeRegistry(rootSchema, definitions));
-    expect(result).toEqual({ 'ui:title': 'Local title' });
-  });
-
-  it('does not add empty property uiSchema to result', () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: { name: { type: 'string' } },
-    };
-    const uiSchema: UiSchema = {};
-
-    const result = expandUiSchemaDefinitions(schema, uiSchema, makeRegistry(schema, {}));
-    // name should not be present since no definitions apply and no local uiSchema
-    expect(result).toEqual({});
-    expect(result.name).toBeUndefined();
-  });
-
-  it('does not add empty items uiSchema to result', () => {
-    const schema: RJSFSchema = {
-      type: 'array',
-      items: { type: 'string' },
-    };
-    const uiSchema: UiSchema = {};
-
-    const result = expandUiSchemaDefinitions(schema, uiSchema, makeRegistry(schema, {}));
-    // items should not be present since no definitions apply and no local uiSchema
-    expect(result).toEqual({});
-    expect(result.items).toBeUndefined();
-  });
-
-  it('expands definitions for additionalProperties with $ref', () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      additionalProperties: { $ref: '#/$defs/value' },
-    };
-    const rootSchema: RJSFSchema = {
-      ...schema,
-      $defs: { value: { type: 'object', properties: { data: { type: 'string' } } } },
-    };
-    const uiSchema: UiSchema = {};
-    const definitions = { '#/$defs/value': { data: { 'ui:placeholder': 'Enter data' } } };
-
-    expect(expandUiSchemaDefinitions(schema, uiSchema, makeRegistry(rootSchema, definitions))).toEqual({
-      additionalProperties: { data: { 'ui:placeholder': 'Enter data' } },
-    });
-  });
-
-  it('does not add empty additionalProperties uiSchema to result', () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      additionalProperties: { type: 'string' },
-    };
-    const uiSchema: UiSchema = {};
-
-    const result = expandUiSchemaDefinitions(schema, uiSchema, makeRegistry(schema, {}));
-    expect(result).toEqual({});
-    expect(result.additionalProperties).toBeUndefined();
-  });
-
-  it('expands oneOf branches into uiSchema.oneOf array', () => {
-    const schema: RJSFSchema = {
-      oneOf: [{ $ref: '#/$defs/optionA' }, { $ref: '#/$defs/optionB' }],
-    };
-    const rootSchema: RJSFSchema = {
-      ...schema,
-      $defs: {
-        optionA: { type: 'object', properties: { name: { type: 'string' } } },
-        optionB: { type: 'object', properties: { name: { type: 'string' } } },
-      },
-    };
-    const uiSchema: UiSchema = {};
-    const definitions = {
-      '#/$defs/optionA': { name: { 'ui:placeholder': 'Name for A' } },
-      '#/$defs/optionB': { name: { 'ui:placeholder': 'Name for B' } },
-    };
-
-    const result = expandUiSchemaDefinitions(schema, uiSchema, makeRegistry(rootSchema, definitions));
-    // Each branch should have its own uiSchema in the oneOf array
-    expect(result.oneOf).toHaveLength(2);
-    expect(result.oneOf[0]).toEqual({ name: { 'ui:placeholder': 'Name for A' } });
-    expect(result.oneOf[1]).toEqual({ name: { 'ui:placeholder': 'Name for B' } });
-    // Root should not have merged properties
-    expect(result.name).toBeUndefined();
-  });
-
-  it('expands anyOf and allOf branches into respective arrays', () => {
-    const schema: RJSFSchema = {
-      anyOf: [{ $ref: '#/$defs/option' }],
-      allOf: [{ $ref: '#/$defs/base' }],
-    };
-    const rootSchema: RJSFSchema = {
-      ...schema,
-      $defs: {
-        option: { type: 'object', properties: { a: { type: 'string' } } },
-        base: { type: 'object', properties: { b: { type: 'string' } } },
-      },
-    };
-    const uiSchema: UiSchema = {};
-    const definitions = {
-      '#/$defs/option': { a: { 'ui:placeholder': 'A' } },
-      '#/$defs/base': { b: { 'ui:placeholder': 'B' } },
-    };
-
-    const result = expandUiSchemaDefinitions(schema, uiSchema, makeRegistry(rootSchema, definitions));
-    expect(result.anyOf).toHaveLength(1);
-    expect(result.anyOf[0]).toEqual({ a: { 'ui:placeholder': 'A' } });
-    expect(result.allOf).toHaveLength(1);
-    expect(result.allOf[0]).toEqual({ b: { 'ui:placeholder': 'B' } });
-  });
-
-  it('preserves existing uiSchema.oneOf array and merges with definitions', () => {
-    const schema: RJSFSchema = {
-      oneOf: [{ $ref: '#/$defs/optionA' }, { $ref: '#/$defs/optionB' }],
-    };
-    const rootSchema: RJSFSchema = {
-      ...schema,
-      $defs: {
-        optionA: { type: 'object', properties: { name: { type: 'string' } } },
-        optionB: { type: 'object', properties: { name: { type: 'string' } } },
-      },
-    };
-    const uiSchema: UiSchema = {
-      oneOf: [{ 'ui:title': 'Custom A' }],
-    };
-    const definitions = {
-      '#/$defs/optionA': { name: { 'ui:placeholder': 'Name for A' } },
-      '#/$defs/optionB': { name: { 'ui:placeholder': 'Name for B' } },
-    };
-
-    const result = expandUiSchemaDefinitions(schema, uiSchema, makeRegistry(rootSchema, definitions));
-    expect(result.oneOf).toHaveLength(2);
-    // First option has local override merged with definition
-    expect(result.oneOf[0]).toEqual({ 'ui:title': 'Custom A', name: { 'ui:placeholder': 'Name for A' } });
-    // Second option only has definition
-    expect(result.oneOf[1]).toEqual({ name: { 'ui:placeholder': 'Name for B' } });
-  });
-
-  it('parent definition overrides child definition for nested $ref', () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: { home: { $ref: '#/$defs/address' } },
-    };
-    const rootSchema: RJSFSchema = {
-      ...schema,
-      $defs: {
-        address: {
-          type: 'object',
-          properties: {
-            street: { type: 'string' },
-            city: { $ref: '#/$defs/city' },
-          },
-        },
-        city: {
-          type: 'object',
-          properties: {
-            name: { type: 'string' },
-            zip: { type: 'string' },
-          },
-        },
-      },
-    };
-    const uiSchema: UiSchema = {};
-    const definitions = {
-      '#/$defs/address': {
-        street: { 'ui:widget': 'textarea' },
-        city: { name: { 'ui:placeholder': 'From address def' } },
-      },
-      '#/$defs/city': {
-        name: { 'ui:widget': 'select', 'ui:placeholder': 'From city def' },
-        zip: { 'ui:help': '5 digits' },
-      },
-    };
-
-    const result = expandUiSchemaDefinitions(schema, uiSchema, makeRegistry(rootSchema, definitions));
-
-    expect(result.home).toEqual({
-      street: { 'ui:widget': 'textarea' },
-      city: {
-        name: { 'ui:widget': 'select', 'ui:placeholder': 'From address def' },
-        zip: { 'ui:help': '5 digits' },
-      },
-    });
-  });
-
-  it('direct uiSchema overrides both parent and child definitions for nested $ref', () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: { home: { $ref: '#/$defs/address' } },
-    };
-    const rootSchema: RJSFSchema = {
-      ...schema,
-      $defs: {
-        address: {
-          type: 'object',
-          properties: {
-            city: { $ref: '#/$defs/city' },
-          },
-        },
-        city: {
-          type: 'object',
-          properties: { name: { type: 'string' } },
-        },
-      },
-    };
-    const uiSchema: UiSchema = {
-      home: { city: { name: { 'ui:widget': 'input' } } },
-    };
-    const definitions = {
-      '#/$defs/address': { city: { name: { 'ui:placeholder': 'From address def' } } },
-      '#/$defs/city': { name: { 'ui:widget': 'select', 'ui:placeholder': 'From city def' } },
-    };
-
-    const result = expandUiSchemaDefinitions(schema, uiSchema, makeRegistry(rootSchema, definitions));
-
-    // Direct "input" wins over city def "select"; address def "From address def" wins over city def "From city def"
-    expect(result.home).toEqual({
-      city: {
-        name: { 'ui:widget': 'input', 'ui:placeholder': 'From address def' },
-      },
-    });
-  });
-
-  it('does not add empty oneOf array when no matching definitions', () => {
-    const schema: RJSFSchema = {
-      oneOf: [{ type: 'string' }, { type: 'number' }],
-    };
-    const uiSchema: UiSchema = {};
-    const definitions = { '#/$defs/other': { 'ui:help': 'Other' } };
-
-    const result = expandUiSchemaDefinitions(schema, uiSchema, makeRegistry(schema, definitions));
-    expect(result.oneOf).toBeUndefined();
-  });
-});
 
 describe('resolveUiSchema() - branching keyword runtime resolution', () => {
   it('resolves correct definition for oneOf branch A at runtime', () => {
@@ -430,6 +53,93 @@ describe('resolveUiSchema() - branching keyword runtime resolution', () => {
 
     expect(resultA.shared).toEqual({ 'ui:widget': 'textarea', 'ui:help': 'Help for A' });
     expect(resultB.shared).toEqual({ 'ui:widget': 'select', 'ui:help': 'Help for B' });
+  });
+});
+
+describe('resolveUiSchema() - oneOf/anyOf branch walking', () => {
+  it('populates uiSchema.oneOf[i] for branches with $ref matching definitions', () => {
+    const schema: RJSFSchema = {
+      oneOf: [{ $ref: '#/$defs/optionA' }, { $ref: '#/$defs/optionB' }],
+    };
+    const definitions = {
+      '#/$defs/optionA': { 'ui:title': 'Option A' },
+      '#/$defs/optionB': { 'ui:title': 'Option B' },
+    };
+    const reg = { ...baseRegistry, uiSchemaDefinitions: definitions };
+
+    const result = resolveUiSchema(schema, undefined, reg);
+    expect(result.oneOf).toHaveLength(2);
+    expect(result.oneOf[0]).toEqual({ 'ui:title': 'Option A' });
+    expect(result.oneOf[1]).toEqual({ 'ui:title': 'Option B' });
+  });
+
+  it('merges local uiSchema.oneOf overrides on top of definitions', () => {
+    const schema: RJSFSchema = { oneOf: [{ $ref: '#/$defs/node' }] };
+    const definitions = { '#/$defs/node': { 'ui:title': 'Default', name: { 'ui:placeholder': 'Name' } } };
+    const local: UiSchema = { oneOf: [{ 'ui:title': 'Custom' }] };
+    const reg = { ...baseRegistry, uiSchemaDefinitions: definitions };
+
+    const result = resolveUiSchema(schema, local, reg);
+    expect(result.oneOf[0]).toEqual({ 'ui:title': 'Custom', name: { 'ui:placeholder': 'Name' } });
+  });
+
+  it('walks oneOf on a resolved schema (via RJSF_REF_KEY from #4967)', () => {
+    const resolvedSchema = {
+      type: 'object',
+      oneOf: [{ $ref: '#/$defs/optA' }, { $ref: '#/$defs/optB' }],
+      __rjsf_ref: '#/$defs/parent',
+    } as unknown as RJSFSchema;
+    const definitions = {
+      '#/$defs/parent': { 'ui:title': 'Parent' },
+      '#/$defs/optA': { 'ui:title': 'A' },
+      '#/$defs/optB': { 'ui:title': 'B' },
+    };
+    const reg = { ...baseRegistry, uiSchemaDefinitions: definitions };
+
+    const result = resolveUiSchema(resolvedSchema, undefined, reg);
+    expect(result['ui:title']).toBe('Parent');
+    expect(result.oneOf).toHaveLength(2);
+    expect(result.oneOf[0]).toEqual({ 'ui:title': 'A' });
+    expect(result.oneOf[1]).toEqual({ 'ui:title': 'B' });
+  });
+
+  it('does not populate uiSchema.oneOf when no options have matching definitions', () => {
+    const schema: RJSFSchema = {
+      oneOf: [{ type: 'string' }, { type: 'number' }],
+    };
+    const definitions = { '#/$defs/unrelated': { 'ui:title': 'Unrelated' } };
+    const reg = { ...baseRegistry, uiSchemaDefinitions: definitions };
+
+    const result = resolveUiSchema(schema, undefined, reg);
+    expect(result.oneOf).toBeUndefined();
+  });
+
+  it('skips options whose $ref is not in definitions', () => {
+    const schema: RJSFSchema = {
+      oneOf: [{ $ref: '#/$defs/known' }, { $ref: '#/$defs/unknown' }],
+    };
+    const definitions = { '#/$defs/known': { 'ui:title': 'Known' } };
+    const reg = { ...baseRegistry, uiSchemaDefinitions: definitions };
+
+    const result = resolveUiSchema(schema, undefined, reg);
+    expect(result.oneOf[0]).toEqual({ 'ui:title': 'Known' });
+    expect(result.oneOf[1]).toBeUndefined();
+  });
+
+  it('resolves an unresolved $ref to walk its oneOf branches', () => {
+    const schema: RJSFSchema = { $ref: '#/$defs/wrapper' };
+    const rootSchema: RJSFSchema = {
+      $defs: {
+        wrapper: { oneOf: [{ $ref: '#/$defs/optA' }] },
+        optA: { type: 'object' },
+      },
+    };
+    const definitions = { '#/$defs/wrapper': { 'ui:title': 'W' }, '#/$defs/optA': { 'ui:title': 'A' } };
+    const reg = makeRegistry(rootSchema, definitions);
+
+    const result = resolveUiSchema(schema, undefined, reg);
+    expect(result['ui:title']).toBe('W');
+    expect(result.oneOf?.[0]).toEqual({ 'ui:title': 'A' });
   });
 });
 

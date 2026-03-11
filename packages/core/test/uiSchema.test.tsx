@@ -2864,5 +2864,51 @@ describe('uiSchema', () => {
 
       expect(node.querySelectorAll("input[placeholder='Node name']")).toHaveLength(5);
     });
+
+    it('should apply ui:title from ui:definitions to oneOf dropdown labels at recursive depth', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          tree: {
+            type: 'array',
+            items: {
+              oneOf: [{ title: 'None', type: 'null' }, { $ref: '#/$defs/node' }],
+            },
+          },
+        },
+        $defs: {
+          node: {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+              children: {
+                type: 'array',
+                items: {
+                  oneOf: [{ title: 'None', type: 'null' }, { $ref: '#/$defs/node' }],
+                },
+              },
+            },
+          },
+        },
+      };
+      const uiSchema: UiSchema = {
+        'ui:definitions': {
+          '#/$defs/node': { 'ui:title': 'Tree Node' },
+        },
+      };
+      const formData = {
+        tree: [{ name: 'L0', children: [{ name: 'L1', children: [] }] }],
+      };
+
+      const { node } = createFormComponent({ schema, uiSchema, formData });
+
+      const selects = node.querySelectorAll('select');
+      expect(selects.length).toBeGreaterThanOrEqual(2);
+      selects.forEach(($select) => {
+        const options = Array.from(($select as HTMLSelectElement).options);
+        const nodeOption = options.find((opt) => opt.text === 'Tree Node');
+        expect(nodeOption).toBeDefined();
+      });
+    });
   });
 });

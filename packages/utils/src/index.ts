@@ -58,7 +58,7 @@ import pad from './pad';
 import parseDateString from './parseDateString';
 import rangeSpec from './rangeSpec';
 import replaceStringParameters from './replaceStringParameters';
-import resolveUiSchema, { expandUiSchemaDefinitions } from './resolveUiSchema';
+import resolveUiSchema from './resolveUiSchema';
 import schemaRequiresTrueValue from './schemaRequiresTrueValue';
 import shouldRender, { ComponentUpdateStrategy } from './shouldRender';
 import shouldRenderOptionalField from './shouldRenderOptionalField';
@@ -154,7 +154,6 @@ export {
   rangeSpec,
   replaceStringParameters,
   resolveUiSchema,
-  expandUiSchemaDefinitions,
   schemaRequiresTrueValue,
   shallowEquals,
   shouldRender,

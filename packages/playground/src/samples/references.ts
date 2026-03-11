@@ -19,7 +19,7 @@ const references: Sample = {
           children: {
             type: 'array',
             items: {
-              $ref: '#/definitions/node',
+              oneOf: [{ title: 'None', type: 'null' }, { $ref: '#/definitions/node' }],
             },
           },
         },
@@ -66,6 +66,7 @@ const references: Sample = {
     'ui:order': ['shipping_address', 'billing_address', 'contact', 'tree'],
     'ui:definitions': {
       '#/definitions/node': {
+        'ui:title': 'Tree Node',
         name: {
           'ui:placeholder': 'Enter node name',
           'ui:help': 'This UI is defined once in ui:definitions and applied at all recursion levels',
