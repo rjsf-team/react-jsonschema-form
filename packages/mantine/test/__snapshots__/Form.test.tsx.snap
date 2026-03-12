@@ -2132,7 +2132,7 @@ exports[`nameGenerator bracketNameGenerator simple fields 1`] = `
                     class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                     data-variant="default"
                     id="root_age"
-                    inputmode="numeric"
+                    inputmode="decimal"
                     name="root[age]"
                     placeholder=""
                     type="text"
@@ -4089,7 +4089,7 @@ exports[`nameGenerator dotNotationNameGenerator simple fields 1`] = `
                     class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                     data-variant="default"
                     id="root_age"
-                    inputmode="numeric"
+                    inputmode="decimal"
                     name="root.age"
                     placeholder=""
                     type="text"
@@ -5824,12 +5824,14 @@ exports[`single fields format color 1`] = `
     >
       <div
         class="m_46b77525 mantine-InputWrapper-root mantine-ColorInput-root"
+        data-size="sm"
       >
         <div
           class="m_6c018570 mantine-Input-wrapper mantine-ColorInput-wrapper"
           data-size="sm"
           data-variant="default"
           data-with-left-section="true"
+          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
         >
           <div
             class="m_82577fc2 mantine-Input-section mantine-ColorInput-section"
@@ -5837,7 +5839,7 @@ exports[`single fields format color 1`] = `
           >
             <div
               class="mantine-focus-auto m_c5ccdcab mantine-ColorInput-colorPreview m_de3d2490 mantine-ColorSwatch-root"
-              style="--cs-size: var(--ci-preview-size);"
+              style="--cs-size: var(--ci-preview-size); --ci-preview-size: var(--ci-preview-size-sm);"
             >
               <span
                 class="m_95709ac0 mantine-ColorSwatch-alphaOverlay"
@@ -6484,7 +6486,7 @@ exports[`single fields number field 0 1`] = `
             class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
             data-variant="default"
             id="root"
-            inputmode="numeric"
+            inputmode="decimal"
             name="root"
             placeholder=""
             type="text"
@@ -6602,7 +6604,7 @@ exports[`single fields number field 1`] = `
             class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
             data-variant="default"
             id="root"
-            inputmode="numeric"
+            inputmode="decimal"
             name="root"
             placeholder=""
             type="text"
@@ -12268,6 +12270,7 @@ exports[`single fields password field 1`] = `
           >
             <button
               aria-hidden="true"
+              aria-pressed="false"
               class="mantine-focus-auto mantine-active m_b1072d44 mantine-PasswordInput-visibilityToggle m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
               data-variant="subtle"
               style="--ai-bg: transparent; --ai-hover: var(--mantine-color-gray-light-hover); --ai-color: var(--mantine-color-gray-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
@@ -12744,7 +12747,7 @@ exports[`single fields schema examples with mixed types (string examples and num
             class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
             data-variant="default"
             id="root"
-            inputmode="numeric"
+            inputmode="decimal"
             list="root__examples"
             name="root"
             placeholder=""
@@ -15582,6 +15585,7 @@ exports[`single fields string field format data-url 1`] = `
           data-pointer="true"
           data-size="sm"
           data-variant="default"
+          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
         >
           <button
             aria-invalid="false"
@@ -16406,7 +16410,7 @@ exports[`single fields up/down field 1`] = `
             class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
             data-variant="default"
             id="root"
-            inputmode="numeric"
+            inputmode="decimal"
             name="root"
             placeholder=""
             type="text"

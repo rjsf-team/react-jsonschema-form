@@ -3849,7 +3849,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <div
                               aria-describedby="root_employment__error root_employment__description root_employment__help"
-                              aria-labelledby="radio-group::r3s::label"
+                              aria-labelledby="fieldset:::r3q:::legend"
                               aria-orientation="vertical"
                               class="chakra-radio-group__root"
                               data-orientation="vertical"
@@ -10145,7 +10145,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <div
                               aria-describedby="root_employment__error root_employment__description root_employment__help"
-                              aria-labelledby="radio-group::r55::label"
+                              aria-labelledby="fieldset:::r53:::legend"
                               aria-orientation="vertical"
                               class="chakra-radio-group__root"
                               data-orientation="vertical"
@@ -16533,7 +16533,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <div
                               aria-describedby="root_employment__error root_employment__description root_employment__help"
-                              aria-labelledby="radio-group::r6g::label"
+                              aria-labelledby="fieldset:::r6e:::legend"
                               aria-orientation="vertical"
                               class="chakra-radio-group__root"
                               data-orientation="vertical"
@@ -20617,7 +20617,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <div
                               aria-describedby="root_employment__error root_employment__description root_employment__help"
-                              aria-labelledby="radio-group::r2j::label"
+                              aria-labelledby="fieldset:::r2h:::legend"
                               aria-orientation="vertical"
                               class="chakra-radio-group__root"
                               data-orientation="vertical"
