@@ -30,11 +30,9 @@ export const JUNK_OPTION: StrictRJSFSchema = {
 /** Recursive function that calculates the score of a `formData` against the given `schema`. The computation is fairly
  * simple. Initially the total score is 0. When `schema.properties` object exists, then all the `key/value` pairs within
  * the object are processed as follows after obtaining the formValue from `formData` using the `key`:
- * - If the `value` contains a `$ref`, `calculateIndexScore()` is called recursively with the formValue and the new
- *   schema that is the result of the ref in the schema being resolved and that sub-schema's resulting score is added to
- *   the total.
- * - If the `value` contains a `oneOf` and there is a formValue, then score based on the index returned from calling
- *   `getClosestMatchingOption()` of that oneOf.
+ * - If the `value` contains a `$ref`, it is resolved and scoring continues on the resolved schema.
+ * - If the `value` contains a `oneOf`/`anyOf` and there is a formValue, the first matching option is found via
+ *   `getFirstMatchingOption()` and `calculateIndexScore()` is called recursively on that option.
  * - If the type of the `value` is 'object', `calculateIndexScore()` is called recursively with the formValue and the
  *   `value` itself as the sub-schema, and the score is added to the total.
  * - If the type of the `value` matches the guessed-type of the `formValue`, the score is incremented by 1, UNLESS the
@@ -66,9 +64,22 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
             return score;
           }
           if (has(value, REF_KEY)) {
-            const newSchema = retrieveSchema<T, S, F>(
+            value = retrieveSchema<T, S, F>(
               validator,
               value as S,
+              rootSchema,
+              formValue,
+              experimental_customMergeAllOf,
+            );
+          }
+          if ((has(value, ONE_OF_KEY) || has(value, ANY_OF_KEY)) && formValue) {
+            const key = has(value, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
+            const options = get(value, key) as S[];
+            const discriminator = getDiscriminatorFieldFromSchema<S>(value as S);
+            const matched = getFirstMatchingOption<T, S, F>(validator, formValue, options, rootSchema, discriminator);
+            const resolvedOption = retrieveSchema<T, S, F>(
+              validator,
+              options[matched] as S,
               rootSchema,
               formValue,
               experimental_customMergeAllOf,
@@ -78,24 +89,8 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
               calculateIndexScore<T, S, F>(
                 validator,
                 rootSchema,
-                newSchema,
-                formValue || {},
-                experimental_customMergeAllOf,
-              )
-            );
-          }
-          if ((has(value, ONE_OF_KEY) || has(value, ANY_OF_KEY)) && formValue) {
-            const key = has(value, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
-            const discriminator = getDiscriminatorFieldFromSchema<S>(value as S);
-            return (
-              score +
-              getClosestMatchingOption<T, S, F>(
-                validator,
-                rootSchema,
+                resolvedOption,
                 formValue,
-                get(value, key) as S[],
-                -1,
-                discriminator,
                 experimental_customMergeAllOf,
               )
             );
