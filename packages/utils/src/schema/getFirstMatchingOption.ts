@@ -1,12 +1,37 @@
 import get from 'lodash/get';
 import has from 'lodash/has';
 import isNumber from 'lodash/isNumber';
+import isObject from 'lodash/isObject';
 
-import { PROPERTIES_KEY } from '../constants';
+import { ANY_OF_KEY, ALL_OF_KEY, ONE_OF_KEY, PROPERTIES_KEY, REF_KEY } from '../constants';
 import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDiscriminator';
 import { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
 
+/** Returns a copy of `schema` with properties that could cause deep recursive AJV
+ * validation (oneOf, anyOf, allOf, $ref) replaced by `{}` (accept any value).
+ * This prevents O(options^depth) validation work in schemas with cross-referencing definitions.
+ */
+function stripRecursiveProperties<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S {
+  const properties = schema[PROPERTIES_KEY];
+  if (!isObject(properties)) {
+    return schema;
+  }
+  const shallow: Record<string, unknown> = {};
+  for (const [key, prop] of Object.entries(properties)) {
+    if (typeof prop !== 'object' || prop === null) {
+      shallow[key] = prop;
+    } else if (ONE_OF_KEY in prop || ANY_OF_KEY in prop || ALL_OF_KEY in prop || REF_KEY in prop) {
+      shallow[key] = {};
+    } else {
+      shallow[key] = prop;
+    }
+  }
+  return { ...schema, [PROPERTIES_KEY]: shallow };
+}
+
 /** Given the `formData` and list of `options`, attempts to find the index of the first option that matches the data.
+ * Matching is shallow: properties containing `oneOf`, `anyOf`, `allOf`, or `$ref` are treated as unconstrained during
+ * validation to avoid exponential AJV validation time with cross-referencing schemas.
  * Always returns the first option if there is nothing that matches.
  *
  * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
@@ -91,10 +116,10 @@ export default function getFirstMatchingOption<
       // been filled in yet, which will mean that the schema is not valid
       delete augmentedSchema.required;
 
-      if (validator.isValid(augmentedSchema, formData, rootSchema)) {
+      if (validator.isValid(stripRecursiveProperties(augmentedSchema as S), formData, rootSchema)) {
         return i;
       }
-    } else if (validator.isValid(option, formData, rootSchema)) {
+    } else if (validator.isValid(stripRecursiveProperties(option), formData, rootSchema)) {
       return i;
     }
   }

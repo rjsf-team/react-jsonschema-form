@@ -212,5 +212,10 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
       }
       consoleWarnSpy.mockRestore();
     });
+    it('handles options with boolean property schemas', () => {
+      testValidator.setReturnValues({ isValid: [true] });
+      const options: RJSFSchema[] = [{ properties: { foo: true, bar: { type: 'string' } } }];
+      expect(getFirstMatchingOption(testValidator, { bar: 'baz' }, options, rootSchema)).toEqual(0);
+    });
   });
 }
