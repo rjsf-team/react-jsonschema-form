@@ -18,6 +18,10 @@ const monacoEditorOptions = {
     enabled: false,
   },
   automaticLayout: true,
+  scrollBeyondLastLine: false,
+  scrollbar: {
+    alwaysConsumeMouseWheel: false,
+  },
 };
 
 const AccordionSummary = styled(MuiAccordionSummary)({
@@ -56,19 +60,40 @@ function Editor({ title, code, onChange }: EditorProps) {
   const cls = valid ? 'valid' : 'invalid';
 
   return (
-    <div className='panel panel-default'>
+    <div className='panel panel-default' style={{ overscrollBehavior: 'none' }}>
       <div className='panel-heading'>
         <span className={`${cls} glyphicon glyphicon-${icon}`} />
         {' ' + title}
       </div>
-      <MonacoEditor
-        language='json'
-        value={code}
-        theme='vs-light'
-        onChange={onCodeChange}
-        height={400}
-        options={monacoEditorOptions}
-      />
+      <div style={{ overscrollBehavior: 'auto' }}>
+        <MonacoEditor
+          language='json'
+          value={code}
+          theme='vs-light'
+          onChange={onCodeChange}
+          height={400}
+          options={monacoEditorOptions}
+          onMount={(editor) => {
+            editor.updateOptions({ scrollbar: { alwaysConsumeMouseWheel: false } });
+
+            editor.getDomNode()?.addEventListener(
+              'wheel',
+              (e) => {
+                const scrollTop = editor.getScrollTop();
+                const scrollHeight = editor.getScrollHeight();
+                const layoutHeight = editor.getLayoutInfo().height;
+                const atBottom = scrollTop + layoutHeight >= scrollHeight - 1;
+
+                if (atBottom && e.deltaY > 0) {
+                  e.preventDefault();
+                  window.scrollBy({ top: e.deltaY * 0.2, behavior: 'smooth' });
+                }
+              },
+              { passive: false },
+            );
+          }}
+        />
+      </div>
     </div>
   );
 }
