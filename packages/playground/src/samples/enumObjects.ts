@@ -72,11 +72,15 @@ const enumObjects: Sample = {
       ...ENUM_NAMES,
     },
     multiSelect: {
-      ...ENUM_NAMES,
+      items: {
+        ...ENUM_NAMES,
+      },
     },
     checkboxes: {
       'ui:widget': 'CheckboxesWidget',
-      ...ENUM_NAMES,
+      items: {
+        ...ENUM_NAMES,
+      },
     },
     rating: {
       'ui:enumNames': {
