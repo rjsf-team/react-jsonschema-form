@@ -358,7 +358,7 @@ function ArrayFieldItem<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
   hideError: boolean;
   registry: Registry<T[], S, F>;
   uiOptions: UIOptionsType<T[], S, F>;
-  parentUiSchema?: UiSchema<T[], S, F>;
+  parentUiSchema: UiSchema<T[], S, F>;
   title: string | undefined;
   canAdd: boolean;
   canRemove?: boolean;
@@ -610,6 +610,7 @@ function NormalArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
         name: name && `${name}-${index}`,
         registry,
         uiOptions,
+        parentUiSchema: uiSchema,
         hideError,
         readonly,
         disabled,
@@ -754,6 +755,7 @@ function FixedArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         name: name && `${name}-${index}`,
         registry,
         uiOptions,
+        parentUiSchema: uiSchema,
         hideError,
         readonly,
         disabled,

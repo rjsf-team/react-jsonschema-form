@@ -378,6 +378,30 @@ describe('ArrayField', () => {
       expect(node.querySelectorAll("input[placeholder='Placeholder...']")).toHaveLength(2);
     });
 
+    it('should pass parentUiSchema to ArrayFieldItemTemplate', () => {
+      const ParentUiSchemaItemTemplate = (props: ArrayFieldItemTemplateProps) => {
+        return (
+          <div className='custom-item' data-has-parent-uischema={props.parentUiSchema ? 'true' : 'false'}>
+            {props.children}
+          </div>
+        );
+      };
+
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: {
+          'ui:classNames': 'my-array',
+        },
+        templates: {
+          ArrayFieldItemTemplate: ParentUiSchemaItemTemplate,
+        },
+        formData: ['foo'],
+      });
+
+      const item = node.querySelector('.custom-item');
+      expect(item).toHaveAttribute('data-has-parent-uischema', 'true');
+    });
+
     it('should pass rawErrors down to custom array field templates', () => {
       const schema: RJSFSchema = {
         type: 'array',
