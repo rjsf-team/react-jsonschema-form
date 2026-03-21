@@ -18,6 +18,11 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.4.2
 
+## @rjsf/core
+
+- Fixed a breaking change introduced in v6.4.0 where array properties with enum items no longer used `ui:enumNames` from the array property's uiSchema ([#4985](https://github.com/rjsf-team/react-jsonschema-form/issues/4985))
+- Passed `parentUiSchema` to `ArrayFieldItem` to maintain `uiSchema`, this prop was introduced recently but was not being passed
+
 ## @rjsf/utils
 
 - Fixed exponential slowdown with cross-referencing `oneOf`/`anyOf` definitions, fixing [#4990](https://github.com/rjsf-team/react-jsonschema-form/issues/4990)
@@ -35,7 +40,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `extraErrors` not displaying on first async set after submit, fixing [#4965](https://github.com/rjsf-team/react-jsonschema-form/issues/4965)
 - Updated multi-select ArrayFields to properly use the `items` uiSchema for enumerated options, fixing [#4955](https://github.com/rjsf-team/react-jsonschema-form/issues/4955)
 - Fixed `validateForm()` clearing `extraErrors` from state when schema validation passes, fixing [#4962](https://github.com/rjsf-team/react-jsonschema-form/issues/4962)
-
 
 ## @rjsf/utils
 

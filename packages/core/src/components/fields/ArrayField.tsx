@@ -199,7 +199,9 @@ function ArrayAsMultiSelect<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   } = props;
   const { widgets, schemaUtils, globalFormOptions, globalUiOptions } = registry;
   const itemsSchema = schemaUtils.retrieveSchema(schema.items as S, items);
-  const itemsUiSchema = (uiSchema?.items ?? {}) as UiSchema<T[], S, F>;
+  // For computing `enumOptions`, fallback to the array property's uiSchema if there is no `items` schema
+  // Avoids a breaking change reported in https://github.com/rjsf-team/react-jsonschema-form/issues/4985
+  const itemsUiSchema = (uiSchema?.items ?? uiSchema) as UiSchema<T[], S, F>;
   const enumOptions = optionsList<T[], S, F>(itemsSchema, itemsUiSchema);
   const { widget = 'select', title: uiTitle, ...options } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
   const Widget = getWidget<T[], S, F>(schema, widget, widgets);
@@ -356,7 +358,7 @@ function ArrayFieldItem<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
   hideError: boolean;
   registry: Registry<T[], S, F>;
   uiOptions: UIOptionsType<T[], S, F>;
-  parentUiSchema?: UiSchema<T[], S, F>;
+  parentUiSchema: UiSchema<T[], S, F>;
   title: string | undefined;
   canAdd: boolean;
   canRemove?: boolean;
@@ -608,6 +610,7 @@ function NormalArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
         name: name && `${name}-${index}`,
         registry,
         uiOptions,
+        parentUiSchema: uiSchema,
         hideError,
         readonly,
         disabled,
@@ -752,6 +755,7 @@ function FixedArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         name: name && `${name}-${index}`,
         registry,
         uiOptions,
+        parentUiSchema: uiSchema,
         hideError,
         readonly,
         disabled,

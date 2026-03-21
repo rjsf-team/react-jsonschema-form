@@ -378,6 +378,30 @@ describe('ArrayField', () => {
       expect(node.querySelectorAll("input[placeholder='Placeholder...']")).toHaveLength(2);
     });
 
+    it('should pass parentUiSchema to ArrayFieldItemTemplate', () => {
+      const ParentUiSchemaItemTemplate = (props: ArrayFieldItemTemplateProps) => {
+        return (
+          <div className='custom-item' data-has-parent-uischema={props.parentUiSchema ? 'true' : 'false'}>
+            {props.children}
+          </div>
+        );
+      };
+
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: {
+          'ui:classNames': 'my-array',
+        },
+        templates: {
+          ArrayFieldItemTemplate: ParentUiSchemaItemTemplate,
+        },
+        formData: ['foo'],
+      });
+
+      const item = node.querySelector('.custom-item');
+      expect(item).toHaveAttribute('data-has-parent-uischema', 'true');
+    });
+
     it('should pass rawErrors down to custom array field templates', () => {
       const schema: RJSFSchema = {
         type: 'array',
@@ -1360,6 +1384,28 @@ describe('ArrayField', () => {
           items: {
             'ui:enumNames': ['A', 'B', 'C'],
           },
+        };
+        const { node } = createFormComponent({ schema: enumSchema, uiSchema: enumUiSchema });
+
+        const options = node.querySelectorAll('select option');
+        expect(options).toHaveLength(3);
+        expect(options[0]).toHaveTextContent('A');
+        expect(options[1]).toHaveTextContent('B');
+        expect(options[2]).toHaveTextContent('C');
+      });
+
+      it("falls back to ui:enumNames from array's uiSchema as option labels (#4985)", () => {
+        const enumSchema: RJSFSchema = {
+          title: 'Demo',
+          type: 'array',
+          items: {
+            type: 'integer',
+            enum: [1, 2, 3],
+          },
+          uniqueItems: true,
+        };
+        const enumUiSchema: UiSchema = {
+          'ui:enumNames': ['A', 'B', 'C'],
         };
         const { node } = createFormComponent({ schema: enumSchema, uiSchema: enumUiSchema });
 
