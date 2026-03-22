@@ -1,7 +1,8 @@
+import isNil from 'lodash/isNil';
+
 import isObject from './isObject';
 import { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, ValidatorType } from './types';
 import retrieveSchema from './schema/retrieveSchema';
-import isNil from 'lodash/isNil';
 
 /** Determines whether a value is considered "empty" for the purposes of optional object pruning.
  * A value is empty if it is `undefined`, `null`, an empty string, or an object where all own
@@ -21,9 +22,6 @@ function isValueEmpty(value: unknown): boolean {
   if (isObject(value)) {
     const obj = value as GenericObjectType;
     const keys = Object.keys(obj);
-    if (keys.length === 0) {
-      return true;
-    }
     return keys.every((key) => isValueEmpty(obj[key]));
   }
   return false;
@@ -74,16 +72,14 @@ export default function removeOptionalEmptyObjects<
       return cleaned === undefined ? ({} as T) : cleaned;
     });
 
-    return hasChanges ? (mapped as unknown as T) : formData;
-  }
-
-  if (!isObject(formData)) {
-    return formData;
+    // Although T is an array type here, we still need to cast it back to T since TS
+    // doesn't narrow the generic T automatically
+    return hasChanges ? (mapped as T) : formData;
   }
 
   const { properties, required: requiredFields = [] } = resolvedSchema;
 
-  if (!properties) {
+  if (!isObject(formData) || !properties) {
     return formData;
   }
 

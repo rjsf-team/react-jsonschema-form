@@ -945,7 +945,7 @@ export default class Form<
       };
     }
 
-    if (removeEmptyOptionalObjects === true) {
+    if (removeEmptyOptionalObjects) {
       newFormData = removeOptionalEmptyObjects(
         schemaUtils.getValidator(),
         schema,
@@ -1085,7 +1085,7 @@ export default class Form<
         newFormData = this.omitExtraData(formData);
         state = { formData: newFormData };
       }
-      if (removeEmptyOptionalObjects === true) {
+      if (removeEmptyOptionalObjects) {
         newFormData = removeOptionalEmptyObjects(
           schemaUtils.getValidator(),
           schema,
@@ -1158,7 +1158,7 @@ export default class Form<
       newFormData = this.omitExtraData(newFormData);
     }
 
-    if (removeEmptyOptionalObjects === true) {
+    if (removeEmptyOptionalObjects) {
       const { schemaUtils, schema } = this.state;
       newFormData = removeOptionalEmptyObjects(
         schemaUtils.getValidator(),
@@ -1355,7 +1355,7 @@ export default class Form<
     if (omitExtraData === true) {
       newFormData = this.omitExtraData(newFormData);
     }
-    if (removeEmptyOptionalObjects === true) {
+    if (removeEmptyOptionalObjects) {
       const { schemaUtils, schema } = this.state;
       newFormData = removeOptionalEmptyObjects(
         schemaUtils.getValidator(),
