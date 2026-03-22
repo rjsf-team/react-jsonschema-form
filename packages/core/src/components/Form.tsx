@@ -765,7 +765,7 @@ export default class Form<
       errors = merged.errors;
     }
     if (customErrors) {
-      const merged = validationDataMerge(schemaValidation, customErrors.ErrorSchema, true);
+      const merged = validationDataMerge({ errors, errorSchema }, customErrors.ErrorSchema, true);
       errorSchema = merged.errorSchema;
       errors = merged.errors;
     }
