@@ -16,6 +16,25 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.5.0
+
+## @rjsf/utils
+
+- Added `optgroups` property to `UIOptionsBaseType` for grouping enum options into `<optgroup>` elements
+
+## @rjsf/core
+
+- Added `<optgroup>` support to `SelectWidget` via `ui:options.optgroups`, fixing [#1813](https://github.com/rjsf-team/react-jsonschema-form/issues/1813) and [#580](https://github.com/rjsf-team/react-jsonschema-form/issues/580)
+
+## @rjsf/react-bootstrap
+
+- Added `<optgroup>` support to `SelectWidget` via `ui:options.optgroups`
+
+## Dev / docs / playground
+
+- Added `optgroups` documentation to `uiSchema.md`
+- Added `optgroups` example to playground widgets sample
+
 # 6.4.2
 
 ## @rjsf/antd
