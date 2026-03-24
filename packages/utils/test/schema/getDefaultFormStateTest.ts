@@ -5814,5 +5814,172 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual({});
       });
     });
+
+    describe('ui:initialValue in getDefaultFormState', () => {
+      it('uses initialValue as default when no formData and no schema default', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            country: { type: 'string' },
+          },
+        };
+        const uiSchema = {
+          country: { 'ui:initialValue': 'US' },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({
+          country: 'US',
+        });
+      });
+      it('overrides schema default with initialValue', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            country: { type: 'string', default: 'UK' },
+          },
+        };
+        const uiSchema = {
+          country: { 'ui:initialValue': 'US' },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({
+          country: 'US',
+        });
+      });
+      it('does not override provided formData', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            country: { type: 'string' },
+          },
+        };
+        const uiSchema = {
+          country: { 'ui:initialValue': 'US' },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            { country: 'FR' },
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({
+          country: 'FR',
+        });
+      });
+      it('takes priority over emptyValue', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            country: { type: 'string' },
+          },
+        };
+        const uiSchema = {
+          country: { 'ui:initialValue': 'US', 'ui:emptyValue': '' },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({
+          country: 'US',
+        });
+      });
+      it('applies initialValue in nested objects', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            address: {
+              type: 'object',
+              properties: {
+                country: { type: 'string' },
+                city: { type: 'string' },
+              },
+            },
+          },
+        };
+        const uiSchema = {
+          address: {
+            country: { 'ui:initialValue': 'US' },
+          },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({
+          address: { country: 'US' },
+        });
+      });
+      it('applies initialValue on reset (undefined formData)', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+          },
+        };
+        const uiSchema = {
+          name: { 'ui:initialValue': 'default name' },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({
+          name: 'default name',
+        });
+      });
+    });
   });
 }

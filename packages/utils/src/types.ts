@@ -1073,6 +1073,8 @@ type UIOptionsBaseType<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     disabled?: boolean;
     /** The default value to use when an input for a field is empty */
     emptyValue?: any;
+    /** Pre-fills the field on initial render and after reset, takes priority over schema default */
+    initialValue?: any;
     /** Will disable any of the enum options specified in the array (by value) */
     enumDisabled?: EnumValue[];
     /** Allows a user to provide a list of labels for enum values in the schema.

@@ -395,10 +395,12 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     defaults = schema.default as unknown as T;
   }
 
-  // Apply ui:emptyValue as a fallback when no other default is available
+  // Apply uiSchema defaults: initialValue overrides schema.default, emptyValue is the fallback for blank fields
   if (uiSchema) {
-    const { emptyValue } = getUiOptions(uiSchema);
-    if (defaults === undefined && emptyValue !== undefined) {
+    const { initialValue, emptyValue } = getUiOptions(uiSchema);
+    if (initialValue !== undefined) {
+      defaults = initialValue as unknown as T;
+    } else if (defaults === undefined && emptyValue !== undefined) {
       defaults = emptyValue as unknown as T;
     }
   }
