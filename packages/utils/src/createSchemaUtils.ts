@@ -169,6 +169,7 @@ class SchemaUtils<
    *          If "excludeObjectChildren", pass `includeUndefinedValues` as false when computing defaults for any nested
    *          object properties.
    * @param initialDefaultsGenerated - Indicates whether or not initial defaults have been generated
+   * @param [uiSchema] - Optional uiSchema, used to apply ui:emptyValue and ui:initialValue as defaults
    * @returns - The resulting `formData` with all the defaults provided
    */
   getDefaultFormState(
@@ -176,6 +177,7 @@ class SchemaUtils<
     formData?: T,
     includeUndefinedValues: boolean | 'excludeObjectChildren' = false,
     initialDefaultsGenerated?: boolean,
+    uiSchema?: UiSchema<T, S, F>,
   ): T | T[] | undefined {
     return getDefaultFormState<T, S, F>(
       this.validator,
@@ -186,6 +188,7 @@ class SchemaUtils<
       this.experimental_defaultFormStateBehavior,
       this.experimental_customMergeAllOf,
       initialDefaultsGenerated,
+      uiSchema,
     );
   }
 

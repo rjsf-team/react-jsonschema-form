@@ -5691,5 +5691,128 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect((result![0] as any).nested).not.toBe((result![1] as any).nested);
       });
     });
+
+    describe('ui:emptyValue in getDefaultFormState', () => {
+      it('uses emptyValue as default when no schema default and no formData', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+          },
+        };
+        const uiSchema = {
+          name: { 'ui:emptyValue': '' },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({
+          name: '',
+        });
+      });
+      it('does not use emptyValue when schema default exists', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            name: { type: 'string', default: 'hello' },
+          },
+        };
+        const uiSchema = {
+          name: { 'ui:emptyValue': '' },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({
+          name: 'hello',
+        });
+      });
+      it('does not use emptyValue when formData is provided', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+          },
+        };
+        const uiSchema = {
+          name: { 'ui:emptyValue': '' },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            { name: 'world' },
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({
+          name: 'world',
+        });
+      });
+      it('applies emptyValue in nested objects', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            address: {
+              type: 'object',
+              properties: {
+                city: { type: 'string' },
+              },
+            },
+          },
+        };
+        const uiSchema = {
+          address: {
+            city: { 'ui:emptyValue': '' },
+          },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({
+          address: { city: '' },
+        });
+      });
+      it('behaves unchanged when uiSchema is not passed', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+          },
+        };
+        expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual({});
+      });
+    });
   });
 }

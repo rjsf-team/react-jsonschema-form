@@ -592,6 +592,7 @@ export default class Form<
       defaultsFormData,
       false,
       state.initialDefaultsGenerated,
+      uiSchema,
     ) as T;
     const _retrievedSchema = this.updateRetrievedSchema(
       retrievedSchema ?? schemaUtils.retrieveSchema(rootSchema, formData),
