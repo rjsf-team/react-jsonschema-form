@@ -1083,6 +1083,10 @@ type UIOptionsBaseType<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
      * Supports a `'*'` wildcard to represent all remaining values in their original schema order.
      */
     enumOrder?: EnumValue[];
+    /** Groups enum options into `<optgroup>` elements. Keys are group labels, values are arrays of enum values
+     * belonging to that group. Enum values not listed in any group are rendered ungrouped after the groups.
+     */
+    optgroups?: Record<string, EnumValue[]>;
     /** Provides an optional field within a schema to be used as the oneOf/anyOf selector when there isn't a
      * discriminator
      */

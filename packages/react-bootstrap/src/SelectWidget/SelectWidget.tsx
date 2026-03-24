@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent } from 'react';
+import { ChangeEvent, FocusEvent, ReactNode } from 'react';
 import FormSelect from 'react-bootstrap/FormSelect';
 import {
   ariaDescribedByIds,
@@ -31,7 +31,7 @@ export default function SelectWidget<
   placeholder,
   rawErrors = [],
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled, emptyValue: optEmptyValue } = options;
+  const { enumOptions, enumDisabled, emptyValue: optEmptyValue, optgroups } = options;
 
   const emptyValue = multiple ? [] : '';
 
@@ -47,6 +47,71 @@ export default function SelectWidget<
   }
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
   const showPlaceholderOption = !multiple && schema.default === undefined;
+
+  function renderOption(i: number): ReactNode {
+    if (!Array.isArray(enumOptions) || !enumOptions[i]) {
+      return null;
+    }
+    const { value, label } = enumOptions[i];
+    const isDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1;
+    return (
+      <option key={i} id={label} value={String(i)} disabled={isDisabled}>
+        {label}
+      </option>
+    );
+  }
+
+  function renderOptions(): ReactNode {
+    if (!Array.isArray(enumOptions)) {
+      return null;
+    }
+
+    if (optgroups && typeof optgroups === 'object') {
+      const valueToIndex = new Map<any, number>();
+      enumOptions.forEach(({ value }, i) => {
+        valueToIndex.set(value, i);
+      });
+
+      const groupedIndices = new Set<number>();
+
+      const groups = Object.entries(optgroups).map(([label, values]) => {
+        const groupOptions = (values as any[])
+          .map((val) => {
+            const idx = valueToIndex.get(val);
+            if (idx === undefined) {
+              return null;
+            }
+            groupedIndices.add(idx);
+            return renderOption(idx);
+          })
+          .filter(Boolean);
+
+        return (
+          <optgroup key={label} label={label}>
+            {groupOptions}
+          </optgroup>
+        );
+      });
+
+      const ungrouped = enumOptions
+        .map((_, i) => {
+          if (groupedIndices.has(i)) {
+            return null;
+          }
+          return renderOption(i);
+        })
+        .filter(Boolean);
+
+      return (
+        <>
+          {groups}
+          {ungrouped}
+        </>
+      );
+    }
+
+    return enumOptions.map((_, i) => renderOption(i));
+  }
 
   return (
     <FormSelect
@@ -79,14 +144,7 @@ export default function SelectWidget<
       aria-describedby={ariaDescribedByIds(id)}
     >
       {showPlaceholderOption && <option value=''>{placeholder}</option>}
-      {(enumOptions as any).map(({ value, label }: any, i: number) => {
-        const disabled: any = Array.isArray(enumDisabled) && (enumDisabled as any).indexOf(value) != -1;
-        return (
-          <option key={i} id={label} value={String(i)} disabled={disabled}>
-            {label}
-          </option>
-        );
-      })}
+      {renderOptions()}
     </FormSelect>
   );
 }
