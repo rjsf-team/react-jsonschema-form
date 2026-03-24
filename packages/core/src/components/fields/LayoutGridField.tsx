@@ -681,6 +681,8 @@ function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSche
     // the `Form` via the prop passed to `LayoutGridField` we need to make sure the uiSchema always has a true value
     // when it is needed
     const { fieldUiSchema, uiReadonly } = computeFieldUiSchema<T, S, F>(name, uiProps, uiSchema, isReadonly, readonly);
+    const fieldUiOptions = getUiOptions<T, S, F>(fieldUiSchema);
+    const effectiveRequired = fieldUiOptions.required !== undefined ? Boolean(fieldUiOptions.required) : isRequired;
 
     return (
       <Field
@@ -691,7 +693,7 @@ function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSche
         }
         {...otherProps}
         name={name}
-        required={isRequired}
+        required={effectiveRequired}
         readonly={uiReadonly}
         schema={schema}
         uiSchema={fieldUiSchema}

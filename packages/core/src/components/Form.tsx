@@ -1,5 +1,6 @@
 import { Component, ElementType, FormEvent, ReactNode, Ref, RefObject, createRef } from 'react';
 import {
+  augmentSchemaWithUiRequired,
   createSchemaUtils,
   CustomValidator,
   deepEquals,
@@ -720,9 +721,10 @@ export default class Form<
     const schemaUtils = altSchemaUtils ? altSchemaUtils : this.state.schemaUtils;
     const { customValidate, transformErrors, uiSchema } = this.props;
     const resolvedSchema = retrievedSchema ?? schemaUtils.retrieveSchema(schema, formData);
+    const effectiveSchema = augmentSchemaWithUiRequired<T, S>(resolvedSchema, uiSchema);
     return schemaUtils
       .getValidator()
-      .validateFormData(formData, resolvedSchema, customValidate, transformErrors, uiSchema);
+      .validateFormData(formData, effectiveSchema, customValidate, transformErrors, uiSchema);
   }
 
   /** Renders any errors contained in the `state` in using the `ErrorList`, if not disabled by `showErrorList`. */
