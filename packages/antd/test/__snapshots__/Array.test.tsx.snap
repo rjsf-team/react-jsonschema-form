@@ -175,6 +175,7 @@ exports[`array fields array icons 1`] = `
                                           id="root_0"
                                           name="root_0"
                                           placeholder=""
+                                          required=""
                                           type="text"
                                           value="a"
                                         />
@@ -361,6 +362,7 @@ exports[`array fields array icons 1`] = `
                                           id="root_1"
                                           name="root_1"
                                           placeholder=""
+                                          required=""
                                           type="text"
                                           value="b"
                                         />
@@ -881,6 +883,7 @@ exports[`array fields fixed array 1`] = `
                                           id="root_0"
                                           name="root_0"
                                           placeholder=""
+                                          required=""
                                           type="text"
                                           value=""
                                         />
@@ -997,6 +1000,7 @@ exports[`array fields fixed array 1`] = `
                                               id="root_1"
                                               name="root_1"
                                               placeholder=""
+                                              required=""
                                               role="spinbutton"
                                               step="1"
                                               type="number"
@@ -2208,6 +2212,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                                           id="root_0"
                                           name="root[0]"
                                           placeholder=""
+                                          required=""
                                           type="text"
                                           value="foo"
                                         />
@@ -2363,6 +2368,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                                           id="root_1"
                                           name="root[1]"
                                           placeholder=""
+                                          required=""
                                           type="text"
                                           value="bar"
                                         />
@@ -2745,6 +2751,7 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
                                           id="root_0"
                                           name="root[0]"
                                           placeholder=""
+                                          required=""
                                           type="text"
                                           value="text"
                                         />
@@ -2862,6 +2869,7 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
                                               id="root_1"
                                               name="root[1]"
                                               placeholder=""
+                                              required=""
                                               role="spinbutton"
                                               step="1"
                                               type="number"
@@ -3067,6 +3075,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                                                 id="root_0_0"
                                                                 name="root[0][0]"
                                                                 placeholder=""
+                                                                required=""
                                                                 type="text"
                                                                 value="a"
                                                               />
@@ -3222,6 +3231,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                                                 id="root_0_1"
                                                                 name="root[0][1]"
                                                                 placeholder=""
+                                                                required=""
                                                                 type="text"
                                                                 value="b"
                                                               />
@@ -3579,6 +3589,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                                                 id="root_1_0"
                                                                 name="root[1][0]"
                                                                 placeholder=""
+                                                                required=""
                                                                 type="text"
                                                                 value="c"
                                                               />
@@ -3734,6 +3745,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                                                                 id="root_1_1"
                                                                 name="root[1][1]"
                                                                 placeholder=""
+                                                                required=""
                                                                 type="text"
                                                                 value="d"
                                                               />
@@ -4925,6 +4937,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                                           id="root_0"
                                           name="root.0"
                                           placeholder=""
+                                          required=""
                                           type="text"
                                           value="foo"
                                         />
@@ -5080,6 +5093,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                                           id="root_1"
                                           name="root.1"
                                           placeholder=""
+                                          required=""
                                           type="text"
                                           value="bar"
                                         />
@@ -5502,6 +5516,7 @@ exports[`with title and description array icons 1`] = `
                                           id="root_0"
                                           name="root_0"
                                           placeholder=""
+                                          required=""
                                           type="text"
                                           value="a"
                                         />
@@ -5712,6 +5727,7 @@ exports[`with title and description array icons 1`] = `
                                           id="root_1"
                                           name="root_1"
                                           placeholder=""
+                                          required=""
                                           type="text"
                                           value="b"
                                         />
@@ -6203,6 +6219,7 @@ exports[`with title and description fixed array 1`] = `
                                           id="root_0"
                                           name="root_0"
                                           placeholder=""
+                                          required=""
                                           type="text"
                                           value=""
                                         />
@@ -6343,6 +6360,7 @@ exports[`with title and description fixed array 1`] = `
                                               id="root_1"
                                               name="root_1"
                                               placeholder=""
+                                              required=""
                                               role="spinbutton"
                                               step="1"
                                               type="number"
@@ -6642,6 +6660,7 @@ exports[`with title and description from both array icons 1`] = `
                                           id="root_0"
                                           name="root_0"
                                           placeholder=""
+                                          required=""
                                           type="text"
                                           value="a"
                                         />
@@ -6852,6 +6871,7 @@ exports[`with title and description from both array icons 1`] = `
                                           id="root_1"
                                           name="root_1"
                                           placeholder=""
+                                          required=""
                                           type="text"
                                           value="b"
                                         />
@@ -7343,6 +7363,7 @@ exports[`with title and description from both fixed array 1`] = `
                                           id="root_0"
                                           name="root_0"
                                           placeholder=""
+                                          required=""
                                           type="text"
                                           value=""
                                         />
@@ -7483,6 +7504,7 @@ exports[`with title and description from both fixed array 1`] = `
                                               id="root_1"
                                               name="root_1"
                                               placeholder=""
+                                              required=""
                                               role="spinbutton"
                                               step="1"
                                               type="number"
@@ -7782,6 +7804,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                                           id="root_0"
                                           name="root_0"
                                           placeholder=""
+                                          required=""
                                           type="text"
                                           value="a"
                                         />
@@ -7992,6 +8015,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                                           id="root_1"
                                           name="root_1"
                                           placeholder=""
+                                          required=""
                                           type="text"
                                           value="b"
                                         />
@@ -8483,6 +8507,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                                           id="root_0"
                                           name="root_0"
                                           placeholder=""
+                                          required=""
                                           type="text"
                                           value=""
                                         />
@@ -8623,6 +8648,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                                               id="root_1"
                                               name="root_1"
                                               placeholder=""
+                                              required=""
                                               role="spinbutton"
                                               step="1"
                                               type="number"
@@ -8885,6 +8911,7 @@ exports[`with title and description with global label off array icons 1`] = `
                                           id="root_0"
                                           name="root_0"
                                           placeholder=""
+                                          required=""
                                           type="text"
                                           value="a"
                                         />
@@ -9084,6 +9111,7 @@ exports[`with title and description with global label off array icons 1`] = `
                                           id="root_1"
                                           name="root_1"
                                           placeholder=""
+                                          required=""
                                           type="text"
                                           value="b"
                                         />
@@ -9540,6 +9568,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                                           id="root_0"
                                           name="root_0"
                                           placeholder=""
+                                          required=""
                                           type="text"
                                           value=""
                                         />
@@ -9669,6 +9698,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                                               id="root_1"
                                               name="root_1"
                                               placeholder=""
+                                              required=""
                                               role="spinbutton"
                                               step="1"
                                               type="number"

@@ -1066,6 +1066,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                                                             id="root_tags_0"
                                                             name="root[tags][0]"
                                                             placeholder=""
+                                                            required=""
                                                             type="text"
                                                             value="developer"
                                                           />
@@ -1232,6 +1233,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                                                             id="root_tags_1"
                                                             name="root[tags][1]"
                                                             placeholder=""
+                                                            required=""
                                                             type="text"
                                                             value="designer"
                                                           />
@@ -2363,6 +2365,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                                                             id="root_items_0"
                                                             name="root.items.0"
                                                             placeholder=""
+                                                            required=""
                                                             type="text"
                                                             value="a"
                                                           />
@@ -2529,6 +2532,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                                                             id="root_items_1"
                                                             name="root.items.1"
                                                             placeholder=""
+                                                            required=""
                                                             type="text"
                                                             value="b"
                                                           />

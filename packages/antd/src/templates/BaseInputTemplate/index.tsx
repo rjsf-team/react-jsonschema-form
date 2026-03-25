@@ -39,6 +39,7 @@ export default function BaseInputTemplate<
     options,
     placeholder,
     readonly,
+    required,
     schema,
     value,
     type,
@@ -79,6 +80,7 @@ export default function BaseInputTemplate<
         onChange={!readonly ? handleNumberChange : undefined}
         onFocus={!readonly ? handleFocus : undefined}
         placeholder={placeholder}
+        required={required}
         style={INPUT_STYLE}
         list={schema.examples ? examplesId(id) : undefined}
         {...inputProps}
@@ -94,6 +96,7 @@ export default function BaseInputTemplate<
         onChange={!readonly ? handleTextChange : undefined}
         onFocus={!readonly ? handleFocus : undefined}
         placeholder={placeholder}
+        required={required}
         style={INPUT_STYLE}
         list={schema.examples ? examplesId(id) : undefined}
         {...inputProps}
