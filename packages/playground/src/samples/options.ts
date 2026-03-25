@@ -21,6 +21,14 @@ const optionsSample: Sample = {
         title: 'Telephone',
         minLength: 10,
       },
+      country: {
+        type: 'string',
+        title: 'Country',
+      },
+      email: {
+        type: 'string',
+        title: 'Email',
+      },
     },
   },
   uiSchema: {
@@ -41,6 +49,7 @@ const optionsSample: Sample = {
       'ui:title': 'Surname',
       'ui:emptyValue': '',
       'ui:autocomplete': 'given-name',
+      'ui:required': false,
     },
     age: {
       'ui:widget': 'updown',
@@ -61,6 +70,13 @@ const optionsSample: Sample = {
       'ui:options': {
         inputType: 'tel',
       },
+    },
+    country: {
+      'ui:initialValue': 'US',
+      'ui:widget': 'hidden',
+    },
+    email: {
+      'ui:required': true,
     },
   },
   formData: {
