@@ -23,6 +23,7 @@ export default function SelectWidget<
   F extends FormContextType = any,
 >({
   id,
+  htmlName,
   options,
   required,
   disabled,
@@ -39,17 +40,18 @@ export default function SelectWidget<
   className,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyValue } = options;
+  const useRealValues = !!htmlName;
 
   const _onFancyFocus = () => {
-    onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, optEmptyValue));
+    onFocus(id, useRealValues ? value : enumOptionsValueForIndex<S>(value, enumOptions, optEmptyValue));
   };
 
   const _onFancyBlur = () => {
-    onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, optEmptyValue));
+    onBlur(id, useRealValues ? value : enumOptionsValueForIndex<S>(value, enumOptions, optEmptyValue));
   };
 
   const items = (enumOptions as any)?.map(({ value, label }: any, index: number) => ({
-    value: multiple ? value : index.toString(),
+    value: multiple || useRealValues ? value : index.toString(),
     label: label,
     index,
     disabled: Array.isArray(enumDisabled) && enumDisabled.includes(value),
@@ -62,9 +64,19 @@ export default function SelectWidget<
       {!multiple ? (
         <FancySelect
           items={items}
-          selected={enumOptionsIndexForValue<S>(value ?? defaultValue, enumOptions, false) as unknown as string}
+          selected={
+            useRealValues
+              ? value !== undefined
+                ? String(value)
+                : undefined
+              : (enumOptionsIndexForValue<S>(value ?? defaultValue, enumOptions, false) as unknown as string)
+          }
           onValueChange={(selectedValue) => {
-            onChange(enumOptionsValueForIndex<S>(selectedValue, enumOptions, optEmptyValue));
+            if (useRealValues) {
+              onChange(selectedValue || optEmptyValue);
+            } else {
+              onChange(enumOptionsValueForIndex<S>(selectedValue, enumOptions, optEmptyValue));
+            }
           }}
           autoFocus={autofocus}
           disabled={disabled || readonly}
@@ -85,7 +97,11 @@ export default function SelectWidget<
           items={items}
           selected={value}
           onValueChange={(values) => {
-            onChange(enumOptionsValueForIndex<S>(values, enumOptions, optEmptyValue));
+            if (useRealValues) {
+              onChange(values);
+            } else {
+              onChange(enumOptionsValueForIndex<S>(values, enumOptions, optEmptyValue));
+            }
           }}
           onFocus={_onFancyFocus}
           onBlur={_onFancyBlur}

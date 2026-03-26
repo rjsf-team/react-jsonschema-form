@@ -818,17 +818,17 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
               value=""
             />
             <option
-              value="0"
+              value="red"
             >
               red
             </option>
             <option
-              value="1"
+              value="green"
             >
               green
             </option>
             <option
-              value="2"
+              value="blue"
             >
               blue
             </option>
@@ -1622,17 +1622,17 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
               value=""
             />
             <option
-              value="0"
+              value="red"
             >
               red
             </option>
             <option
-              value="1"
+              value="green"
             >
               green
             </option>
             <option
-              value="2"
+              value="blue"
             >
               blue
             </option>

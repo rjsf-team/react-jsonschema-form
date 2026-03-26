@@ -4087,17 +4087,17 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
                             value=""
                           />
                           <option
-                            value="0"
+                            value="red"
                           >
                             red
                           </option>
                           <option
-                            value="1"
+                            value="green"
                           >
                             green
                           </option>
                           <option
-                            value="2"
+                            value="blue"
                           >
                             blue
                           </option>
@@ -4191,9 +4191,9 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
                               data-part="item"
                               data-scope="select"
                               data-state="unchecked"
-                              data-value="0"
+                              data-value="red"
                               dir="ltr"
-                              id="select:root_color:option:0"
+                              id="select:root_color:option:red"
                               role="option"
                             >
                               red
@@ -4221,9 +4221,9 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
                               data-part="item"
                               data-scope="select"
                               data-state="unchecked"
-                              data-value="1"
+                              data-value="green"
                               dir="ltr"
-                              id="select:root_color:option:1"
+                              id="select:root_color:option:green"
                               role="option"
                             >
                               green
@@ -4251,9 +4251,9 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
                               data-part="item"
                               data-scope="select"
                               data-state="unchecked"
-                              data-value="2"
+                              data-value="blue"
                               dir="ltr"
-                              id="select:root_color:option:2"
+                              id="select:root_color:option:blue"
                               role="option"
                             >
                               blue
@@ -8243,17 +8243,17 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
                             value=""
                           />
                           <option
-                            value="0"
+                            value="red"
                           >
                             red
                           </option>
                           <option
-                            value="1"
+                            value="green"
                           >
                             green
                           </option>
                           <option
-                            value="2"
+                            value="blue"
                           >
                             blue
                           </option>
@@ -8347,9 +8347,9 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
                               data-part="item"
                               data-scope="select"
                               data-state="unchecked"
-                              data-value="0"
+                              data-value="red"
                               dir="ltr"
-                              id="select:root_color:option:0"
+                              id="select:root_color:option:red"
                               role="option"
                             >
                               red
@@ -8377,9 +8377,9 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
                               data-part="item"
                               data-scope="select"
                               data-state="unchecked"
-                              data-value="1"
+                              data-value="green"
                               dir="ltr"
-                              id="select:root_color:option:1"
+                              id="select:root_color:option:green"
                               role="option"
                             >
                               green
@@ -8407,9 +8407,9 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
                               data-part="item"
                               data-scope="select"
                               data-state="unchecked"
-                              data-value="2"
+                              data-value="blue"
                               dir="ltr"
-                              id="select:root_color:option:2"
+                              id="select:root_color:option:blue"
                               role="option"
                             >
                               blue

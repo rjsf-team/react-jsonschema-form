@@ -43,6 +43,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   placeholder,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
+  const useRealValues = !!htmlName;
 
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
   let selectedIndexesAsArray: string[] = [];
@@ -53,14 +54,30 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     selectedIndexesAsArray = selectedIndexes.map((index) => String(index));
   }
 
-  const dropdownValue = selectedIndexesAsArray
-    .map((index) => (enumOptions ? enumOptions[Number(index)].label : undefined))
-    .join(', ');
+  const selectedOptionsValue = useRealValues
+    ? Array.isArray(value)
+      ? value.map(String)
+      : typeof value !== 'undefined'
+        ? [String(value)]
+        : []
+    : selectedIndexesAsArray;
+
+  const dropdownValue = useRealValues
+    ? selectedOptionsValue
+        .map((val) => {
+          const opt = enumOptions?.find((o) => String(o.value) === val);
+          return opt?.label;
+        })
+        .join(', ')
+    : selectedIndexesAsArray.map((index) => (enumOptions ? enumOptions[Number(index)].label : undefined)).join(', ');
 
   const _onBlur = () => onBlur(id, selectedIndexes);
   const _onFocus = () => onFocus(id, selectedIndexes);
   const _onChange = (_: any, data: OptionOnSelectData) => {
     const newValue = getValue(data, multiple);
+    if (useRealValues) {
+      return onChange(multiple ? newValue : newValue || optEmptyVal);
+    }
     return onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
   };
   const showPlaceholderOption = !multiple && schema.default === undefined;
@@ -82,7 +99,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
         onBlur={_onBlur}
         onFocus={_onFocus}
         onOptionSelect={_onChange}
-        selectedOptions={selectedIndexesAsArray}
+        selectedOptions={selectedOptionsValue}
         aria-describedby={ariaDescribedByIds(id)}
       >
         {showPlaceholderOption && <Option value=''>{placeholder || ''}</Option>}
@@ -90,7 +107,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
           enumOptions.map(({ value, label }, i) => {
             const disabled = enumDisabled && enumDisabled.indexOf(value) !== -1;
             return (
-              <Option key={i} value={String(i)} disabled={disabled}>
+              <Option key={i} value={useRealValues ? String(value) : String(i)} disabled={disabled}>
                 {label}
               </Option>
             );

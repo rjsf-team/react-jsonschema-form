@@ -42,21 +42,39 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     uiSchema,
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
+  const useRealValues = !!htmlName;
 
   const _onMultiChange = ({ value }: SelectValueChangeDetails) => {
+    if (useRealValues) {
+      return onChange(value);
+    }
     return onChange(enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
   };
 
   const _onSingleChange = ({ value }: SelectValueChangeDetails) => {
+    if (useRealValues) {
+      const selected = Array.isArray(value) && value.length === 1 ? value[0] : value;
+      return onChange(selected || emptyValue);
+    }
     const selected = enumOptionsValueForIndex<S>(value, enumOptions, emptyValue);
     return onChange(Array.isArray(selected) && selected.length === 1 ? selected[0] : selected);
   };
 
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
+    onBlur(
+      id,
+      useRealValues
+        ? target && target.value
+        : enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue),
+    );
 
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
+    onFocus(
+      id,
+      useRealValues
+        ? target && target.value
+        : enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue),
+    );
 
   const showPlaceholderOption = !multiple && schema.default === undefined;
   const { valueLabelMap, displayEnumOptions } = useMemo((): {
@@ -68,10 +86,11 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     if (Array.isArray(enumOptions)) {
       displayEnumOptions = enumOptions.map((option: EnumOptionsType<S>, index: number) => {
         const { value, label } = option;
-        valueLabelMap[index] = label || String(value);
+        const optionKey = useRealValues ? String(value) : index;
+        valueLabelMap[optionKey] = label || String(value);
         return {
           label,
-          value: String(index),
+          value: useRealValues ? String(value) : String(index),
           disabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1,
         };
       });
@@ -80,16 +99,17 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       }
     }
     return { valueLabelMap: valueLabelMap, displayEnumOptions: displayEnumOptions };
-  }, [enumDisabled, enumOptions, placeholder, showPlaceholderOption]);
+  }, [enumDisabled, enumOptions, placeholder, showPlaceholderOption, useRealValues]);
 
   const isMultiple = typeof multiple !== 'undefined' && multiple !== false && Boolean(enumOptions);
   const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions, isMultiple);
 
   const getMultiValue = () =>
     ((selectedIndex as string[]) || []).map((i: string) => {
+      const key = useRealValues ? String(value[Number(i)]) : i;
       return {
-        label: valueLabelMap[i],
-        value: i.toString(),
+        label: valueLabelMap[useRealValues ? key : i],
+        value: useRealValues ? key : i.toString(),
       };
     });
 
@@ -97,13 +117,19 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     typeof selectedIndex !== 'undefined'
       ? [
           {
-            label: valueLabelMap[selectedIndex as string] || '',
-            value: selectedIndex.toString(),
+            label: valueLabelMap[useRealValues ? String(value) : (selectedIndex as string)] || '',
+            value: useRealValues ? String(value) : selectedIndex.toString(),
           },
         ]
       : [];
 
-  const formValue = (isMultiple ? getMultiValue() : getSingleValue()).map((item) => item.value);
+  const formValue = useRealValues
+    ? typeof value !== 'undefined'
+      ? Array.isArray(value)
+        ? value.map(String)
+        : [String(value)]
+      : []
+    : (isMultiple ? getMultiValue() : getSingleValue()).map((item) => item.value);
 
   const selectOptions = createListCollection({
     items: displayEnumOptions.filter((item) => item.value),

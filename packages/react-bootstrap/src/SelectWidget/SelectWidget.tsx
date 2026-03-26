@@ -34,6 +34,7 @@ export default function SelectWidget<
   const { enumOptions, enumDisabled, emptyValue: optEmptyValue } = options;
 
   const emptyValue = multiple ? [] : '';
+  const useRealValues = !!htmlName;
 
   function getValue(event: FocusEvent | ChangeEvent | any, multiple?: boolean) {
     if (multiple) {
@@ -46,13 +47,24 @@ export default function SelectWidget<
     }
   }
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
+  const isEmpty = typeof value === 'undefined' || (multiple && value.length < 1) || (!multiple && value === emptyValue);
   const showPlaceholderOption = !multiple && schema.default === undefined;
+
+  const selectValue = useRealValues
+    ? isEmpty
+      ? emptyValue
+      : multiple
+        ? value.map(String)
+        : String(value)
+    : typeof selectedIndexes === 'undefined'
+      ? emptyValue
+      : selectedIndexes;
 
   return (
     <FormSelect
       id={id}
       name={htmlName || id}
-      value={typeof selectedIndexes === 'undefined' ? emptyValue : selectedIndexes}
+      value={selectValue}
       required={required}
       multiple={multiple}
       disabled={disabled || readonly}
@@ -62,19 +74,31 @@ export default function SelectWidget<
         onBlur &&
         ((event: FocusEvent) => {
           const newValue = getValue(event, multiple);
-          onBlur(id, enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue));
+          if (useRealValues) {
+            onBlur(id, multiple ? newValue : newValue || optEmptyValue);
+          } else {
+            onBlur(id, enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue));
+          }
         })
       }
       onFocus={
         onFocus &&
         ((event: FocusEvent) => {
           const newValue = getValue(event, multiple);
-          onFocus(id, enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue));
+          if (useRealValues) {
+            onFocus(id, multiple ? newValue : newValue || optEmptyValue);
+          } else {
+            onFocus(id, enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue));
+          }
         })
       }
       onChange={(event: ChangeEvent) => {
         const newValue = getValue(event, multiple);
-        onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue));
+        if (useRealValues) {
+          onChange(multiple ? newValue : newValue || optEmptyValue);
+        } else {
+          onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue));
+        }
       }}
       aria-describedby={ariaDescribedByIds(id)}
     >
@@ -82,7 +106,7 @@ export default function SelectWidget<
       {(enumOptions as any).map(({ value, label }: any, i: number) => {
         const disabled: any = Array.isArray(enumDisabled) && (enumDisabled as any).indexOf(value) != -1;
         return (
-          <option key={i} id={label} value={String(i)} disabled={disabled}>
+          <option key={i} id={label} value={useRealValues ? String(value) : String(i)} disabled={disabled}>
             {label}
           </option>
         );
