@@ -68,7 +68,7 @@ export default function SelectWidget<
             useRealValues
               ? value !== undefined
                 ? String(value)
-                : undefined
+                : ''
               : (enumOptionsIndexForValue<S>(value ?? defaultValue, enumOptions, false) as unknown as string)
           }
           onValueChange={(selectedValue) => {
