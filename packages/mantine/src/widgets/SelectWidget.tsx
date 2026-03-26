@@ -42,32 +42,45 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
 
   const { enumOptions, enumDisabled, emptyValue } = options;
   const themeProps = cleanupOptions(options);
+  const useRealValues = !!htmlName;
 
   const handleChange = useCallback(
     (nextValue: any) => {
       if (!disabled && !readonly && onChange) {
-        onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
+        if (useRealValues) {
+          onChange(multiple ? nextValue : nextValue || emptyValue);
+        } else {
+          onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
+        }
       }
     },
-    [onChange, disabled, readonly, enumOptions, emptyValue],
+    [onChange, disabled, readonly, enumOptions, emptyValue, useRealValues, multiple],
   );
 
   const handleBlur = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) => {
       if (onBlur) {
-        onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
+        if (useRealValues) {
+          onBlur(id, target && target.value);
+        } else {
+          onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
+        }
       }
     },
-    [onBlur, id, enumOptions, emptyValue],
+    [onBlur, id, enumOptions, emptyValue, useRealValues],
   );
 
   const handleFocus = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) => {
       if (onFocus) {
-        onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
+        if (useRealValues) {
+          onFocus(id, target && target.value);
+        } else {
+          onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
+        }
       }
     },
-    [onFocus, id, enumOptions, emptyValue],
+    [onFocus, id, enumOptions, emptyValue, useRealValues],
   );
 
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
@@ -75,14 +88,14 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const selectOptions = useMemo(() => {
     if (Array.isArray(enumOptions)) {
       return enumOptions.map((option, index) => ({
-        key: String(index),
-        value: String(index),
+        key: useRealValues ? String(option.value) : String(index),
+        value: useRealValues ? String(option.value) : String(index),
         label: option.label,
         disabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1,
       }));
     }
     return [];
-  }, [enumDisabled, enumOptions]);
+  }, [enumDisabled, enumOptions, useRealValues]);
 
   const Component = multiple ? MultiSelect : Select;
 
@@ -92,7 +105,17 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       name={htmlName || id}
       label={labelValue(label || undefined, hideLabel, false)}
       data={selectOptions}
-      value={multiple ? (selectedIndexes as any) : (selectedIndexes as string)}
+      value={
+        useRealValues
+          ? multiple
+            ? value?.map(String)
+            : value !== undefined
+              ? String(value)
+              : null
+          : multiple
+            ? (selectedIndexes as any)
+            : (selectedIndexes as string)
+      }
       onChange={!readonly ? handleChange : undefined}
       onBlur={!readonly ? handleBlur : undefined}
       onFocus={!readonly ? handleFocus : undefined}

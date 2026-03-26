@@ -52,23 +52,49 @@ export default function SelectWidget<
 
   const emptyValue = multiple ? [] : '';
   const isEmpty = typeof value === 'undefined' || (multiple && value.length < 1) || (!multiple && value === emptyValue);
+  const useRealValues = !!htmlName;
 
-  const _onChange = ({ target: { value } }: ChangeEvent<{ value: string }>) =>
-    onChange(enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
+  const _onChange = ({ target: { value } }: ChangeEvent<{ value: string }>) => {
+    if (useRealValues) {
+      onChange(multiple ? value : value || optEmptyVal);
+    } else {
+      onChange(enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
+    }
+  };
+  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => {
+    if (useRealValues) {
+      onBlur(id, multiple ? target && target.value : (target && target.value) || optEmptyVal);
+    } else {
+      onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
+    }
+  };
+  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => {
+    if (useRealValues) {
+      onFocus(id, multiple ? target && target.value : (target && target.value) || optEmptyVal);
+    } else {
+      onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
+    }
+  };
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
   const { InputLabelProps, SelectProps, autocomplete, ...textFieldRemainingProps } = textFieldProps;
   const showPlaceholderOption = !multiple && schema.default === undefined;
+
+  const selectValue = useRealValues
+    ? isEmpty
+      ? emptyValue
+      : multiple
+        ? value.map(String)
+        : String(value)
+    : !isEmpty && typeof selectedIndexes !== 'undefined'
+      ? selectedIndexes
+      : emptyValue;
 
   return (
     <TextField
       id={id}
       name={htmlName || id}
       label={labelValue(label || undefined, hideLabel, undefined)}
-      value={!isEmpty && typeof selectedIndexes !== 'undefined' ? selectedIndexes : emptyValue}
+      value={selectValue}
       required={required}
       disabled={disabled || readonly}
       autoFocus={autofocus}
@@ -95,7 +121,7 @@ export default function SelectWidget<
         enumOptions.map(({ value, label }, i: number) => {
           const disabled: boolean = Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1;
           return (
-            <MenuItem key={i} value={String(i)} disabled={disabled}>
+            <MenuItem key={i} value={useRealValues ? String(value) : String(i)} disabled={disabled}>
               {label}
             </MenuItem>
           );

@@ -51,29 +51,56 @@ function SingleSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
   const primeProps = (options.prime || {}) as object;
+  const useRealValues = !!htmlName;
 
   multiple = typeof multiple === 'undefined' ? false : multiple;
 
   const emptyValue = multiple ? [] : '';
   const isEmpty = typeof value === 'undefined' || (multiple && value.length < 1) || (!multiple && value === emptyValue);
 
-  const _onChange = (e: { value: any }) => onChange(enumOptionsValueForIndex<S>(e.value, enumOptions, optEmptyVal));
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
+  const _onChange = (e: { value: any }) => {
+    if (useRealValues) {
+      onChange(multiple ? e.value : e.value || optEmptyVal);
+    } else {
+      onChange(enumOptionsValueForIndex<S>(e.value, enumOptions, optEmptyVal));
+    }
+  };
+  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => {
+    if (useRealValues) {
+      onBlur(id, target && target.value);
+    } else {
+      onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
+    }
+  };
+  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => {
+    if (useRealValues) {
+      onFocus(id, target && target.value);
+    } else {
+      onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
+    }
+  };
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
   const { ...dropdownRemainingProps } = dropdownProps;
+
+  const selectValue = useRealValues
+    ? isEmpty
+      ? emptyValue
+      : multiple
+        ? value.map(String)
+        : String(value)
+    : !isEmpty && typeof selectedIndexes !== 'undefined'
+      ? selectedIndexes
+      : emptyValue;
 
   return (
     <Dropdown
       id={id}
       name={htmlName || id}
       {...primeProps}
-      value={!isEmpty && typeof selectedIndexes !== 'undefined' ? selectedIndexes : emptyValue}
+      value={selectValue}
       options={(enumOptions ?? []).map(({ value, label }, i: number) => ({
         label,
-        value: String(i),
+        value: useRealValues ? String(value) : String(i),
         disabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1,
       }))}
       onChange={_onChange}
@@ -104,26 +131,53 @@ function MultiSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
   const primeProps = (options.prime || {}) as object;
+  const useRealValues = !!htmlName;
 
   const emptyValue = multiple ? [] : '';
   const isEmpty = typeof value === 'undefined' || (multiple && value.length < 1) || (!multiple && value === emptyValue);
 
-  const _onChange = (e: { value: any }) => onChange(enumOptionsValueForIndex<S>(e.value, enumOptions, optEmptyVal));
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
+  const _onChange = (e: { value: any }) => {
+    if (useRealValues) {
+      onChange(multiple ? e.value : e.value || optEmptyVal);
+    } else {
+      onChange(enumOptionsValueForIndex<S>(e.value, enumOptions, optEmptyVal));
+    }
+  };
+  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => {
+    if (useRealValues) {
+      onBlur(id, target && target.value);
+    } else {
+      onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
+    }
+  };
+  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => {
+    if (useRealValues) {
+      onFocus(id, target && target.value);
+    } else {
+      onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
+    }
+  };
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
+
+  const selectValue = useRealValues
+    ? isEmpty
+      ? emptyValue
+      : multiple
+        ? value.map(String)
+        : String(value)
+    : !isEmpty && typeof selectedIndexes !== 'undefined'
+      ? selectedIndexes
+      : emptyValue;
 
   return (
     <MultiSelect
       id={id}
       name={htmlName || id}
       {...primeProps}
-      value={!isEmpty && typeof selectedIndexes !== 'undefined' ? selectedIndexes : emptyValue}
+      value={selectValue}
       options={(enumOptions ?? []).map(({ value, label }, i: number) => ({
         label,
-        value: String(i),
+        value: useRealValues ? String(value) : String(i),
         disabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1,
       }))}
       onChange={_onChange}
