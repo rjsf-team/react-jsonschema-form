@@ -18,6 +18,10 @@ const monacoEditorOptions = {
     enabled: false,
   },
   automaticLayout: true,
+  scrollBeyondLastLine: false,
+  scrollbar: {
+    alwaysConsumeMouseWheel: false,
+  },
 };
 
 const AccordionSummary = styled(MuiAccordionSummary)({
@@ -61,14 +65,16 @@ function Editor({ title, code, onChange }: EditorProps) {
         <span className={`${cls} glyphicon glyphicon-${icon}`} />
         {' ' + title}
       </div>
-      <MonacoEditor
-        language='json'
-        value={code}
-        theme='vs-light'
-        onChange={onCodeChange}
-        height={400}
-        options={monacoEditorOptions}
-      />
+      <div style={{ overscrollBehavior: 'auto' }}>
+        <MonacoEditor
+          language='json'
+          value={code}
+          theme='vs-light'
+          onChange={onCodeChange}
+          height={400}
+          options={monacoEditorOptions}
+        />
+      </div>
     </div>
   );
 }
