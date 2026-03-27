@@ -1,3 +1,5 @@
+import isEmpty from 'lodash/isEmpty';
+
 import { ANY_OF_KEY, ONE_OF_KEY, REF_KEY, RJSF_REF_KEY } from './constants';
 import findSchemaDefinition from './findSchemaDefinition';
 import mergeObjects from './mergeObjects';
@@ -31,7 +33,7 @@ export default function resolveUiSchema<
   let result: UiSchema<T, S, F>;
   if (!definitionUiSchema) {
     result = localUiSchema || {};
-  } else if (!localUiSchema || Object.keys(localUiSchema).length === 0) {
+  } else if (!localUiSchema || isEmpty(localUiSchema)) {
     result = { ...definitionUiSchema };
   } else {
     result = mergeObjects(definitionUiSchema as GenericObjectType, localUiSchema as GenericObjectType) as UiSchema<
@@ -48,7 +50,8 @@ export default function resolveUiSchema<
     if (ref && schema[REF_KEY] && !(schema as GenericObjectType)[RJSF_REF_KEY]) {
       try {
         resolvedSchema = findSchemaDefinition<S>(ref, registry.rootSchema as S);
-      } catch {
+      } catch (e) {
+        console.warn('could not resolve $ref in resolveUiSchema:\n', e);
         return result;
       }
     }
@@ -64,8 +67,8 @@ export default function resolveUiSchema<
 
       let hasExpanded = false;
       for (let i = 0; i < schemaOptions.length; i++) {
-        const optionRef = ((schemaOptions[i] as GenericObjectType)?.[RJSF_REF_KEY] ??
-          (schemaOptions[i] as GenericObjectType)?.[REF_KEY]) as string | undefined;
+        const option = schemaOptions[i] as GenericObjectType | undefined;
+        const optionRef = (option?.[RJSF_REF_KEY] ?? option?.[REF_KEY]) as string | undefined;
         if (optionRef && optionRef in definitions) {
           const optionUiSchema = (uiSchemaArray[i] || {}) as GenericObjectType;
           uiSchemaArray[i] = mergeObjects(definitions[optionRef] as GenericObjectType, optionUiSchema) as UiSchema<

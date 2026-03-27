@@ -1,5 +1,12 @@
 import { Registry, RJSFSchema, resolveUiSchema, TemplatesType, UiSchema, UiSchemaDefinitions } from '../src';
 
+beforeEach(() => {
+  jest.spyOn(console, 'warn').mockImplementation();
+});
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
 const baseRegistry: Registry = {
   formContext: {},
   rootSchema: {},
