@@ -65,25 +65,19 @@ export default function SelectWidget<
         return;
       }
 
+      const optionValue =
+        useRealValues || isEnumeratedObject
+          ? enumOptions![index].value
+          : enumOptionsValueForIndex<S>(String(index), enumOptions, optEmptyVal);
+
       if (multiple) {
         const currentValue = Array.isArray(value) ? value : [];
-        const optionValue = useRealValues
-          ? enumOptions![index].value
-          : isEnumeratedObject
-            ? enumOptions[index].value
-            : enumOptionsValueForIndex<S>(String(index), enumOptions, optEmptyVal);
         const newValue = currentValue.includes(optionValue)
           ? currentValue.filter((v) => v !== optionValue)
           : [...currentValue, optionValue];
         onChange(newValue);
       } else {
-        onChange(
-          useRealValues
-            ? enumOptions![index].value
-            : isEnumeratedObject
-              ? enumOptions[index].value
-              : enumOptionsValueForIndex<S>(String(index), enumOptions, optEmptyVal),
-        );
+        onChange(optionValue);
       }
     },
     [value, multiple, isEnumeratedObject, enumOptions, optEmptyVal, onChange, useRealValues],

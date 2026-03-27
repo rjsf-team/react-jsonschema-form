@@ -47,11 +47,12 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const handleChange = useCallback(
     (nextValue: any) => {
       if (!disabled && !readonly && onChange) {
-        if (useRealValues) {
-          onChange(multiple ? nextValue : nextValue || emptyValue);
-        } else {
-          onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
-        }
+        const resolved = useRealValues
+          ? multiple
+            ? nextValue
+            : nextValue || emptyValue
+          : enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue);
+        onChange(resolved);
       }
     },
     [onChange, disabled, readonly, enumOptions, emptyValue, useRealValues, multiple],
@@ -60,11 +61,10 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const handleBlur = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) => {
       if (onBlur) {
-        if (useRealValues) {
-          onBlur(id, target && target.value);
-        } else {
-          onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
-        }
+        const newValue = useRealValues
+          ? target && target.value
+          : enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue);
+        onBlur(id, newValue);
       }
     },
     [onBlur, id, enumOptions, emptyValue, useRealValues],
@@ -73,11 +73,10 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const handleFocus = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) => {
       if (onFocus) {
-        if (useRealValues) {
-          onFocus(id, target && target.value);
-        } else {
-          onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
-        }
+        const newValue = useRealValues
+          ? target && target.value
+          : enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue);
+        onFocus(id, newValue);
       }
     },
     [onFocus, id, enumOptions, emptyValue, useRealValues],
@@ -99,23 +98,20 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
 
   const Component = multiple ? MultiSelect : Select;
 
+  let selectValue;
+  if (useRealValues) {
+    selectValue = multiple ? value?.map(String) : value !== undefined ? String(value) : null;
+  } else {
+    selectValue = multiple ? (selectedIndexes as any) : (selectedIndexes as string);
+  }
+
   return (
     <Component
       id={id}
       name={htmlName || id}
       label={labelValue(label || undefined, hideLabel, false)}
       data={selectOptions}
-      value={
-        useRealValues
-          ? multiple
-            ? value?.map(String)
-            : value !== undefined
-              ? String(value)
-              : null
-          : multiple
-            ? (selectedIndexes as any)
-            : (selectedIndexes as string)
-      }
+      value={selectValue}
       onChange={!readonly ? handleChange : undefined}
       onBlur={!readonly ? handleBlur : undefined}
       onFocus={!readonly ? handleFocus : undefined}
