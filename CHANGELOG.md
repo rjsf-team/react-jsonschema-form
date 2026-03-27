@@ -28,6 +28,10 @@ should change the heading of the (upcoming) version to include a major version b
 - Passed `parentUiSchema` to `ArrayFieldItem` to maintain `uiSchema`, this prop was introduced recently but was not being passed
 - Fixed `extraErrors` not displaying when `customErrors` are also present (e.g., with array fields and controlled `formData`), fixing [#4982](https://github.com/rjsf-team/react-jsonschema-form/issues/4982)
 
+## Dev / docs / playground
+
+- Fixed scrolling of Monaco editors in the playground, fixing [#4992](https://github.com/rjsf-team/react-jsonschema-form/issues/4992)
+
 # 6.4.1
 
 ## Dev / docs / playground
