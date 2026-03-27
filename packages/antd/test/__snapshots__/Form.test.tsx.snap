@@ -966,6 +966,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                                                             id="root_tags_0"
                                                             name="root[tags][0]"
                                                             placeholder=""
+                                                            required=""
                                                             type="text"
                                                             value="foo"
                                                           />
@@ -1132,6 +1133,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                                                             id="root_tags_1"
                                                             name="root[tags][1]"
                                                             placeholder=""
+                                                            required=""
                                                             type="text"
                                                             value="bar"
                                                           />
@@ -3421,6 +3423,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                                                             id="root_tags_0"
                                                             name="root.tags.0"
                                                             placeholder=""
+                                                            required=""
                                                             type="text"
                                                             value="foo"
                                                           />
@@ -3587,6 +3590,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                                                             id="root_tags_1"
                                                             name="root.tags.1"
                                                             placeholder=""
+                                                            required=""
                                                             type="text"
                                                             value="bar"
                                                           />
@@ -10722,6 +10726,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                                             id="root_nestedArrayOptional_0"
                                                             name="root_nestedArrayOptional_0"
                                                             placeholder=""
+                                                            required=""
                                                             type="text"
                                                             value="bar"
                                                           />
@@ -12078,6 +12083,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                                             id="root_nestedArrayOptional_0"
                                                             name="root_nestedArrayOptional_0"
                                                             placeholder=""
+                                                            required=""
                                                             type="text"
                                                             value="bar"
                                                           />

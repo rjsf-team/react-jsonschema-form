@@ -4592,6 +4592,82 @@ describe('Async errors', () => {
     expect(formRef.current!.state.errorSchema).toEqual({});
     expect(formRef.current!.state.errors).toEqual([]);
   });
+
+  it('should display extraErrors on first async set with array field and controlled formData', async () => {
+    // Reproduces https://github.com/rjsf-team/react-jsonschema-form/issues/4982
+    // When formData is controlled externally and the schema has an array field,
+    // setting extraErrors after submit should show errors on the first attempt.
+    // The bug was in mergeErrors() where the customErrors merge (created by array
+    // field interactions) overwrote the extraErrors merge by using the original
+    // schemaValidation base instead of the accumulated result.
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        values: {
+          type: 'array',
+          items: { type: 'number' },
+        },
+      },
+    };
+
+    const formRef = createRef<Form>();
+
+    function Wrapper() {
+      const [formData, setFormData] = useState<Record<string, unknown>>({ values: [] });
+      const [extraErrors, setExtraErrors] = useState<ErrorSchema>({});
+
+      const onSubmit = useCallback(async () => {
+        await new Promise((r) => setTimeout(r, 50));
+        setExtraErrors({
+          values: {
+            0: { __errors: ['ERROR MESSAGE'] },
+          },
+          __errors: ['Root error'],
+        } as unknown as ErrorSchema);
+      }, []);
+
+      return (
+        <Form
+          ref={formRef}
+          schema={schema}
+          validator={validator}
+          formData={formData}
+          onChange={({ formData: next }: IChangeEvent) => setFormData((next as Record<string, unknown>) ?? {})}
+          extraErrors={extraErrors}
+          onSubmit={onSubmit}
+        />
+      );
+    }
+
+    const { container } = render(<Wrapper />);
+    const form = container.firstElementChild!;
+
+    // Add an array item and fill it with a valid number
+    const addBtn = form.querySelector('.btn-add');
+    await act(async () => {
+      fireEvent.click(addBtn!);
+    });
+    const input = form.querySelector('input[type="number"]');
+    await act(async () => {
+      fireEvent.change(input!, { target: { value: '42' } });
+    });
+
+    // Submit the form, then wait for async extraErrors to be set
+    await act(async () => {
+      fireEvent.submit(form);
+    });
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 100));
+    });
+
+    // The extra errors should be displayed on the FIRST submit
+    expect(formRef.current!.state.errors.length).toBeGreaterThan(0);
+    expect(formRef.current!.state.errorSchema).toEqual(
+      expect.objectContaining({
+        __errors: ['Root error'],
+      }),
+    );
+  });
 });
 
 describe('Calling onChange right after updating a Form with props formData', () => {

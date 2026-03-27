@@ -18,10 +18,15 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.4.2
 
+## @rjsf/antd
+
+- Forward `required` to `BaseInputTemplate` so that required string and number fields render the HTML `required` attribute, fixing [#3743](https://github.com/rjsf-team/react-jsonschema-form/issues/3743)
+
 ## @rjsf/core
 
 - Fixed a breaking change introduced in v6.4.0 where array properties with enum items no longer used `ui:enumNames` from the array property's uiSchema ([#4985](https://github.com/rjsf-team/react-jsonschema-form/issues/4985))
 - Passed `parentUiSchema` to `ArrayFieldItem` to maintain `uiSchema`, this prop was introduced recently but was not being passed
+- Fixed `extraErrors` not displaying when `customErrors` are also present (e.g., with array fields and controlled `formData`), fixing [#4982](https://github.com/rjsf-team/react-jsonschema-form/issues/4982)
 
 # 6.4.1
 

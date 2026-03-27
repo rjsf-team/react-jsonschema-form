@@ -9,6 +9,40 @@ import Form from '../src';
 formTests(Form);
 
 describe('antd specific tests', () => {
+  test('applies the required attribute to required input fields', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      required: ['name'],
+      properties: {
+        name: {
+          type: 'string',
+          title: 'Name',
+        },
+      },
+    };
+
+    const { container } = render(<Form schema={schema} validator={validator} />);
+
+    expect(container.querySelector('input#root_name')).toHaveAttribute('required');
+  });
+
+  test('applies the required attribute to required number fields', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      required: ['age'],
+      properties: {
+        age: {
+          type: 'number',
+          title: 'Age',
+        },
+      },
+    };
+
+    const { container } = render(<Form schema={schema} validator={validator} />);
+
+    expect(container.querySelector('input#root_age')).toHaveAttribute('required');
+  });
+
   test('descriptionLocation tooltip in formContext', () => {
     const schema: RJSFSchema = {
       type: 'object',
