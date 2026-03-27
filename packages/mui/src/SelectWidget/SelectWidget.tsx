@@ -55,39 +55,39 @@ export default function SelectWidget<
   const useRealValues = !!htmlName;
 
   const _onChange = ({ target: { value } }: ChangeEvent<{ value: string }>) => {
-    if (useRealValues) {
-      onChange(multiple ? value : value || optEmptyVal);
-    } else {
-      onChange(enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
-    }
+    const newValue = useRealValues
+      ? multiple
+        ? value
+        : value || optEmptyVal
+      : enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal);
+    onChange(newValue);
   };
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => {
-    if (useRealValues) {
-      onBlur(id, multiple ? target && target.value : (target && target.value) || optEmptyVal);
-    } else {
-      onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
-    }
+    const newValue = useRealValues
+      ? multiple
+        ? target && target.value
+        : (target && target.value) || optEmptyVal
+      : enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal);
+    onBlur(id, newValue);
   };
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => {
-    if (useRealValues) {
-      onFocus(id, multiple ? target && target.value : (target && target.value) || optEmptyVal);
-    } else {
-      onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
-    }
+    const newValue = useRealValues
+      ? multiple
+        ? target && target.value
+        : (target && target.value) || optEmptyVal
+      : enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal);
+    onFocus(id, newValue);
   };
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
   const { InputLabelProps, SelectProps, autocomplete, ...textFieldRemainingProps } = textFieldProps;
   const showPlaceholderOption = !multiple && schema.default === undefined;
 
-  const selectValue = useRealValues
-    ? isEmpty
-      ? emptyValue
-      : multiple
-        ? value.map(String)
-        : String(value)
-    : !isEmpty && typeof selectedIndexes !== 'undefined'
-      ? selectedIndexes
-      : emptyValue;
+  let selectValue;
+  if (useRealValues) {
+    selectValue = isEmpty ? emptyValue : multiple ? value.map(String) : String(value);
+  } else {
+    selectValue = !isEmpty && typeof selectedIndexes !== 'undefined' ? selectedIndexes : emptyValue;
+  }
 
   return (
     <TextField

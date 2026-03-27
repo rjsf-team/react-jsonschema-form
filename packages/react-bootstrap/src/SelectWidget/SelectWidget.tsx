@@ -50,15 +50,12 @@ export default function SelectWidget<
   const isEmpty = typeof value === 'undefined' || (multiple && value.length < 1) || (!multiple && value === emptyValue);
   const showPlaceholderOption = !multiple && schema.default === undefined;
 
-  const selectValue = useRealValues
-    ? isEmpty
-      ? emptyValue
-      : multiple
-        ? value.map(String)
-        : String(value)
-    : typeof selectedIndexes === 'undefined'
-      ? emptyValue
-      : selectedIndexes;
+  let selectValue;
+  if (useRealValues) {
+    selectValue = isEmpty ? emptyValue : multiple ? value.map(String) : String(value);
+  } else {
+    selectValue = typeof selectedIndexes === 'undefined' ? emptyValue : selectedIndexes;
+  }
 
   return (
     <FormSelect
@@ -74,31 +71,34 @@ export default function SelectWidget<
         onBlur &&
         ((event: FocusEvent) => {
           const newValue = getValue(event, multiple);
-          if (useRealValues) {
-            onBlur(id, multiple ? newValue : newValue || optEmptyValue);
-          } else {
-            onBlur(id, enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue));
-          }
+          const resolved = useRealValues
+            ? multiple
+              ? newValue
+              : newValue || optEmptyValue
+            : enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue);
+          onBlur(id, resolved);
         })
       }
       onFocus={
         onFocus &&
         ((event: FocusEvent) => {
           const newValue = getValue(event, multiple);
-          if (useRealValues) {
-            onFocus(id, multiple ? newValue : newValue || optEmptyValue);
-          } else {
-            onFocus(id, enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue));
-          }
+          const resolved = useRealValues
+            ? multiple
+              ? newValue
+              : newValue || optEmptyValue
+            : enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue);
+          onFocus(id, resolved);
         })
       }
       onChange={(event: ChangeEvent) => {
         const newValue = getValue(event, multiple);
-        if (useRealValues) {
-          onChange(multiple ? newValue : newValue || optEmptyValue);
-        } else {
-          onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue));
-        }
+        const resolved = useRealValues
+          ? multiple
+            ? newValue
+            : newValue || optEmptyValue
+          : enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue);
+        onChange(resolved);
       }}
       aria-describedby={ariaDescribedByIds(id)}
     >

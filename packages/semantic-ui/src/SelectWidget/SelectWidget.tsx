@@ -96,38 +96,38 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     useRealValues,
   );
   const _onChange = (_: SyntheticEvent<HTMLElement>, { value }: DropdownProps) => {
-    if (useRealValues) {
-      onChange(multiple ? value : value || optEmptyVal);
-    } else {
-      onChange(enumOptionsValueForIndex<S>(value as string[], enumOptions, optEmptyVal));
-    }
+    const newValue = useRealValues
+      ? multiple
+        ? value
+        : value || optEmptyVal
+      : enumOptionsValueForIndex<S>(value as string[], enumOptions, optEmptyVal);
+    onChange(newValue);
   };
   // eslint-disable-next-line no-shadow
   const _onBlur = (_: FocusEvent<HTMLElement>, { target }: DropdownProps) => {
-    if (useRealValues) {
-      onBlur(id, multiple ? target && target.value : (target && target.value) || optEmptyVal);
-    } else {
-      onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
-    }
+    const newValue = useRealValues
+      ? multiple
+        ? target && target.value
+        : (target && target.value) || optEmptyVal
+      : enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal);
+    onBlur(id, newValue);
   };
   const _onFocus = (_: FocusEvent<HTMLElement>, { target }: DropdownProps) => {
-    if (useRealValues) {
-      onFocus(id, multiple ? target && target.value : (target && target.value) || optEmptyVal);
-    } else {
-      onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
-    }
+    const newValue = useRealValues
+      ? multiple
+        ? target && target.value
+        : (target && target.value) || optEmptyVal
+      : enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal);
+    onFocus(id, newValue);
   };
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
 
-  const selectValue = useRealValues
-    ? typeof value === 'undefined'
-      ? emptyValue
-      : multiple
-        ? value.map(String)
-        : String(value)
-    : typeof value === 'undefined'
-      ? emptyValue
-      : selectedIndexes;
+  let selectValue;
+  if (useRealValues) {
+    selectValue = typeof value === 'undefined' ? emptyValue : multiple ? value.map(String) : String(value);
+  } else {
+    selectValue = typeof value === 'undefined' ? emptyValue : selectedIndexes;
+  }
 
   return (
     <Form.Dropdown

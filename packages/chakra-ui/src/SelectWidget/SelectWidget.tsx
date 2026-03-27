@@ -45,36 +45,29 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const useRealValues = !!htmlName;
 
   const _onMultiChange = ({ value }: SelectValueChangeDetails) => {
-    if (useRealValues) {
-      return onChange(value);
-    }
-    return onChange(enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
+    const newValue = useRealValues ? value : enumOptionsValueForIndex<S>(value, enumOptions, emptyValue);
+    return onChange(newValue);
   };
 
   const _onSingleChange = ({ value }: SelectValueChangeDetails) => {
-    if (useRealValues) {
-      const selected = Array.isArray(value) && value.length === 1 ? value[0] : value;
-      return onChange(selected || emptyValue);
-    }
-    const selected = enumOptionsValueForIndex<S>(value, enumOptions, emptyValue);
-    return onChange(Array.isArray(selected) && selected.length === 1 ? selected[0] : selected);
+    const resolved = useRealValues ? value : enumOptionsValueForIndex<S>(value, enumOptions, emptyValue);
+    const selected = Array.isArray(resolved) && resolved.length === 1 ? resolved[0] : resolved;
+    return onChange(selected || emptyValue);
   };
 
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(
-      id,
-      useRealValues
-        ? target && target.value
-        : enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue),
-    );
+  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => {
+    const newValue = useRealValues
+      ? target && target.value
+      : enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue);
+    onBlur(id, newValue);
+  };
 
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(
-      id,
-      useRealValues
-        ? target && target.value
-        : enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue),
-    );
+  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => {
+    const newValue = useRealValues
+      ? target && target.value
+      : enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue);
+    onFocus(id, newValue);
+  };
 
   const showPlaceholderOption = !multiple && schema.default === undefined;
   const { valueLabelMap, displayEnumOptions } = useMemo((): {
@@ -123,13 +116,16 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         ]
       : [];
 
-  const formValue = useRealValues
-    ? typeof value !== 'undefined'
-      ? Array.isArray(value)
-        ? value.map(String)
-        : [String(value)]
-      : []
-    : (isMultiple ? getMultiValue() : getSingleValue()).map((item) => item.value);
+  let formValue: string[];
+  if (useRealValues) {
+    if (typeof value === 'undefined') {
+      formValue = [];
+    } else {
+      formValue = Array.isArray(value) ? value.map(String) : [String(value)];
+    }
+  } else {
+    formValue = (isMultiple ? getMultiValue() : getSingleValue()).map((item) => item.value);
+  }
 
   const selectOptions = createListCollection({
     items: displayEnumOptions.filter((item) => item.value),

@@ -59,38 +59,34 @@ function SingleSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   const isEmpty = typeof value === 'undefined' || (multiple && value.length < 1) || (!multiple && value === emptyValue);
 
   const _onChange = (e: { value: any }) => {
-    if (useRealValues) {
-      onChange(multiple ? e.value : e.value || optEmptyVal);
-    } else {
-      onChange(enumOptionsValueForIndex<S>(e.value, enumOptions, optEmptyVal));
-    }
+    const newValue = useRealValues
+      ? multiple
+        ? e.value
+        : e.value || optEmptyVal
+      : enumOptionsValueForIndex<S>(e.value, enumOptions, optEmptyVal);
+    onChange(newValue);
   };
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => {
-    if (useRealValues) {
-      onBlur(id, target && target.value);
-    } else {
-      onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
-    }
+    const newValue = useRealValues
+      ? target && target.value
+      : enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal);
+    onBlur(id, newValue);
   };
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => {
-    if (useRealValues) {
-      onFocus(id, target && target.value);
-    } else {
-      onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
-    }
+    const newValue = useRealValues
+      ? target && target.value
+      : enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal);
+    onFocus(id, newValue);
   };
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
   const { ...dropdownRemainingProps } = dropdownProps;
 
-  const selectValue = useRealValues
-    ? isEmpty
-      ? emptyValue
-      : multiple
-        ? value.map(String)
-        : String(value)
-    : !isEmpty && typeof selectedIndexes !== 'undefined'
-      ? selectedIndexes
-      : emptyValue;
+  let selectValue;
+  if (useRealValues) {
+    selectValue = isEmpty ? emptyValue : multiple ? value.map(String) : String(value);
+  } else {
+    selectValue = !isEmpty && typeof selectedIndexes !== 'undefined' ? selectedIndexes : emptyValue;
+  }
 
   return (
     <Dropdown
@@ -137,37 +133,33 @@ function MultiSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   const isEmpty = typeof value === 'undefined' || (multiple && value.length < 1) || (!multiple && value === emptyValue);
 
   const _onChange = (e: { value: any }) => {
-    if (useRealValues) {
-      onChange(multiple ? e.value : e.value || optEmptyVal);
-    } else {
-      onChange(enumOptionsValueForIndex<S>(e.value, enumOptions, optEmptyVal));
-    }
+    const newValue = useRealValues
+      ? multiple
+        ? e.value
+        : e.value || optEmptyVal
+      : enumOptionsValueForIndex<S>(e.value, enumOptions, optEmptyVal);
+    onChange(newValue);
   };
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => {
-    if (useRealValues) {
-      onBlur(id, target && target.value);
-    } else {
-      onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
-    }
+    const newValue = useRealValues
+      ? target && target.value
+      : enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal);
+    onBlur(id, newValue);
   };
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => {
-    if (useRealValues) {
-      onFocus(id, target && target.value);
-    } else {
-      onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
-    }
+    const newValue = useRealValues
+      ? target && target.value
+      : enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal);
+    onFocus(id, newValue);
   };
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
 
-  const selectValue = useRealValues
-    ? isEmpty
-      ? emptyValue
-      : multiple
-        ? value.map(String)
-        : String(value)
-    : !isEmpty && typeof selectedIndexes !== 'undefined'
-      ? selectedIndexes
-      : emptyValue;
+  let selectValue;
+  if (useRealValues) {
+    selectValue = isEmpty ? emptyValue : multiple ? value.map(String) : String(value);
+  } else {
+    selectValue = !isEmpty && typeof selectedIndexes !== 'undefined' ? selectedIndexes : emptyValue;
+  }
 
   return (
     <MultiSelect

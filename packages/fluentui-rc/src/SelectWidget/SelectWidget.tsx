@@ -54,13 +54,18 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     selectedIndexesAsArray = selectedIndexes.map((index) => String(index));
   }
 
-  const selectedOptionsValue = useRealValues
-    ? Array.isArray(value)
-      ? value.map(String)
-      : typeof value !== 'undefined'
-        ? [String(value)]
-        : []
-    : selectedIndexesAsArray;
+  let selectedOptionsValue: string[];
+  if (useRealValues) {
+    if (Array.isArray(value)) {
+      selectedOptionsValue = value.map(String);
+    } else if (typeof value !== 'undefined') {
+      selectedOptionsValue = [String(value)];
+    } else {
+      selectedOptionsValue = [];
+    }
+  } else {
+    selectedOptionsValue = selectedIndexesAsArray;
+  }
 
   const dropdownValue = useRealValues
     ? selectedOptionsValue
@@ -75,10 +80,12 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   const _onFocus = () => onFocus(id, selectedIndexes);
   const _onChange = (_: any, data: OptionOnSelectData) => {
     const newValue = getValue(data, multiple);
-    if (useRealValues) {
-      return onChange(multiple ? newValue : newValue || optEmptyVal);
-    }
-    return onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
+    const resolved = useRealValues
+      ? multiple
+        ? newValue
+        : newValue || optEmptyVal
+      : enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal);
+    return onChange(resolved);
   };
   const showPlaceholderOption = !multiple && schema.default === undefined;
 

@@ -59,24 +59,24 @@ export default function SelectWidget<
 
   const cnClassName = cn({ 'border-destructive': rawErrors.length > 0 }, className);
 
+  let selectedValue: string;
+  if (useRealValues) {
+    selectedValue = value !== undefined ? String(value) : '';
+  } else {
+    selectedValue = enumOptionsIndexForValue<S>(value ?? defaultValue, enumOptions, false) as unknown as string;
+  }
+
   return (
     <div className='p-0.5'>
       {!multiple ? (
         <FancySelect
           items={items}
-          selected={
-            useRealValues
-              ? value !== undefined
-                ? String(value)
-                : ''
-              : (enumOptionsIndexForValue<S>(value ?? defaultValue, enumOptions, false) as unknown as string)
-          }
+          selected={selectedValue}
           onValueChange={(selectedValue) => {
-            if (useRealValues) {
-              onChange(selectedValue || optEmptyValue);
-            } else {
-              onChange(enumOptionsValueForIndex<S>(selectedValue, enumOptions, optEmptyValue));
-            }
+            const newValue = useRealValues
+              ? selectedValue || optEmptyValue
+              : enumOptionsValueForIndex<S>(selectedValue, enumOptions, optEmptyValue);
+            onChange(newValue);
           }}
           autoFocus={autofocus}
           disabled={disabled || readonly}
@@ -97,11 +97,8 @@ export default function SelectWidget<
           items={items}
           selected={value}
           onValueChange={(values) => {
-            if (useRealValues) {
-              onChange(values);
-            } else {
-              onChange(enumOptionsValueForIndex<S>(values, enumOptions, optEmptyValue));
-            }
+            const newValue = useRealValues ? values : enumOptionsValueForIndex<S>(values, enumOptions, optEmptyValue);
+            onChange(newValue);
           }}
           onFocus={_onFancyFocus}
           onBlur={_onFancyBlur}
