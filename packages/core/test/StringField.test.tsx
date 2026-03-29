@@ -525,7 +525,7 @@ describe('StringField', () => {
       });
       act(() => {
         fireEvent.change(node.querySelector('select')!, {
-          target: { value: 0 }, // use index
+          target: { value: 'foo' }, // use real value
         });
       });
       expectToHaveBeenCalledWithFormData(onChange, 'foo', 'root');
@@ -558,7 +558,7 @@ describe('StringField', () => {
 
       act(() => {
         fireEvent.change(node.querySelector('select')!, {
-          target: { value: 0 }, // use index
+          target: { value: 'foo' }, // use real value
         });
       });
 
@@ -1114,22 +1114,22 @@ describe('StringField', () => {
 
       act(() => {
         fireEvent.change(node.querySelector('#root_year')!, {
-          target: { value: 2012 - 1900 }, // convert year to index
+          target: { value: '2012' }, // use real value
         });
         fireEvent.change(node.querySelector('#root_month')!, {
-          target: { value: 9 }, // Month index
+          target: { value: '10' }, // use real value (October)
         });
         fireEvent.change(node.querySelector('#root_day')!, {
-          target: { value: 1 }, // Day index
+          target: { value: '2' }, // use real value
         });
         fireEvent.change(node.querySelector('#root_hour')!, {
-          target: { value: 1 },
+          target: { value: '1' },
         });
         fireEvent.change(node.querySelector('#root_minute')!, {
-          target: { value: 2 },
+          target: { value: '2' },
         });
         fireEvent.change(node.querySelector('#root_second')!, {
-          target: { value: 3 },
+          target: { value: '3' },
         });
       });
       expectToHaveBeenCalledWithFormData(onChange, '2012-10-02T01:02:03.000Z', 'root');
@@ -1184,7 +1184,7 @@ describe('StringField', () => {
       ]);
       const monthOptions = node.querySelectorAll('select#root_month option');
       const monthOptionsValues = [].map.call(monthOptions, (o: HTMLOptionElement) => o.value);
-      expect(monthOptionsValues).toEqual(['', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']);
+      expect(monthOptionsValues).toEqual(['', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']);
     });
 
     it("should render the widgets with the expected options' labels", () => {
@@ -1475,13 +1475,13 @@ describe('StringField', () => {
 
       act(() => {
         fireEvent.change(node.querySelector('#root_year')!, {
-          target: { value: 2012 - 1900 }, // convert year to index
+          target: { value: '2012' }, // use real value
         });
         fireEvent.change(node.querySelector('#root_month')!, {
-          target: { value: 9 }, // Month index
+          target: { value: '10' }, // use real value (October)
         });
         fireEvent.change(node.querySelector('#root_day')!, {
-          target: { value: 1 }, // Day index
+          target: { value: '2' }, // use real value
         });
       });
       expectToHaveBeenCalledWithFormData(onChange, '2012-10-02', 'root');
@@ -1498,10 +1498,10 @@ describe('StringField', () => {
 
       act(() => {
         fireEvent.change(node.querySelector('#root_year')!, {
-          target: { value: 2012 - 1900 }, // convert year to index
+          target: { value: '2012' }, // use real value
         });
         fireEvent.change(node.querySelector('#root_month')!, {
-          target: { value: 9 }, // Month index
+          target: { value: '10' }, // use real value (October)
         });
       });
       expect(getSelectedOptionValue(node.querySelector<HTMLSelectElement>('#root_year')!)).toEqual('2012');
@@ -1557,7 +1557,7 @@ describe('StringField', () => {
       ]);
       const monthOptions = node.querySelectorAll('select#root_month option');
       const monthOptionsValues = [].map.call(monthOptions, (o: HTMLOptionElement) => o.value);
-      expect(monthOptionsValues).toEqual(['', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']);
+      expect(monthOptionsValues).toEqual(['', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']);
     });
 
     it("should render the widgets with the expected options' labels", () => {

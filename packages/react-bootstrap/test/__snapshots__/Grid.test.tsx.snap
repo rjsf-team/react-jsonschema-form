@@ -392,338 +392,394 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 value=""
                               />
                               <option
+                                data-index="0"
                                 id="AL"
-                                value="0"
+                                value="AL"
                               >
                                 AL
                               </option>
                               <option
+                                data-index="1"
                                 id="AK"
-                                value="1"
+                                value="AK"
                               >
                                 AK
                               </option>
                               <option
+                                data-index="2"
                                 id="AS"
-                                value="2"
+                                value="AS"
                               >
                                 AS
                               </option>
                               <option
+                                data-index="3"
                                 id="AZ"
-                                value="3"
+                                value="AZ"
                               >
                                 AZ
                               </option>
                               <option
+                                data-index="4"
                                 id="AR"
-                                value="4"
+                                value="AR"
                               >
                                 AR
                               </option>
                               <option
+                                data-index="5"
                                 id="CA"
-                                value="5"
+                                value="CA"
                               >
                                 CA
                               </option>
                               <option
+                                data-index="6"
                                 id="CO"
-                                value="6"
+                                value="CO"
                               >
                                 CO
                               </option>
                               <option
+                                data-index="7"
                                 id="CT"
-                                value="7"
+                                value="CT"
                               >
                                 CT
                               </option>
                               <option
+                                data-index="8"
                                 id="DE"
-                                value="8"
+                                value="DE"
                               >
                                 DE
                               </option>
                               <option
+                                data-index="9"
                                 id="DC"
-                                value="9"
+                                value="DC"
                               >
                                 DC
                               </option>
                               <option
+                                data-index="10"
                                 id="FL"
-                                value="10"
+                                value="FL"
                               >
                                 FL
                               </option>
                               <option
+                                data-index="11"
                                 id="GA"
-                                value="11"
+                                value="GA"
                               >
                                 GA
                               </option>
                               <option
+                                data-index="12"
                                 id="GU"
-                                value="12"
+                                value="GU"
                               >
                                 GU
                               </option>
                               <option
+                                data-index="13"
                                 id="HI"
-                                value="13"
+                                value="HI"
                               >
                                 HI
                               </option>
                               <option
+                                data-index="14"
                                 id="ID"
-                                value="14"
+                                value="ID"
                               >
                                 ID
                               </option>
                               <option
+                                data-index="15"
                                 id="IL"
-                                value="15"
+                                value="IL"
                               >
                                 IL
                               </option>
                               <option
+                                data-index="16"
                                 id="IN"
-                                value="16"
+                                value="IN"
                               >
                                 IN
                               </option>
                               <option
+                                data-index="17"
                                 id="IA"
-                                value="17"
+                                value="IA"
                               >
                                 IA
                               </option>
                               <option
+                                data-index="18"
                                 id="KS"
-                                value="18"
+                                value="KS"
                               >
                                 KS
                               </option>
                               <option
+                                data-index="19"
                                 id="KY"
-                                value="19"
+                                value="KY"
                               >
                                 KY
                               </option>
                               <option
+                                data-index="20"
                                 id="LA"
-                                value="20"
+                                value="LA"
                               >
                                 LA
                               </option>
                               <option
+                                data-index="21"
                                 id="ME"
-                                value="21"
+                                value="ME"
                               >
                                 ME
                               </option>
                               <option
+                                data-index="22"
                                 id="MD"
-                                value="22"
+                                value="MD"
                               >
                                 MD
                               </option>
                               <option
+                                data-index="23"
                                 id="MA"
-                                value="23"
+                                value="MA"
                               >
                                 MA
                               </option>
                               <option
+                                data-index="24"
                                 id="MI"
-                                value="24"
+                                value="MI"
                               >
                                 MI
                               </option>
                               <option
+                                data-index="25"
                                 id="MN"
-                                value="25"
+                                value="MN"
                               >
                                 MN
                               </option>
                               <option
+                                data-index="26"
                                 id="MS"
-                                value="26"
+                                value="MS"
                               >
                                 MS
                               </option>
                               <option
+                                data-index="27"
                                 id="MO"
-                                value="27"
+                                value="MO"
                               >
                                 MO
                               </option>
                               <option
+                                data-index="28"
                                 id="MT"
-                                value="28"
+                                value="MT"
                               >
                                 MT
                               </option>
                               <option
+                                data-index="29"
                                 id="NE"
-                                value="29"
+                                value="NE"
                               >
                                 NE
                               </option>
                               <option
+                                data-index="30"
                                 id="NV"
-                                value="30"
+                                value="NV"
                               >
                                 NV
                               </option>
                               <option
+                                data-index="31"
                                 id="NH"
-                                value="31"
+                                value="NH"
                               >
                                 NH
                               </option>
                               <option
+                                data-index="32"
                                 id="NJ"
-                                value="32"
+                                value="NJ"
                               >
                                 NJ
                               </option>
                               <option
+                                data-index="33"
                                 id="NM"
-                                value="33"
+                                value="NM"
                               >
                                 NM
                               </option>
                               <option
+                                data-index="34"
                                 id="NY"
-                                value="34"
+                                value="NY"
                               >
                                 NY
                               </option>
                               <option
+                                data-index="35"
                                 id="NC"
-                                value="35"
+                                value="NC"
                               >
                                 NC
                               </option>
                               <option
+                                data-index="36"
                                 id="ND"
-                                value="36"
+                                value="ND"
                               >
                                 ND
                               </option>
                               <option
+                                data-index="37"
                                 id="MP"
-                                value="37"
+                                value="MP"
                               >
                                 MP
                               </option>
                               <option
+                                data-index="38"
                                 id="OH"
-                                value="38"
+                                value="OH"
                               >
                                 OH
                               </option>
                               <option
+                                data-index="39"
                                 id="OK"
-                                value="39"
+                                value="OK"
                               >
                                 OK
                               </option>
                               <option
+                                data-index="40"
                                 id="OR"
-                                value="40"
+                                value="OR"
                               >
                                 OR
                               </option>
                               <option
+                                data-index="41"
                                 id="PA"
-                                value="41"
+                                value="PA"
                               >
                                 PA
                               </option>
                               <option
+                                data-index="42"
                                 id="PR"
-                                value="42"
+                                value="PR"
                               >
                                 PR
                               </option>
                               <option
+                                data-index="43"
                                 id="RI"
-                                value="43"
+                                value="RI"
                               >
                                 RI
                               </option>
                               <option
+                                data-index="44"
                                 id="SC"
-                                value="44"
+                                value="SC"
                               >
                                 SC
                               </option>
                               <option
+                                data-index="45"
                                 id="SD"
-                                value="45"
+                                value="SD"
                               >
                                 SD
                               </option>
                               <option
+                                data-index="46"
                                 id="TN"
-                                value="46"
+                                value="TN"
                               >
                                 TN
                               </option>
                               <option
+                                data-index="47"
                                 id="TX"
-                                value="47"
+                                value="TX"
                               >
                                 TX
                               </option>
                               <option
+                                data-index="48"
                                 id="UT"
-                                value="48"
+                                value="UT"
                               >
                                 UT
                               </option>
                               <option
+                                data-index="49"
                                 id="VT"
-                                value="49"
+                                value="VT"
                               >
                                 VT
                               </option>
                               <option
+                                data-index="50"
                                 id="VA"
-                                value="50"
+                                value="VA"
                               >
                                 VA
                               </option>
                               <option
+                                data-index="51"
                                 id="VI"
-                                value="51"
+                                value="VI"
                               >
                                 VI
                               </option>
                               <option
+                                data-index="52"
                                 id="WA"
-                                value="52"
+                                value="WA"
                               >
                                 WA
                               </option>
                               <option
+                                data-index="53"
                                 id="WV"
-                                value="53"
+                                value="WV"
                               >
                                 WV
                               </option>
                               <option
+                                data-index="54"
                                 id="WI"
-                                value="54"
+                                value="WI"
                               >
                                 WI
                               </option>
                               <option
+                                data-index="55"
                                 id="WY"
-                                value="55"
+                                value="WY"
                               >
                                 WY
                               </option>
@@ -946,338 +1002,394 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           value=""
                         />
                         <option
+                          data-index="0"
                           id="AL"
-                          value="0"
+                          value="AL"
                         >
                           AL
                         </option>
                         <option
+                          data-index="1"
                           id="AK"
-                          value="1"
+                          value="AK"
                         >
                           AK
                         </option>
                         <option
+                          data-index="2"
                           id="AS"
-                          value="2"
+                          value="AS"
                         >
                           AS
                         </option>
                         <option
+                          data-index="3"
                           id="AZ"
-                          value="3"
+                          value="AZ"
                         >
                           AZ
                         </option>
                         <option
+                          data-index="4"
                           id="AR"
-                          value="4"
+                          value="AR"
                         >
                           AR
                         </option>
                         <option
+                          data-index="5"
                           id="CA"
-                          value="5"
+                          value="CA"
                         >
                           CA
                         </option>
                         <option
+                          data-index="6"
                           id="CO"
-                          value="6"
+                          value="CO"
                         >
                           CO
                         </option>
                         <option
+                          data-index="7"
                           id="CT"
-                          value="7"
+                          value="CT"
                         >
                           CT
                         </option>
                         <option
+                          data-index="8"
                           id="DE"
-                          value="8"
+                          value="DE"
                         >
                           DE
                         </option>
                         <option
+                          data-index="9"
                           id="DC"
-                          value="9"
+                          value="DC"
                         >
                           DC
                         </option>
                         <option
+                          data-index="10"
                           id="FL"
-                          value="10"
+                          value="FL"
                         >
                           FL
                         </option>
                         <option
+                          data-index="11"
                           id="GA"
-                          value="11"
+                          value="GA"
                         >
                           GA
                         </option>
                         <option
+                          data-index="12"
                           id="GU"
-                          value="12"
+                          value="GU"
                         >
                           GU
                         </option>
                         <option
+                          data-index="13"
                           id="HI"
-                          value="13"
+                          value="HI"
                         >
                           HI
                         </option>
                         <option
+                          data-index="14"
                           id="ID"
-                          value="14"
+                          value="ID"
                         >
                           ID
                         </option>
                         <option
+                          data-index="15"
                           id="IL"
-                          value="15"
+                          value="IL"
                         >
                           IL
                         </option>
                         <option
+                          data-index="16"
                           id="IN"
-                          value="16"
+                          value="IN"
                         >
                           IN
                         </option>
                         <option
+                          data-index="17"
                           id="IA"
-                          value="17"
+                          value="IA"
                         >
                           IA
                         </option>
                         <option
+                          data-index="18"
                           id="KS"
-                          value="18"
+                          value="KS"
                         >
                           KS
                         </option>
                         <option
+                          data-index="19"
                           id="KY"
-                          value="19"
+                          value="KY"
                         >
                           KY
                         </option>
                         <option
+                          data-index="20"
                           id="LA"
-                          value="20"
+                          value="LA"
                         >
                           LA
                         </option>
                         <option
+                          data-index="21"
                           id="ME"
-                          value="21"
+                          value="ME"
                         >
                           ME
                         </option>
                         <option
+                          data-index="22"
                           id="MD"
-                          value="22"
+                          value="MD"
                         >
                           MD
                         </option>
                         <option
+                          data-index="23"
                           id="MA"
-                          value="23"
+                          value="MA"
                         >
                           MA
                         </option>
                         <option
+                          data-index="24"
                           id="MI"
-                          value="24"
+                          value="MI"
                         >
                           MI
                         </option>
                         <option
+                          data-index="25"
                           id="MN"
-                          value="25"
+                          value="MN"
                         >
                           MN
                         </option>
                         <option
+                          data-index="26"
                           id="MS"
-                          value="26"
+                          value="MS"
                         >
                           MS
                         </option>
                         <option
+                          data-index="27"
                           id="MO"
-                          value="27"
+                          value="MO"
                         >
                           MO
                         </option>
                         <option
+                          data-index="28"
                           id="MT"
-                          value="28"
+                          value="MT"
                         >
                           MT
                         </option>
                         <option
+                          data-index="29"
                           id="NE"
-                          value="29"
+                          value="NE"
                         >
                           NE
                         </option>
                         <option
+                          data-index="30"
                           id="NV"
-                          value="30"
+                          value="NV"
                         >
                           NV
                         </option>
                         <option
+                          data-index="31"
                           id="NH"
-                          value="31"
+                          value="NH"
                         >
                           NH
                         </option>
                         <option
+                          data-index="32"
                           id="NJ"
-                          value="32"
+                          value="NJ"
                         >
                           NJ
                         </option>
                         <option
+                          data-index="33"
                           id="NM"
-                          value="33"
+                          value="NM"
                         >
                           NM
                         </option>
                         <option
+                          data-index="34"
                           id="NY"
-                          value="34"
+                          value="NY"
                         >
                           NY
                         </option>
                         <option
+                          data-index="35"
                           id="NC"
-                          value="35"
+                          value="NC"
                         >
                           NC
                         </option>
                         <option
+                          data-index="36"
                           id="ND"
-                          value="36"
+                          value="ND"
                         >
                           ND
                         </option>
                         <option
+                          data-index="37"
                           id="MP"
-                          value="37"
+                          value="MP"
                         >
                           MP
                         </option>
                         <option
+                          data-index="38"
                           id="OH"
-                          value="38"
+                          value="OH"
                         >
                           OH
                         </option>
                         <option
+                          data-index="39"
                           id="OK"
-                          value="39"
+                          value="OK"
                         >
                           OK
                         </option>
                         <option
+                          data-index="40"
                           id="OR"
-                          value="40"
+                          value="OR"
                         >
                           OR
                         </option>
                         <option
+                          data-index="41"
                           id="PA"
-                          value="41"
+                          value="PA"
                         >
                           PA
                         </option>
                         <option
+                          data-index="42"
                           id="PR"
-                          value="42"
+                          value="PR"
                         >
                           PR
                         </option>
                         <option
+                          data-index="43"
                           id="RI"
-                          value="43"
+                          value="RI"
                         >
                           RI
                         </option>
                         <option
+                          data-index="44"
                           id="SC"
-                          value="44"
+                          value="SC"
                         >
                           SC
                         </option>
                         <option
+                          data-index="45"
                           id="SD"
-                          value="45"
+                          value="SD"
                         >
                           SD
                         </option>
                         <option
+                          data-index="46"
                           id="TN"
-                          value="46"
+                          value="TN"
                         >
                           TN
                         </option>
                         <option
+                          data-index="47"
                           id="TX"
-                          value="47"
+                          value="TX"
                         >
                           TX
                         </option>
                         <option
+                          data-index="48"
                           id="UT"
-                          value="48"
+                          value="UT"
                         >
                           UT
                         </option>
                         <option
+                          data-index="49"
                           id="VT"
-                          value="49"
+                          value="VT"
                         >
                           VT
                         </option>
                         <option
+                          data-index="50"
                           id="VA"
-                          value="50"
+                          value="VA"
                         >
                           VA
                         </option>
                         <option
+                          data-index="51"
                           id="VI"
-                          value="51"
+                          value="VI"
                         >
                           VI
                         </option>
                         <option
+                          data-index="52"
                           id="WA"
-                          value="52"
+                          value="WA"
                         >
                           WA
                         </option>
                         <option
+                          data-index="53"
                           id="WV"
-                          value="53"
+                          value="WV"
                         >
                           WV
                         </option>
                         <option
+                          data-index="54"
                           id="WI"
-                          value="54"
+                          value="WI"
                         >
                           WI
                         </option>
                         <option
+                          data-index="55"
                           id="WY"
-                          value="55"
+                          value="WY"
                         >
                           WY
                         </option>
@@ -1695,338 +1807,394 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 value=""
                               />
                               <option
+                                data-index="0"
                                 id="AL"
-                                value="0"
+                                value="AL"
                               >
                                 AL
                               </option>
                               <option
+                                data-index="1"
                                 id="AK"
-                                value="1"
+                                value="AK"
                               >
                                 AK
                               </option>
                               <option
+                                data-index="2"
                                 id="AS"
-                                value="2"
+                                value="AS"
                               >
                                 AS
                               </option>
                               <option
+                                data-index="3"
                                 id="AZ"
-                                value="3"
+                                value="AZ"
                               >
                                 AZ
                               </option>
                               <option
+                                data-index="4"
                                 id="AR"
-                                value="4"
+                                value="AR"
                               >
                                 AR
                               </option>
                               <option
+                                data-index="5"
                                 id="CA"
-                                value="5"
+                                value="CA"
                               >
                                 CA
                               </option>
                               <option
+                                data-index="6"
                                 id="CO"
-                                value="6"
+                                value="CO"
                               >
                                 CO
                               </option>
                               <option
+                                data-index="7"
                                 id="CT"
-                                value="7"
+                                value="CT"
                               >
                                 CT
                               </option>
                               <option
+                                data-index="8"
                                 id="DE"
-                                value="8"
+                                value="DE"
                               >
                                 DE
                               </option>
                               <option
+                                data-index="9"
                                 id="DC"
-                                value="9"
+                                value="DC"
                               >
                                 DC
                               </option>
                               <option
+                                data-index="10"
                                 id="FL"
-                                value="10"
+                                value="FL"
                               >
                                 FL
                               </option>
                               <option
+                                data-index="11"
                                 id="GA"
-                                value="11"
+                                value="GA"
                               >
                                 GA
                               </option>
                               <option
+                                data-index="12"
                                 id="GU"
-                                value="12"
+                                value="GU"
                               >
                                 GU
                               </option>
                               <option
+                                data-index="13"
                                 id="HI"
-                                value="13"
+                                value="HI"
                               >
                                 HI
                               </option>
                               <option
+                                data-index="14"
                                 id="ID"
-                                value="14"
+                                value="ID"
                               >
                                 ID
                               </option>
                               <option
+                                data-index="15"
                                 id="IL"
-                                value="15"
+                                value="IL"
                               >
                                 IL
                               </option>
                               <option
+                                data-index="16"
                                 id="IN"
-                                value="16"
+                                value="IN"
                               >
                                 IN
                               </option>
                               <option
+                                data-index="17"
                                 id="IA"
-                                value="17"
+                                value="IA"
                               >
                                 IA
                               </option>
                               <option
+                                data-index="18"
                                 id="KS"
-                                value="18"
+                                value="KS"
                               >
                                 KS
                               </option>
                               <option
+                                data-index="19"
                                 id="KY"
-                                value="19"
+                                value="KY"
                               >
                                 KY
                               </option>
                               <option
+                                data-index="20"
                                 id="LA"
-                                value="20"
+                                value="LA"
                               >
                                 LA
                               </option>
                               <option
+                                data-index="21"
                                 id="ME"
-                                value="21"
+                                value="ME"
                               >
                                 ME
                               </option>
                               <option
+                                data-index="22"
                                 id="MD"
-                                value="22"
+                                value="MD"
                               >
                                 MD
                               </option>
                               <option
+                                data-index="23"
                                 id="MA"
-                                value="23"
+                                value="MA"
                               >
                                 MA
                               </option>
                               <option
+                                data-index="24"
                                 id="MI"
-                                value="24"
+                                value="MI"
                               >
                                 MI
                               </option>
                               <option
+                                data-index="25"
                                 id="MN"
-                                value="25"
+                                value="MN"
                               >
                                 MN
                               </option>
                               <option
+                                data-index="26"
                                 id="MS"
-                                value="26"
+                                value="MS"
                               >
                                 MS
                               </option>
                               <option
+                                data-index="27"
                                 id="MO"
-                                value="27"
+                                value="MO"
                               >
                                 MO
                               </option>
                               <option
+                                data-index="28"
                                 id="MT"
-                                value="28"
+                                value="MT"
                               >
                                 MT
                               </option>
                               <option
+                                data-index="29"
                                 id="NE"
-                                value="29"
+                                value="NE"
                               >
                                 NE
                               </option>
                               <option
+                                data-index="30"
                                 id="NV"
-                                value="30"
+                                value="NV"
                               >
                                 NV
                               </option>
                               <option
+                                data-index="31"
                                 id="NH"
-                                value="31"
+                                value="NH"
                               >
                                 NH
                               </option>
                               <option
+                                data-index="32"
                                 id="NJ"
-                                value="32"
+                                value="NJ"
                               >
                                 NJ
                               </option>
                               <option
+                                data-index="33"
                                 id="NM"
-                                value="33"
+                                value="NM"
                               >
                                 NM
                               </option>
                               <option
+                                data-index="34"
                                 id="NY"
-                                value="34"
+                                value="NY"
                               >
                                 NY
                               </option>
                               <option
+                                data-index="35"
                                 id="NC"
-                                value="35"
+                                value="NC"
                               >
                                 NC
                               </option>
                               <option
+                                data-index="36"
                                 id="ND"
-                                value="36"
+                                value="ND"
                               >
                                 ND
                               </option>
                               <option
+                                data-index="37"
                                 id="MP"
-                                value="37"
+                                value="MP"
                               >
                                 MP
                               </option>
                               <option
+                                data-index="38"
                                 id="OH"
-                                value="38"
+                                value="OH"
                               >
                                 OH
                               </option>
                               <option
+                                data-index="39"
                                 id="OK"
-                                value="39"
+                                value="OK"
                               >
                                 OK
                               </option>
                               <option
+                                data-index="40"
                                 id="OR"
-                                value="40"
+                                value="OR"
                               >
                                 OR
                               </option>
                               <option
+                                data-index="41"
                                 id="PA"
-                                value="41"
+                                value="PA"
                               >
                                 PA
                               </option>
                               <option
+                                data-index="42"
                                 id="PR"
-                                value="42"
+                                value="PR"
                               >
                                 PR
                               </option>
                               <option
+                                data-index="43"
                                 id="RI"
-                                value="43"
+                                value="RI"
                               >
                                 RI
                               </option>
                               <option
+                                data-index="44"
                                 id="SC"
-                                value="44"
+                                value="SC"
                               >
                                 SC
                               </option>
                               <option
+                                data-index="45"
                                 id="SD"
-                                value="45"
+                                value="SD"
                               >
                                 SD
                               </option>
                               <option
+                                data-index="46"
                                 id="TN"
-                                value="46"
+                                value="TN"
                               >
                                 TN
                               </option>
                               <option
+                                data-index="47"
                                 id="TX"
-                                value="47"
+                                value="TX"
                               >
                                 TX
                               </option>
                               <option
+                                data-index="48"
                                 id="UT"
-                                value="48"
+                                value="UT"
                               >
                                 UT
                               </option>
                               <option
+                                data-index="49"
                                 id="VT"
-                                value="49"
+                                value="VT"
                               >
                                 VT
                               </option>
                               <option
+                                data-index="50"
                                 id="VA"
-                                value="50"
+                                value="VA"
                               >
                                 VA
                               </option>
                               <option
+                                data-index="51"
                                 id="VI"
-                                value="51"
+                                value="VI"
                               >
                                 VI
                               </option>
                               <option
+                                data-index="52"
                                 id="WA"
-                                value="52"
+                                value="WA"
                               >
                                 WA
                               </option>
                               <option
+                                data-index="53"
                                 id="WV"
-                                value="53"
+                                value="WV"
                               >
                                 WV
                               </option>
                               <option
+                                data-index="54"
                                 id="WI"
-                                value="54"
+                                value="WI"
                               >
                                 WI
                               </option>
                               <option
+                                data-index="55"
                                 id="WY"
-                                value="55"
+                                value="WY"
                               >
                                 WY
                               </option>
@@ -2274,338 +2442,394 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           value=""
                         />
                         <option
+                          data-index="0"
                           id="AL"
-                          value="0"
+                          value="AL"
                         >
                           AL
                         </option>
                         <option
+                          data-index="1"
                           id="AK"
-                          value="1"
+                          value="AK"
                         >
                           AK
                         </option>
                         <option
+                          data-index="2"
                           id="AS"
-                          value="2"
+                          value="AS"
                         >
                           AS
                         </option>
                         <option
+                          data-index="3"
                           id="AZ"
-                          value="3"
+                          value="AZ"
                         >
                           AZ
                         </option>
                         <option
+                          data-index="4"
                           id="AR"
-                          value="4"
+                          value="AR"
                         >
                           AR
                         </option>
                         <option
+                          data-index="5"
                           id="CA"
-                          value="5"
+                          value="CA"
                         >
                           CA
                         </option>
                         <option
+                          data-index="6"
                           id="CO"
-                          value="6"
+                          value="CO"
                         >
                           CO
                         </option>
                         <option
+                          data-index="7"
                           id="CT"
-                          value="7"
+                          value="CT"
                         >
                           CT
                         </option>
                         <option
+                          data-index="8"
                           id="DE"
-                          value="8"
+                          value="DE"
                         >
                           DE
                         </option>
                         <option
+                          data-index="9"
                           id="DC"
-                          value="9"
+                          value="DC"
                         >
                           DC
                         </option>
                         <option
+                          data-index="10"
                           id="FL"
-                          value="10"
+                          value="FL"
                         >
                           FL
                         </option>
                         <option
+                          data-index="11"
                           id="GA"
-                          value="11"
+                          value="GA"
                         >
                           GA
                         </option>
                         <option
+                          data-index="12"
                           id="GU"
-                          value="12"
+                          value="GU"
                         >
                           GU
                         </option>
                         <option
+                          data-index="13"
                           id="HI"
-                          value="13"
+                          value="HI"
                         >
                           HI
                         </option>
                         <option
+                          data-index="14"
                           id="ID"
-                          value="14"
+                          value="ID"
                         >
                           ID
                         </option>
                         <option
+                          data-index="15"
                           id="IL"
-                          value="15"
+                          value="IL"
                         >
                           IL
                         </option>
                         <option
+                          data-index="16"
                           id="IN"
-                          value="16"
+                          value="IN"
                         >
                           IN
                         </option>
                         <option
+                          data-index="17"
                           id="IA"
-                          value="17"
+                          value="IA"
                         >
                           IA
                         </option>
                         <option
+                          data-index="18"
                           id="KS"
-                          value="18"
+                          value="KS"
                         >
                           KS
                         </option>
                         <option
+                          data-index="19"
                           id="KY"
-                          value="19"
+                          value="KY"
                         >
                           KY
                         </option>
                         <option
+                          data-index="20"
                           id="LA"
-                          value="20"
+                          value="LA"
                         >
                           LA
                         </option>
                         <option
+                          data-index="21"
                           id="ME"
-                          value="21"
+                          value="ME"
                         >
                           ME
                         </option>
                         <option
+                          data-index="22"
                           id="MD"
-                          value="22"
+                          value="MD"
                         >
                           MD
                         </option>
                         <option
+                          data-index="23"
                           id="MA"
-                          value="23"
+                          value="MA"
                         >
                           MA
                         </option>
                         <option
+                          data-index="24"
                           id="MI"
-                          value="24"
+                          value="MI"
                         >
                           MI
                         </option>
                         <option
+                          data-index="25"
                           id="MN"
-                          value="25"
+                          value="MN"
                         >
                           MN
                         </option>
                         <option
+                          data-index="26"
                           id="MS"
-                          value="26"
+                          value="MS"
                         >
                           MS
                         </option>
                         <option
+                          data-index="27"
                           id="MO"
-                          value="27"
+                          value="MO"
                         >
                           MO
                         </option>
                         <option
+                          data-index="28"
                           id="MT"
-                          value="28"
+                          value="MT"
                         >
                           MT
                         </option>
                         <option
+                          data-index="29"
                           id="NE"
-                          value="29"
+                          value="NE"
                         >
                           NE
                         </option>
                         <option
+                          data-index="30"
                           id="NV"
-                          value="30"
+                          value="NV"
                         >
                           NV
                         </option>
                         <option
+                          data-index="31"
                           id="NH"
-                          value="31"
+                          value="NH"
                         >
                           NH
                         </option>
                         <option
+                          data-index="32"
                           id="NJ"
-                          value="32"
+                          value="NJ"
                         >
                           NJ
                         </option>
                         <option
+                          data-index="33"
                           id="NM"
-                          value="33"
+                          value="NM"
                         >
                           NM
                         </option>
                         <option
+                          data-index="34"
                           id="NY"
-                          value="34"
+                          value="NY"
                         >
                           NY
                         </option>
                         <option
+                          data-index="35"
                           id="NC"
-                          value="35"
+                          value="NC"
                         >
                           NC
                         </option>
                         <option
+                          data-index="36"
                           id="ND"
-                          value="36"
+                          value="ND"
                         >
                           ND
                         </option>
                         <option
+                          data-index="37"
                           id="MP"
-                          value="37"
+                          value="MP"
                         >
                           MP
                         </option>
                         <option
+                          data-index="38"
                           id="OH"
-                          value="38"
+                          value="OH"
                         >
                           OH
                         </option>
                         <option
+                          data-index="39"
                           id="OK"
-                          value="39"
+                          value="OK"
                         >
                           OK
                         </option>
                         <option
+                          data-index="40"
                           id="OR"
-                          value="40"
+                          value="OR"
                         >
                           OR
                         </option>
                         <option
+                          data-index="41"
                           id="PA"
-                          value="41"
+                          value="PA"
                         >
                           PA
                         </option>
                         <option
+                          data-index="42"
                           id="PR"
-                          value="42"
+                          value="PR"
                         >
                           PR
                         </option>
                         <option
+                          data-index="43"
                           id="RI"
-                          value="43"
+                          value="RI"
                         >
                           RI
                         </option>
                         <option
+                          data-index="44"
                           id="SC"
-                          value="44"
+                          value="SC"
                         >
                           SC
                         </option>
                         <option
+                          data-index="45"
                           id="SD"
-                          value="45"
+                          value="SD"
                         >
                           SD
                         </option>
                         <option
+                          data-index="46"
                           id="TN"
-                          value="46"
+                          value="TN"
                         >
                           TN
                         </option>
                         <option
+                          data-index="47"
                           id="TX"
-                          value="47"
+                          value="TX"
                         >
                           TX
                         </option>
                         <option
+                          data-index="48"
                           id="UT"
-                          value="48"
+                          value="UT"
                         >
                           UT
                         </option>
                         <option
+                          data-index="49"
                           id="VT"
-                          value="49"
+                          value="VT"
                         >
                           VT
                         </option>
                         <option
+                          data-index="50"
                           id="VA"
-                          value="50"
+                          value="VA"
                         >
                           VA
                         </option>
                         <option
+                          data-index="51"
                           id="VI"
-                          value="51"
+                          value="VI"
                         >
                           VI
                         </option>
                         <option
+                          data-index="52"
                           id="WA"
-                          value="52"
+                          value="WA"
                         >
                           WA
                         </option>
                         <option
+                          data-index="53"
                           id="WV"
-                          value="53"
+                          value="WV"
                         >
                           WV
                         </option>
                         <option
+                          data-index="54"
                           id="WI"
-                          value="54"
+                          value="WI"
                         >
                           WI
                         </option>
                         <option
+                          data-index="55"
                           id="WY"
-                          value="55"
+                          value="WY"
                         >
                           WY
                         </option>
@@ -3023,338 +3247,394 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 value=""
                               />
                               <option
+                                data-index="0"
                                 id="AL"
-                                value="0"
+                                value="AL"
                               >
                                 AL
                               </option>
                               <option
+                                data-index="1"
                                 id="AK"
-                                value="1"
+                                value="AK"
                               >
                                 AK
                               </option>
                               <option
+                                data-index="2"
                                 id="AS"
-                                value="2"
+                                value="AS"
                               >
                                 AS
                               </option>
                               <option
+                                data-index="3"
                                 id="AZ"
-                                value="3"
+                                value="AZ"
                               >
                                 AZ
                               </option>
                               <option
+                                data-index="4"
                                 id="AR"
-                                value="4"
+                                value="AR"
                               >
                                 AR
                               </option>
                               <option
+                                data-index="5"
                                 id="CA"
-                                value="5"
+                                value="CA"
                               >
                                 CA
                               </option>
                               <option
+                                data-index="6"
                                 id="CO"
-                                value="6"
+                                value="CO"
                               >
                                 CO
                               </option>
                               <option
+                                data-index="7"
                                 id="CT"
-                                value="7"
+                                value="CT"
                               >
                                 CT
                               </option>
                               <option
+                                data-index="8"
                                 id="DE"
-                                value="8"
+                                value="DE"
                               >
                                 DE
                               </option>
                               <option
+                                data-index="9"
                                 id="DC"
-                                value="9"
+                                value="DC"
                               >
                                 DC
                               </option>
                               <option
+                                data-index="10"
                                 id="FL"
-                                value="10"
+                                value="FL"
                               >
                                 FL
                               </option>
                               <option
+                                data-index="11"
                                 id="GA"
-                                value="11"
+                                value="GA"
                               >
                                 GA
                               </option>
                               <option
+                                data-index="12"
                                 id="GU"
-                                value="12"
+                                value="GU"
                               >
                                 GU
                               </option>
                               <option
+                                data-index="13"
                                 id="HI"
-                                value="13"
+                                value="HI"
                               >
                                 HI
                               </option>
                               <option
+                                data-index="14"
                                 id="ID"
-                                value="14"
+                                value="ID"
                               >
                                 ID
                               </option>
                               <option
+                                data-index="15"
                                 id="IL"
-                                value="15"
+                                value="IL"
                               >
                                 IL
                               </option>
                               <option
+                                data-index="16"
                                 id="IN"
-                                value="16"
+                                value="IN"
                               >
                                 IN
                               </option>
                               <option
+                                data-index="17"
                                 id="IA"
-                                value="17"
+                                value="IA"
                               >
                                 IA
                               </option>
                               <option
+                                data-index="18"
                                 id="KS"
-                                value="18"
+                                value="KS"
                               >
                                 KS
                               </option>
                               <option
+                                data-index="19"
                                 id="KY"
-                                value="19"
+                                value="KY"
                               >
                                 KY
                               </option>
                               <option
+                                data-index="20"
                                 id="LA"
-                                value="20"
+                                value="LA"
                               >
                                 LA
                               </option>
                               <option
+                                data-index="21"
                                 id="ME"
-                                value="21"
+                                value="ME"
                               >
                                 ME
                               </option>
                               <option
+                                data-index="22"
                                 id="MD"
-                                value="22"
+                                value="MD"
                               >
                                 MD
                               </option>
                               <option
+                                data-index="23"
                                 id="MA"
-                                value="23"
+                                value="MA"
                               >
                                 MA
                               </option>
                               <option
+                                data-index="24"
                                 id="MI"
-                                value="24"
+                                value="MI"
                               >
                                 MI
                               </option>
                               <option
+                                data-index="25"
                                 id="MN"
-                                value="25"
+                                value="MN"
                               >
                                 MN
                               </option>
                               <option
+                                data-index="26"
                                 id="MS"
-                                value="26"
+                                value="MS"
                               >
                                 MS
                               </option>
                               <option
+                                data-index="27"
                                 id="MO"
-                                value="27"
+                                value="MO"
                               >
                                 MO
                               </option>
                               <option
+                                data-index="28"
                                 id="MT"
-                                value="28"
+                                value="MT"
                               >
                                 MT
                               </option>
                               <option
+                                data-index="29"
                                 id="NE"
-                                value="29"
+                                value="NE"
                               >
                                 NE
                               </option>
                               <option
+                                data-index="30"
                                 id="NV"
-                                value="30"
+                                value="NV"
                               >
                                 NV
                               </option>
                               <option
+                                data-index="31"
                                 id="NH"
-                                value="31"
+                                value="NH"
                               >
                                 NH
                               </option>
                               <option
+                                data-index="32"
                                 id="NJ"
-                                value="32"
+                                value="NJ"
                               >
                                 NJ
                               </option>
                               <option
+                                data-index="33"
                                 id="NM"
-                                value="33"
+                                value="NM"
                               >
                                 NM
                               </option>
                               <option
+                                data-index="34"
                                 id="NY"
-                                value="34"
+                                value="NY"
                               >
                                 NY
                               </option>
                               <option
+                                data-index="35"
                                 id="NC"
-                                value="35"
+                                value="NC"
                               >
                                 NC
                               </option>
                               <option
+                                data-index="36"
                                 id="ND"
-                                value="36"
+                                value="ND"
                               >
                                 ND
                               </option>
                               <option
+                                data-index="37"
                                 id="MP"
-                                value="37"
+                                value="MP"
                               >
                                 MP
                               </option>
                               <option
+                                data-index="38"
                                 id="OH"
-                                value="38"
+                                value="OH"
                               >
                                 OH
                               </option>
                               <option
+                                data-index="39"
                                 id="OK"
-                                value="39"
+                                value="OK"
                               >
                                 OK
                               </option>
                               <option
+                                data-index="40"
                                 id="OR"
-                                value="40"
+                                value="OR"
                               >
                                 OR
                               </option>
                               <option
+                                data-index="41"
                                 id="PA"
-                                value="41"
+                                value="PA"
                               >
                                 PA
                               </option>
                               <option
+                                data-index="42"
                                 id="PR"
-                                value="42"
+                                value="PR"
                               >
                                 PR
                               </option>
                               <option
+                                data-index="43"
                                 id="RI"
-                                value="43"
+                                value="RI"
                               >
                                 RI
                               </option>
                               <option
+                                data-index="44"
                                 id="SC"
-                                value="44"
+                                value="SC"
                               >
                                 SC
                               </option>
                               <option
+                                data-index="45"
                                 id="SD"
-                                value="45"
+                                value="SD"
                               >
                                 SD
                               </option>
                               <option
+                                data-index="46"
                                 id="TN"
-                                value="46"
+                                value="TN"
                               >
                                 TN
                               </option>
                               <option
+                                data-index="47"
                                 id="TX"
-                                value="47"
+                                value="TX"
                               >
                                 TX
                               </option>
                               <option
+                                data-index="48"
                                 id="UT"
-                                value="48"
+                                value="UT"
                               >
                                 UT
                               </option>
                               <option
+                                data-index="49"
                                 id="VT"
-                                value="49"
+                                value="VT"
                               >
                                 VT
                               </option>
                               <option
+                                data-index="50"
                                 id="VA"
-                                value="50"
+                                value="VA"
                               >
                                 VA
                               </option>
                               <option
+                                data-index="51"
                                 id="VI"
-                                value="51"
+                                value="VI"
                               >
                                 VI
                               </option>
                               <option
+                                data-index="52"
                                 id="WA"
-                                value="52"
+                                value="WA"
                               >
                                 WA
                               </option>
                               <option
+                                data-index="53"
                                 id="WV"
-                                value="53"
+                                value="WV"
                               >
                                 WV
                               </option>
                               <option
+                                data-index="54"
                                 id="WI"
-                                value="54"
+                                value="WI"
                               >
                                 WI
                               </option>
                               <option
+                                data-index="55"
                                 id="WY"
-                                value="55"
+                                value="WY"
                               >
                                 WY
                               </option>
@@ -3915,338 +4195,394 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 value=""
                               />
                               <option
+                                data-index="0"
                                 id="AL"
-                                value="0"
+                                value="AL"
                               >
                                 AL
                               </option>
                               <option
+                                data-index="1"
                                 id="AK"
-                                value="1"
+                                value="AK"
                               >
                                 AK
                               </option>
                               <option
+                                data-index="2"
                                 id="AS"
-                                value="2"
+                                value="AS"
                               >
                                 AS
                               </option>
                               <option
+                                data-index="3"
                                 id="AZ"
-                                value="3"
+                                value="AZ"
                               >
                                 AZ
                               </option>
                               <option
+                                data-index="4"
                                 id="AR"
-                                value="4"
+                                value="AR"
                               >
                                 AR
                               </option>
                               <option
+                                data-index="5"
                                 id="CA"
-                                value="5"
+                                value="CA"
                               >
                                 CA
                               </option>
                               <option
+                                data-index="6"
                                 id="CO"
-                                value="6"
+                                value="CO"
                               >
                                 CO
                               </option>
                               <option
+                                data-index="7"
                                 id="CT"
-                                value="7"
+                                value="CT"
                               >
                                 CT
                               </option>
                               <option
+                                data-index="8"
                                 id="DE"
-                                value="8"
+                                value="DE"
                               >
                                 DE
                               </option>
                               <option
+                                data-index="9"
                                 id="DC"
-                                value="9"
+                                value="DC"
                               >
                                 DC
                               </option>
                               <option
+                                data-index="10"
                                 id="FL"
-                                value="10"
+                                value="FL"
                               >
                                 FL
                               </option>
                               <option
+                                data-index="11"
                                 id="GA"
-                                value="11"
+                                value="GA"
                               >
                                 GA
                               </option>
                               <option
+                                data-index="12"
                                 id="GU"
-                                value="12"
+                                value="GU"
                               >
                                 GU
                               </option>
                               <option
+                                data-index="13"
                                 id="HI"
-                                value="13"
+                                value="HI"
                               >
                                 HI
                               </option>
                               <option
+                                data-index="14"
                                 id="ID"
-                                value="14"
+                                value="ID"
                               >
                                 ID
                               </option>
                               <option
+                                data-index="15"
                                 id="IL"
-                                value="15"
+                                value="IL"
                               >
                                 IL
                               </option>
                               <option
+                                data-index="16"
                                 id="IN"
-                                value="16"
+                                value="IN"
                               >
                                 IN
                               </option>
                               <option
+                                data-index="17"
                                 id="IA"
-                                value="17"
+                                value="IA"
                               >
                                 IA
                               </option>
                               <option
+                                data-index="18"
                                 id="KS"
-                                value="18"
+                                value="KS"
                               >
                                 KS
                               </option>
                               <option
+                                data-index="19"
                                 id="KY"
-                                value="19"
+                                value="KY"
                               >
                                 KY
                               </option>
                               <option
+                                data-index="20"
                                 id="LA"
-                                value="20"
+                                value="LA"
                               >
                                 LA
                               </option>
                               <option
+                                data-index="21"
                                 id="ME"
-                                value="21"
+                                value="ME"
                               >
                                 ME
                               </option>
                               <option
+                                data-index="22"
                                 id="MD"
-                                value="22"
+                                value="MD"
                               >
                                 MD
                               </option>
                               <option
+                                data-index="23"
                                 id="MA"
-                                value="23"
+                                value="MA"
                               >
                                 MA
                               </option>
                               <option
+                                data-index="24"
                                 id="MI"
-                                value="24"
+                                value="MI"
                               >
                                 MI
                               </option>
                               <option
+                                data-index="25"
                                 id="MN"
-                                value="25"
+                                value="MN"
                               >
                                 MN
                               </option>
                               <option
+                                data-index="26"
                                 id="MS"
-                                value="26"
+                                value="MS"
                               >
                                 MS
                               </option>
                               <option
+                                data-index="27"
                                 id="MO"
-                                value="27"
+                                value="MO"
                               >
                                 MO
                               </option>
                               <option
+                                data-index="28"
                                 id="MT"
-                                value="28"
+                                value="MT"
                               >
                                 MT
                               </option>
                               <option
+                                data-index="29"
                                 id="NE"
-                                value="29"
+                                value="NE"
                               >
                                 NE
                               </option>
                               <option
+                                data-index="30"
                                 id="NV"
-                                value="30"
+                                value="NV"
                               >
                                 NV
                               </option>
                               <option
+                                data-index="31"
                                 id="NH"
-                                value="31"
+                                value="NH"
                               >
                                 NH
                               </option>
                               <option
+                                data-index="32"
                                 id="NJ"
-                                value="32"
+                                value="NJ"
                               >
                                 NJ
                               </option>
                               <option
+                                data-index="33"
                                 id="NM"
-                                value="33"
+                                value="NM"
                               >
                                 NM
                               </option>
                               <option
+                                data-index="34"
                                 id="NY"
-                                value="34"
+                                value="NY"
                               >
                                 NY
                               </option>
                               <option
+                                data-index="35"
                                 id="NC"
-                                value="35"
+                                value="NC"
                               >
                                 NC
                               </option>
                               <option
+                                data-index="36"
                                 id="ND"
-                                value="36"
+                                value="ND"
                               >
                                 ND
                               </option>
                               <option
+                                data-index="37"
                                 id="MP"
-                                value="37"
+                                value="MP"
                               >
                                 MP
                               </option>
                               <option
+                                data-index="38"
                                 id="OH"
-                                value="38"
+                                value="OH"
                               >
                                 OH
                               </option>
                               <option
+                                data-index="39"
                                 id="OK"
-                                value="39"
+                                value="OK"
                               >
                                 OK
                               </option>
                               <option
+                                data-index="40"
                                 id="OR"
-                                value="40"
+                                value="OR"
                               >
                                 OR
                               </option>
                               <option
+                                data-index="41"
                                 id="PA"
-                                value="41"
+                                value="PA"
                               >
                                 PA
                               </option>
                               <option
+                                data-index="42"
                                 id="PR"
-                                value="42"
+                                value="PR"
                               >
                                 PR
                               </option>
                               <option
+                                data-index="43"
                                 id="RI"
-                                value="43"
+                                value="RI"
                               >
                                 RI
                               </option>
                               <option
+                                data-index="44"
                                 id="SC"
-                                value="44"
+                                value="SC"
                               >
                                 SC
                               </option>
                               <option
+                                data-index="45"
                                 id="SD"
-                                value="45"
+                                value="SD"
                               >
                                 SD
                               </option>
                               <option
+                                data-index="46"
                                 id="TN"
-                                value="46"
+                                value="TN"
                               >
                                 TN
                               </option>
                               <option
+                                data-index="47"
                                 id="TX"
-                                value="47"
+                                value="TX"
                               >
                                 TX
                               </option>
                               <option
+                                data-index="48"
                                 id="UT"
-                                value="48"
+                                value="UT"
                               >
                                 UT
                               </option>
                               <option
+                                data-index="49"
                                 id="VT"
-                                value="49"
+                                value="VT"
                               >
                                 VT
                               </option>
                               <option
+                                data-index="50"
                                 id="VA"
-                                value="50"
+                                value="VA"
                               >
                                 VA
                               </option>
                               <option
+                                data-index="51"
                                 id="VI"
-                                value="51"
+                                value="VI"
                               >
                                 VI
                               </option>
                               <option
+                                data-index="52"
                                 id="WA"
-                                value="52"
+                                value="WA"
                               >
                                 WA
                               </option>
                               <option
+                                data-index="53"
                                 id="WV"
-                                value="53"
+                                value="WV"
                               >
                                 WV
                               </option>
                               <option
+                                data-index="54"
                                 id="WI"
-                                value="54"
+                                value="WI"
                               >
                                 WI
                               </option>
                               <option
+                                data-index="55"
                                 id="WY"
-                                value="55"
+                                value="WY"
                               >
                                 WY
                               </option>
@@ -4469,338 +4805,394 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           value=""
                         />
                         <option
+                          data-index="0"
                           id="AL"
-                          value="0"
+                          value="AL"
                         >
                           AL
                         </option>
                         <option
+                          data-index="1"
                           id="AK"
-                          value="1"
+                          value="AK"
                         >
                           AK
                         </option>
                         <option
+                          data-index="2"
                           id="AS"
-                          value="2"
+                          value="AS"
                         >
                           AS
                         </option>
                         <option
+                          data-index="3"
                           id="AZ"
-                          value="3"
+                          value="AZ"
                         >
                           AZ
                         </option>
                         <option
+                          data-index="4"
                           id="AR"
-                          value="4"
+                          value="AR"
                         >
                           AR
                         </option>
                         <option
+                          data-index="5"
                           id="CA"
-                          value="5"
+                          value="CA"
                         >
                           CA
                         </option>
                         <option
+                          data-index="6"
                           id="CO"
-                          value="6"
+                          value="CO"
                         >
                           CO
                         </option>
                         <option
+                          data-index="7"
                           id="CT"
-                          value="7"
+                          value="CT"
                         >
                           CT
                         </option>
                         <option
+                          data-index="8"
                           id="DE"
-                          value="8"
+                          value="DE"
                         >
                           DE
                         </option>
                         <option
+                          data-index="9"
                           id="DC"
-                          value="9"
+                          value="DC"
                         >
                           DC
                         </option>
                         <option
+                          data-index="10"
                           id="FL"
-                          value="10"
+                          value="FL"
                         >
                           FL
                         </option>
                         <option
+                          data-index="11"
                           id="GA"
-                          value="11"
+                          value="GA"
                         >
                           GA
                         </option>
                         <option
+                          data-index="12"
                           id="GU"
-                          value="12"
+                          value="GU"
                         >
                           GU
                         </option>
                         <option
+                          data-index="13"
                           id="HI"
-                          value="13"
+                          value="HI"
                         >
                           HI
                         </option>
                         <option
+                          data-index="14"
                           id="ID"
-                          value="14"
+                          value="ID"
                         >
                           ID
                         </option>
                         <option
+                          data-index="15"
                           id="IL"
-                          value="15"
+                          value="IL"
                         >
                           IL
                         </option>
                         <option
+                          data-index="16"
                           id="IN"
-                          value="16"
+                          value="IN"
                         >
                           IN
                         </option>
                         <option
+                          data-index="17"
                           id="IA"
-                          value="17"
+                          value="IA"
                         >
                           IA
                         </option>
                         <option
+                          data-index="18"
                           id="KS"
-                          value="18"
+                          value="KS"
                         >
                           KS
                         </option>
                         <option
+                          data-index="19"
                           id="KY"
-                          value="19"
+                          value="KY"
                         >
                           KY
                         </option>
                         <option
+                          data-index="20"
                           id="LA"
-                          value="20"
+                          value="LA"
                         >
                           LA
                         </option>
                         <option
+                          data-index="21"
                           id="ME"
-                          value="21"
+                          value="ME"
                         >
                           ME
                         </option>
                         <option
+                          data-index="22"
                           id="MD"
-                          value="22"
+                          value="MD"
                         >
                           MD
                         </option>
                         <option
+                          data-index="23"
                           id="MA"
-                          value="23"
+                          value="MA"
                         >
                           MA
                         </option>
                         <option
+                          data-index="24"
                           id="MI"
-                          value="24"
+                          value="MI"
                         >
                           MI
                         </option>
                         <option
+                          data-index="25"
                           id="MN"
-                          value="25"
+                          value="MN"
                         >
                           MN
                         </option>
                         <option
+                          data-index="26"
                           id="MS"
-                          value="26"
+                          value="MS"
                         >
                           MS
                         </option>
                         <option
+                          data-index="27"
                           id="MO"
-                          value="27"
+                          value="MO"
                         >
                           MO
                         </option>
                         <option
+                          data-index="28"
                           id="MT"
-                          value="28"
+                          value="MT"
                         >
                           MT
                         </option>
                         <option
+                          data-index="29"
                           id="NE"
-                          value="29"
+                          value="NE"
                         >
                           NE
                         </option>
                         <option
+                          data-index="30"
                           id="NV"
-                          value="30"
+                          value="NV"
                         >
                           NV
                         </option>
                         <option
+                          data-index="31"
                           id="NH"
-                          value="31"
+                          value="NH"
                         >
                           NH
                         </option>
                         <option
+                          data-index="32"
                           id="NJ"
-                          value="32"
+                          value="NJ"
                         >
                           NJ
                         </option>
                         <option
+                          data-index="33"
                           id="NM"
-                          value="33"
+                          value="NM"
                         >
                           NM
                         </option>
                         <option
+                          data-index="34"
                           id="NY"
-                          value="34"
+                          value="NY"
                         >
                           NY
                         </option>
                         <option
+                          data-index="35"
                           id="NC"
-                          value="35"
+                          value="NC"
                         >
                           NC
                         </option>
                         <option
+                          data-index="36"
                           id="ND"
-                          value="36"
+                          value="ND"
                         >
                           ND
                         </option>
                         <option
+                          data-index="37"
                           id="MP"
-                          value="37"
+                          value="MP"
                         >
                           MP
                         </option>
                         <option
+                          data-index="38"
                           id="OH"
-                          value="38"
+                          value="OH"
                         >
                           OH
                         </option>
                         <option
+                          data-index="39"
                           id="OK"
-                          value="39"
+                          value="OK"
                         >
                           OK
                         </option>
                         <option
+                          data-index="40"
                           id="OR"
-                          value="40"
+                          value="OR"
                         >
                           OR
                         </option>
                         <option
+                          data-index="41"
                           id="PA"
-                          value="41"
+                          value="PA"
                         >
                           PA
                         </option>
                         <option
+                          data-index="42"
                           id="PR"
-                          value="42"
+                          value="PR"
                         >
                           PR
                         </option>
                         <option
+                          data-index="43"
                           id="RI"
-                          value="43"
+                          value="RI"
                         >
                           RI
                         </option>
                         <option
+                          data-index="44"
                           id="SC"
-                          value="44"
+                          value="SC"
                         >
                           SC
                         </option>
                         <option
+                          data-index="45"
                           id="SD"
-                          value="45"
+                          value="SD"
                         >
                           SD
                         </option>
                         <option
+                          data-index="46"
                           id="TN"
-                          value="46"
+                          value="TN"
                         >
                           TN
                         </option>
                         <option
+                          data-index="47"
                           id="TX"
-                          value="47"
+                          value="TX"
                         >
                           TX
                         </option>
                         <option
+                          data-index="48"
                           id="UT"
-                          value="48"
+                          value="UT"
                         >
                           UT
                         </option>
                         <option
+                          data-index="49"
                           id="VT"
-                          value="49"
+                          value="VT"
                         >
                           VT
                         </option>
                         <option
+                          data-index="50"
                           id="VA"
-                          value="50"
+                          value="VA"
                         >
                           VA
                         </option>
                         <option
+                          data-index="51"
                           id="VI"
-                          value="51"
+                          value="VI"
                         >
                           VI
                         </option>
                         <option
+                          data-index="52"
                           id="WA"
-                          value="52"
+                          value="WA"
                         >
                           WA
                         </option>
                         <option
+                          data-index="53"
                           id="WV"
-                          value="53"
+                          value="WV"
                         >
                           WV
                         </option>
                         <option
+                          data-index="54"
                           id="WI"
-                          value="54"
+                          value="WI"
                         >
                           WI
                         </option>
                         <option
+                          data-index="55"
                           id="WY"
-                          value="55"
+                          value="WY"
                         >
                           WY
                         </option>
@@ -5189,338 +5581,394 @@ exports[`Three even column grid renders person and address in three columns, no 
                     value=""
                   />
                   <option
+                    data-index="0"
                     id="AL"
-                    value="0"
+                    value="AL"
                   >
                     AL
                   </option>
                   <option
+                    data-index="1"
                     id="AK"
-                    value="1"
+                    value="AK"
                   >
                     AK
                   </option>
                   <option
+                    data-index="2"
                     id="AS"
-                    value="2"
+                    value="AS"
                   >
                     AS
                   </option>
                   <option
+                    data-index="3"
                     id="AZ"
-                    value="3"
+                    value="AZ"
                   >
                     AZ
                   </option>
                   <option
+                    data-index="4"
                     id="AR"
-                    value="4"
+                    value="AR"
                   >
                     AR
                   </option>
                   <option
+                    data-index="5"
                     id="CA"
-                    value="5"
+                    value="CA"
                   >
                     CA
                   </option>
                   <option
+                    data-index="6"
                     id="CO"
-                    value="6"
+                    value="CO"
                   >
                     CO
                   </option>
                   <option
+                    data-index="7"
                     id="CT"
-                    value="7"
+                    value="CT"
                   >
                     CT
                   </option>
                   <option
+                    data-index="8"
                     id="DE"
-                    value="8"
+                    value="DE"
                   >
                     DE
                   </option>
                   <option
+                    data-index="9"
                     id="DC"
-                    value="9"
+                    value="DC"
                   >
                     DC
                   </option>
                   <option
+                    data-index="10"
                     id="FL"
-                    value="10"
+                    value="FL"
                   >
                     FL
                   </option>
                   <option
+                    data-index="11"
                     id="GA"
-                    value="11"
+                    value="GA"
                   >
                     GA
                   </option>
                   <option
+                    data-index="12"
                     id="GU"
-                    value="12"
+                    value="GU"
                   >
                     GU
                   </option>
                   <option
+                    data-index="13"
                     id="HI"
-                    value="13"
+                    value="HI"
                   >
                     HI
                   </option>
                   <option
+                    data-index="14"
                     id="ID"
-                    value="14"
+                    value="ID"
                   >
                     ID
                   </option>
                   <option
+                    data-index="15"
                     id="IL"
-                    value="15"
+                    value="IL"
                   >
                     IL
                   </option>
                   <option
+                    data-index="16"
                     id="IN"
-                    value="16"
+                    value="IN"
                   >
                     IN
                   </option>
                   <option
+                    data-index="17"
                     id="IA"
-                    value="17"
+                    value="IA"
                   >
                     IA
                   </option>
                   <option
+                    data-index="18"
                     id="KS"
-                    value="18"
+                    value="KS"
                   >
                     KS
                   </option>
                   <option
+                    data-index="19"
                     id="KY"
-                    value="19"
+                    value="KY"
                   >
                     KY
                   </option>
                   <option
+                    data-index="20"
                     id="LA"
-                    value="20"
+                    value="LA"
                   >
                     LA
                   </option>
                   <option
+                    data-index="21"
                     id="ME"
-                    value="21"
+                    value="ME"
                   >
                     ME
                   </option>
                   <option
+                    data-index="22"
                     id="MD"
-                    value="22"
+                    value="MD"
                   >
                     MD
                   </option>
                   <option
+                    data-index="23"
                     id="MA"
-                    value="23"
+                    value="MA"
                   >
                     MA
                   </option>
                   <option
+                    data-index="24"
                     id="MI"
-                    value="24"
+                    value="MI"
                   >
                     MI
                   </option>
                   <option
+                    data-index="25"
                     id="MN"
-                    value="25"
+                    value="MN"
                   >
                     MN
                   </option>
                   <option
+                    data-index="26"
                     id="MS"
-                    value="26"
+                    value="MS"
                   >
                     MS
                   </option>
                   <option
+                    data-index="27"
                     id="MO"
-                    value="27"
+                    value="MO"
                   >
                     MO
                   </option>
                   <option
+                    data-index="28"
                     id="MT"
-                    value="28"
+                    value="MT"
                   >
                     MT
                   </option>
                   <option
+                    data-index="29"
                     id="NE"
-                    value="29"
+                    value="NE"
                   >
                     NE
                   </option>
                   <option
+                    data-index="30"
                     id="NV"
-                    value="30"
+                    value="NV"
                   >
                     NV
                   </option>
                   <option
+                    data-index="31"
                     id="NH"
-                    value="31"
+                    value="NH"
                   >
                     NH
                   </option>
                   <option
+                    data-index="32"
                     id="NJ"
-                    value="32"
+                    value="NJ"
                   >
                     NJ
                   </option>
                   <option
+                    data-index="33"
                     id="NM"
-                    value="33"
+                    value="NM"
                   >
                     NM
                   </option>
                   <option
+                    data-index="34"
                     id="NY"
-                    value="34"
+                    value="NY"
                   >
                     NY
                   </option>
                   <option
+                    data-index="35"
                     id="NC"
-                    value="35"
+                    value="NC"
                   >
                     NC
                   </option>
                   <option
+                    data-index="36"
                     id="ND"
-                    value="36"
+                    value="ND"
                   >
                     ND
                   </option>
                   <option
+                    data-index="37"
                     id="MP"
-                    value="37"
+                    value="MP"
                   >
                     MP
                   </option>
                   <option
+                    data-index="38"
                     id="OH"
-                    value="38"
+                    value="OH"
                   >
                     OH
                   </option>
                   <option
+                    data-index="39"
                     id="OK"
-                    value="39"
+                    value="OK"
                   >
                     OK
                   </option>
                   <option
+                    data-index="40"
                     id="OR"
-                    value="40"
+                    value="OR"
                   >
                     OR
                   </option>
                   <option
+                    data-index="41"
                     id="PA"
-                    value="41"
+                    value="PA"
                   >
                     PA
                   </option>
                   <option
+                    data-index="42"
                     id="PR"
-                    value="42"
+                    value="PR"
                   >
                     PR
                   </option>
                   <option
+                    data-index="43"
                     id="RI"
-                    value="43"
+                    value="RI"
                   >
                     RI
                   </option>
                   <option
+                    data-index="44"
                     id="SC"
-                    value="44"
+                    value="SC"
                   >
                     SC
                   </option>
                   <option
+                    data-index="45"
                     id="SD"
-                    value="45"
+                    value="SD"
                   >
                     SD
                   </option>
                   <option
+                    data-index="46"
                     id="TN"
-                    value="46"
+                    value="TN"
                   >
                     TN
                   </option>
                   <option
+                    data-index="47"
                     id="TX"
-                    value="47"
+                    value="TX"
                   >
                     TX
                   </option>
                   <option
+                    data-index="48"
                     id="UT"
-                    value="48"
+                    value="UT"
                   >
                     UT
                   </option>
                   <option
+                    data-index="49"
                     id="VT"
-                    value="49"
+                    value="VT"
                   >
                     VT
                   </option>
                   <option
+                    data-index="50"
                     id="VA"
-                    value="50"
+                    value="VA"
                   >
                     VA
                   </option>
                   <option
+                    data-index="51"
                     id="VI"
-                    value="51"
+                    value="VI"
                   >
                     VI
                   </option>
                   <option
+                    data-index="52"
                     id="WA"
-                    value="52"
+                    value="WA"
                   >
                     WA
                   </option>
                   <option
+                    data-index="53"
                     id="WV"
-                    value="53"
+                    value="WV"
                   >
                     WV
                   </option>
                   <option
+                    data-index="54"
                     id="WI"
-                    value="54"
+                    value="WI"
                   >
                     WI
                   </option>
                   <option
+                    data-index="55"
                     id="WY"
-                    value="55"
+                    value="WY"
                   >
                     WY
                   </option>
@@ -5909,338 +6357,394 @@ exports[`Two even column grid renders person and address in two columns, no empl
                     value=""
                   />
                   <option
+                    data-index="0"
                     id="AL"
-                    value="0"
+                    value="AL"
                   >
                     AL
                   </option>
                   <option
+                    data-index="1"
                     id="AK"
-                    value="1"
+                    value="AK"
                   >
                     AK
                   </option>
                   <option
+                    data-index="2"
                     id="AS"
-                    value="2"
+                    value="AS"
                   >
                     AS
                   </option>
                   <option
+                    data-index="3"
                     id="AZ"
-                    value="3"
+                    value="AZ"
                   >
                     AZ
                   </option>
                   <option
+                    data-index="4"
                     id="AR"
-                    value="4"
+                    value="AR"
                   >
                     AR
                   </option>
                   <option
+                    data-index="5"
                     id="CA"
-                    value="5"
+                    value="CA"
                   >
                     CA
                   </option>
                   <option
+                    data-index="6"
                     id="CO"
-                    value="6"
+                    value="CO"
                   >
                     CO
                   </option>
                   <option
+                    data-index="7"
                     id="CT"
-                    value="7"
+                    value="CT"
                   >
                     CT
                   </option>
                   <option
+                    data-index="8"
                     id="DE"
-                    value="8"
+                    value="DE"
                   >
                     DE
                   </option>
                   <option
+                    data-index="9"
                     id="DC"
-                    value="9"
+                    value="DC"
                   >
                     DC
                   </option>
                   <option
+                    data-index="10"
                     id="FL"
-                    value="10"
+                    value="FL"
                   >
                     FL
                   </option>
                   <option
+                    data-index="11"
                     id="GA"
-                    value="11"
+                    value="GA"
                   >
                     GA
                   </option>
                   <option
+                    data-index="12"
                     id="GU"
-                    value="12"
+                    value="GU"
                   >
                     GU
                   </option>
                   <option
+                    data-index="13"
                     id="HI"
-                    value="13"
+                    value="HI"
                   >
                     HI
                   </option>
                   <option
+                    data-index="14"
                     id="ID"
-                    value="14"
+                    value="ID"
                   >
                     ID
                   </option>
                   <option
+                    data-index="15"
                     id="IL"
-                    value="15"
+                    value="IL"
                   >
                     IL
                   </option>
                   <option
+                    data-index="16"
                     id="IN"
-                    value="16"
+                    value="IN"
                   >
                     IN
                   </option>
                   <option
+                    data-index="17"
                     id="IA"
-                    value="17"
+                    value="IA"
                   >
                     IA
                   </option>
                   <option
+                    data-index="18"
                     id="KS"
-                    value="18"
+                    value="KS"
                   >
                     KS
                   </option>
                   <option
+                    data-index="19"
                     id="KY"
-                    value="19"
+                    value="KY"
                   >
                     KY
                   </option>
                   <option
+                    data-index="20"
                     id="LA"
-                    value="20"
+                    value="LA"
                   >
                     LA
                   </option>
                   <option
+                    data-index="21"
                     id="ME"
-                    value="21"
+                    value="ME"
                   >
                     ME
                   </option>
                   <option
+                    data-index="22"
                     id="MD"
-                    value="22"
+                    value="MD"
                   >
                     MD
                   </option>
                   <option
+                    data-index="23"
                     id="MA"
-                    value="23"
+                    value="MA"
                   >
                     MA
                   </option>
                   <option
+                    data-index="24"
                     id="MI"
-                    value="24"
+                    value="MI"
                   >
                     MI
                   </option>
                   <option
+                    data-index="25"
                     id="MN"
-                    value="25"
+                    value="MN"
                   >
                     MN
                   </option>
                   <option
+                    data-index="26"
                     id="MS"
-                    value="26"
+                    value="MS"
                   >
                     MS
                   </option>
                   <option
+                    data-index="27"
                     id="MO"
-                    value="27"
+                    value="MO"
                   >
                     MO
                   </option>
                   <option
+                    data-index="28"
                     id="MT"
-                    value="28"
+                    value="MT"
                   >
                     MT
                   </option>
                   <option
+                    data-index="29"
                     id="NE"
-                    value="29"
+                    value="NE"
                   >
                     NE
                   </option>
                   <option
+                    data-index="30"
                     id="NV"
-                    value="30"
+                    value="NV"
                   >
                     NV
                   </option>
                   <option
+                    data-index="31"
                     id="NH"
-                    value="31"
+                    value="NH"
                   >
                     NH
                   </option>
                   <option
+                    data-index="32"
                     id="NJ"
-                    value="32"
+                    value="NJ"
                   >
                     NJ
                   </option>
                   <option
+                    data-index="33"
                     id="NM"
-                    value="33"
+                    value="NM"
                   >
                     NM
                   </option>
                   <option
+                    data-index="34"
                     id="NY"
-                    value="34"
+                    value="NY"
                   >
                     NY
                   </option>
                   <option
+                    data-index="35"
                     id="NC"
-                    value="35"
+                    value="NC"
                   >
                     NC
                   </option>
                   <option
+                    data-index="36"
                     id="ND"
-                    value="36"
+                    value="ND"
                   >
                     ND
                   </option>
                   <option
+                    data-index="37"
                     id="MP"
-                    value="37"
+                    value="MP"
                   >
                     MP
                   </option>
                   <option
+                    data-index="38"
                     id="OH"
-                    value="38"
+                    value="OH"
                   >
                     OH
                   </option>
                   <option
+                    data-index="39"
                     id="OK"
-                    value="39"
+                    value="OK"
                   >
                     OK
                   </option>
                   <option
+                    data-index="40"
                     id="OR"
-                    value="40"
+                    value="OR"
                   >
                     OR
                   </option>
                   <option
+                    data-index="41"
                     id="PA"
-                    value="41"
+                    value="PA"
                   >
                     PA
                   </option>
                   <option
+                    data-index="42"
                     id="PR"
-                    value="42"
+                    value="PR"
                   >
                     PR
                   </option>
                   <option
+                    data-index="43"
                     id="RI"
-                    value="43"
+                    value="RI"
                   >
                     RI
                   </option>
                   <option
+                    data-index="44"
                     id="SC"
-                    value="44"
+                    value="SC"
                   >
                     SC
                   </option>
                   <option
+                    data-index="45"
                     id="SD"
-                    value="45"
+                    value="SD"
                   >
                     SD
                   </option>
                   <option
+                    data-index="46"
                     id="TN"
-                    value="46"
+                    value="TN"
                   >
                     TN
                   </option>
                   <option
+                    data-index="47"
                     id="TX"
-                    value="47"
+                    value="TX"
                   >
                     TX
                   </option>
                   <option
+                    data-index="48"
                     id="UT"
-                    value="48"
+                    value="UT"
                   >
                     UT
                   </option>
                   <option
+                    data-index="49"
                     id="VT"
-                    value="49"
+                    value="VT"
                   >
                     VT
                   </option>
                   <option
+                    data-index="50"
                     id="VA"
-                    value="50"
+                    value="VA"
                   >
                     VA
                   </option>
                   <option
+                    data-index="51"
                     id="VI"
-                    value="51"
+                    value="VI"
                   >
                     VI
                   </option>
                   <option
+                    data-index="52"
                     id="WA"
-                    value="52"
+                    value="WA"
                   >
                     WA
                   </option>
                   <option
+                    data-index="53"
                     id="WV"
-                    value="53"
+                    value="WV"
                   >
                     WV
                   </option>
                   <option
+                    data-index="54"
                     id="WI"
-                    value="54"
+                    value="WI"
                   >
                     WI
                   </option>
                   <option
+                    data-index="55"
                     id="WY"
-                    value="55"
+                    value="WY"
                   >
                     WY
                   </option>

@@ -37,48 +37,16 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Forward `required` to `BaseInputTemplate` so that required string and number fields render the HTML `required` attribute, fixing [#3743](https://github.com/rjsf-team/react-jsonschema-form/issues/3743)
 
-## @rjsf/chakra-ui
-
-- Fixed `SelectWidget` rendering array indices instead of real enum values when `nameGenerator` is active, breaking native form submission ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
-
 ## @rjsf/core
 
 - Fixed a breaking change introduced in v6.4.0 where array properties with enum items no longer used `ui:enumNames` from the array property's uiSchema ([#4985](https://github.com/rjsf-team/react-jsonschema-form/issues/4985))
 - Passed `parentUiSchema` to `ArrayFieldItem` to maintain `uiSchema`, this prop was introduced recently but was not being passed
 - Fixed `extraErrors` not displaying when `customErrors` are also present (e.g., with array fields and controlled `formData`), fixing [#4982](https://github.com/rjsf-team/react-jsonschema-form/issues/4982)
-- Fixed `SelectWidget` rendering array indices instead of real enum values when `nameGenerator` is active, breaking native form submission ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
-
-## @rjsf/daisyui
-
-- Fixed `SelectWidget` rendering array indices instead of real enum values when `nameGenerator` is active, breaking native form submission ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
-
-## @rjsf/fluentui-rc
-
-- Fixed `SelectWidget` rendering array indices instead of real enum values when `nameGenerator` is active, breaking native form submission ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
-
-## @rjsf/mantine
-
-- Fixed `SelectWidget` rendering array indices instead of real enum values when `nameGenerator` is active, breaking native form submission ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
-
-## @rjsf/mui
-
-- Fixed `SelectWidget` rendering array indices instead of real enum values when `nameGenerator` is active, breaking native form submission ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
-
-## @rjsf/primereact
-
-- Fixed `SelectWidget` rendering array indices instead of real enum values when `nameGenerator` is active, breaking native form submission ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
+- Fixed `SelectWidget` rendering array indices instead of real enum values in `<option value>`, breaking native form submission. Uses `data-index` for internal typed value resolution ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
 
 ## @rjsf/react-bootstrap
 
-- Fixed `SelectWidget` rendering array indices instead of real enum values when `nameGenerator` is active, breaking native form submission ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
-
-## @rjsf/semantic-ui
-
-- Fixed `SelectWidget` rendering array indices instead of real enum values when `nameGenerator` is active, breaking native form submission ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
-
-## @rjsf/shadcn
-
-- Fixed `SelectWidget` rendering array indices instead of real enum values when `nameGenerator` is active, breaking native form submission ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
+- Fixed `SelectWidget` rendering array indices instead of real enum values in `<option value>`, breaking native form submission. Uses `data-index` for internal typed value resolution ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
 
 ## Dev / docs / playground
 

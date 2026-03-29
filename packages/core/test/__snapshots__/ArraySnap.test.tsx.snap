@@ -260,17 +260,20 @@ exports[`array fields checkboxes 1`] = `
         role="combobox"
       >
         <option
-          value="0"
+          data-index="0"
+          value="a"
         >
           a
         </option>
         <option
-          value="1"
+          data-index="1"
+          value="b"
         >
           b
         </option>
         <option
-          value="2"
+          data-index="2"
+          value="c"
         >
           c
         </option>
@@ -973,17 +976,20 @@ exports[`nameGenerator bracketNameGenerator checkboxes with nameGenerator 1`] = 
         role="combobox"
       >
         <option
-          value="0"
+          data-index="0"
+          value="foo"
         >
           foo
         </option>
         <option
-          value="1"
+          data-index="1"
+          value="bar"
         >
           bar
         </option>
         <option
-          value="2"
+          data-index="2"
+          value="baz"
         >
           baz
         </option>
@@ -2319,17 +2325,20 @@ exports[`with title and description checkboxes 1`] = `
         role="combobox"
       >
         <option
-          value="0"
+          data-index="0"
+          value="a"
         >
           a
         </option>
         <option
-          value="1"
+          data-index="1"
+          value="b"
         >
           b
         </option>
         <option
-          value="2"
+          data-index="2"
+          value="c"
         >
           c
         </option>
@@ -2799,17 +2808,20 @@ exports[`with title and description from both checkboxes 1`] = `
         role="combobox"
       >
         <option
-          value="0"
+          data-index="0"
+          value="a"
         >
           a
         </option>
         <option
-          value="1"
+          data-index="1"
+          value="b"
         >
           b
         </option>
         <option
-          value="2"
+          data-index="2"
+          value="c"
         >
           c
         </option>
@@ -3279,17 +3291,20 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
         role="combobox"
       >
         <option
-          value="0"
+          data-index="0"
+          value="a"
         >
           a
         </option>
         <option
-          value="1"
+          data-index="1"
+          value="b"
         >
           b
         </option>
         <option
-          value="2"
+          data-index="2"
+          value="c"
         >
           c
         </option>
@@ -3691,17 +3706,20 @@ exports[`with title and description with global label off checkboxes 1`] = `
         role="combobox"
       >
         <option
-          value="0"
+          data-index="0"
+          value="a"
         >
           a
         </option>
         <option
-          value="1"
+          data-index="1"
+          value="b"
         >
           b
         </option>
         <option
-          value="2"
+          data-index="2"
+          value="c"
         >
           c
         </option>

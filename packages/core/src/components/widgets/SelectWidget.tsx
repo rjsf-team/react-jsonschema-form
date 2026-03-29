@@ -1,7 +1,6 @@
 import { ChangeEvent, FocusEvent, SyntheticEvent, useCallback } from 'react';
 import {
   ariaDescribedByIds,
-  enumOptionsIndexForValue,
   enumOptionsValueForIndex,
   FormContextType,
   RJSFSchema,
@@ -9,14 +8,20 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 
-function getValue(event: SyntheticEvent<HTMLSelectElement>, multiple: boolean) {
+/** Reads the data-index attribute from selected options to resolve typed enum values
+ *  via enumOptionsValueForIndex, while keeping real values in the standard value attribute
+ *  for native form submission.
+ */
+function getSelectedIndex(event: SyntheticEvent<HTMLSelectElement>, multiple: boolean) {
+  const select = event.target as HTMLSelectElement;
   if (multiple) {
-    return Array.from((event.target as HTMLSelectElement).options)
+    return Array.from(select.options)
       .slice()
       .filter((o) => o.selected)
-      .map((o) => o.value);
+      .map((o) => o.dataset.index ?? o.value);
   }
-  return (event.target as HTMLSelectElement).value;
+  const selectedOption = select.options[select.selectedIndex];
+  return selectedOption?.dataset.index ?? select.value;
 }
 
 /** The `SelectWidget` is a widget for rendering dropdowns.
@@ -42,56 +47,36 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
   const emptyValue = multiple ? [] : '';
-  const useRealValues = !!htmlName;
 
   const handleFocus = useCallback(
     (event: FocusEvent<HTMLSelectElement>) => {
-      const newValue = getValue(event, multiple);
-      const resolved = useRealValues
-        ? multiple
-          ? newValue
-          : newValue || optEmptyVal
-        : enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal);
-      return onFocus(id, resolved);
+      const newValue = getSelectedIndex(event, multiple);
+      return onFocus(id, enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
     },
-    [onFocus, id, multiple, enumOptions, optEmptyVal, useRealValues],
+    [onFocus, id, multiple, enumOptions, optEmptyVal],
   );
 
   const handleBlur = useCallback(
     (event: FocusEvent<HTMLSelectElement>) => {
-      const newValue = getValue(event, multiple);
-      const resolved = useRealValues
-        ? multiple
-          ? newValue
-          : newValue || optEmptyVal
-        : enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal);
-      return onBlur(id, resolved);
+      const newValue = getSelectedIndex(event, multiple);
+      return onBlur(id, enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
     },
-    [onBlur, id, multiple, enumOptions, optEmptyVal, useRealValues],
+    [onBlur, id, multiple, enumOptions, optEmptyVal],
   );
 
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLSelectElement>) => {
-      const newValue = getValue(event, multiple);
-      const resolved = useRealValues
-        ? multiple
-          ? newValue
-          : newValue || optEmptyVal
-        : enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal);
-      return onChange(resolved);
+      const newValue = getSelectedIndex(event, multiple);
+      return onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
     },
-    [onChange, multiple, enumOptions, optEmptyVal, useRealValues],
+    [onChange, multiple, enumOptions, optEmptyVal],
   );
 
-  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
   const isEmpty = typeof value === 'undefined' || (multiple && value.length < 1) || (!multiple && value === emptyValue);
   const showPlaceholderOption = !multiple && schema.default === undefined;
-
-  let selectValue;
-  if (useRealValues) {
-    selectValue = isEmpty ? emptyValue : multiple ? value.map(String) : String(value);
-  } else {
-    selectValue = typeof selectedIndexes === 'undefined' ? emptyValue : selectedIndexes;
+  let selectValue = emptyValue;
+  if (!isEmpty) {
+    selectValue = multiple ? value.map(String) : String(value);
   }
 
   return (
@@ -115,7 +100,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
         enumOptions.map(({ value, label }, i) => {
           const disabled = enumDisabled && enumDisabled.indexOf(value) !== -1;
           return (
-            <option key={i} value={useRealValues ? String(value) : String(i)} disabled={disabled}>
+            <option key={i} value={String(value)} data-index={String(i)} disabled={disabled}>
               {label}
             </option>
           );

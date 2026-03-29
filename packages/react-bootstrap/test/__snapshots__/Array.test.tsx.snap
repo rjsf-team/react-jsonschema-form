@@ -435,20 +435,23 @@ exports[`array fields checkboxes 1`] = `
           name="root"
         >
           <option
+            data-index="0"
             id="a"
-            value="0"
+            value="a"
           >
             a
           </option>
           <option
+            data-index="1"
             id="b"
-            value="1"
+            value="b"
           >
             b
           </option>
           <option
+            data-index="2"
             id="c"
-            value="2"
+            value="c"
           >
             c
           </option>
@@ -1474,20 +1477,23 @@ exports[`nameGenerator bracketNameGenerator checkboxes with nameGenerator 1`] = 
           name="root"
         >
           <option
+            data-index="0"
             id="foo"
-            value="0"
+            value="foo"
           >
             foo
           </option>
           <option
+            data-index="1"
             id="bar"
-            value="1"
+            value="bar"
           >
             bar
           </option>
           <option
+            data-index="2"
             id="baz"
-            value="2"
+            value="baz"
           >
             baz
           </option>
@@ -3584,20 +3590,23 @@ exports[`with title and description checkboxes 1`] = `
           name="root"
         >
           <option
+            data-index="0"
             id="a"
-            value="0"
+            value="a"
           >
             a
           </option>
           <option
+            data-index="1"
             id="b"
-            value="1"
+            value="b"
           >
             b
           </option>
           <option
+            data-index="2"
             id="c"
-            value="2"
+            value="c"
           >
             c
           </option>
@@ -4281,20 +4290,23 @@ exports[`with title and description from both checkboxes 1`] = `
           name="root"
         >
           <option
+            data-index="0"
             id="a"
-            value="0"
+            value="a"
           >
             a
           </option>
           <option
+            data-index="1"
             id="b"
-            value="1"
+            value="b"
           >
             b
           </option>
           <option
+            data-index="2"
             id="c"
-            value="2"
+            value="c"
           >
             c
           </option>
@@ -4978,20 +4990,23 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
           name="root"
         >
           <option
+            data-index="0"
             id="a"
-            value="0"
+            value="a"
           >
             a
           </option>
           <option
+            data-index="1"
             id="b"
-            value="1"
+            value="b"
           >
             b
           </option>
           <option
+            data-index="2"
             id="c"
-            value="2"
+            value="c"
           >
             c
           </option>
@@ -5593,20 +5608,23 @@ exports[`with title and description with global label off checkboxes 1`] = `
           name="root"
         >
           <option
+            data-index="0"
             id="a"
-            value="0"
+            value="a"
           >
             a
           </option>
           <option
+            data-index="1"
             id="b"
-            value="1"
+            value="b"
           >
             b
           </option>
           <option
+            data-index="2"
             id="c"
-            value="2"
+            value="c"
           >
             c
           </option>

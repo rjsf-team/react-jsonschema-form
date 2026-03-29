@@ -27,7 +27,6 @@ export default function SelectWidget<
 >({
   schema,
   id,
-  htmlName,
   options,
   label,
   disabled,
@@ -40,7 +39,6 @@ export default function SelectWidget<
   onFocus,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, emptyValue: optEmptyVal } = options;
-  const useRealValues = !!htmlName;
   multiple = typeof multiple === 'undefined' ? false : !!multiple;
 
   const getDisplayValue = (val: any) => {
@@ -65,22 +63,24 @@ export default function SelectWidget<
         return;
       }
 
-      const optionValue =
-        useRealValues || isEnumeratedObject
-          ? enumOptions![index].value
-          : enumOptionsValueForIndex<S>(String(index), enumOptions, optEmptyVal);
-
       if (multiple) {
         const currentValue = Array.isArray(value) ? value : [];
+        const optionValue = isEnumeratedObject
+          ? enumOptions[index].value
+          : enumOptionsValueForIndex<S>(String(index), enumOptions, optEmptyVal);
         const newValue = currentValue.includes(optionValue)
           ? currentValue.filter((v) => v !== optionValue)
           : [...currentValue, optionValue];
         onChange(newValue);
       } else {
-        onChange(optionValue);
+        onChange(
+          isEnumeratedObject
+            ? enumOptions[index].value
+            : enumOptionsValueForIndex<S>(String(index), enumOptions, optEmptyVal),
+        );
       }
     },
-    [value, multiple, isEnumeratedObject, enumOptions, optEmptyVal, onChange, useRealValues],
+    [value, multiple, isEnumeratedObject, enumOptions, optEmptyVal, onChange],
   );
 
   const _onBlur = useCallback(

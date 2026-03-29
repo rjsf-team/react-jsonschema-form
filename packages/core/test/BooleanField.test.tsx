@@ -550,7 +550,7 @@ describe('BooleanField', () => {
     const element = node.querySelector('select');
     fireEvent.focus(element!, {
       target: {
-        value: 1, // use index
+        value: 'false', // use real value
       },
     });
     expect(onFocus).toHaveBeenLastCalledWith(element?.id, false);
@@ -572,7 +572,7 @@ describe('BooleanField', () => {
     const element = node.querySelector('select');
     fireEvent.blur(element!, {
       target: {
-        value: 1, // use index
+        value: 'false', // use real value
       },
     });
     expect(onBlur).toHaveBeenLastCalledWith(element?.id, false);
@@ -719,7 +719,7 @@ describe('BooleanField', () => {
 
       act(() => {
         fireEvent.change($select!, {
-          target: { value: 0 }, // use index
+          target: { value: 'true' }, // use real value
         });
       });
       expect(getSelectedOptionValue($select!)).toEqual('true');
@@ -756,7 +756,7 @@ describe('BooleanField', () => {
 
       act(() => {
         fireEvent.change(node.querySelector('select')!, {
-          target: { value: 1 }, // use index
+          target: { value: 'false' }, // use real value
         });
       });
 

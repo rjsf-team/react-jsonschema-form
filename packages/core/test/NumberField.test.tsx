@@ -440,7 +440,7 @@ describe('NumberField', () => {
 
       act(() => {
         fireEvent.change(node.querySelector('.rjsf-field select')!, {
-          target: { value: 0 }, // use index
+          target: { value: '1' }, // use real value
         });
       });
       expect(getSelectedOptionValue($select!)).toEqual('1');
@@ -483,7 +483,7 @@ describe('NumberField', () => {
 
       act(() => {
         fireEvent.change(node.querySelector('select')!, {
-          target: { value: 1 }, // useIndex
+          target: { value: '2' }, // use real value
         });
       });
 
