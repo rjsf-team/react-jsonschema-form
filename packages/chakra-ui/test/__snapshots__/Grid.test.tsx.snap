@@ -3875,6 +3875,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   id="root_employment-0"
                                 >
                                   <input
+                                    aria-labelledby="radio-group::r3s::radio:label:0"
                                     checked=""
                                     data-ownedby="radio-group::r3s:"
                                     id="radio-group::r3s::radio:input:0"
@@ -3924,6 +3925,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   id="root_employment-1"
                                 >
                                   <input
+                                    aria-labelledby="radio-group::r3s::radio:label:1"
                                     data-ownedby="radio-group::r3s:"
                                     id="radio-group::r3s::radio:input:1"
                                     name="root_employment"
@@ -3967,6 +3969,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   id="root_employment-2"
                                 >
                                   <input
+                                    aria-labelledby="radio-group::r3s::radio:label:2"
                                     data-ownedby="radio-group::r3s:"
                                     id="radio-group::r3s::radio:input:2"
                                     name="root_employment"
@@ -10171,6 +10174,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   id="root_employment-0"
                                 >
                                   <input
+                                    aria-labelledby="radio-group::r55::radio:label:0"
                                     data-ownedby="radio-group::r55:"
                                     id="radio-group::r55::radio:input:0"
                                     name="root_employment"
@@ -10214,6 +10218,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   id="root_employment-1"
                                 >
                                   <input
+                                    aria-labelledby="radio-group::r55::radio:label:1"
                                     checked=""
                                     data-ownedby="radio-group::r55:"
                                     id="radio-group::r55::radio:input:1"
@@ -10263,6 +10268,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   id="root_employment-2"
                                 >
                                   <input
+                                    aria-labelledby="radio-group::r55::radio:label:2"
                                     data-ownedby="radio-group::r55:"
                                     id="radio-group::r55::radio:input:2"
                                     name="root_employment"
@@ -16559,6 +16565,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   id="root_employment-0"
                                 >
                                   <input
+                                    aria-labelledby="radio-group::r6g::radio:label:0"
                                     data-ownedby="radio-group::r6g:"
                                     id="radio-group::r6g::radio:input:0"
                                     name="root_employment"
@@ -16602,6 +16609,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   id="root_employment-1"
                                 >
                                   <input
+                                    aria-labelledby="radio-group::r6g::radio:label:1"
                                     data-ownedby="radio-group::r6g:"
                                     id="radio-group::r6g::radio:input:1"
                                     name="root_employment"
@@ -16645,6 +16653,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   id="root_employment-2"
                                 >
                                   <input
+                                    aria-labelledby="radio-group::r6g::radio:label:2"
                                     checked=""
                                     data-ownedby="radio-group::r6g:"
                                     id="radio-group::r6g::radio:input:2"
@@ -20643,6 +20652,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   id="root_employment-0"
                                 >
                                   <input
+                                    aria-labelledby="radio-group::r2j::radio:label:0"
                                     checked=""
                                     data-ownedby="radio-group::r2j:"
                                     id="radio-group::r2j::radio:input:0"
@@ -20692,6 +20702,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   id="root_employment-1"
                                 >
                                   <input
+                                    aria-labelledby="radio-group::r2j::radio:label:1"
                                     data-ownedby="radio-group::r2j:"
                                     id="radio-group::r2j::radio:input:1"
                                     name="root_employment"
@@ -20735,6 +20746,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   id="root_employment-2"
                                 >
                                   <input
+                                    aria-labelledby="radio-group::r2j::radio:label:2"
                                     data-ownedby="radio-group::r2j:"
                                     id="radio-group::r2j::radio:input:2"
                                     name="root_employment"

@@ -3437,6 +3437,7 @@ exports[`nameGenerator bracketNameGenerator radio field 1`] = `
                             id="root_option-0"
                           >
                             <input
+                              aria-labelledby="radio-group::r9s::radio:label:0"
                               data-ownedby="radio-group::r9s:"
                               id="radio-group::r9s::radio:input:0"
                               name="root[option]"
@@ -3480,6 +3481,7 @@ exports[`nameGenerator bracketNameGenerator radio field 1`] = `
                             id="root_option-1"
                           >
                             <input
+                              aria-labelledby="radio-group::r9s::radio:label:1"
                               data-ownedby="radio-group::r9s:"
                               id="radio-group::r9s::radio:input:1"
                               name="root[option]"
@@ -25894,6 +25896,7 @@ exports[`single fields radio field 1`] = `
                   id="root-0"
                 >
                   <input
+                    aria-labelledby="radio-group::r3m::radio:label:0"
                     data-ownedby="radio-group::r3m:"
                     id="radio-group::r3m::radio:input:0"
                     name="root"
@@ -25937,6 +25940,7 @@ exports[`single fields radio field 1`] = `
                   id="root-1"
                 >
                   <input
+                    aria-labelledby="radio-group::r3m::radio:label:1"
                     data-ownedby="radio-group::r3m:"
                     id="radio-group::r3m::radio:input:1"
                     name="root"
@@ -26366,6 +26370,7 @@ exports[`single fields radio widget with description in schema and FieldTemplate
                   id="root-0"
                 >
                   <input
+                    aria-labelledby="radio-group::r3a::radio:label:0"
                     data-ownedby="radio-group::r3a:"
                     id="radio-group::r3a::radio:input:0"
                     name="root"
@@ -26409,6 +26414,7 @@ exports[`single fields radio widget with description in schema and FieldTemplate
                   id="root-1"
                 >
                   <input
+                    aria-labelledby="radio-group::r3a::radio:label:1"
                     data-ownedby="radio-group::r3a:"
                     id="radio-group::r3a::radio:input:1"
                     name="root"
@@ -32051,6 +32057,7 @@ exports[`single fields select field single choice enumDisabled using radio widge
                   id="root-0"
                 >
                   <input
+                    aria-labelledby="radio-group::r1p::radio:label:0"
                     data-ownedby="radio-group::r1p:"
                     id="radio-group::r1p::radio:input:0"
                     name="root"
@@ -32095,6 +32102,7 @@ exports[`single fields select field single choice enumDisabled using radio widge
                   id="root-1"
                 >
                   <input
+                    aria-labelledby="radio-group::r1p::radio:label:1"
                     data-ownedby="radio-group::r1p:"
                     disabled=""
                     id="radio-group::r1p::radio:input:1"
@@ -32464,6 +32472,7 @@ exports[`single fields select field single choice form disabled using radio widg
                   id="root-0"
                 >
                   <input
+                    aria-labelledby="radio-group::r1v::radio:label:0"
                     data-ownedby="radio-group::r1v:"
                     disabled=""
                     id="radio-group::r1v::radio:input:0"
@@ -32511,6 +32520,7 @@ exports[`single fields select field single choice form disabled using radio widg
                   id="root-1"
                 >
                   <input
+                    aria-labelledby="radio-group::r1v::radio:label:1"
                     data-ownedby="radio-group::r1v:"
                     disabled=""
                     id="radio-group::r1v::radio:input:1"
@@ -33541,6 +33551,7 @@ exports[`single fields select field single choice uiSchema disabled using radio 
                   id="root-0"
                 >
                   <input
+                    aria-labelledby="radio-group::r1s::radio:label:0"
                     data-ownedby="radio-group::r1s:"
                     disabled=""
                     id="radio-group::r1s::radio:input:0"
@@ -33588,6 +33599,7 @@ exports[`single fields select field single choice uiSchema disabled using radio 
                   id="root-1"
                 >
                   <input
+                    aria-labelledby="radio-group::r1s::radio:label:1"
                     data-ownedby="radio-group::r1s:"
                     disabled=""
                     id="radio-group::r1s::radio:input:1"
