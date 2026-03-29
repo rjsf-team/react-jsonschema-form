@@ -29,12 +29,12 @@
     "@docusaurus/core": "^3.8.1",
     "@docusaurus/preset-classic": "^3.9.2",
     "@mdx-js/react": "^3.1.1",
-    "ajv": "^8.17.1",
+    "ajv": "^8.18.0",
     "prism-react-renderer": "^2.4.1"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "^3.8.1",
-    "@tsconfig/docusaurus": "^2.0.8"
+    "@tsconfig/docusaurus": "^2.0.9"
   },
   "browserslist": {
     "production": [

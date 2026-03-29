@@ -12249,7 +12249,6 @@ exports[`single fields password field 1`] = `
           data-size="sm"
           data-variant="default"
           data-with-right-section="true"
-          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-left-section-pointer-events: none; --input-right-section-pointer-events: all;"
         >
           <div
             class="m_ccf8da4c m_8fb7ebe7 mantine-Input-input mantine-PasswordInput-input"

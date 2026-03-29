@@ -61,7 +61,7 @@ export default function CheckboxesWidget<
         value={selectedIndexes}
         aria-describedby={ariaDescribedByIds(id)}
         readOnly={readonly}
-        required={required}
+        invalid={required && value.length === 0}
       >
         <Stack direction={row ? 'row' : 'column'}>
           {Array.isArray(enumOptions) &&

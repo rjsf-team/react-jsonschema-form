@@ -76,7 +76,7 @@
     "rc-picker": "^4.11.3"
   },
   "devDependencies": {
-    "@ant-design/icons": "^6.1.0",
+    "@ant-design/icons": "^6.1.1",
     "@rjsf/core": "6.4.2",
     "@rjsf/snapshot-tests": "6.4.2",
     "@rjsf/utils": "6.4.2",
@@ -84,7 +84,7 @@
     "@rollup/plugin-replace": "^6.0.3",
     "antd": "^5.29.3",
     "atob": "^2.1.2",
-    "dayjs": "^1.11.19",
+    "dayjs": "^1.11.20",
     "eslint": "^8.57.1"
   },
   "repository": {
