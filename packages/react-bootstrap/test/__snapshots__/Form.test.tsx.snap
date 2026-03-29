@@ -1218,18 +1218,21 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
                       value=""
                     />
                     <option
+                      data-index="0"
                       id="red"
                       value="red"
                     >
                       red
                     </option>
                     <option
+                      data-index="1"
                       id="green"
                       value="green"
                     >
                       green
                     </option>
                     <option
+                      data-index="2"
                       id="blue"
                       value="blue"
                     >
@@ -2466,18 +2469,21 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
                       value=""
                     />
                     <option
+                      data-index="0"
                       id="red"
                       value="red"
                     >
                       red
                     </option>
                     <option
+                      data-index="1"
                       id="green"
                       value="green"
                     >
                       green
                     </option>
                     <option
+                      data-index="2"
                       id="blue"
                       value="blue"
                     >
@@ -4610,18 +4616,21 @@ exports[`single fields optional data controls does not show optional controls wh
                         name="root_optionalObjectWithOneofs__oneof_select"
                       >
                         <option
+                          data-index="0"
                           id="Option 1"
                           value="0"
                         >
                           Option 1
                         </option>
                         <option
+                          data-index="1"
                           id="Option 2"
                           value="1"
                         >
                           Option 2
                         </option>
                         <option
+                          data-index="2"
                           id="Option 3"
                           value="2"
                         >
@@ -4724,18 +4733,21 @@ exports[`single fields optional data controls does not show optional controls wh
                         name="root_optionalArrayWithAnyofs__anyof_select"
                       >
                         <option
+                          data-index="0"
                           id="Option 1"
                           value="0"
                         >
                           Option 1
                         </option>
                         <option
+                          data-index="1"
                           id="Option 2"
                           value="1"
                         >
                           Option 2
                         </option>
                         <option
+                          data-index="2"
                           id="Option 3"
                           value="2"
                         >
@@ -5585,18 +5597,21 @@ exports[`single fields optional data controls does not show optional controls wh
                         name="root_optionalObjectWithOneofs__oneof_select"
                       >
                         <option
+                          data-index="0"
                           id="Option 1"
                           value="0"
                         >
                           Option 1
                         </option>
                         <option
+                          data-index="1"
                           id="Option 2"
                           value="1"
                         >
                           Option 2
                         </option>
                         <option
+                          data-index="2"
                           id="Option 3"
                           value="2"
                         >
@@ -5700,18 +5715,21 @@ exports[`single fields optional data controls does not show optional controls wh
                         name="root_optionalArrayWithAnyofs__anyof_select"
                       >
                         <option
+                          data-index="0"
                           id="Option 1"
                           value="0"
                         >
                           Option 1
                         </option>
                         <option
+                          data-index="1"
                           id="Option 2"
                           value="1"
                         >
                           Option 2
                         </option>
                         <option
+                          data-index="2"
                           id="Option 3"
                           value="2"
                         >
@@ -8973,14 +8991,16 @@ exports[`single fields select field 1`] = `
             value=""
           />
           <option
+            data-index="0"
             id="foo"
-            value="0"
+            value="foo"
           >
             foo
           </option>
           <option
+            data-index="1"
             id="bar"
-            value="1"
+            value="bar"
           >
             bar
           </option>
@@ -9020,26 +9040,30 @@ exports[`single fields select field multiple choice 1`] = `
           name="root"
         >
           <option
+            data-index="0"
             id="foo"
-            value="0"
+            value="foo"
           >
             foo
           </option>
           <option
+            data-index="1"
             id="bar"
-            value="1"
+            value="bar"
           >
             bar
           </option>
           <option
+            data-index="2"
             id="fuzz"
-            value="2"
+            value="fuzz"
           >
             fuzz
           </option>
           <option
+            data-index="3"
             id="qux"
-            value="3"
+            value="qux"
           >
             qux
           </option>
@@ -9079,27 +9103,31 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
           name="root"
         >
           <option
+            data-index="0"
             id="foo"
-            value="0"
+            value="foo"
           >
             foo
           </option>
           <option
+            data-index="1"
             disabled=""
             id="bar"
-            value="1"
+            value="bar"
           >
             bar
           </option>
           <option
+            data-index="2"
             id="fuzz"
-            value="2"
+            value="fuzz"
           >
             fuzz
           </option>
           <option
+            data-index="3"
             id="qux"
-            value="3"
+            value="qux"
           >
             qux
           </option>
@@ -9241,26 +9269,30 @@ exports[`single fields select field multiple choice formData 1`] = `
           name="root"
         >
           <option
+            data-index="0"
             id="foo"
-            value="0"
+            value="foo"
           >
             foo
           </option>
           <option
+            data-index="1"
             id="bar"
-            value="1"
+            value="bar"
           >
             bar
           </option>
           <option
+            data-index="2"
             id="fuzz"
-            value="2"
+            value="fuzz"
           >
             fuzz
           </option>
           <option
+            data-index="3"
             id="qux"
-            value="3"
+            value="qux"
           >
             qux
           </option>
@@ -9300,20 +9332,23 @@ exports[`single fields select field multiple choice with labels 1`] = `
           name="root"
         >
           <option
+            data-index="0"
             id="Blue"
-            value="0"
+            value="1"
           >
             Blue
           </option>
           <option
+            data-index="1"
             id="Red"
-            value="1"
+            value="2"
           >
             Red
           </option>
           <option
+            data-index="2"
             id="Green"
-            value="2"
+            value="3"
           >
             Green
           </option>
@@ -9355,15 +9390,17 @@ exports[`single fields select field single choice enumDisabled 1`] = `
             value=""
           />
           <option
+            data-index="0"
             id="foo"
-            value="0"
+            value="foo"
           >
             foo
           </option>
           <option
+            data-index="1"
             disabled=""
             id="bar"
-            value="1"
+            value="bar"
           >
             bar
           </option>
@@ -9547,14 +9584,16 @@ exports[`single fields select field single choice formData 1`] = `
             value=""
           />
           <option
+            data-index="0"
             id="foo"
-            value="0"
+            value="foo"
           >
             foo
           </option>
           <option
+            data-index="1"
             id="bar"
-            value="1"
+            value="bar"
           >
             bar
           </option>
@@ -9669,14 +9708,16 @@ exports[`single fields select widget with description in schema and FieldTemplat
             value=""
           />
           <option
+            data-index="0"
             id="Yes"
-            value="0"
+            value="true"
           >
             Yes
           </option>
           <option
+            data-index="1"
             id="No"
-            value="1"
+            value="false"
           >
             No
           </option>

@@ -818,16 +818,19 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
               value=""
             />
             <option
+              data-index="0"
               value="red"
             >
               red
             </option>
             <option
+              data-index="1"
               value="green"
             >
               green
             </option>
             <option
+              data-index="2"
               value="blue"
             >
               blue
@@ -1622,16 +1625,19 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
               value=""
             />
             <option
+              data-index="0"
               value="red"
             >
               red
             </option>
             <option
+              data-index="1"
               value="green"
             >
               green
             </option>
             <option
+              data-index="2"
               value="blue"
             >
               blue
@@ -3153,16 +3159,19 @@ exports[`single fields optional data controls does not show optional controls wh
                 role="combobox"
               >
                 <option
+                  data-index="0"
                   value="0"
                 >
                   Option 1
                 </option>
                 <option
+                  data-index="1"
                   value="1"
                 >
                   Option 2
                 </option>
                 <option
+                  data-index="2"
                   value="2"
                 >
                   Option 3
@@ -3228,16 +3237,19 @@ exports[`single fields optional data controls does not show optional controls wh
                 role="combobox"
               >
                 <option
+                  data-index="0"
                   value="0"
                 >
                   Option 1
                 </option>
                 <option
+                  data-index="1"
                   value="1"
                 >
                   Option 2
                 </option>
                 <option
+                  data-index="2"
                   value="2"
                 >
                   Option 3
@@ -3671,16 +3683,19 @@ exports[`single fields optional data controls does not show optional controls wh
                 role="combobox"
               >
                 <option
+                  data-index="0"
                   value="0"
                 >
                   Option 1
                 </option>
                 <option
+                  data-index="1"
                   value="1"
                 >
                   Option 2
                 </option>
                 <option
+                  data-index="2"
                   value="2"
                 >
                   Option 3
@@ -3747,16 +3762,19 @@ exports[`single fields optional data controls does not show optional controls wh
                 role="combobox"
               >
                 <option
+                  data-index="0"
                   value="0"
                 >
                   Option 1
                 </option>
                 <option
+                  data-index="1"
                   value="1"
                 >
                   Option 2
                 </option>
                 <option
+                  data-index="2"
                   value="2"
                 >
                   Option 3
@@ -5544,12 +5562,14 @@ exports[`single fields select field 1`] = `
           value=""
         />
         <option
-          value="0"
+          data-index="0"
+          value="foo"
         >
           foo
         </option>
         <option
-          value="1"
+          data-index="1"
+          value="bar"
         >
           bar
         </option>
@@ -5584,22 +5604,26 @@ exports[`single fields select field multiple choice 1`] = `
         role="combobox"
       >
         <option
-          value="0"
+          data-index="0"
+          value="foo"
         >
           foo
         </option>
         <option
-          value="1"
+          data-index="1"
+          value="bar"
         >
           bar
         </option>
         <option
-          value="2"
+          data-index="2"
+          value="fuzz"
         >
           fuzz
         </option>
         <option
-          value="3"
+          data-index="3"
+          value="qux"
         >
           qux
         </option>
@@ -5634,23 +5658,27 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
         role="combobox"
       >
         <option
-          value="0"
+          data-index="0"
+          value="foo"
         >
           foo
         </option>
         <option
+          data-index="1"
           disabled=""
-          value="1"
+          value="bar"
         >
           bar
         </option>
         <option
-          value="2"
+          data-index="2"
+          value="fuzz"
         >
           fuzz
         </option>
         <option
-          value="3"
+          data-index="3"
+          value="qux"
         >
           qux
         </option>
@@ -5784,22 +5812,26 @@ exports[`single fields select field multiple choice formData 1`] = `
         role="combobox"
       >
         <option
-          value="0"
+          data-index="0"
+          value="foo"
         >
           foo
         </option>
         <option
-          value="1"
+          data-index="1"
+          value="bar"
         >
           bar
         </option>
         <option
-          value="2"
+          data-index="2"
+          value="fuzz"
         >
           fuzz
         </option>
         <option
-          value="3"
+          data-index="3"
+          value="qux"
         >
           qux
         </option>
@@ -5834,17 +5866,20 @@ exports[`single fields select field multiple choice with labels 1`] = `
         role="combobox"
       >
         <option
-          value="0"
+          data-index="0"
+          value="1"
         >
           Blue
         </option>
         <option
-          value="1"
+          data-index="1"
+          value="2"
         >
           Red
         </option>
         <option
-          value="2"
+          data-index="2"
+          value="3"
         >
           Green
         </option>
@@ -5881,13 +5916,15 @@ exports[`single fields select field single choice enumDisabled 1`] = `
           value=""
         />
         <option
-          value="0"
+          data-index="0"
+          value="foo"
         >
           foo
         </option>
         <option
+          data-index="1"
           disabled=""
-          value="1"
+          value="bar"
         >
           bar
         </option>
@@ -6054,12 +6091,14 @@ exports[`single fields select field single choice formData 1`] = `
           value=""
         />
         <option
-          value="0"
+          data-index="0"
+          value="foo"
         >
           foo
         </option>
         <option
-          value="1"
+          data-index="1"
+          value="bar"
         >
           bar
         </option>
@@ -6173,12 +6212,14 @@ exports[`single fields select widget with description in schema and FieldTemplat
           value=""
         />
         <option
-          value="0"
+          data-index="0"
+          value="true"
         >
           Yes
         </option>
         <option
-          value="1"
+          data-index="1"
+          value="false"
         >
           No
         </option>

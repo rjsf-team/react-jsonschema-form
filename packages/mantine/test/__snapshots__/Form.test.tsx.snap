@@ -1945,7 +1945,7 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
                               data-combobox-option="true"
                               id=":r1h6:"
                               role="option"
-                              value="red"
+                              value="0"
                             >
                               <span>
                                 red
@@ -1957,7 +1957,7 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
                               data-combobox-option="true"
                               id=":r1h8:"
                               role="option"
-                              value="green"
+                              value="1"
                             >
                               <span>
                                 green
@@ -1969,7 +1969,7 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
                               data-combobox-option="true"
                               id=":r1ha:"
                               role="option"
-                              value="blue"
+                              value="2"
                             >
                               <span>
                                 blue
@@ -3902,7 +3902,7 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
                               data-combobox-option="true"
                               id=":r1pj:"
                               role="option"
-                              value="red"
+                              value="0"
                             >
                               <span>
                                 red
@@ -3914,7 +3914,7 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
                               data-combobox-option="true"
                               id=":r1pl:"
                               role="option"
-                              value="green"
+                              value="1"
                             >
                               <span>
                                 green
@@ -3926,7 +3926,7 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
                               data-combobox-option="true"
                               id=":r1pn:"
                               role="option"
-                              value="blue"
+                              value="2"
                             >
                               <span>
                                 blue

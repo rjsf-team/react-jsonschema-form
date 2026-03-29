@@ -394,282 +394,338 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           value=""
                         />
                         <option
-                          value="0"
+                          data-index="0"
+                          value="AL"
                         >
                           AL
                         </option>
                         <option
-                          value="1"
+                          data-index="1"
+                          value="AK"
                         >
                           AK
                         </option>
                         <option
-                          value="2"
+                          data-index="2"
+                          value="AS"
                         >
                           AS
                         </option>
                         <option
-                          value="3"
+                          data-index="3"
+                          value="AZ"
                         >
                           AZ
                         </option>
                         <option
-                          value="4"
+                          data-index="4"
+                          value="AR"
                         >
                           AR
                         </option>
                         <option
-                          value="5"
+                          data-index="5"
+                          value="CA"
                         >
                           CA
                         </option>
                         <option
-                          value="6"
+                          data-index="6"
+                          value="CO"
                         >
                           CO
                         </option>
                         <option
-                          value="7"
+                          data-index="7"
+                          value="CT"
                         >
                           CT
                         </option>
                         <option
-                          value="8"
+                          data-index="8"
+                          value="DE"
                         >
                           DE
                         </option>
                         <option
-                          value="9"
+                          data-index="9"
+                          value="DC"
                         >
                           DC
                         </option>
                         <option
-                          value="10"
+                          data-index="10"
+                          value="FL"
                         >
                           FL
                         </option>
                         <option
-                          value="11"
+                          data-index="11"
+                          value="GA"
                         >
                           GA
                         </option>
                         <option
-                          value="12"
+                          data-index="12"
+                          value="GU"
                         >
                           GU
                         </option>
                         <option
-                          value="13"
+                          data-index="13"
+                          value="HI"
                         >
                           HI
                         </option>
                         <option
-                          value="14"
+                          data-index="14"
+                          value="ID"
                         >
                           ID
                         </option>
                         <option
-                          value="15"
+                          data-index="15"
+                          value="IL"
                         >
                           IL
                         </option>
                         <option
-                          value="16"
+                          data-index="16"
+                          value="IN"
                         >
                           IN
                         </option>
                         <option
-                          value="17"
+                          data-index="17"
+                          value="IA"
                         >
                           IA
                         </option>
                         <option
-                          value="18"
+                          data-index="18"
+                          value="KS"
                         >
                           KS
                         </option>
                         <option
-                          value="19"
+                          data-index="19"
+                          value="KY"
                         >
                           KY
                         </option>
                         <option
-                          value="20"
+                          data-index="20"
+                          value="LA"
                         >
                           LA
                         </option>
                         <option
-                          value="21"
+                          data-index="21"
+                          value="ME"
                         >
                           ME
                         </option>
                         <option
-                          value="22"
+                          data-index="22"
+                          value="MD"
                         >
                           MD
                         </option>
                         <option
-                          value="23"
+                          data-index="23"
+                          value="MA"
                         >
                           MA
                         </option>
                         <option
-                          value="24"
+                          data-index="24"
+                          value="MI"
                         >
                           MI
                         </option>
                         <option
-                          value="25"
+                          data-index="25"
+                          value="MN"
                         >
                           MN
                         </option>
                         <option
-                          value="26"
+                          data-index="26"
+                          value="MS"
                         >
                           MS
                         </option>
                         <option
-                          value="27"
+                          data-index="27"
+                          value="MO"
                         >
                           MO
                         </option>
                         <option
-                          value="28"
+                          data-index="28"
+                          value="MT"
                         >
                           MT
                         </option>
                         <option
-                          value="29"
+                          data-index="29"
+                          value="NE"
                         >
                           NE
                         </option>
                         <option
-                          value="30"
+                          data-index="30"
+                          value="NV"
                         >
                           NV
                         </option>
                         <option
-                          value="31"
+                          data-index="31"
+                          value="NH"
                         >
                           NH
                         </option>
                         <option
-                          value="32"
+                          data-index="32"
+                          value="NJ"
                         >
                           NJ
                         </option>
                         <option
-                          value="33"
+                          data-index="33"
+                          value="NM"
                         >
                           NM
                         </option>
                         <option
-                          value="34"
+                          data-index="34"
+                          value="NY"
                         >
                           NY
                         </option>
                         <option
-                          value="35"
+                          data-index="35"
+                          value="NC"
                         >
                           NC
                         </option>
                         <option
-                          value="36"
+                          data-index="36"
+                          value="ND"
                         >
                           ND
                         </option>
                         <option
-                          value="37"
+                          data-index="37"
+                          value="MP"
                         >
                           MP
                         </option>
                         <option
-                          value="38"
+                          data-index="38"
+                          value="OH"
                         >
                           OH
                         </option>
                         <option
-                          value="39"
+                          data-index="39"
+                          value="OK"
                         >
                           OK
                         </option>
                         <option
-                          value="40"
+                          data-index="40"
+                          value="OR"
                         >
                           OR
                         </option>
                         <option
-                          value="41"
+                          data-index="41"
+                          value="PA"
                         >
                           PA
                         </option>
                         <option
-                          value="42"
+                          data-index="42"
+                          value="PR"
                         >
                           PR
                         </option>
                         <option
-                          value="43"
+                          data-index="43"
+                          value="RI"
                         >
                           RI
                         </option>
                         <option
-                          value="44"
+                          data-index="44"
+                          value="SC"
                         >
                           SC
                         </option>
                         <option
-                          value="45"
+                          data-index="45"
+                          value="SD"
                         >
                           SD
                         </option>
                         <option
-                          value="46"
+                          data-index="46"
+                          value="TN"
                         >
                           TN
                         </option>
                         <option
-                          value="47"
+                          data-index="47"
+                          value="TX"
                         >
                           TX
                         </option>
                         <option
-                          value="48"
+                          data-index="48"
+                          value="UT"
                         >
                           UT
                         </option>
                         <option
-                          value="49"
+                          data-index="49"
+                          value="VT"
                         >
                           VT
                         </option>
                         <option
-                          value="50"
+                          data-index="50"
+                          value="VA"
                         >
                           VA
                         </option>
                         <option
-                          value="51"
+                          data-index="51"
+                          value="VI"
                         >
                           VI
                         </option>
                         <option
-                          value="52"
+                          data-index="52"
+                          value="WA"
                         >
                           WA
                         </option>
                         <option
-                          value="53"
+                          data-index="53"
+                          value="WV"
                         >
                           WV
                         </option>
                         <option
-                          value="54"
+                          data-index="54"
+                          value="WI"
                         >
                           WI
                         </option>
                         <option
-                          value="55"
+                          data-index="55"
+                          value="WY"
                         >
                           WY
                         </option>
@@ -893,282 +949,338 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   value=""
                 />
                 <option
-                  value="0"
+                  data-index="0"
+                  value="AL"
                 >
                   AL
                 </option>
                 <option
-                  value="1"
+                  data-index="1"
+                  value="AK"
                 >
                   AK
                 </option>
                 <option
-                  value="2"
+                  data-index="2"
+                  value="AS"
                 >
                   AS
                 </option>
                 <option
-                  value="3"
+                  data-index="3"
+                  value="AZ"
                 >
                   AZ
                 </option>
                 <option
-                  value="4"
+                  data-index="4"
+                  value="AR"
                 >
                   AR
                 </option>
                 <option
-                  value="5"
+                  data-index="5"
+                  value="CA"
                 >
                   CA
                 </option>
                 <option
-                  value="6"
+                  data-index="6"
+                  value="CO"
                 >
                   CO
                 </option>
                 <option
-                  value="7"
+                  data-index="7"
+                  value="CT"
                 >
                   CT
                 </option>
                 <option
-                  value="8"
+                  data-index="8"
+                  value="DE"
                 >
                   DE
                 </option>
                 <option
-                  value="9"
+                  data-index="9"
+                  value="DC"
                 >
                   DC
                 </option>
                 <option
-                  value="10"
+                  data-index="10"
+                  value="FL"
                 >
                   FL
                 </option>
                 <option
-                  value="11"
+                  data-index="11"
+                  value="GA"
                 >
                   GA
                 </option>
                 <option
-                  value="12"
+                  data-index="12"
+                  value="GU"
                 >
                   GU
                 </option>
                 <option
-                  value="13"
+                  data-index="13"
+                  value="HI"
                 >
                   HI
                 </option>
                 <option
-                  value="14"
+                  data-index="14"
+                  value="ID"
                 >
                   ID
                 </option>
                 <option
-                  value="15"
+                  data-index="15"
+                  value="IL"
                 >
                   IL
                 </option>
                 <option
-                  value="16"
+                  data-index="16"
+                  value="IN"
                 >
                   IN
                 </option>
                 <option
-                  value="17"
+                  data-index="17"
+                  value="IA"
                 >
                   IA
                 </option>
                 <option
-                  value="18"
+                  data-index="18"
+                  value="KS"
                 >
                   KS
                 </option>
                 <option
-                  value="19"
+                  data-index="19"
+                  value="KY"
                 >
                   KY
                 </option>
                 <option
-                  value="20"
+                  data-index="20"
+                  value="LA"
                 >
                   LA
                 </option>
                 <option
-                  value="21"
+                  data-index="21"
+                  value="ME"
                 >
                   ME
                 </option>
                 <option
-                  value="22"
+                  data-index="22"
+                  value="MD"
                 >
                   MD
                 </option>
                 <option
-                  value="23"
+                  data-index="23"
+                  value="MA"
                 >
                   MA
                 </option>
                 <option
-                  value="24"
+                  data-index="24"
+                  value="MI"
                 >
                   MI
                 </option>
                 <option
-                  value="25"
+                  data-index="25"
+                  value="MN"
                 >
                   MN
                 </option>
                 <option
-                  value="26"
+                  data-index="26"
+                  value="MS"
                 >
                   MS
                 </option>
                 <option
-                  value="27"
+                  data-index="27"
+                  value="MO"
                 >
                   MO
                 </option>
                 <option
-                  value="28"
+                  data-index="28"
+                  value="MT"
                 >
                   MT
                 </option>
                 <option
-                  value="29"
+                  data-index="29"
+                  value="NE"
                 >
                   NE
                 </option>
                 <option
-                  value="30"
+                  data-index="30"
+                  value="NV"
                 >
                   NV
                 </option>
                 <option
-                  value="31"
+                  data-index="31"
+                  value="NH"
                 >
                   NH
                 </option>
                 <option
-                  value="32"
+                  data-index="32"
+                  value="NJ"
                 >
                   NJ
                 </option>
                 <option
-                  value="33"
+                  data-index="33"
+                  value="NM"
                 >
                   NM
                 </option>
                 <option
-                  value="34"
+                  data-index="34"
+                  value="NY"
                 >
                   NY
                 </option>
                 <option
-                  value="35"
+                  data-index="35"
+                  value="NC"
                 >
                   NC
                 </option>
                 <option
-                  value="36"
+                  data-index="36"
+                  value="ND"
                 >
                   ND
                 </option>
                 <option
-                  value="37"
+                  data-index="37"
+                  value="MP"
                 >
                   MP
                 </option>
                 <option
-                  value="38"
+                  data-index="38"
+                  value="OH"
                 >
                   OH
                 </option>
                 <option
-                  value="39"
+                  data-index="39"
+                  value="OK"
                 >
                   OK
                 </option>
                 <option
-                  value="40"
+                  data-index="40"
+                  value="OR"
                 >
                   OR
                 </option>
                 <option
-                  value="41"
+                  data-index="41"
+                  value="PA"
                 >
                   PA
                 </option>
                 <option
-                  value="42"
+                  data-index="42"
+                  value="PR"
                 >
                   PR
                 </option>
                 <option
-                  value="43"
+                  data-index="43"
+                  value="RI"
                 >
                   RI
                 </option>
                 <option
-                  value="44"
+                  data-index="44"
+                  value="SC"
                 >
                   SC
                 </option>
                 <option
-                  value="45"
+                  data-index="45"
+                  value="SD"
                 >
                   SD
                 </option>
                 <option
-                  value="46"
+                  data-index="46"
+                  value="TN"
                 >
                   TN
                 </option>
                 <option
-                  value="47"
+                  data-index="47"
+                  value="TX"
                 >
                   TX
                 </option>
                 <option
-                  value="48"
+                  data-index="48"
+                  value="UT"
                 >
                   UT
                 </option>
                 <option
-                  value="49"
+                  data-index="49"
+                  value="VT"
                 >
                   VT
                 </option>
                 <option
-                  value="50"
+                  data-index="50"
+                  value="VA"
                 >
                   VA
                 </option>
                 <option
-                  value="51"
+                  data-index="51"
+                  value="VI"
                 >
                   VI
                 </option>
                 <option
-                  value="52"
+                  data-index="52"
+                  value="WA"
                 >
                   WA
                 </option>
                 <option
-                  value="53"
+                  data-index="53"
+                  value="WV"
                 >
                   WV
                 </option>
                 <option
-                  value="54"
+                  data-index="54"
+                  value="WI"
                 >
                   WI
                 </option>
                 <option
-                  value="55"
+                  data-index="55"
+                  value="WY"
                 >
                   WY
                 </option>
@@ -1584,282 +1696,338 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           value=""
                         />
                         <option
-                          value="0"
+                          data-index="0"
+                          value="AL"
                         >
                           AL
                         </option>
                         <option
-                          value="1"
+                          data-index="1"
+                          value="AK"
                         >
                           AK
                         </option>
                         <option
-                          value="2"
+                          data-index="2"
+                          value="AS"
                         >
                           AS
                         </option>
                         <option
-                          value="3"
+                          data-index="3"
+                          value="AZ"
                         >
                           AZ
                         </option>
                         <option
-                          value="4"
+                          data-index="4"
+                          value="AR"
                         >
                           AR
                         </option>
                         <option
-                          value="5"
+                          data-index="5"
+                          value="CA"
                         >
                           CA
                         </option>
                         <option
-                          value="6"
+                          data-index="6"
+                          value="CO"
                         >
                           CO
                         </option>
                         <option
-                          value="7"
+                          data-index="7"
+                          value="CT"
                         >
                           CT
                         </option>
                         <option
-                          value="8"
+                          data-index="8"
+                          value="DE"
                         >
                           DE
                         </option>
                         <option
-                          value="9"
+                          data-index="9"
+                          value="DC"
                         >
                           DC
                         </option>
                         <option
-                          value="10"
+                          data-index="10"
+                          value="FL"
                         >
                           FL
                         </option>
                         <option
-                          value="11"
+                          data-index="11"
+                          value="GA"
                         >
                           GA
                         </option>
                         <option
-                          value="12"
+                          data-index="12"
+                          value="GU"
                         >
                           GU
                         </option>
                         <option
-                          value="13"
+                          data-index="13"
+                          value="HI"
                         >
                           HI
                         </option>
                         <option
-                          value="14"
+                          data-index="14"
+                          value="ID"
                         >
                           ID
                         </option>
                         <option
-                          value="15"
+                          data-index="15"
+                          value="IL"
                         >
                           IL
                         </option>
                         <option
-                          value="16"
+                          data-index="16"
+                          value="IN"
                         >
                           IN
                         </option>
                         <option
-                          value="17"
+                          data-index="17"
+                          value="IA"
                         >
                           IA
                         </option>
                         <option
-                          value="18"
+                          data-index="18"
+                          value="KS"
                         >
                           KS
                         </option>
                         <option
-                          value="19"
+                          data-index="19"
+                          value="KY"
                         >
                           KY
                         </option>
                         <option
-                          value="20"
+                          data-index="20"
+                          value="LA"
                         >
                           LA
                         </option>
                         <option
-                          value="21"
+                          data-index="21"
+                          value="ME"
                         >
                           ME
                         </option>
                         <option
-                          value="22"
+                          data-index="22"
+                          value="MD"
                         >
                           MD
                         </option>
                         <option
-                          value="23"
+                          data-index="23"
+                          value="MA"
                         >
                           MA
                         </option>
                         <option
-                          value="24"
+                          data-index="24"
+                          value="MI"
                         >
                           MI
                         </option>
                         <option
-                          value="25"
+                          data-index="25"
+                          value="MN"
                         >
                           MN
                         </option>
                         <option
-                          value="26"
+                          data-index="26"
+                          value="MS"
                         >
                           MS
                         </option>
                         <option
-                          value="27"
+                          data-index="27"
+                          value="MO"
                         >
                           MO
                         </option>
                         <option
-                          value="28"
+                          data-index="28"
+                          value="MT"
                         >
                           MT
                         </option>
                         <option
-                          value="29"
+                          data-index="29"
+                          value="NE"
                         >
                           NE
                         </option>
                         <option
-                          value="30"
+                          data-index="30"
+                          value="NV"
                         >
                           NV
                         </option>
                         <option
-                          value="31"
+                          data-index="31"
+                          value="NH"
                         >
                           NH
                         </option>
                         <option
-                          value="32"
+                          data-index="32"
+                          value="NJ"
                         >
                           NJ
                         </option>
                         <option
-                          value="33"
+                          data-index="33"
+                          value="NM"
                         >
                           NM
                         </option>
                         <option
-                          value="34"
+                          data-index="34"
+                          value="NY"
                         >
                           NY
                         </option>
                         <option
-                          value="35"
+                          data-index="35"
+                          value="NC"
                         >
                           NC
                         </option>
                         <option
-                          value="36"
+                          data-index="36"
+                          value="ND"
                         >
                           ND
                         </option>
                         <option
-                          value="37"
+                          data-index="37"
+                          value="MP"
                         >
                           MP
                         </option>
                         <option
-                          value="38"
+                          data-index="38"
+                          value="OH"
                         >
                           OH
                         </option>
                         <option
-                          value="39"
+                          data-index="39"
+                          value="OK"
                         >
                           OK
                         </option>
                         <option
-                          value="40"
+                          data-index="40"
+                          value="OR"
                         >
                           OR
                         </option>
                         <option
-                          value="41"
+                          data-index="41"
+                          value="PA"
                         >
                           PA
                         </option>
                         <option
-                          value="42"
+                          data-index="42"
+                          value="PR"
                         >
                           PR
                         </option>
                         <option
-                          value="43"
+                          data-index="43"
+                          value="RI"
                         >
                           RI
                         </option>
                         <option
-                          value="44"
+                          data-index="44"
+                          value="SC"
                         >
                           SC
                         </option>
                         <option
-                          value="45"
+                          data-index="45"
+                          value="SD"
                         >
                           SD
                         </option>
                         <option
-                          value="46"
+                          data-index="46"
+                          value="TN"
                         >
                           TN
                         </option>
                         <option
-                          value="47"
+                          data-index="47"
+                          value="TX"
                         >
                           TX
                         </option>
                         <option
-                          value="48"
+                          data-index="48"
+                          value="UT"
                         >
                           UT
                         </option>
                         <option
-                          value="49"
+                          data-index="49"
+                          value="VT"
                         >
                           VT
                         </option>
                         <option
-                          value="50"
+                          data-index="50"
+                          value="VA"
                         >
                           VA
                         </option>
                         <option
-                          value="51"
+                          data-index="51"
+                          value="VI"
                         >
                           VI
                         </option>
                         <option
-                          value="52"
+                          data-index="52"
+                          value="WA"
                         >
                           WA
                         </option>
                         <option
-                          value="53"
+                          data-index="53"
+                          value="WV"
                         >
                           WV
                         </option>
                         <option
-                          value="54"
+                          data-index="54"
+                          value="WI"
                         >
                           WI
                         </option>
                         <option
-                          value="55"
+                          data-index="55"
+                          value="WY"
                         >
                           WY
                         </option>
@@ -2107,282 +2275,338 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   value=""
                 />
                 <option
-                  value="0"
+                  data-index="0"
+                  value="AL"
                 >
                   AL
                 </option>
                 <option
-                  value="1"
+                  data-index="1"
+                  value="AK"
                 >
                   AK
                 </option>
                 <option
-                  value="2"
+                  data-index="2"
+                  value="AS"
                 >
                   AS
                 </option>
                 <option
-                  value="3"
+                  data-index="3"
+                  value="AZ"
                 >
                   AZ
                 </option>
                 <option
-                  value="4"
+                  data-index="4"
+                  value="AR"
                 >
                   AR
                 </option>
                 <option
-                  value="5"
+                  data-index="5"
+                  value="CA"
                 >
                   CA
                 </option>
                 <option
-                  value="6"
+                  data-index="6"
+                  value="CO"
                 >
                   CO
                 </option>
                 <option
-                  value="7"
+                  data-index="7"
+                  value="CT"
                 >
                   CT
                 </option>
                 <option
-                  value="8"
+                  data-index="8"
+                  value="DE"
                 >
                   DE
                 </option>
                 <option
-                  value="9"
+                  data-index="9"
+                  value="DC"
                 >
                   DC
                 </option>
                 <option
-                  value="10"
+                  data-index="10"
+                  value="FL"
                 >
                   FL
                 </option>
                 <option
-                  value="11"
+                  data-index="11"
+                  value="GA"
                 >
                   GA
                 </option>
                 <option
-                  value="12"
+                  data-index="12"
+                  value="GU"
                 >
                   GU
                 </option>
                 <option
-                  value="13"
+                  data-index="13"
+                  value="HI"
                 >
                   HI
                 </option>
                 <option
-                  value="14"
+                  data-index="14"
+                  value="ID"
                 >
                   ID
                 </option>
                 <option
-                  value="15"
+                  data-index="15"
+                  value="IL"
                 >
                   IL
                 </option>
                 <option
-                  value="16"
+                  data-index="16"
+                  value="IN"
                 >
                   IN
                 </option>
                 <option
-                  value="17"
+                  data-index="17"
+                  value="IA"
                 >
                   IA
                 </option>
                 <option
-                  value="18"
+                  data-index="18"
+                  value="KS"
                 >
                   KS
                 </option>
                 <option
-                  value="19"
+                  data-index="19"
+                  value="KY"
                 >
                   KY
                 </option>
                 <option
-                  value="20"
+                  data-index="20"
+                  value="LA"
                 >
                   LA
                 </option>
                 <option
-                  value="21"
+                  data-index="21"
+                  value="ME"
                 >
                   ME
                 </option>
                 <option
-                  value="22"
+                  data-index="22"
+                  value="MD"
                 >
                   MD
                 </option>
                 <option
-                  value="23"
+                  data-index="23"
+                  value="MA"
                 >
                   MA
                 </option>
                 <option
-                  value="24"
+                  data-index="24"
+                  value="MI"
                 >
                   MI
                 </option>
                 <option
-                  value="25"
+                  data-index="25"
+                  value="MN"
                 >
                   MN
                 </option>
                 <option
-                  value="26"
+                  data-index="26"
+                  value="MS"
                 >
                   MS
                 </option>
                 <option
-                  value="27"
+                  data-index="27"
+                  value="MO"
                 >
                   MO
                 </option>
                 <option
-                  value="28"
+                  data-index="28"
+                  value="MT"
                 >
                   MT
                 </option>
                 <option
-                  value="29"
+                  data-index="29"
+                  value="NE"
                 >
                   NE
                 </option>
                 <option
-                  value="30"
+                  data-index="30"
+                  value="NV"
                 >
                   NV
                 </option>
                 <option
-                  value="31"
+                  data-index="31"
+                  value="NH"
                 >
                   NH
                 </option>
                 <option
-                  value="32"
+                  data-index="32"
+                  value="NJ"
                 >
                   NJ
                 </option>
                 <option
-                  value="33"
+                  data-index="33"
+                  value="NM"
                 >
                   NM
                 </option>
                 <option
-                  value="34"
+                  data-index="34"
+                  value="NY"
                 >
                   NY
                 </option>
                 <option
-                  value="35"
+                  data-index="35"
+                  value="NC"
                 >
                   NC
                 </option>
                 <option
-                  value="36"
+                  data-index="36"
+                  value="ND"
                 >
                   ND
                 </option>
                 <option
-                  value="37"
+                  data-index="37"
+                  value="MP"
                 >
                   MP
                 </option>
                 <option
-                  value="38"
+                  data-index="38"
+                  value="OH"
                 >
                   OH
                 </option>
                 <option
-                  value="39"
+                  data-index="39"
+                  value="OK"
                 >
                   OK
                 </option>
                 <option
-                  value="40"
+                  data-index="40"
+                  value="OR"
                 >
                   OR
                 </option>
                 <option
-                  value="41"
+                  data-index="41"
+                  value="PA"
                 >
                   PA
                 </option>
                 <option
-                  value="42"
+                  data-index="42"
+                  value="PR"
                 >
                   PR
                 </option>
                 <option
-                  value="43"
+                  data-index="43"
+                  value="RI"
                 >
                   RI
                 </option>
                 <option
-                  value="44"
+                  data-index="44"
+                  value="SC"
                 >
                   SC
                 </option>
                 <option
-                  value="45"
+                  data-index="45"
+                  value="SD"
                 >
                   SD
                 </option>
                 <option
-                  value="46"
+                  data-index="46"
+                  value="TN"
                 >
                   TN
                 </option>
                 <option
-                  value="47"
+                  data-index="47"
+                  value="TX"
                 >
                   TX
                 </option>
                 <option
-                  value="48"
+                  data-index="48"
+                  value="UT"
                 >
                   UT
                 </option>
                 <option
-                  value="49"
+                  data-index="49"
+                  value="VT"
                 >
                   VT
                 </option>
                 <option
-                  value="50"
+                  data-index="50"
+                  value="VA"
                 >
                   VA
                 </option>
                 <option
-                  value="51"
+                  data-index="51"
+                  value="VI"
                 >
                   VI
                 </option>
                 <option
-                  value="52"
+                  data-index="52"
+                  value="WA"
                 >
                   WA
                 </option>
                 <option
-                  value="53"
+                  data-index="53"
+                  value="WV"
                 >
                   WV
                 </option>
                 <option
-                  value="54"
+                  data-index="54"
+                  value="WI"
                 >
                   WI
                 </option>
                 <option
-                  value="55"
+                  data-index="55"
+                  value="WY"
                 >
                   WY
                 </option>
@@ -2798,282 +3022,338 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           value=""
                         />
                         <option
-                          value="0"
+                          data-index="0"
+                          value="AL"
                         >
                           AL
                         </option>
                         <option
-                          value="1"
+                          data-index="1"
+                          value="AK"
                         >
                           AK
                         </option>
                         <option
-                          value="2"
+                          data-index="2"
+                          value="AS"
                         >
                           AS
                         </option>
                         <option
-                          value="3"
+                          data-index="3"
+                          value="AZ"
                         >
                           AZ
                         </option>
                         <option
-                          value="4"
+                          data-index="4"
+                          value="AR"
                         >
                           AR
                         </option>
                         <option
-                          value="5"
+                          data-index="5"
+                          value="CA"
                         >
                           CA
                         </option>
                         <option
-                          value="6"
+                          data-index="6"
+                          value="CO"
                         >
                           CO
                         </option>
                         <option
-                          value="7"
+                          data-index="7"
+                          value="CT"
                         >
                           CT
                         </option>
                         <option
-                          value="8"
+                          data-index="8"
+                          value="DE"
                         >
                           DE
                         </option>
                         <option
-                          value="9"
+                          data-index="9"
+                          value="DC"
                         >
                           DC
                         </option>
                         <option
-                          value="10"
+                          data-index="10"
+                          value="FL"
                         >
                           FL
                         </option>
                         <option
-                          value="11"
+                          data-index="11"
+                          value="GA"
                         >
                           GA
                         </option>
                         <option
-                          value="12"
+                          data-index="12"
+                          value="GU"
                         >
                           GU
                         </option>
                         <option
-                          value="13"
+                          data-index="13"
+                          value="HI"
                         >
                           HI
                         </option>
                         <option
-                          value="14"
+                          data-index="14"
+                          value="ID"
                         >
                           ID
                         </option>
                         <option
-                          value="15"
+                          data-index="15"
+                          value="IL"
                         >
                           IL
                         </option>
                         <option
-                          value="16"
+                          data-index="16"
+                          value="IN"
                         >
                           IN
                         </option>
                         <option
-                          value="17"
+                          data-index="17"
+                          value="IA"
                         >
                           IA
                         </option>
                         <option
-                          value="18"
+                          data-index="18"
+                          value="KS"
                         >
                           KS
                         </option>
                         <option
-                          value="19"
+                          data-index="19"
+                          value="KY"
                         >
                           KY
                         </option>
                         <option
-                          value="20"
+                          data-index="20"
+                          value="LA"
                         >
                           LA
                         </option>
                         <option
-                          value="21"
+                          data-index="21"
+                          value="ME"
                         >
                           ME
                         </option>
                         <option
-                          value="22"
+                          data-index="22"
+                          value="MD"
                         >
                           MD
                         </option>
                         <option
-                          value="23"
+                          data-index="23"
+                          value="MA"
                         >
                           MA
                         </option>
                         <option
-                          value="24"
+                          data-index="24"
+                          value="MI"
                         >
                           MI
                         </option>
                         <option
-                          value="25"
+                          data-index="25"
+                          value="MN"
                         >
                           MN
                         </option>
                         <option
-                          value="26"
+                          data-index="26"
+                          value="MS"
                         >
                           MS
                         </option>
                         <option
-                          value="27"
+                          data-index="27"
+                          value="MO"
                         >
                           MO
                         </option>
                         <option
-                          value="28"
+                          data-index="28"
+                          value="MT"
                         >
                           MT
                         </option>
                         <option
-                          value="29"
+                          data-index="29"
+                          value="NE"
                         >
                           NE
                         </option>
                         <option
-                          value="30"
+                          data-index="30"
+                          value="NV"
                         >
                           NV
                         </option>
                         <option
-                          value="31"
+                          data-index="31"
+                          value="NH"
                         >
                           NH
                         </option>
                         <option
-                          value="32"
+                          data-index="32"
+                          value="NJ"
                         >
                           NJ
                         </option>
                         <option
-                          value="33"
+                          data-index="33"
+                          value="NM"
                         >
                           NM
                         </option>
                         <option
-                          value="34"
+                          data-index="34"
+                          value="NY"
                         >
                           NY
                         </option>
                         <option
-                          value="35"
+                          data-index="35"
+                          value="NC"
                         >
                           NC
                         </option>
                         <option
-                          value="36"
+                          data-index="36"
+                          value="ND"
                         >
                           ND
                         </option>
                         <option
-                          value="37"
+                          data-index="37"
+                          value="MP"
                         >
                           MP
                         </option>
                         <option
-                          value="38"
+                          data-index="38"
+                          value="OH"
                         >
                           OH
                         </option>
                         <option
-                          value="39"
+                          data-index="39"
+                          value="OK"
                         >
                           OK
                         </option>
                         <option
-                          value="40"
+                          data-index="40"
+                          value="OR"
                         >
                           OR
                         </option>
                         <option
-                          value="41"
+                          data-index="41"
+                          value="PA"
                         >
                           PA
                         </option>
                         <option
-                          value="42"
+                          data-index="42"
+                          value="PR"
                         >
                           PR
                         </option>
                         <option
-                          value="43"
+                          data-index="43"
+                          value="RI"
                         >
                           RI
                         </option>
                         <option
-                          value="44"
+                          data-index="44"
+                          value="SC"
                         >
                           SC
                         </option>
                         <option
-                          value="45"
+                          data-index="45"
+                          value="SD"
                         >
                           SD
                         </option>
                         <option
-                          value="46"
+                          data-index="46"
+                          value="TN"
                         >
                           TN
                         </option>
                         <option
-                          value="47"
+                          data-index="47"
+                          value="TX"
                         >
                           TX
                         </option>
                         <option
-                          value="48"
+                          data-index="48"
+                          value="UT"
                         >
                           UT
                         </option>
                         <option
-                          value="49"
+                          data-index="49"
+                          value="VT"
                         >
                           VT
                         </option>
                         <option
-                          value="50"
+                          data-index="50"
+                          value="VA"
                         >
                           VA
                         </option>
                         <option
-                          value="51"
+                          data-index="51"
+                          value="VI"
                         >
                           VI
                         </option>
                         <option
-                          value="52"
+                          data-index="52"
+                          value="WA"
                         >
                           WA
                         </option>
                         <option
-                          value="53"
+                          data-index="53"
+                          value="WV"
                         >
                           WV
                         </option>
                         <option
-                          value="54"
+                          data-index="54"
+                          value="WI"
                         >
                           WI
                         </option>
                         <option
-                          value="55"
+                          data-index="55"
+                          value="WY"
                         >
                           WY
                         </option>
@@ -3621,282 +3901,338 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           value=""
                         />
                         <option
-                          value="0"
+                          data-index="0"
+                          value="AL"
                         >
                           AL
                         </option>
                         <option
-                          value="1"
+                          data-index="1"
+                          value="AK"
                         >
                           AK
                         </option>
                         <option
-                          value="2"
+                          data-index="2"
+                          value="AS"
                         >
                           AS
                         </option>
                         <option
-                          value="3"
+                          data-index="3"
+                          value="AZ"
                         >
                           AZ
                         </option>
                         <option
-                          value="4"
+                          data-index="4"
+                          value="AR"
                         >
                           AR
                         </option>
                         <option
-                          value="5"
+                          data-index="5"
+                          value="CA"
                         >
                           CA
                         </option>
                         <option
-                          value="6"
+                          data-index="6"
+                          value="CO"
                         >
                           CO
                         </option>
                         <option
-                          value="7"
+                          data-index="7"
+                          value="CT"
                         >
                           CT
                         </option>
                         <option
-                          value="8"
+                          data-index="8"
+                          value="DE"
                         >
                           DE
                         </option>
                         <option
-                          value="9"
+                          data-index="9"
+                          value="DC"
                         >
                           DC
                         </option>
                         <option
-                          value="10"
+                          data-index="10"
+                          value="FL"
                         >
                           FL
                         </option>
                         <option
-                          value="11"
+                          data-index="11"
+                          value="GA"
                         >
                           GA
                         </option>
                         <option
-                          value="12"
+                          data-index="12"
+                          value="GU"
                         >
                           GU
                         </option>
                         <option
-                          value="13"
+                          data-index="13"
+                          value="HI"
                         >
                           HI
                         </option>
                         <option
-                          value="14"
+                          data-index="14"
+                          value="ID"
                         >
                           ID
                         </option>
                         <option
-                          value="15"
+                          data-index="15"
+                          value="IL"
                         >
                           IL
                         </option>
                         <option
-                          value="16"
+                          data-index="16"
+                          value="IN"
                         >
                           IN
                         </option>
                         <option
-                          value="17"
+                          data-index="17"
+                          value="IA"
                         >
                           IA
                         </option>
                         <option
-                          value="18"
+                          data-index="18"
+                          value="KS"
                         >
                           KS
                         </option>
                         <option
-                          value="19"
+                          data-index="19"
+                          value="KY"
                         >
                           KY
                         </option>
                         <option
-                          value="20"
+                          data-index="20"
+                          value="LA"
                         >
                           LA
                         </option>
                         <option
-                          value="21"
+                          data-index="21"
+                          value="ME"
                         >
                           ME
                         </option>
                         <option
-                          value="22"
+                          data-index="22"
+                          value="MD"
                         >
                           MD
                         </option>
                         <option
-                          value="23"
+                          data-index="23"
+                          value="MA"
                         >
                           MA
                         </option>
                         <option
-                          value="24"
+                          data-index="24"
+                          value="MI"
                         >
                           MI
                         </option>
                         <option
-                          value="25"
+                          data-index="25"
+                          value="MN"
                         >
                           MN
                         </option>
                         <option
-                          value="26"
+                          data-index="26"
+                          value="MS"
                         >
                           MS
                         </option>
                         <option
-                          value="27"
+                          data-index="27"
+                          value="MO"
                         >
                           MO
                         </option>
                         <option
-                          value="28"
+                          data-index="28"
+                          value="MT"
                         >
                           MT
                         </option>
                         <option
-                          value="29"
+                          data-index="29"
+                          value="NE"
                         >
                           NE
                         </option>
                         <option
-                          value="30"
+                          data-index="30"
+                          value="NV"
                         >
                           NV
                         </option>
                         <option
-                          value="31"
+                          data-index="31"
+                          value="NH"
                         >
                           NH
                         </option>
                         <option
-                          value="32"
+                          data-index="32"
+                          value="NJ"
                         >
                           NJ
                         </option>
                         <option
-                          value="33"
+                          data-index="33"
+                          value="NM"
                         >
                           NM
                         </option>
                         <option
-                          value="34"
+                          data-index="34"
+                          value="NY"
                         >
                           NY
                         </option>
                         <option
-                          value="35"
+                          data-index="35"
+                          value="NC"
                         >
                           NC
                         </option>
                         <option
-                          value="36"
+                          data-index="36"
+                          value="ND"
                         >
                           ND
                         </option>
                         <option
-                          value="37"
+                          data-index="37"
+                          value="MP"
                         >
                           MP
                         </option>
                         <option
-                          value="38"
+                          data-index="38"
+                          value="OH"
                         >
                           OH
                         </option>
                         <option
-                          value="39"
+                          data-index="39"
+                          value="OK"
                         >
                           OK
                         </option>
                         <option
-                          value="40"
+                          data-index="40"
+                          value="OR"
                         >
                           OR
                         </option>
                         <option
-                          value="41"
+                          data-index="41"
+                          value="PA"
                         >
                           PA
                         </option>
                         <option
-                          value="42"
+                          data-index="42"
+                          value="PR"
                         >
                           PR
                         </option>
                         <option
-                          value="43"
+                          data-index="43"
+                          value="RI"
                         >
                           RI
                         </option>
                         <option
-                          value="44"
+                          data-index="44"
+                          value="SC"
                         >
                           SC
                         </option>
                         <option
-                          value="45"
+                          data-index="45"
+                          value="SD"
                         >
                           SD
                         </option>
                         <option
-                          value="46"
+                          data-index="46"
+                          value="TN"
                         >
                           TN
                         </option>
                         <option
-                          value="47"
+                          data-index="47"
+                          value="TX"
                         >
                           TX
                         </option>
                         <option
-                          value="48"
+                          data-index="48"
+                          value="UT"
                         >
                           UT
                         </option>
                         <option
-                          value="49"
+                          data-index="49"
+                          value="VT"
                         >
                           VT
                         </option>
                         <option
-                          value="50"
+                          data-index="50"
+                          value="VA"
                         >
                           VA
                         </option>
                         <option
-                          value="51"
+                          data-index="51"
+                          value="VI"
                         >
                           VI
                         </option>
                         <option
-                          value="52"
+                          data-index="52"
+                          value="WA"
                         >
                           WA
                         </option>
                         <option
-                          value="53"
+                          data-index="53"
+                          value="WV"
                         >
                           WV
                         </option>
                         <option
-                          value="54"
+                          data-index="54"
+                          value="WI"
                         >
                           WI
                         </option>
                         <option
-                          value="55"
+                          data-index="55"
+                          value="WY"
                         >
                           WY
                         </option>
@@ -4120,282 +4456,338 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   value=""
                 />
                 <option
-                  value="0"
+                  data-index="0"
+                  value="AL"
                 >
                   AL
                 </option>
                 <option
-                  value="1"
+                  data-index="1"
+                  value="AK"
                 >
                   AK
                 </option>
                 <option
-                  value="2"
+                  data-index="2"
+                  value="AS"
                 >
                   AS
                 </option>
                 <option
-                  value="3"
+                  data-index="3"
+                  value="AZ"
                 >
                   AZ
                 </option>
                 <option
-                  value="4"
+                  data-index="4"
+                  value="AR"
                 >
                   AR
                 </option>
                 <option
-                  value="5"
+                  data-index="5"
+                  value="CA"
                 >
                   CA
                 </option>
                 <option
-                  value="6"
+                  data-index="6"
+                  value="CO"
                 >
                   CO
                 </option>
                 <option
-                  value="7"
+                  data-index="7"
+                  value="CT"
                 >
                   CT
                 </option>
                 <option
-                  value="8"
+                  data-index="8"
+                  value="DE"
                 >
                   DE
                 </option>
                 <option
-                  value="9"
+                  data-index="9"
+                  value="DC"
                 >
                   DC
                 </option>
                 <option
-                  value="10"
+                  data-index="10"
+                  value="FL"
                 >
                   FL
                 </option>
                 <option
-                  value="11"
+                  data-index="11"
+                  value="GA"
                 >
                   GA
                 </option>
                 <option
-                  value="12"
+                  data-index="12"
+                  value="GU"
                 >
                   GU
                 </option>
                 <option
-                  value="13"
+                  data-index="13"
+                  value="HI"
                 >
                   HI
                 </option>
                 <option
-                  value="14"
+                  data-index="14"
+                  value="ID"
                 >
                   ID
                 </option>
                 <option
-                  value="15"
+                  data-index="15"
+                  value="IL"
                 >
                   IL
                 </option>
                 <option
-                  value="16"
+                  data-index="16"
+                  value="IN"
                 >
                   IN
                 </option>
                 <option
-                  value="17"
+                  data-index="17"
+                  value="IA"
                 >
                   IA
                 </option>
                 <option
-                  value="18"
+                  data-index="18"
+                  value="KS"
                 >
                   KS
                 </option>
                 <option
-                  value="19"
+                  data-index="19"
+                  value="KY"
                 >
                   KY
                 </option>
                 <option
-                  value="20"
+                  data-index="20"
+                  value="LA"
                 >
                   LA
                 </option>
                 <option
-                  value="21"
+                  data-index="21"
+                  value="ME"
                 >
                   ME
                 </option>
                 <option
-                  value="22"
+                  data-index="22"
+                  value="MD"
                 >
                   MD
                 </option>
                 <option
-                  value="23"
+                  data-index="23"
+                  value="MA"
                 >
                   MA
                 </option>
                 <option
-                  value="24"
+                  data-index="24"
+                  value="MI"
                 >
                   MI
                 </option>
                 <option
-                  value="25"
+                  data-index="25"
+                  value="MN"
                 >
                   MN
                 </option>
                 <option
-                  value="26"
+                  data-index="26"
+                  value="MS"
                 >
                   MS
                 </option>
                 <option
-                  value="27"
+                  data-index="27"
+                  value="MO"
                 >
                   MO
                 </option>
                 <option
-                  value="28"
+                  data-index="28"
+                  value="MT"
                 >
                   MT
                 </option>
                 <option
-                  value="29"
+                  data-index="29"
+                  value="NE"
                 >
                   NE
                 </option>
                 <option
-                  value="30"
+                  data-index="30"
+                  value="NV"
                 >
                   NV
                 </option>
                 <option
-                  value="31"
+                  data-index="31"
+                  value="NH"
                 >
                   NH
                 </option>
                 <option
-                  value="32"
+                  data-index="32"
+                  value="NJ"
                 >
                   NJ
                 </option>
                 <option
-                  value="33"
+                  data-index="33"
+                  value="NM"
                 >
                   NM
                 </option>
                 <option
-                  value="34"
+                  data-index="34"
+                  value="NY"
                 >
                   NY
                 </option>
                 <option
-                  value="35"
+                  data-index="35"
+                  value="NC"
                 >
                   NC
                 </option>
                 <option
-                  value="36"
+                  data-index="36"
+                  value="ND"
                 >
                   ND
                 </option>
                 <option
-                  value="37"
+                  data-index="37"
+                  value="MP"
                 >
                   MP
                 </option>
                 <option
-                  value="38"
+                  data-index="38"
+                  value="OH"
                 >
                   OH
                 </option>
                 <option
-                  value="39"
+                  data-index="39"
+                  value="OK"
                 >
                   OK
                 </option>
                 <option
-                  value="40"
+                  data-index="40"
+                  value="OR"
                 >
                   OR
                 </option>
                 <option
-                  value="41"
+                  data-index="41"
+                  value="PA"
                 >
                   PA
                 </option>
                 <option
-                  value="42"
+                  data-index="42"
+                  value="PR"
                 >
                   PR
                 </option>
                 <option
-                  value="43"
+                  data-index="43"
+                  value="RI"
                 >
                   RI
                 </option>
                 <option
-                  value="44"
+                  data-index="44"
+                  value="SC"
                 >
                   SC
                 </option>
                 <option
-                  value="45"
+                  data-index="45"
+                  value="SD"
                 >
                   SD
                 </option>
                 <option
-                  value="46"
+                  data-index="46"
+                  value="TN"
                 >
                   TN
                 </option>
                 <option
-                  value="47"
+                  data-index="47"
+                  value="TX"
                 >
                   TX
                 </option>
                 <option
-                  value="48"
+                  data-index="48"
+                  value="UT"
                 >
                   UT
                 </option>
                 <option
-                  value="49"
+                  data-index="49"
+                  value="VT"
                 >
                   VT
                 </option>
                 <option
-                  value="50"
+                  data-index="50"
+                  value="VA"
                 >
                   VA
                 </option>
                 <option
-                  value="51"
+                  data-index="51"
+                  value="VI"
                 >
                   VI
                 </option>
                 <option
-                  value="52"
+                  data-index="52"
+                  value="WA"
                 >
                   WA
                 </option>
                 <option
-                  value="53"
+                  data-index="53"
+                  value="WV"
                 >
                   WV
                 </option>
                 <option
-                  value="54"
+                  data-index="54"
+                  value="WI"
                 >
                   WI
                 </option>
                 <option
-                  value="55"
+                  data-index="55"
+                  value="WY"
                 >
                   WY
                 </option>
@@ -4788,282 +5180,338 @@ exports[`Three even column grid renders person and address in three columns, no 
                 value=""
               />
               <option
-                value="0"
+                data-index="0"
+                value="AL"
               >
                 AL
               </option>
               <option
-                value="1"
+                data-index="1"
+                value="AK"
               >
                 AK
               </option>
               <option
-                value="2"
+                data-index="2"
+                value="AS"
               >
                 AS
               </option>
               <option
-                value="3"
+                data-index="3"
+                value="AZ"
               >
                 AZ
               </option>
               <option
-                value="4"
+                data-index="4"
+                value="AR"
               >
                 AR
               </option>
               <option
-                value="5"
+                data-index="5"
+                value="CA"
               >
                 CA
               </option>
               <option
-                value="6"
+                data-index="6"
+                value="CO"
               >
                 CO
               </option>
               <option
-                value="7"
+                data-index="7"
+                value="CT"
               >
                 CT
               </option>
               <option
-                value="8"
+                data-index="8"
+                value="DE"
               >
                 DE
               </option>
               <option
-                value="9"
+                data-index="9"
+                value="DC"
               >
                 DC
               </option>
               <option
-                value="10"
+                data-index="10"
+                value="FL"
               >
                 FL
               </option>
               <option
-                value="11"
+                data-index="11"
+                value="GA"
               >
                 GA
               </option>
               <option
-                value="12"
+                data-index="12"
+                value="GU"
               >
                 GU
               </option>
               <option
-                value="13"
+                data-index="13"
+                value="HI"
               >
                 HI
               </option>
               <option
-                value="14"
+                data-index="14"
+                value="ID"
               >
                 ID
               </option>
               <option
-                value="15"
+                data-index="15"
+                value="IL"
               >
                 IL
               </option>
               <option
-                value="16"
+                data-index="16"
+                value="IN"
               >
                 IN
               </option>
               <option
-                value="17"
+                data-index="17"
+                value="IA"
               >
                 IA
               </option>
               <option
-                value="18"
+                data-index="18"
+                value="KS"
               >
                 KS
               </option>
               <option
-                value="19"
+                data-index="19"
+                value="KY"
               >
                 KY
               </option>
               <option
-                value="20"
+                data-index="20"
+                value="LA"
               >
                 LA
               </option>
               <option
-                value="21"
+                data-index="21"
+                value="ME"
               >
                 ME
               </option>
               <option
-                value="22"
+                data-index="22"
+                value="MD"
               >
                 MD
               </option>
               <option
-                value="23"
+                data-index="23"
+                value="MA"
               >
                 MA
               </option>
               <option
-                value="24"
+                data-index="24"
+                value="MI"
               >
                 MI
               </option>
               <option
-                value="25"
+                data-index="25"
+                value="MN"
               >
                 MN
               </option>
               <option
-                value="26"
+                data-index="26"
+                value="MS"
               >
                 MS
               </option>
               <option
-                value="27"
+                data-index="27"
+                value="MO"
               >
                 MO
               </option>
               <option
-                value="28"
+                data-index="28"
+                value="MT"
               >
                 MT
               </option>
               <option
-                value="29"
+                data-index="29"
+                value="NE"
               >
                 NE
               </option>
               <option
-                value="30"
+                data-index="30"
+                value="NV"
               >
                 NV
               </option>
               <option
-                value="31"
+                data-index="31"
+                value="NH"
               >
                 NH
               </option>
               <option
-                value="32"
+                data-index="32"
+                value="NJ"
               >
                 NJ
               </option>
               <option
-                value="33"
+                data-index="33"
+                value="NM"
               >
                 NM
               </option>
               <option
-                value="34"
+                data-index="34"
+                value="NY"
               >
                 NY
               </option>
               <option
-                value="35"
+                data-index="35"
+                value="NC"
               >
                 NC
               </option>
               <option
-                value="36"
+                data-index="36"
+                value="ND"
               >
                 ND
               </option>
               <option
-                value="37"
+                data-index="37"
+                value="MP"
               >
                 MP
               </option>
               <option
-                value="38"
+                data-index="38"
+                value="OH"
               >
                 OH
               </option>
               <option
-                value="39"
+                data-index="39"
+                value="OK"
               >
                 OK
               </option>
               <option
-                value="40"
+                data-index="40"
+                value="OR"
               >
                 OR
               </option>
               <option
-                value="41"
+                data-index="41"
+                value="PA"
               >
                 PA
               </option>
               <option
-                value="42"
+                data-index="42"
+                value="PR"
               >
                 PR
               </option>
               <option
-                value="43"
+                data-index="43"
+                value="RI"
               >
                 RI
               </option>
               <option
-                value="44"
+                data-index="44"
+                value="SC"
               >
                 SC
               </option>
               <option
-                value="45"
+                data-index="45"
+                value="SD"
               >
                 SD
               </option>
               <option
-                value="46"
+                data-index="46"
+                value="TN"
               >
                 TN
               </option>
               <option
-                value="47"
+                data-index="47"
+                value="TX"
               >
                 TX
               </option>
               <option
-                value="48"
+                data-index="48"
+                value="UT"
               >
                 UT
               </option>
               <option
-                value="49"
+                data-index="49"
+                value="VT"
               >
                 VT
               </option>
               <option
-                value="50"
+                data-index="50"
+                value="VA"
               >
                 VA
               </option>
               <option
-                value="51"
+                data-index="51"
+                value="VI"
               >
                 VI
               </option>
               <option
-                value="52"
+                data-index="52"
+                value="WA"
               >
                 WA
               </option>
               <option
-                value="53"
+                data-index="53"
+                value="WV"
               >
                 WV
               </option>
               <option
-                value="54"
+                data-index="54"
+                value="WI"
               >
                 WI
               </option>
               <option
-                value="55"
+                data-index="55"
+                value="WY"
               >
                 WY
               </option>
@@ -5458,282 +5906,338 @@ exports[`Two even column grid renders person and address in two columns, no empl
                 value=""
               />
               <option
-                value="0"
+                data-index="0"
+                value="AL"
               >
                 AL
               </option>
               <option
-                value="1"
+                data-index="1"
+                value="AK"
               >
                 AK
               </option>
               <option
-                value="2"
+                data-index="2"
+                value="AS"
               >
                 AS
               </option>
               <option
-                value="3"
+                data-index="3"
+                value="AZ"
               >
                 AZ
               </option>
               <option
-                value="4"
+                data-index="4"
+                value="AR"
               >
                 AR
               </option>
               <option
-                value="5"
+                data-index="5"
+                value="CA"
               >
                 CA
               </option>
               <option
-                value="6"
+                data-index="6"
+                value="CO"
               >
                 CO
               </option>
               <option
-                value="7"
+                data-index="7"
+                value="CT"
               >
                 CT
               </option>
               <option
-                value="8"
+                data-index="8"
+                value="DE"
               >
                 DE
               </option>
               <option
-                value="9"
+                data-index="9"
+                value="DC"
               >
                 DC
               </option>
               <option
-                value="10"
+                data-index="10"
+                value="FL"
               >
                 FL
               </option>
               <option
-                value="11"
+                data-index="11"
+                value="GA"
               >
                 GA
               </option>
               <option
-                value="12"
+                data-index="12"
+                value="GU"
               >
                 GU
               </option>
               <option
-                value="13"
+                data-index="13"
+                value="HI"
               >
                 HI
               </option>
               <option
-                value="14"
+                data-index="14"
+                value="ID"
               >
                 ID
               </option>
               <option
-                value="15"
+                data-index="15"
+                value="IL"
               >
                 IL
               </option>
               <option
-                value="16"
+                data-index="16"
+                value="IN"
               >
                 IN
               </option>
               <option
-                value="17"
+                data-index="17"
+                value="IA"
               >
                 IA
               </option>
               <option
-                value="18"
+                data-index="18"
+                value="KS"
               >
                 KS
               </option>
               <option
-                value="19"
+                data-index="19"
+                value="KY"
               >
                 KY
               </option>
               <option
-                value="20"
+                data-index="20"
+                value="LA"
               >
                 LA
               </option>
               <option
-                value="21"
+                data-index="21"
+                value="ME"
               >
                 ME
               </option>
               <option
-                value="22"
+                data-index="22"
+                value="MD"
               >
                 MD
               </option>
               <option
-                value="23"
+                data-index="23"
+                value="MA"
               >
                 MA
               </option>
               <option
-                value="24"
+                data-index="24"
+                value="MI"
               >
                 MI
               </option>
               <option
-                value="25"
+                data-index="25"
+                value="MN"
               >
                 MN
               </option>
               <option
-                value="26"
+                data-index="26"
+                value="MS"
               >
                 MS
               </option>
               <option
-                value="27"
+                data-index="27"
+                value="MO"
               >
                 MO
               </option>
               <option
-                value="28"
+                data-index="28"
+                value="MT"
               >
                 MT
               </option>
               <option
-                value="29"
+                data-index="29"
+                value="NE"
               >
                 NE
               </option>
               <option
-                value="30"
+                data-index="30"
+                value="NV"
               >
                 NV
               </option>
               <option
-                value="31"
+                data-index="31"
+                value="NH"
               >
                 NH
               </option>
               <option
-                value="32"
+                data-index="32"
+                value="NJ"
               >
                 NJ
               </option>
               <option
-                value="33"
+                data-index="33"
+                value="NM"
               >
                 NM
               </option>
               <option
-                value="34"
+                data-index="34"
+                value="NY"
               >
                 NY
               </option>
               <option
-                value="35"
+                data-index="35"
+                value="NC"
               >
                 NC
               </option>
               <option
-                value="36"
+                data-index="36"
+                value="ND"
               >
                 ND
               </option>
               <option
-                value="37"
+                data-index="37"
+                value="MP"
               >
                 MP
               </option>
               <option
-                value="38"
+                data-index="38"
+                value="OH"
               >
                 OH
               </option>
               <option
-                value="39"
+                data-index="39"
+                value="OK"
               >
                 OK
               </option>
               <option
-                value="40"
+                data-index="40"
+                value="OR"
               >
                 OR
               </option>
               <option
-                value="41"
+                data-index="41"
+                value="PA"
               >
                 PA
               </option>
               <option
-                value="42"
+                data-index="42"
+                value="PR"
               >
                 PR
               </option>
               <option
-                value="43"
+                data-index="43"
+                value="RI"
               >
                 RI
               </option>
               <option
-                value="44"
+                data-index="44"
+                value="SC"
               >
                 SC
               </option>
               <option
-                value="45"
+                data-index="45"
+                value="SD"
               >
                 SD
               </option>
               <option
-                value="46"
+                data-index="46"
+                value="TN"
               >
                 TN
               </option>
               <option
-                value="47"
+                data-index="47"
+                value="TX"
               >
                 TX
               </option>
               <option
-                value="48"
+                data-index="48"
+                value="UT"
               >
                 UT
               </option>
               <option
-                value="49"
+                data-index="49"
+                value="VT"
               >
                 VT
               </option>
               <option
-                value="50"
+                data-index="50"
+                value="VA"
               >
                 VA
               </option>
               <option
-                value="51"
+                data-index="51"
+                value="VI"
               >
                 VI
               </option>
               <option
-                value="52"
+                data-index="52"
+                value="WA"
               >
                 WA
               </option>
               <option
-                value="53"
+                data-index="53"
+                value="WV"
               >
                 WV
               </option>
               <option
-                value="54"
+                data-index="54"
+                value="WI"
               >
                 WI
               </option>
               <option
-                value="55"
+                data-index="55"
+                value="WY"
               >
                 WY
               </option>
