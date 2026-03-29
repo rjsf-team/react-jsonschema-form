@@ -1225,7 +1225,8 @@ exports[`array fields checkboxes 1`] = `
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    z-index: var(--chakra-z-index-dropdown);
+    --select-z-index: var(--chakra-z-index-popover);
+    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -2387,6 +2388,7 @@ exports[`array fields has errors 1`] = `
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
+    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     background: var(--chakra-colors-color-palette-subtle);
     --bg-currentcolor: var(--chakra-colors-color-palette-subtle);
     color: var(--chakra-colors-color-palette-fg);
@@ -5030,7 +5032,8 @@ exports[`nameGenerator bracketNameGenerator checkboxes with nameGenerator 1`] = 
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    z-index: var(--chakra-z-index-dropdown);
+    --select-z-index: var(--chakra-z-index-popover);
+    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -5703,6 +5706,7 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
+    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -10429,7 +10433,8 @@ exports[`with title and description checkboxes 1`] = `
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    z-index: var(--chakra-z-index-dropdown);
+    --select-z-index: var(--chakra-z-index-popover);
+    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -12904,7 +12909,8 @@ exports[`with title and description from both checkboxes 1`] = `
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    z-index: var(--chakra-z-index-dropdown);
+    --select-z-index: var(--chakra-z-index-popover);
+    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -15379,7 +15385,8 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    z-index: var(--chakra-z-index-dropdown);
+    --select-z-index: var(--chakra-z-index-popover);
+    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -17601,7 +17608,8 @@ exports[`with title and description with global label off checkboxes 1`] = `
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    z-index: var(--chakra-z-index-dropdown);
+    --select-z-index: var(--chakra-z-index-popover);
+    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
