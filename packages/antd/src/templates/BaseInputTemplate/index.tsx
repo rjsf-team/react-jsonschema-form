@@ -82,8 +82,10 @@ export default function BaseInputTemplate<
         placeholder={placeholder}
         required={required}
         style={INPUT_STYLE}
+        changeOnWheel={false}
         list={schema.examples ? examplesId(id) : undefined}
         {...inputProps}
+        type={undefined}
         value={value}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
