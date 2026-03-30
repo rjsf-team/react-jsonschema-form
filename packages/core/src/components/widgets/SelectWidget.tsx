@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent, SyntheticEvent, useCallback } from 'react';
+import { ChangeEvent, FocusEvent, ReactNode, SyntheticEvent, useCallback } from 'react';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
@@ -40,7 +40,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   placeholder,
   htmlName,
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
+  const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const emptyValue = multiple ? [] : '';
 
   const handleFocus = useCallback(
@@ -70,6 +70,76 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
   const showPlaceholderOption = !multiple && schema.default === undefined;
 
+  function renderOption(i: number): ReactNode {
+    if (!Array.isArray(enumOptions) || !enumOptions[i]) {
+      return null;
+    }
+    const { value, label } = enumOptions[i];
+    const isDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1;
+    return (
+      <option key={i} value={String(i)} disabled={isDisabled}>
+        {label}
+      </option>
+    );
+  }
+
+  function renderOptions(): ReactNode {
+    if (!Array.isArray(enumOptions)) {
+      return null;
+    }
+
+    if (optgroups && typeof optgroups === 'object') {
+      // Build a map from enum value to its index in enumOptions
+      const valueToIndex = new Map<any, number>();
+      enumOptions.forEach(({ value }, i) => {
+        valueToIndex.set(value, i);
+      });
+
+      // Track which indices are used in groups
+      const groupedIndices = new Set<number>();
+
+      // Render optgroups
+      const groups = Object.entries(optgroups).map(([label, values]) => {
+        const groupOptions = (values as any[])
+          .map((val) => {
+            const idx = valueToIndex.get(val);
+            if (idx === undefined) {
+              return null;
+            }
+            groupedIndices.add(idx);
+            return renderOption(idx);
+          })
+          .filter(Boolean);
+
+        return (
+          <optgroup key={label} label={label}>
+            {groupOptions}
+          </optgroup>
+        );
+      });
+
+      // Render ungrouped options
+      const ungrouped = enumOptions
+        .map((_, i) => {
+          if (groupedIndices.has(i)) {
+            return null;
+          }
+          return renderOption(i);
+        })
+        .filter(Boolean);
+
+      return (
+        <>
+          {groups}
+          {ungrouped}
+        </>
+      );
+    }
+
+    // Default: flat list
+    return enumOptions.map((_, i) => renderOption(i));
+  }
+
   return (
     <select
       id={id}
@@ -87,15 +157,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       aria-describedby={ariaDescribedByIds(id)}
     >
       {showPlaceholderOption && <option value=''>{placeholder}</option>}
-      {Array.isArray(enumOptions) &&
-        enumOptions.map(({ value, label }, i) => {
-          const disabled = enumDisabled && enumDisabled.indexOf(value) !== -1;
-          return (
-            <option key={i} value={String(i)} disabled={disabled}>
-              {label}
-            </option>
-          );
-        })}
+      {renderOptions()}
     </select>
   );
 }
