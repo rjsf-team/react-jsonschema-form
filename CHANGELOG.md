@@ -16,6 +16,16 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.5.0
+
+## @rjsf/core
+
+- Added a new `removeEmptyOptionalObjects` boolean prop to gracefully prune optional empty objects preventing form submission lockouts, fixing [#4954](https://github.com/rjsf-team/react-jsonschema-form/issues/4954)
+
+## @rjsf/utils
+
+- Added `removeOptionalEmptyObjects` utility function to recursively strip fully empty optional objects based on their parent's `required` properties, fixing [#4954](https://github.com/rjsf-team/react-jsonschema-form/issues/4954)
+
 # 6.4.2
 
 ## @rjsf/antd

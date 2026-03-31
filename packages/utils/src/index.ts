@@ -53,6 +53,7 @@ import mergeDefaultsWithFormData from './mergeDefaultsWithFormData';
 import mergeObjects from './mergeObjects';
 import mergeSchemas from './mergeSchemas';
 import optionsList from './optionsList';
+import removeOptionalEmptyObjects from './removeOptionalEmptyObjects';
 import orderProperties from './orderProperties';
 import pad from './pad';
 import parseDateString from './parseDateString';
@@ -152,6 +153,7 @@ export {
   pad,
   parseDateString,
   rangeSpec,
+  removeOptionalEmptyObjects,
   replaceStringParameters,
   resolveUiSchema,
   expandUiSchemaDefinitions,
