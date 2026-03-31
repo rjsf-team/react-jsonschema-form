@@ -1003,7 +1003,6 @@ exports[`array fields fixed array 1`] = `
                                               required=""
                                               role="spinbutton"
                                               step="1"
-                                              type="number"
                                               value=""
                                             />
                                           </div>
@@ -1610,7 +1609,6 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                                                 placeholder=""
                                                                 role="spinbutton"
                                                                 step="1"
-                                                                type="number"
                                                                 value="10"
                                                               />
                                                             </div>
@@ -1941,7 +1939,6 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                                                                 placeholder=""
                                                                 role="spinbutton"
                                                                 step="1"
-                                                                type="number"
                                                                 value="20"
                                                               />
                                                             </div>
@@ -2872,7 +2869,6 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
                                               required=""
                                               role="spinbutton"
                                               step="1"
-                                              type="number"
                                               value="42"
                                             />
                                           </div>
@@ -4335,7 +4331,6 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                                                 placeholder=""
                                                                 role="spinbutton"
                                                                 step="1"
-                                                                type="number"
                                                                 value="10"
                                                               />
                                                             </div>
@@ -4666,7 +4661,6 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                                                                 placeholder=""
                                                                 role="spinbutton"
                                                                 step="1"
-                                                                type="number"
                                                                 value="20"
                                                               />
                                                             </div>
@@ -6363,7 +6357,6 @@ exports[`with title and description fixed array 1`] = `
                                               required=""
                                               role="spinbutton"
                                               step="1"
-                                              type="number"
                                               value=""
                                             />
                                           </div>
@@ -7507,7 +7500,6 @@ exports[`with title and description from both fixed array 1`] = `
                                               required=""
                                               role="spinbutton"
                                               step="1"
-                                              type="number"
                                               value=""
                                             />
                                           </div>
@@ -8651,7 +8643,6 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                                               required=""
                                               role="spinbutton"
                                               step="1"
-                                              type="number"
                                               value=""
                                             />
                                           </div>
@@ -9701,7 +9692,6 @@ exports[`with title and description with global label off fixed array 1`] = `
                                               required=""
                                               role="spinbutton"
                                               step="1"
-                                              type="number"
                                               value=""
                                             />
                                           </div>

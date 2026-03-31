@@ -899,7 +899,6 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
                                           placeholder=""
                                           role="spinbutton"
                                           step="1"
-                                          type="number"
                                           value="30"
                                         />
                                       </div>
@@ -1686,7 +1685,6 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
                                           placeholder=""
                                           role="spinbutton"
                                           step="1"
-                                          type="number"
                                           value=""
                                         />
                                       </div>
@@ -2251,7 +2249,6 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
                                           placeholder=""
                                           role="spinbutton"
                                           step="1"
-                                          type="number"
                                           value="5"
                                         />
                                       </div>
@@ -2985,7 +2982,6 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
                                           placeholder=""
                                           role="spinbutton"
                                           step="1"
-                                          type="number"
                                           value=""
                                         />
                                       </div>
@@ -4640,7 +4636,6 @@ exports[`object fields object 1`] = `
                                           placeholder=""
                                           role="spinbutton"
                                           step="1"
-                                          type="number"
                                           value=""
                                         />
                                       </div>
@@ -5731,7 +5726,6 @@ exports[`object fields with title and description from both object 1`] = `
                                           placeholder=""
                                           role="spinbutton"
                                           step="1"
-                                          type="number"
                                           value=""
                                         />
                                       </div>
@@ -6306,7 +6300,6 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                                           placeholder=""
                                           role="spinbutton"
                                           step="1"
-                                          type="number"
                                           value=""
                                         />
                                       </div>
@@ -6881,7 +6874,6 @@ exports[`object fields with title and description object 1`] = `
                                           placeholder=""
                                           role="spinbutton"
                                           step="1"
-                                          type="number"
                                           value=""
                                         />
                                       </div>
@@ -7664,7 +7656,6 @@ exports[`object fields with title and description with global label off object 1
                                           placeholder=""
                                           role="spinbutton"
                                           step="1"
-                                          type="number"
                                           value=""
                                         />
                                       </div>
