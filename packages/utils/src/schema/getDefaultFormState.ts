@@ -29,8 +29,10 @@ import {
   GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
+  UiSchema,
   ValidatorType,
 } from '../types';
+import getUiOptions from '../getUiOptions';
 import isMultiSelect from './isMultiSelect';
 import isSelect from './isSelect';
 import retrieveSchema, { resolveDependencies } from './retrieveSchema';
@@ -183,7 +185,7 @@ function maybeAddDefaultToObject<T = any>(
   }
 }
 
-interface ComputeDefaultsProps<T = any, S extends StrictRJSFSchema = RJSFSchema> {
+interface ComputeDefaultsProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
   /** Any defaults provided by the parent field in the schema */
   parentDefaults?: T;
   /** The options root schema, used to primarily to look up `$ref`s */
@@ -211,6 +213,8 @@ interface ComputeDefaultsProps<T = any, S extends StrictRJSFSchema = RJSFSchema>
   shouldMergeDefaultsIntoFormData?: boolean;
   /** Indicates whether initial defaults have been generated */
   initialDefaultsGenerated?: boolean;
+  /** Optional uiSchema, used to apply ui:emptyValue and ui:initialValue as defaults */
+  uiSchema?: UiSchema<T, S, F>;
 }
 
 /** Computes the defaults for the current `schema` given the `rawFormData` and `parentDefaults` if any. This drills into
@@ -224,7 +228,7 @@ interface ComputeDefaultsProps<T = any, S extends StrictRJSFSchema = RJSFSchema>
 export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   validator: ValidatorType<T, S, F>,
   rawSchema: S,
-  computeDefaultsProps: ComputeDefaultsProps<T, S> = {},
+  computeDefaultsProps: ComputeDefaultsProps<T, S, F> = {},
 ): T | T[] | undefined {
   const {
     parentDefaults,
@@ -237,6 +241,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     required,
     shouldMergeDefaultsIntoFormData = false,
     initialDefaultsGenerated,
+    uiSchema,
   } = computeDefaultsProps;
   let formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
   const schema: S = isObject(rawSchema) ? rawSchema : ({} as S);
@@ -307,7 +312,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     schemaToCompute = resolvedSchema[0]; // pick the first element from resolve dependencies
   } else if (isFixedItems(schema)) {
     defaults = (schema.items! as S[]).map((itemSchema: S, idx: number) =>
-      computeDefaults<T, S>(validator, itemSchema, {
+      computeDefaults<T, S, F>(validator, itemSchema, {
         rootSchema,
         includeUndefinedValues,
         _recurseList,
@@ -381,12 +386,23 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       required,
       shouldMergeDefaultsIntoFormData,
       initialDefaultsGenerated,
+      uiSchema,
     });
   }
 
   // No defaults defined for this node, fallback to generic typed ones.
   if (defaults === undefined) {
     defaults = schema.default as unknown as T;
+  }
+
+  // Apply uiSchema defaults: initialValue overrides schema.default, emptyValue is the fallback for blank fields
+  if (uiSchema) {
+    const { initialValue, emptyValue } = getUiOptions(uiSchema);
+    if (initialValue !== undefined) {
+      defaults = initialValue as unknown as T;
+    } else if (defaults === undefined && emptyValue !== undefined) {
+      defaults = emptyValue as unknown as T;
+    }
   }
 
   const defaultBasedOnSchemaType = getDefaultBasedOnSchemaType(validator, schema, computeDefaultsProps, defaults);
@@ -482,7 +498,8 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
     required,
     shouldMergeDefaultsIntoFormData,
     initialDefaultsGenerated,
-  }: ComputeDefaultsProps<T, S> = {},
+    uiSchema,
+  }: ComputeDefaultsProps<T, S, F> = {},
   defaults?: T | T[],
 ): T {
   {
@@ -522,6 +539,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
           required: retrievedSchema.required?.includes(key),
           shouldMergeDefaultsIntoFormData,
           initialDefaultsGenerated,
+          uiSchema: get(uiSchema, [key]),
         });
 
         maybeAddDefaultToObject<T>(
@@ -571,6 +589,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
           required: retrievedSchema.required?.includes(key),
           shouldMergeDefaultsIntoFormData,
           initialDefaultsGenerated,
+          uiSchema: get(uiSchema, [key]),
         });
         // Since these are additional properties we don't need to add the `experimental_defaultFormStateBehavior` prop
         maybeAddDefaultToObject<T>(
@@ -761,6 +780,7 @@ export function getDefaultBasedOnSchemaType<
  * @param [experimental_defaultFormStateBehavior] Optional configuration object, if provided, allows users to override default form state behavior
  * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @param initialDefaultsGenerated - Optional flag, indicates whether or not initial defaults have been generated
+ * @param [uiSchema] - Optional uiSchema, used to apply ui:emptyValue and ui:initialValue as defaults
  * @returns - The resulting `formData` with all the defaults provided
  */
 export default function getDefaultFormState<
@@ -776,6 +796,7 @@ export default function getDefaultFormState<
   experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior,
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
   initialDefaultsGenerated?: boolean,
+  uiSchema?: UiSchema<T, S, F>,
 ) {
   if (!isObject(theSchema)) {
     throw new Error('Invalid schema: ' + theSchema);
@@ -794,6 +815,7 @@ export default function getDefaultFormState<
     shouldMergeDefaultsIntoFormData: true,
     initialDefaultsGenerated,
     requiredAsRoot: true,
+    uiSchema,
   });
 
   if (schema.type !== 'object' && isObject(schema.default)) {

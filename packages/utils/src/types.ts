@@ -1073,6 +1073,10 @@ type UIOptionsBaseType<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     disabled?: boolean;
     /** The default value to use when an input for a field is empty */
     emptyValue?: any;
+    /** Pre-fills the field on initial render and after reset, takes priority over schema default */
+    initialValue?: any;
+    /** Overrides the schema's required for a field: true adds required, false hides the indicator */
+    required?: boolean;
     /** Will disable any of the enum options specified in the array (by value) */
     enumDisabled?: EnumValue[];
     /** Allows a user to provide a list of labels for enum values in the schema.
@@ -1329,6 +1333,7 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
     formData?: T,
     includeUndefinedValues?: boolean | 'excludeObjectChildren',
     initialDefaultsGenerated?: boolean,
+    uiSchema?: UiSchema<T, S, F>,
   ): T | T[] | undefined;
   /** Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema`
    * should be displayed in a UI.

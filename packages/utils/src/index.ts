@@ -1,5 +1,6 @@
 import allowAdditionalItems from './allowAdditionalItems';
 import asNumber from './asNumber';
+import augmentSchemaWithUiRequired from './augmentSchemaWithUiRequired';
 import canExpand from './canExpand';
 import createErrorHandler from './createErrorHandler';
 import createSchemaUtils from './createSchemaUtils';
@@ -97,6 +98,7 @@ export {
   allowAdditionalItems,
   ariaDescribedByIds,
   asNumber,
+  augmentSchemaWithUiRequired,
   buttonId,
   canExpand,
   createErrorHandler,

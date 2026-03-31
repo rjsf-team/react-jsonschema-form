@@ -16,6 +16,23 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 7.0.0
+
+## @rjsf/utils
+
+- Extended `ui:emptyValue` to apply whenever a field is blank (initial render, reset, or user clearing), not just on widget clear ([#4983](https://github.com/rjsf-team/react-jsonschema-form/issues/4983))
+- Added `ui:initialValue` to pre-fill fields on render/reset, taking priority over `schema.default` ([#4983](https://github.com/rjsf-team/react-jsonschema-form/issues/4983))
+- Added `ui:required` to override schema required status from uiSchema ([#4983](https://github.com/rjsf-team/react-jsonschema-form/issues/4983))
+
+## @rjsf/core
+
+- Updated `Form` to pass `uiSchema` through `getDefaultFormState` for `ui:emptyValue` and `ui:initialValue` support ([#4983](https://github.com/rjsf-team/react-jsonschema-form/issues/4983))
+- Updated `SchemaField` and `LayoutGridField` to respect `ui:required` override ([#4983](https://github.com/rjsf-team/react-jsonschema-form/issues/4983))
+
+## Dev / docs / playground
+
+- Added documentation and playground examples for `ui:emptyValue` (extended), `ui:initialValue`, and `ui:required` ([#4983](https://github.com/rjsf-team/react-jsonschema-form/issues/4983))
+
 # 6.4.2
 
 ## @rjsf/antd

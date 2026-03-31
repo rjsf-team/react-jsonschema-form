@@ -485,7 +485,25 @@ render(
 
 ### emptyValue
 
-The `ui:emptyValue` uiSchema directive provides the default value to use when an input for a field is empty
+The `ui:emptyValue` uiSchema directive provides the default value to use when a field is empty. This applies whenever the field is blank, whether from initial render, a form reset, or the user clearing the input.
+
+```tsx
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+
+const schema: RJSFSchema = {
+  type: 'object',
+  required: ['name'],
+  properties: {
+    name: { type: 'string' },
+  },
+};
+
+const uiSchema: UiSchema = {
+  name: {
+    'ui:emptyValue': '',
+  },
+};
+```
 
 ### enumDisabled
 
@@ -588,6 +606,28 @@ If you need to enable the default error display of a child in the hierarchy afte
 
 This is useful when you have a custom field or widget that utilizes either the `rawErrors` or the `errorSchema` to manipulate and/or show the error(s) for the field/widget itself.
 
+### initialValue
+
+The `ui:initialValue` uiSchema directive pre-fills a field on initial render and after a form reset. It takes priority over `schema.default` but does not override user-provided `formData`. Useful for hidden fields that need a fixed value.
+
+```tsx
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+
+const schema: RJSFSchema = {
+  type: 'object',
+  properties: {
+    country: { type: 'string' },
+  },
+};
+
+const uiSchema: UiSchema = {
+  country: {
+    'ui:initialValue': 'US',
+    'ui:widget': 'hidden',
+  },
+};
+```
+
 ### inputType
 
 To change the input type (for example, `tel` or `email`) you can specify the `inputType` in the `ui:options` uiSchema directive.
@@ -681,6 +721,10 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 The `ui:readonly` uiSchema directive will mark all child widgets from a given field as read-only. This is equivalent to setting the `readOnly` property in the schema.
 
 > Note: If you're wondering about the difference between a `disabled` field and a `readonly` one: Marking a field as read-only will render it greyed out, but its text value will be selectable. Disabling it will prevent its value to be selected at all.
+
+### required
+
+The `ui:required` uiSchema directive overrides the schema's `required` status for a field. Setting `ui:required` to `true` shows the required indicator and produces a validation error if the field is left empty. Setting it to `false` hides the required indicator, but does not suppress schema-level validation. A `console.warn` is emitted when `ui:required` is `false` on a schema-required field without `ui:initialValue` or `ui:emptyValue` set.
 
 ### rows
 
