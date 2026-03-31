@@ -378,6 +378,20 @@ describe('ArrayField', () => {
       expect(node.querySelectorAll("input[placeholder='Placeholder...']")).toHaveLength(2);
     });
 
+    it('should pass uiSchema to normal array field', () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: {
+          'ui:items': {
+            'ui:placeholder': 'Placeholder...',
+          },
+        },
+        formData: ['foo', 'barr'],
+      });
+
+      expect(node.querySelectorAll("input[placeholder='Placeholder...']")).toHaveLength(2);
+    });
+
     it('should pass parentUiSchema to ArrayFieldItemTemplate', () => {
       const ParentUiSchemaItemTemplate = (props: ArrayFieldItemTemplateProps) => {
         return (
@@ -3408,7 +3422,7 @@ describe('ArrayField', () => {
         },
       };
 
-      const dynamicUiSchemaFunction = jest.fn((itemData) => {
+      const dynamicUiSchemaFunction = jest.fn((itemData: any) => {
         return {
           name: {
             'ui:widget': itemData.role === 'admin' ? 'textarea' : 'text',
@@ -3456,7 +3470,7 @@ describe('ArrayField', () => {
       };
 
       const uiSchema: UiSchema = {
-        items: (itemData) => {
+        items: (itemData: any) => {
           if (itemData.priority === 'high') {
             return {
               name: {
@@ -3514,7 +3528,7 @@ describe('ArrayField', () => {
       const consoleErrorStub = jest.spyOn(console, 'error');
 
       const uiSchema: UiSchema = {
-        items: (_: any, index) => {
+        items: (_: any, index: number) => {
           if (index === 1) {
             throw new Error('Test error');
           }
@@ -3560,7 +3574,7 @@ describe('ArrayField', () => {
       const consoleErrorStub = jest.spyOn(console, 'error');
 
       const uiSchema: UiSchema = {
-        items: (_: any, index) => {
+        items: (_: any, index: number) => {
           if (index === 1) {
             throw new Error('Test error in fixed array');
           }
@@ -3682,7 +3696,7 @@ describe('ArrayField', () => {
 
       let callCount = 0;
       const uiSchema: UiSchema = {
-        items: (_: any, index) => {
+        items: (_: any, index: number) => {
           callCount++;
           return {
             name: {
@@ -3732,12 +3746,419 @@ describe('ArrayField', () => {
       };
 
       const uiSchema: UiSchema = {
-        items: (_: any, index) => ({
+        items: (_: any, index: number) => ({
           title: {
             'ui:widget': index === 0 ? 'textarea' : 'text',
           },
           tags: {
             items: {
+              'ui:widget': 'text',
+              'ui:placeholder': 'Tag',
+            },
+          },
+        }),
+      };
+
+      const formData = [
+        { title: 'First Post', tags: ['react', 'form'] },
+        { title: 'Second Post', tags: ['javascript'] },
+      ];
+
+      const { node } = createFormComponent({ schema, uiSchema, formData });
+
+      // First item title should be textarea
+      const firstItemTitle = node
+        .querySelectorAll('.rjsf-array-item')[0]
+        .querySelector('.rjsf-field-object .rjsf-field-string:first-of-type textarea');
+      expect(firstItemTitle).toBeInTheDocument();
+
+      // Second item title should be text input
+      const secondItemTitle = node
+        .querySelectorAll('.rjsf-array-item')[1]
+        .querySelector('.rjsf-field-object .rjsf-field-string:first-of-type input[type="text"]');
+      expect(secondItemTitle).toBeInTheDocument();
+
+      // Verify that tag inputs exist
+      const tagInputs = node.querySelectorAll('.rjsf-field-array .rjsf-field-array input[type="text"]');
+      expect(tagInputs.length).toBeGreaterThanOrEqual(3); // 2 tags in first item + 1 tag in second item
+    });
+  });
+
+  describe('Dynamic uiSchema{ ui:items function }', () => {
+    it('should support static uiSchema.items object for backward compatibility', () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            age: { type: 'number' },
+          },
+        },
+      };
+
+      const uiSchema: UiSchema = {
+        'ui:items': {
+          name: {
+            'ui:widget': 'textarea',
+          },
+        },
+      };
+
+      const formData = [
+        { name: 'John', age: 30 },
+        { name: 'Jane', age: 25 },
+      ];
+
+      const { node } = createFormComponent({ schema, uiSchema, formData });
+
+      // Should render textareas for name fields based on static uiSchema
+      const textareas = node.querySelectorAll('textarea');
+      expect(textareas).toHaveLength(2);
+    });
+
+    it('should call dynamic uiSchema.items function with correct parameters', () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            role: { type: 'string' },
+          },
+        },
+      };
+
+      const dynamicUiSchemaFunction = jest.fn((itemData: any) => {
+        return {
+          name: {
+            'ui:widget': itemData.role === 'admin' ? 'textarea' : 'text',
+          },
+        };
+      });
+
+      const uiSchema: UiSchema = {
+        'ui:items': dynamicUiSchemaFunction,
+      };
+
+      const formData = [
+        { name: 'John', role: 'admin' },
+        { name: 'Jane', role: 'user' },
+      ];
+
+      const formContext = { testContext: 'value' };
+
+      createFormComponent({ schema, uiSchema, formData, formContext });
+
+      // Should be called twice (once for each array item)
+      expect(dynamicUiSchemaFunction).toHaveBeenCalledTimes(2);
+
+      // Check first call
+      expect(dynamicUiSchemaFunction).toHaveBeenNthCalledWith(1, { name: 'John', role: 'admin' }, 0, {
+        testContext: 'value',
+      });
+
+      // Check second call
+      expect(dynamicUiSchemaFunction).toHaveBeenNthCalledWith(2, { name: 'Jane', role: 'user' }, 1, {
+        testContext: 'value',
+      });
+    });
+
+    it('should apply dynamic uiSchema correctly based on item data', () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            priority: { type: 'string', enum: ['high', 'normal', 'low'] },
+          },
+        },
+      };
+
+      const uiSchema: UiSchema = {
+        'ui:items': (itemData: any) => {
+          if (itemData.priority === 'high') {
+            return {
+              name: {
+                'ui:widget': 'textarea',
+                'ui:options': {
+                  rows: 5,
+                },
+              },
+              priority: {
+                'ui:widget': 'select',
+                'ui:classNames': 'priority-high',
+              },
+            };
+          }
+          return {
+            name: {
+              'ui:widget': 'text',
+            },
+          };
+        },
+      };
+
+      const formData = [
+        { name: 'Critical Task', priority: 'high' },
+        { name: 'Regular Task', priority: 'normal' },
+      ];
+
+      const { node } = createFormComponent({ schema, uiSchema, formData });
+
+      // First item should have textarea due to high priority
+      const firstItemTextarea = node.querySelectorAll('.rjsf-array-item')[0].querySelector('textarea');
+      expect(firstItemTextarea).toBeInTheDocument();
+      expect(firstItemTextarea).toHaveAttribute('rows', '5');
+
+      // Second item should have text input
+      const secondItemInput = node.querySelectorAll('.rjsf-array-item')[1].querySelector('input[type="text"]');
+      expect(secondItemInput).toBeInTheDocument();
+
+      // High priority item should have custom className
+      const highPrioritySelect = node.querySelector('.priority-high select');
+      expect(highPrioritySelect).toBeInTheDocument();
+    });
+
+    it('should handle errors in dynamic uiSchema function gracefully', () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+          },
+        },
+      };
+
+      const consoleErrorStub = jest.spyOn(console, 'error');
+
+      const uiSchema: UiSchema = {
+        'ui:items': (_: any, index: number) => {
+          if (index === 1) {
+            throw new Error('Test error');
+          }
+          return {
+            name: {
+              'ui:widget': 'textarea',
+            },
+          };
+        },
+      };
+
+      const formData = [{ name: 'First' }, { name: 'Second' }, { name: 'Third' }];
+
+      const { node } = createFormComponent({ schema, uiSchema, formData });
+
+      // Should log error for second item
+      expect(consoleErrorStub).toHaveBeenLastCalledWith(
+        'Error executing dynamic uiSchema.items function for item at index 1:',
+        expect.any(Error),
+      );
+
+      // All items should still render (with fallback for errored item)
+      const arrayItems = node.querySelectorAll('.rjsf-array-item');
+      expect(arrayItems).toHaveLength(3);
+
+      // First and third items should have textareas
+      expect(arrayItems[0].querySelector('textarea')).toBeInTheDocument();
+      expect(arrayItems[2].querySelector('textarea')).toBeInTheDocument();
+
+      // Second item should fall back to default text input
+      expect(arrayItems[1].querySelector('input[type="text"]')).toBeInTheDocument();
+      expect(arrayItems[1].querySelector('textarea')).not.toBeInTheDocument();
+
+      consoleErrorStub.mockRestore();
+    });
+
+    it('should handle errors in dynamic uiSchema function gracefully for fixed arrays', () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: [{ type: 'string' }, { type: 'string' }],
+      };
+
+      const consoleErrorStub = jest.spyOn(console, 'error');
+
+      const uiSchema: UiSchema = {
+        'ui:items': (_: any, index: number) => {
+          if (index === 1) {
+            throw new Error('Test error in fixed array');
+          }
+          return { 'ui:widget': 'textarea' };
+        },
+      };
+
+      const formData = ['First', 'Second'];
+      const { node } = createFormComponent({ schema, uiSchema, formData });
+
+      // Should log error for second item
+      expect(consoleErrorStub).toHaveBeenLastCalledWith(
+        'Error executing dynamic uiSchema.items function for item at index 1:',
+        expect.any(Error),
+      );
+
+      // All items should still render
+      const arrayItems = node.querySelectorAll('.rjsf-array-item');
+      expect(arrayItems).toHaveLength(2);
+
+      // First item should have textarea
+      expect(arrayItems[0].querySelector('textarea')).toBeInTheDocument();
+
+      // Second item should fall back to default text input
+      expect(arrayItems[1].querySelector('input[type="text"]')).toBeInTheDocument();
+      expect(arrayItems[1].querySelector('textarea')).not.toBeInTheDocument();
+
+      consoleErrorStub.mockRestore();
+    });
+
+    it('should handle falsy return values from dynamic uiSchema function', () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            visible: { type: 'boolean' },
+          },
+        },
+      };
+
+      const uiSchema: UiSchema = {
+        'ui:items': (itemData: any) => {
+          // Return empty uiSchema for items where visible is false
+          if (!itemData.visible) {
+            return {};
+          }
+          return {
+            name: {
+              'ui:widget': 'textarea',
+            },
+          };
+        },
+      };
+
+      const formData = [
+        { name: 'Visible Item', visible: true },
+        { name: 'Hidden Item', visible: false },
+      ];
+
+      const { node } = createFormComponent({ schema, uiSchema, formData });
+
+      // Both items should render
+      const arrayItems = node.querySelectorAll('.rjsf-array-item');
+      expect(arrayItems).toHaveLength(2);
+
+      // First item should have textarea
+      expect(arrayItems[0].querySelector('textarea')).toBeInTheDocument();
+
+      // Second item should have default input (falsy return handled gracefully)
+      expect(arrayItems[1].querySelector('input[type="text"]')).toBeInTheDocument();
+      expect(arrayItems[1].querySelector('textarea')).not.toBeInTheDocument();
+    });
+
+    it('should work with empty arrays', () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+          },
+        },
+      };
+
+      const dynamicUiSchemaFunction = jest.fn(() => ({
+        name: {
+          'ui:widget': 'textarea',
+        },
+      }));
+
+      const uiSchema: UiSchema = {
+        'ui:items': dynamicUiSchemaFunction,
+      };
+
+      const formData: any[] = [];
+
+      const { node } = createFormComponent({ schema, uiSchema, formData });
+
+      // Function should not be called for empty array
+      expect(dynamicUiSchemaFunction).toHaveBeenCalledTimes(0);
+
+      // Should still render the add button
+      const addButton = node.querySelector('.rjsf-array-item-add button');
+      expect(addButton).toBeInTheDocument();
+    });
+
+    it('should update dynamically when array items are added', () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+          },
+        },
+      };
+
+      let callCount = 0;
+      const uiSchema: UiSchema = {
+        'ui:items': (_: any, index: number) => {
+          callCount++;
+          return {
+            name: {
+              'ui:widget': 'textarea',
+              'ui:placeholder': `Item ${index + 1}`,
+            },
+          };
+        },
+      };
+
+      const formData = [{ name: 'First' }];
+
+      const { node } = createFormComponent({ schema, uiSchema, formData });
+
+      // Initial render should call function once
+      expect(callCount).toEqual(1);
+
+      // Add a new item
+      const addButton = node.querySelector('.rjsf-array-item-add button');
+      act(() => {
+        fireEvent.click(addButton!);
+      });
+
+      // Should now have called function for both items (3 total: 1 initial + 2 for re-render)
+      expect(callCount).toBeGreaterThanOrEqual(3);
+
+      // Check placeholders are set correctly
+      const textareas = node.querySelectorAll('textarea');
+      expect(textareas).toHaveLength(2);
+      expect(textareas[0].placeholder).toEqual('Item 1');
+      expect(textareas[1].placeholder).toEqual('Item 2');
+    });
+
+    it('should work with nested arrays', () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            title: { type: 'string' },
+            tags: {
+              type: 'array',
+              items: { type: 'string' },
+            },
+          },
+        },
+      };
+
+      const uiSchema: UiSchema = {
+        'ui:items': (_: any, index: number) => ({
+          title: {
+            'ui:widget': index === 0 ? 'textarea' : 'text',
+          },
+          tags: {
+            'ui:items': {
               'ui:widget': 'text',
               'ui:placeholder': 'Tag',
             },

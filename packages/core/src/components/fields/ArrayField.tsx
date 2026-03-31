@@ -128,11 +128,13 @@ function computeItemUiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   index: number,
   formContext: F,
 ): UiSchema<T[], S, F> | undefined {
-  if (typeof uiSchema.items === 'function') {
+  const options = getUiOptions<T[], S, F>(uiSchema);
+  const { items = options.items } = uiSchema;
+  if (typeof items === 'function') {
     try {
       // Call the function with item data, index, and form context
       // TypeScript now correctly infers the types thanks to the ArrayElement type in UiSchema
-      const result = uiSchema.items(item, index, formContext);
+      const result = items(item, index, formContext);
       // Only use the result if it's truthy
       return result as UiSchema<T[], S, F>;
     } catch (e) {
@@ -142,7 +144,7 @@ function computeItemUiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F
     }
   } else {
     // Static object case - preserve undefined to maintain backward compatibility
-    return uiSchema.items as UiSchema<T[], S, F> | undefined;
+    return items as UiSchema<T[], S, F> | undefined;
   }
 }
 

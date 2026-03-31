@@ -26,10 +26,12 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Added a new `removeEmptyOptionalObjects` boolean prop to gracefully prune optional empty objects preventing form submission lockouts, fixing [#4954](https://github.com/rjsf-team/react-jsonschema-form/issues/4954)
+- Updated `ArrayField` to look for `item` on either the `UiSchema` or `options`, partially fixing [#4949](https://github.com/rjsf-team/react-jsonschema-form/issues/4949)
 
 ## @rjsf/utils
 
 - Added `removeOptionalEmptyObjects` utility function to recursively strip fully empty optional objects based on their parent's `required` properties, fixing [#4954](https://github.com/rjsf-team/react-jsonschema-form/issues/4954)
+- Moved `items` from `UiSchema` to `UIOptionsBaseType`, partially fixing [#4949](https://github.com/rjsf-team/react-jsonschema-form/issues/4949)
 
 # 6.4.2
 

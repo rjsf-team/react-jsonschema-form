@@ -1109,6 +1109,13 @@ type UIOptionsBaseType<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
      * to look up an implementation from the `widgets` list or an actual one-off widget implementation itself
      */
     widget?: Widget<T, S, F> | string;
+    /** The uiSchema for items in an array. Can be an object for a uniform uiSchema across all items (current behavior),
+     * or a function that returns a dynamic uiSchema based on the item's data and index.
+     * When using a function, it receives the item data, index, and optionally the form context as parameters.
+     */
+    items?:
+      | UiSchema<ArrayElement<T>, S, F>
+      | ((itemData: ArrayElement<T>, index: number, formContext?: F) => UiSchema<ArrayElement<T>, S, F>);
   };
 
 /** The type that represents the Options potentially provided by `ui:options` */
@@ -1165,13 +1172,6 @@ export type UiSchema<
     'ui:fieldReplacesAnyOrOneOf'?: boolean;
     /** An object that contains all the potential UI options in a single object */
     'ui:options'?: UIOptionsType<T, S, F>;
-    /** The uiSchema for items in an array. Can be an object for a uniform uiSchema across all items (current behavior),
-     * or a function that returns a dynamic uiSchema based on the item's data and index.
-     * When using a function, it receives the item data, index, and optionally the form context as parameters.
-     */
-    items?:
-      | UiSchema<ArrayElement<T>, S, F>
-      | ((itemData: ArrayElement<T>, index: number, formContext?: F) => UiSchema<ArrayElement<T>, S, F>);
     /** An object containing uiSchema definitions keyed by JSON Schema `$ref` paths.
      * When a schema with a `$ref` is resolved, the corresponding uiSchema definition is automatically
      * applied and merged with any local uiSchema overrides at that path.
