@@ -1,7 +1,8 @@
-import { FocusEvent, useCallback, useState } from 'react';
+import { FocusEvent, useCallback, useEffect, useState } from 'react';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
+  ID_KEY,
   getTemplate,
   getUiOptions,
   isFormDataAvailable,
@@ -225,6 +226,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
   const { properties: schemaProperties = {} } = schema;
   // All the children will use childFieldPathId if present in the props, falling back to the fieldPathId
   const childFieldPathId = props.childFieldPathId ?? fieldPathId;
+  const [focusAfterRenameKey, setFocusAfterRenameKey] = useState<string | null>(null);
 
   const templateTitle = uiOptions.title ?? schema.title ?? title ?? name;
   const description = uiOptions.description ?? schema.description;
@@ -316,6 +318,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
         });
         const renamedObj = Object.assign({}, ...keyValues);
 
+        setFocusAfterRenameKey(actualNewKey);
         onChange(renamedObj, childFieldPathId.path);
       }
     },
@@ -331,6 +334,17 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     },
     [onChange, childFieldPathId],
   );
+
+  useEffect(() => {
+    if (focusAfterRenameKey !== null) {
+      const renamedFieldPathId = toFieldPathId(focusAfterRenameKey, registry.globalFormOptions, childFieldPathId.path);
+      const element = document.getElementById(renamedFieldPathId[ID_KEY]);
+      if (element) {
+        element.focus();
+      }
+      setFocusAfterRenameKey(null);
+    }
+  }, [focusAfterRenameKey, childFieldPathId, registry.globalFormOptions]);
 
   if (!renderOptionalField || hasFormData) {
     try {
