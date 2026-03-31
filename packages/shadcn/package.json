@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/shadcn",
-  "version": "6.4.1",
+  "version": "6.4.2",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -73,11 +73,11 @@
     "node": ">=20"
   },
   "devDependencies": {
-    "@rjsf/core": "6.4.1",
-    "@rjsf/snapshot-tests": "6.4.1",
-    "@rjsf/utils": "6.4.1",
-    "@rjsf/validator-ajv8": "6.4.1",
-    "@tailwindcss/cli": "^4.1.18",
+    "@rjsf/core": "6.4.2",
+    "@rjsf/snapshot-tests": "6.4.2",
+    "@rjsf/utils": "6.4.2",
+    "@rjsf/validator-ajv8": "6.4.2",
+    "@tailwindcss/cli": "^4.2.2",
     "eslint": "^8.57.1",
     "jsdom": "^27.0.1",
     "tailwindcss": "^4.1.18"
@@ -100,7 +100,7 @@
     "lodash": "^4.17.23",
     "lodash-es": "^4.17.23",
     "lucide-react": "^0.548.0",
-    "tailwind-merge": "^3.4.0",
+    "tailwind-merge": "^3.5.0",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^13.0.0"
   },

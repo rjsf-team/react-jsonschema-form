@@ -120,6 +120,7 @@ exports[`array fields array icons 1`] = `
             >
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-up ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 disabled=""
                 id="root_0__moveUp"
                 title="Move up"
@@ -146,6 +147,7 @@ exports[`array fields array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-down ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_0__moveDown"
                 title="Move down"
                 type="button"
@@ -171,6 +173,7 @@ exports[`array fields array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-copy ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_0__copy"
                 title="Copy"
                 type="button"
@@ -196,6 +199,7 @@ exports[`array fields array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_0__remove"
                 title="Remove"
                 type="button"
@@ -267,6 +271,7 @@ exports[`array fields array icons 1`] = `
             >
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_1__moveUp"
                 title="Move up"
                 type="button"
@@ -292,6 +297,7 @@ exports[`array fields array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-down ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 disabled=""
                 id="root_1__moveDown"
                 title="Move down"
@@ -318,6 +324,7 @@ exports[`array fields array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-copy ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_1__copy"
                 title="Copy"
                 type="button"
@@ -343,6 +350,7 @@ exports[`array fields array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_1__remove"
                 title="Remove"
                 type="button"
@@ -922,6 +930,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
             >
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-up ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 disabled=""
                 id="root_0__moveUp"
                 title="Move up"
@@ -948,6 +957,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-down ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_0__moveDown"
                 title="Move down"
                 type="button"
@@ -973,6 +983,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_0__remove"
                 title="Remove"
                 type="button"
@@ -1088,6 +1099,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
             >
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_1__moveUp"
                 title="Move up"
                 type="button"
@@ -1113,6 +1125,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-down ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 disabled=""
                 id="root_1__moveDown"
                 title="Move down"
@@ -1139,6 +1152,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_1__remove"
                 title="Remove"
                 type="button"
@@ -1270,6 +1284,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
             >
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-up ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 disabled=""
                 id="root_0__moveUp"
                 title="Move up"
@@ -1296,6 +1311,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-down ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_0__moveDown"
                 title="Move down"
                 type="button"
@@ -1321,6 +1337,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_0__remove"
                 title="Remove"
                 type="button"
@@ -1392,6 +1409,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
             >
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_1__moveUp"
                 title="Move up"
                 type="button"
@@ -1417,6 +1435,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-down ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 disabled=""
                 id="root_1__moveDown"
                 title="Move down"
@@ -1443,6 +1462,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_1__remove"
                 title="Remove"
                 type="button"
@@ -1825,6 +1845,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                       >
                         <button
                           class="fui-Button r1f29ykk rjsf-array-item-move-up ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
+                          color="secondary"
                           disabled=""
                           id="root_0_0__moveUp"
                           title="Move up"
@@ -1851,6 +1872,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                         </button>
                         <button
                           class="fui-Button r1f29ykk rjsf-array-item-move-down ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                          color="secondary"
                           id="root_0_0__moveDown"
                           title="Move down"
                           type="button"
@@ -1876,6 +1898,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                         </button>
                         <button
                           class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                          color="secondary"
                           id="root_0_0__remove"
                           title="Remove"
                           type="button"
@@ -1947,6 +1970,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                       >
                         <button
                           class="fui-Button r1f29ykk rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                          color="secondary"
                           id="root_0_1__moveUp"
                           title="Move up"
                           type="button"
@@ -1972,6 +1996,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                         </button>
                         <button
                           class="fui-Button r1f29ykk rjsf-array-item-move-down ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
+                          color="secondary"
                           disabled=""
                           id="root_0_1__moveDown"
                           title="Move down"
@@ -1998,6 +2023,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                         </button>
                         <button
                           class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                          color="secondary"
                           id="root_0_1__remove"
                           title="Remove"
                           type="button"
@@ -2062,6 +2088,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
             >
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-up ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 disabled=""
                 id="root_0__moveUp"
                 title="Move up"
@@ -2088,6 +2115,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-down ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_0__moveDown"
                 title="Move down"
                 type="button"
@@ -2113,6 +2141,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_0__remove"
                 title="Remove"
                 type="button"
@@ -2199,6 +2228,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                       >
                         <button
                           class="fui-Button r1f29ykk rjsf-array-item-move-up ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
+                          color="secondary"
                           disabled=""
                           id="root_1_0__moveUp"
                           title="Move up"
@@ -2225,6 +2255,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                         </button>
                         <button
                           class="fui-Button r1f29ykk rjsf-array-item-move-down ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                          color="secondary"
                           id="root_1_0__moveDown"
                           title="Move down"
                           type="button"
@@ -2250,6 +2281,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                         </button>
                         <button
                           class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                          color="secondary"
                           id="root_1_0__remove"
                           title="Remove"
                           type="button"
@@ -2321,6 +2353,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                       >
                         <button
                           class="fui-Button r1f29ykk rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                          color="secondary"
                           id="root_1_1__moveUp"
                           title="Move up"
                           type="button"
@@ -2346,6 +2379,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                         </button>
                         <button
                           class="fui-Button r1f29ykk rjsf-array-item-move-down ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
+                          color="secondary"
                           disabled=""
                           id="root_1_1__moveDown"
                           title="Move down"
@@ -2372,6 +2406,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
                         </button>
                         <button
                           class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                          color="secondary"
                           id="root_1_1__remove"
                           title="Remove"
                           type="button"
@@ -2436,6 +2471,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
             >
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_1__moveUp"
                 title="Move up"
                 type="button"
@@ -2461,6 +2497,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-down ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 disabled=""
                 id="root_1__moveDown"
                 title="Move down"
@@ -2487,6 +2524,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_1__remove"
                 title="Remove"
                 type="button"
@@ -2662,6 +2700,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
             >
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-up ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 disabled=""
                 id="root_0__moveUp"
                 title="Move up"
@@ -2688,6 +2727,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-down ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_0__moveDown"
                 title="Move down"
                 type="button"
@@ -2713,6 +2753,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_0__remove"
                 title="Remove"
                 type="button"
@@ -2828,6 +2869,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
             >
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_1__moveUp"
                 title="Move up"
                 type="button"
@@ -2853,6 +2895,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-down ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 disabled=""
                 id="root_1__moveDown"
                 title="Move down"
@@ -2879,6 +2922,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_1__remove"
                 title="Remove"
                 type="button"
@@ -3010,6 +3054,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
             >
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-up ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 disabled=""
                 id="root_0__moveUp"
                 title="Move up"
@@ -3036,6 +3081,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-down ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_0__moveDown"
                 title="Move down"
                 type="button"
@@ -3061,6 +3107,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_0__remove"
                 title="Remove"
                 type="button"
@@ -3132,6 +3179,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
             >
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_1__moveUp"
                 title="Move up"
                 type="button"
@@ -3157,6 +3205,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-down ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 disabled=""
                 id="root_1__moveDown"
                 title="Move down"
@@ -3183,6 +3232,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_1__remove"
                 title="Remove"
                 type="button"
@@ -3430,6 +3480,7 @@ exports[`with title and description array icons 1`] = `
             >
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-up ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 disabled=""
                 id="root_0__moveUp"
                 title="Move up"
@@ -3456,6 +3507,7 @@ exports[`with title and description array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-down ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_0__moveDown"
                 title="Move down"
                 type="button"
@@ -3481,6 +3533,7 @@ exports[`with title and description array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-copy ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_0__copy"
                 title="Copy"
                 type="button"
@@ -3506,6 +3559,7 @@ exports[`with title and description array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_0__remove"
                 title="Remove"
                 type="button"
@@ -3589,6 +3643,7 @@ exports[`with title and description array icons 1`] = `
             >
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_1__moveUp"
                 title="Move up"
                 type="button"
@@ -3614,6 +3669,7 @@ exports[`with title and description array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-down ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 disabled=""
                 id="root_1__moveDown"
                 title="Move down"
@@ -3640,6 +3696,7 @@ exports[`with title and description array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-copy ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_1__copy"
                 title="Copy"
                 type="button"
@@ -3665,6 +3722,7 @@ exports[`with title and description array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_1__remove"
                 title="Remove"
                 type="button"
@@ -4156,6 +4214,7 @@ exports[`with title and description from both array icons 1`] = `
             >
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-up ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 disabled=""
                 id="root_0__moveUp"
                 title="Move up"
@@ -4182,6 +4241,7 @@ exports[`with title and description from both array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-down ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_0__moveDown"
                 title="Move down"
                 type="button"
@@ -4207,6 +4267,7 @@ exports[`with title and description from both array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-copy ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_0__copy"
                 title="Copy"
                 type="button"
@@ -4232,6 +4293,7 @@ exports[`with title and description from both array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_0__remove"
                 title="Remove"
                 type="button"
@@ -4315,6 +4377,7 @@ exports[`with title and description from both array icons 1`] = `
             >
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_1__moveUp"
                 title="Move up"
                 type="button"
@@ -4340,6 +4403,7 @@ exports[`with title and description from both array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-down ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 disabled=""
                 id="root_1__moveDown"
                 title="Move down"
@@ -4366,6 +4430,7 @@ exports[`with title and description from both array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-copy ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_1__copy"
                 title="Copy"
                 type="button"
@@ -4391,6 +4456,7 @@ exports[`with title and description from both array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_1__remove"
                 title="Remove"
                 type="button"
@@ -4882,6 +4948,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             >
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-up ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 disabled=""
                 id="root_0__moveUp"
                 title="Move up"
@@ -4908,6 +4975,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-down ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_0__moveDown"
                 title="Move down"
                 type="button"
@@ -4933,6 +5001,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-copy ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_0__copy"
                 title="Copy"
                 type="button"
@@ -4958,6 +5027,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_0__remove"
                 title="Remove"
                 type="button"
@@ -5041,6 +5111,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             >
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_1__moveUp"
                 title="Move up"
                 type="button"
@@ -5066,6 +5137,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-down ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 disabled=""
                 id="root_1__moveDown"
                 title="Move down"
@@ -5092,6 +5164,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-copy ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_1__copy"
                 title="Copy"
                 type="button"
@@ -5117,6 +5190,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_1__remove"
                 title="Remove"
                 type="button"
@@ -5541,6 +5615,7 @@ exports[`with title and description with global label off array icons 1`] = `
             >
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-up ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 disabled=""
                 id="root_0__moveUp"
                 title="Move up"
@@ -5567,6 +5642,7 @@ exports[`with title and description with global label off array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-down ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_0__moveDown"
                 title="Move down"
                 type="button"
@@ -5592,6 +5668,7 @@ exports[`with title and description with global label off array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-copy ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_0__copy"
                 title="Copy"
                 type="button"
@@ -5617,6 +5694,7 @@ exports[`with title and description with global label off array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_0__remove"
                 title="Remove"
                 type="button"
@@ -5677,6 +5755,7 @@ exports[`with title and description with global label off array icons 1`] = `
             >
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_1__moveUp"
                 title="Move up"
                 type="button"
@@ -5702,6 +5781,7 @@ exports[`with title and description with global label off array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-move-down ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 disabled=""
                 id="root_1__moveDown"
                 title="Move down"
@@ -5728,6 +5808,7 @@ exports[`with title and description with global label off array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-copy ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_1__copy"
                 title="Copy"
                 type="button"
@@ -5753,6 +5834,7 @@ exports[`with title and description with global label off array icons 1`] = `
               </button>
               <button
                 class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
                 id="root_1__remove"
                 title="Remove"
                 type="button"

@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/daisyui",
-  "version": "6.4.1",
+  "version": "6.4.2",
   "description": "Daisy UI components for react-jsonschema-form",
   "main": "dist/index.js",
   "module": "lib/index.js",
@@ -65,9 +65,9 @@
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.2.0",
     "@fortawesome/free-solid-svg-icons": "^7.2.0",
-    "@fortawesome/react-fontawesome": "^3.2.0",
+    "@fortawesome/react-fontawesome": "^3.3.0",
     "date-fns": "^4.1.0",
-    "react-day-picker": "^9.13.2",
+    "react-day-picker": "^9.14.0",
     "tailwindcss": "^4.1.18"
   },
   "peerDependencies": {
@@ -77,10 +77,10 @@
     "react": ">=18"
   },
   "devDependencies": {
-    "@rjsf/core": "6.4.1",
-    "@rjsf/snapshot-tests": "6.4.1",
-    "@rjsf/utils": "6.4.1",
-    "@rjsf/validator-ajv8": "6.4.1",
+    "@rjsf/core": "6.4.2",
+    "@rjsf/snapshot-tests": "6.4.2",
+    "@rjsf/utils": "6.4.2",
+    "@rjsf/validator-ajv8": "6.4.2",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
