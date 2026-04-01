@@ -226,7 +226,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
   const { properties: schemaProperties = {} } = schema;
   // All the children will use childFieldPathId if present in the props, falling back to the fieldPathId
   const childFieldPathId = props.childFieldPathId ?? fieldPathId;
-  const [focusAfterRenameKey, setFocusAfterRenameKey] = useState<string | null>(null);
+  const [focusAfterRenameKey, setFocusAfterRenameKey] = useState<string | undefined>();
 
   const templateTitle = uiOptions.title ?? schema.title ?? title ?? name;
   const description = uiOptions.description ?? schema.description;
@@ -336,15 +336,15 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
   );
 
   useEffect(() => {
-    if (focusAfterRenameKey !== null) {
+    if (focusAfterRenameKey !== undefined) {
       const renamedFieldPathId = toFieldPathId(focusAfterRenameKey, registry.globalFormOptions, childFieldPathId.path);
       const element = document.getElementById(renamedFieldPathId[ID_KEY]);
       if (element) {
         element.focus();
       }
-      setFocusAfterRenameKey(null);
+      setFocusAfterRenameKey(undefined);
     }
-  }, [focusAfterRenameKey, childFieldPathId, registry.globalFormOptions]);
+  }, [focusAfterRenameKey, childFieldPathId.path, registry.globalFormOptions]);
 
   if (!renderOptionalField || hasFormData) {
     try {
