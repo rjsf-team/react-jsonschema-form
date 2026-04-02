@@ -1,8 +1,9 @@
 import { FocusEvent } from 'react';
 import {
   ariaDescribedByIds,
+  enumOptionValueDecoder,
+  enumOptionValueEncoder,
   enumOptionsIndexForValue,
-  enumOptionsValueForIndex,
   labelValue,
   optionId,
   FormContextType,
@@ -32,13 +33,14 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   onFocus,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue, inline } = options;
+  const useRealValues = !!options.useRealOptionValues;
 
   const _onChange = (_: any, data: RadioGroupOnChangeData) =>
-    onChange(enumOptionsValueForIndex<S>(data.value, enumOptions, emptyValue));
+    onChange(enumOptionValueDecoder<S>(data.value, enumOptions, useRealValues, emptyValue));
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
+    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, emptyValue));
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
+    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, emptyValue));
 
   const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions) ?? undefined;
 
@@ -67,7 +69,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
               <Radio
                 id={optionId(id, index)}
                 label={option.label}
-                value={String(index)}
+                value={enumOptionValueEncoder(option.value, index, useRealValues)}
                 key={index}
                 disabled={disabled || itemDisabled || readonly}
               />

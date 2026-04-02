@@ -2,10 +2,10 @@ import { ChangeEvent, FocusEvent } from 'react';
 import Form from 'react-bootstrap/Form';
 import {
   ariaDescribedByIds,
+  enumOptionValueDecoder,
   enumOptionsDeselectValue,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
-  enumOptionsValueForIndex,
   optionId,
   FormContextType,
   RJSFSchema,
@@ -31,6 +31,7 @@ export default function CheckboxesWidget<
   onFocus,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
+  const useRealValues = !!options.useRealOptionValues;
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const _onChange =
@@ -44,9 +45,9 @@ export default function CheckboxesWidget<
     };
 
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
+    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, emptyValue));
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
+    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, emptyValue));
 
   return (
     <Form.Group>

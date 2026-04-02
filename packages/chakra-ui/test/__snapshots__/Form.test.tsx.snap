@@ -258,7 +258,6 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
-    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -2188,7 +2187,6 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
-    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -3251,7 +3249,6 @@ exports[`nameGenerator bracketNameGenerator radio field 1`] = `
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
-    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-red-500);
   }
 
@@ -3440,7 +3437,6 @@ exports[`nameGenerator bracketNameGenerator radio field 1`] = `
                             id="root_option-0"
                           >
                             <input
-                              aria-labelledby="radio-group::r9s::radio:label:0"
                               data-ownedby="radio-group::r9s:"
                               id="radio-group::r9s::radio:input:0"
                               name="root[option]"
@@ -3484,7 +3480,6 @@ exports[`nameGenerator bracketNameGenerator radio field 1`] = `
                             id="root_option-1"
                           >
                             <input
-                              aria-labelledby="radio-group::r9s::radio:label:1"
                               data-ownedby="radio-group::r9s:"
                               id="radio-group::r9s::radio:input:1"
                               name="root[option]"
@@ -3804,8 +3799,7 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    --select-z-index: var(--chakra-z-index-popover);
-    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
+    z-index: var(--chakra-z-index-dropdown);
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -4514,7 +4508,6 @@ exports[`nameGenerator bracketNameGenerator simple fields 1`] = `
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
-    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -5408,7 +5401,6 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
-    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -7960,8 +7952,7 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    --select-z-index: var(--chakra-z-index-popover);
-    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
+    z-index: var(--chakra-z-index-dropdown);
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -8670,7 +8661,6 @@ exports[`nameGenerator dotNotationNameGenerator simple fields 1`] = `
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
-    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -9134,7 +9124,6 @@ exports[`single fields checkbox field 1`] = `
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
-    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -9479,7 +9468,6 @@ exports[`single fields checkbox field with description in schema and FieldTempla
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
-    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -9844,7 +9832,6 @@ exports[`single fields checkbox field with label 1`] = `
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
-    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -10200,7 +10187,6 @@ exports[`single fields checkbox field with label and description 1`] = `
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
-    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -10562,7 +10548,6 @@ exports[`single fields checkbox field with label and rich text description 1`] =
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
-    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -10965,7 +10950,6 @@ exports[`single fields checkboxes field 1`] = `
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
-    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -11531,7 +11515,6 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
-    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -12075,7 +12058,6 @@ exports[`single fields checkboxes widget with required field 1`] = `
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
-    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -14806,7 +14788,6 @@ exports[`single fields help and error display 1`] = `
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
-    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     background: var(--chakra-colors-color-palette-subtle);
     --bg-currentcolor: var(--chakra-colors-color-palette-subtle);
     color: var(--chakra-colors-color-palette-fg);
@@ -16815,8 +16796,7 @@ exports[`single fields optional data controls does not show optional controls wh
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    --select-z-index: var(--chakra-z-index-popover);
-    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
+    z-index: var(--chakra-z-index-dropdown);
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -18862,8 +18842,7 @@ exports[`single fields optional data controls does not show optional controls wh
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    --select-z-index: var(--chakra-z-index-popover);
-    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
+    z-index: var(--chakra-z-index-dropdown);
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -25752,7 +25731,6 @@ exports[`single fields radio field 1`] = `
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
-    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-red-500);
   }
 
@@ -25916,7 +25894,6 @@ exports[`single fields radio field 1`] = `
                   id="root-0"
                 >
                   <input
-                    aria-labelledby="radio-group::r3m::radio:label:0"
                     data-ownedby="radio-group::r3m:"
                     id="radio-group::r3m::radio:input:0"
                     name="root"
@@ -25960,7 +25937,6 @@ exports[`single fields radio field 1`] = `
                   id="root-1"
                 >
                   <input
-                    aria-labelledby="radio-group::r3m::radio:label:1"
                     data-ownedby="radio-group::r3m:"
                     id="radio-group::r3m::radio:input:1"
                     name="root"
@@ -26205,7 +26181,6 @@ exports[`single fields radio widget with description in schema and FieldTemplate
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
-    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-red-500);
   }
 
@@ -26391,7 +26366,6 @@ exports[`single fields radio widget with description in schema and FieldTemplate
                   id="root-0"
                 >
                   <input
-                    aria-labelledby="radio-group::r3a::radio:label:0"
                     data-ownedby="radio-group::r3a:"
                     id="radio-group::r3a::radio:input:0"
                     name="root"
@@ -26435,7 +26409,6 @@ exports[`single fields radio widget with description in schema and FieldTemplate
                   id="root-1"
                 >
                   <input
-                    aria-labelledby="radio-group::r3a::radio:label:1"
                     data-ownedby="radio-group::r3a:"
                     id="radio-group::r3a::radio:input:1"
                     name="root"
@@ -27243,8 +27216,7 @@ exports[`single fields select field 1`] = `
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    --select-z-index: var(--chakra-z-index-popover);
-    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
+    z-index: var(--chakra-z-index-dropdown);
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -27906,8 +27878,7 @@ exports[`single fields select field multiple choice 1`] = `
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    --select-z-index: var(--chakra-z-index-popover);
-    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
+    z-index: var(--chakra-z-index-dropdown);
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -28641,8 +28612,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    --select-z-index: var(--chakra-z-index-popover);
-    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
+    z-index: var(--chakra-z-index-dropdown);
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -29308,7 +29278,6 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
-    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -29908,8 +29877,7 @@ exports[`single fields select field multiple choice formData 1`] = `
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    --select-z-index: var(--chakra-z-index-popover);
-    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
+    z-index: var(--chakra-z-index-dropdown);
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -30641,8 +30609,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    --select-z-index: var(--chakra-z-index-popover);
-    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
+    z-index: var(--chakra-z-index-dropdown);
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -31341,8 +31308,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    --select-z-index: var(--chakra-z-index-popover);
-    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
+    z-index: var(--chakra-z-index-dropdown);
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -31922,7 +31888,6 @@ exports[`single fields select field single choice enumDisabled using radio widge
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
-    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-red-500);
   }
 
@@ -32086,7 +32051,6 @@ exports[`single fields select field single choice enumDisabled using radio widge
                   id="root-0"
                 >
                   <input
-                    aria-labelledby="radio-group::r1p::radio:label:0"
                     data-ownedby="radio-group::r1p:"
                     id="radio-group::r1p::radio:input:0"
                     name="root"
@@ -32131,7 +32095,6 @@ exports[`single fields select field single choice enumDisabled using radio widge
                   id="root-1"
                 >
                   <input
-                    aria-labelledby="radio-group::r1p::radio:label:1"
                     data-ownedby="radio-group::r1p:"
                     disabled=""
                     id="radio-group::r1p::radio:input:1"
@@ -32332,7 +32295,6 @@ exports[`single fields select field single choice form disabled using radio widg
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
-    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-red-500);
   }
 
@@ -32502,7 +32464,6 @@ exports[`single fields select field single choice form disabled using radio widg
                   id="root-0"
                 >
                   <input
-                    aria-labelledby="radio-group::r1v::radio:label:0"
                     data-ownedby="radio-group::r1v:"
                     disabled=""
                     id="radio-group::r1v::radio:input:0"
@@ -32550,7 +32511,6 @@ exports[`single fields select field single choice form disabled using radio widg
                   id="root-1"
                 >
                   <input
-                    aria-labelledby="radio-group::r1v::radio:label:1"
                     data-ownedby="radio-group::r1v:"
                     disabled=""
                     id="radio-group::r1v::radio:input:1"
@@ -32837,8 +32797,7 @@ exports[`single fields select field single choice formData 1`] = `
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    --select-z-index: var(--chakra-z-index-popover);
-    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
+    z-index: var(--chakra-z-index-dropdown);
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -33413,7 +33372,6 @@ exports[`single fields select field single choice uiSchema disabled using radio 
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
-    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-red-500);
   }
 
@@ -33583,7 +33541,6 @@ exports[`single fields select field single choice uiSchema disabled using radio 
                   id="root-0"
                 >
                   <input
-                    aria-labelledby="radio-group::r1s::radio:label:0"
                     data-ownedby="radio-group::r1s:"
                     disabled=""
                     id="radio-group::r1s::radio:input:0"
@@ -33631,7 +33588,6 @@ exports[`single fields select field single choice uiSchema disabled using radio 
                   id="root-1"
                 >
                   <input
-                    aria-labelledby="radio-group::r1s::radio:label:1"
                     data-ownedby="radio-group::r1s:"
                     disabled=""
                     id="radio-group::r1s::radio:input:1"
@@ -33964,8 +33920,7 @@ exports[`single fields select widget with description in schema and FieldTemplat
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    --select-z-index: var(--chakra-z-index-popover);
-    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
+    z-index: var(--chakra-z-index-dropdown);
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -34524,7 +34479,8 @@ exports[`single fields slider field 1`] = `
     min-height: var(--slider-thumb-size);
   }
 
-  .emotion-4:has(.chakra-slider__markerLabel) {
+  .emotion-4[data-has-mark-label],
+  .emotion-4:has(.chakra-slider__marker-label) {
     margin-bottom: var(--chakra-spacing-4);
   }
 }
@@ -34577,10 +34533,6 @@ exports[`single fields slider field 1`] = `
     outline: 0;
     z-index: 2;
     border-radius: var(--chakra-radii-full);
-    -webkit-transition: box-shadow;
-    transition: box-shadow;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
     border-width: 2px;
     border-color: var(--chakra-colors-color-palette-solid);
     background: var(--chakra-colors-bg);
@@ -34595,10 +34547,11 @@ exports[`single fields slider field 1`] = `
   .emotion-7:is(:focus-visible, [data-focus-visible]) {
     --ring-offset-shadow: var(--ring-inset) 0 0 0 var(--ring-offset-width) var(--ring-offset-color);
     --ring-shadow: var(--ring-inset) 0 0 0 calc(var(--ring-width) + var(--ring-offset-width)) var(--ring-color);
-    --ring-width: 3px;
+    --ring-width: 2px;
     box-shadow: var(--ring-offset-shadow),var(--ring-shadow),var(--shadow, 0 0 #0000);
-    --mix---ring-color: color-mix(in srgb, var(--chakra-colors-color-palette-focus-ring) 50%, transparent);
-    --ring-color: var(--mix---ring-color, var(--chakra-colors-color-palette-focus-ring));
+    --ring-color: var(--chakra-colors-color-palette-focus-ring);
+    --ring-offset-width: 2px;
+    --ring-offset-color: var(--chakra-colors-bg);
   }
 
   .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {

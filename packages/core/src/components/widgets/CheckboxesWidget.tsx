@@ -1,10 +1,11 @@
 import { ChangeEvent, FocusEvent, useCallback } from 'react';
 import {
   ariaDescribedByIds,
+  enumOptionValueDecoder,
+  enumOptionValueEncoder,
   enumOptionsDeselectValue,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
-  enumOptionsValueForIndex,
   optionId,
   FormContextType,
   WidgetProps,
@@ -20,7 +21,7 @@ import {
 function CheckboxesWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,
   disabled,
-  options: { inline = false, enumOptions, enumDisabled, emptyValue },
+  options,
   value,
   autofocus = false,
   readonly,
@@ -29,19 +30,22 @@ function CheckboxesWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   onFocus,
   htmlName,
 }: WidgetProps<T, S, F>) {
+  const { inline = false, enumOptions, enumDisabled, emptyValue } = options;
+  const useRealValues = !!options.useRealOptionValues;
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const handleBlur = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) =>
-      onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue)),
-    [onBlur, id, enumOptions, emptyValue],
+      onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, emptyValue)),
+    [onBlur, id, enumOptions, emptyValue, useRealValues],
   );
 
   const handleFocus = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) =>
-      onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue)),
-    [onFocus, id, enumOptions, emptyValue],
+      onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, emptyValue)),
+    [onFocus, id, enumOptions, emptyValue, useRealValues],
   );
+
   return (
     <div className='checkboxes' id={id}>
       {Array.isArray(enumOptions) &&
@@ -65,7 +69,7 @@ function CheckboxesWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
                 id={optionId(id, index)}
                 name={htmlName || id}
                 checked={checked}
-                value={String(index)}
+                value={enumOptionValueEncoder(option.value, index, useRealValues)}
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={autofocus && index === 0}
                 onChange={handleChange}

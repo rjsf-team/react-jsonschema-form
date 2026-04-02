@@ -1,5 +1,12 @@
 import { FocusEvent, useCallback } from 'react';
-import { WidgetProps, StrictRJSFSchema, FormContextType, RJSFSchema } from '@rjsf/utils';
+import {
+  enumOptionValueDecoder,
+  enumOptionValueEncoder,
+  WidgetProps,
+  StrictRJSFSchema,
+  FormContextType,
+  RJSFSchema,
+} from '@rjsf/utils';
 
 /** The `RadioWidget` component renders a group of radio buttons with DaisyUI styling
  *
@@ -25,17 +32,9 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   onFocus,
   onBlur,
 }: WidgetProps<T, S, F>) {
-  const { enumOptions } = options;
+  const { enumOptions, emptyValue } = options;
+  const useRealValues = !!options.useRealOptionValues;
   const isEnumeratedObject = enumOptions && enumOptions[0]?.value && typeof enumOptions[0].value === 'object';
-
-  /** Gets the actual value from an option
-   *
-   * @param option - The option object to get value from
-   * @returns The option's value
-   */
-  const getValue = (option: any) => {
-    return option.value;
-  };
 
   /** Determines if an option is checked based on the current value
    *
@@ -53,37 +52,32 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const handleFocus = useCallback(
     (event: FocusEvent<HTMLInputElement>) => {
       if (onFocus) {
-        const index = Number(event.target.dataset.index);
-        const optionValue = enumOptions?.[index]?.value;
-        onFocus(id, optionValue);
+        onFocus(id, enumOptionValueDecoder<S>(event.target.value, enumOptions, useRealValues, emptyValue));
       }
     },
-    [onFocus, id, enumOptions],
+    [onFocus, id, enumOptions, useRealValues, emptyValue],
   );
 
   /** Handles blur events for accessibility */
   const handleBlur = useCallback(
     (event: FocusEvent<HTMLInputElement>) => {
       if (onBlur) {
-        const index = Number(event.target.dataset.index);
-        const optionValue = enumOptions?.[index]?.value;
-        onBlur(id, optionValue);
+        onBlur(id, enumOptionValueDecoder<S>(event.target.value, enumOptions, useRealValues, emptyValue));
       }
     },
-    [onBlur, id, enumOptions],
+    [onBlur, id, enumOptions, useRealValues, emptyValue],
   );
 
   /** Handles change events for radio options */
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      const index = Number(event.target.dataset.index);
-      const option = enumOptions?.[index];
-      if (option) {
-        onChange(isEnumeratedObject ? option.value : option.value);
+      const decoded = enumOptionValueDecoder<S>(event.target.value, enumOptions, useRealValues, emptyValue);
+      if (decoded !== undefined) {
+        onChange(decoded);
         event.target.blur();
       }
     },
-    [onChange, isEnumeratedObject, enumOptions],
+    [onChange, enumOptions, useRealValues, emptyValue],
   );
 
   return (
@@ -97,7 +91,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
               id={`${id}-${option.value}`}
               className='radio'
               name={htmlName || id}
-              value={getValue(option)}
+              value={enumOptionValueEncoder(option.value, index, useRealValues)}
               checked={isChecked(option)}
               required={required}
               disabled={disabled || readonly}

@@ -1380,7 +1380,6 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
-    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 

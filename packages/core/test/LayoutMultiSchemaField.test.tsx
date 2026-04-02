@@ -343,19 +343,18 @@ describe('LayoutMultiSchemaField', () => {
     const items = within(formControl).getAllByRole('option');
     expect(items.length).toBe(oneOfSchema.oneOf.length + 1); // add one for clear selection text
 
-    const expectedValues = ['first_option', 'second_option'];
     items.forEach((item, index) => {
       if (index === 0) {
         expect(item).toHaveTextContent('');
         expect(item).toHaveAttribute('value', '');
       } else {
         expect(item).toHaveTextContent(oneOfSchema.oneOf[index - 1].title);
-        expect(item).toHaveAttribute('value', expectedValues[index - 1]);
+        expect(item).toHaveAttribute('value', String(index - 1));
       }
     });
 
-    // select the option with the 'first_option' value
-    await user.selectOptions(button, 'first_option');
+    // select the option with the '0' value
+    await user.selectOptions(button, '0');
 
     // Verify the blur function was called
     await user.tab();
@@ -423,18 +422,17 @@ describe('LayoutMultiSchemaField', () => {
     const items = within(formControl).getAllByRole('option');
     expect(items.length).toBe(oneOfSchema.oneOf.length + 1); // add one for clear selection text
 
-    const expectedValues = ['first_option', 'second_option'];
     items.forEach((item, index) => {
       if (index === 0) {
         expect(item).toHaveTextContent('');
         expect(item).toHaveAttribute('value', '');
       } else {
         expect(item).toHaveTextContent(oneOfSchema.oneOf[index - 1].title);
-        expect(item).toHaveAttribute('value', expectedValues[index - 1]);
+        expect(item).toHaveAttribute('value', String(index - 1));
       }
     });
 
-    // select the empty option to clear selection
+    // select the option with the '0' value
     await user.selectOptions(button, '');
 
     // OnChange was called with the correct event

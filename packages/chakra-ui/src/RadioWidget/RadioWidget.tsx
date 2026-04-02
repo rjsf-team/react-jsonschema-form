@@ -2,8 +2,9 @@ import { ChangeEvent, FocusEvent } from 'react';
 import { Stack } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
+  enumOptionValueDecoder,
+  enumOptionValueEncoder,
   enumOptionsIndexForValue,
-  enumOptionsValueForIndex,
   labelValue,
   optionId,
   FormContextType,
@@ -32,13 +33,14 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   uiSchema,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue } = options;
+  const useRealValues = !!options.useRealOptionValues;
 
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
-    onChange(enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
+    onChange(enumOptionValueDecoder<S>(value, enumOptions, useRealValues, emptyValue));
   const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
+    onBlur(id, enumOptionValueDecoder<S>(value, enumOptions, useRealValues, emptyValue));
   const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
+    onFocus(id, enumOptionValueDecoder<S>(value, enumOptions, useRealValues, emptyValue));
 
   const row = options ? options.inline : false;
   const selectedIndex = (enumOptionsIndexForValue<S>(value, enumOptions) as string) ?? null;
@@ -58,7 +60,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        value={selectedIndex}
+        value={useRealValues ? (value != null ? String(value) : null) : selectedIndex}
         name={htmlName || id}
         aria-describedby={ariaDescribedByIds(id)}
       >
@@ -69,7 +71,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
 
               return (
                 <Radio
-                  value={String(index)}
+                  value={enumOptionValueEncoder(option.value, index, useRealValues)}
                   key={index}
                   id={optionId(id, index)}
                   disabled={disabled || itemDisabled || readonly}

@@ -5,8 +5,9 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import {
   ariaDescribedByIds,
+  enumOptionValueDecoder,
+  enumOptionValueEncoder,
   enumOptionsIndexForValue,
-  enumOptionsValueForIndex,
   labelValue,
   optionId,
   FormContextType,
@@ -35,12 +36,14 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   onFocus,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue } = options;
+  const useRealValues = !!options.useRealOptionValues;
 
-  const _onChange = (_: any, value: any) => onChange(enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
+  const _onChange = (_: any, value: any) =>
+    onChange(enumOptionValueDecoder<S>(value, enumOptions, useRealValues, emptyValue));
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
+    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, emptyValue));
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
+    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, emptyValue));
 
   const row = options ? options.inline : false;
   const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions) ?? null;
@@ -56,7 +59,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       <RadioGroup
         id={id}
         name={htmlName || id}
-        value={selectedIndex}
+        value={useRealValues ? (value !== undefined ? String(value) : '') : selectedIndex}
         row={row as boolean}
         onChange={_onChange}
         onBlur={_onBlur}
@@ -70,7 +73,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
               <FormControlLabel
                 control={<Radio name={htmlName || id} id={optionId(id, index)} color='primary' />}
                 label={option.label}
-                value={String(index)}
+                value={enumOptionValueEncoder(option.value, index, useRealValues)}
                 key={index}
                 disabled={disabled || itemDisabled || readonly}
               />

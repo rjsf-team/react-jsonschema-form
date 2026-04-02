@@ -978,6 +978,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
                           id="root_choices-foo"
                           name="root[choices][]"
                           type="checkbox"
+                          value="0"
                         />
                         <span
                           class="label-text"
@@ -994,6 +995,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
                           id="root_choices-bar"
                           name="root[choices][]"
                           type="checkbox"
+                          value="1"
                         />
                         <span
                           class="label-text"
@@ -1010,6 +1012,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
                           id="root_choices-baz"
                           name="root[choices][]"
                           type="checkbox"
+                          value="2"
                         />
                         <span
                           class="label-text"
@@ -1451,7 +1454,7 @@ exports[`nameGenerator bracketNameGenerator radio field 1`] = `
                           id="root_option-foo"
                           name="root[option]"
                           type="radio"
-                          value="foo"
+                          value="0"
                         />
                         <span
                           class="label-text"
@@ -1468,7 +1471,7 @@ exports[`nameGenerator bracketNameGenerator radio field 1`] = `
                           id="root_option-bar"
                           name="root[option]"
                           type="radio"
-                          value="bar"
+                          value="1"
                         />
                         <span
                           class="label-text"
@@ -3879,6 +3882,7 @@ exports[`single fields checkboxes field 1`] = `
                 id="root-foo"
                 name="root"
                 type="checkbox"
+                value="0"
               />
               <span
                 class="label-text"
@@ -3895,6 +3899,7 @@ exports[`single fields checkboxes field 1`] = `
                 id="root-bar"
                 name="root"
                 type="checkbox"
+                value="1"
               />
               <span
                 class="label-text"
@@ -3911,6 +3916,7 @@ exports[`single fields checkboxes field 1`] = `
                 id="root-fuzz"
                 name="root"
                 type="checkbox"
+                value="2"
               />
               <span
                 class="label-text"
@@ -3927,6 +3933,7 @@ exports[`single fields checkboxes field 1`] = `
                 id="root-qux"
                 name="root"
                 type="checkbox"
+                value="3"
               />
               <span
                 class="label-text"
@@ -3994,6 +4001,7 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
                 id="root-option1"
                 name="root"
                 type="checkbox"
+                value="0"
               />
               <span
                 class="label-text"
@@ -4010,6 +4018,7 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
                 id="root-option2"
                 name="root"
                 type="checkbox"
+                value="1"
               />
               <span
                 class="label-text"
@@ -4026,6 +4035,7 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
                 id="root-option3"
                 name="root"
                 type="checkbox"
+                value="2"
               />
               <span
                 class="label-text"
@@ -4108,6 +4118,7 @@ exports[`single fields checkboxes widget with required field 1`] = `
                 id="root-red"
                 name="root"
                 type="checkbox"
+                value="0"
               />
               <span
                 class="label-text"
@@ -4124,6 +4135,7 @@ exports[`single fields checkboxes widget with required field 1`] = `
                 id="root-green"
                 name="root"
                 type="checkbox"
+                value="1"
               />
               <span
                 class="label-text"
@@ -4140,6 +4152,7 @@ exports[`single fields checkboxes widget with required field 1`] = `
                 id="root-blue"
                 name="root"
                 type="checkbox"
+                value="2"
               />
               <span
                 class="label-text"
@@ -10964,7 +10977,7 @@ exports[`single fields radio field 1`] = `
                 id="root-true"
                 name="root"
                 type="radio"
-                value="true"
+                value="0"
               />
               <span
                 class="label-text"
@@ -10981,7 +10994,7 @@ exports[`single fields radio field 1`] = `
                 id="root-false"
                 name="root"
                 type="radio"
-                value="false"
+                value="1"
               />
               <span
                 class="label-text"
@@ -11038,7 +11051,7 @@ exports[`single fields radio widget with description in schema and FieldTemplate
                 id="root-true"
                 name="root"
                 type="radio"
-                value="true"
+                value="0"
               />
               <span
                 class="label-text"
@@ -11055,7 +11068,7 @@ exports[`single fields radio widget with description in schema and FieldTemplate
                 id="root-false"
                 name="root"
                 type="radio"
-                value="false"
+                value="1"
               />
               <span
                 class="label-text"
@@ -11679,6 +11692,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                 id="root-foo"
                 name="root"
                 type="checkbox"
+                value="0"
               />
               <span
                 class="label-text"
@@ -11695,6 +11709,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                 id="root-bar"
                 name="root"
                 type="checkbox"
+                value="1"
               />
               <span
                 class="label-text"
@@ -11711,6 +11726,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                 id="root-fuzz"
                 name="root"
                 type="checkbox"
+                value="2"
               />
               <span
                 class="label-text"
@@ -11727,6 +11743,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                 id="root-qux"
                 name="root"
                 type="checkbox"
+                value="3"
               />
               <span
                 class="label-text"
@@ -12156,7 +12173,7 @@ exports[`single fields select field single choice enumDisabled using radio widge
                 id="root-foo"
                 name="root"
                 type="radio"
-                value="foo"
+                value="0"
               />
               <span
                 class="label-text"
@@ -12173,7 +12190,7 @@ exports[`single fields select field single choice enumDisabled using radio widge
                 id="root-bar"
                 name="root"
                 type="radio"
-                value="bar"
+                value="1"
               />
               <span
                 class="label-text"
@@ -12240,7 +12257,7 @@ exports[`single fields select field single choice form disabled using radio widg
                 id="root-foo"
                 name="root"
                 type="radio"
-                value="foo"
+                value="0"
               />
               <span
                 class="label-text"
@@ -12258,7 +12275,7 @@ exports[`single fields select field single choice form disabled using radio widg
                 id="root-bar"
                 name="root"
                 type="radio"
-                value="bar"
+                value="1"
               />
               <span
                 class="label-text"
@@ -12422,7 +12439,7 @@ exports[`single fields select field single choice uiSchema disabled using radio 
                 id="root-foo"
                 name="root"
                 type="radio"
-                value="foo"
+                value="0"
               />
               <span
                 class="label-text"
@@ -12440,7 +12457,7 @@ exports[`single fields select field single choice uiSchema disabled using radio 
                 id="root-bar"
                 name="root"
                 type="radio"
-                value="bar"
+                value="1"
               />
               <span
                 class="label-text"

@@ -150,7 +150,6 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                     >
                       <button
                         class="fui-Button r1f29ykk rjsf-array-item-move-up ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
-                        color="secondary"
                         disabled=""
                         id="root_tasks_0__moveUp"
                         title="Move up"
@@ -177,7 +176,6 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                       </button>
                       <button
                         class="fui-Button r1f29ykk rjsf-array-item-move-down ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
-                        color="secondary"
                         id="root_tasks_0__moveDown"
                         title="Move down"
                         type="button"
@@ -203,7 +201,6 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                       </button>
                       <button
                         class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
-                        color="secondary"
                         id="root_tasks_0__remove"
                         title="Remove"
                         type="button"
@@ -352,7 +349,6 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                     >
                       <button
                         class="fui-Button r1f29ykk rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
-                        color="secondary"
                         id="root_tasks_1__moveUp"
                         title="Move up"
                         type="button"
@@ -378,7 +374,6 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                       </button>
                       <button
                         class="fui-Button r1f29ykk rjsf-array-item-move-down ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
-                        color="secondary"
                         disabled=""
                         id="root_tasks_1__moveDown"
                         title="Move down"
@@ -405,7 +400,6 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
                       </button>
                       <button
                         class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
-                        color="secondary"
                         id="root_tasks_1__remove"
                         title="Remove"
                         type="button"
@@ -571,7 +565,6 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                     >
                       <button
                         class="fui-Button r1f29ykk rjsf-array-item-move-up ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
-                        color="secondary"
                         disabled=""
                         id="root_tags_0__moveUp"
                         title="Move up"
@@ -598,7 +591,6 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                       </button>
                       <button
                         class="fui-Button r1f29ykk rjsf-array-item-move-down ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
-                        color="secondary"
                         id="root_tags_0__moveDown"
                         title="Move down"
                         type="button"
@@ -624,7 +616,6 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                       </button>
                       <button
                         class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
-                        color="secondary"
                         id="root_tags_0__remove"
                         title="Remove"
                         type="button"
@@ -697,7 +688,6 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                     >
                       <button
                         class="fui-Button r1f29ykk rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
-                        color="secondary"
                         id="root_tags_1__moveUp"
                         title="Move up"
                         type="button"
@@ -723,7 +713,6 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                       </button>
                       <button
                         class="fui-Button r1f29ykk rjsf-array-item-move-down ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
-                        color="secondary"
                         disabled=""
                         id="root_tags_1__moveDown"
                         title="Move down"
@@ -750,7 +739,6 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
                       </button>
                       <button
                         class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
-                        color="secondary"
                         id="root_tags_1__remove"
                         title="Remove"
                         type="button"
@@ -1721,7 +1709,6 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                     >
                       <button
                         class="fui-Button r1f29ykk rjsf-array-item-move-up ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
-                        color="secondary"
                         disabled=""
                         id="root_tasks_0__moveUp"
                         title="Move up"
@@ -1748,7 +1735,6 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                       </button>
                       <button
                         class="fui-Button r1f29ykk rjsf-array-item-move-down ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
-                        color="secondary"
                         id="root_tasks_0__moveDown"
                         title="Move down"
                         type="button"
@@ -1774,7 +1760,6 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                       </button>
                       <button
                         class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
-                        color="secondary"
                         id="root_tasks_0__remove"
                         title="Remove"
                         type="button"
@@ -1923,7 +1908,6 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                     >
                       <button
                         class="fui-Button r1f29ykk rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
-                        color="secondary"
                         id="root_tasks_1__moveUp"
                         title="Move up"
                         type="button"
@@ -1949,7 +1933,6 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                       </button>
                       <button
                         class="fui-Button r1f29ykk rjsf-array-item-move-down ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
-                        color="secondary"
                         disabled=""
                         id="root_tasks_1__moveDown"
                         title="Move down"
@@ -1976,7 +1959,6 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
                       </button>
                       <button
                         class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
-                        color="secondary"
                         id="root_tasks_1__remove"
                         title="Remove"
                         type="button"
@@ -2142,7 +2124,6 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                     >
                       <button
                         class="fui-Button r1f29ykk rjsf-array-item-move-up ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
-                        color="secondary"
                         disabled=""
                         id="root_tags_0__moveUp"
                         title="Move up"
@@ -2169,7 +2150,6 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                       </button>
                       <button
                         class="fui-Button r1f29ykk rjsf-array-item-move-down ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
-                        color="secondary"
                         id="root_tags_0__moveDown"
                         title="Move down"
                         type="button"
@@ -2195,7 +2175,6 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                       </button>
                       <button
                         class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
-                        color="secondary"
                         id="root_tags_0__remove"
                         title="Remove"
                         type="button"
@@ -2268,7 +2247,6 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                     >
                       <button
                         class="fui-Button r1f29ykk rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
-                        color="secondary"
                         id="root_tags_1__moveUp"
                         title="Move up"
                         type="button"
@@ -2294,7 +2272,6 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                       </button>
                       <button
                         class="fui-Button r1f29ykk rjsf-array-item-move-down ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
-                        color="secondary"
                         disabled=""
                         id="root_tags_1__moveDown"
                         title="Move down"
@@ -2321,7 +2298,6 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
                       </button>
                       <button
                         class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
-                        color="secondary"
                         id="root_tags_1__remove"
                         title="Remove"
                         type="button"
@@ -6134,7 +6110,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                     >
                       <button
                         class="fui-Button r1f29ykk rjsf-remove-optional-data ___d2i6ur0_1f7yp8q f17fgpbq fu97m5z ft85np5 fy9rknc figsok6 fwrc4pm fazmxh f1jt17bm"
-                        color="secondary"
                         id="root_nestedObjectOptional__optionalRemove"
                         title="Remove data for optional field"
                         type="button"
@@ -6233,7 +6208,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                             >
                               <button
                                 class="fui-Button r1f29ykk rjsf-add-optional-data ___d2i6ur0_1f7yp8q f17fgpbq fu97m5z ft85np5 fy9rknc figsok6 fwrc4pm fazmxh f1jt17bm"
-                                color="secondary"
                                 id="root_nestedObjectOptional_deepObjectOptional__optionalAdd"
                                 title="Add data for optional field"
                                 type="button"
@@ -6430,7 +6404,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                             >
                               <button
                                 class="fui-Button r1f29ykk rjsf-add-optional-data ___d2i6ur0_1f7yp8q f17fgpbq fu97m5z ft85np5 fy9rknc figsok6 fwrc4pm fazmxh f1jt17bm"
-                                color="secondary"
                                 id="root_nestedObjectOptional_deepArrayOptional2__optionalAdd"
                                 title="Add data for optional field"
                                 type="button"
@@ -6566,7 +6539,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                     >
                       <button
                         class="fui-Button r1f29ykk rjsf-remove-optional-data ___d2i6ur0_1f7yp8q f17fgpbq fu97m5z ft85np5 fy9rknc figsok6 fwrc4pm fazmxh f1jt17bm"
-                        color="secondary"
                         id="root_nestedArrayOptional__optionalRemove"
                         title="Remove data for optional field"
                         type="button"
@@ -6648,7 +6620,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                     >
                       <button
                         class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
-                        color="secondary"
                         id="root_nestedArrayOptional_0__remove"
                         title="Remove"
                         type="button"
@@ -6876,7 +6847,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                           >
                             <button
                               class="fui-Button r1f29ykk rjsf-add-optional-data ___d2i6ur0_1f7yp8q f17fgpbq fu97m5z ft85np5 fy9rknc figsok6 fwrc4pm fazmxh f1jt17bm"
-                              color="secondary"
                               id="root_optionalObjectWithOneofs__optionalAdd"
                               title="Add data for optional field"
                               type="button"
@@ -6959,7 +6929,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                           >
                             <button
                               class="fui-Button r1f29ykk rjsf-add-optional-data ___d2i6ur0_1f7yp8q f17fgpbq fu97m5z ft85np5 fy9rknc figsok6 fwrc4pm fazmxh f1jt17bm"
-                              color="secondary"
                               id="root_optionalArrayWithAnyofs__optionalAdd"
                               title="Add data for optional field"
                               type="button"
@@ -7458,7 +7427,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                     >
                       <button
                         class="fui-Button r1f29ykk rjsf-array-item-remove ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
-                        color="secondary"
                         disabled=""
                         id="root_nestedArrayOptional_0__remove"
                         title="Remove"
@@ -7829,7 +7797,6 @@ exports[`single fields optional data controls shows "add" optional controls when
                     >
                       <button
                         class="fui-Button r1f29ykk rjsf-add-optional-data ___d2i6ur0_1f7yp8q f17fgpbq fu97m5z ft85np5 fy9rknc figsok6 fwrc4pm fazmxh f1jt17bm"
-                        color="secondary"
                         id="root_nestedObjectOptional__optionalAdd"
                         title="Add data for optional field"
                         type="button"
@@ -7899,7 +7866,6 @@ exports[`single fields optional data controls shows "add" optional controls when
                     >
                       <button
                         class="fui-Button r1f29ykk rjsf-add-optional-data ___d2i6ur0_1f7yp8q f17fgpbq fu97m5z ft85np5 fy9rknc figsok6 fwrc4pm fazmxh f1jt17bm"
-                        color="secondary"
                         id="root_nestedArrayOptional__optionalAdd"
                         title="Add data for optional field"
                         type="button"
@@ -8106,7 +8072,6 @@ exports[`single fields optional data controls shows "add" optional controls when
                           >
                             <button
                               class="fui-Button r1f29ykk rjsf-add-optional-data ___d2i6ur0_1f7yp8q f17fgpbq fu97m5z ft85np5 fy9rknc figsok6 fwrc4pm fazmxh f1jt17bm"
-                              color="secondary"
                               id="root_optionalObjectWithOneofs__optionalAdd"
                               title="Add data for optional field"
                               type="button"
@@ -8189,7 +8154,6 @@ exports[`single fields optional data controls shows "add" optional controls when
                           >
                             <button
                               class="fui-Button r1f29ykk rjsf-add-optional-data ___d2i6ur0_1f7yp8q f17fgpbq fu97m5z ft85np5 fy9rknc figsok6 fwrc4pm fazmxh f1jt17bm"
-                              color="secondary"
                               id="root_optionalArrayWithAnyofs__optionalAdd"
                               title="Add data for optional field"
                               type="button"
@@ -10566,7 +10530,6 @@ exports[`single fields string field string field with allowClearTextInputs and v
         </span>
         <button
           class="fui-Button r1f29ykk ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
-          color="secondary"
           title="clear input"
           type="button"
         >
