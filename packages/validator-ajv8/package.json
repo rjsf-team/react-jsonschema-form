@@ -80,7 +80,7 @@
     "ajv": "^8.18.0",
     "ajv-formats": "^2.1.1",
     "lodash": "^4.17.23",
-    "lodash-es": "^4.17.23"
+    "lodash-es": "^4.18.1"
   },
   "peerDependencies": {
     "@rjsf/utils": "^6.4.x"
