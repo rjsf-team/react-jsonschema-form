@@ -1128,9 +1128,8 @@ describe('ObjectField', () => {
 
       // Rename the new property to "first" (the old name)
       const newKeyInput = node.querySelector('#root_newKey-key');
-      if (newKeyInput) {
-        fireEvent.blur(newKeyInput, { target: { value: 'first' } });
-      }
+      expect(newKeyInput).not.toBeNull();
+      fireEvent.blur(newKeyInput!, { target: { value: 'first' } });
 
       // Both properties should render without errors
       expect(node.querySelector('#root_second')).not.toBeNull();
@@ -1195,16 +1194,15 @@ describe('ObjectField', () => {
 
       // Rename the new property
       const keyInput = node.querySelector('#root_newKey-key');
-      if (keyInput) {
-        fireEvent.blur(keyInput, { target: { value: 'renamed' } });
+      expect(keyInput).not.toBeNull();
+      fireEvent.blur(keyInput!, { target: { value: 'renamed' } });
 
-        expect(onChange).toHaveBeenLastCalledWith(
-          expect.objectContaining({
-            formData: { renamed: 'New Value' },
-          }),
-          'root',
-        );
-      }
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          formData: { renamed: 'New Value' },
+        }),
+        'root',
+      );
     });
 
     it('should generate unique stable keys that do not collide with existing property names', () => {
