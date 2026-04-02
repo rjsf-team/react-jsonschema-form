@@ -72,7 +72,7 @@
   "dependencies": {
     "classnames": "^2.5.1",
     "lodash": "^4.17.23",
-    "lodash-es": "^4.17.23",
+    "lodash-es": "^4.18.1",
     "rc-picker": "^4.11.3"
   },
   "devDependencies": {
