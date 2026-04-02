@@ -93,7 +93,7 @@ export default function SelectWidget<
           items={items}
           selected={value}
           onValueChange={(values) => {
-            onChange(enumOptionValueDecoder<S>(values, enumOptions, useRealValues, optEmptyValue));
+            onChange(enumOptionValueDecoder<S>(values.map(String), enumOptions, useRealValues, optEmptyValue));
           }}
           onFocus={_onFancyFocus}
           onBlur={_onFancyBlur}
