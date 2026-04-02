@@ -1151,12 +1151,16 @@ describe('ObjectField', () => {
       fireEvent.click(node.querySelector('.rjsf-object-property-expand button')!);
 
       // The last onChange call should have both renamed + new property, no value duplication
-      const lastCall = onChange.mock.calls[onChange.mock.calls.length - 1];
-      const formData = lastCall[0].formData;
-      expect(formData.renamed).toBe(1);
-      expect(formData.newKey).toBeDefined();
-      // Original key should not exist
-      expect(formData.first).toBeUndefined();
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          formData: {
+            renamed: 1,
+            newKey: expect.any(String),
+            first: undefined,
+          },
+        }),
+        'root',
+      );
     });
 
     it('should preserve focus across consecutive renames of the same property', () => {
