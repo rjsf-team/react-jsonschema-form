@@ -8,6 +8,8 @@ import dateRangeOptions from './dateRangeOptions';
 import deepEquals from './deepEquals';
 import shallowEquals from './shallowEquals';
 import englishStringTranslator from './englishStringTranslator';
+import enumOptionValueDecoder from './enumOptionValueDecoder';
+import enumOptionValueEncoder from './enumOptionValueEncoder';
 import enumOptionsDeselectValue from './enumOptionsDeselectValue';
 import enumOptionsIndexForValue from './enumOptionsIndexForValue';
 import enumOptionsIsSelected from './enumOptionsIsSelected';
@@ -108,6 +110,8 @@ export {
   deepEquals,
   descriptionId,
   englishStringTranslator,
+  enumOptionValueDecoder,
+  enumOptionValueEncoder,
   enumOptionsDeselectValue,
   enumOptionsIndexForValue,
   enumOptionsIsSelected,

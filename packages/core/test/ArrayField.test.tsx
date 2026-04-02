@@ -1367,7 +1367,7 @@ describe('ArrayField', () => {
           },
         });
 
-        expect(node.querySelector("option[value='bar']")).toBeDisabled(); // use real value
+        expect(node.querySelector("option[value='1']")).toBeDisabled(); // use index
       });
 
       it('should use ui:enumNames from items uiSchema as option labels', () => {

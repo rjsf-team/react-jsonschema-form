@@ -2,28 +2,14 @@ import { ChangeEvent, FocusEvent } from 'react';
 import FormSelect from 'react-bootstrap/FormSelect';
 import {
   ariaDescribedByIds,
+  enumOptionValueDecoder,
+  enumOptionValueEncoder,
+  enumOptionsIndexForValue,
   FormContextType,
-  enumOptionsValueForIndex,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-
-/** Reads the data-index attribute from selected options to resolve typed enum values
- *  via enumOptionsValueForIndex, while keeping real values in the standard value attribute
- *  for native form submission.
- */
-function getSelectedIndex(event: FocusEvent | ChangeEvent | any, multiple?: boolean) {
-  const select = event.target as HTMLSelectElement;
-  if (multiple) {
-    return [].slice
-      .call(select.options as any)
-      .filter((o: any) => o.selected)
-      .map((o: any) => o.dataset.index ?? o.value);
-  }
-  const selectedOption = select.options[select.selectedIndex];
-  return selectedOption?.dataset.index ?? select.value;
-}
 
 export default function SelectWidget<
   T = any,
@@ -49,11 +35,32 @@ export default function SelectWidget<
   const { enumOptions, enumDisabled, emptyValue: optEmptyValue } = options;
 
   const emptyValue = multiple ? [] : '';
-  const isEmpty = typeof value === 'undefined' || (multiple && value.length < 1) || (!multiple && value === emptyValue);
+  const useRealValues = !!options.useRealOptionValues;
+
+  function getValue(event: FocusEvent | ChangeEvent | any, multiple?: boolean) {
+    if (multiple) {
+      return [].slice
+        .call(event.target.options as any)
+        .filter((o: any) => o.selected)
+        .map((o: any) => o.value);
+    } else {
+      return event.target.value;
+    }
+  }
+  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
   const showPlaceholderOption = !multiple && schema.default === undefined;
-  let selectValue = emptyValue;
-  if (!isEmpty) {
-    selectValue = multiple ? value.map(String) : String(value);
+
+  let selectValue;
+  if (useRealValues) {
+    const isEmpty =
+      typeof value === 'undefined' || (multiple && value.length < 1) || (!multiple && value === emptyValue);
+    if (isEmpty) {
+      selectValue = emptyValue;
+    } else {
+      selectValue = multiple ? value.map(String) : String(value);
+    }
+  } else {
+    selectValue = typeof selectedIndexes === 'undefined' ? emptyValue : selectedIndexes;
   }
 
   return (
@@ -69,20 +76,20 @@ export default function SelectWidget<
       onBlur={
         onBlur &&
         ((event: FocusEvent) => {
-          const newValue = getSelectedIndex(event, multiple);
-          onBlur(id, enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue));
+          const newValue = getValue(event, multiple);
+          onBlur(id, enumOptionValueDecoder<S>(newValue, enumOptions, useRealValues, optEmptyValue));
         })
       }
       onFocus={
         onFocus &&
         ((event: FocusEvent) => {
-          const newValue = getSelectedIndex(event, multiple);
-          onFocus(id, enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue));
+          const newValue = getValue(event, multiple);
+          onFocus(id, enumOptionValueDecoder<S>(newValue, enumOptions, useRealValues, optEmptyValue));
         })
       }
       onChange={(event: ChangeEvent) => {
-        const newValue = getSelectedIndex(event, multiple);
-        onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue));
+        const newValue = getValue(event, multiple);
+        onChange(enumOptionValueDecoder<S>(newValue, enumOptions, useRealValues, optEmptyValue));
       }}
       aria-describedby={ariaDescribedByIds(id)}
     >
@@ -90,7 +97,7 @@ export default function SelectWidget<
       {(enumOptions as any).map(({ value, label }: any, i: number) => {
         const disabled: any = Array.isArray(enumDisabled) && (enumDisabled as any).indexOf(value) != -1;
         return (
-          <option key={i} id={label} value={String(value)} data-index={String(i)} disabled={disabled}>
+          <option key={i} id={label} value={enumOptionValueEncoder(value, i, useRealValues)} disabled={disabled}>
             {label}
           </option>
         );

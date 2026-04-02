@@ -1671,11 +1671,11 @@ describeRepeated('Form common', (createFormComponent) => {
       });
 
       const protocolInputID = '#root_protocol';
-      expect(node.querySelector(protocolInputID)).toHaveValue('fast');
+      expect(node.querySelector(protocolInputID)).toHaveValue('0');
 
       act(() => {
         fireEvent.change(node.querySelector(protocolInputID)!, {
-          target: { value: 'balanced' }, // use real value
+          target: { value: '1' },
         });
       });
 
@@ -1687,7 +1687,7 @@ describeRepeated('Form common', (createFormComponent) => {
         'root_protocol',
       );
 
-      expect(node.querySelector(protocolInputID)).toHaveValue('balanced');
+      expect(node.querySelector(protocolInputID)).toHaveValue('1');
     });
     describe('Should modify oneOf radio button when the defaults are set.', () => {
       const schema: RJSFSchema = {
@@ -3198,7 +3198,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
         act(() => {
           fireEvent.change(node.querySelector('select')!, {
-            target: { value: '3' }, // use real enum value (was index 2)
+            target: { value: 2 }, // The selector uses indexes rather than values so index 2 is branch value 3
           });
         });
 

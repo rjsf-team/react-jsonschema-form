@@ -1714,7 +1714,7 @@ describe('uiSchema', () => {
           fireEvent.change(node.querySelector('select')!, {
             // DOM option change events always return strings
             target: {
-              value: 'true', // use real value
+              value: 0, // use index
             },
           });
         });
@@ -1734,7 +1734,7 @@ describe('uiSchema', () => {
         act(() => {
           fireEvent.change(node.querySelector('select')!, {
             target: {
-              value: 'false', // use real value
+              value: 1, // use index
             },
           });
         });

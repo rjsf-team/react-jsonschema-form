@@ -356,6 +356,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           name="root_person_race"
                           required=""
                           type="checkbox"
+                          value="0"
                         />
                         <span
                           class="label-text"
@@ -373,6 +374,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           name="root_person_race"
                           required=""
                           type="checkbox"
+                          value="1"
                         />
                         <span
                           class="label-text"
@@ -390,6 +392,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           name="root_person_race"
                           required=""
                           type="checkbox"
+                          value="2"
                         />
                         <span
                           class="label-text"
@@ -407,6 +410,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           name="root_person_race"
                           required=""
                           type="checkbox"
+                          value="3"
                         />
                         <span
                           class="label-text"
@@ -424,6 +428,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           name="root_person_race"
                           required=""
                           type="checkbox"
+                          value="4"
                         />
                         <span
                           class="label-text"
@@ -1611,7 +1616,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           id="root_employment-company"
                           name="root_employment"
                           type="radio"
-                          value="company"
+                          value="0"
                         />
                         <span
                           class="label-text"
@@ -1628,7 +1633,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           id="root_employment-education"
                           name="root_employment"
                           type="radio"
-                          value="education"
+                          value="1"
                         />
                         <span
                           class="label-text"
@@ -1645,7 +1650,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           id="root_employment-other"
                           name="root_employment"
                           type="radio"
-                          value="other"
+                          value="2"
                         />
                         <span
                           class="label-text"
@@ -2037,6 +2042,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           name="root_person_race"
                           required=""
                           type="checkbox"
+                          value="0"
                         />
                         <span
                           class="label-text"
@@ -2054,6 +2060,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           name="root_person_race"
                           required=""
                           type="checkbox"
+                          value="1"
                         />
                         <span
                           class="label-text"
@@ -2071,6 +2078,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           name="root_person_race"
                           required=""
                           type="checkbox"
+                          value="2"
                         />
                         <span
                           class="label-text"
@@ -2088,6 +2096,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           name="root_person_race"
                           required=""
                           type="checkbox"
+                          value="3"
                         />
                         <span
                           class="label-text"
@@ -2105,6 +2114,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           name="root_person_race"
                           required=""
                           type="checkbox"
+                          value="4"
                         />
                         <span
                           class="label-text"
@@ -3291,7 +3301,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           id="root_employment-company"
                           name="root_employment"
                           type="radio"
-                          value="company"
+                          value="0"
                         />
                         <span
                           class="label-text"
@@ -3309,7 +3319,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           id="root_employment-education"
                           name="root_employment"
                           type="radio"
-                          value="education"
+                          value="1"
                         />
                         <span
                           class="label-text"
@@ -3326,7 +3336,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           id="root_employment-other"
                           name="root_employment"
                           type="radio"
-                          value="other"
+                          value="2"
                         />
                         <span
                           class="label-text"
@@ -3718,6 +3728,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           name="root_person_race"
                           required=""
                           type="checkbox"
+                          value="0"
                         />
                         <span
                           class="label-text"
@@ -3735,6 +3746,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           name="root_person_race"
                           required=""
                           type="checkbox"
+                          value="1"
                         />
                         <span
                           class="label-text"
@@ -3752,6 +3764,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           name="root_person_race"
                           required=""
                           type="checkbox"
+                          value="2"
                         />
                         <span
                           class="label-text"
@@ -3769,6 +3782,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           name="root_person_race"
                           required=""
                           type="checkbox"
+                          value="3"
                         />
                         <span
                           class="label-text"
@@ -3786,6 +3800,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           name="root_person_race"
                           required=""
                           type="checkbox"
+                          value="4"
                         />
                         <span
                           class="label-text"
@@ -4972,7 +4987,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           id="root_employment-company"
                           name="root_employment"
                           type="radio"
-                          value="company"
+                          value="0"
                         />
                         <span
                           class="label-text"
@@ -4989,7 +5004,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           id="root_employment-education"
                           name="root_employment"
                           type="radio"
-                          value="education"
+                          value="1"
                         />
                         <span
                           class="label-text"
@@ -5007,7 +5022,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           id="root_employment-other"
                           name="root_employment"
                           type="radio"
-                          value="other"
+                          value="2"
                         />
                         <span
                           class="label-text"
@@ -5399,6 +5414,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           name="root_person_race"
                           required=""
                           type="checkbox"
+                          value="0"
                         />
                         <span
                           class="label-text"
@@ -5416,6 +5432,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           name="root_person_race"
                           required=""
                           type="checkbox"
+                          value="1"
                         />
                         <span
                           class="label-text"
@@ -5433,6 +5450,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           name="root_person_race"
                           required=""
                           type="checkbox"
+                          value="2"
                         />
                         <span
                           class="label-text"
@@ -5450,6 +5468,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           name="root_person_race"
                           required=""
                           type="checkbox"
+                          value="3"
                         />
                         <span
                           class="label-text"
@@ -5467,6 +5486,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           name="root_person_race"
                           required=""
                           type="checkbox"
+                          value="4"
                         />
                         <span
                           class="label-text"
@@ -6654,7 +6674,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           id="root_employment-company"
                           name="root_employment"
                           type="radio"
-                          value="company"
+                          value="0"
                         />
                         <span
                           class="label-text"
@@ -6671,7 +6691,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           id="root_employment-education"
                           name="root_employment"
                           type="radio"
-                          value="education"
+                          value="1"
                         />
                         <span
                           class="label-text"
@@ -6688,7 +6708,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           id="root_employment-other"
                           name="root_employment"
                           type="radio"
-                          value="other"
+                          value="2"
                         />
                         <span
                           class="label-text"
@@ -7069,6 +7089,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                         name="root_person_race"
                         required=""
                         type="checkbox"
+                        value="0"
                       />
                       <span
                         class="label-text"
@@ -7086,6 +7107,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                         name="root_person_race"
                         required=""
                         type="checkbox"
+                        value="1"
                       />
                       <span
                         class="label-text"
@@ -7103,6 +7125,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                         name="root_person_race"
                         required=""
                         type="checkbox"
+                        value="2"
                       />
                       <span
                         class="label-text"
@@ -7120,6 +7143,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                         name="root_person_race"
                         required=""
                         type="checkbox"
+                        value="3"
                       />
                       <span
                         class="label-text"
@@ -7137,6 +7161,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                         name="root_person_race"
                         required=""
                         type="checkbox"
+                        value="4"
                       />
                       <span
                         class="label-text"
@@ -8568,6 +8593,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                         name="root_person_race"
                         required=""
                         type="checkbox"
+                        value="0"
                       />
                       <span
                         class="label-text"
@@ -8585,6 +8611,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                         name="root_person_race"
                         required=""
                         type="checkbox"
+                        value="1"
                       />
                       <span
                         class="label-text"
@@ -8602,6 +8629,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                         name="root_person_race"
                         required=""
                         type="checkbox"
+                        value="2"
                       />
                       <span
                         class="label-text"
@@ -8619,6 +8647,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                         name="root_person_race"
                         required=""
                         type="checkbox"
+                        value="3"
                       />
                       <span
                         class="label-text"
@@ -8636,6 +8665,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                         name="root_person_race"
                         required=""
                         type="checkbox"
+                        value="4"
                       />
                       <span
                         class="label-text"
