@@ -318,7 +318,10 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
         const renamedObj = Object.assign({}, ...keyValues);
 
         if (oldKey !== lastRenamedProperty.current.currentKey) {
-          lastRenamedProperty.current.previousKey = oldKey;
+          // Use getAvailableKey with oldKey artificially added back to renamedObj
+          // to generate a unique previousKey that won't collide with any real property name.
+          // This prevents React key duplication when a new property is added with the old name.
+          lastRenamedProperty.current.previousKey = getAvailableKey(oldKey, { ...renamedObj, [oldKey]: true } as T);
         }
         lastRenamedProperty.current.currentKey = actualNewKey;
         onChange(renamedObj, childFieldPathId.path);

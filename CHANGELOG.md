@@ -27,6 +27,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Added a new `removeEmptyOptionalObjects` boolean prop to gracefully prune optional empty objects preventing form submission lockouts, fixing [#4954](https://github.com/rjsf-team/react-jsonschema-form/issues/4954)
 - Included `button` elements in `focusOnError` querySelector so that radio and checkbox groups receive focus on validation error, fixing [#4870](https://github.com/rjsf-team/react-jsonschema-form/issues/4870)
+- Fixed focus being lost when renaming additional property keys by preserving React key for renamed properties ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
 
 ## @rjsf/utils
 
@@ -40,7 +41,6 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 
-- Fixed focus being lost when renaming additional property keys and pressing Tab, by restoring focus to the value field after re-render ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
 - Fixed a breaking change introduced in v6.4.0 where array properties with enum items no longer used `ui:enumNames` from the array property's uiSchema ([#4985](https://github.com/rjsf-team/react-jsonschema-form/issues/4985))
 - Passed `parentUiSchema` to `ArrayFieldItem` to maintain `uiSchema`, this prop was introduced recently but was not being passed
 - Fixed `extraErrors` not displaying when `customErrors` are also present (e.g., with array fields and controlled `formData`), fixing [#4982](https://github.com/rjsf-team/react-jsonschema-form/issues/4982)
