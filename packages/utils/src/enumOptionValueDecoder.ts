@@ -6,10 +6,7 @@ function decodeSingle<S extends StrictRJSFSchema = RJSFSchema>(
   enumOptions: EnumOptionsType<S>[] | undefined,
   emptyValue?: unknown,
 ): unknown {
-  if (value === '') {
-    return emptyValue;
-  }
-  if (!Array.isArray(enumOptions)) {
+  if (value === '' || !Array.isArray(enumOptions)) {
     return emptyValue;
   }
   const match = enumOptions.find((opt) => String(opt.value) === value);
