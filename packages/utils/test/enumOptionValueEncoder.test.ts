@@ -1,4 +1,4 @@
-import enumOptionValueEncoder from '../src/enumOptionValueEncoder';
+import { enumOptionValueEncoder } from '../src';
 
 describe('enumOptionValueEncoder', () => {
   describe('when useRealValues is false', () => {
