@@ -1,4 +1,4 @@
-import enumOptionValueDecoder from '../src/enumOptionValueDecoder';
+import { enumOptionValueDecoder } from '../src';
 import { EnumOptionsType, RJSFSchema } from '../src';
 
 describe('enumOptionValueDecoder', () => {
