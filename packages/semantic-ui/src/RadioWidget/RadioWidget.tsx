@@ -44,7 +44,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     uiSchema,
   });
   const _onChange = (_: FormEvent<HTMLInputElement>, { value: eventValue }: CheckboxProps) => {
-    return onChange(enumOptionValueDecoder<S>(eventValue!, enumOptions, useRealValues, emptyValue));
+    return onChange(enumOptionValueDecoder<S>(String(eventValue!), enumOptions, useRealValues, emptyValue));
   };
 
   const _onBlur = () => onBlur(id, value);
