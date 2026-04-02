@@ -59,5 +59,8 @@ describe('enumOptionValueDecoder', () => {
     it('returns emptyValue for unmatched value', () => {
       expect(enumOptionValueDecoder('nonexistent', stringOptions, true, 'empty')).toBe('empty');
     });
+    it('returns emptyValue when enumOptions is undefined', () => {
+      expect(enumOptionValueDecoder('foo', undefined, true, 'empty')).toBe('empty');
+    });
   });
 });
