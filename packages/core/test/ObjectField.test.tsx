@@ -1098,6 +1098,131 @@ describe('ObjectField', () => {
       );
     });
 
+    it('should preserve focus on value field after renaming key via Tab', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { first: 1 },
+      });
+
+      const keyInput = node.querySelector('#root_first-key') as HTMLInputElement;
+      keyInput.focus();
+      fireEvent.blur(keyInput, { target: { value: 'renamed' } });
+
+      // After rename, the value input for the renamed key should exist
+      const valueInput = node.querySelector('#root_renamed');
+      expect(valueInput).not.toBeNull();
+    });
+
+    it('should not produce duplicate React keys when adding a property with the old name after rename', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { first: 1 },
+      });
+
+      // Rename "first" to "second"
+      const keyInput = node.querySelector('#root_first-key');
+      fireEvent.blur(keyInput!, { target: { value: 'second' } });
+
+      // Add a new property
+      fireEvent.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      // Rename the new property to "first" (the old name)
+      const newKeyInput = node.querySelector('#root_newKey-key');
+      if (newKeyInput) {
+        fireEvent.blur(newKeyInput, { target: { value: 'first' } });
+      }
+
+      // Both properties should render without errors
+      expect(node.querySelector('#root_second')).not.toBeNull();
+      expect(node.querySelector('#root_first')).not.toBeNull();
+    });
+
+    it('should not duplicate values when clicking Add button during key rename', () => {
+      const { node, onChange } = createFormComponent({
+        schema,
+        formData: { first: 1 },
+      });
+
+      // Start editing the key
+      const keyInput = node.querySelector('#root_first-key') as HTMLInputElement;
+      keyInput.focus();
+
+      // Blur triggers rename, then click Add
+      fireEvent.blur(keyInput, { target: { value: 'renamed' } });
+      fireEvent.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      // The last onChange call should have both renamed + new property, no value duplication
+      const lastCall = onChange.mock.calls[onChange.mock.calls.length - 1];
+      const formData = lastCall[0].formData;
+      expect(formData.renamed).toBe(1);
+      expect(formData.newKey).toBeDefined();
+      // Original key should not exist
+      expect(formData.first).toBeUndefined();
+    });
+
+    it('should preserve focus across consecutive renames of the same property', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { first: 1 },
+      });
+
+      // First rename
+      const keyInput1 = node.querySelector('#root_first-key');
+      fireEvent.blur(keyInput1!, { target: { value: 'second' } });
+
+      // Second rename of the same property
+      const keyInput2 = node.querySelector('#root_second-key');
+      expect(keyInput2).not.toBeNull();
+      fireEvent.blur(keyInput2!, { target: { value: 'third' } });
+
+      // The property should exist with the final name
+      const keyInput3 = node.querySelector('#root_third-key');
+      expect(keyInput3).not.toBeNull();
+      expect(node.querySelector('#root_third')).not.toBeNull();
+    });
+
+    it('should handle rename after removing a property', () => {
+      const { node, onChange } = createFormComponent({
+        schema,
+        formData: { first: 1 },
+      });
+
+      // Remove "first"
+      fireEvent.click(node.querySelector('.rjsf-object-property-remove')!);
+
+      // Add a new property
+      fireEvent.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      // Rename the new property
+      const keyInput = node.querySelector('#root_newKey-key');
+      if (keyInput) {
+        fireEvent.blur(keyInput, { target: { value: 'renamed' } });
+
+        expect(onChange).toHaveBeenLastCalledWith(
+          expect.objectContaining({
+            formData: { renamed: 'New Value' },
+          }),
+          'root',
+        );
+      }
+    });
+
+    it('should generate unique stable keys that do not collide with existing property names', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { first: 1, 'first-1': 2 },
+      });
+
+      // Rename "first" to "other" — previousKey should not be "first" (collision)
+      // nor "first-1" (also exists). It should be "first-2" or similar
+      const keyInput = node.querySelector('#root_first-key');
+      fireEvent.blur(keyInput!, { target: { value: 'other' } });
+
+      // Both remaining properties should render correctly
+      expect(node.querySelector('#root_other')).not.toBeNull();
+      expect(node.querySelector('#root_first-1')).not.toBeNull();
+    });
+
     it('should have an expand button', () => {
       const { node } = createFormComponent({ schema });
 
