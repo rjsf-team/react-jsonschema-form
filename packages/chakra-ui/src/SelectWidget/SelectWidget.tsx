@@ -3,8 +3,10 @@ import { FocusEvent, useMemo, useRef } from 'react';
 import {
   ariaDescribedByIds,
   EnumOptionsType,
+  enumOptionSelectedValue,
+  enumOptionValueDecoder,
+  enumOptionValueEncoder,
   enumOptionsIndexForValue,
-  enumOptionsValueForIndex,
   labelValue,
   FormContextType,
   RJSFSchema,
@@ -42,21 +44,22 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     uiSchema,
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
+  const useRealValues = !!options.useRealOptionValues;
 
   const _onMultiChange = ({ value }: SelectValueChangeDetails) => {
-    return onChange(enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
+    return onChange(enumOptionValueDecoder<S>(value, enumOptions, useRealValues, emptyValue));
   };
 
   const _onSingleChange = ({ value }: SelectValueChangeDetails) => {
-    const selected = enumOptionsValueForIndex<S>(value, enumOptions, emptyValue);
+    const selected = enumOptionValueDecoder<S>(value, enumOptions, useRealValues, emptyValue);
     return onChange(Array.isArray(selected) && selected.length === 1 ? selected[0] : selected);
   };
 
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
+    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, emptyValue));
 
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
+    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, emptyValue));
 
   const showPlaceholderOption = !multiple && schema.default === undefined;
   const { valueLabelMap, displayEnumOptions } = useMemo((): {
@@ -71,7 +74,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         valueLabelMap[index] = label || String(value);
         return {
           label,
-          value: String(index),
+          value: enumOptionValueEncoder(value, index, useRealValues),
           disabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1,
         };
       });
@@ -80,7 +83,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       }
     }
     return { valueLabelMap: valueLabelMap, displayEnumOptions: displayEnumOptions };
-  }, [enumDisabled, enumOptions, placeholder, showPlaceholderOption]);
+  }, [enumDisabled, enumOptions, placeholder, showPlaceholderOption, useRealValues]);
 
   const isMultiple = typeof multiple !== 'undefined' && multiple !== false && Boolean(enumOptions);
   const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions, isMultiple);
@@ -103,7 +106,14 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         ]
       : [];
 
-  const formValue = (isMultiple ? getMultiValue() : getSingleValue()).map((item) => item.value);
+  let formValue: string[];
+  if (useRealValues) {
+    formValue = [
+      enumOptionSelectedValue<S>(value, enumOptions, isMultiple, true, isMultiple ? [] : ''),
+    ].flat() as string[];
+  } else {
+    formValue = (isMultiple ? getMultiValue() : getSingleValue()).map((item) => item.value);
+  }
 
   const selectOptions = createListCollection({
     items: displayEnumOptions.filter((item) => item.value),

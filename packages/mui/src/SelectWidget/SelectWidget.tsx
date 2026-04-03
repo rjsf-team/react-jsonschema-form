@@ -3,8 +3,9 @@ import MenuItem from '@mui/material/MenuItem';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import {
   ariaDescribedByIds,
-  enumOptionsIndexForValue,
-  enumOptionsValueForIndex,
+  enumOptionSelectedValue,
+  enumOptionValueDecoder,
+  enumOptionValueEncoder,
   labelValue,
   FormContextType,
   RJSFSchema,
@@ -47,6 +48,7 @@ export default function SelectWidget<
   ...textFieldProps
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
+  const useRealValues = !!options.useRealOptionValues;
 
   multiple = typeof multiple === 'undefined' ? false : !!multiple;
 
@@ -54,12 +56,11 @@ export default function SelectWidget<
   const isEmpty = typeof value === 'undefined' || (multiple && value.length < 1) || (!multiple && value === emptyValue);
 
   const _onChange = ({ target: { value } }: ChangeEvent<{ value: string }>) =>
-    onChange(enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
+    onChange(enumOptionValueDecoder<S>(value, enumOptions, useRealValues, optEmptyVal));
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
+    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, optEmptyVal));
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
-  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
+    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, optEmptyVal));
   const { InputLabelProps, SelectProps, autocomplete, ...textFieldRemainingProps } = textFieldProps;
   const showPlaceholderOption = !multiple && schema.default === undefined;
 
@@ -68,7 +69,7 @@ export default function SelectWidget<
       id={id}
       name={htmlName || id}
       label={labelValue(label || undefined, hideLabel, undefined)}
-      value={!isEmpty && typeof selectedIndexes !== 'undefined' ? selectedIndexes : emptyValue}
+      value={enumOptionSelectedValue<S>(value, enumOptions, multiple, useRealValues, emptyValue)}
       required={required}
       disabled={disabled || readonly}
       autoFocus={autofocus}
@@ -95,7 +96,7 @@ export default function SelectWidget<
         enumOptions.map(({ value, label }, i: number) => {
           const disabled: boolean = Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1;
           return (
-            <MenuItem key={i} value={String(i)} disabled={disabled}>
+            <MenuItem key={i} value={enumOptionValueEncoder(value, i, useRealValues)} disabled={disabled}>
               {label}
             </MenuItem>
           );

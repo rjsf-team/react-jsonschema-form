@@ -420,6 +420,11 @@ export type GlobalUISchemaOptions = GenericObjectType & {
    * both. To disable the Optional Data Field UI for a specific field, provide an empty array within the UI schema.
    */
   enableOptionalDataFieldForType?: ('object' | 'array')[];
+  /** When true, enum-backed widgets (select, radio, checkboxes) render real enum values
+   *  in their value attributes instead of array indices. This enables proper native form
+   *  submission and browser autocomplete. Default: false (index-based, current behavior).
+   */
+  useRealOptionValues?: boolean;
 };
 
 /** The set of options from the `Form` that will be available on the `Registry` for use in everywhere the `registry` is

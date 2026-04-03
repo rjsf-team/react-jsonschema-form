@@ -1,8 +1,9 @@
 import { FocusEvent, SyntheticEvent } from 'react';
 import {
   ariaDescribedByIds,
-  enumOptionsIndexForValue,
-  enumOptionsValueForIndex,
+  enumOptionSelectedValue,
+  enumOptionValueDecoder,
+  enumOptionValueEncoder,
   labelValue,
   EnumOptionsType,
   FormContextType,
@@ -28,13 +29,14 @@ function createDefaultValueOptionsForDropDown<S extends StrictRJSFSchema = RJSFS
   enumDisabled?: UIOptionsType['enumDisabled'],
   showPlaceholderOption?: boolean,
   placeholder?: string,
+  useRealValues?: boolean,
 ) {
   const disabledOptions = enumDisabled || [];
   const options: DropdownItemProps[] = map(enumOptions, ({ label, value }, index) => ({
     disabled: disabledOptions.indexOf(value) !== -1,
     key: label,
     text: label,
-    value: String(index),
+    value: enumOptionValueEncoder(value, index, !!useRealValues),
   }));
   if (showPlaceholderOption) {
     options.unshift({ value: '', text: placeholder || '' });
@@ -85,22 +87,22 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   });
   const { enumDisabled, enumOptions, emptyValue: optEmptyVal } = options;
   const emptyValue = multiple ? [] : '';
+  const useRealValues = !!options.useRealOptionValues;
   const showPlaceholderOption = !multiple && schema.default === undefined;
   const dropdownOptions = createDefaultValueOptionsForDropDown<S>(
     enumOptions,
     enumDisabled,
     showPlaceholderOption,
     placeholder,
+    useRealValues,
   );
   const _onChange = (_: SyntheticEvent<HTMLElement>, { value }: DropdownProps) =>
-    onChange(enumOptionsValueForIndex<S>(value as string[], enumOptions, optEmptyVal));
+    onChange(enumOptionValueDecoder<S>(value as string[], enumOptions, useRealValues, optEmptyVal));
   // eslint-disable-next-line no-shadow
   const _onBlur = (_: FocusEvent<HTMLElement>, { target }: DropdownProps) =>
-    onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
+    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, optEmptyVal));
   const _onFocus = (_: FocusEvent<HTMLElement>, { target }: DropdownProps) =>
-    onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
-  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
-
+    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, optEmptyVal));
   return (
     <Form.Dropdown
       key={id}
@@ -108,7 +110,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       name={htmlName || id}
       label={labelValue(label || undefined, hideLabel, false)}
       multiple={typeof multiple === 'undefined' ? false : multiple}
-      value={typeof value === 'undefined' ? emptyValue : selectedIndexes}
+      value={enumOptionSelectedValue<S>(value, enumOptions, !!multiple, useRealValues, emptyValue)}
       error={rawErrors.length > 0}
       disabled={disabled}
       placeholder={placeholder}

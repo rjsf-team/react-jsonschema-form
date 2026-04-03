@@ -1,8 +1,9 @@
 import { FormEvent } from 'react';
 import {
   ariaDescribedByIds,
+  enumOptionValueDecoder,
+  enumOptionValueEncoder,
   enumOptionsIsSelected,
-  enumOptionsValueForIndex,
   optionId,
   FormContextType,
   RJSFSchema,
@@ -36,13 +37,14 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     rawErrors = [],
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
+  const useRealValues = !!options.useRealOptionValues;
   const semanticProps = getSemanticProps<T, S, F>({
     formContext: registry.formContext,
     options,
     uiSchema,
   });
   const _onChange = (_: FormEvent<HTMLInputElement>, { value: eventValue }: CheckboxProps) => {
-    return onChange(enumOptionsValueForIndex<S>(eventValue!, enumOptions, emptyValue));
+    return onChange(enumOptionValueDecoder<S>(String(eventValue!), enumOptions, useRealValues, emptyValue));
   };
 
   const _onBlur = () => onBlur(id, value);
@@ -65,7 +67,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
               onBlur={_onBlur}
               onChange={_onChange}
               label={option.label}
-              value={String(index)}
+              value={enumOptionValueEncoder(option.value, index, useRealValues)}
               error={rawErrors.length > 0}
               key={index}
               checked={checked}
