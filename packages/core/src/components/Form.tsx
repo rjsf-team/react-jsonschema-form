@@ -6,7 +6,6 @@ import {
   ErrorSchema,
   ErrorSchemaBuilder,
   ErrorTransformer,
-  expandUiSchemaDefinitions,
   FieldPathId,
   FieldPathList,
   FormContextType,
@@ -670,11 +669,6 @@ export default class Form<
     const newRegistry = this.getRegistry(props, rootSchema, schemaUtils);
     const registry = deepEquals(state.registry, newRegistry) ? state.registry : newRegistry;
 
-    // Pre-expand ui:definitions into the uiSchema structure (must happen after registry is created)
-    const expandedUiSchema: UiSchema<T, S, F> = registry.uiSchemaDefinitions
-      ? expandUiSchemaDefinitions<T, S, F>(rootSchema, uiSchema, registry)
-      : uiSchema;
-
     // Only compute a new `fieldPathId` when the `idPrefix` is different than the existing fieldPathId's ID_KEY
     const fieldPathId =
       state.fieldPathId && state.fieldPathId?.[ID_KEY] === registry.globalFormOptions.idPrefix
@@ -683,7 +677,7 @@ export default class Form<
     const nextState: FormState<T, S, F> = {
       schemaUtils,
       schema: rootSchema,
-      uiSchema: expandedUiSchema,
+      uiSchema,
       fieldPathId,
       formData,
       edit,
