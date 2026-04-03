@@ -84,7 +84,7 @@ export default function BaseInputTemplate<
         style={INPUT_STYLE}
         changeOnWheel={false}
         list={schema.examples ? examplesId(id) : undefined}
-        {...inputProps}
+        {...(inputProps as Omit<typeof inputProps, 'min' | 'max'> & { min?: number; max?: number })}
         type={undefined}
         value={value}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
