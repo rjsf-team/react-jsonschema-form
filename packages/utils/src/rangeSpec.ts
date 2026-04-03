@@ -1,5 +1,6 @@
 import { RangeSpecType, StrictRJSFSchema } from './types';
 import { RJSFSchema } from './types';
+import { resolveDateExpression } from './resolveDateExpression';
 
 const DATE_FORMATS = new Set(['date', 'date-time', 'time']);
 
@@ -19,10 +20,10 @@ export default function rangeSpec<S extends StrictRJSFSchema = RJSFSchema>(schem
   if (DATE_FORMATS.has(schema.format as string)) {
     const { formatMinimum, formatMaximum } = schema as S & { formatMinimum?: string; formatMaximum?: string };
     if (formatMinimum !== undefined) {
-      spec.min = formatMinimum;
+      spec.min = resolveDateExpression(formatMinimum, schema.format as string);
     }
     if (formatMaximum !== undefined) {
-      spec.max = formatMaximum;
+      spec.max = resolveDateExpression(formatMaximum, schema.format as string);
     }
   } else {
     if (schema.minimum || schema.minimum === 0) {
