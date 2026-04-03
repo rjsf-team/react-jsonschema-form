@@ -45,11 +45,11 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
     it('returns 0 when formData is empty object', () => {
       expect(calculateIndexScore(testValidator, oneOfSchema, firstOption, {})).toEqual(0);
     });
-    it('returns 1 for first option in oneOf schema', () => {
-      expect(calculateIndexScore(testValidator, oneOfSchema, firstOption, ONE_OF_SCHEMA_DATA)).toEqual(1);
+    it('returns 2 for first option in oneOf schema', () => {
+      expect(calculateIndexScore(testValidator, oneOfSchema, firstOption, ONE_OF_SCHEMA_DATA)).toEqual(2);
     });
-    it('returns 8 for second option in oneOf schema', () => {
-      expect(calculateIndexScore(testValidator, oneOfSchema, secondOption, ONE_OF_SCHEMA_DATA)).toEqual(9);
+    it('returns 10 for second option in oneOf schema', () => {
+      expect(calculateIndexScore(testValidator, oneOfSchema, secondOption, ONE_OF_SCHEMA_DATA)).toEqual(10);
     });
     it('returns 1 for a schema that has a type matching the formData type', () => {
       expect(calculateIndexScore(testValidator, oneOfSchema, { type: 'boolean' }, true)).toEqual(1);
@@ -73,6 +73,28 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
           { foo: 'aValue' },
         ),
       ).toEqual(0);
+    });
+    it('scores nested oneOf by finding the first matching option and recursing', () => {
+      const schema: RJSFSchema = {
+        properties: {
+          choice: {
+            oneOf: [{ properties: { day: { type: 'string' } } }, { properties: { night: { type: 'string' } } }],
+          },
+        },
+      };
+      testValidator.setReturnValues({ isValid: [true] });
+      expect(calculateIndexScore(testValidator, oneOfSchema, schema, { choice: { day: 'monday' } })).toEqual(1);
+    });
+    it('scores nested anyOf by finding the first matching option and recursing', () => {
+      const schema: RJSFSchema = {
+        properties: {
+          choice: {
+            anyOf: [{ properties: { x: { type: 'number' } } }, { properties: { y: { type: 'number' } } }],
+          },
+        },
+      };
+      testValidator.setReturnValues({ isValid: [true] });
+      expect(calculateIndexScore(testValidator, oneOfSchema, schema, { choice: { x: 42 } })).toEqual(1);
     });
   });
   describe('oneOfMatchingOption', () => {
@@ -161,9 +183,10 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
         },
       };
       const formData = { ipsum: { night: 'nicht' } };
-      // Mock to return true for the last of the second one-ofs
+      // Mock: first 3 calls (JUNK for lorem, lorem itself, JUNK for ipsum) fail;
+      // 4th call (ipsum with oneOf stripped to {}) succeeds, giving a unique valid match
       testValidator.setReturnValues({
-        isValid: [false, false, false, false, false, false, false, true],
+        isValid: [false, false, false, true],
       });
       expect(getClosestMatchingOption(testValidator, schema, formData, get(schema, 'items.oneOf'))).toEqual(1);
     });
@@ -207,9 +230,10 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
         },
       };
       const formData = { ipsum: { night: 'nicht' } };
-      // Mock to return true for the last of the second anyOfs
+      // Mock: first 3 calls (JUNK for lorem, lorem itself, JUNK for ipsum) fail;
+      // 4th call (ipsum with anyOf stripped to {}) succeeds, giving a unique valid match
       testValidator.setReturnValues({
-        isValid: [false, false, false, false, false, false, false, true],
+        isValid: [false, false, false, true],
       });
       expect(getClosestMatchingOption(testValidator, schema, formData, get(schema, 'items.anyOf'))).toEqual(1);
     });

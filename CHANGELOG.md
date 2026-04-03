@@ -47,6 +47,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Fixed scrolling of Monaco editors in the playground, fixing [#4992](https://github.com/rjsf-team/react-jsonschema-form/issues/4992)
 
+## @rjsf/utils
+
+- Fixed exponential slowdown with cross-referencing `oneOf`/`anyOf` definitions, fixing [#4990](https://github.com/rjsf-team/react-jsonschema-form/issues/4990)
+
 # 6.4.1
 
 ## Dev / docs / playground
