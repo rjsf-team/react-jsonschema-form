@@ -44,7 +44,7 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
 }: WidgetProps<T, S, F>): JSX.Element {
   const _onChange = (value: number[]) => onChange(value[0]);
 
-  const sliderProps = { value, label, id, ...rangeSpec<S>(schema) };
+  const sliderProps = { value, label, id, ...(rangeSpec<S>(schema) as { step?: number; min?: number; max?: number }) };
   const uiProps = { id, ..._pick((options.props as object) || {}, allowedProps) };
   return (
     <>
