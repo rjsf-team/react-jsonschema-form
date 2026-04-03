@@ -702,7 +702,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 >
                                   <span
                                     class="truncate"
-                                  />
+                                  >
+                                    State
+                                  </span>
                                   <span
                                     class="ml-2"
                                   >
@@ -2388,7 +2390,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 >
                                   <span
                                     class="truncate"
-                                  />
+                                  >
+                                    State
+                                  </span>
                                   <span
                                     class="ml-2"
                                   >
@@ -4074,7 +4078,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 >
                                   <span
                                     class="truncate"
-                                  />
+                                  >
+                                    State
+                                  </span>
                                   <span
                                     class="ml-2"
                                   >
@@ -5760,7 +5766,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 >
                                   <span
                                     class="truncate"
-                                  />
+                                  >
+                                    State
+                                  </span>
                                   <span
                                     class="ml-2"
                                   >
@@ -7415,7 +7423,9 @@ exports[`Three even column grid renders person and address in three columns, no 
                     >
                       <span
                         class="truncate"
-                      />
+                      >
+                        State
+                      </span>
                       <span
                         class="ml-2"
                       >
@@ -8919,7 +8929,9 @@ exports[`Two even column grid renders person and address in two columns, no empl
                     >
                       <span
                         class="truncate"
-                      />
+                      >
+                        State
+                      </span>
                       <span
                         class="ml-2"
                       >

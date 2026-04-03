@@ -1,9 +1,9 @@
 import { FocusEvent, useCallback, useMemo } from 'react';
 import {
   ariaDescribedByIds,
+  enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
-  enumOptionsIndexForValue,
   labelValue,
   FormContextType,
   RJSFSchema,
@@ -72,8 +72,6 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     [onFocus, id, enumOptions, emptyValue, useRealValues],
   );
 
-  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
-
   const selectOptions = useMemo(() => {
     if (Array.isArray(enumOptions)) {
       return enumOptions.map((option, index) => ({
@@ -94,7 +92,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       name={htmlName || id}
       label={labelValue(label || undefined, hideLabel, false)}
       data={selectOptions}
-      value={multiple ? (selectedIndexes as any) : (selectedIndexes as string)}
+      value={enumOptionSelectedValue<S>(value, enumOptions, !!multiple, useRealValues, multiple ? [] : null) as any}
       onChange={!readonly ? handleChange : undefined}
       onBlur={!readonly ? handleBlur : undefined}
       onFocus={!readonly ? handleFocus : undefined}

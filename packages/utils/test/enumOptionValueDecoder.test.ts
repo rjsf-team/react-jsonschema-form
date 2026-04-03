@@ -1,24 +1,27 @@
 import { enumOptionValueDecoder } from '../src';
 import { EnumOptionsType, RJSFSchema } from '../src';
 
-describe('enumOptionValueDecoder', () => {
-  const stringOptions: EnumOptionsType<RJSFSchema>[] = [
-    { value: 'foo', label: 'Foo' },
-    { value: 'bar', label: 'Bar' },
-  ];
-  const numericOptions: EnumOptionsType<RJSFSchema>[] = [
-    { value: 123, label: '123' },
-    { value: 456, label: '456' },
-  ];
-  const booleanOptions: EnumOptionsType<RJSFSchema>[] = [
-    { value: true, label: 'Yes' },
-    { value: false, label: 'No' },
-  ];
-  const objectOptions: EnumOptionsType<RJSFSchema>[] = [
-    { value: { name: 'NY' } as unknown as RJSFSchema, label: 'New York' },
-    { value: { name: 'LA' } as unknown as RJSFSchema, label: 'Los Angeles' },
-  ];
+const stringOptions: EnumOptionsType<RJSFSchema>[] = [
+  { value: 'foo', label: 'Foo' },
+  { value: 'bar', label: 'Bar' },
+];
 
+const numericOptions: EnumOptionsType<RJSFSchema>[] = [
+  { value: 123, label: '123' },
+  { value: 456, label: '456' },
+];
+
+const booleanOptions: EnumOptionsType<RJSFSchema>[] = [
+  { value: true, label: 'Yes' },
+  { value: false, label: 'No' },
+];
+
+const objectOptions: EnumOptionsType<RJSFSchema>[] = [
+  { value: { name: 'NY' } as unknown as RJSFSchema, label: 'New York' },
+  { value: { name: 'LA' } as unknown as RJSFSchema, label: 'Los Angeles' },
+];
+
+describe('enumOptionValueDecoder', () => {
   describe('when useRealValues is false (index mode)', () => {
     it('resolves index to value', () => {
       expect(enumOptionValueDecoder('0', stringOptions, false)).toBe('foo');

@@ -1,3 +1,5 @@
+import isNil from 'lodash/isNil';
+
 /** Encodes an enum option value into a string for a DOM value attribute.
  *
  * When `useRealValues` is true, primitive values are converted via String().
@@ -15,7 +17,7 @@ export default function enumOptionValueEncoder(value: unknown, index: number, us
   if (!useRealValues) {
     return String(index);
   }
-  if (value === undefined || value === null) {
+  if (isNil(value)) {
     return '';
   }
   if (typeof value === 'object') {

@@ -1,9 +1,9 @@
 import { ChangeEvent, FocusEvent, SyntheticEvent, useCallback } from 'react';
 import {
   ariaDescribedByIds,
+  enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
-  enumOptionsIndexForValue,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -69,21 +69,8 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     [onChange, multiple, enumOptions, optEmptyVal, useRealValues],
   );
 
-  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
+  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, multiple, useRealValues, emptyValue);
   const showPlaceholderOption = !multiple && schema.default === undefined;
-
-  let selectValue;
-  if (useRealValues) {
-    const isEmpty =
-      typeof value === 'undefined' || (multiple && value.length < 1) || (!multiple && value === emptyValue);
-    if (isEmpty) {
-      selectValue = emptyValue;
-    } else {
-      selectValue = multiple ? value.map(String) : String(value);
-    }
-  } else {
-    selectValue = typeof selectedIndexes === 'undefined' ? emptyValue : selectedIndexes;
-  }
 
   return (
     <select

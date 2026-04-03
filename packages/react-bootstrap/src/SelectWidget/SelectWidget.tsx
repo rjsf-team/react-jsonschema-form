@@ -2,9 +2,9 @@ import { ChangeEvent, FocusEvent } from 'react';
 import FormSelect from 'react-bootstrap/FormSelect';
 import {
   ariaDescribedByIds,
+  enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
-  enumOptionsIndexForValue,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -47,21 +47,8 @@ export default function SelectWidget<
       return event.target.value;
     }
   }
-  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
+  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, !!multiple, useRealValues, emptyValue);
   const showPlaceholderOption = !multiple && schema.default === undefined;
-
-  let selectValue;
-  if (useRealValues) {
-    const isEmpty =
-      typeof value === 'undefined' || (multiple && value.length < 1) || (!multiple && value === emptyValue);
-    if (isEmpty) {
-      selectValue = emptyValue;
-    } else {
-      selectValue = multiple ? value.map(String) : String(value);
-    }
-  } else {
-    selectValue = typeof selectedIndexes === 'undefined' ? emptyValue : selectedIndexes;
-  }
 
   return (
     <FormSelect

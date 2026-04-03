@@ -1,8 +1,8 @@
 import { FocusEvent, useCallback } from 'react';
 import {
+  enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
-  enumOptionsIndexForValue,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -105,16 +105,11 @@ export default function SelectWidget<
     [onFocus, id, enumOptions, optEmptyVal, useRealValues],
   );
 
-  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
-  const selectedValues = useRealValues
-    ? Array.isArray(value)
-      ? value.map(String)
-      : value != null
-        ? [String(value)]
-        : []
-    : Array.isArray(selectedIndexes)
-      ? selectedIndexes
-      : [selectedIndexes];
+  const selectedValues: string[] = [
+    enumOptionSelectedValue<S>(value, enumOptions, !!multiple, useRealValues, multiple ? [] : ''),
+  ]
+    .flat()
+    .filter((v) => v !== '');
 
   const optionsList =
     enumOptions ||

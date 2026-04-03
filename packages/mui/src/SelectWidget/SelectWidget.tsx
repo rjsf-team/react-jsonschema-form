@@ -3,9 +3,9 @@ import MenuItem from '@mui/material/MenuItem';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import {
   ariaDescribedByIds,
+  enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
-  enumOptionsIndexForValue,
   labelValue,
   FormContextType,
   RJSFSchema,
@@ -61,7 +61,6 @@ export default function SelectWidget<
     onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, optEmptyVal));
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, optEmptyVal));
-  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
   const { InputLabelProps, SelectProps, autocomplete, ...textFieldRemainingProps } = textFieldProps;
   const showPlaceholderOption = !multiple && schema.default === undefined;
 
@@ -70,17 +69,7 @@ export default function SelectWidget<
       id={id}
       name={htmlName || id}
       label={labelValue(label || undefined, hideLabel, undefined)}
-      value={
-        useRealValues
-          ? isEmpty
-            ? emptyValue
-            : multiple
-              ? value.map(String)
-              : String(value)
-          : !isEmpty && typeof selectedIndexes !== 'undefined'
-            ? selectedIndexes
-            : emptyValue
-      }
+      value={enumOptionSelectedValue<S>(value, enumOptions, multiple, useRealValues, emptyValue)}
       required={required}
       disabled={disabled || readonly}
       autoFocus={autofocus}
