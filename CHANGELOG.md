@@ -20,6 +20,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/antd
 
+- Cast `rangeSpec` result to numeric types in `RangeWidget` and `BaseInputTemplate` (`InputNumber`) to fix TypeScript errors caused by the widened `RangeSpecType.min`/`max` types, fixing [#3955](https://github.com/rjsf-team/react-jsonschema-form/issues/3955)
 - Updated `BaseInputTemplate` to remove `type` and set `changeOnWheel` to false for the `InputNumber` component, fixing [#5002](https://github.com/rjsf-team/react-jsonschema-form/issues/5002)
 - Updated `ErrorList` and `IconButton` to destructure icons imported from `@ant-design/icons`, fixing [#4953](https://github.com/rjsf-team/react-jsonschema-form/issues/4953)
 
@@ -27,9 +28,38 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Added a new `removeEmptyOptionalObjects` boolean prop to gracefully prune optional empty objects preventing form submission lockouts, fixing [#4954](https://github.com/rjsf-team/react-jsonschema-form/issues/4954)
 
+## @rjsf/chakra-ui
+
+- Cast `rangeSpec` result to numeric types in `RangeWidget` to fix TypeScript errors caused by the widened `RangeSpecType.min`/`max` types, fixing [#3955](https://github.com/rjsf-team/react-jsonschema-form/issues/3955)
+
+## @rjsf/fluentui-rc
+
+- Cast `rangeSpec` result to numeric types in `RangeWidget` to fix TypeScript errors caused by the widened `RangeSpecType.min`/`max` types, fixing [#3955](https://github.com/rjsf-team/react-jsonschema-form/issues/3955)
+
+## @rjsf/mui
+
+- Cast `rangeSpec` result to numeric types in `RangeWidget` to fix TypeScript errors caused by the widened `RangeSpecType.min`/`max` types, fixing [#3955](https://github.com/rjsf-team/react-jsonschema-form/issues/3955)
+
+## @rjsf/primereact
+
+- Cast `rangeSpec` result to numeric types in `RangeWidget` to fix TypeScript errors caused by the widened `RangeSpecType.min`/`max` types, fixing [#3955](https://github.com/rjsf-team/react-jsonschema-form/issues/3955)
+
+## @rjsf/shadcn
+
+- Cast `rangeSpec` result to numeric types in `RangeWidget` to fix TypeScript errors caused by the widened `RangeSpecType.min`/`max` types, fixing [#3955](https://github.com/rjsf-team/react-jsonschema-form/issues/3955)
+
 ## @rjsf/utils
 
+- Widened `RangeSpecType.min`/`max` from `number` to `number | string` to support date string values, fixing [#3955](https://github.com/rjsf-team/react-jsonschema-form/issues/3955)
+- Updated `rangeSpec` to read `formatMinimum`/`formatMaximum` instead of `minimum`/`maximum` for `date`, `date-time`, and `time` format fields, propagating them as HTML `min`/`max` attributes on native date inputs, fixing [#3955](https://github.com/rjsf-team/react-jsonschema-form/issues/3955)
+- Added `resolveDateExpression` to evaluate `now()` expressions (e.g. `"now()+3600"`) to concrete date strings at call time, fixing [#3955](https://github.com/rjsf-team/react-jsonschema-form/issues/3955)
+- Added `resolveDynamicDates` to walk a schema tree and resolve all `now()` expressions in `formatMinimum`/`formatMaximum` values for use on the AJV validation side, fixing [#3955](https://github.com/rjsf-team/react-jsonschema-form/issues/3955)
+- Added `formatDateForSchema` and `NOW_EXPRESSION_REGEX` as exported utilities supporting the dynamic date expression system, fixing [#3955](https://github.com/rjsf-team/react-jsonschema-form/issues/3955)
 - Added `removeOptionalEmptyObjects` utility function to recursively strip fully empty optional objects based on their parent's `required` properties, fixing [#4954](https://github.com/rjsf-team/react-jsonschema-form/issues/4954)
+
+## Dev / docs / playground
+
+- Updated playground to call `resolveDynamicDates` on the schema before passing it to `<Form>`, ensuring `now()` date expressions are resolved for AJV validation as well as HTML input constraints, fixing [#3955](https://github.com/rjsf-team/react-jsonschema-form/issues/3955)
 
 # 6.4.2
 

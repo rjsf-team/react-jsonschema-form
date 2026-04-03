@@ -58,6 +58,8 @@ import orderProperties from './orderProperties';
 import pad from './pad';
 import parseDateString from './parseDateString';
 import rangeSpec from './rangeSpec';
+import { resolveDateExpression, formatDateForSchema, NOW_EXPRESSION_REGEX } from './resolveDateExpression';
+import { resolveDynamicDates } from './resolveDynamicDates';
 import replaceStringParameters from './replaceStringParameters';
 import resolveUiSchema, { expandUiSchemaDefinitions } from './resolveUiSchema';
 import schemaRequiresTrueValue from './schemaRequiresTrueValue';
@@ -154,6 +156,10 @@ export {
   parseDateString,
   rangeSpec,
   removeOptionalEmptyObjects,
+  resolveDateExpression,
+  resolveDynamicDates,
+  formatDateForSchema,
+  NOW_EXPRESSION_REGEX,
   replaceStringParameters,
   resolveUiSchema,
   expandUiSchemaDefinitions,

@@ -64,4 +64,16 @@ describe('rangeSpec()', () => {
   it('returns empty object for date schema with no formatMinimum/formatMaximum', () => {
     expect(rangeSpec({ format: 'date' } as any)).toEqual({});
   });
+  it('resolves now() expression in formatMinimum for format: date', () => {
+    const result = rangeSpec({ format: 'date', formatMinimum: 'now()' } as any);
+    expect(result.min).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  });
+  it('resolves now() expression in formatMaximum for format: date', () => {
+    const result = rangeSpec({ format: 'date', formatMaximum: 'now()+86400' } as any);
+    expect(result.max).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  });
+  it('resolves now() expression for format: date-time', () => {
+    const result = rangeSpec({ format: 'date-time', formatMinimum: 'now()-3600' } as any);
+    expect(result.min).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/);
+  });
 });
