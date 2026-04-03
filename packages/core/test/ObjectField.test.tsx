@@ -1225,6 +1225,49 @@ describe('ObjectField', () => {
       expect(node.querySelector('#root_first-1')).not.toBeNull();
     });
 
+    it('should preserve stable React key when renaming a newly added property for the first time', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { first: 1 },
+      });
+
+      // Add a new property
+      fireEvent.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      // Rename the newly added property for the first time
+      const newKeyInput = node.querySelector('#root_newKey-key') as HTMLInputElement;
+      expect(newKeyInput).not.toBeNull();
+      newKeyInput.focus();
+      fireEvent.blur(newKeyInput, { target: { value: 'second' } });
+
+      // The renamed key and its value input should exist (component was reused, not remounted)
+      expect(node.querySelector('#root_second-key')).not.toBeNull();
+      expect(node.querySelector('#root_second')).not.toBeNull();
+    });
+
+    it('should not collide React keys when a new property is added after rename and gets the old name', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { first: 1 },
+      });
+
+      // Rename "first" → "renamed"
+      const keyInput = node.querySelector('#root_first-key');
+      fireEvent.blur(keyInput!, { target: { value: 'renamed' } });
+
+      // Add a new property (resets previousKey so "first" won't be reused as a React key)
+      fireEvent.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      // Rename new property to "first" (the old name)
+      const newKeyInput = node.querySelector('#root_newKey-key');
+      expect(newKeyInput).not.toBeNull();
+      fireEvent.blur(newKeyInput!, { target: { value: 'first' } });
+
+      // Both properties should render without React key collision
+      expect(node.querySelector('#root_renamed')).not.toBeNull();
+      expect(node.querySelector('#root_first')).not.toBeNull();
+    });
+
     it('should have an expand button', () => {
       const { node } = createFormComponent({ schema });
 
