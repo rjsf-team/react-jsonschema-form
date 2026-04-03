@@ -30,6 +30,48 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Added `removeOptionalEmptyObjects` utility function to recursively strip fully empty optional objects based on their parent's `required` properties, fixing [#4954](https://github.com/rjsf-team/react-jsonschema-form/issues/4954)
+- Added `enumOptionValueEncoder`, `enumOptionValueDecoder`, and `enumOptionSelectedValue` utilities for opt-in real enum value rendering in select/radio/checkbox widgets ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
+- Added `useRealOptionValues` to `GlobalUISchemaOptions` for opt-in real enum values in widget option attributes ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
+
+## @rjsf/core
+
+- Added opt-in `useRealOptionValues` support to `SelectWidget`, `RadioWidget`, and `CheckboxesWidget` for rendering real enum values instead of array indices ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
+
+## @rjsf/react-bootstrap
+
+- Added opt-in `useRealOptionValues` support to `SelectWidget`, `RadioWidget`, and `CheckboxesWidget` ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
+
+## @rjsf/chakra-ui
+
+- Added opt-in `useRealOptionValues` support to `SelectWidget`, `RadioWidget`, and `CheckboxesWidget` ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
+
+## @rjsf/daisyui
+
+- Added opt-in `useRealOptionValues` support to `SelectWidget`, `RadioWidget`, and `CheckboxesWidget` ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
+
+## @rjsf/fluentui-rc
+
+- Added opt-in `useRealOptionValues` support to `SelectWidget`, `RadioWidget`, and `CheckboxesWidget` ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
+
+## @rjsf/mantine
+
+- Added opt-in `useRealOptionValues` support to `SelectWidget`, `RadioWidget`, and `CheckboxesWidget` ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
+
+## @rjsf/mui
+
+- Added opt-in `useRealOptionValues` support to `SelectWidget`, `RadioWidget`, and `CheckboxesWidget` ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
+
+## @rjsf/primereact
+
+- Added opt-in `useRealOptionValues` support to `SelectWidget`, `RadioWidget`, and `CheckboxesWidget` ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
+
+## @rjsf/semantic-ui
+
+- Added opt-in `useRealOptionValues` support to `SelectWidget`, `RadioWidget`, and `CheckboxesWidget` ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
+
+## @rjsf/shadcn
+
+- Added opt-in `useRealOptionValues` support to `SelectWidget`, `RadioWidget`, and `CheckboxesWidget` ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
 
 # 6.4.2
 
@@ -42,11 +84,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed a breaking change introduced in v6.4.0 where array properties with enum items no longer used `ui:enumNames` from the array property's uiSchema ([#4985](https://github.com/rjsf-team/react-jsonschema-form/issues/4985))
 - Passed `parentUiSchema` to `ArrayFieldItem` to maintain `uiSchema`, this prop was introduced recently but was not being passed
 - Fixed `extraErrors` not displaying when `customErrors` are also present (e.g., with array fields and controlled `formData`), fixing [#4982](https://github.com/rjsf-team/react-jsonschema-form/issues/4982)
-- Fixed `SelectWidget` rendering array indices instead of real enum values in `<option value>`, breaking native form submission. Uses `data-index` for internal typed value resolution ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
-
-## @rjsf/react-bootstrap
-
-- Fixed `SelectWidget` rendering array indices instead of real enum values in `<option value>`, breaking native form submission. Uses `data-index` for internal typed value resolution ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
 
 ## Dev / docs / playground
 

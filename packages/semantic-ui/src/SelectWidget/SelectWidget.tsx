@@ -1,9 +1,9 @@
 import { FocusEvent, SyntheticEvent } from 'react';
 import {
   ariaDescribedByIds,
+  enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
-  enumOptionsIndexForValue,
   labelValue,
   EnumOptionsType,
   FormContextType,
@@ -103,8 +103,6 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, optEmptyVal));
   const _onFocus = (_: FocusEvent<HTMLElement>, { target }: DropdownProps) =>
     onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, optEmptyVal));
-  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
-
   return (
     <Form.Dropdown
       key={id}
@@ -112,17 +110,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       name={htmlName || id}
       label={labelValue(label || undefined, hideLabel, false)}
       multiple={typeof multiple === 'undefined' ? false : multiple}
-      value={
-        useRealValues
-          ? typeof value === 'undefined'
-            ? emptyValue
-            : multiple
-              ? value.map(String)
-              : String(value)
-          : typeof value === 'undefined'
-            ? emptyValue
-            : selectedIndexes
-      }
+      value={enumOptionSelectedValue<S>(value, enumOptions, !!multiple, useRealValues, emptyValue)}
       error={rawErrors.length > 0}
       disabled={disabled}
       placeholder={placeholder}

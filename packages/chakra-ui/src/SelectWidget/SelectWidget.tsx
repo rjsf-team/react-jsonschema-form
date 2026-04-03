@@ -3,6 +3,7 @@ import { FocusEvent, useMemo, useRef } from 'react';
 import {
   ariaDescribedByIds,
   EnumOptionsType,
+  enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   enumOptionsIndexForValue,
@@ -107,14 +108,9 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
 
   let formValue: string[];
   if (useRealValues) {
-    const emptyVal = isMultiple ? [] : '';
-    const isEmpty =
-      typeof value === 'undefined' || (isMultiple && value.length < 1) || (!isMultiple && value === emptyVal);
-    if (isEmpty) {
-      formValue = isMultiple ? [] : [''];
-    } else {
-      formValue = isMultiple ? value.map(String) : [String(value)];
-    }
+    formValue = [
+      enumOptionSelectedValue<S>(value, enumOptions, isMultiple, true, isMultiple ? [] : ''),
+    ].flat() as string[];
   } else {
     formValue = (isMultiple ? getMultiValue() : getSingleValue()).map((item) => item.value);
   }

@@ -1,8 +1,8 @@
 import {
   ariaDescribedByIds,
+  enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
-  enumOptionsIndexForValue,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -34,7 +34,6 @@ export default function SelectWidget<
   onChange,
   onBlur,
   onFocus,
-  defaultValue,
   placeholder,
   rawErrors = [],
   className,
@@ -64,13 +63,7 @@ export default function SelectWidget<
       {!multiple ? (
         <FancySelect
           items={items}
-          selected={
-            useRealValues
-              ? typeof value === 'undefined'
-                ? ''
-                : String(value)
-              : (enumOptionsIndexForValue<S>(value ?? defaultValue, enumOptions, false) as unknown as string)
-          }
+          selected={enumOptionSelectedValue<S>(value, enumOptions, false, useRealValues, '') as string}
           onValueChange={(selectedValue) => {
             onChange(enumOptionValueDecoder<S>(selectedValue, enumOptions, useRealValues, optEmptyValue));
           }}
