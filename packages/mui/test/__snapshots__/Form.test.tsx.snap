@@ -18676,11 +18676,8 @@ exports[`single fields help and error display 1`] = `
   margin-bottom: 4px;
 }
 
-.MuiTypography-root:where(.emotion-7 .MuiListItemText-primary) {
-  display: block;
-}
-
-.MuiTypography-root:where(.emotion-7 .MuiListItemText-secondary) {
+.emotion-7 .MuiTypography-root:where( .MuiListItemText-primary),
+.emotion-7 .MuiTypography-root:where( .MuiListItemText-secondary) {
   display: block;
 }
 
@@ -34802,9 +34799,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
           >
             <span
               aria-describedby="root__error root__description root__help"
-              aria-disabled="true"
-              class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium Mui-disabled PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium Mui-disabled MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-4"
-              tabindex="-1"
+              class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium Mui-disabled MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-4"
             >
               <input
                 class="PrivateSwitchBase-input emotion-5"
@@ -36885,9 +36880,7 @@ exports[`single fields select field single choice enumDisabled using radio widge
             class="MuiFormControlLabel-root Mui-disabled MuiFormControlLabel-labelPlacementEnd emotion-3"
           >
             <span
-              aria-disabled="true"
-              class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary Mui-disabled PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-disabled MuiRadio-root MuiRadio-colorPrimary emotion-11"
-              tabindex="-1"
+              class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-disabled MuiRadio-root MuiRadio-colorPrimary emotion-11"
             >
               <input
                 class="PrivateSwitchBase-input emotion-5"
@@ -37314,9 +37307,7 @@ exports[`single fields select field single choice form disabled using radio widg
             class="MuiFormControlLabel-root Mui-disabled MuiFormControlLabel-labelPlacementEnd emotion-3"
           >
             <span
-              aria-disabled="true"
-              class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary Mui-disabled PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-disabled MuiRadio-root MuiRadio-colorPrimary emotion-4"
-              tabindex="-1"
+              class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-disabled MuiRadio-root MuiRadio-colorPrimary emotion-4"
             >
               <input
                 class="PrivateSwitchBase-input emotion-5"
@@ -37363,9 +37354,7 @@ exports[`single fields select field single choice form disabled using radio widg
             class="MuiFormControlLabel-root Mui-disabled MuiFormControlLabel-labelPlacementEnd emotion-3"
           >
             <span
-              aria-disabled="true"
-              class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary Mui-disabled PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-disabled MuiRadio-root MuiRadio-colorPrimary emotion-4"
-              tabindex="-1"
+              class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-disabled MuiRadio-root MuiRadio-colorPrimary emotion-4"
             >
               <input
                 class="PrivateSwitchBase-input emotion-5"
@@ -38286,9 +38275,7 @@ exports[`single fields select field single choice uiSchema disabled using radio 
             class="MuiFormControlLabel-root Mui-disabled MuiFormControlLabel-labelPlacementEnd emotion-3"
           >
             <span
-              aria-disabled="true"
-              class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary Mui-disabled PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-disabled MuiRadio-root MuiRadio-colorPrimary emotion-4"
-              tabindex="-1"
+              class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-disabled MuiRadio-root MuiRadio-colorPrimary emotion-4"
             >
               <input
                 class="PrivateSwitchBase-input emotion-5"
@@ -38335,9 +38322,7 @@ exports[`single fields select field single choice uiSchema disabled using radio 
             class="MuiFormControlLabel-root Mui-disabled MuiFormControlLabel-labelPlacementEnd emotion-3"
           >
             <span
-              aria-disabled="true"
-              class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary Mui-disabled PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-disabled MuiRadio-root MuiRadio-colorPrimary emotion-4"
-              tabindex="-1"
+              class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-disabled MuiRadio-root MuiRadio-colorPrimary emotion-4"
             >
               <input
                 class="PrivateSwitchBase-input emotion-5"
