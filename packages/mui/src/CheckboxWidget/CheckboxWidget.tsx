@@ -1,5 +1,5 @@
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
+import FormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel';
 import {
   ariaDescribedByIds,
   descriptionId,
@@ -11,6 +11,7 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
+import { getMuiProps } from '../util';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -54,6 +55,12 @@ export default function CheckboxWidget<
   const _onFocus: React.FocusEventHandler<HTMLButtonElement> = () => onFocus(id, value);
   const description = options.description ?? schema.description;
 
+  const muiProps = getMuiProps<T, S, F>({
+    uiSchema,
+    formContext: registry.formContext,
+    options,
+  });
+
   return (
     <>
       {!hideLabel && description && (
@@ -66,6 +73,7 @@ export default function CheckboxWidget<
         />
       )}
       <FormControlLabel
+        {...(muiProps as FormControlLabelProps)}
         control={
           <Checkbox
             id={id}
@@ -78,6 +86,7 @@ export default function CheckboxWidget<
             onBlur={_onBlur}
             onFocus={_onFocus}
             aria-describedby={ariaDescribedByIds(id)}
+            {...(muiProps as CheckboxProps)}
           />
         }
         label={labelValue(label, hideLabel, false)}

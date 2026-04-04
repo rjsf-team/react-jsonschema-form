@@ -1,6 +1,6 @@
 import { FocusEvent } from 'react';
 import FormLabel from '@mui/material/FormLabel';
-import Slider from '@mui/material/Slider';
+import Slider, { SliderProps } from '@mui/material/Slider';
 import {
   ariaDescribedByIds,
   labelValue,
@@ -10,6 +10,7 @@ import {
   WidgetProps,
   rangeSpec,
 } from '@rjsf/utils';
+import { getMuiProps } from '../util';
 
 /** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
  * in a div, with the value along side it.
@@ -19,8 +20,22 @@ import {
 export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>,
 ) {
-  const { value, readonly, disabled, onBlur, onFocus, options, schema, onChange, required, label, hideLabel, id } =
-    props;
+  const {
+    value,
+    readonly,
+    disabled,
+    onBlur,
+    onFocus,
+    options,
+    schema,
+    onChange,
+    required,
+    label,
+    hideLabel,
+    id,
+    registry,
+    uiSchema,
+  } = props;
   const sliderProps = { value, label, id, name: id, ...rangeSpec<S>(schema) };
 
   const _onChange = (_: any, value?: number | number[]) => {
@@ -28,6 +43,13 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   };
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
+
+  const muiProps = getMuiProps<T, S, F>({
+    uiSchema,
+    formContext: registry.formContext,
+    options,
+  });
+  const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
   return (
     <>
@@ -38,12 +60,16 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         hideLabel,
       )}
       <Slider
+        {...(otherMuiProps as SliderProps)}
         disabled={disabled || readonly}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
         valueLabelDisplay='auto'
         {...sliderProps}
+        slotProps={{
+          ...muiSlotProps,
+        }}
         aria-describedby={ariaDescribedByIds(id)}
       />
     </>

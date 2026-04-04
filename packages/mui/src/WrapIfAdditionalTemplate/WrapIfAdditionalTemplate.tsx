@@ -1,5 +1,5 @@
 import { CSSProperties } from 'react';
-import Grid from '@mui/material/Grid';
+import Grid, { GridProps } from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import {
   ADDITIONAL_PROPERTY_FLAG,
@@ -9,7 +9,9 @@ import {
   StrictRJSFSchema,
   TranslatableString,
   WrapIfAdditionalTemplateProps,
+  getUiOptions,
 } from '@rjsf/utils';
+import { getMuiProps } from '../util';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.
@@ -49,6 +51,14 @@ export default function WrapIfAdditionalTemplate<
     fontWeight: 'bold',
   };
 
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const muiProps = getMuiProps<T, S, F>({
+    uiSchema,
+    formContext: registry.formContext,
+    options: uiOptions,
+  });
+  const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
+
   if (!additional) {
     return (
       <div className={classNames} style={style}>
@@ -58,8 +68,17 @@ export default function WrapIfAdditionalTemplate<
   }
 
   return (
-    <Grid container key={`${id}-key`} alignItems='flex-start' spacing={2} className={classNames} style={style}>
-      <Grid size={5.5}>
+    <Grid
+      container
+      key={`${id}-key`}
+      alignItems='flex-start'
+      spacing={2}
+      className={classNames}
+      style={style}
+      {...(otherMuiProps as GridProps)}
+      {...(muiSlotProps?.grid as GridProps)}
+    >
+      <Grid size={5.5} {...(muiSlotProps?.grid as GridProps)}>
         <TextField
           fullWidth={true}
           required={required}
@@ -70,10 +89,15 @@ export default function WrapIfAdditionalTemplate<
           name={`${id}-key`}
           onBlur={!readonly ? onKeyRenameBlur : undefined}
           type='text'
+          slotProps={{
+            ...muiSlotProps,
+          }}
         />
       </Grid>
-      <Grid size={5.5}>{children}</Grid>
-      <Grid sx={{ mt: 1.5 }}>
+      <Grid size={5.5} {...(muiSlotProps?.grid as GridProps)}>
+        {children}
+      </Grid>
+      <Grid sx={{ mt: 1.5 }} {...(muiSlotProps?.grid as GridProps)}>
         <RemoveButton
           id={buttonId(id, 'remove')}
           className='rjsf-object-property-remove'

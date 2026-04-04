@@ -104,6 +104,45 @@ import { Theme } from '@rjsf/mui';
 const Form = withTheme(Theme);
 ```
 
+### Customizing MUI-specific props
+
+You can pass MUI-specific props (like `sx`, `slotProps`, `variant`, etc.) directly to any MUI component rendered by a Template or Widget. This can be done globally via `formContext` or specifically for a field via `ui:options` in the `uiSchema`.
+
+#### Via `uiSchema`
+
+```json
+"myField": {
+  "ui:options": {
+    "mui": {
+      "variant": "filled",
+      "sx": {
+        "backgroundColor": "background.paper"
+      },
+      "slotProps": {
+        "input": {
+          "endAdornment": "kg"
+        }
+      }
+    }
+  }
+}
+```
+
+#### Via `formContext`
+
+```json
+const formContext = {
+  mui: {
+    variant: "outlined",
+    fullWidth: true
+  }
+};
+
+<Form schema={schema} formContext={formContext} />
+```
+
+Local `uiSchema` props will override global `formContext` props.
+
 <!-- ROADMAP -->
 
 ## Roadmap

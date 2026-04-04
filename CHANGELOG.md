@@ -27,6 +27,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Added a new `removeEmptyOptionalObjects` boolean prop to gracefully prune optional empty objects preventing form submission lockouts, fixing [#4954](https://github.com/rjsf-team/react-jsonschema-form/issues/4954)
 
+## @rjsf/mui
+
+- Added support for passing MUI-specific props (e.g., `sx`, `slotProps`, `variant`) directly through `uiSchema` or `formContext` for all templates and widgets, fixing [#4996](https://github.com/rjsf-team/react-jsonschema-form/issues/4996)
+
 ## @rjsf/utils
 
 - Added `removeOptionalEmptyObjects` utility function to recursively strip fully empty optional objects based on their parent's `required` properties, fixing [#4954](https://github.com/rjsf-team/react-jsonschema-form/issues/4954)
