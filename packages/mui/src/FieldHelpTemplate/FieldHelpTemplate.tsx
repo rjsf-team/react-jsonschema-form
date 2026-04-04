@@ -1,6 +1,7 @@
 import { RichHelp } from '@rjsf/core';
-import { helpId, FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import FormHelperText from '@mui/material/FormHelperText';
+import { helpId, FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema, getUiOptions } from '@rjsf/utils';
+import FormHelperText, { FormHelperTextProps } from '@mui/material/FormHelperText';
+import { getMuiProps } from '../util';
 
 /** The `FieldHelpTemplate` component renders any help desired for a field
  *
@@ -16,8 +17,22 @@ export default function FieldHelpTemplate<
     return null;
   }
 
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const muiProps = getMuiProps<T, S, F>({
+    uiSchema,
+    formContext: registry.formContext,
+    options: uiOptions,
+  });
+  const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
+
   return (
-    <FormHelperText component='div' id={helpId(fieldPathId)} style={{ marginTop: '5px' }}>
+    <FormHelperText
+      component='div'
+      id={helpId(fieldPathId)}
+      style={{ marginTop: '5px' }}
+      {...(otherMuiProps as FormHelperTextProps)}
+      {...(muiSlotProps?.formHelperText as FormHelperTextProps)}
+    >
       <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
     </FormHelperText>
   );

@@ -1,7 +1,7 @@
 import { CSSProperties } from 'react';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
+import Box, { BoxProps } from '@mui/material/Box';
+import Grid, { GridProps } from '@mui/material/Grid';
+import Paper, { PaperProps } from '@mui/material/Paper';
 import {
   ArrayFieldItemTemplateProps,
   FormContextType,
@@ -10,6 +10,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
+import { getMuiProps } from '../util';
 
 /** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
  *
@@ -34,17 +35,31 @@ export default function ArrayFieldItemTemplate<
     fontWeight: 'bold',
     minWidth: 0,
   };
+
+  const muiProps = getMuiProps<T, S, F>({
+    uiSchema,
+    formContext: registry.formContext,
+    options: uiOptions,
+  });
+  const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
+
   return (
-    <Grid container={true} alignItems='center'>
-      <Grid size={{ xs: 8, sm: 9, md: 10, lg: 11, xl: 11.25 }} style={{ overflow: 'auto' }}>
-        <Box mb={2}>
-          <Paper elevation={2}>
-            <Box p={2}>{children}</Box>
+    <Grid container={true} alignItems='center' {...(otherMuiProps as GridProps)} {...(muiSlotProps?.grid as GridProps)}>
+      <Grid
+        size={{ xs: 8, sm: 9, md: 10, lg: 11, xl: 11.25 }}
+        style={{ overflow: 'auto' }}
+        {...(muiSlotProps?.grid as GridProps)}
+      >
+        <Box mb={2} {...(muiSlotProps?.box as BoxProps)}>
+          <Paper elevation={2} {...(muiSlotProps?.paper as PaperProps)}>
+            <Box p={2} {...(muiSlotProps?.box as BoxProps)}>
+              {children}
+            </Box>
           </Paper>
         </Box>
       </Grid>
       {hasToolbar && (
-        <Grid sx={{ mt: hasDescription ? -5 : -1.5 }}>
+        <Grid sx={{ mt: hasDescription ? -5 : -1.5 }} {...(muiSlotProps?.grid as GridProps)}>
           <ArrayFieldItemButtonsTemplate {...buttonsProps} style={btnStyle} />
         </Grid>
       )}
