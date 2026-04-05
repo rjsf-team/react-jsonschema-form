@@ -47,6 +47,16 @@ export default function getInputProps<
     }
   }
 
+  // For date/time input types, propagate formatMinimum/formatMaximum to min/max
+  if (['date', 'datetime-local', 'time', 'week', 'month'].includes(inputProps.type)) {
+    if (schema.formatMinimum !== undefined) {
+      inputProps.min = schema.formatMinimum as string;
+    }
+    if (schema.formatMaximum !== undefined) {
+      inputProps.max = schema.formatMaximum as string;
+    }
+  }
+
   if (options.autocomplete) {
     inputProps.autoComplete = options.autocomplete;
   }
