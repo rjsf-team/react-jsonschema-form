@@ -12,7 +12,7 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
 ) {
   const { value, readonly, disabled, onBlur, onFocus, options, schema, onChange, id } = props;
   const primeProps = (options.prime || {}) as object;
-  const sliderProps = { value, id, ...(rangeSpec<S>(schema) as { step?: number; min?: number; max?: number }) };
+  const sliderProps = { value, id, ...rangeSpec<S>(schema) };
 
   const _onChange = (e: SliderChangeEvent) => {
     onChange(e.value ?? options.emptyValue);

@@ -34,7 +34,7 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
-  const { min, max, step } = rangeSpec(schema) as { step?: number; min?: number; max?: number };
+  const { min, max, step } = rangeSpec(schema);
 
   const emptyValue = options.emptyValue || '';
 
