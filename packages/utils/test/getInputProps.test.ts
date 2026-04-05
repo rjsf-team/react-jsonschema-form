@@ -71,4 +71,28 @@ describe('getInputProps', () => {
       max: schema.maximum,
     });
   });
+  it('returns min from formatMinimum when defaultType is date', () => {
+    const schema: RJSFSchema = { formatMinimum: '2020-01-01' };
+    expect(getInputProps(schema, 'date')).toEqual({ type: 'date', min: '2020-01-01' });
+  });
+  it('returns max from formatMaximum when defaultType is date', () => {
+    const schema: RJSFSchema = { formatMaximum: '2030-12-31' };
+    expect(getInputProps(schema, 'date')).toEqual({ type: 'date', max: '2030-12-31' });
+  });
+  it('returns min and max from formatMinimum/formatMaximum when defaultType is date', () => {
+    const schema: RJSFSchema = { formatMinimum: '2020-01-01', formatMaximum: '2030-12-31' };
+    expect(getInputProps(schema, 'date')).toEqual({ type: 'date', min: '2020-01-01', max: '2030-12-31' });
+  });
+  it('returns min and max from formatMinimum/formatMaximum when defaultType is datetime-local', () => {
+    const schema: RJSFSchema = { formatMinimum: '2020-01-01T00:00', formatMaximum: '2030-12-31T23:59' };
+    expect(getInputProps(schema, 'datetime-local')).toEqual({
+      type: 'datetime-local',
+      min: '2020-01-01T00:00',
+      max: '2030-12-31T23:59',
+    });
+  });
+  it('does not set min/max from formatMinimum/formatMaximum for non-date input types', () => {
+    const schema: RJSFSchema = { formatMinimum: '2020-01-01', formatMaximum: '2030-12-31' };
+    expect(getInputProps(schema, 'text')).toEqual({ type: 'text' });
+  });
 });
