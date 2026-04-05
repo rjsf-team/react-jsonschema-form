@@ -11,47 +11,48 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
+import { getMuiProps } from '../util';
 
 /** The `SelectWidget` is a widget for rendering dropdowns.
  *  It is typically used with string properties constrained with enum options.
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function SelectWidget<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->({
-  schema,
-  id,
-  name, // remove this from textFieldProps
-  htmlName,
-  options,
-  label,
-  hideLabel,
-  required,
-  disabled,
-  placeholder,
-  readonly,
-  value,
-  multiple,
-  autofocus,
-  onChange,
-  onBlur,
-  onFocus,
-  errorSchema,
-  rawErrors = [],
-  registry,
-  uiSchema,
-  hideError,
-  ...textFieldProps
-}: WidgetProps<T, S, F>) {
+export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: WidgetProps<T, S, F>,
+) {
+  const {
+    schema,
+    id,
+    name, // remove this from textFieldProps
+    htmlName,
+    options,
+    label,
+    hideLabel,
+    required,
+    disabled,
+    placeholder,
+    readonly,
+    value,
+    multiple,
+    autofocus,
+    onChange,
+    onBlur,
+    onFocus,
+    errorSchema,
+    rawErrors = [],
+    registry,
+    uiSchema,
+    hideError,
+    ...textFieldProps
+  } = props;
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
 
-  multiple = typeof multiple === 'undefined' ? false : !!multiple;
+  const isMultiple = typeof multiple === 'undefined' ? false : !!multiple;
 
-  const emptyValue = multiple ? [] : '';
-  const isEmpty = typeof value === 'undefined' || (multiple && value.length < 1) || (!multiple && value === emptyValue);
+  const emptyValue = isMultiple ? [] : '';
+  const isEmpty =
+    typeof value === 'undefined' || (isMultiple && value.length < 1) || (!isMultiple && value === emptyValue);
 
   const _onChange = ({ target: { value } }: ChangeEvent<{ value: string }>) =>
     onChange(enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
@@ -59,9 +60,16 @@ export default function SelectWidget<
     onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
-  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
+  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, isMultiple);
+  const muiProps = getMuiProps<T, S, F>({
+    uiSchema,
+    formContext: registry.formContext,
+    options,
+  });
+  const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
+
   const { InputLabelProps, SelectProps, autocomplete, ...textFieldRemainingProps } = textFieldProps;
-  const showPlaceholderOption = !multiple && schema.default === undefined;
+  const showPlaceholderOption = !isMultiple && schema.default === undefined;
 
   return (
     <TextField
@@ -78,13 +86,19 @@ export default function SelectWidget<
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
+      {...otherMuiProps}
       {...(textFieldRemainingProps as TextFieldProps)}
       select // Apply this and the following props after the potential overrides defined in textFieldProps
+      slotProps={{
+        ...muiSlotProps,
+      }}
       InputLabelProps={{
+        ...muiSlotProps?.inputLabel,
         ...InputLabelProps,
         shrink: !isEmpty,
       }}
       SelectProps={{
+        ...muiSlotProps?.select,
         ...SelectProps,
         multiple,
       }}

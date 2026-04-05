@@ -1,6 +1,6 @@
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
+import Box, { BoxProps } from '@mui/material/Box';
+import Grid, { GridProps } from '@mui/material/Grid';
+import Paper, { PaperProps } from '@mui/material/Paper';
 import {
   getTemplate,
   getUiOptions,
@@ -10,6 +10,7 @@ import {
   StrictRJSFSchema,
   buttonId,
 } from '@rjsf/utils';
+import { getMuiProps } from '../util';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
@@ -50,9 +51,17 @@ export default function ArrayFieldTemplate<
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
+
+  const muiProps = getMuiProps<T, S, F>({
+    uiSchema,
+    formContext: registry.formContext,
+    options: uiOptions,
+  });
+  const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
+
   return (
-    <Paper elevation={2}>
-      <Box p={2}>
+    <Paper elevation={2} {...(otherMuiProps as PaperProps)} {...(muiSlotProps?.paper as PaperProps)}>
+      <Box p={2} {...(muiSlotProps?.box as BoxProps)}>
         <ArrayFieldTitleTemplate
           fieldPathId={fieldPathId}
           title={uiOptions.title || title}
@@ -72,9 +81,9 @@ export default function ArrayFieldTemplate<
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
         {items}
         {canAdd && (
-          <Grid container justifyContent='flex-end'>
-            <Grid>
-              <Box mt={2}>
+          <Grid container justifyContent='flex-end' {...(muiSlotProps?.grid as GridProps)}>
+            <Grid {...(muiSlotProps?.grid as GridProps)}>
+              <Box mt={2} {...(muiSlotProps?.box as BoxProps)}>
                 <AddButton
                   id={buttonId(fieldPathId, 'add')}
                   className='rjsf-array-item-add'
