@@ -1268,6 +1268,55 @@ describe('ObjectField', () => {
       expect(node.querySelector('#root_first')).not.toBeNull();
     });
 
+    it('should not carry over renamed key input value to newly added property', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: {},
+      });
+
+      // Add a property
+      fireEvent.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      // Rename "newKey" → "first"
+      const keyInput = node.querySelector('#root_newKey-key') as HTMLInputElement;
+      fireEvent.blur(keyInput, { target: { value: 'first' } });
+
+      // Add another property
+      fireEvent.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      // The new property's key input should show "newKey", not "first"
+      const newKeyInput = node.querySelector('#root_newKey-key') as HTMLInputElement;
+      expect(newKeyInput).not.toBeNull();
+      expect(newKeyInput.value).toBe('newKey');
+    });
+
+    it('should not corrupt key input when renaming two properties sequentially', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: {},
+      });
+
+      // Add first property and rename to "first"
+      fireEvent.click(node.querySelector('.rjsf-object-property-expand button')!);
+      const keyInput1 = node.querySelector('#root_newKey-key') as HTMLInputElement;
+      fireEvent.blur(keyInput1, { target: { value: 'first' } });
+
+      // Add second property and rename to "second"
+      fireEvent.click(node.querySelector('.rjsf-object-property-expand button')!);
+      const keyInput2 = node.querySelector('#root_newKey-key') as HTMLInputElement;
+      fireEvent.blur(keyInput2, { target: { value: 'second' } });
+
+      // Both properties should exist with correct values
+      expect(node.querySelector('#root_first')).not.toBeNull();
+      expect(node.querySelector('#root_second')).not.toBeNull();
+
+      // Key inputs should show their actual property names, not carry over values
+      const firstKeyInput = node.querySelector('#root_first-key') as HTMLInputElement;
+      const secondKeyInput = node.querySelector('#root_second-key') as HTMLInputElement;
+      expect(firstKeyInput.value).toBe('first');
+      expect(secondKeyInput.value).toBe('second');
+    });
+
     it('should have an expand button', () => {
       const { node } = createFormComponent({ schema });
 
