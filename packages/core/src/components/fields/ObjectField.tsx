@@ -1,4 +1,4 @@
-import { FocusEvent, useCallback, useState } from 'react';
+import { FocusEvent, useCallback, useRef, useState } from 'react';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
@@ -225,6 +225,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
   const { properties: schemaProperties = {} } = schema;
   // All the children will use childFieldPathId if present in the props, falling back to the fieldPathId
   const childFieldPathId = props.childFieldPathId ?? fieldPathId;
+  const lastRenamedProperty = useRef({ previousKey: '', currentKey: undefined as string | undefined });
 
   const templateTitle = uiOptions.title ?? schema.title ?? title ?? name;
   const description = uiOptions.description ?? schema.description;
@@ -292,6 +293,13 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       set(newFormData as GenericObjectType, newKey, newValue);
     }
 
+    // If the new property's key matches the previousKey used for stable key mapping,
+    // clear the mapping so the new property gets its natural React key ("newKey").
+    // The previously renamed property will remount (acceptable during Add),
+    // and the next rename of this new property can set up a fresh stable mapping.
+    if (lastRenamedProperty.current.previousKey === newKey) {
+      lastRenamedProperty.current = { previousKey: '', currentKey: undefined };
+    }
     onChange(newFormData, childFieldPathId.path);
   }, [formData, onChange, registry, childFieldPathId, getAvailableKey, schema]);
 
@@ -316,6 +324,23 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
         });
         const renamedObj = Object.assign({}, ...keyValues);
 
+        if (actualNewKey !== newKey) {
+          // The key was modified by getAvailableKey due to a duplicate (e.g. user typed "first"
+          // but it became "first-1"). Still preserve the React key so focus is maintained on Tab.
+          // The key input resets via its own `key={label}` prop in WrapIfAdditionalTemplate.
+          lastRenamedProperty.current.previousKey = oldKey;
+          lastRenamedProperty.current.currentKey = actualNewKey;
+        } else if (oldKey === lastRenamedProperty.current.currentKey) {
+          // Same property being renamed again (e.g. "a" → "ab" → "abc").
+          // Keep the original previousKey so React continues to reuse the same component.
+          lastRenamedProperty.current.currentKey = actualNewKey;
+        } else {
+          // Different property being renamed. Reset and track only this one.
+          // The previously renamed property will remount (same as main branch behavior),
+          // but this avoids key collisions and value corruption.
+          lastRenamedProperty.current.previousKey = oldKey;
+          lastRenamedProperty.current.currentKey = actualNewKey;
+        }
         onChange(renamedObj, childFieldPathId.path);
       }
     },
@@ -331,6 +356,18 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     },
     [onChange, childFieldPathId],
   );
+
+  /** Returns the stable React key for a property. For the most recently renamed
+   * additional property, returns the previous key so that React reuses the
+   * existing component instance instead of unmounting/remounting it. This
+   * preserves DOM focus naturally without manual focus management.
+   */
+  const getStableKey = useCallback((property: string) => {
+    if (lastRenamedProperty.current.currentKey === property) {
+      return lastRenamedProperty.current.previousKey;
+    }
+    return property;
+  }, []);
 
   if (!renderOptionalField || hasFormData) {
     try {
@@ -365,7 +402,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       const hidden = getUiOptions<T, S, F>(fieldUiSchema).widget === 'hidden';
       const content = (
         <ObjectFieldProperty<T, S, F>
-          key={name}
+          key={getStableKey(name)}
           propertyName={name}
           required={isRequired<S>(schema, name)}
           schema={get(schema, [PROPERTIES_KEY, name], {}) as S}

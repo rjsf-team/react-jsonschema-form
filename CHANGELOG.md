@@ -26,6 +26,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Added a new `removeEmptyOptionalObjects` boolean prop to gracefully prune optional empty objects preventing form submission lockouts, fixing [#4954](https://github.com/rjsf-team/react-jsonschema-form/issues/4954)
+- Fixed focus being lost when renaming additional property keys by preserving React key for renamed properties ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
 
 ## @rjsf/utils
 
