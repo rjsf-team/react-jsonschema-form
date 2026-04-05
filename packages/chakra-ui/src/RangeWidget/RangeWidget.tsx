@@ -38,7 +38,7 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   return (
     <Field mb={1} label={labelValue(label, hideLabel || !label)} {...chakraProps}>
       <Slider
-        {...(rangeSpec<S>(schema) as { step?: number; min?: number; max?: number })}
+        {...rangeSpec<S>(schema)}
         id={id}
         name={id}
         disabled={disabled || readonly}

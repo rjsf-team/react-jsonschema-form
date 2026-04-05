@@ -2,14 +2,7 @@ import { ComponentType, FormEvent, useCallback, useEffect, useRef, useState } fr
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import { FormProps, IChangeEvent, withTheme } from '@rjsf/core';
-import {
-  ErrorSchema,
-  RJSFSchema,
-  RJSFValidationError,
-  UiSchema,
-  ValidatorType,
-  resolveDynamicDates,
-} from '@rjsf/utils';
+import { ErrorSchema, RJSFSchema, RJSFValidationError, UiSchema, ValidatorType } from '@rjsf/utils';
 import { isFunction } from 'lodash';
 
 import { samples } from '../samples';
@@ -230,7 +223,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
                 {...otherFormProps}
                 {...liveSettings}
                 extraErrors={extraErrors}
-                schema={resolveDynamicDates(schema)}
+                schema={schema}
                 uiSchema={uiSchema}
                 formData={formData}
                 fields={{

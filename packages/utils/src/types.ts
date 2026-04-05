@@ -145,9 +145,9 @@ export type RangeSpecType = {
   /** Specifies the interval between legal numbers in an input field */
   step?: number;
   /** Specifies a minimum value for an <input> element */
-  min?: number | string;
+  min?: number;
   /** Specifies the maximum value for an <input> element */
-  max?: number | string;
+  max?: number;
 };
 
 /** Properties describing a Range specification in terms of attribute that can be added to the `HTML` `<input>` */
