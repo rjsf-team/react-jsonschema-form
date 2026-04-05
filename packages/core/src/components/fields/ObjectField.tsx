@@ -293,7 +293,13 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       set(newFormData as GenericObjectType, newKey, newValue);
     }
 
-    lastRenamedProperty.current.previousKey = getAvailableKey(newKey, newFormData);
+    // If the new property's key matches the previousKey used for stable key mapping,
+    // reassign the mapping so the new property gets a fresh DOM instead of
+    // inheriting the renamed property's DOM.
+    if (lastRenamedProperty.current.previousKey === newKey) {
+      lastRenamedProperty.current.currentKey = newKey;
+      lastRenamedProperty.current.previousKey = getAvailableKey(newKey, newFormData);
+    }
     onChange(newFormData, childFieldPathId.path);
   }, [formData, onChange, registry, childFieldPathId, getAvailableKey, schema]);
 
@@ -318,10 +324,22 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
         });
         const renamedObj = Object.assign({}, ...keyValues);
 
-        if (oldKey !== lastRenamedProperty.current.currentKey) {
+        if (actualNewKey !== newKey) {
+          // The key was modified by getAvailableKey due to a duplicate (e.g. user typed "first"
+          // but it became "first-1"). Don't preserve the React key — let the component remount
+          // so the key input resets to show the actual property name, preventing blur oscillation.
+          lastRenamedProperty.current = { previousKey: '', currentKey: undefined };
+        } else if (oldKey === lastRenamedProperty.current.currentKey) {
+          // Same property being renamed again (e.g. "a" → "ab" → "abc").
+          // Keep the original previousKey so React continues to reuse the same component.
+          lastRenamedProperty.current.currentKey = actualNewKey;
+        } else {
+          // Different property being renamed. Reset and track only this one.
+          // The previously renamed property will remount (same as main branch behavior),
+          // but this avoids key collisions and value corruption.
           lastRenamedProperty.current.previousKey = oldKey;
+          lastRenamedProperty.current.currentKey = actualNewKey;
         }
-        lastRenamedProperty.current.currentKey = actualNewKey;
         onChange(renamedObj, childFieldPathId.path);
       }
     },
