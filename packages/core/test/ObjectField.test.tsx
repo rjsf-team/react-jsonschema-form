@@ -1317,6 +1317,29 @@ describe('ObjectField', () => {
       expect(secondKeyInput.value).toBe('second');
     });
 
+    it('should preserve value input in DOM when renaming to a duplicate key', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { first: 1 },
+      });
+
+      // Add a new property
+      fireEvent.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      // Rename "newKey" to "first" (duplicate — will become "first-1")
+      const keyInput = node.querySelector('#root_newKey-key') as HTMLInputElement;
+      fireEvent.blur(keyInput, { target: { value: 'first' } });
+
+      // The value input for "first-1" should exist (component stayed mounted via stable key)
+      const valueInput = node.querySelector('#root_first-1');
+      expect(valueInput).not.toBeNull();
+
+      // The key input should show the actual property name "first-1", not "first"
+      const renamedKeyInput = node.querySelector('#root_first-1-key') as HTMLInputElement;
+      expect(renamedKeyInput).not.toBeNull();
+      expect(renamedKeyInput.value).toBe('first-1');
+    });
+
     it('should have an expand button', () => {
       const { node } = createFormComponent({ schema });
 

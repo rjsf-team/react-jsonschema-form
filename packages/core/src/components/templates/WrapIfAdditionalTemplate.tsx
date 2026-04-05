@@ -68,6 +68,7 @@ export default function WrapIfAdditionalTemplate<
             {displayLabel && <Label label={keyLabel} required={required} id={`${id}-key`} />}
             {displayLabel && rawDescription && <div>&nbsp;</div>}
             <input
+              key={label}
               className='form-control'
               type='text'
               id={`${id}-key`}

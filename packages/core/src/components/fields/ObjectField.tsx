@@ -294,11 +294,11 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     }
 
     // If the new property's key matches the previousKey used for stable key mapping,
-    // reassign the mapping so the new property gets a fresh DOM instead of
-    // inheriting the renamed property's DOM.
+    // clear the mapping so the new property gets its natural React key ("newKey").
+    // The previously renamed property will remount (acceptable during Add),
+    // and the next rename of this new property can set up a fresh stable mapping.
     if (lastRenamedProperty.current.previousKey === newKey) {
-      lastRenamedProperty.current.currentKey = newKey;
-      lastRenamedProperty.current.previousKey = getAvailableKey(newKey, newFormData);
+      lastRenamedProperty.current = { previousKey: '', currentKey: undefined };
     }
     onChange(newFormData, childFieldPathId.path);
   }, [formData, onChange, registry, childFieldPathId, getAvailableKey, schema]);
@@ -326,9 +326,10 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
 
         if (actualNewKey !== newKey) {
           // The key was modified by getAvailableKey due to a duplicate (e.g. user typed "first"
-          // but it became "first-1"). Don't preserve the React key — let the component remount
-          // so the key input resets to show the actual property name, preventing blur oscillation.
-          lastRenamedProperty.current = { previousKey: '', currentKey: undefined };
+          // but it became "first-1"). Still preserve the React key so focus is maintained on Tab.
+          // The key input resets via its own `key={label}` prop in WrapIfAdditionalTemplate.
+          lastRenamedProperty.current.previousKey = oldKey;
+          lastRenamedProperty.current.currentKey = actualNewKey;
         } else if (oldKey === lastRenamedProperty.current.currentKey) {
           // Same property being renamed again (e.g. "a" → "ab" → "abc").
           // Keep the original previousKey so React continues to reuse the same component.
