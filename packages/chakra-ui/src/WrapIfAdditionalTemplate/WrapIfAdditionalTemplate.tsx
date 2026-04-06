@@ -60,6 +60,7 @@ export default function WrapIfAdditionalTemplate<
       <GridItem colSpan={5} style={{ marginTop: hasDescription ? '36px' : undefined }}>
         <Field required={required} label={keyLabel}>
           <Input
+            key={label}
             defaultValue={label}
             disabled={disabled || readonly}
             id={`${id}-key`}

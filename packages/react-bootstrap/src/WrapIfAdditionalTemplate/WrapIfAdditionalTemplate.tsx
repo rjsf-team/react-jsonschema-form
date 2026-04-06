@@ -59,6 +59,7 @@ export default function WrapIfAdditionalTemplate<
         <Form.Group>
           {displayLabel && <Form.Label htmlFor={keyId}>{keyLabel}</Form.Label>}
           <Form.Control
+            key={label}
             required={required}
             defaultValue={label}
             disabled={disabled || readonly}
