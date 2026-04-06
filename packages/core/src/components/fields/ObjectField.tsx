@@ -293,12 +293,9 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       set(newFormData as GenericObjectType, newKey, newValue);
     }
 
-    // If the new property's key matches the previousKey used for stable key mapping,
-    // clear the mapping so the new property gets its natural React key ("newKey").
-    // The previously renamed property will remount (acceptable during Add),
-    // and the next rename of this new property can set up a fresh stable mapping.
     if (lastRenamedProperty.current.previousKey === newKey) {
-      lastRenamedProperty.current = { previousKey: '', currentKey: undefined };
+      lastRenamedProperty.current.currentKey = newKey;
+      lastRenamedProperty.current.previousKey = getAvailableKey(newKey, newFormData);
     }
     onChange(newFormData, childFieldPathId.path);
   }, [formData, onChange, registry, childFieldPathId, getAvailableKey, schema]);
@@ -324,23 +321,10 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
         });
         const renamedObj = Object.assign({}, ...keyValues);
 
-        if (actualNewKey !== newKey) {
-          // The key was modified by getAvailableKey due to a duplicate (e.g. user typed "first"
-          // but it became "first-1"). Still preserve the React key so focus is maintained on Tab.
-          // The key input resets via its own `key={label}` prop in WrapIfAdditionalTemplate.
+        if (oldKey !== lastRenamedProperty.current.currentKey) {
           lastRenamedProperty.current.previousKey = oldKey;
-          lastRenamedProperty.current.currentKey = actualNewKey;
-        } else if (oldKey === lastRenamedProperty.current.currentKey) {
-          // Same property being renamed again (e.g. "a" → "ab" → "abc").
-          // Keep the original previousKey so React continues to reuse the same component.
-          lastRenamedProperty.current.currentKey = actualNewKey;
-        } else {
-          // Different property being renamed. Reset and track only this one.
-          // The previously renamed property will remount (same as main branch behavior),
-          // but this avoids key collisions and value corruption.
-          lastRenamedProperty.current.previousKey = oldKey;
-          lastRenamedProperty.current.currentKey = actualNewKey;
         }
+        lastRenamedProperty.current.currentKey = actualNewKey;
         onChange(renamedObj, childFieldPathId.path);
       }
     },
