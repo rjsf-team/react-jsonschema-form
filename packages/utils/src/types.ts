@@ -151,11 +151,15 @@ export type RangeSpecType = {
 };
 
 /** Properties describing a Range specification in terms of attribute that can be added to the `HTML` `<input>` */
-export type InputPropsType = Omit<RangeSpecType, 'step'> & {
+export type InputPropsType = {
   /** Specifies the type of the <input> element */
   type: string;
   /** Specifies the interval between legal numbers in an input field or "any" */
   step?: number | 'any';
+  /** Specifies a minimum value for an <input> element; accepts a number for numeric inputs or a string for date/time inputs */
+  min?: number | string;
+  /** Specifies the maximum value for an <input> element; accepts a number for numeric inputs or a string for date/time inputs */
+  max?: number | string;
   /** Specifies the `autoComplete` value for an <input> element */
   autoComplete?: HTMLInputElement['autocomplete'];
   /** Specifies a filter for what file types the user can upload. */
