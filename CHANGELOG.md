@@ -27,6 +27,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/chakra-ui
 
 - Added `key={label}` to key input in `WrapIfAdditionalTemplate` to reset input value after duplicate key rename ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
+- Updated `BaseInputTemplate` to guard numeric-only `min`/`max` before spreading onto `InputNumber`, fixing a build error caused by the widened `InputPropsType`
 
 ## @rjsf/core
 
@@ -69,6 +70,8 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Added `removeOptionalEmptyObjects` utility function to recursively strip fully empty optional objects based on their parent's `required` properties, fixing [#4954](https://github.com/rjsf-team/react-jsonschema-form/issues/4954)
+- Updated `InputPropsType` to widen `min` and `max` to `number | string` to support date values (e.g. `"2020-01-01"`)
+- Updated `getInputProps()` to propagate `formatMinimum` and `formatMaximum` schema keywords to the HTML `min`/`max` attributes for `date`, `datetime-local`, `time`, `week`, and `month` input types, aligning browser-native date picker constraints with AJV validation
 
 # 6.4.2
 
