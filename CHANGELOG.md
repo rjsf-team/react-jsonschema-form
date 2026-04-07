@@ -72,7 +72,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/mui
 
-- Added support for passing MUI-specific props (e.g., `sx`, `slotProps`, `variant`) directly through `uiSchema` or `formContext` for all templates and widgets, fixing [#4996](https://github.com/rjsf-team/react-jsonschema-form/issues/4996)
+- Added support for passing MUI-specific props (e.g., `sx`, `slotProps`, `variant`) directly through `uiSchema` for all templates and widgets, fixing [#4996](https://github.com/rjsf-team/react-jsonschema-form/issues/4996)
 
 ## @rjsf/utils
 
@@ -90,6 +90,10 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated References playground sample to demonstrate `oneOf` with `ui:title` at recursive depth, related to [#4986](https://github.com/rjsf-team/react-jsonschema-form/issues/4986)
 - Updated the building of the `mantine` theme to properly support ESM, fixing [#5025](https://github.com/rjsf-team/react-jsonschema-form/issues/5025)
 - Updated the `validator-ajv8.md` and `validation.md` documetation for the new `suppressDuplicateFiltering` configuration prop
+
+## Dev / Docs / Playground
+
+- Added comprehensive documentation for `@rjsf/mui` customization via `uiSchema` (including `slotProps` usage).
 
 # 6.4.2
 

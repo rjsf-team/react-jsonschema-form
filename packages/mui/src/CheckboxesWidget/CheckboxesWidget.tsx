@@ -42,8 +42,6 @@ export default function CheckboxesWidget<
     onChange,
     onBlur,
     onFocus,
-    registry,
-    uiSchema,
   } = props;
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
   const checkboxesValues = Array.isArray(value) ? value : [value];
@@ -63,11 +61,7 @@ export default function CheckboxesWidget<
   const _onFocus = ({ target }: FocusEvent<HTMLButtonElement>) =>
     onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
 
-  const muiProps = getMuiProps<T, S, F>({
-    uiSchema,
-    formContext: registry.formContext,
-    options,
-  });
+  const muiProps = getMuiProps<T, S, F>(options);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
   return (
@@ -85,7 +79,6 @@ export default function CheckboxesWidget<
             const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
             const checkbox = (
               <Checkbox
-                {...(otherMuiProps as CheckboxProps)}
                 {...(muiSlotProps?.checkbox as CheckboxProps)}
                 id={optionId(id, index)}
                 name={htmlName || id}

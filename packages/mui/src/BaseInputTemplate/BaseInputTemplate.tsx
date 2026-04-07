@@ -61,11 +61,7 @@ export default function BaseInputTemplate<
   // Now we need to pull out the step, min, max into an inner `inputProps` for material-ui
   const { step, min, max, accept, ...rest } = getInputProps<T, S, F>(schema, type, options);
 
-  const muiProps = getMuiProps<T, S, F>({
-    uiSchema,
-    formContext: registry.formContext,
-    options,
-  });
+  const muiProps = getMuiProps<T, S, F>(options);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
   const htmlInputProps = {

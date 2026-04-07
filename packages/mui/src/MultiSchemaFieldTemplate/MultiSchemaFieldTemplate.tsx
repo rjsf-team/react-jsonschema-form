@@ -14,14 +14,10 @@ export default function MultiSchemaFieldTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: MultiSchemaFieldTemplateProps<T, S, F>) {
-  const { optionSchemaField, selector, uiSchema, registry } = props;
+  const { optionSchemaField, selector, uiSchema } = props;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const muiProps = getMuiProps<T, S, F>({
-    uiSchema,
-    formContext: registry.formContext,
-    options: uiOptions,
-  });
+  const muiProps = getMuiProps<T, S, F>(uiOptions);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
   return (

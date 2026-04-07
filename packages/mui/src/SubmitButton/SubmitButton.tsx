@@ -16,18 +16,14 @@ export default function SubmitButton<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->({ uiSchema, registry }: SubmitButtonProps<T, S, F>) {
+>({ uiSchema }: SubmitButtonProps<T, S, F>) {
   const { submitText, norender, props: submitButtonProps = {} } = getSubmitButtonOptions<T, S, F>(uiSchema);
   if (norender) {
     return null;
   }
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const muiProps = getMuiProps<T, S, F>({
-    uiSchema,
-    formContext: registry.formContext,
-    options: uiOptions,
-  });
+  const muiProps = getMuiProps<T, S, F>(uiOptions);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
   return (

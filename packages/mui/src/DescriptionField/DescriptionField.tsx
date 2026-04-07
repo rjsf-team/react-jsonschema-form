@@ -15,22 +15,11 @@ export default function DescriptionField<
   const { id, description, registry, uiSchema } = props;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const muiProps = getMuiProps<T, S, F>({
-    uiSchema,
-    formContext: registry.formContext,
-    options: uiOptions,
-  });
-  const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
+  const muiProps = getMuiProps<T, S, F, TypographyProps>(uiOptions);
 
   if (description) {
     return (
-      <Typography
-        id={id}
-        variant='subtitle2'
-        style={{ marginTop: '5px' }}
-        {...(otherMuiProps as TypographyProps)}
-        {...(muiSlotProps?.typography as TypographyProps)}
-      >
+      <Typography id={id} variant='subtitle2' style={{ marginTop: '5px' }} {...muiProps}>
         <RichDescription description={description} registry={registry} uiSchema={uiSchema} />
       </Typography>
     );

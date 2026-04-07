@@ -52,11 +52,7 @@ export default function WrapIfAdditionalTemplate<
   };
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const muiProps = getMuiProps<T, S, F>({
-    uiSchema,
-    formContext: registry.formContext,
-    options: uiOptions,
-  });
+  const muiProps = getMuiProps<T, S, F>(uiOptions);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
   if (!additional) {

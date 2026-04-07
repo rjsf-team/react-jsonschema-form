@@ -4,7 +4,14 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import CopyIcon from '@mui/icons-material/ContentCopy';
 import RemoveIcon from '@mui/icons-material/Remove';
 import ClearIcon from '@mui/icons-material/Clear';
-import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
+import {
+  FormContextType,
+  IconButtonProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+  TranslatableString,
+  getUiOptions,
+} from '@rjsf/utils';
 import { getMuiProps } from '../util';
 
 export default function MuiIconButton<
@@ -14,18 +21,11 @@ export default function MuiIconButton<
 >(props: IconButtonProps<T, S, F>) {
   const { icon, color, uiSchema, registry, ...otherProps } = props;
 
-  const muiProps = getMuiProps<T, S, F>({
-    uiSchema,
-    formContext: registry.formContext,
-  });
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const muiProps = getMuiProps<T, S, F, MuiIconButtonProps>(uiOptions);
 
   return (
-    <IconButton
-      {...(muiProps as MuiIconButtonProps)}
-      {...otherProps}
-      size='small'
-      color={color as MuiIconButtonProps['color']}
-    >
+    <IconButton {...muiProps} {...otherProps} size='small' color={color as MuiIconButtonProps['color']}>
       {icon}
     </IconButton>
   );

@@ -56,11 +56,7 @@ export default function FieldTemplate<
 
   const isCheckbox = uiOptions.widget === 'checkbox';
 
-  const muiProps = getMuiProps<T, S, F>({
-    uiSchema,
-    formContext: registry.formContext,
-    options: uiOptions,
-  });
+  const muiProps = getMuiProps<T, S, F>(uiOptions);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
   return (

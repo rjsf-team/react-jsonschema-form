@@ -24,22 +24,8 @@ import { getMuiProps } from '../util';
 export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>,
 ) {
-  const {
-    id,
-    htmlName,
-    options,
-    value,
-    required,
-    disabled,
-    readonly,
-    label,
-    hideLabel,
-    onChange,
-    onBlur,
-    onFocus,
-    registry,
-    uiSchema,
-  } = props;
+  const { id, htmlName, options, value, required, disabled, readonly, label, hideLabel, onChange, onBlur, onFocus } =
+    props;
   const { enumOptions, enumDisabled, emptyValue } = options;
 
   const _onChange = (_: any, value: any) => onChange(enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
@@ -51,11 +37,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const row = options ? options.inline : false;
   const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions) ?? null;
 
-  const muiProps = getMuiProps<T, S, F>({
-    uiSchema,
-    formContext: registry.formContext,
-    options,
-  });
+  const muiProps = getMuiProps<T, S, F>(options);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
   return (

@@ -18,21 +18,10 @@ export default function FieldHelpTemplate<
   }
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const muiProps = getMuiProps<T, S, F>({
-    uiSchema,
-    formContext: registry.formContext,
-    options: uiOptions,
-  });
-  const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
+  const muiProps = getMuiProps<T, S, F, FormHelperTextProps>(uiOptions);
 
   return (
-    <FormHelperText
-      component='div'
-      id={helpId(fieldPathId)}
-      style={{ marginTop: '5px' }}
-      {...(otherMuiProps as FormHelperTextProps)}
-      {...(muiSlotProps?.formHelperText as FormHelperTextProps)}
-    >
+    <FormHelperText component='div' id={helpId(fieldPathId)} style={{ marginTop: '5px' }} {...muiProps}>
       <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
     </FormHelperText>
   );

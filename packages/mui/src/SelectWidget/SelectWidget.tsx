@@ -61,11 +61,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, isMultiple);
-  const muiProps = getMuiProps<T, S, F>({
-    uiSchema,
-    formContext: registry.formContext,
-    options,
-  });
+  const muiProps = getMuiProps<T, S, F, TextFieldProps>(options);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
   const { InputLabelProps, SelectProps, autocomplete, ...textFieldRemainingProps } = textFieldProps;

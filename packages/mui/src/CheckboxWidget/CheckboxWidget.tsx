@@ -55,11 +55,8 @@ export default function CheckboxWidget<
   const _onFocus: React.FocusEventHandler<HTMLButtonElement> = () => onFocus(id, value);
   const description = options.description ?? schema.description;
 
-  const muiProps = getMuiProps<T, S, F>({
-    uiSchema,
-    formContext: registry.formContext,
-    options,
-  });
+  const muiProps = getMuiProps<T, S, F>(options);
+  const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
   return (
     <>
@@ -73,7 +70,8 @@ export default function CheckboxWidget<
         />
       )}
       <FormControlLabel
-        {...(muiProps as FormControlLabelProps)}
+        {...(otherMuiProps as FormControlLabelProps)}
+        {...(muiSlotProps?.formControlLabel as FormControlLabelProps)}
         control={
           <Checkbox
             id={id}
@@ -86,7 +84,7 @@ export default function CheckboxWidget<
             onBlur={_onBlur}
             onFocus={_onFocus}
             aria-describedby={ariaDescribedByIds(id)}
-            {...(muiProps as CheckboxProps)}
+            {...(muiSlotProps?.checkbox as CheckboxProps)}
           />
         }
         label={labelValue(label, hideLabel, false)}

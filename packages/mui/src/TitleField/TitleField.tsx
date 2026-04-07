@@ -12,14 +12,10 @@ import { getMuiProps } from '../util';
 export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: TitleFieldProps<T, S, F>,
 ) {
-  const { id, title, optionalDataControl, uiSchema, registry } = props;
+  const { id, title, optionalDataControl, uiSchema } = props;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const muiProps = getMuiProps<T, S, F>({
-    uiSchema,
-    formContext: registry.formContext,
-    options: uiOptions,
-  });
+  const muiProps = getMuiProps<T, S, F>(uiOptions);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
   let heading = (
