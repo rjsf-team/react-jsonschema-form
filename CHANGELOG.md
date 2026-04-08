@@ -22,12 +22,49 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `BaseInputTemplate` to remove `type` and set `changeOnWheel` to false for the `InputNumber` component, fixing [#5002](https://github.com/rjsf-team/react-jsonschema-form/issues/5002)
 - Updated `ErrorList` and `IconButton` to destructure icons imported from `@ant-design/icons`, fixing [#4953](https://github.com/rjsf-team/react-jsonschema-form/issues/4953)
+- Added `key={label}` to key input in `WrapIfAdditionalTemplate` to reset input value after duplicate key rename ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
+
+## @rjsf/chakra-ui
+
+- Added `key={label}` to key input in `WrapIfAdditionalTemplate` to reset input value after duplicate key rename ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
 
 ## @rjsf/core
 
 - Added a new `removeEmptyOptionalObjects` boolean prop to gracefully prune optional empty objects preventing form submission lockouts, fixing [#4954](https://github.com/rjsf-team/react-jsonschema-form/issues/4954)
 - Included `button` elements in `focusOnError` querySelector so that radio and checkbox groups receive focus on validation error, fixing [#4870](https://github.com/rjsf-team/react-jsonschema-form/issues/4870)
 - Fixed focus being lost when renaming additional property keys by preserving React key for renamed properties ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
+
+## @rjsf/daisyui
+
+- Added `key={label}` to key input in `WrapIfAdditionalTemplate` to reset input value after duplicate key rename ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
+
+## @rjsf/fluentui-rc
+
+- Added `key={label}` to key input in `WrapIfAdditionalTemplate` to reset input value after duplicate key rename ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
+
+## @rjsf/mantine
+
+- Added `key={label}` to key input in `WrapIfAdditionalTemplate` to reset input value after duplicate key rename ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
+
+## @rjsf/mui
+
+- Added `key={label}` to key input in `WrapIfAdditionalTemplate` to reset input value after duplicate key rename ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
+
+## @rjsf/primereact
+
+- Added `key={label}` to key input in `WrapIfAdditionalTemplate` to reset input value after duplicate key rename ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
+
+## @rjsf/react-bootstrap
+
+- Added `key={label}` to key input in `WrapIfAdditionalTemplate` to reset input value after duplicate key rename ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
+
+## @rjsf/semantic-ui
+
+- Added `key={label}` to key input in `WrapIfAdditionalTemplate` to reset input value after duplicate key rename ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
+
+## @rjsf/shadcn
+
+- Added `key={label}` to key input in `WrapIfAdditionalTemplate` to reset input value after duplicate key rename ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
 
 ## @rjsf/utils
 
