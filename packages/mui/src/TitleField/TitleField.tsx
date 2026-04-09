@@ -19,7 +19,7 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
   let heading = (
-    <Typography variant='h5' {...(otherMuiProps as TypographyProps)} {...(muiSlotProps?.typography as TypographyProps)}>
+    <Typography variant='h5' {...(muiSlotProps?.typography as TypographyProps)}>
       {title}
     </Typography>
   );
@@ -36,7 +36,7 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
     );
   }
   return (
-    <Box id={id} mb={1} mt={1} {...(muiSlotProps?.box as BoxProps)}>
+    <Box id={id} mb={1} mt={1} {...(otherMuiProps as BoxProps)} {...(muiSlotProps?.box as BoxProps)}>
       {heading}
       <Divider {...(muiSlotProps?.divider as DividerProps)} />
     </Box>

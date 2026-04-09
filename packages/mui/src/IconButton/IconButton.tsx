@@ -22,7 +22,14 @@ export default function MuiIconButton<
   const { icon, color, uiSchema, registry, ...otherProps } = props;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const muiProps = getMuiProps<T, S, F, MuiIconButtonProps>(uiOptions);
+  const muiProps = getMuiProps<T, S, F, MuiIconButtonProps>(uiOptions, [
+    'color',
+    'disableFocusRipple',
+    'disableRipple',
+    'edge',
+    'size',
+    'sx',
+  ]);
 
   return (
     <IconButton {...muiProps} {...otherProps} size='small' color={color as MuiIconButtonProps['color']}>

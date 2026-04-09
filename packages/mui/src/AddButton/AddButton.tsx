@@ -19,7 +19,14 @@ export default function AddButton<T = any, S extends StrictRJSFSchema = RJSFSche
 }: IconButtonProps<T, S, F>) {
   const { translateString } = registry;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const muiProps = getMuiProps<T, S, F, MuiIconButtonProps>(uiOptions);
+  const muiProps = getMuiProps<T, S, F, MuiIconButtonProps>(uiOptions, [
+    'color',
+    'disableFocusRipple',
+    'disableRipple',
+    'edge',
+    'size',
+    'sx',
+  ]);
 
   return (
     <IconButton
