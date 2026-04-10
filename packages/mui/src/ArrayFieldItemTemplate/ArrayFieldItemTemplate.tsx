@@ -9,8 +9,28 @@ import {
   getTemplate,
   RJSFSchema,
   StrictRJSFSchema,
+  GenericObjectType,
 } from '@rjsf/utils';
 import { getMuiProps } from '../util';
+
+/** Properties available for the `slotProps` target of the ArrayFieldItemTemplate. */
+export interface ArrayFieldItemTemplateMuiProps extends GenericObjectType {
+  /** MUI subset property for targeting specific child elements. */
+  slotProps?: {
+    /** Props applied to the outermost `Grid` container. */
+    gridContainer?: GridProps;
+    /** Props applied to the `Grid` item wrapping the item's content. */
+    gridItem?: GridProps;
+    /** Props applied to the outer `Box` container. */
+    outerBox?: BoxProps;
+    /** Props applied to the `Paper` elevation component. */
+    paper?: PaperProps;
+    /** Props applied to the inner `Box` containing the actual children. */
+    innerBox?: BoxProps;
+    /** Props applied to the `Grid` containing the item's buttons. */
+    toolbarGrid?: GridProps;
+  };
+}
 
 /** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
  *
@@ -36,26 +56,22 @@ export default function ArrayFieldItemTemplate<
     minWidth: 0,
   };
 
-  const muiProps = getMuiProps<T, S, F>(uiOptions);
+  const muiProps = getMuiProps<T, S, F, ArrayFieldItemTemplateMuiProps>(uiOptions);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
   return (
-    <Grid container={true} alignItems='center' {...(otherMuiProps as GridProps)} {...(muiSlotProps?.grid as GridProps)}>
-      <Grid
-        size={{ xs: 8, sm: 9, md: 10, lg: 11, xl: 11.25 }}
-        style={{ overflow: 'auto' }}
-        {...(muiSlotProps?.grid as GridProps)}
-      >
-        <Box mb={2} {...(muiSlotProps?.box as BoxProps)}>
-          <Paper elevation={2} {...(muiSlotProps?.paper as PaperProps)}>
-            <Box p={2} {...(muiSlotProps?.box as BoxProps)}>
+    <Grid container={true} alignItems='center' {...otherMuiProps} {...muiSlotProps?.gridContainer}>
+      <Grid size={{ xs: 8, sm: 9, md: 10, lg: 11, xl: 11.25 }} style={{ overflow: 'auto' }} {...muiSlotProps?.gridItem}>
+        <Box mb={2} {...muiSlotProps?.outerBox}>
+          <Paper elevation={2} {...muiSlotProps?.paper}>
+            <Box p={2} {...muiSlotProps?.innerBox}>
               {children}
             </Box>
           </Paper>
         </Box>
       </Grid>
       {hasToolbar && (
-        <Grid sx={{ mt: hasDescription ? -5 : -1.5 }} {...(muiSlotProps?.grid as GridProps)}>
+        <Grid sx={{ mt: hasDescription ? -5 : -1.5 }} {...muiSlotProps?.toolbarGrid}>
           <ArrayFieldItemButtonsTemplate {...buttonsProps} style={btnStyle} />
         </Grid>
       )}

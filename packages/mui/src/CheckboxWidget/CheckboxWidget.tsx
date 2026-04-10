@@ -7,11 +7,23 @@ import {
   labelValue,
   schemaRequiresTrueValue,
   FormContextType,
+  GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
 import { getMuiProps } from '../util';
+
+/** Properties available for the `slotProps` target of the CheckboxWidget. */
+export interface CheckboxWidgetMuiProps extends GenericObjectType {
+  /** MUI subset property for targeting specific child elements. */
+  slotProps?: {
+    /** Props applied to the individual `Checkbox` component. */
+    checkbox?: CheckboxProps;
+    /** Props applied to the `FormControlLabel` component wrapping the checkbox. */
+    formControlLabel?: FormControlLabelProps;
+  };
+}
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -55,7 +67,7 @@ export default function CheckboxWidget<
   const _onFocus: React.FocusEventHandler<HTMLButtonElement> = () => onFocus(id, value);
   const description = options.description ?? schema.description;
 
-  const muiProps = getMuiProps<T, S, F>(options);
+  const muiProps = getMuiProps<T, S, F, CheckboxWidgetMuiProps>(options);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
   return (
@@ -70,8 +82,8 @@ export default function CheckboxWidget<
         />
       )}
       <FormControlLabel
-        {...(otherMuiProps as FormControlLabelProps)}
-        {...(muiSlotProps?.formControlLabel as FormControlLabelProps)}
+        {...otherMuiProps}
+        {...muiSlotProps?.formControlLabel}
         control={
           <Checkbox
             id={id}
@@ -84,7 +96,7 @@ export default function CheckboxWidget<
             onBlur={_onBlur}
             onFocus={_onFocus}
             aria-describedby={ariaDescribedByIds(id)}
-            {...(muiSlotProps?.checkbox as CheckboxProps)}
+            {...muiSlotProps?.checkbox}
           />
         }
         label={labelValue(label, hideLabel, false)}

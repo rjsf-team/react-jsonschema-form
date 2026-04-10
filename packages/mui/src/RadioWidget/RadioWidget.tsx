@@ -10,11 +10,25 @@ import {
   labelValue,
   optionId,
   FormContextType,
+  GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
 import { getMuiProps } from '../util';
+
+/** Properties available for the `slotProps` target of the RadioWidget. */
+export interface RadioWidgetMuiProps extends GenericObjectType {
+  /** MUI subset property for targeting specific child elements. */
+  slotProps?: {
+    /** Props applied to the `RadioGroup` component. */
+    radioGroup?: RadioGroupProps;
+    /** Props applied to the individual `Radio` components. */
+    radio?: RadioProps;
+    /** Props applied to the `FormControlLabel` components wrapping each radio button. */
+    formControlLabel?: FormControlLabelProps;
+  };
+}
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.
@@ -37,7 +51,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const row = options ? options.inline : false;
   const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions) ?? null;
 
-  const muiProps = getMuiProps<T, S, F>(options);
+  const muiProps = getMuiProps<T, S, F, RadioWidgetMuiProps>(options);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
   return (
@@ -49,7 +63,8 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         hideLabel,
       )}
       <RadioGroup
-        {...(otherMuiProps as RadioGroupProps)}
+        {...otherMuiProps}
+        {...muiSlotProps?.radioGroup}
         id={id}
         name={htmlName || id}
         value={selectedIndex}
@@ -64,15 +79,9 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
             const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
             const radio = (
               <FormControlLabel
-                {...(muiSlotProps?.formControlLabel as FormControlLabelProps)}
+                {...muiSlotProps?.formControlLabel}
                 control={
-                  <Radio
-                    {...(otherMuiProps as RadioProps)}
-                    {...(muiSlotProps?.radio as RadioProps)}
-                    name={htmlName || id}
-                    id={optionId(id, index)}
-                    color='primary'
-                  />
+                  <Radio {...muiSlotProps?.radio} name={htmlName || id} id={optionId(id, index)} color='primary' />
                 }
                 label={option.label}
                 value={String(index)}

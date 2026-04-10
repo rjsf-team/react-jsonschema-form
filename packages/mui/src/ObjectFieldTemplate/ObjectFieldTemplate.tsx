@@ -1,6 +1,7 @@
 import Grid, { GridProps } from '@mui/material/Grid';
 import {
   FormContextType,
+  GenericObjectType,
   ObjectFieldTemplateProps,
   RJSFSchema,
   StrictRJSFSchema,
@@ -12,6 +13,21 @@ import {
   buttonId,
 } from '@rjsf/utils';
 import { getMuiProps } from '../util';
+
+/** Properties available for the `slotProps` target of the ObjectFieldTemplate. */
+export interface ObjectFieldTemplateMuiProps extends GenericObjectType {
+  /** MUI subset property for targeting specific child elements. */
+  slotProps?: {
+    /** Props applied to the outermost `Grid` container wrapping all object properties. */
+    gridContainer?: GridProps;
+    /** Props applied to the `Grid` item wrapping each individual object property. */
+    gridItem?: GridProps;
+    /** Props applied to the wrapper `Grid` container next to the Add Button (when expandable). */
+    addButtonGridContainer?: GridProps;
+    /** Props applied to the `Grid` item containing the Add Button. */
+    addButtonGridItem?: GridProps;
+  };
+}
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
@@ -52,7 +68,7 @@ export default function ObjectFieldTemplate<
     ButtonTemplates: { AddButton },
   } = registry.templates;
 
-  const muiProps = getMuiProps<T, S, F>(uiOptions);
+  const muiProps = getMuiProps<T, S, F, ObjectFieldTemplateMuiProps>(uiOptions);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
   return (
@@ -77,13 +93,7 @@ export default function ObjectFieldTemplate<
           registry={registry}
         />
       )}
-      <Grid
-        container
-        spacing={2}
-        style={{ marginTop: '10px' }}
-        {...(otherMuiProps as GridProps)}
-        {...(muiSlotProps?.grid as GridProps)}
-      >
+      <Grid container spacing={2} style={{ marginTop: '10px' }} {...otherMuiProps} {...muiSlotProps?.gridContainer}>
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
         {properties.map((element, index) =>
           // Remove the <Grid> if the inner element is hidden as the <Grid>
@@ -91,15 +101,15 @@ export default function ObjectFieldTemplate<
           element.hidden ? (
             element.content
           ) : (
-            <Grid size={{ xs: 12 }} key={index} style={{ marginBottom: '10px' }} {...(muiSlotProps?.grid as GridProps)}>
+            <Grid size={{ xs: 12 }} key={index} style={{ marginBottom: '10px' }} {...muiSlotProps?.gridItem}>
               {element.content}
             </Grid>
           ),
         )}
       </Grid>
       {canExpand<T, S, F>(schema, uiSchema, formData) && (
-        <Grid container justifyContent='flex-end' {...(muiSlotProps?.grid as GridProps)}>
-          <Grid {...(muiSlotProps?.grid as GridProps)}>
+        <Grid container justifyContent='flex-end' {...muiSlotProps?.addButtonGridContainer}>
+          <Grid {...muiSlotProps?.addButtonGridItem}>
             <AddButton
               id={buttonId(fieldPathId, 'add')}
               className='rjsf-object-property-expand'

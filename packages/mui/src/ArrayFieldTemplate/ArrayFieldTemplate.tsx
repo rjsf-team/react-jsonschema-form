@@ -9,8 +9,26 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   buttonId,
+  GenericObjectType,
 } from '@rjsf/utils';
 import { getMuiProps } from '../util';
+
+/** Properties available for the `slotProps` target of the ArrayFieldTemplate. */
+export interface ArrayFieldTemplateMuiProps extends GenericObjectType {
+  /** MUI subset property for targeting specific child elements. */
+  slotProps?: {
+    /** Props applied to the wrapper `Paper` material. */
+    paper?: PaperProps;
+    /** Props applied to the primary `Box` container. */
+    box?: BoxProps;
+    /** Props applied to the wrapper `Grid` container next to the Add Button. */
+    addButtonGridContainer?: GridProps;
+    /** Props applied to the `Grid` item containing the Add Button. */
+    addButtonGridItem?: GridProps;
+    /** Props applied to the `Box` containing the Add Button. */
+    addButtonBox?: BoxProps;
+  };
+}
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
@@ -52,12 +70,12 @@ export default function ArrayFieldTemplate<
     ButtonTemplates: { AddButton },
   } = registry.templates;
 
-  const muiProps = getMuiProps<T, S, F>(uiOptions);
+  const muiProps = getMuiProps<T, S, F, ArrayFieldTemplateMuiProps>(uiOptions);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
   return (
-    <Paper elevation={2} {...(otherMuiProps as PaperProps)} {...(muiSlotProps?.paper as PaperProps)}>
-      <Box p={2} {...(muiSlotProps?.box as BoxProps)}>
+    <Paper elevation={2} {...otherMuiProps} {...muiSlotProps?.paper}>
+      <Box p={2} {...muiSlotProps?.box}>
         <ArrayFieldTitleTemplate
           fieldPathId={fieldPathId}
           title={uiOptions.title || title}
@@ -77,9 +95,9 @@ export default function ArrayFieldTemplate<
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
         {items}
         {canAdd && (
-          <Grid container justifyContent='flex-end' {...(muiSlotProps?.grid as GridProps)}>
-            <Grid {...(muiSlotProps?.grid as GridProps)}>
-              <Box mt={2} {...(muiSlotProps?.box as BoxProps)}>
+          <Grid container justifyContent='flex-end' {...muiSlotProps?.addButtonGridContainer}>
+            <Grid {...muiSlotProps?.addButtonGridItem}>
+              <Box mt={2} {...muiSlotProps?.addButtonBox}>
                 <AddButton
                   id={buttonId(fieldPathId, 'add')}
                   className='rjsf-array-item-add'

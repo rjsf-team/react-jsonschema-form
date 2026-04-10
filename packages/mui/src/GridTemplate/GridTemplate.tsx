@@ -1,4 +1,4 @@
-import Grid, { GridProps } from '@mui/material/Grid';
+import Grid from '@mui/material/Grid';
 import { GridTemplateProps } from '@rjsf/utils';
 
 /** Renders a `GridTemplate` for mui, which is expecting the column sizing information coming in via the
@@ -8,9 +8,8 @@ import { GridTemplateProps } from '@rjsf/utils';
  */
 export default function GridTemplate(props: GridTemplateProps) {
   const { children, column, ...rest } = props;
-
   return (
-    <Grid container={!column} {...(rest as GridProps)}>
+    <Grid container={!column} {...rest}>
       {children}
     </Grid>
   );

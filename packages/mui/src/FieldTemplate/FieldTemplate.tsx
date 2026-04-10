@@ -3,12 +3,24 @@ import Typography, { TypographyProps } from '@mui/material/Typography';
 import {
   FieldTemplateProps,
   FormContextType,
+  GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
   getTemplate,
   getUiOptions,
 } from '@rjsf/utils';
 import { getMuiProps } from '../util';
+
+/** Properties available for the `slotProps` target of the FieldTemplate. */
+export interface FieldTemplateMuiProps extends GenericObjectType {
+  /** MUI subset property for targeting specific child elements. */
+  slotProps?: {
+    /** Props applied to the MUI `FormControl` wrapping the field. */
+    formControl?: FormControlProps;
+    /** Props applied to the MUI `Typography` element used for description. */
+    typography?: TypographyProps;
+  };
+}
 
 /** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
  * content, (label, description, children, errors and help) inside of a `WrapIfAdditional` component.
@@ -56,7 +68,7 @@ export default function FieldTemplate<
 
   const isCheckbox = uiOptions.widget === 'checkbox';
 
-  const muiProps = getMuiProps<T, S, F>(uiOptions);
+  const muiProps = getMuiProps<T, S, F, FieldTemplateMuiProps>(uiOptions);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
   return (
@@ -81,13 +93,13 @@ export default function FieldTemplate<
         fullWidth={true}
         error={rawErrors.length ? true : false}
         required={required}
-        {...(muiSlotProps?.formControl as FormControlProps)}
+        {...muiSlotProps?.formControl}
         sx={otherMuiProps.sx}
         className={otherMuiProps.className}
       >
         {children}
         {displayLabel && !isCheckbox && rawDescription ? (
-          <Typography variant='caption' color='textSecondary' {...(muiSlotProps?.typography as TypographyProps)}>
+          <Typography variant='caption' color='textSecondary' {...muiSlotProps?.typography}>
             {description}
           </Typography>
         ) : null}

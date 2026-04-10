@@ -3,6 +3,7 @@ import Grid, { GridProps } from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  GenericObjectType,
   buttonId,
   FormContextType,
   RJSFSchema,
@@ -12,6 +13,22 @@ import {
   getUiOptions,
 } from '@rjsf/utils';
 import { getMuiProps } from '../util';
+/** Properties available for the `slotProps` target of the WrapIfAdditionalTemplate. */
+export interface WrapIfAdditionalTemplateMuiProps extends GenericObjectType {
+  /** MUI subset property for targeting specific child elements. */
+  slotProps?: {
+    /** Props applied to the outermost `Grid` container. */
+    gridContainer?: GridProps;
+    /** Props applied to the `Grid` item containing the key TextField. */
+    keyGridItem?: GridProps;
+    /** Props applied to the `Grid` item containing the field children. */
+    childrenGridItem?: GridProps;
+    /** Props applied to the `Grid` item containing the remove button. */
+    removeButtonGridItem?: GridProps;
+    /** Any other slotProps targetable by `TextField` internally. */
+    [key: string]: any;
+  };
+}
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.
@@ -52,7 +69,7 @@ export default function WrapIfAdditionalTemplate<
   };
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const muiProps = getMuiProps<T, S, F>(uiOptions);
+  const muiProps = getMuiProps<T, S, F, WrapIfAdditionalTemplateMuiProps>(uiOptions);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
   if (!additional) {
@@ -63,6 +80,10 @@ export default function WrapIfAdditionalTemplate<
     );
   }
 
+  // Extract grid-specific slotProps to prevent overlap onto TextField
+  const { gridContainer, keyGridItem, childrenGridItem, removeButtonGridItem, ...textFieldSlotProps } =
+    muiSlotProps || {};
+
   return (
     <Grid
       container
@@ -71,10 +92,10 @@ export default function WrapIfAdditionalTemplate<
       spacing={2}
       className={classNames}
       style={style}
-      {...(otherMuiProps as GridProps)}
-      {...(muiSlotProps?.grid as GridProps)}
+      {...otherMuiProps}
+      {...gridContainer}
     >
-      <Grid size={5.5} {...(muiSlotProps?.grid as GridProps)}>
+      <Grid size={5.5} {...keyGridItem}>
         <TextField
           key={label}
           fullWidth={true}
@@ -87,14 +108,14 @@ export default function WrapIfAdditionalTemplate<
           onBlur={!readonly ? onKeyRenameBlur : undefined}
           type='text'
           slotProps={{
-            ...muiSlotProps,
+            ...textFieldSlotProps,
           }}
         />
       </Grid>
-      <Grid size={5.5} {...(muiSlotProps?.grid as GridProps)}>
+      <Grid size={5.5} {...childrenGridItem}>
         {children}
       </Grid>
-      <Grid sx={{ mt: 1.5 }} {...(muiSlotProps?.grid as GridProps)}>
+      <Grid sx={{ mt: 1.5 }} {...removeButtonGridItem}>
         <RemoveButton
           id={buttonId(id, 'remove')}
           className='rjsf-object-property-remove'

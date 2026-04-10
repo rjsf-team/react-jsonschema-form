@@ -47,7 +47,9 @@ Top-level standard MUI props are applied to the primary component. To pass custo
 
 ## Customizing Templates (e.g. Object and Array wrappers)
 
-MUI theme customizations are natively passed down into both your standard fields and their wrapping structural templates (like `ArrayFieldTemplate` or `ObjectFieldTemplate`). Because RJSF funnels the `uiSchema` dynamically into these templates, you can manipulate structural properties effortlessly.
+MUI theme customizations are natively passed down into both your standard fields and their wrapping structural templates (like `ArrayFieldTemplate` or `ObjectFieldTemplate`) (see [table below](#components-and-their-slotprops-targets)).
+
+Because RJSF funnels the `uiSchema` dynamically into these templates, you can manipulate structural properties effortlessly.
 
 For example, to customize the structural rendering of an array template—such as raising the elevation of the Material UI `<Paper>` container—you place the `mui` property at the field's `ui:options`:
 

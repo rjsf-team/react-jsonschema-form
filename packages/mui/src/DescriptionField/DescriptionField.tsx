@@ -1,7 +1,23 @@
 import Typography, { TypographyProps } from '@mui/material/Typography';
-import { DescriptionFieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, getUiOptions } from '@rjsf/utils';
+import {
+  DescriptionFieldProps,
+  FormContextType,
+  GenericObjectType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  getUiOptions,
+} from '@rjsf/utils';
 import { RichDescription } from '@rjsf/core';
 import { getMuiProps } from '../util';
+
+/** Properties available for the `slotProps` target of the DescriptionField. */
+export interface DescriptionFieldMuiProps extends GenericObjectType {
+  /** MUI subset property for targeting specific child elements. */
+  slotProps?: {
+    /** Props applied to the `Typography` element used for the description. */
+    typography?: TypographyProps;
+  };
+}
 
 /** The `DescriptionField` is the template to use to render the description of a field
  *
@@ -15,11 +31,12 @@ export default function DescriptionField<
   const { id, description, registry, uiSchema } = props;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const muiProps = getMuiProps<T, S, F, TypographyProps>(uiOptions);
+  const muiProps = getMuiProps<T, S, F, DescriptionFieldMuiProps>(uiOptions);
+  const { slotProps: muiSlotProps } = muiProps;
 
   if (description) {
     return (
-      <Typography id={id} variant='subtitle2' style={{ marginTop: '5px' }} {...muiProps}>
+      <Typography id={id} variant='subtitle2' style={{ marginTop: '5px' }} {...muiSlotProps?.typography}>
         <RichDescription description={description} registry={registry} uiSchema={uiSchema} />
       </Typography>
     );

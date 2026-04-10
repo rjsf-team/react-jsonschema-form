@@ -12,11 +12,25 @@ import {
   labelValue,
   optionId,
   FormContextType,
+  GenericObjectType,
   WidgetProps,
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import { getMuiProps } from '../util';
+
+/** Properties available for the `slotProps` target of the CheckboxesWidget. */
+export interface CheckboxesWidgetMuiProps extends GenericObjectType {
+  /** MUI subset property for targeting specific child elements. */
+  slotProps?: {
+    /** Props applied to the `FormGroup` container. */
+    formGroup?: FormGroupProps;
+    /** Props applied to the individual `Checkbox` components. */
+    checkbox?: CheckboxProps;
+    /** Props applied to the `FormControlLabel` components wrapping each checkbox. */
+    formControlLabel?: FormControlLabelProps;
+  };
+}
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
  *  It is typically used to represent an array of enums.
@@ -61,7 +75,7 @@ export default function CheckboxesWidget<
   const _onFocus = ({ target }: FocusEvent<HTMLButtonElement>) =>
     onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
 
-  const muiProps = getMuiProps<T, S, F>(options);
+  const muiProps = getMuiProps<T, S, F, CheckboxesWidgetMuiProps>(options);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
   return (
@@ -72,14 +86,14 @@ export default function CheckboxesWidget<
         </FormLabel>,
         hideLabel,
       )}
-      <FormGroup {...(otherMuiProps as FormGroupProps)} id={id} row={!!inline}>
+      <FormGroup {...otherMuiProps} {...muiSlotProps?.formGroup} id={id} row={!!inline}>
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index: number) => {
             const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
             const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
             const checkbox = (
               <Checkbox
-                {...(muiSlotProps?.checkbox as CheckboxProps)}
+                {...muiSlotProps?.checkbox}
                 id={optionId(id, index)}
                 name={htmlName || id}
                 checked={checked}
@@ -93,7 +107,7 @@ export default function CheckboxesWidget<
             );
             return (
               <FormControlLabel
-                {...(muiSlotProps?.formControlLabel as FormControlLabelProps)}
+                {...muiSlotProps?.formControlLabel}
                 control={checkbox}
                 key={index}
                 label={option.label}

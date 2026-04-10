@@ -9,12 +9,34 @@ import Typography, { TypographyProps } from '@mui/material/Typography';
 import {
   ErrorListProps,
   FormContextType,
+  GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
   getUiOptions,
 } from '@rjsf/utils';
 import { getMuiProps } from '../util';
+
+/** Properties available for the `slotProps` target of the ErrorList. */
+export interface ErrorListMuiProps extends GenericObjectType {
+  /** MUI subset property for targeting specific child elements. */
+  slotProps?: {
+    /** Props applied to the outermost `Paper` component. */
+    paper?: PaperProps;
+    /** Props applied to the `Box` container. */
+    box?: BoxProps;
+    /** Props applied to the `Typography` element for the title. */
+    typography?: TypographyProps;
+    /** Props applied to the `List` container holding the errors. */
+    list?: ListProps;
+    /** Props applied to each `ListItem` representing an error. */
+    listItem?: ListItemProps;
+    /** Props applied to each `ListItemIcon` representing the error icon. */
+    listItemIcon?: ListItemIconProps;
+    /** Props applied to each `ListItemText` representing the error message. */
+    listItemText?: ListItemTextProps;
+  };
+}
 
 /** The `ErrorList` component is the template that renders the all the errors associated with the fields in the `Form`
  *
@@ -28,23 +50,23 @@ export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSche
   const { translateString } = registry;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const muiProps = getMuiProps<T, S, F>(uiOptions);
+  const muiProps = getMuiProps<T, S, F, ErrorListMuiProps>(uiOptions);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
   return (
-    <Paper elevation={2} {...(otherMuiProps as PaperProps)} {...(muiSlotProps?.paper as PaperProps)}>
-      <Box mb={2} p={2} {...(muiSlotProps?.box as BoxProps)}>
-        <Typography variant='h6' {...(muiSlotProps?.typography as TypographyProps)}>
+    <Paper elevation={2} {...otherMuiProps} {...muiSlotProps?.paper}>
+      <Box mb={2} p={2} {...muiSlotProps?.box}>
+        <Typography variant='h6' {...muiSlotProps?.typography}>
           {translateString(TranslatableString.ErrorsLabel)}
         </Typography>
-        <List dense={true} {...(muiSlotProps?.list as ListProps)}>
+        <List dense={true} {...muiSlotProps?.list}>
           {errors.map((error, i: number) => {
             return (
-              <ListItem key={i} {...(muiSlotProps?.listItem as ListItemProps)}>
-                <ListItemIcon {...(muiSlotProps?.listItemIcon as ListItemIconProps)}>
+              <ListItem key={i} {...muiSlotProps?.listItem}>
+                <ListItemIcon {...muiSlotProps?.listItemIcon}>
                   <ErrorIcon color='error' />
                 </ListItemIcon>
-                <ListItemText primary={error.stack} {...(muiSlotProps?.listItemText as ListItemTextProps)} />
+                <ListItemText primary={error.stack} {...muiSlotProps?.listItemText} />
               </ListItem>
             );
           })}

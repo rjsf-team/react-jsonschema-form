@@ -5,12 +5,22 @@ import {
   ariaDescribedByIds,
   labelValue,
   FormContextType,
+  GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
   rangeSpec,
 } from '@rjsf/utils';
 import { getMuiProps } from '../util';
+
+/** Properties available for the `slotProps` target of the RangeWidget. */
+export interface RangeWidgetMuiProps extends GenericObjectType {
+  /** MUI subset property for targeting specific child elements. */
+  slotProps?: {
+    /** Props applied to the MUI `Slider` component. */
+    slider?: SliderProps;
+  };
+}
 
 /** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
  * in a div, with the value along side it.
@@ -30,7 +40,8 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
 
-  const muiProps = getMuiProps<T, S, F, SliderProps>(options);
+  const muiProps = getMuiProps<T, S, F, RangeWidgetMuiProps>(options);
+  const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
   return (
     <>
@@ -41,12 +52,13 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         hideLabel,
       )}
       <Slider
-        {...muiProps}
         disabled={disabled || readonly}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
         valueLabelDisplay='auto'
+        {...otherMuiProps}
+        {...muiSlotProps?.slider}
         {...sliderProps}
         aria-describedby={ariaDescribedByIds(id)}
       />

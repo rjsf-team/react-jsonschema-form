@@ -1,17 +1,33 @@
 import { ChangeEvent, FocusEvent } from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
+import { InputLabelProps as MuiInputLabelProps } from '@mui/material/InputLabel';
+import { SelectProps as MuiSelectProps } from '@mui/material/Select';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
   enumOptionsValueForIndex,
   labelValue,
   FormContextType,
+  GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
 import { getMuiProps } from '../util';
+
+/** Properties available for the `slotProps` target of the SelectWidget. */
+export interface SelectWidgetMuiProps extends GenericObjectType {
+  /** MUI subset property for targeting specific child elements. */
+  slotProps?: {
+    /** Props applied to the `InputLabel` element. */
+    inputLabel?: MuiInputLabelProps;
+    /** Props applied to the `Select` element. */
+    select?: MuiSelectProps;
+    /** Any other slotProps targetable by `TextField` internally. */
+    [key: string]: any;
+  };
+}
 
 /** The `SelectWidget` is a widget for rendering dropdowns.
  *  It is typically used with string properties constrained with enum options.
@@ -61,7 +77,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, isMultiple);
-  const muiProps = getMuiProps<T, S, F, TextFieldProps>(options);
+  const muiProps = getMuiProps<T, S, F, SelectWidgetMuiProps>(options);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
   const { InputLabelProps, SelectProps, autocomplete, ...textFieldRemainingProps } = textFieldProps;
@@ -82,21 +98,18 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
-      {...otherMuiProps}
-      {...(textFieldRemainingProps as TextFieldProps)}
+      {...({ ...otherMuiProps, ...textFieldRemainingProps } as TextFieldProps)}
       select // Apply this and the following props after the potential overrides defined in textFieldProps
       slotProps={{
         ...muiSlotProps,
-      }}
-      InputLabelProps={{
-        ...muiSlotProps?.inputLabel,
-        ...InputLabelProps,
-        shrink: !isEmpty,
-      }}
-      SelectProps={{
-        ...muiSlotProps?.select,
-        ...SelectProps,
-        multiple,
+        inputLabel: {
+          ...muiSlotProps?.inputLabel,
+          shrink: !isEmpty,
+        },
+        select: {
+          ...muiSlotProps?.select,
+          multiple,
+        },
       }}
       aria-describedby={ariaDescribedByIds(id)}
     >

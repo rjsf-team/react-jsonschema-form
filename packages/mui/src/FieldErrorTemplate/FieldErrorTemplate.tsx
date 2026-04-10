@@ -1,8 +1,29 @@
 import ListItem, { ListItemProps } from '@mui/material/ListItem';
 import FormHelperText, { FormHelperTextProps } from '@mui/material/FormHelperText';
 import List, { ListProps } from '@mui/material/List';
-import { errorId, FieldErrorProps, FormContextType, RJSFSchema, StrictRJSFSchema, getUiOptions } from '@rjsf/utils';
+import {
+  errorId,
+  FieldErrorProps,
+  FormContextType,
+  GenericObjectType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  getUiOptions,
+} from '@rjsf/utils';
 import { getMuiProps } from '../util';
+
+/** Properties available for the `slotProps` target of the FieldErrorTemplate. */
+export interface FieldErrorTemplateMuiProps extends GenericObjectType {
+  /** MUI subset property for targeting specific child elements. */
+  slotProps?: {
+    /** Props applied to the `List` container holding the errors. */
+    list?: ListProps;
+    /** Props applied to each `ListItem` representing an error. */
+    listItem?: ListItemProps;
+    /** Props applied to the `FormHelperText` displaying the actual error message. */
+    formHelperText?: FormHelperTextProps;
+  };
+}
 
 /** The `FieldErrorTemplate` component renders the errors local to the particular field
  *
@@ -20,25 +41,15 @@ export default function FieldErrorTemplate<
   const id = errorId(fieldPathId);
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const muiProps = getMuiProps<T, S, F>(uiOptions);
-  const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
+  const muiProps = getMuiProps<T, S, F, FieldErrorTemplateMuiProps>(uiOptions);
+  const { slotProps: muiSlotProps } = muiProps;
 
   return (
-    <List
-      id={id}
-      dense={true}
-      disablePadding={true}
-      {...(otherMuiProps as ListProps)}
-      {...(muiSlotProps?.list as ListProps)}
-    >
+    <List id={id} dense={true} disablePadding={true} {...muiSlotProps?.list}>
       {errors.map((error, i: number) => {
         return (
-          <ListItem key={i} disableGutters={true} {...(muiSlotProps?.listItem as ListItemProps)}>
-            <FormHelperText
-              component='div'
-              id={`${id}-${i}`}
-              {...(muiSlotProps?.formHelperText as FormHelperTextProps)}
-            >
+          <ListItem key={i} disableGutters={true} {...muiSlotProps?.listItem}>
+            <FormHelperText component='div' id={`${id}-${i}`} {...muiSlotProps?.formHelperText}>
               {error}
             </FormHelperText>
           </ListItem>

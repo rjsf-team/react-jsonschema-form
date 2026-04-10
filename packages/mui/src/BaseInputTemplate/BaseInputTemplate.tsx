@@ -1,7 +1,8 @@
 import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
-
+import { InputProps as MuiInputProps } from '@mui/material/Input';
+import { InputLabelProps as MuiInputLabelProps } from '@mui/material/InputLabel';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -9,11 +10,25 @@ import {
   getInputProps,
   labelValue,
   FormContextType,
+  GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import { SchemaExamples } from '@rjsf/core';
 import { getMuiProps } from '../util';
+
+/** Properties available for the `slotProps` target of the BaseInputTemplate. */
+export interface BaseInputTemplateMuiProps extends GenericObjectType {
+  /** MUI subset property for targeting specific child elements. */
+  slotProps?: {
+    /** Props applied to the base native HTML `<input>` or `<textarea>` element. */
+    htmlInput?: React.HTMLAttributes<HTMLInputElement | HTMLTextAreaElement>;
+    /** Props applied to the MUI `Input` element, useful for `endAdornment`/`startAdornment`. */
+    input?: MuiInputProps;
+    /** Props applied to the MUI `InputLabel` element. */
+    inputLabel?: MuiInputLabelProps;
+  };
+}
 
 const TYPES_THAT_SHRINK_LABEL = ['date', 'datetime-local', 'file', 'time'];
 
@@ -61,7 +76,7 @@ export default function BaseInputTemplate<
   // Now we need to pull out the step, min, max into an inner `inputProps` for material-ui
   const { step, min, max, accept, ...rest } = getInputProps<T, S, F>(schema, type, options);
 
-  const muiProps = getMuiProps<T, S, F>(options);
+  const muiProps = getMuiProps<T, S, F, BaseInputTemplateMuiProps>(options);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
   const htmlInputProps = {
@@ -128,8 +143,7 @@ export default function BaseInputTemplate<
         onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        {...otherMuiProps}
-        {...(textFieldProps as TextFieldProps)}
+        {...({ ...otherMuiProps, ...textFieldProps } as TextFieldProps)}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
       <SchemaExamples id={id} schema={schema} />

@@ -29,12 +29,7 @@ export default function AddButton<T = any, S extends StrictRJSFSchema = RJSFSche
   ]);
 
   return (
-    <IconButton
-      title={translateString(TranslatableString.AddItemButton)}
-      {...props}
-      color='primary'
-      {...(muiProps as MuiIconButtonProps)}
-    >
+    <IconButton title={translateString(TranslatableString.AddItemButton)} {...props} color='primary' {...muiProps}>
       <AddIcon />
     </IconButton>
   );
