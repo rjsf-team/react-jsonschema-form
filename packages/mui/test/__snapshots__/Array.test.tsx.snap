@@ -3243,11 +3243,8 @@ exports[`array fields has errors 1`] = `
   margin-bottom: 4px;
 }
 
-.MuiTypography-root:where(.emotion-7 .MuiListItemText-primary) {
-  display: block;
-}
-
-.MuiTypography-root:where(.emotion-7 .MuiListItemText-secondary) {
+.emotion-7 .MuiTypography-root:where( .MuiListItemText-primary),
+.emotion-7 .MuiTypography-root:where( .MuiListItemText-secondary) {
   display: block;
 }
 

@@ -60,6 +60,7 @@ export default function WrapIfAdditionalTemplate<
           <Grid.Column width={7} className='form-additional'>
             <Form.Group widths='equal' grouped>
               <Form.Input
+                key={label}
                 className='form-group'
                 hasFeedback
                 fluid

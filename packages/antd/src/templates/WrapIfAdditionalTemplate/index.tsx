@@ -90,6 +90,7 @@ export default function WrapIfAdditionalTemplate<
               wrapperCol={wrapperCol}
             >
               <Input
+                key={label}
                 className='form-control'
                 defaultValue={label}
                 disabled={disabled || (readonlyAsDisabled && readonly)}

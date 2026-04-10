@@ -55,5 +55,6 @@
         "updateDependents": "always"
       }
     }
-  }
+  },
+  "analytics": true
 }

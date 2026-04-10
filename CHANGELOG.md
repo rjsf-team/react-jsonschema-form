@@ -16,6 +16,64 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.5.0
+
+## @rjsf/antd
+
+- Updated `BaseInputTemplate` to remove `type` and set `changeOnWheel` to false for the `InputNumber` component, fixing [#5002](https://github.com/rjsf-team/react-jsonschema-form/issues/5002)
+- Updated `ErrorList` and `IconButton` to destructure icons imported from `@ant-design/icons`, fixing [#4953](https://github.com/rjsf-team/react-jsonschema-form/issues/4953)
+- Added `key={label}` to key input in `WrapIfAdditionalTemplate` to reset input value after duplicate key rename ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
+- Updated `BaseInputTemplate` to destructure and guard `min`/`max` before spreading onto `InputNumber`, fixing a build error caused by the widened `InputPropsType` (`number | string`)
+
+## @rjsf/chakra-ui
+
+- Added `key={label}` to key input in `WrapIfAdditionalTemplate` to reset input value after duplicate key rename ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
+
+## @rjsf/core
+
+- Added a new `removeEmptyOptionalObjects` boolean prop to gracefully prune optional empty objects preventing form submission lockouts, fixing [#4954](https://github.com/rjsf-team/react-jsonschema-form/issues/4954)
+- Included `button` elements in `focusOnError` querySelector so that radio and checkbox groups receive focus on validation error, fixing [#4870](https://github.com/rjsf-team/react-jsonschema-form/issues/4870)
+- Fixed focus being lost when renaming additional property keys by preserving React key for renamed properties ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
+
+## @rjsf/daisyui
+
+- Added `key={label}` to key input in `WrapIfAdditionalTemplate` to reset input value after duplicate key rename ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
+
+## @rjsf/fluentui-rc
+
+- Added `key={label}` to key input in `WrapIfAdditionalTemplate` to reset input value after duplicate key rename ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
+
+## @rjsf/mantine
+
+- Added `key={label}` to key input in `WrapIfAdditionalTemplate` to reset input value after duplicate key rename ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
+- Updated `BaseInputTemplate` to destructure and guard `min`/`max` before spreading onto `NumberInput`, fixing a build error caused by the widened `InputPropsType` (`number | string`)
+
+## @rjsf/mui
+
+- Added `key={label}` to key input in `WrapIfAdditionalTemplate` to reset input value after duplicate key rename ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
+
+## @rjsf/primereact
+
+- Added `key={label}` to key input in `WrapIfAdditionalTemplate` to reset input value after duplicate key rename ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
+
+## @rjsf/react-bootstrap
+
+- Added `key={label}` to key input in `WrapIfAdditionalTemplate` to reset input value after duplicate key rename ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
+
+## @rjsf/semantic-ui
+
+- Added `key={label}` to key input in `WrapIfAdditionalTemplate` to reset input value after duplicate key rename ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
+
+## @rjsf/shadcn
+
+- Added `key={label}` to key input in `WrapIfAdditionalTemplate` to reset input value after duplicate key rename ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
+
+## @rjsf/utils
+
+- Added `removeOptionalEmptyObjects` utility function to recursively strip fully empty optional objects based on their parent's `required` properties, fixing [#4954](https://github.com/rjsf-team/react-jsonschema-form/issues/4954)
+- Updated `InputPropsType` to widen `min` and `max` to `number | string` to support date values (e.g. `"2020-01-01"`)
+- Updated `getInputProps()` to propagate `formatMinimum` and `formatMaximum` schema keywords to the HTML `min`/`max` attributes for `date`, `datetime-local`, `time`, `week`, and `month` input types, aligning browser-native date picker constraints with AJV validation
+
 # 6.4.2
 
 ## @rjsf/antd
@@ -36,6 +94,10 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Updated References playground sample to demonstrate `oneOf` with `ui:title` at recursive depth, related to [#4986](https://github.com/rjsf-team/react-jsonschema-form/issues/4986)
+
+## Dev / docs / playground
+
+- Fixed scrolling of Monaco editors in the playground, fixing [#4992](https://github.com/rjsf-team/react-jsonschema-form/issues/4992)
 
 # 6.4.1
 

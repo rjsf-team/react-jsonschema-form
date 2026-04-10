@@ -337,6 +337,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
+    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -576,7 +577,8 @@ exports[`Complex grid renders person and address and employment in a complex gri
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    z-index: var(--chakra-z-index-dropdown);
+    --select-z-index: var(--chakra-z-index-popover);
+    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -792,6 +794,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
+    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-red-500);
   }
 
@@ -1220,7 +1223,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           class="emotion-41"
                           data-part="group"
                           data-scope="checkbox"
-                          required=""
                           role="group"
                         >
                           <div
@@ -1228,6 +1230,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           >
                             <label
                               class="chakra-checkbox__root emotion-43"
+                              data-invalid=""
                               data-part="root"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -1236,7 +1239,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               id="checkbox:root_person_race-0"
                             >
                               <input
-                                aria-invalid="false"
+                                aria-invalid="true"
                                 aria-labelledby="checkbox:root_person_race-0:label"
                                 id="checkbox:root_person_race-0:input"
                                 name="root_person_race"
@@ -1247,6 +1250,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               <div
                                 aria-hidden="true"
                                 class="chakra-checkbox__control emotion-44"
+                                data-invalid=""
                                 data-part="control"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -1261,6 +1265,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               </div>
                               <span
                                 class="chakra-checkbox__label emotion-46"
+                                data-invalid=""
                                 data-part="label"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -1274,6 +1279,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <label
                               class="chakra-checkbox__root emotion-43"
+                              data-invalid=""
                               data-part="root"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -1282,7 +1288,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               id="checkbox:root_person_race-1"
                             >
                               <input
-                                aria-invalid="false"
+                                aria-invalid="true"
                                 aria-labelledby="checkbox:root_person_race-1:label"
                                 id="checkbox:root_person_race-1:input"
                                 name="root_person_race"
@@ -1293,6 +1299,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               <div
                                 aria-hidden="true"
                                 class="chakra-checkbox__control emotion-44"
+                                data-invalid=""
                                 data-part="control"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -1307,6 +1314,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               </div>
                               <span
                                 class="chakra-checkbox__label emotion-46"
+                                data-invalid=""
                                 data-part="label"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -1320,6 +1328,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <label
                               class="chakra-checkbox__root emotion-43"
+                              data-invalid=""
                               data-part="root"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -1328,7 +1337,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               id="checkbox:root_person_race-2"
                             >
                               <input
-                                aria-invalid="false"
+                                aria-invalid="true"
                                 aria-labelledby="checkbox:root_person_race-2:label"
                                 id="checkbox:root_person_race-2:input"
                                 name="root_person_race"
@@ -1339,6 +1348,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               <div
                                 aria-hidden="true"
                                 class="chakra-checkbox__control emotion-44"
+                                data-invalid=""
                                 data-part="control"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -1353,6 +1363,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               </div>
                               <span
                                 class="chakra-checkbox__label emotion-46"
+                                data-invalid=""
                                 data-part="label"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -1366,6 +1377,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <label
                               class="chakra-checkbox__root emotion-43"
+                              data-invalid=""
                               data-part="root"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -1374,7 +1386,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               id="checkbox:root_person_race-3"
                             >
                               <input
-                                aria-invalid="false"
+                                aria-invalid="true"
                                 aria-labelledby="checkbox:root_person_race-3:label"
                                 id="checkbox:root_person_race-3:input"
                                 name="root_person_race"
@@ -1385,6 +1397,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               <div
                                 aria-hidden="true"
                                 class="chakra-checkbox__control emotion-44"
+                                data-invalid=""
                                 data-part="control"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -1399,6 +1412,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               </div>
                               <span
                                 class="chakra-checkbox__label emotion-46"
+                                data-invalid=""
                                 data-part="label"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -1412,6 +1426,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <label
                               class="chakra-checkbox__root emotion-43"
+                              data-invalid=""
                               data-part="root"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -1420,7 +1435,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               id="checkbox:root_person_race-4"
                             >
                               <input
-                                aria-invalid="false"
+                                aria-invalid="true"
                                 aria-labelledby="checkbox:root_person_race-4:label"
                                 id="checkbox:root_person_race-4:input"
                                 name="root_person_race"
@@ -1431,6 +1446,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               <div
                                 aria-hidden="true"
                                 class="chakra-checkbox__control emotion-44"
+                                data-invalid=""
                                 data-part="control"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -1445,6 +1461,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               </div>
                               <span
                                 class="chakra-checkbox__label emotion-46"
+                                data-invalid=""
                                 data-part="label"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -3875,6 +3892,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   id="root_employment-0"
                                 >
                                   <input
+                                    aria-labelledby="radio-group::r3s::radio:label:0"
                                     checked=""
                                     data-ownedby="radio-group::r3s:"
                                     id="radio-group::r3s::radio:input:0"
@@ -3924,6 +3942,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   id="root_employment-1"
                                 >
                                   <input
+                                    aria-labelledby="radio-group::r3s::radio:label:1"
                                     data-ownedby="radio-group::r3s:"
                                     id="radio-group::r3s::radio:input:1"
                                     name="root_employment"
@@ -3967,6 +3986,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   id="root_employment-2"
                                 >
                                   <input
+                                    aria-labelledby="radio-group::r3s::radio:label:2"
                                     data-ownedby="radio-group::r3s:"
                                     id="radio-group::r3s::radio:input:2"
                                     name="root_employment"
@@ -6633,6 +6653,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
+    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -6872,7 +6893,8 @@ exports[`Complex grid renders person and address and employment in a complex gri
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    z-index: var(--chakra-z-index-dropdown);
+    --select-z-index: var(--chakra-z-index-popover);
+    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -7088,6 +7110,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
+    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-red-500);
   }
 
@@ -7516,7 +7539,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           class="emotion-41"
                           data-part="group"
                           data-scope="checkbox"
-                          required=""
                           role="group"
                         >
                           <div
@@ -7524,6 +7546,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           >
                             <label
                               class="chakra-checkbox__root emotion-43"
+                              data-invalid=""
                               data-part="root"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -7532,7 +7555,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               id="checkbox:root_person_race-0"
                             >
                               <input
-                                aria-invalid="false"
+                                aria-invalid="true"
                                 aria-labelledby="checkbox:root_person_race-0:label"
                                 id="checkbox:root_person_race-0:input"
                                 name="root_person_race"
@@ -7543,6 +7566,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               <div
                                 aria-hidden="true"
                                 class="chakra-checkbox__control emotion-44"
+                                data-invalid=""
                                 data-part="control"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -7557,6 +7581,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               </div>
                               <span
                                 class="chakra-checkbox__label emotion-46"
+                                data-invalid=""
                                 data-part="label"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -7570,6 +7595,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <label
                               class="chakra-checkbox__root emotion-43"
+                              data-invalid=""
                               data-part="root"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -7578,7 +7604,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               id="checkbox:root_person_race-1"
                             >
                               <input
-                                aria-invalid="false"
+                                aria-invalid="true"
                                 aria-labelledby="checkbox:root_person_race-1:label"
                                 id="checkbox:root_person_race-1:input"
                                 name="root_person_race"
@@ -7589,6 +7615,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               <div
                                 aria-hidden="true"
                                 class="chakra-checkbox__control emotion-44"
+                                data-invalid=""
                                 data-part="control"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -7603,6 +7630,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               </div>
                               <span
                                 class="chakra-checkbox__label emotion-46"
+                                data-invalid=""
                                 data-part="label"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -7616,6 +7644,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <label
                               class="chakra-checkbox__root emotion-43"
+                              data-invalid=""
                               data-part="root"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -7624,7 +7653,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               id="checkbox:root_person_race-2"
                             >
                               <input
-                                aria-invalid="false"
+                                aria-invalid="true"
                                 aria-labelledby="checkbox:root_person_race-2:label"
                                 id="checkbox:root_person_race-2:input"
                                 name="root_person_race"
@@ -7635,6 +7664,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               <div
                                 aria-hidden="true"
                                 class="chakra-checkbox__control emotion-44"
+                                data-invalid=""
                                 data-part="control"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -7649,6 +7679,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               </div>
                               <span
                                 class="chakra-checkbox__label emotion-46"
+                                data-invalid=""
                                 data-part="label"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -7662,6 +7693,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <label
                               class="chakra-checkbox__root emotion-43"
+                              data-invalid=""
                               data-part="root"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -7670,7 +7702,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               id="checkbox:root_person_race-3"
                             >
                               <input
-                                aria-invalid="false"
+                                aria-invalid="true"
                                 aria-labelledby="checkbox:root_person_race-3:label"
                                 id="checkbox:root_person_race-3:input"
                                 name="root_person_race"
@@ -7681,6 +7713,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               <div
                                 aria-hidden="true"
                                 class="chakra-checkbox__control emotion-44"
+                                data-invalid=""
                                 data-part="control"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -7695,6 +7728,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               </div>
                               <span
                                 class="chakra-checkbox__label emotion-46"
+                                data-invalid=""
                                 data-part="label"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -7708,6 +7742,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <label
                               class="chakra-checkbox__root emotion-43"
+                              data-invalid=""
                               data-part="root"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -7716,7 +7751,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               id="checkbox:root_person_race-4"
                             >
                               <input
-                                aria-invalid="false"
+                                aria-invalid="true"
                                 aria-labelledby="checkbox:root_person_race-4:label"
                                 id="checkbox:root_person_race-4:input"
                                 name="root_person_race"
@@ -7727,6 +7762,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               <div
                                 aria-hidden="true"
                                 class="chakra-checkbox__control emotion-44"
+                                data-invalid=""
                                 data-part="control"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -7741,6 +7777,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               </div>
                               <span
                                 class="chakra-checkbox__label emotion-46"
+                                data-invalid=""
                                 data-part="label"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -10171,6 +10208,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   id="root_employment-0"
                                 >
                                   <input
+                                    aria-labelledby="radio-group::r55::radio:label:0"
                                     data-ownedby="radio-group::r55:"
                                     id="radio-group::r55::radio:input:0"
                                     name="root_employment"
@@ -10214,6 +10252,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   id="root_employment-1"
                                 >
                                   <input
+                                    aria-labelledby="radio-group::r55::radio:label:1"
                                     checked=""
                                     data-ownedby="radio-group::r55:"
                                     id="radio-group::r55::radio:input:1"
@@ -10263,6 +10302,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   id="root_employment-2"
                                 >
                                   <input
+                                    aria-labelledby="radio-group::r55::radio:label:2"
                                     data-ownedby="radio-group::r55:"
                                     id="radio-group::r55::radio:input:2"
                                     name="root_employment"
@@ -12976,6 +13016,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
+    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -13215,7 +13256,8 @@ exports[`Complex grid renders person and address and employment in a complex gri
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    z-index: var(--chakra-z-index-dropdown);
+    --select-z-index: var(--chakra-z-index-popover);
+    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -13431,6 +13473,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
+    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-red-500);
   }
 
@@ -13904,7 +13947,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           class="emotion-41"
                           data-part="group"
                           data-scope="checkbox"
-                          required=""
                           role="group"
                         >
                           <div
@@ -13912,6 +13954,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           >
                             <label
                               class="chakra-checkbox__root emotion-43"
+                              data-invalid=""
                               data-part="root"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -13920,7 +13963,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               id="checkbox:root_person_race-0"
                             >
                               <input
-                                aria-invalid="false"
+                                aria-invalid="true"
                                 aria-labelledby="checkbox:root_person_race-0:label"
                                 id="checkbox:root_person_race-0:input"
                                 name="root_person_race"
@@ -13931,6 +13974,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               <div
                                 aria-hidden="true"
                                 class="chakra-checkbox__control emotion-44"
+                                data-invalid=""
                                 data-part="control"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -13945,6 +13989,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               </div>
                               <span
                                 class="chakra-checkbox__label emotion-46"
+                                data-invalid=""
                                 data-part="label"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -13958,6 +14003,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <label
                               class="chakra-checkbox__root emotion-43"
+                              data-invalid=""
                               data-part="root"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -13966,7 +14012,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               id="checkbox:root_person_race-1"
                             >
                               <input
-                                aria-invalid="false"
+                                aria-invalid="true"
                                 aria-labelledby="checkbox:root_person_race-1:label"
                                 id="checkbox:root_person_race-1:input"
                                 name="root_person_race"
@@ -13977,6 +14023,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               <div
                                 aria-hidden="true"
                                 class="chakra-checkbox__control emotion-44"
+                                data-invalid=""
                                 data-part="control"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -13991,6 +14038,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               </div>
                               <span
                                 class="chakra-checkbox__label emotion-46"
+                                data-invalid=""
                                 data-part="label"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -14004,6 +14052,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <label
                               class="chakra-checkbox__root emotion-43"
+                              data-invalid=""
                               data-part="root"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -14012,7 +14061,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               id="checkbox:root_person_race-2"
                             >
                               <input
-                                aria-invalid="false"
+                                aria-invalid="true"
                                 aria-labelledby="checkbox:root_person_race-2:label"
                                 id="checkbox:root_person_race-2:input"
                                 name="root_person_race"
@@ -14023,6 +14072,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               <div
                                 aria-hidden="true"
                                 class="chakra-checkbox__control emotion-44"
+                                data-invalid=""
                                 data-part="control"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -14037,6 +14087,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               </div>
                               <span
                                 class="chakra-checkbox__label emotion-46"
+                                data-invalid=""
                                 data-part="label"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -14050,6 +14101,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <label
                               class="chakra-checkbox__root emotion-43"
+                              data-invalid=""
                               data-part="root"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -14058,7 +14110,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               id="checkbox:root_person_race-3"
                             >
                               <input
-                                aria-invalid="false"
+                                aria-invalid="true"
                                 aria-labelledby="checkbox:root_person_race-3:label"
                                 id="checkbox:root_person_race-3:input"
                                 name="root_person_race"
@@ -14069,6 +14121,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               <div
                                 aria-hidden="true"
                                 class="chakra-checkbox__control emotion-44"
+                                data-invalid=""
                                 data-part="control"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -14083,6 +14136,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               </div>
                               <span
                                 class="chakra-checkbox__label emotion-46"
+                                data-invalid=""
                                 data-part="label"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -14096,6 +14150,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <label
                               class="chakra-checkbox__root emotion-43"
+                              data-invalid=""
                               data-part="root"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -14104,7 +14159,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               id="checkbox:root_person_race-4"
                             >
                               <input
-                                aria-invalid="false"
+                                aria-invalid="true"
                                 aria-labelledby="checkbox:root_person_race-4:label"
                                 id="checkbox:root_person_race-4:input"
                                 name="root_person_race"
@@ -14115,6 +14170,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               <div
                                 aria-hidden="true"
                                 class="chakra-checkbox__control emotion-44"
+                                data-invalid=""
                                 data-part="control"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -14129,6 +14185,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               </div>
                               <span
                                 class="chakra-checkbox__label emotion-46"
+                                data-invalid=""
                                 data-part="label"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -16559,6 +16616,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   id="root_employment-0"
                                 >
                                   <input
+                                    aria-labelledby="radio-group::r6g::radio:label:0"
                                     data-ownedby="radio-group::r6g:"
                                     id="radio-group::r6g::radio:input:0"
                                     name="root_employment"
@@ -16602,6 +16660,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   id="root_employment-1"
                                 >
                                   <input
+                                    aria-labelledby="radio-group::r6g::radio:label:1"
                                     data-ownedby="radio-group::r6g:"
                                     id="radio-group::r6g::radio:input:1"
                                     name="root_employment"
@@ -16645,6 +16704,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   id="root_employment-2"
                                 >
                                   <input
+                                    aria-labelledby="radio-group::r6g::radio:label:2"
                                     checked=""
                                     data-ownedby="radio-group::r6g:"
                                     id="radio-group::r6g::radio:input:2"
@@ -17105,6 +17165,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
+    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -17344,7 +17405,8 @@ exports[`Complex grid renders person and address and employment in a complex gri
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    z-index: var(--chakra-z-index-dropdown);
+    --select-z-index: var(--chakra-z-index-popover);
+    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -17560,6 +17622,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
+    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-red-500);
   }
 
@@ -17988,7 +18051,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           class="emotion-41"
                           data-part="group"
                           data-scope="checkbox"
-                          required=""
                           role="group"
                         >
                           <div
@@ -17996,6 +18058,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           >
                             <label
                               class="chakra-checkbox__root emotion-43"
+                              data-invalid=""
                               data-part="root"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -18004,7 +18067,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               id="checkbox:root_person_race-0"
                             >
                               <input
-                                aria-invalid="false"
+                                aria-invalid="true"
                                 aria-labelledby="checkbox:root_person_race-0:label"
                                 id="checkbox:root_person_race-0:input"
                                 name="root_person_race"
@@ -18015,6 +18078,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               <div
                                 aria-hidden="true"
                                 class="chakra-checkbox__control emotion-44"
+                                data-invalid=""
                                 data-part="control"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -18029,6 +18093,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               </div>
                               <span
                                 class="chakra-checkbox__label emotion-46"
+                                data-invalid=""
                                 data-part="label"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -18042,6 +18107,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <label
                               class="chakra-checkbox__root emotion-43"
+                              data-invalid=""
                               data-part="root"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -18050,7 +18116,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               id="checkbox:root_person_race-1"
                             >
                               <input
-                                aria-invalid="false"
+                                aria-invalid="true"
                                 aria-labelledby="checkbox:root_person_race-1:label"
                                 id="checkbox:root_person_race-1:input"
                                 name="root_person_race"
@@ -18061,6 +18127,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               <div
                                 aria-hidden="true"
                                 class="chakra-checkbox__control emotion-44"
+                                data-invalid=""
                                 data-part="control"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -18075,6 +18142,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               </div>
                               <span
                                 class="chakra-checkbox__label emotion-46"
+                                data-invalid=""
                                 data-part="label"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -18088,6 +18156,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <label
                               class="chakra-checkbox__root emotion-43"
+                              data-invalid=""
                               data-part="root"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -18096,7 +18165,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               id="checkbox:root_person_race-2"
                             >
                               <input
-                                aria-invalid="false"
+                                aria-invalid="true"
                                 aria-labelledby="checkbox:root_person_race-2:label"
                                 id="checkbox:root_person_race-2:input"
                                 name="root_person_race"
@@ -18107,6 +18176,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               <div
                                 aria-hidden="true"
                                 class="chakra-checkbox__control emotion-44"
+                                data-invalid=""
                                 data-part="control"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -18121,6 +18191,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               </div>
                               <span
                                 class="chakra-checkbox__label emotion-46"
+                                data-invalid=""
                                 data-part="label"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -18134,6 +18205,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <label
                               class="chakra-checkbox__root emotion-43"
+                              data-invalid=""
                               data-part="root"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -18142,7 +18214,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               id="checkbox:root_person_race-3"
                             >
                               <input
-                                aria-invalid="false"
+                                aria-invalid="true"
                                 aria-labelledby="checkbox:root_person_race-3:label"
                                 id="checkbox:root_person_race-3:input"
                                 name="root_person_race"
@@ -18153,6 +18225,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               <div
                                 aria-hidden="true"
                                 class="chakra-checkbox__control emotion-44"
+                                data-invalid=""
                                 data-part="control"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -18167,6 +18240,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               </div>
                               <span
                                 class="chakra-checkbox__label emotion-46"
+                                data-invalid=""
                                 data-part="label"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -18180,6 +18254,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             </label>
                             <label
                               class="chakra-checkbox__root emotion-43"
+                              data-invalid=""
                               data-part="root"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -18188,7 +18263,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               id="checkbox:root_person_race-4"
                             >
                               <input
-                                aria-invalid="false"
+                                aria-invalid="true"
                                 aria-labelledby="checkbox:root_person_race-4:label"
                                 id="checkbox:root_person_race-4:input"
                                 name="root_person_race"
@@ -18199,6 +18274,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               <div
                                 aria-hidden="true"
                                 class="chakra-checkbox__control emotion-44"
+                                data-invalid=""
                                 data-part="control"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -18213,6 +18289,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               </div>
                               <span
                                 class="chakra-checkbox__label emotion-46"
+                                data-invalid=""
                                 data-part="label"
                                 data-scope="checkbox"
                                 data-state="unchecked"
@@ -20643,6 +20720,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   id="root_employment-0"
                                 >
                                   <input
+                                    aria-labelledby="radio-group::r2j::radio:label:0"
                                     checked=""
                                     data-ownedby="radio-group::r2j:"
                                     id="radio-group::r2j::radio:input:0"
@@ -20692,6 +20770,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   id="root_employment-1"
                                 >
                                   <input
+                                    aria-labelledby="radio-group::r2j::radio:label:1"
                                     data-ownedby="radio-group::r2j:"
                                     id="radio-group::r2j::radio:input:1"
                                     name="root_employment"
@@ -20735,6 +20814,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   id="root_employment-2"
                                 >
                                   <input
+                                    aria-labelledby="radio-group::r2j::radio:label:2"
                                     data-ownedby="radio-group::r2j:"
                                     id="radio-group::r2j::radio:input:2"
                                     name="root_employment"
@@ -23385,6 +23465,7 @@ exports[`Three even column grid renders person and address in three columns, no 
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
+    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -23618,7 +23699,8 @@ exports[`Three even column grid renders person and address in three columns, no 
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    z-index: var(--chakra-z-index-dropdown);
+    --select-z-index: var(--chakra-z-index-popover);
+    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -24135,7 +24217,6 @@ exports[`Three even column grid renders person and address in three columns, no 
                         class="emotion-37"
                         data-part="group"
                         data-scope="checkbox"
-                        required=""
                         role="group"
                       >
                         <div
@@ -24143,6 +24224,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                         >
                           <label
                             class="chakra-checkbox__root emotion-39"
+                            data-invalid=""
                             data-part="root"
                             data-scope="checkbox"
                             data-state="unchecked"
@@ -24151,7 +24233,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                             id="checkbox:root_person_race-0"
                           >
                             <input
-                              aria-invalid="false"
+                              aria-invalid="true"
                               aria-labelledby="checkbox:root_person_race-0:label"
                               id="checkbox:root_person_race-0:input"
                               name="root_person_race"
@@ -24162,6 +24244,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                             <div
                               aria-hidden="true"
                               class="chakra-checkbox__control emotion-40"
+                              data-invalid=""
                               data-part="control"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -24176,6 +24259,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                             </div>
                             <span
                               class="chakra-checkbox__label emotion-42"
+                              data-invalid=""
                               data-part="label"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -24189,6 +24273,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                           </label>
                           <label
                             class="chakra-checkbox__root emotion-39"
+                            data-invalid=""
                             data-part="root"
                             data-scope="checkbox"
                             data-state="unchecked"
@@ -24197,7 +24282,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                             id="checkbox:root_person_race-1"
                           >
                             <input
-                              aria-invalid="false"
+                              aria-invalid="true"
                               aria-labelledby="checkbox:root_person_race-1:label"
                               id="checkbox:root_person_race-1:input"
                               name="root_person_race"
@@ -24208,6 +24293,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                             <div
                               aria-hidden="true"
                               class="chakra-checkbox__control emotion-40"
+                              data-invalid=""
                               data-part="control"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -24222,6 +24308,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                             </div>
                             <span
                               class="chakra-checkbox__label emotion-42"
+                              data-invalid=""
                               data-part="label"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -24235,6 +24322,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                           </label>
                           <label
                             class="chakra-checkbox__root emotion-39"
+                            data-invalid=""
                             data-part="root"
                             data-scope="checkbox"
                             data-state="unchecked"
@@ -24243,7 +24331,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                             id="checkbox:root_person_race-2"
                           >
                             <input
-                              aria-invalid="false"
+                              aria-invalid="true"
                               aria-labelledby="checkbox:root_person_race-2:label"
                               id="checkbox:root_person_race-2:input"
                               name="root_person_race"
@@ -24254,6 +24342,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                             <div
                               aria-hidden="true"
                               class="chakra-checkbox__control emotion-40"
+                              data-invalid=""
                               data-part="control"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -24268,6 +24357,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                             </div>
                             <span
                               class="chakra-checkbox__label emotion-42"
+                              data-invalid=""
                               data-part="label"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -24281,6 +24371,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                           </label>
                           <label
                             class="chakra-checkbox__root emotion-39"
+                            data-invalid=""
                             data-part="root"
                             data-scope="checkbox"
                             data-state="unchecked"
@@ -24289,7 +24380,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                             id="checkbox:root_person_race-3"
                           >
                             <input
-                              aria-invalid="false"
+                              aria-invalid="true"
                               aria-labelledby="checkbox:root_person_race-3:label"
                               id="checkbox:root_person_race-3:input"
                               name="root_person_race"
@@ -24300,6 +24391,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                             <div
                               aria-hidden="true"
                               class="chakra-checkbox__control emotion-40"
+                              data-invalid=""
                               data-part="control"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -24314,6 +24406,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                             </div>
                             <span
                               class="chakra-checkbox__label emotion-42"
+                              data-invalid=""
                               data-part="label"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -24327,6 +24420,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                           </label>
                           <label
                             class="chakra-checkbox__root emotion-39"
+                            data-invalid=""
                             data-part="root"
                             data-scope="checkbox"
                             data-state="unchecked"
@@ -24335,7 +24429,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                             id="checkbox:root_person_race-4"
                           >
                             <input
-                              aria-invalid="false"
+                              aria-invalid="true"
                               aria-labelledby="checkbox:root_person_race-4:label"
                               id="checkbox:root_person_race-4:input"
                               name="root_person_race"
@@ -24346,6 +24440,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                             <div
                               aria-hidden="true"
                               class="chakra-checkbox__control emotion-40"
+                              data-invalid=""
                               data-part="control"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -24360,6 +24455,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                             </div>
                             <span
                               class="chakra-checkbox__label emotion-42"
+                              data-invalid=""
                               data-part="label"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -26982,6 +27078,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
     --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
     --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
     --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
+    --chakra-colors-color-palette-border: var(--chakra-colors-red-border);
     border-color: var(--chakra-colors-border-error);
   }
 
@@ -27215,7 +27312,8 @@ exports[`Two even column grid renders person and address in two columns, no empl
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    z-index: var(--chakra-z-index-dropdown);
+    --select-z-index: var(--chakra-z-index-popover);
+    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
     border-radius: var(--chakra-radii-l2);
     outline: 0;
     max-height: var(--chakra-sizes-96);
@@ -27732,7 +27830,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
                         class="emotion-37"
                         data-part="group"
                         data-scope="checkbox"
-                        required=""
                         role="group"
                       >
                         <div
@@ -27740,6 +27837,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                         >
                           <label
                             class="chakra-checkbox__root emotion-39"
+                            data-invalid=""
                             data-part="root"
                             data-scope="checkbox"
                             data-state="unchecked"
@@ -27748,7 +27846,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                             id="checkbox:root_person_race-0"
                           >
                             <input
-                              aria-invalid="false"
+                              aria-invalid="true"
                               aria-labelledby="checkbox:root_person_race-0:label"
                               id="checkbox:root_person_race-0:input"
                               name="root_person_race"
@@ -27759,6 +27857,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                             <div
                               aria-hidden="true"
                               class="chakra-checkbox__control emotion-40"
+                              data-invalid=""
                               data-part="control"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -27773,6 +27872,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                             </div>
                             <span
                               class="chakra-checkbox__label emotion-42"
+                              data-invalid=""
                               data-part="label"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -27786,6 +27886,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                           </label>
                           <label
                             class="chakra-checkbox__root emotion-39"
+                            data-invalid=""
                             data-part="root"
                             data-scope="checkbox"
                             data-state="unchecked"
@@ -27794,7 +27895,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                             id="checkbox:root_person_race-1"
                           >
                             <input
-                              aria-invalid="false"
+                              aria-invalid="true"
                               aria-labelledby="checkbox:root_person_race-1:label"
                               id="checkbox:root_person_race-1:input"
                               name="root_person_race"
@@ -27805,6 +27906,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                             <div
                               aria-hidden="true"
                               class="chakra-checkbox__control emotion-40"
+                              data-invalid=""
                               data-part="control"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -27819,6 +27921,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                             </div>
                             <span
                               class="chakra-checkbox__label emotion-42"
+                              data-invalid=""
                               data-part="label"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -27832,6 +27935,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                           </label>
                           <label
                             class="chakra-checkbox__root emotion-39"
+                            data-invalid=""
                             data-part="root"
                             data-scope="checkbox"
                             data-state="unchecked"
@@ -27840,7 +27944,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                             id="checkbox:root_person_race-2"
                           >
                             <input
-                              aria-invalid="false"
+                              aria-invalid="true"
                               aria-labelledby="checkbox:root_person_race-2:label"
                               id="checkbox:root_person_race-2:input"
                               name="root_person_race"
@@ -27851,6 +27955,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                             <div
                               aria-hidden="true"
                               class="chakra-checkbox__control emotion-40"
+                              data-invalid=""
                               data-part="control"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -27865,6 +27970,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                             </div>
                             <span
                               class="chakra-checkbox__label emotion-42"
+                              data-invalid=""
                               data-part="label"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -27878,6 +27984,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                           </label>
                           <label
                             class="chakra-checkbox__root emotion-39"
+                            data-invalid=""
                             data-part="root"
                             data-scope="checkbox"
                             data-state="unchecked"
@@ -27886,7 +27993,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                             id="checkbox:root_person_race-3"
                           >
                             <input
-                              aria-invalid="false"
+                              aria-invalid="true"
                               aria-labelledby="checkbox:root_person_race-3:label"
                               id="checkbox:root_person_race-3:input"
                               name="root_person_race"
@@ -27897,6 +28004,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                             <div
                               aria-hidden="true"
                               class="chakra-checkbox__control emotion-40"
+                              data-invalid=""
                               data-part="control"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -27911,6 +28019,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                             </div>
                             <span
                               class="chakra-checkbox__label emotion-42"
+                              data-invalid=""
                               data-part="label"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -27924,6 +28033,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                           </label>
                           <label
                             class="chakra-checkbox__root emotion-39"
+                            data-invalid=""
                             data-part="root"
                             data-scope="checkbox"
                             data-state="unchecked"
@@ -27932,7 +28042,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                             id="checkbox:root_person_race-4"
                           >
                             <input
-                              aria-invalid="false"
+                              aria-invalid="true"
                               aria-labelledby="checkbox:root_person_race-4:label"
                               id="checkbox:root_person_race-4:input"
                               name="root_person_race"
@@ -27943,6 +28053,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                             <div
                               aria-hidden="true"
                               class="chakra-checkbox__control emotion-40"
+                              data-invalid=""
                               data-part="control"
                               data-scope="checkbox"
                               data-state="unchecked"
@@ -27957,6 +28068,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                             </div>
                             <span
                               class="chakra-checkbox__label emotion-42"
+                              data-invalid=""
                               data-part="label"
                               data-scope="checkbox"
                               data-state="unchecked"

@@ -101,17 +101,21 @@ export default function BaseInputTemplate<
     list: schema.examples ? examplesId(id) : undefined,
   };
 
+  const { min, max, ...restInputProps } = inputProps;
+
   const input =
     inputProps.type === 'number' || inputProps.type === 'integer' ? (
       <NumberInput
         onChange={!readonly ? handleNumberChange : undefined}
         {...componentProps}
-        {...inputProps}
+        {...restInputProps}
         {...themeProps}
         step={typeof inputProps.step === 'number' ? inputProps.step : 1}
         type='text'
         description={description}
         value={value}
+        min={typeof min === 'number' ? min : undefined}
+        max={typeof max === 'number' ? max : undefined}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
     ) : (

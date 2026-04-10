@@ -70,6 +70,8 @@ export default function BaseInputTemplate<
     [onChange, options.emptyValue],
   );
 
+  const { min, max, ...restInputProps } = inputProps;
+
   const input =
     inputProps.type === 'number' || inputProps.type === 'integer' ? (
       <InputNumber
@@ -82,8 +84,12 @@ export default function BaseInputTemplate<
         placeholder={placeholder}
         required={required}
         style={INPUT_STYLE}
+        changeOnWheel={false}
         list={schema.examples ? examplesId(id) : undefined}
-        {...inputProps}
+        {...restInputProps}
+        min={typeof min === 'number' ? min : undefined}
+        max={typeof max === 'number' ? max : undefined}
+        type={undefined}
         value={value}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />

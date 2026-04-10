@@ -2389,7 +2389,6 @@ exports[`nameGenerator bracketNameGenerator simple fields 1`] = `
                                           placeholder=""
                                           role="spinbutton"
                                           step="1"
-                                          type="number"
                                           value=""
                                         />
                                       </div>
@@ -4529,7 +4528,6 @@ exports[`nameGenerator dotNotationNameGenerator simple fields 1`] = `
                                           placeholder=""
                                           role="spinbutton"
                                           step="1"
-                                          type="number"
                                           value=""
                                         />
                                       </div>
@@ -6656,7 +6654,6 @@ exports[`single fields number field 0 1`] = `
                         placeholder=""
                         role="spinbutton"
                         step="1"
-                        type="number"
                         value="0"
                       />
                     </div>
@@ -6783,7 +6780,6 @@ exports[`single fields number field 1`] = `
                         placeholder=""
                         role="spinbutton"
                         step="1"
-                        type="number"
                         value=""
                       />
                     </div>
@@ -14483,7 +14479,6 @@ exports[`single fields schema examples with mixed types (string examples and num
                         placeholder=""
                         role="spinbutton"
                         step="1"
-                        type="number"
                         value="5432"
                       />
                     </div>
@@ -17268,7 +17263,6 @@ exports[`single fields up/down field 1`] = `
                         placeholder=""
                         role="spinbutton"
                         step="1"
-                        type="number"
                         value=""
                       />
                     </div>

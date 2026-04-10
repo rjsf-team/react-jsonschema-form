@@ -64,6 +64,7 @@ export default function WrapIfAdditionalTemplate<
         <Grid w='100%' align='center'>
           <Grid.Col span={6} className='form-additional'>
             <TextInput
+              key={label}
               className='form-group'
               label={displayLabel ? keyLabel : undefined}
               defaultValue={label}

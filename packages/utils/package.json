@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/utils",
-  "version": "6.4.1",
+  "version": "6.4.2",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -65,11 +65,11 @@
     "react": ">=18"
   },
   "dependencies": {
-    "@x0k/json-schema-merge": "^1.0.2",
+    "@x0k/json-schema-merge": "^1.0.3",
     "fast-uri": "^3.1.0",
     "jsonpointer": "^5.0.1",
-    "lodash": "^4.17.23",
-    "lodash-es": "^4.17.23",
+    "lodash": "^4.18.1",
+    "lodash-es": "^4.18.1",
     "react-is": "^18.3.1"
   },
   "devDependencies": {

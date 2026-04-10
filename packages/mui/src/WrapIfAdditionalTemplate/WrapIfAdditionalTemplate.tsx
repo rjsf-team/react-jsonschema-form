@@ -61,6 +61,7 @@ export default function WrapIfAdditionalTemplate<
     <Grid container key={`${id}-key`} alignItems='flex-start' spacing={2} className={classNames} style={style}>
       <Grid size={5.5}>
         <TextField
+          key={label}
           fullWidth={true}
           required={required}
           label={displayLabel ? keyLabel : undefined}
