@@ -33,7 +33,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   onBlur,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, emptyValue } = options;
-  const useRealValues = !!options.useRealOptionValues;
+  const optionValueFormat = options.optionValueFormat ?? 'indexed';
   const isEnumeratedObject = enumOptions && enumOptions[0]?.value && typeof enumOptions[0].value === 'object';
 
   /** Determines if an option is checked based on the current value
@@ -52,32 +52,32 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const handleFocus = useCallback(
     (event: FocusEvent<HTMLInputElement>) => {
       if (onFocus) {
-        onFocus(id, enumOptionValueDecoder<S>(event.target.value, enumOptions, useRealValues, emptyValue));
+        onFocus(id, enumOptionValueDecoder<S>(event.target.value, enumOptions, optionValueFormat, emptyValue));
       }
     },
-    [onFocus, id, enumOptions, useRealValues, emptyValue],
+    [onFocus, id, enumOptions, optionValueFormat, emptyValue],
   );
 
   /** Handles blur events for accessibility */
   const handleBlur = useCallback(
     (event: FocusEvent<HTMLInputElement>) => {
       if (onBlur) {
-        onBlur(id, enumOptionValueDecoder<S>(event.target.value, enumOptions, useRealValues, emptyValue));
+        onBlur(id, enumOptionValueDecoder<S>(event.target.value, enumOptions, optionValueFormat, emptyValue));
       }
     },
-    [onBlur, id, enumOptions, useRealValues, emptyValue],
+    [onBlur, id, enumOptions, optionValueFormat, emptyValue],
   );
 
   /** Handles change events for radio options */
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      const decoded = enumOptionValueDecoder<S>(event.target.value, enumOptions, useRealValues, emptyValue);
+      const decoded = enumOptionValueDecoder<S>(event.target.value, enumOptions, optionValueFormat, emptyValue);
       if (decoded !== undefined) {
         onChange(decoded);
         event.target.blur();
       }
     },
-    [onChange, enumOptions, useRealValues, emptyValue],
+    [onChange, enumOptions, optionValueFormat, emptyValue],
   );
 
   return (
@@ -91,7 +91,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
               id={`${id}-${option.value}`}
               className='radio'
               name={htmlName || id}
-              value={enumOptionValueEncoder(option.value, index, useRealValues)}
+              value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
               checked={isChecked(option)}
               required={required}
               disabled={disabled || readonly}

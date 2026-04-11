@@ -33,14 +33,14 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   uiSchema,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue } = options;
-  const useRealValues = !!options.useRealOptionValues;
+  const optionValueFormat = options.optionValueFormat ?? 'indexed';
 
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
-    onChange(enumOptionValueDecoder<S>(value, enumOptions, useRealValues, emptyValue));
+    onChange(enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, emptyValue));
   const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(value, enumOptions, useRealValues, emptyValue));
+    onBlur(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, emptyValue));
   const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(value, enumOptions, useRealValues, emptyValue));
+    onFocus(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, emptyValue));
 
   const row = options ? options.inline : false;
   const selectedIndex = (enumOptionsIndexForValue<S>(value, enumOptions) as string) ?? null;
@@ -60,7 +60,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        value={useRealValues ? (value != null ? String(value) : null) : selectedIndex}
+        value={optionValueFormat === 'realValue' ? (value != null ? String(value) : null) : selectedIndex}
         name={htmlName || id}
         aria-describedby={ariaDescribedByIds(id)}
       >
@@ -71,7 +71,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
 
               return (
                 <Radio
-                  value={enumOptionValueEncoder(option.value, index, useRealValues)}
+                  value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
                   key={index}
                   id={optionId(id, index)}
                   disabled={disabled || itemDisabled || readonly}

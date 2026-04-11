@@ -36,6 +36,14 @@ export type FormContextType = GenericObjectType;
  */
 export type TestIdShape = Record<string, string>;
 
+/** Controls how enum-backed widgets encode option values in their DOM `value` attributes.
+ *
+ * - `'indexed'`: options are encoded as their array index (default, historical behavior).
+ * - `'realValue'`: primitive option values are stringified directly, enabling native form
+ *   submission. Object/array values still fall back to their index.
+ */
+export type OptionValueFormat = 'indexed' | 'realValue';
+
 /** Function to generate HTML name attributes from path segments */
 export type NameGeneratorFunction = (path: FieldPathList, idPrefix: string, isMultiValue?: boolean) => string;
 
@@ -424,11 +432,21 @@ export type GlobalUISchemaOptions = GenericObjectType & {
    * both. To disable the Optional Data Field UI for a specific field, provide an empty array within the UI schema.
    */
   enableOptionalDataFieldForType?: ('object' | 'array')[];
-  /** When true, enum-backed widgets (select, radio, checkboxes) render real enum values
-   *  in their value attributes instead of array indices. This enables proper native form
-   *  submission and browser autocomplete. Default: false (index-based, current behavior).
+  /** Controls how enum-backed widgets (select, radio, checkboxes) encode option values
+   *  in their DOM `value` attributes.
+   *
+   *  - `'indexed'` (default): options are encoded as their array index. This is the
+   *    historical behavior and keeps object/array enum values addressable without
+   *    stringifying them.
+   *  - `'realValue'`: primitive option values are stringified directly (e.g. `"foo"`,
+   *    `"42"`, `"true"`). This enables native form submission and browser autocomplete
+   *    since the submitted value matches the enum value. Object/array values still
+   *    fall back to their index since `String(obj)` would produce `"[object Object]"`.
+   *
+   *  The form data passed to `onChange` is always the typed enum value; this option
+   *  only affects the DOM-level encoding.
    */
-  useRealOptionValues?: boolean;
+  optionValueFormat?: OptionValueFormat;
 };
 
 /** The set of options from the `Form` that will be available on the `Registry` for use in everywhere the `registry` is

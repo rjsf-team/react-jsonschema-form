@@ -35,7 +35,7 @@ export default function SelectWidget<
   const { enumOptions, enumDisabled, emptyValue: optEmptyValue } = options;
 
   const emptyValue = multiple ? [] : '';
-  const useRealValues = !!options.useRealOptionValues;
+  const optionValueFormat = options.optionValueFormat ?? 'indexed';
 
   function getValue(event: FocusEvent | ChangeEvent | any, multiple?: boolean) {
     if (multiple) {
@@ -47,7 +47,7 @@ export default function SelectWidget<
       return event.target.value;
     }
   }
-  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, !!multiple, useRealValues, emptyValue);
+  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, !!multiple, optionValueFormat, emptyValue);
   const showPlaceholderOption = !multiple && schema.default === undefined;
 
   return (
@@ -64,19 +64,19 @@ export default function SelectWidget<
         onBlur &&
         ((event: FocusEvent) => {
           const newValue = getValue(event, multiple);
-          onBlur(id, enumOptionValueDecoder<S>(newValue, enumOptions, useRealValues, optEmptyValue));
+          onBlur(id, enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyValue));
         })
       }
       onFocus={
         onFocus &&
         ((event: FocusEvent) => {
           const newValue = getValue(event, multiple);
-          onFocus(id, enumOptionValueDecoder<S>(newValue, enumOptions, useRealValues, optEmptyValue));
+          onFocus(id, enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyValue));
         })
       }
       onChange={(event: ChangeEvent) => {
         const newValue = getValue(event, multiple);
-        onChange(enumOptionValueDecoder<S>(newValue, enumOptions, useRealValues, optEmptyValue));
+        onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyValue));
       }}
       aria-describedby={ariaDescribedByIds(id)}
     >
@@ -84,7 +84,7 @@ export default function SelectWidget<
       {(enumOptions as any).map(({ value, label }: any, i: number) => {
         const disabled: any = Array.isArray(enumDisabled) && (enumDisabled as any).indexOf(value) != -1;
         return (
-          <option key={i} id={label} value={enumOptionValueEncoder(value, i, useRealValues)} disabled={disabled}>
+          <option key={i} id={label} value={enumOptionValueEncoder(value, i, optionValueFormat)} disabled={disabled}>
             {label}
           </option>
         );

@@ -35,18 +35,18 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const { enumOptions, enumDisabled, emptyValue } = options;
-  const useRealValues = !!options.useRealOptionValues;
+  const optionValueFormat = options.optionValueFormat ?? 'indexed';
 
   const handleChange = ({ target: { value: nextValue } }: RadioChangeEvent) =>
-    onChange(enumOptionValueDecoder<S>(nextValue, enumOptions, useRealValues, emptyValue));
+    onChange(enumOptionValueDecoder<S>(nextValue, enumOptions, optionValueFormat, emptyValue));
 
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, emptyValue));
+    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
 
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, emptyValue));
+    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
 
-  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, false, useRealValues, emptyValue);
+  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat, emptyValue);
 
   return (
     <Radio.Group
@@ -67,7 +67,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
             autoFocus={i === 0 ? autofocus : false}
             disabled={disabled || (Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1)}
             key={i}
-            value={enumOptionValueEncoder(option.value, i, useRealValues)}
+            value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
           >
             {option.label}
           </Radio>

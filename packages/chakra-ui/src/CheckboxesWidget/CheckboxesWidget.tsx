@@ -38,12 +38,12 @@ export default function CheckboxesWidget<
     uiSchema,
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
-  const useRealValues = !!options.useRealOptionValues;
+  const optionValueFormat = options.optionValueFormat ?? 'indexed';
 
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement | any>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, emptyValue));
+    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement | any>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, emptyValue));
+    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
 
   const row = options ? options.inline : false;
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, true) as string[];
@@ -59,8 +59,10 @@ export default function CheckboxesWidget<
     >
       {!hideLabel && label && <FieldsetLegend>{labelValue(label)}</FieldsetLegend>}
       <CheckboxGroup
-        onValueChange={(option) => onChange(enumOptionValueDecoder<S>(option, enumOptions, useRealValues, emptyValue))}
-        value={useRealValues ? (Array.isArray(value) ? value.map(String) : []) : selectedIndexes}
+        onValueChange={(option) =>
+          onChange(enumOptionValueDecoder<S>(option, enumOptions, optionValueFormat, emptyValue))
+        }
+        value={optionValueFormat === 'realValue' ? (Array.isArray(value) ? value.map(String) : []) : selectedIndexes}
         aria-describedby={ariaDescribedByIds(id)}
         readOnly={readonly}
         invalid={required && value.length === 0}
@@ -74,7 +76,7 @@ export default function CheckboxesWidget<
                   key={index}
                   id={optionId(id, index)}
                   name={htmlName || id}
-                  value={enumOptionValueEncoder(option.value, index, useRealValues)}
+                  value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
                   disabled={disabled || itemDisabled || readonly}
                   onBlur={_onBlur}
                   onFocus={_onFocus}

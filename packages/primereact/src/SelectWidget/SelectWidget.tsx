@@ -51,7 +51,7 @@ function SingleSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   ...dropdownProps
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
-  const useRealValues = !!options.useRealOptionValues;
+  const optionValueFormat = options.optionValueFormat ?? 'indexed';
   const primeProps = (options.prime || {}) as object;
 
   multiple = typeof multiple === 'undefined' ? false : multiple;
@@ -59,11 +59,11 @@ function SingleSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   const emptyValue = multiple ? [] : '';
 
   const _onChange = (e: { value: any }) =>
-    onChange(enumOptionValueDecoder<S>(e.value, enumOptions, useRealValues, optEmptyVal));
+    onChange(enumOptionValueDecoder<S>(e.value, enumOptions, optionValueFormat, optEmptyVal));
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, optEmptyVal));
+    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, optEmptyVal));
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, optEmptyVal));
+    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, optEmptyVal));
   const { ...dropdownRemainingProps } = dropdownProps;
 
   return (
@@ -71,10 +71,10 @@ function SingleSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
       id={id}
       name={htmlName || id}
       {...primeProps}
-      value={enumOptionSelectedValue<S>(value, enumOptions, !!multiple, useRealValues, emptyValue)}
+      value={enumOptionSelectedValue<S>(value, enumOptions, !!multiple, optionValueFormat, emptyValue)}
       options={(enumOptions ?? []).map(({ value, label }, i: number) => ({
         label,
-        value: enumOptionValueEncoder(value, i, useRealValues),
+        value: enumOptionValueEncoder(value, i, optionValueFormat),
         disabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1,
       }))}
       onChange={_onChange}
@@ -104,27 +104,27 @@ function MultiSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   onFocus,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
-  const useRealValues = !!options.useRealOptionValues;
+  const optionValueFormat = options.optionValueFormat ?? 'indexed';
   const primeProps = (options.prime || {}) as object;
 
   const emptyValue = multiple ? [] : '';
 
   const _onChange = (e: { value: any }) =>
-    onChange(enumOptionValueDecoder<S>(e.value, enumOptions, useRealValues, optEmptyVal));
+    onChange(enumOptionValueDecoder<S>(e.value, enumOptions, optionValueFormat, optEmptyVal));
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, optEmptyVal));
+    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, optEmptyVal));
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, optEmptyVal));
+    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, optEmptyVal));
 
   return (
     <MultiSelect
       id={id}
       name={htmlName || id}
       {...primeProps}
-      value={enumOptionSelectedValue<S>(value, enumOptions, multiple, useRealValues, emptyValue)}
+      value={enumOptionSelectedValue<S>(value, enumOptions, multiple, optionValueFormat, emptyValue)}
       options={(enumOptions ?? []).map(({ value, label }, i: number) => ({
         label,
-        value: enumOptionValueEncoder(value, i, useRealValues),
+        value: enumOptionValueEncoder(value, i, optionValueFormat),
         disabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1,
       }))}
       onChange={_onChange}

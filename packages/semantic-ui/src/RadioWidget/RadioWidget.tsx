@@ -37,14 +37,14 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     rawErrors = [],
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
-  const useRealValues = !!options.useRealOptionValues;
+  const optionValueFormat = options.optionValueFormat ?? 'indexed';
   const semanticProps = getSemanticProps<T, S, F>({
     formContext: registry.formContext,
     options,
     uiSchema,
   });
   const _onChange = (_: FormEvent<HTMLInputElement>, { value: eventValue }: CheckboxProps) => {
-    return onChange(enumOptionValueDecoder<S>(String(eventValue!), enumOptions, useRealValues, emptyValue));
+    return onChange(enumOptionValueDecoder<S>(String(eventValue!), enumOptions, optionValueFormat, emptyValue));
   };
 
   const _onBlur = () => onBlur(id, value);
@@ -67,7 +67,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
               onBlur={_onBlur}
               onChange={_onChange}
               label={option.label}
-              value={enumOptionValueEncoder(option.value, index, useRealValues)}
+              value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
               error={rawErrors.length > 0}
               key={index}
               checked={checked}

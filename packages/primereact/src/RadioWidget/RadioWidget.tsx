@@ -22,10 +22,10 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const { id, htmlName, value, disabled, readonly, onChange, onBlur, onFocus, options } = props;
   const primeProps = (options.prime || {}) as object;
   const { enumOptions, enumDisabled, emptyValue } = options;
-  const useRealValues = !!options.useRealOptionValues;
+  const optionValueFormat = options.optionValueFormat ?? 'indexed';
 
   const _onChange = (e: RadioButtonChangeEvent) => {
-    onChange(enumOptionValueDecoder<S>(e.value, enumOptions, useRealValues, emptyValue));
+    onChange(enumOptionValueDecoder<S>(e.value, enumOptions, optionValueFormat, emptyValue));
   };
 
   const _onBlur = () => onBlur(id, value);
@@ -46,7 +46,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
                 onFocus={_onFocus}
                 onBlur={_onBlur}
                 onChange={_onChange}
-                value={enumOptionValueEncoder(option.value, index, useRealValues)}
+                value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
                 checked={checked}
                 disabled={disabled || itemDisabled || readonly}
                 aria-describedby={ariaDescribedByIds(id)}

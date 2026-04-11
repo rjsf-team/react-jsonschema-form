@@ -40,7 +40,7 @@ export default function SelectWidget<
   onFocus,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, emptyValue: optEmptyVal } = options;
-  const useRealValues = !!options.useRealOptionValues;
+  const optionValueFormat = options.optionValueFormat ?? 'indexed';
   multiple = typeof multiple === 'undefined' ? false : !!multiple;
 
   const getDisplayValue = (val: any) => {
@@ -69,7 +69,7 @@ export default function SelectWidget<
         const currentValue = Array.isArray(value) ? value : [];
         const optionValue = isEnumeratedObject
           ? enumOptions[index].value
-          : enumOptionValueDecoder<S>(String(index), enumOptions, useRealValues, optEmptyVal);
+          : enumOptionValueDecoder<S>(String(index), enumOptions, optionValueFormat, optEmptyVal);
         const newValue = currentValue.includes(optionValue)
           ? currentValue.filter((v) => v !== optionValue)
           : [...currentValue, optionValue];
@@ -78,35 +78,35 @@ export default function SelectWidget<
         onChange(
           isEnumeratedObject
             ? enumOptions[index].value
-            : enumOptionValueDecoder<S>(String(index), enumOptions, useRealValues, optEmptyVal),
+            : enumOptionValueDecoder<S>(String(index), enumOptions, optionValueFormat, optEmptyVal),
         );
       }
     },
-    [value, multiple, isEnumeratedObject, enumOptions, optEmptyVal, useRealValues, onChange],
+    [value, multiple, isEnumeratedObject, enumOptions, optEmptyVal, optionValueFormat, onChange],
   );
 
   const _onBlur = useCallback(
     ({ target }: FocusEvent<HTMLDivElement>) => {
       const dataValue = target?.getAttribute('data-value');
       if (dataValue !== null) {
-        onBlur(id, enumOptionValueDecoder<S>(dataValue, enumOptions, useRealValues, optEmptyVal));
+        onBlur(id, enumOptionValueDecoder<S>(dataValue, enumOptions, optionValueFormat, optEmptyVal));
       }
     },
-    [onBlur, id, enumOptions, optEmptyVal, useRealValues],
+    [onBlur, id, enumOptions, optEmptyVal, optionValueFormat],
   );
 
   const _onFocus = useCallback(
     ({ target }: FocusEvent<HTMLDivElement>) => {
       const dataValue = target?.getAttribute('data-value');
       if (dataValue !== null) {
-        onFocus(id, enumOptionValueDecoder<S>(dataValue, enumOptions, useRealValues, optEmptyVal));
+        onFocus(id, enumOptionValueDecoder<S>(dataValue, enumOptions, optionValueFormat, optEmptyVal));
       }
     },
-    [onFocus, id, enumOptions, optEmptyVal, useRealValues],
+    [onFocus, id, enumOptions, optEmptyVal, optionValueFormat],
   );
 
   const selectedValues: string[] = [
-    enumOptionSelectedValue<S>(value, enumOptions, !!multiple, useRealValues, multiple ? [] : ''),
+    enumOptionSelectedValue<S>(value, enumOptions, !!multiple, optionValueFormat, multiple ? [] : ''),
   ]
     .flat()
     .filter((v) => v !== '');
@@ -136,7 +136,7 @@ export default function SelectWidget<
         </div>
         <ul className='dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg'>
           {optionsList.map(({ value: optValue, label }, i) => {
-            const encodedValue = enumOptionValueEncoder(optValue, i, useRealValues);
+            const encodedValue = enumOptionValueEncoder(optValue, i, optionValueFormat);
             return (
               <li
                 key={i}

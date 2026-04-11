@@ -39,18 +39,18 @@ export default function SelectWidget<
   className,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyValue } = options;
-  const useRealValues = !!options.useRealOptionValues;
+  const optionValueFormat = options.optionValueFormat ?? 'indexed';
 
   const _onFancyFocus = () => {
-    onFocus(id, enumOptionValueDecoder<S>(value, enumOptions, useRealValues, optEmptyValue));
+    onFocus(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, optEmptyValue));
   };
 
   const _onFancyBlur = () => {
-    onBlur(id, enumOptionValueDecoder<S>(value, enumOptions, useRealValues, optEmptyValue));
+    onBlur(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, optEmptyValue));
   };
 
   const items = (enumOptions as any)?.map(({ value, label }: any, index: number) => ({
-    value: multiple ? value : enumOptionValueEncoder(value, index, useRealValues),
+    value: multiple ? value : enumOptionValueEncoder(value, index, optionValueFormat),
     label: label,
     index,
     disabled: Array.isArray(enumDisabled) && enumDisabled.includes(value),
@@ -63,9 +63,9 @@ export default function SelectWidget<
       {!multiple ? (
         <FancySelect
           items={items}
-          selected={enumOptionSelectedValue<S>(value, enumOptions, false, useRealValues, '') as string}
+          selected={enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat, '') as string}
           onValueChange={(selectedValue) => {
-            onChange(enumOptionValueDecoder<S>(selectedValue, enumOptions, useRealValues, optEmptyValue));
+            onChange(enumOptionValueDecoder<S>(selectedValue, enumOptions, optionValueFormat, optEmptyValue));
           }}
           autoFocus={autofocus}
           disabled={disabled || readonly}
@@ -86,7 +86,7 @@ export default function SelectWidget<
           items={items}
           selected={value}
           onValueChange={(values) => {
-            onChange(enumOptionValueDecoder<S>(values.map(String), enumOptions, useRealValues, optEmptyValue));
+            onChange(enumOptionValueDecoder<S>(values.map(String), enumOptions, optionValueFormat, optEmptyValue));
           }}
           onFocus={_onFancyFocus}
           onBlur={_onFancyBlur}

@@ -13,45 +13,48 @@ const numericOptions: EnumOptionsType<RJSFSchema>[] = [
 ];
 
 describe('enumOptionSelectedValue', () => {
-  describe('when useRealValues is false (index mode)', () => {
+  describe("when format is 'indexed' (default)", () => {
     it('returns index for a single value', () => {
-      expect(enumOptionSelectedValue('bar', stringOptions, false, false, '')).toBe('1');
+      expect(enumOptionSelectedValue('bar', stringOptions, false, 'indexed', '')).toBe('1');
     });
     it('returns indexes for multiple values', () => {
-      expect(enumOptionSelectedValue(['foo', 'baz'], stringOptions, true, false, [])).toEqual(['0', '2']);
+      expect(enumOptionSelectedValue(['foo', 'baz'], stringOptions, true, 'indexed', [])).toEqual(['0', '2']);
     });
     it('returns emptyValue when value is undefined', () => {
-      expect(enumOptionSelectedValue(undefined, stringOptions, false, false, '')).toBe('');
+      expect(enumOptionSelectedValue(undefined, stringOptions, false, 'indexed', '')).toBe('');
     });
     it('returns emptyValue when value equals emptyValue (single)', () => {
-      expect(enumOptionSelectedValue('', stringOptions, false, false, '')).toBe('');
+      expect(enumOptionSelectedValue('', stringOptions, false, 'indexed', '')).toBe('');
     });
     it('returns emptyValue when value is empty array (multiple)', () => {
-      expect(enumOptionSelectedValue([], stringOptions, true, false, [])).toEqual([]);
+      expect(enumOptionSelectedValue([], stringOptions, true, 'indexed', [])).toEqual([]);
     });
     it('returns emptyValue when index not found', () => {
-      expect(enumOptionSelectedValue('nonexistent', stringOptions, false, false, '')).toBe('');
+      expect(enumOptionSelectedValue('nonexistent', stringOptions, false, 'indexed', '')).toBe('');
+    });
+    it('defaults to indexed when format is omitted', () => {
+      expect(enumOptionSelectedValue('bar', stringOptions, false)).toBe('1');
     });
   });
 
-  describe('when useRealValues is true', () => {
+  describe("when format is 'realValue'", () => {
     it('returns String(value) for a single string value', () => {
-      expect(enumOptionSelectedValue('bar', stringOptions, false, true, '')).toBe('bar');
+      expect(enumOptionSelectedValue('bar', stringOptions, false, 'realValue', '')).toBe('bar');
     });
     it('returns String(value) for a single numeric value', () => {
-      expect(enumOptionSelectedValue(10, numericOptions, false, true, '')).toBe('10');
+      expect(enumOptionSelectedValue(10, numericOptions, false, 'realValue', '')).toBe('10');
     });
     it('returns value.map(String) for multiple values', () => {
-      expect(enumOptionSelectedValue(['foo', 'baz'], stringOptions, true, true, [])).toEqual(['foo', 'baz']);
+      expect(enumOptionSelectedValue(['foo', 'baz'], stringOptions, true, 'realValue', [])).toEqual(['foo', 'baz']);
     });
     it('returns emptyValue when value is undefined', () => {
-      expect(enumOptionSelectedValue(undefined, stringOptions, false, true, '')).toBe('');
+      expect(enumOptionSelectedValue(undefined, stringOptions, false, 'realValue', '')).toBe('');
     });
     it('returns emptyValue when value is empty array (multiple)', () => {
-      expect(enumOptionSelectedValue([], stringOptions, true, true, [])).toEqual([]);
+      expect(enumOptionSelectedValue([], stringOptions, true, 'realValue', [])).toEqual([]);
     });
     it('returns emptyValue when value equals emptyValue (single)', () => {
-      expect(enumOptionSelectedValue('', stringOptions, false, true, '')).toBe('');
+      expect(enumOptionSelectedValue('', stringOptions, false, 'realValue', '')).toBe('');
     });
   });
 });

@@ -1,16 +1,16 @@
-import { EnumOptionsType, StrictRJSFSchema, RJSFSchema } from './types';
+import { EnumOptionsType, OptionValueFormat, StrictRJSFSchema, RJSFSchema } from './types';
 import enumOptionsIndexForValue from './enumOptionsIndexForValue';
 
 /** Computes the value to pass to a select element's `value` attribute.
  *
- * When `useRealValues` is true, converts form data values to strings.
- * When `useRealValues` is false, resolves to index-based values via `enumOptionsIndexForValue`.
- * Returns `emptyValue` when the current value is empty/undefined.
+ * When `format` is `'realValue'`, converts form data values to strings.
+ * When `format` is `'indexed'` (the default), resolves to index-based values via
+ * `enumOptionsIndexForValue`. Returns `emptyValue` when the current value is empty.
  *
  * @param value - The current form data value
  * @param enumOptions - The available enum options
  * @param multiple - Whether the select allows multiple selections
- * @param useRealValues - Whether real values or indices are used for encoding
+ * @param [format='indexed'] - How option values are encoded on the DOM
  * @param emptyValue - The value to return when the selection is empty
  * @returns The value to use for the select element's `value` attribute
  */
@@ -18,7 +18,7 @@ export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJS
   value: any,
   enumOptions: EnumOptionsType<S>[] | undefined,
   multiple: boolean,
-  useRealValues: boolean,
+  format: OptionValueFormat = 'indexed',
   emptyValue?: any,
 ): any {
   const isEmpty =
@@ -30,7 +30,7 @@ export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJS
     return emptyValue;
   }
 
-  if (useRealValues) {
+  if (format === 'realValue') {
     return multiple ? value.map(String) : String(value);
   }
 

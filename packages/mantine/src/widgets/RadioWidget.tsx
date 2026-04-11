@@ -40,34 +40,34 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   } = props;
 
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
-  const useRealValues = !!options.useRealOptionValues;
+  const optionValueFormat = options.optionValueFormat ?? 'indexed';
   const themeProps = cleanupOptions(options);
 
   const handleChange = useCallback(
     (nextValue: any) => {
       if (!disabled && !readonly && onChange) {
-        onChange(enumOptionValueDecoder<S>(nextValue, enumOptions, useRealValues, emptyValue));
+        onChange(enumOptionValueDecoder<S>(nextValue, enumOptions, optionValueFormat, emptyValue));
       }
     },
-    [onChange, disabled, readonly, enumOptions, emptyValue, useRealValues],
+    [onChange, disabled, readonly, enumOptions, emptyValue, optionValueFormat],
   );
 
   const handleBlur = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) => {
       if (onBlur) {
-        onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, emptyValue));
+        onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
       }
     },
-    [onBlur, id, enumOptions, emptyValue, useRealValues],
+    [onBlur, id, enumOptions, emptyValue, optionValueFormat],
   );
 
   const handleFocus = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) => {
       if (onFocus) {
-        onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, emptyValue));
+        onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
       }
     },
-    [onFocus, id, enumOptions, emptyValue, useRealValues],
+    [onFocus, id, enumOptions, emptyValue, optionValueFormat],
   );
 
   const selected = enumOptionsIndexForValue<S>(value, enumOptions) as string;
@@ -91,7 +91,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
             <Radio
               key={i}
               id={optionId(id, i)}
-              value={enumOptionValueEncoder(option.value, i, useRealValues)}
+              value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
               label={option.label}
               disabled={Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1}
               autoFocus={i === 0 && autofocus}

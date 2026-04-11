@@ -44,22 +44,22 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     uiSchema,
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
-  const useRealValues = !!options.useRealOptionValues;
+  const optionValueFormat = options.optionValueFormat ?? 'indexed';
 
   const _onMultiChange = ({ value }: SelectValueChangeDetails) => {
-    return onChange(enumOptionValueDecoder<S>(value, enumOptions, useRealValues, emptyValue));
+    return onChange(enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, emptyValue));
   };
 
   const _onSingleChange = ({ value }: SelectValueChangeDetails) => {
-    const selected = enumOptionValueDecoder<S>(value, enumOptions, useRealValues, emptyValue);
+    const selected = enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, emptyValue);
     return onChange(Array.isArray(selected) && selected.length === 1 ? selected[0] : selected);
   };
 
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, emptyValue));
+    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
 
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, emptyValue));
+    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
 
   const showPlaceholderOption = !multiple && schema.default === undefined;
   const { valueLabelMap, displayEnumOptions } = useMemo((): {
@@ -74,7 +74,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         valueLabelMap[index] = label || String(value);
         return {
           label,
-          value: enumOptionValueEncoder(value, index, useRealValues),
+          value: enumOptionValueEncoder(value, index, optionValueFormat),
           disabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1,
         };
       });
@@ -83,7 +83,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       }
     }
     return { valueLabelMap: valueLabelMap, displayEnumOptions: displayEnumOptions };
-  }, [enumDisabled, enumOptions, placeholder, showPlaceholderOption, useRealValues]);
+  }, [enumDisabled, enumOptions, placeholder, showPlaceholderOption, optionValueFormat]);
 
   const isMultiple = typeof multiple !== 'undefined' && multiple !== false && Boolean(enumOptions);
   const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions, isMultiple);
@@ -107,9 +107,9 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       : [];
 
   let formValue: string[];
-  if (useRealValues) {
+  if (optionValueFormat === 'realValue') {
     formValue = [
-      enumOptionSelectedValue<S>(value, enumOptions, isMultiple, true, isMultiple ? [] : ''),
+      enumOptionSelectedValue<S>(value, enumOptions, isMultiple, optionValueFormat, isMultiple ? [] : ''),
     ].flat() as string[];
   } else {
     formValue = (isMultiple ? getMultiValue() : getSingleValue()).map((item) => item.value);

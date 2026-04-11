@@ -31,19 +31,19 @@ function CheckboxesWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   htmlName,
 }: WidgetProps<T, S, F>) {
   const { inline = false, enumOptions, enumDisabled, emptyValue } = options;
-  const useRealValues = !!options.useRealOptionValues;
+  const optionValueFormat = options.optionValueFormat ?? 'indexed';
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const handleBlur = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) =>
-      onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, emptyValue)),
-    [onBlur, id, enumOptions, emptyValue, useRealValues],
+      onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue)),
+    [onBlur, id, enumOptions, emptyValue, optionValueFormat],
   );
 
   const handleFocus = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) =>
-      onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, emptyValue)),
-    [onFocus, id, enumOptions, emptyValue, useRealValues],
+      onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue)),
+    [onFocus, id, enumOptions, emptyValue, optionValueFormat],
   );
 
   return (
@@ -69,7 +69,7 @@ function CheckboxesWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
                 id={optionId(id, index)}
                 name={htmlName || id}
                 checked={checked}
-                value={enumOptionValueEncoder(option.value, index, useRealValues)}
+                value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={autofocus && index === 0}
                 onChange={handleChange}

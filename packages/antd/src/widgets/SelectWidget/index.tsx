@@ -48,14 +48,14 @@ export default function SelectWidget<
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const { enumOptions, enumDisabled, emptyValue } = options;
-  const useRealValues = !!options.useRealOptionValues;
+  const optionValueFormat = options.optionValueFormat ?? 'indexed';
 
   const handleChange = (nextValue: any) =>
-    onChange(enumOptionValueDecoder<S>(nextValue, enumOptions, useRealValues, emptyValue));
+    onChange(enumOptionValueDecoder<S>(nextValue, enumOptions, optionValueFormat, emptyValue));
 
-  const handleBlur = () => onBlur(id, enumOptionValueDecoder<S>(value, enumOptions, useRealValues, emptyValue));
+  const handleBlur = () => onBlur(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, emptyValue));
 
-  const handleFocus = () => onFocus(id, enumOptionValueDecoder<S>(value, enumOptions, useRealValues, emptyValue));
+  const handleFocus = () => onFocus(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, emptyValue));
 
   const filterOption: SelectProps['filterOption'] = (input, option) => {
     if (option && isString(option.label)) {
@@ -67,7 +67,7 @@ export default function SelectWidget<
 
   const getPopupContainer = SelectWidget.getPopupContainerCallback();
 
-  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, !!multiple, useRealValues, emptyValue);
+  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, !!multiple, optionValueFormat, emptyValue);
 
   // Antd's typescript definitions do not contain the following props that are actually necessary and, if provided,
   // they are used, so hacking them in via by spreading `extraProps` on the component to avoid typescript errors
@@ -82,7 +82,7 @@ export default function SelectWidget<
       const options: DefaultOptionType[] = enumOptions.map(({ value: optionValue, label: optionLabel }, index) => ({
         disabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(optionValue) !== -1,
         key: String(index),
-        value: enumOptionValueEncoder(optionValue, index, useRealValues),
+        value: enumOptionValueEncoder(optionValue, index, optionValueFormat),
         label: optionLabel,
       }));
 
@@ -92,7 +92,7 @@ export default function SelectWidget<
       return options;
     }
     return undefined;
-  }, [enumDisabled, enumOptions, placeholder, showPlaceholderOption, useRealValues]);
+  }, [enumDisabled, enumOptions, placeholder, showPlaceholderOption, optionValueFormat]);
 
   return (
     <Select

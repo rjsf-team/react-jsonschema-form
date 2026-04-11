@@ -35,7 +35,7 @@ export default function CheckboxesWidget<T, S extends StrictRJSFSchema = RJSFSch
   onBlur,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, emptyValue } = options;
-  const useRealValues = !!options.useRealOptionValues;
+  const optionValueFormat = options.optionValueFormat ?? 'indexed';
   const isEnumeratedObject = enumOptions && enumOptions[0]?.value && typeof enumOptions[0].value === 'object';
 
   /** Determines if a checkbox option should be checked based on the current value
@@ -81,20 +81,20 @@ export default function CheckboxesWidget<T, S extends StrictRJSFSchema = RJSFSch
   const handleFocus = useCallback(
     (event: FocusEvent<HTMLInputElement>) => {
       if (onFocus) {
-        onFocus(id, enumOptionValueDecoder<S>(event.target.value, enumOptions, useRealValues, emptyValue));
+        onFocus(id, enumOptionValueDecoder<S>(event.target.value, enumOptions, optionValueFormat, emptyValue));
       }
     },
-    [onFocus, id, enumOptions, useRealValues, emptyValue],
+    [onFocus, id, enumOptions, optionValueFormat, emptyValue],
   );
 
   /** Handles blur events for accessibility */
   const handleBlur = useCallback(
     (event: FocusEvent<HTMLInputElement>) => {
       if (onBlur) {
-        onBlur(id, enumOptionValueDecoder<S>(event.target.value, enumOptions, useRealValues, emptyValue));
+        onBlur(id, enumOptionValueDecoder<S>(event.target.value, enumOptions, optionValueFormat, emptyValue));
       }
     },
-    [onBlur, id, enumOptions, useRealValues, emptyValue],
+    [onBlur, id, enumOptions, optionValueFormat, emptyValue],
   );
 
   return (
@@ -108,7 +108,7 @@ export default function CheckboxesWidget<T, S extends StrictRJSFSchema = RJSFSch
               id={`${id}-${option.value}`}
               className='checkbox'
               name={htmlName || id}
-              value={enumOptionValueEncoder(option.value, index, useRealValues)}
+              value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
               checked={isChecked(option)}
               required={required}
               disabled={disabled || readonly}

@@ -42,7 +42,7 @@ export default function CheckboxesWidget<
   onFocus,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
-  const useRealValues = !!options.useRealOptionValues;
+  const optionValueFormat = options.optionValueFormat ?? 'indexed';
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const _onChange =
@@ -56,9 +56,9 @@ export default function CheckboxesWidget<
     };
 
   const _onBlur = ({ target }: FocusEvent<HTMLButtonElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, emptyValue));
+    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
   const _onFocus = ({ target }: FocusEvent<HTMLButtonElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, emptyValue));
+    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
 
   return (
     <>

@@ -39,16 +39,16 @@ export default function CheckboxesWidget<
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
-  const useRealValues = !!options.useRealOptionValues;
+  const optionValueFormat = options.optionValueFormat ?? 'indexed';
 
   const handleChange = (nextValue: any) =>
-    onChange(enumOptionValueDecoder<S>(nextValue, enumOptions, useRealValues, emptyValue));
+    onChange(enumOptionValueDecoder<S>(nextValue, enumOptions, optionValueFormat, emptyValue));
 
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target.value, enumOptions, useRealValues, emptyValue));
+    onBlur(id, enumOptionValueDecoder<S>(target.value, enumOptions, optionValueFormat, emptyValue));
 
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target.value, enumOptions, useRealValues, emptyValue));
+    onFocus(id, enumOptionValueDecoder<S>(target.value, enumOptions, optionValueFormat, emptyValue));
 
   // Antd's typescript definitions do not contain the following props that are actually necessary and, if provided,
   // they are used, so hacking them in via by spreading `extraProps` on the component to avoid typescript errors
@@ -58,7 +58,7 @@ export default function CheckboxesWidget<
     onFocus: !readonly ? handleFocus : undefined,
   };
 
-  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, true, useRealValues, []) as string[];
+  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, true, optionValueFormat, []) as string[];
 
   return Array.isArray(enumOptions) && enumOptions.length > 0 ? (
     <>
@@ -78,7 +78,7 @@ export default function CheckboxesWidget<
                 name={htmlName || id}
                 autoFocus={i === 0 ? autofocus : false}
                 disabled={Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1}
-                value={enumOptionValueEncoder(option.value, i, useRealValues)}
+                value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
               >
                 {option.label}
               </Checkbox>

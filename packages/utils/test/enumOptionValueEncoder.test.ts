@@ -1,39 +1,42 @@
 import { enumOptionValueEncoder } from '../src';
 
 describe('enumOptionValueEncoder', () => {
-  describe('when useRealValues is false', () => {
+  describe("when format is 'indexed'", () => {
     it('returns the index as a string', () => {
-      expect(enumOptionValueEncoder('hello', 2, false)).toBe('2');
+      expect(enumOptionValueEncoder('hello', 2, 'indexed')).toBe('2');
     });
     it('returns the index for numeric values', () => {
-      expect(enumOptionValueEncoder(123, 0, false)).toBe('0');
+      expect(enumOptionValueEncoder(123, 0, 'indexed')).toBe('0');
     });
     it('returns the index for object values', () => {
-      expect(enumOptionValueEncoder({ name: 'test' }, 1, false)).toBe('1');
+      expect(enumOptionValueEncoder({ name: 'test' }, 1, 'indexed')).toBe('1');
+    });
+    it('defaults to indexed when format is omitted', () => {
+      expect(enumOptionValueEncoder('hello', 2)).toBe('2');
     });
   });
 
-  describe('when useRealValues is true', () => {
+  describe("when format is 'realValue'", () => {
     it('returns String(value) for string values', () => {
-      expect(enumOptionValueEncoder('hello', 2, true)).toBe('hello');
+      expect(enumOptionValueEncoder('hello', 2, 'realValue')).toBe('hello');
     });
     it('returns String(value) for numeric values', () => {
-      expect(enumOptionValueEncoder(123, 0, true)).toBe('123');
+      expect(enumOptionValueEncoder(123, 0, 'realValue')).toBe('123');
     });
     it('returns String(value) for boolean values', () => {
-      expect(enumOptionValueEncoder(true, 0, true)).toBe('true');
+      expect(enumOptionValueEncoder(true, 0, 'realValue')).toBe('true');
     });
     it('falls back to index for object values', () => {
-      expect(enumOptionValueEncoder({ name: 'test' }, 1, true)).toBe('1');
+      expect(enumOptionValueEncoder({ name: 'test' }, 1, 'realValue')).toBe('1');
     });
     it('falls back to index for array values', () => {
-      expect(enumOptionValueEncoder([1, 2], 0, true)).toBe('0');
+      expect(enumOptionValueEncoder([1, 2], 0, 'realValue')).toBe('0');
     });
     it('returns empty string for undefined', () => {
-      expect(enumOptionValueEncoder(undefined, 0, true)).toBe('');
+      expect(enumOptionValueEncoder(undefined, 0, 'realValue')).toBe('');
     });
     it('returns empty string for null', () => {
-      expect(enumOptionValueEncoder(null, 0, true)).toBe('');
+      expect(enumOptionValueEncoder(null, 0, 'realValue')).toBe('');
     });
   });
 });

@@ -48,7 +48,7 @@ export default function SelectWidget<
   ...textFieldProps
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
-  const useRealValues = !!options.useRealOptionValues;
+  const optionValueFormat = options.optionValueFormat ?? 'indexed';
 
   multiple = typeof multiple === 'undefined' ? false : !!multiple;
 
@@ -56,11 +56,11 @@ export default function SelectWidget<
   const isEmpty = typeof value === 'undefined' || (multiple && value.length < 1) || (!multiple && value === emptyValue);
 
   const _onChange = ({ target: { value } }: ChangeEvent<{ value: string }>) =>
-    onChange(enumOptionValueDecoder<S>(value, enumOptions, useRealValues, optEmptyVal));
+    onChange(enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, optEmptyVal));
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, optEmptyVal));
+    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, optEmptyVal));
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, optEmptyVal));
+    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, optEmptyVal));
   const { InputLabelProps, SelectProps, autocomplete, ...textFieldRemainingProps } = textFieldProps;
   const showPlaceholderOption = !multiple && schema.default === undefined;
 
@@ -69,7 +69,7 @@ export default function SelectWidget<
       id={id}
       name={htmlName || id}
       label={labelValue(label || undefined, hideLabel, undefined)}
-      value={enumOptionSelectedValue<S>(value, enumOptions, multiple, useRealValues, emptyValue)}
+      value={enumOptionSelectedValue<S>(value, enumOptions, multiple, optionValueFormat, emptyValue)}
       required={required}
       disabled={disabled || readonly}
       autoFocus={autofocus}
@@ -96,7 +96,7 @@ export default function SelectWidget<
         enumOptions.map(({ value, label }, i: number) => {
           const disabled: boolean = Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1;
           return (
-            <MenuItem key={i} value={enumOptionValueEncoder(value, i, useRealValues)} disabled={disabled}>
+            <MenuItem key={i} value={enumOptionValueEncoder(value, i, optionValueFormat)} disabled={disabled}>
               {label}
             </MenuItem>
           );
