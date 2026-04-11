@@ -220,6 +220,8 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
   } = props;
   const { fields, schemaUtils, translateString, globalUiOptions } = registry;
   const { OptionalDataControlsField } = fields;
+  const formDataRef = useRef(formData);
+  formDataRef.current = formData;
   const schema: S = schemaUtils.retrieveSchema(rawSchema, formData, true);
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const { properties: schemaProperties = {} } = schema;
@@ -310,9 +312,10 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
   const handleKeyRename = useCallback(
     (oldKey: string, newKey: string) => {
       if (oldKey !== newKey) {
-        const actualNewKey = getAvailableKey(newKey, formData);
+        const currentFormData = formDataRef.current;
+        const actualNewKey = getAvailableKey(newKey, currentFormData);
         const newFormData: GenericObjectType = {
-          ...(formData as GenericObjectType),
+          ...(currentFormData as GenericObjectType),
         };
         const newKeys: GenericObjectType = { [oldKey]: actualNewKey };
         const keyValues = Object.keys(newFormData).map((key) => {
@@ -321,6 +324,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
         });
         const renamedObj = Object.assign({}, ...keyValues);
 
+        formDataRef.current = renamedObj as T;
         if (oldKey !== lastRenamedProperty.current.currentKey) {
           lastRenamedProperty.current.previousKey = oldKey;
         }
@@ -328,7 +332,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
         onChange(renamedObj, childFieldPathId.path);
       }
     },
-    [formData, onChange, childFieldPathId, getAvailableKey],
+    [onChange, childFieldPathId, getAvailableKey],
   );
 
   /** Handles the remove click which calls the `onChange` callback with the special ADDITIONAL_PROPERTY_FIELD_REMOVE

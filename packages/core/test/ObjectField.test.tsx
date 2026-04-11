@@ -1163,6 +1163,38 @@ describe('ObjectField', () => {
       );
     });
 
+    it('should preserve all properties when two keys are renamed in quick succession', () => {
+      const formData = {
+        first: 1,
+        second: 2,
+        third: 3,
+      };
+      const { node, onChange } = createFormComponent({
+        schema,
+        formData,
+      });
+
+      const firstKeyNode = node.querySelector('#root_first-key');
+      const secondKeyNode = node.querySelector('#root_second-key');
+
+      act(() => {
+        fireEvent.blur(firstKeyNode!, {
+          target: { value: 'renamedFirst' },
+        });
+        fireEvent.blur(secondKeyNode!, {
+          target: { value: 'renamedSecond' },
+        });
+      });
+
+      expect(onChange).toHaveBeenCalledTimes(2);
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          formData: { renamedFirst: 1, renamedSecond: 2, third: 3 },
+        }),
+        'root',
+      );
+    });
+
     it('should preserve focus across consecutive renames of the same property', () => {
       const { node } = createFormComponent({
         schema,

@@ -35,6 +35,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Included `button` elements in `focusOnError` querySelector so that radio and checkbox groups receive focus on validation error, fixing [#4870](https://github.com/rjsf-team/react-jsonschema-form/issues/4870)
 - Fixed focus being lost when renaming additional property keys by preserving React key for renamed properties ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
 - Removed `expandUiSchemaDefinitions` call at form init, now handled at runtime by `resolveUiSchema`, fixing [#4986](https://github.com/rjsf-team/react-jsonschema-form/issues/4986)
+- Used `useRef` to track latest `formData` in `handleKeyRename`, preventing stale closure data when multiple additional property keys are renamed in quick succession, fixing [#5021](https://github.com/rjsf-team/react-jsonschema-form/issues/5021)
 
 ## @rjsf/daisyui
 
