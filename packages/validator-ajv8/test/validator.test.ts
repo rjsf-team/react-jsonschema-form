@@ -2721,4 +2721,10 @@ describe('AJV8Validator', () => {
       });
     });
   });
+  describe('with suppressDuplicateFiltering option', () => {
+    it('should store the suppressDuplicateFiltering value on the instance', () => {
+      const validator = new AJV8Validator({ suppressDuplicateFiltering: 'all' });
+      expect(validator.suppressDuplicateFiltering).toBe('all');
+    });
+  });
 });

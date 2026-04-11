@@ -77,10 +77,15 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `getInputProps()` to propagate `formatMinimum` and `formatMaximum` schema keywords to the HTML `min`/`max` attributes for `date`, `datetime-local`, `time`, `week`, and `month` input types, aligning browser-native date picker constraints with AJV validation
 - Fixed `ui:title` from `ui:definitions` not applied to `oneOf`/`anyOf` dropdowns beyond first recursion level, fixing [#4986](https://github.com/rjsf-team/react-jsonschema-form/issues/4986)
 
+# @rjsf/validator-ajv8
+
+- Updated `CustomValidatorOptionsType` to add the new `suppressDuplicateFiltering` flag prop, updating the validators to pass it through to the `transformRJSFValidationErrors()` which suppresses the appropriate duplicate errors if specified, fixing [#5028](https://github.com/rjsf-team/react-jsonschema-form/issues/5028)
+
 ## Dev / docs / playground
 
 - Updated References playground sample to demonstrate `oneOf` with `ui:title` at recursive depth, related to [#4986](https://github.com/rjsf-team/react-jsonschema-form/issues/4986)
 - Updated the building of the `mantine` theme to properly support ESM, fixing [#5025](https://github.com/rjsf-team/react-jsonschema-form/issues/5025)
+- Updated the `validator-ajv8.md` and `validation.md` documetation for the new `suppressDuplicateFiltering` configuration prop
 
 # 6.4.2
 

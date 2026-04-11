@@ -18,6 +18,13 @@ export interface CustomValidatorOptionsType {
   AjvClass?: typeof Ajv;
   /** A function to call to extend AJV, such as `ajvErrors()` */
   extenderFn?: (ajv: Ajv) => Ajv;
+  /** When set, suppresses duplicate error filtering for the specified keyword(s):
+   * - `'all'`: disables all duplicate filtering
+   * - `'anyOf'`: disables filtering for `anyOf` errors only (oneOf duplicates are still filtered)
+   * - `'oneOf'`: disables filtering for `oneOf` errors only (anyOf duplicates are still filtered)
+   * When omitted, both `anyOf` and `oneOf` duplicate errors are filtered (default behavior).
+   */
+  suppressDuplicateFiltering?: 'anyOf' | 'oneOf' | 'all';
 }
 
 /** The type describing a function that takes a list of Ajv `ErrorObject`s and localizes them
