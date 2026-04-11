@@ -62,6 +62,7 @@ export default function WrapIfAdditionalTemplate<
           </label>
         )}
         <InputText
+          key={label}
           id={`${id}-key`}
           name={`${id}-key`}
           defaultValue={label}

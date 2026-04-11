@@ -227,6 +227,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
   const { properties: schemaProperties = {} } = schema;
   // All the children will use childFieldPathId if present in the props, falling back to the fieldPathId
   const childFieldPathId = props.childFieldPathId ?? fieldPathId;
+  const lastRenamedProperty = useRef({ previousKey: '', currentKey: undefined as string | undefined });
 
   const templateTitle = uiOptions.title ?? schema.title ?? title ?? name;
   const description = uiOptions.description ?? schema.description;
@@ -294,6 +295,10 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       set(newFormData as GenericObjectType, newKey, newValue);
     }
 
+    if (lastRenamedProperty.current.previousKey === newKey) {
+      lastRenamedProperty.current.currentKey = newKey;
+      lastRenamedProperty.current.previousKey = getAvailableKey(newKey, newFormData);
+    }
     onChange(newFormData, childFieldPathId.path);
   }, [formData, onChange, registry, childFieldPathId, getAvailableKey, schema]);
 
@@ -320,6 +325,10 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
         const renamedObj = Object.assign({}, ...keyValues);
 
         formDataRef.current = renamedObj as T;
+        if (oldKey !== lastRenamedProperty.current.currentKey) {
+          lastRenamedProperty.current.previousKey = oldKey;
+        }
+        lastRenamedProperty.current.currentKey = actualNewKey;
         onChange(renamedObj, childFieldPathId.path);
       }
     },
@@ -335,6 +344,18 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     },
     [onChange, childFieldPathId],
   );
+
+  /** Returns the stable React key for a property. For the most recently renamed
+   * additional property, returns the previous key so that React reuses the
+   * existing component instance instead of unmounting/remounting it. This
+   * preserves DOM focus naturally without manual focus management.
+   */
+  const getStableKey = useCallback((property: string) => {
+    if (lastRenamedProperty.current.currentKey === property) {
+      return lastRenamedProperty.current.previousKey;
+    }
+    return property;
+  }, []);
 
   if (!renderOptionalField || hasFormData) {
     try {
@@ -369,7 +390,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       const hidden = getUiOptions<T, S, F>(fieldUiSchema).widget === 'hidden';
       const content = (
         <ObjectFieldProperty<T, S, F>
-          key={name}
+          key={getStableKey(name)}
           propertyName={name}
           required={isRequired<S>(schema, name)}
           schema={get(schema, [PROPERTIES_KEY, name], {}) as S}

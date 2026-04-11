@@ -67,6 +67,7 @@ export default function WrapIfAdditionalTemplate<
             )}
             <div className='pl-0.5'>
               <Input
+                key={label}
                 required={required}
                 defaultValue={label}
                 disabled={disabled || readonly}

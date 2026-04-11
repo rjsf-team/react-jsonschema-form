@@ -59,6 +59,7 @@ export default function WrapIfAdditionalTemplate<
             </label>
           )}
           <input
+            key={label}
             type='text'
             className='input input-bordered'
             id={`${id}-key`}

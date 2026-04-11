@@ -94,6 +94,7 @@ export default function WrapIfAdditionalTemplate<
       <div className={classes.halfWidth}>
         <Field label={displayLabel ? keyLabel : undefined} required={required}>
           <Input
+            key={label}
             required={required}
             defaultValue={label}
             disabled={disabled || readonly}
