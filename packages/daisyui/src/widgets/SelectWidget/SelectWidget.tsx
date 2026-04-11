@@ -106,6 +106,9 @@ export default function SelectWidget<
     [onFocus, id, enumOptions, optEmptyVal, optionValueFormat],
   );
 
+  // The custom dropdown iterates `selectedValues.includes(...)` per option, so
+  // it always needs a string array regardless of `multiple`. Flatten the
+  // helper's single/multiple return shape and strip the empty-single case.
   const selectedValues: string[] = [
     enumOptionSelectedValue<S>(value, enumOptions, !!multiple, optionValueFormat, multiple ? [] : ''),
   ]

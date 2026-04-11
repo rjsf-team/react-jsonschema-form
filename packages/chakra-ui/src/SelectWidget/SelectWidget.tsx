@@ -82,6 +82,8 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
 
   const isMultiple = typeof multiple !== 'undefined' && multiple !== false && Boolean(enumOptions);
 
+  // Chakra's SelectRoot always expects a string array, so flatten the helper's
+  // single/multiple return shape and strip the empty-single case.
   const formValue = [
     enumOptionSelectedValue<S>(value, enumOptions, isMultiple, optionValueFormat, isMultiple ? [] : ''),
   ]
