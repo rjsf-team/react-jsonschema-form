@@ -27,6 +27,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Added a new `removeEmptyOptionalObjects` boolean prop to gracefully prune optional empty objects preventing form submission lockouts, fixing [#4954](https://github.com/rjsf-team/react-jsonschema-form/issues/4954)
 - Included `button` elements in `focusOnError` querySelector so that radio and checkbox groups receive focus on validation error, fixing [#4870](https://github.com/rjsf-team/react-jsonschema-form/issues/4870)
+- Used `useRef` to track latest `formData` in `handleKeyRename`, preventing stale closure data when multiple additional property keys are renamed in quick succession, fixing [#5021](https://github.com/rjsf-team/react-jsonschema-form/issues/5021)
 
 ## @rjsf/utils
 
