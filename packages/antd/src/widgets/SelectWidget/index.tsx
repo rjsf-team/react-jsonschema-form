@@ -2,8 +2,9 @@ import { useMemo, useState } from 'react';
 import { Select, SelectProps } from 'antd';
 import {
   ariaDescribedByIds,
-  enumOptionsIndexForValue,
-  enumOptionsValueForIndex,
+  enumOptionSelectedValue,
+  enumOptionValueDecoder,
+  enumOptionValueEncoder,
   FormContextType,
   GenericObjectType,
   RJSFSchema,
@@ -47,12 +48,14 @@ export default function SelectWidget<
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const { enumOptions, enumDisabled, emptyValue } = options;
+  const useRealValues = !!options.useRealOptionValues;
 
-  const handleChange = (nextValue: any) => onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
+  const handleChange = (nextValue: any) =>
+    onChange(enumOptionValueDecoder<S>(nextValue, enumOptions, useRealValues, emptyValue));
 
-  const handleBlur = () => onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
+  const handleBlur = () => onBlur(id, enumOptionValueDecoder<S>(value, enumOptions, useRealValues, emptyValue));
 
-  const handleFocus = () => onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
+  const handleFocus = () => onFocus(id, enumOptionValueDecoder<S>(value, enumOptions, useRealValues, emptyValue));
 
   const filterOption: SelectProps['filterOption'] = (input, option) => {
     if (option && isString(option.label)) {
@@ -64,7 +67,7 @@ export default function SelectWidget<
 
   const getPopupContainer = SelectWidget.getPopupContainerCallback();
 
-  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
+  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, !!multiple, useRealValues, emptyValue);
 
   // Antd's typescript definitions do not contain the following props that are actually necessary and, if provided,
   // they are used, so hacking them in via by spreading `extraProps` on the component to avoid typescript errors
@@ -79,7 +82,7 @@ export default function SelectWidget<
       const options: DefaultOptionType[] = enumOptions.map(({ value: optionValue, label: optionLabel }, index) => ({
         disabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(optionValue) !== -1,
         key: String(index),
-        value: String(index),
+        value: enumOptionValueEncoder(optionValue, index, useRealValues),
         label: optionLabel,
       }));
 
@@ -89,7 +92,7 @@ export default function SelectWidget<
       return options;
     }
     return undefined;
-  }, [enumDisabled, enumOptions, placeholder, showPlaceholderOption]);
+  }, [enumDisabled, enumOptions, placeholder, showPlaceholderOption, useRealValues]);
 
   return (
     <Select
@@ -104,7 +107,7 @@ export default function SelectWidget<
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
       style={SELECT_STYLE}
-      value={selectedIndexes}
+      value={selectValue}
       {...extraProps}
       // When the open change is called, set the open state, needed so that the select opens properly in the playground
       onOpenChange={setOpen}

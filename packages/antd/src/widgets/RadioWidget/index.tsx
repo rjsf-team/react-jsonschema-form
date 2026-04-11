@@ -2,8 +2,9 @@ import { FocusEvent } from 'react';
 import { Radio, RadioChangeEvent } from 'antd';
 import {
   ariaDescribedByIds,
-  enumOptionsIndexForValue,
-  enumOptionsValueForIndex,
+  enumOptionSelectedValue,
+  enumOptionValueDecoder,
+  enumOptionValueEncoder,
   optionId,
   FormContextType,
   GenericObjectType,
@@ -34,17 +35,18 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const { enumOptions, enumDisabled, emptyValue } = options;
+  const useRealValues = !!options.useRealOptionValues;
 
   const handleChange = ({ target: { value: nextValue } }: RadioChangeEvent) =>
-    onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
+    onChange(enumOptionValueDecoder<S>(nextValue, enumOptions, useRealValues, emptyValue));
 
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
+    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, emptyValue));
 
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
+    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, useRealValues, emptyValue));
 
-  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions) as string;
+  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, false, useRealValues, emptyValue);
 
   return (
     <Radio.Group
@@ -54,7 +56,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       onChange={!readonly ? handleChange : undefined}
       onBlur={!readonly ? handleBlur : undefined}
       onFocus={!readonly ? handleFocus : undefined}
-      value={selectedIndexes}
+      value={selectValue}
       aria-describedby={ariaDescribedByIds(id)}
     >
       {Array.isArray(enumOptions) &&
@@ -65,7 +67,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
             autoFocus={i === 0 ? autofocus : false}
             disabled={disabled || (Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1)}
             key={i}
-            value={String(i)}
+            value={enumOptionValueEncoder(option.value, i, useRealValues)}
           >
             {option.label}
           </Radio>
