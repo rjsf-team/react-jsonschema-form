@@ -8,5 +8,9 @@
     {
       "path": "./src"
     }
-  ]
+  ],
+  "tsc-alias": {
+    "resolveFullPaths": true,
+    "verbose": true
+  }
 }

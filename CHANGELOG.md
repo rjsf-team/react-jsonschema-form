@@ -79,6 +79,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Updated References playground sample to demonstrate `oneOf` with `ui:title` at recursive depth, related to [#4986](https://github.com/rjsf-team/react-jsonschema-form/issues/4986)
+- Updated the building of the `mantine` theme to properly support ESM, fixing [#5025](https://github.com/rjsf-team/react-jsonschema-form/issues/5025)
 
 # 6.4.2
 
