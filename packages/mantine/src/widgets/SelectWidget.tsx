@@ -85,27 +85,35 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     return [];
   }, [enumDisabled, enumOptions, optionValueFormat]);
 
-  const Component = multiple ? MultiSelect : Select;
+  const sharedProps = {
+    id,
+    name: htmlName || id,
+    label: labelValue(label || undefined, hideLabel, false),
+    data: selectOptions,
+    onBlur: !readonly ? handleBlur : undefined,
+    onFocus: !readonly ? handleFocus : undefined,
+    autoFocus: autofocus,
+    placeholder,
+    disabled: disabled || readonly,
+    required,
+    error: rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined,
+    searchable: true,
+    'aria-describedby': ariaDescribedByIds(id),
+    comboboxProps: { withinPortal: false },
+    ...themeProps,
+  };
 
-  return (
-    <Component
-      id={id}
-      name={htmlName || id}
-      label={labelValue(label || undefined, hideLabel, false)}
-      data={selectOptions}
-      value={enumOptionSelectedValue<S>(value, enumOptions, !!multiple, optionValueFormat, multiple ? [] : null) as any}
+  return multiple ? (
+    <MultiSelect
+      {...sharedProps}
+      value={enumOptionSelectedValue<S>(value, enumOptions, true, optionValueFormat, []) as string[]}
       onChange={!readonly ? handleChange : undefined}
-      onBlur={!readonly ? handleBlur : undefined}
-      onFocus={!readonly ? handleFocus : undefined}
-      autoFocus={autofocus}
-      placeholder={placeholder}
-      disabled={disabled || readonly}
-      required={required}
-      error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
-      searchable
-      {...themeProps}
-      aria-describedby={ariaDescribedByIds(id)}
-      comboboxProps={{ withinPortal: false }}
+    />
+  ) : (
+    <Select
+      {...sharedProps}
+      value={enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat, null) as string | null}
+      onChange={!readonly ? handleChange : undefined}
     />
   );
 }
