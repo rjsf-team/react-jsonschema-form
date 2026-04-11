@@ -1,9 +1,9 @@
 import { CheckboxGroup, FieldsetRoot, Stack, Text, FieldsetLegend } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
+  enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
-  enumOptionsIndexForValue,
   getOptionValueFormat,
   FormContextType,
   optionId,
@@ -47,7 +47,7 @@ export default function CheckboxesWidget<
     onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
 
   const row = options ? options.inline : false;
-  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, true) as string[];
+  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, true, optionValueFormat, []) as string[];
 
   const chakraProps = getChakra({ uiSchema });
 
@@ -63,7 +63,7 @@ export default function CheckboxesWidget<
         onValueChange={(option) =>
           onChange(enumOptionValueDecoder<S>(option, enumOptions, optionValueFormat, emptyValue))
         }
-        value={optionValueFormat === 'realValue' ? (Array.isArray(value) ? value.map(String) : []) : selectedIndexes}
+        value={selectValue}
         aria-describedby={ariaDescribedByIds(id)}
         readOnly={readonly}
         invalid={required && value.length === 0}

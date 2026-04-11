@@ -5,9 +5,9 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import {
   ariaDescribedByIds,
+  enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
-  enumOptionsIndexForValue,
   getOptionValueFormat,
   labelValue,
   optionId,
@@ -47,7 +47,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
 
   const row = options ? options.inline : false;
-  const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions) ?? null;
+  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat, '');
 
   return (
     <>
@@ -60,7 +60,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       <RadioGroup
         id={id}
         name={htmlName || id}
-        value={optionValueFormat === 'realValue' ? (value !== undefined ? String(value) : '') : selectedIndex}
+        value={selectValue}
         row={row as boolean}
         onChange={_onChange}
         onBlur={_onBlur}

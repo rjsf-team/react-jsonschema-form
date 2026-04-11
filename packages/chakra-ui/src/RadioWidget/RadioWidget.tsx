@@ -2,9 +2,9 @@ import { ChangeEvent, FocusEvent } from 'react';
 import { Stack } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
+  enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
-  enumOptionsIndexForValue,
   getOptionValueFormat,
   labelValue,
   optionId,
@@ -44,7 +44,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     onFocus(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, emptyValue));
 
   const row = options ? options.inline : false;
-  const selectedIndex = (enumOptionsIndexForValue<S>(value, enumOptions) as string) ?? null;
+  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat, null);
 
   const chakraProps = getChakra({ uiSchema });
 
@@ -61,7 +61,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        value={optionValueFormat === 'realValue' ? (value != null ? String(value) : null) : selectedIndex}
+        value={selectValue}
         name={htmlName || id}
         aria-describedby={ariaDescribedByIds(id)}
       >
