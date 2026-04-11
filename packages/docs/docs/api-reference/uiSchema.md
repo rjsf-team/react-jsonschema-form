@@ -640,6 +640,46 @@ const uiSchema: UiSchema = {
 render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
+### optionValueFormat
+
+Controls how enum-backed widgets (`select`, `radio`, `checkboxes`) encode option values in their DOM `value` attributes. Accepts `'indexed'` (default) or `'realValue'`.
+
+- `'indexed'`: options are encoded as their array index (e.g. `value="0"`, `value="1"`). This is the historical behavior and keeps non-primitive enum values (objects, arrays) addressable without stringifying them.
+- `'realValue'`: primitive option values are stringified directly (e.g. `value="admin"`, `value="42"`, `value="true"`). This enables native HTML form submission and browser autocomplete since the submitted value matches the enum value. Non-primitive values (objects, arrays) still fall back to their index because `String(obj)` would produce `"[object Object]"`.
+
+The form data passed to `onChange` is always the typed enum value; this option only affects the DOM-level encoding. Can be specified in `ui:globalOptions` to apply to all enum-backed fields, or per-field in `ui:options`.
+
+```tsx
+import { Form } from '@rjsf/core';
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'object',
+  properties: {
+    role: { type: 'string', enum: ['admin', 'editor', 'viewer'] },
+  },
+};
+
+// Form-wide
+const uiSchema: UiSchema = {
+  'ui:globalOptions': {
+    optionValueFormat: 'realValue',
+  },
+};
+
+// Or per-field
+const fieldUiSchema: UiSchema = {
+  role: {
+    'ui:options': {
+      optionValueFormat: 'realValue',
+    },
+  },
+};
+
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+```
+
 ### order
 
 This property allows you to reorder the properties that are shown for a particular object. See [Objects](../json-schema/objects.md) for more information.
