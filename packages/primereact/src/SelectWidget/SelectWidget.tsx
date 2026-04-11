@@ -5,6 +5,7 @@ import {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
+  getOptionValueFormat,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -51,7 +52,7 @@ function SingleSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   ...dropdownProps
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
-  const optionValueFormat = options.optionValueFormat ?? 'indexed';
+  const optionValueFormat = getOptionValueFormat(options);
   const primeProps = (options.prime || {}) as object;
 
   multiple = typeof multiple === 'undefined' ? false : multiple;
@@ -104,7 +105,7 @@ function MultiSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   onFocus,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
-  const optionValueFormat = options.optionValueFormat ?? 'indexed';
+  const optionValueFormat = getOptionValueFormat(options);
   const primeProps = (options.prime || {}) as object;
 
   const emptyValue = multiple ? [] : '';

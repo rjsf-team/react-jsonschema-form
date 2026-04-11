@@ -4,6 +4,7 @@ import {
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   enumOptionsIndexForValue,
+  getOptionValueFormat,
   optionId,
   titleId,
   FormContextType,
@@ -43,7 +44,7 @@ export default function CheckboxesWidget<
   } = props;
 
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
-  const optionValueFormat = options.optionValueFormat ?? 'indexed';
+  const optionValueFormat = getOptionValueFormat(options);
   const themeProps = cleanupOptions(options);
 
   const handleChange = useCallback(

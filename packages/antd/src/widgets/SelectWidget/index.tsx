@@ -5,6 +5,7 @@ import {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
+  getOptionValueFormat,
   FormContextType,
   GenericObjectType,
   RJSFSchema,
@@ -48,7 +49,7 @@ export default function SelectWidget<
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const { enumOptions, enumDisabled, emptyValue } = options;
-  const optionValueFormat = options.optionValueFormat ?? 'indexed';
+  const optionValueFormat = getOptionValueFormat(options);
 
   const handleChange = (nextValue: any) =>
     onChange(enumOptionValueDecoder<S>(nextValue, enumOptions, optionValueFormat, emptyValue));

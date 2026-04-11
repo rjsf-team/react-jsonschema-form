@@ -2,6 +2,7 @@ import { FocusEvent, useCallback } from 'react';
 import {
   enumOptionValueDecoder,
   enumOptionValueEncoder,
+  getOptionValueFormat,
   WidgetProps,
   StrictRJSFSchema,
   RJSFSchema,
@@ -35,7 +36,7 @@ export default function CheckboxesWidget<T, S extends StrictRJSFSchema = RJSFSch
   onBlur,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, emptyValue } = options;
-  const optionValueFormat = options.optionValueFormat ?? 'indexed';
+  const optionValueFormat = getOptionValueFormat(options);
   const isEnumeratedObject = enumOptions && enumOptions[0]?.value && typeof enumOptions[0].value === 'object';
 
   /** Determines if a checkbox option should be checked based on the current value

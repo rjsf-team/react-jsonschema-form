@@ -6,6 +6,7 @@ import {
   enumOptionsDeselectValue,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
+  getOptionValueFormat,
   optionId,
   FormContextType,
   WidgetProps,
@@ -31,7 +32,7 @@ function CheckboxesWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   htmlName,
 }: WidgetProps<T, S, F>) {
   const { inline = false, enumOptions, enumDisabled, emptyValue } = options;
-  const optionValueFormat = options.optionValueFormat ?? 'indexed';
+  const optionValueFormat = getOptionValueFormat(options);
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const handleBlur = useCallback(

@@ -4,6 +4,7 @@ import {
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   enumOptionsIsSelected,
+  getOptionValueFormat,
   optionId,
   FormContextType,
   RJSFSchema,
@@ -30,7 +31,7 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   htmlName,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
-  const optionValueFormat = options.optionValueFormat ?? 'indexed';
+  const optionValueFormat = getOptionValueFormat(options);
 
   const handleBlur = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) =>

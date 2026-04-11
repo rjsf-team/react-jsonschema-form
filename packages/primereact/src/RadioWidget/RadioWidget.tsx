@@ -3,6 +3,7 @@ import {
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   enumOptionsIsSelected,
+  getOptionValueFormat,
   optionId,
   FormContextType,
   RJSFSchema,
@@ -22,7 +23,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const { id, htmlName, value, disabled, readonly, onChange, onBlur, onFocus, options } = props;
   const primeProps = (options.prime || {}) as object;
   const { enumOptions, enumDisabled, emptyValue } = options;
-  const optionValueFormat = options.optionValueFormat ?? 'indexed';
+  const optionValueFormat = getOptionValueFormat(options);
 
   const _onChange = (e: RadioButtonChangeEvent) => {
     onChange(enumOptionValueDecoder<S>(e.value, enumOptions, optionValueFormat, emptyValue));

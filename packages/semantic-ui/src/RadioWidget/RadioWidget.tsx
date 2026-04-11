@@ -4,6 +4,7 @@ import {
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   enumOptionsIsSelected,
+  getOptionValueFormat,
   optionId,
   FormContextType,
   RJSFSchema,
@@ -37,7 +38,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     rawErrors = [],
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
-  const optionValueFormat = options.optionValueFormat ?? 'indexed';
+  const optionValueFormat = getOptionValueFormat(options);
   const semanticProps = getSemanticProps<T, S, F>({
     formContext: registry.formContext,
     options,

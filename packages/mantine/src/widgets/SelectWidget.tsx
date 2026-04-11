@@ -4,6 +4,7 @@ import {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
+  getOptionValueFormat,
   labelValue,
   FormContextType,
   RJSFSchema,
@@ -42,7 +43,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   } = props;
 
   const { enumOptions, enumDisabled, emptyValue } = options;
-  const optionValueFormat = options.optionValueFormat ?? 'indexed';
+  const optionValueFormat = getOptionValueFormat(options);
   const themeProps = cleanupOptions(options);
 
   const handleChange = useCallback(

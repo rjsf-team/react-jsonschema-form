@@ -5,6 +5,7 @@ import {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
+  getOptionValueFormat,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -35,7 +36,7 @@ export default function SelectWidget<
   const { enumOptions, enumDisabled, emptyValue: optEmptyValue } = options;
 
   const emptyValue = multiple ? [] : '';
-  const optionValueFormat = options.optionValueFormat ?? 'indexed';
+  const optionValueFormat = getOptionValueFormat(options);
 
   function getValue(event: FocusEvent | ChangeEvent | any, multiple?: boolean) {
     if (multiple) {

@@ -4,6 +4,7 @@ import {
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   enumOptionsIndexForValue,
+  getOptionValueFormat,
   optionId,
   FormContextType,
   RJSFSchema,
@@ -40,7 +41,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   } = props;
 
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
-  const optionValueFormat = options.optionValueFormat ?? 'indexed';
+  const optionValueFormat = getOptionValueFormat(options);
   const themeProps = cleanupOptions(options);
 
   const handleChange = useCallback(

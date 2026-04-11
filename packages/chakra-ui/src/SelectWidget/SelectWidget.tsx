@@ -7,6 +7,7 @@ import {
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   enumOptionsIndexForValue,
+  getOptionValueFormat,
   labelValue,
   FormContextType,
   RJSFSchema,
@@ -44,7 +45,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     uiSchema,
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
-  const optionValueFormat = options.optionValueFormat ?? 'indexed';
+  const optionValueFormat = getOptionValueFormat(options);
 
   const _onMultiChange = ({ value }: SelectValueChangeDetails) => {
     return onChange(enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, emptyValue));

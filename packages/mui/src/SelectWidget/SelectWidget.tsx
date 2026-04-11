@@ -6,6 +6,7 @@ import {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
+  getOptionValueFormat,
   labelValue,
   FormContextType,
   RJSFSchema,
@@ -48,7 +49,7 @@ export default function SelectWidget<
   ...textFieldProps
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
-  const optionValueFormat = options.optionValueFormat ?? 'indexed';
+  const optionValueFormat = getOptionValueFormat(options);
 
   multiple = typeof multiple === 'undefined' ? false : !!multiple;
 

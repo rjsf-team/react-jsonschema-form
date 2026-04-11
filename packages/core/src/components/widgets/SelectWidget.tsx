@@ -4,6 +4,7 @@ import {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
+  getOptionValueFormat,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -43,7 +44,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
   const emptyValue = multiple ? [] : '';
-  const optionValueFormat = options.optionValueFormat ?? 'indexed';
+  const optionValueFormat = getOptionValueFormat(options);
 
   const handleFocus = useCallback(
     (event: FocusEvent<HTMLSelectElement>) => {

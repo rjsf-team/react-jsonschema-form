@@ -4,6 +4,7 @@ import {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
+  getOptionValueFormat,
   labelValue,
   EnumOptionsType,
   FormContextType,
@@ -87,7 +88,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   });
   const { enumDisabled, enumOptions, emptyValue: optEmptyVal } = options;
   const emptyValue = multiple ? [] : '';
-  const optionValueFormat = options.optionValueFormat ?? 'indexed';
+  const optionValueFormat = getOptionValueFormat(options);
   const showPlaceholderOption = !multiple && schema.default === undefined;
   const dropdownOptions = createDefaultValueOptionsForDropDown<S>(
     enumOptions,

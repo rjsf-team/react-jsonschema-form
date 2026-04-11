@@ -4,6 +4,7 @@ import {
   enumOptionsDeselectValue,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
+  getOptionValueFormat,
   FormContextType,
   optionId,
   RJSFSchema,
@@ -40,7 +41,7 @@ export default function CheckboxesWidget<
   className,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
-  const optionValueFormat = options.optionValueFormat ?? 'indexed';
+  const optionValueFormat = getOptionValueFormat(options);
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const _onBlur = ({ target }: FocusEvent<HTMLButtonElement>) =>

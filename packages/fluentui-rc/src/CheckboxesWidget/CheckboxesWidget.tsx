@@ -5,6 +5,7 @@ import {
   enumOptionsDeselectValue,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
+  getOptionValueFormat,
   labelValue,
   optionId,
   FormContextType,
@@ -40,7 +41,7 @@ export default function CheckboxesWidget<
   onFocus,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
-  const optionValueFormat = options.optionValueFormat ?? 'indexed';
+  const optionValueFormat = getOptionValueFormat(options);
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const _onChange =

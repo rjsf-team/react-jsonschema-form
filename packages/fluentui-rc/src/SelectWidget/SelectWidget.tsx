@@ -3,6 +3,7 @@ import {
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   enumOptionsIndexForValue,
+  getOptionValueFormat,
   FormContextType,
   labelValue,
   RJSFSchema,
@@ -44,7 +45,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   placeholder,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
-  const optionValueFormat = options.optionValueFormat ?? 'indexed';
+  const optionValueFormat = getOptionValueFormat(options);
 
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
   let selectedIndexesAsArray: string[] = [];

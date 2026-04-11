@@ -23,6 +23,7 @@ import getDateElementProps, { DateElementFormat, DateElementProp } from './getDa
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema';
 import getInputProps from './getInputProps';
 import getOptionMatchingSimpleDiscriminator from './getOptionMatchingSimpleDiscriminator';
+import getOptionValueFormat from './getOptionValueFormat';
 import getSchemaType from './getSchemaType';
 import getSubmitButtonOptions from './getSubmitButtonOptions';
 import getTemplate from './getTemplate';
@@ -128,6 +129,7 @@ export {
   getDiscriminatorFieldFromSchema,
   getInputProps,
   getOptionMatchingSimpleDiscriminator,
+  getOptionValueFormat,
   getSchemaType,
   getSubmitButtonOptions,
   getTemplate,

@@ -3,6 +3,7 @@ import {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
+  getOptionValueFormat,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -40,7 +41,7 @@ export default function SelectWidget<
   onFocus,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, emptyValue: optEmptyVal } = options;
-  const optionValueFormat = options.optionValueFormat ?? 'indexed';
+  const optionValueFormat = getOptionValueFormat(options);
   multiple = typeof multiple === 'undefined' ? false : !!multiple;
 
   const getDisplayValue = (val: any) => {
