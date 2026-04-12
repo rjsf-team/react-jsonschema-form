@@ -11,10 +11,10 @@ import {
 } from '@rjsf/utils';
 import { getMuiProps } from '../util';
 
-/** Properties available for the `slotProps` target of the SubmitButton. */
+/** Properties available for the `rjsfSlotProps` target of the SubmitButton. */
 export interface SubmitButtonMuiProps extends GenericObjectType {
-  /** MUI subset property for targeting specific child elements. */
-  slotProps?: {
+  /** RJSF-specific slot props for targeting child elements of the SubmitButton. */
+  rjsfSlotProps?: {
     /** Props applied to the `Box` wrapper. */
     box?: BoxProps;
     /** Props applied to the `Button` element. */
@@ -35,8 +35,7 @@ export default function SubmitButton<
   }
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const muiProps = getMuiProps<T, S, F, SubmitButtonMuiProps>(uiOptions);
-  const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
+  const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, SubmitButtonMuiProps>(uiOptions);
 
   return (
     <Box marginTop={3} {...muiSlotProps?.box}>

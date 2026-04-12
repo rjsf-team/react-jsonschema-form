@@ -4,12 +4,12 @@ describe('getMuiProps', () => {
   it('should extract mui props from uiOptions', () => {
     const options = {
       mui: {
-        slotProps: { input: { endAdornment: 'kg' } },
+        rjsfSlotProps: { input: { endAdornment: 'kg' } },
         variant: 'filled',
       },
     };
     const result = getMuiProps(options);
-    expect(result.slotProps.input.endAdornment).toBe('kg');
+    expect(result.rjsfSlotProps.input.endAdornment).toBe('kg');
     expect(result.variant).toBe('filled');
   });
 
@@ -36,5 +36,19 @@ describe('getMuiProps', () => {
       variant: 'filled',
       disabled: false,
     });
+  });
+
+  it('should return only rjsfSlotProps when rjsfSlotPropsOnly is true', () => {
+    const options = {
+      mui: {
+        rjsfSlotProps: { paper: { elevation: 10 } },
+        variant: 'filled',
+        sx: { mt: 2 },
+      },
+    };
+    const result = getMuiProps(options, undefined, true);
+    expect(result.rjsfSlotProps).toEqual({ paper: { elevation: 10 } });
+    expect(result.variant).toBeUndefined();
+    expect(result.sx).toBeUndefined();
   });
 });

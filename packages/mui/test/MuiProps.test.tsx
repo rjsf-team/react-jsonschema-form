@@ -57,7 +57,7 @@ describe('MUI Theme-Specific Props', () => {
     expect(field).toBeInTheDocument();
   });
 
-  it('should apply props to ArrayFieldTemplate (Paper)', () => {
+  it('should apply rjsfSlotProps to ArrayFieldTemplate (Paper elevation)', () => {
     const schema: RJSFSchema = {
       type: 'array',
       items: { type: 'string' },
@@ -65,7 +65,9 @@ describe('MUI Theme-Specific Props', () => {
     const uiSchema: UiSchema = {
       'ui:options': {
         mui: {
-          elevation: 10,
+          rjsfSlotProps: {
+            paper: { elevation: 10 },
+          },
         },
       },
     };
@@ -77,7 +79,7 @@ describe('MUI Theme-Specific Props', () => {
     expect(paper).toHaveClass('MuiPaper-elevation10');
   });
 
-  it('should apply slotProps to SelectWidget', () => {
+  it('should apply variant to SelectWidget via root mui props', () => {
     const schema: RJSFSchema = {
       type: 'string',
       enum: ['a', 'b'],

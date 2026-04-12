@@ -3,16 +3,21 @@ import { FormContextType, RJSFSchema, StrictRJSFSchema, UIOptionsType, GenericOb
 /**
  * Extract props meant for MUI components from the `options` field of the `uiSchema`.
  * @param {UIOptionsType} options - The options from the uiSchema
- * @param {string[]} [propsToFilter] - An optional list of props to filter out
- * @returns {any}
+ * @param {string[]} [propsToFilter] - An optional allowlist of props to return (used by button/icon components)
+ * @param {boolean} [rjsfSlotPropsOnly] - If true, returns only `rjsfSlotProps`, preventing root-level prop bleeding
+ * @returns {P}
  */
 export function getMuiProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
   P extends GenericObjectType = GenericObjectType,
->(options: UIOptionsType<T, S, F>, propsToFilter?: string[]): P {
+>(options: UIOptionsType<T, S, F>, propsToFilter?: string[], rjsfSlotPropsOnly?: boolean): P {
   const muiProps = (options?.mui as P) || ({} as P);
+  if (rjsfSlotPropsOnly) {
+    const { rjsfSlotProps } = muiProps as any;
+    return { rjsfSlotProps } as unknown as P;
+  }
   if (propsToFilter) {
     return Object.keys(muiProps)
       .filter((key) => propsToFilter.includes(key))

@@ -11,10 +11,10 @@ import {
 import FormHelperText, { FormHelperTextProps } from '@mui/material/FormHelperText';
 import { getMuiProps } from '../util';
 
-/** Properties available for the `slotProps` target of the FieldHelpTemplate. */
+/** Properties available for the `rjsfSlotProps` target of the FieldHelpTemplate. */
 export interface FieldHelpTemplateMuiProps extends GenericObjectType {
-  /** MUI subset property for targeting specific child elements. */
-  slotProps?: {
+  /** RJSF-specific slot props for targeting child elements of the FieldHelpTemplate. */
+  rjsfSlotProps?: {
     /** Props applied to the `FormHelperText` used for help text. */
     formHelperText?: FormHelperTextProps;
   };
@@ -36,7 +36,7 @@ export default function FieldHelpTemplate<
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const muiProps = getMuiProps<T, S, F, FieldHelpTemplateMuiProps>(uiOptions);
-  const { slotProps: muiSlotProps } = muiProps;
+  const { rjsfSlotProps: muiSlotProps } = muiProps;
 
   return (
     <FormHelperText

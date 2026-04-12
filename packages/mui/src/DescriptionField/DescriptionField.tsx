@@ -10,10 +10,10 @@ import {
 import { RichDescription } from '@rjsf/core';
 import { getMuiProps } from '../util';
 
-/** Properties available for the `slotProps` target of the DescriptionField. */
+/** Properties available for the `rjsfSlotProps` target of the DescriptionField. */
 export interface DescriptionFieldMuiProps extends GenericObjectType {
-  /** MUI subset property for targeting specific child elements. */
-  slotProps?: {
+  /** RJSF-specific slot props for targeting child elements of the DescriptionField. */
+  rjsfSlotProps?: {
     /** Props applied to the `Typography` element used for the description. */
     typography?: TypographyProps;
   };
@@ -32,7 +32,7 @@ export default function DescriptionField<
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const muiProps = getMuiProps<T, S, F, DescriptionFieldMuiProps>(uiOptions);
-  const { slotProps: muiSlotProps } = muiProps;
+  const { rjsfSlotProps: muiSlotProps } = muiProps;
 
   if (description) {
     return (

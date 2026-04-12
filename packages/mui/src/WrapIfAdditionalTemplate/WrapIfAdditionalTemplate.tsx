@@ -13,10 +13,10 @@ import {
   getUiOptions,
 } from '@rjsf/utils';
 import { getMuiProps } from '../util';
-/** Properties available for the `slotProps` target of the WrapIfAdditionalTemplate. */
+/** Properties available for the `rjsfSlotProps` target of the WrapIfAdditionalTemplate. */
 export interface WrapIfAdditionalTemplateMuiProps extends GenericObjectType {
-  /** MUI subset property for targeting specific child elements. */
-  slotProps?: {
+  /** RJSF-specific slot props for targeting child elements of the WrapIfAdditionalTemplate. */
+  rjsfSlotProps?: {
     /** Props applied to the outermost `Grid` container. */
     gridContainer?: GridProps;
     /** Props applied to the `Grid` item containing the key TextField. */
@@ -25,8 +25,6 @@ export interface WrapIfAdditionalTemplateMuiProps extends GenericObjectType {
     childrenGridItem?: GridProps;
     /** Props applied to the `Grid` item containing the remove button. */
     removeButtonGridItem?: GridProps;
-    /** Any other slotProps targetable by `TextField` internally. */
-    [key: string]: any;
   };
 }
 
@@ -69,8 +67,8 @@ export default function WrapIfAdditionalTemplate<
   };
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const muiProps = getMuiProps<T, S, F, WrapIfAdditionalTemplateMuiProps>(uiOptions);
-  const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
+  const { rjsfSlotProps } = getMuiProps<T, S, F, WrapIfAdditionalTemplateMuiProps>(uiOptions);
+  const muiSlotProps = rjsfSlotProps;
 
   if (!additional) {
     return (
@@ -80,9 +78,7 @@ export default function WrapIfAdditionalTemplate<
     );
   }
 
-  // Extract grid-specific slotProps to prevent overlap onto TextField
-  const { gridContainer, keyGridItem, childrenGridItem, removeButtonGridItem, ...textFieldSlotProps } =
-    muiSlotProps || {};
+  const { gridContainer, keyGridItem, childrenGridItem, removeButtonGridItem } = muiSlotProps || {};
 
   return (
     <Grid
@@ -92,7 +88,6 @@ export default function WrapIfAdditionalTemplate<
       spacing={2}
       className={classNames}
       style={style}
-      {...otherMuiProps}
       {...gridContainer}
     >
       <Grid size={5.5} {...keyGridItem}>
@@ -107,9 +102,6 @@ export default function WrapIfAdditionalTemplate<
           name={`${id}-key`}
           onBlur={!readonly ? onKeyRenameBlur : undefined}
           type='text'
-          slotProps={{
-            ...textFieldSlotProps,
-          }}
         />
       </Grid>
       <Grid size={5.5} {...childrenGridItem}>

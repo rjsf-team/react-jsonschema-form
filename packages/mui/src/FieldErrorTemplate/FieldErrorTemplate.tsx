@@ -12,10 +12,10 @@ import {
 } from '@rjsf/utils';
 import { getMuiProps } from '../util';
 
-/** Properties available for the `slotProps` target of the FieldErrorTemplate. */
+/** Properties available for the `rjsfSlotProps` target of the FieldErrorTemplate. */
 export interface FieldErrorTemplateMuiProps extends GenericObjectType {
-  /** MUI subset property for targeting specific child elements. */
-  slotProps?: {
+  /** RJSF-specific slot props for targeting child elements of the FieldErrorTemplate. */
+  rjsfSlotProps?: {
     /** Props applied to the `List` container holding the errors. */
     list?: ListProps;
     /** Props applied to each `ListItem` representing an error. */
@@ -42,7 +42,7 @@ export default function FieldErrorTemplate<
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const muiProps = getMuiProps<T, S, F, FieldErrorTemplateMuiProps>(uiOptions);
-  const { slotProps: muiSlotProps } = muiProps;
+  const { rjsfSlotProps: muiSlotProps } = muiProps;
 
   return (
     <List id={id} dense={true} disablePadding={true} {...muiSlotProps?.list}>

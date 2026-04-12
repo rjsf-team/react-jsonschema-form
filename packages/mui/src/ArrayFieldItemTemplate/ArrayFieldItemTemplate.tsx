@@ -13,10 +13,10 @@ import {
 } from '@rjsf/utils';
 import { getMuiProps } from '../util';
 
-/** Properties available for the `slotProps` target of the ArrayFieldItemTemplate. */
+/** Properties available for the `rjsfSlotProps` target of the ArrayFieldItemTemplate. */
 export interface ArrayFieldItemTemplateMuiProps extends GenericObjectType {
-  /** MUI subset property for targeting specific child elements. */
-  slotProps?: {
+  /** RJSF-specific slot props for targeting child elements of the ArrayFieldItemTemplate. */
+  rjsfSlotProps?: {
     /** Props applied to the outermost `Grid` container. */
     gridContainer?: GridProps;
     /** Props applied to the `Grid` item wrapping the item's content. */
@@ -56,11 +56,10 @@ export default function ArrayFieldItemTemplate<
     minWidth: 0,
   };
 
-  const muiProps = getMuiProps<T, S, F, ArrayFieldItemTemplateMuiProps>(uiOptions);
-  const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
+  const { rjsfSlotProps: muiSlotProps } = getMuiProps<T, S, F, ArrayFieldItemTemplateMuiProps>(uiOptions);
 
   return (
-    <Grid container={true} alignItems='center' {...otherMuiProps} {...muiSlotProps?.gridContainer}>
+    <Grid container={true} alignItems='center' {...muiSlotProps?.gridContainer}>
       <Grid size={{ xs: 8, sm: 9, md: 10, lg: 11, xl: 11.25 }} style={{ overflow: 'auto' }} {...muiSlotProps?.gridItem}>
         <Box mb={2} {...muiSlotProps?.outerBox}>
           <Paper elevation={2} {...muiSlotProps?.paper}>

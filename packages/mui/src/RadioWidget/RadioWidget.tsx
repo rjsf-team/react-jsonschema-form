@@ -17,10 +17,10 @@ import {
 } from '@rjsf/utils';
 import { getMuiProps } from '../util';
 
-/** Properties available for the `slotProps` target of the RadioWidget. */
+/** Properties available for the `rjsfSlotProps` target of the RadioWidget. */
 export interface RadioWidgetMuiProps extends GenericObjectType {
-  /** MUI subset property for targeting specific child elements. */
-  slotProps?: {
+  /** RJSF-specific slot props for targeting child elements of the RadioWidget. */
+  rjsfSlotProps?: {
     /** Props applied to the `RadioGroup` component. */
     radioGroup?: RadioGroupProps;
     /** Props applied to the individual `Radio` components. */
@@ -51,8 +51,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const row = options ? options.inline : false;
   const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions) ?? null;
 
-  const muiProps = getMuiProps<T, S, F, RadioWidgetMuiProps>(options);
-  const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
+  const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, RadioWidgetMuiProps>(options);
 
   return (
     <>

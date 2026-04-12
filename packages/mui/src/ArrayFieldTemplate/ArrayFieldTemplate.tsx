@@ -13,10 +13,10 @@ import {
 } from '@rjsf/utils';
 import { getMuiProps } from '../util';
 
-/** Properties available for the `slotProps` target of the ArrayFieldTemplate. */
+/** Properties available for the `rjsfSlotProps` target of the ArrayFieldTemplate. */
 export interface ArrayFieldTemplateMuiProps extends GenericObjectType {
-  /** MUI subset property for targeting specific child elements. */
-  slotProps?: {
+  /** RJSF-specific slot props for targeting child elements of the ArrayFieldTemplate. */
+  rjsfSlotProps?: {
     /** Props applied to the wrapper `Paper` material. */
     paper?: PaperProps;
     /** Props applied to the primary `Box` container. */
@@ -70,11 +70,10 @@ export default function ArrayFieldTemplate<
     ButtonTemplates: { AddButton },
   } = registry.templates;
 
-  const muiProps = getMuiProps<T, S, F, ArrayFieldTemplateMuiProps>(uiOptions);
-  const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
+  const { rjsfSlotProps: muiSlotProps } = getMuiProps<T, S, F, ArrayFieldTemplateMuiProps>(uiOptions);
 
   return (
-    <Paper elevation={2} {...otherMuiProps} {...muiSlotProps?.paper}>
+    <Paper elevation={2} {...muiSlotProps?.paper}>
       <Box p={2} {...muiSlotProps?.box}>
         <ArrayFieldTitleTemplate
           fieldPathId={fieldPathId}

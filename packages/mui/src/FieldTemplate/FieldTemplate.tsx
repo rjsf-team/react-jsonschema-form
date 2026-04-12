@@ -11,10 +11,10 @@ import {
 } from '@rjsf/utils';
 import { getMuiProps } from '../util';
 
-/** Properties available for the `slotProps` target of the FieldTemplate. */
+/** Properties available for the `rjsfSlotProps` target of the FieldTemplate. */
 export interface FieldTemplateMuiProps extends GenericObjectType {
-  /** MUI subset property for targeting specific child elements. */
-  slotProps?: {
+  /** RJSF-specific slot props for targeting child elements of the FieldTemplate. */
+  rjsfSlotProps?: {
     /** Props applied to the MUI `FormControl` wrapping the field. */
     formControl?: FormControlProps;
     /** Props applied to the MUI `Typography` element used for description. */
@@ -68,8 +68,7 @@ export default function FieldTemplate<
 
   const isCheckbox = uiOptions.widget === 'checkbox';
 
-  const muiProps = getMuiProps<T, S, F, FieldTemplateMuiProps>(uiOptions);
-  const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
+  const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, FieldTemplateMuiProps>(uiOptions);
 
   return (
     <WrapIfAdditionalTemplate

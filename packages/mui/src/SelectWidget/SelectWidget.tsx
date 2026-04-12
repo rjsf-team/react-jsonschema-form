@@ -16,16 +16,14 @@ import {
 } from '@rjsf/utils';
 import { getMuiProps } from '../util';
 
-/** Properties available for the `slotProps` target of the SelectWidget. */
+/** Properties available for the `rjsfSlotProps` target of the SelectWidget. */
 export interface SelectWidgetMuiProps extends GenericObjectType {
-  /** MUI subset property for targeting specific child elements. */
-  slotProps?: {
+  /** RJSF-specific slot props for targeting child elements of the SelectWidget. */
+  rjsfSlotProps?: {
     /** Props applied to the `InputLabel` element. */
     inputLabel?: MuiInputLabelProps;
     /** Props applied to the `Select` element. */
     select?: MuiSelectProps;
-    /** Any other slotProps targetable by `TextField` internally. */
-    [key: string]: any;
   };
 }
 
@@ -77,8 +75,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, isMultiple);
-  const muiProps = getMuiProps<T, S, F, SelectWidgetMuiProps>(options);
-  const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
+  const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, SelectWidgetMuiProps>(options);
 
   const { InputLabelProps, SelectProps, autocomplete, ...textFieldRemainingProps } = textFieldProps;
   const showPlaceholderOption = !isMultiple && schema.default === undefined;

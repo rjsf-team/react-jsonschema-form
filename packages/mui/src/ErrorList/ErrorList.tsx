@@ -17,10 +17,10 @@ import {
 } from '@rjsf/utils';
 import { getMuiProps } from '../util';
 
-/** Properties available for the `slotProps` target of the ErrorList. */
+/** Properties available for the `rjsfSlotProps` target of the ErrorList. */
 export interface ErrorListMuiProps extends GenericObjectType {
-  /** MUI subset property for targeting specific child elements. */
-  slotProps?: {
+  /** RJSF-specific slot props for targeting child elements of the ErrorList. */
+  rjsfSlotProps?: {
     /** Props applied to the outermost `Paper` component. */
     paper?: PaperProps;
     /** Props applied to the `Box` container. */
@@ -50,11 +50,10 @@ export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSche
   const { translateString } = registry;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const muiProps = getMuiProps<T, S, F, ErrorListMuiProps>(uiOptions);
-  const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
+  const { rjsfSlotProps: muiSlotProps } = getMuiProps<T, S, F, ErrorListMuiProps>(uiOptions);
 
   return (
-    <Paper elevation={2} {...otherMuiProps} {...muiSlotProps?.paper}>
+    <Paper elevation={2} {...muiSlotProps?.paper}>
       <Box mb={2} p={2} {...muiSlotProps?.box}>
         <Typography variant='h6' {...muiSlotProps?.typography}>
           {translateString(TranslatableString.ErrorsLabel)}

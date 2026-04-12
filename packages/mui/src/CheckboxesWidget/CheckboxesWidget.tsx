@@ -19,10 +19,10 @@ import {
 } from '@rjsf/utils';
 import { getMuiProps } from '../util';
 
-/** Properties available for the `slotProps` target of the CheckboxesWidget. */
+/** Properties available for the `rjsfSlotProps` target of the CheckboxesWidget. */
 export interface CheckboxesWidgetMuiProps extends GenericObjectType {
-  /** MUI subset property for targeting specific child elements. */
-  slotProps?: {
+  /** RJSF-specific slot props for targeting child elements of the CheckboxesWidget. */
+  rjsfSlotProps?: {
     /** Props applied to the `FormGroup` container. */
     formGroup?: FormGroupProps;
     /** Props applied to the individual `Checkbox` components. */
@@ -75,8 +75,7 @@ export default function CheckboxesWidget<
   const _onFocus = ({ target }: FocusEvent<HTMLButtonElement>) =>
     onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
 
-  const muiProps = getMuiProps<T, S, F, CheckboxesWidgetMuiProps>(options);
-  const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
+  const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, CheckboxesWidgetMuiProps>(options);
 
   return (
     <>

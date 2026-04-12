@@ -13,10 +13,10 @@ import {
 } from '@rjsf/utils';
 import { getMuiProps } from '../util';
 
-/** Properties available for the `slotProps` target of the RangeWidget. */
+/** Properties available for the `rjsfSlotProps` target of the RangeWidget. */
 export interface RangeWidgetMuiProps extends GenericObjectType {
-  /** MUI subset property for targeting specific child elements. */
-  slotProps?: {
+  /** RJSF-specific slot props for targeting child elements of the RangeWidget. */
+  rjsfSlotProps?: {
     /** Props applied to the MUI `Slider` component. */
     slider?: SliderProps;
   };
@@ -40,8 +40,7 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
 
-  const muiProps = getMuiProps<T, S, F, RangeWidgetMuiProps>(options);
-  const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
+  const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, RangeWidgetMuiProps>(options);
 
   return (
     <>

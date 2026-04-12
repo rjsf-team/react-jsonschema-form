@@ -12,10 +12,10 @@ import {
 } from '@rjsf/utils';
 import { getMuiProps } from '../util';
 
-/** Properties available for the `slotProps` target of the TitleField. */
+/** Properties available for the `rjsfSlotProps` target of the TitleField. */
 export interface TitleFieldMuiProps extends GenericObjectType {
-  /** MUI subset property for targeting specific child elements. */
-  slotProps?: {
+  /** RJSF-specific slot props for targeting child elements of the TitleField. */
+  rjsfSlotProps?: {
     /** Props applied to the `Box` wrapper. */
     box?: BoxProps;
     /** Props applied to the `Divider` element. */
@@ -41,8 +41,7 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
   const { id, title, optionalDataControl, uiSchema } = props;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const muiProps = getMuiProps<T, S, F, TitleFieldMuiProps>(uiOptions);
-  const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
+  const { rjsfSlotProps: muiSlotProps } = getMuiProps<T, S, F, TitleFieldMuiProps>(uiOptions);
 
   let heading = (
     <Typography variant='h5' {...muiSlotProps?.typography}>
@@ -62,7 +61,7 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
     );
   }
   return (
-    <Box id={id} mb={1} mt={1} {...otherMuiProps} {...muiSlotProps?.box}>
+    <Box id={id} mb={1} mt={1} {...muiSlotProps?.box}>
       {heading}
       <Divider {...muiSlotProps?.divider} />
     </Box>

@@ -17,9 +17,11 @@ import {
 import { SchemaExamples } from '@rjsf/core';
 import { getMuiProps } from '../util';
 
-/** Properties available for the `slotProps` target of the BaseInputTemplate. */
+/** Properties available for the MUI `ui:options` of the BaseInputTemplate.
+ *  Unlike RJSF templates, `slotProps` here maps directly to MUI's native `TextField` `slotProps`,
+ *  enabling type-safe customization of the underlying MUI sub-components. */
 export interface BaseInputTemplateMuiProps extends GenericObjectType {
-  /** MUI subset property for targeting specific child elements. */
+  /** Native MUI `TextField` slotProps for targeting specific sub-components. */
   slotProps?: {
     /** Props applied to the base native HTML `<input>` or `<textarea>` element. */
     htmlInput?: React.HTMLAttributes<HTMLInputElement | HTMLTextAreaElement>;

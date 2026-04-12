@@ -14,10 +14,10 @@ import {
 } from '@rjsf/utils';
 import { getMuiProps } from '../util';
 
-/** Properties available for the `slotProps` target of the ObjectFieldTemplate. */
+/** Properties available for the `rjsfSlotProps` target of the ObjectFieldTemplate. */
 export interface ObjectFieldTemplateMuiProps extends GenericObjectType {
-  /** MUI subset property for targeting specific child elements. */
-  slotProps?: {
+  /** RJSF-specific slot props for targeting child elements of the ObjectFieldTemplate. */
+  rjsfSlotProps?: {
     /** Props applied to the outermost `Grid` container wrapping all object properties. */
     gridContainer?: GridProps;
     /** Props applied to the `Grid` item wrapping each individual object property. */
@@ -68,8 +68,7 @@ export default function ObjectFieldTemplate<
     ButtonTemplates: { AddButton },
   } = registry.templates;
 
-  const muiProps = getMuiProps<T, S, F, ObjectFieldTemplateMuiProps>(uiOptions);
-  const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
+  const { rjsfSlotProps: muiSlotProps } = getMuiProps<T, S, F, ObjectFieldTemplateMuiProps>(uiOptions);
 
   return (
     <>
@@ -93,7 +92,7 @@ export default function ObjectFieldTemplate<
           registry={registry}
         />
       )}
-      <Grid container spacing={2} style={{ marginTop: '10px' }} {...otherMuiProps} {...muiSlotProps?.gridContainer}>
+      <Grid container spacing={2} style={{ marginTop: '10px' }} {...muiSlotProps?.gridContainer}>
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
         {properties.map((element, index) =>
           // Remove the <Grid> if the inner element is hidden as the <Grid>
