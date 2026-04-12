@@ -732,10 +732,35 @@ import { customizeValidator } from '@rjsf/validator-ajv8';
 const schema: RJSFSchema = {
   type: 'object',
   properties: {
-    value: {
-      anyOf: [{ type: 'string' }, { type: 'number' }],
+    asc: {
+      title: 'Low to high',
+      type: 'boolean',
+      default: true,
+    },
+    desc: {
+      title: 'High to low',
+      type: 'boolean',
+      default: true,
     },
   },
+  anyOf: [
+    {
+      required: ['asc'],
+      properties: {
+        asc: {
+          const: true,
+        },
+      },
+    },
+    {
+      required: ['desc'],
+      properties: {
+        desc: {
+          const: true,
+        },
+      },
+    },
+  ],
 };
 
 // Disable all duplicate filtering — show every error from every anyOf/oneOf branch
