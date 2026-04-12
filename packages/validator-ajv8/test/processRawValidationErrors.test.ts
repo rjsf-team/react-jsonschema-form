@@ -28,8 +28,14 @@ describe('filterDuplicateErrors', () => {
   };
   const errorList = [anyOfDup1, anyOfDup2, oneOfDup1, oneOfDup2];
 
-  it('filters both anyOf and oneOf duplicates when no flag is provided', () => {
+  it('filters both anyOf and oneOf duplicates when no flag is provided (default "none")', () => {
     const result = filterDuplicateErrors(errorList);
+    expect(result).toHaveLength(2);
+    expect(result).toEqual([anyOfDup1, oneOfDup1]);
+  });
+
+  it('filters both anyOf and oneOf duplicates when flag is "none"', () => {
+    const result = filterDuplicateErrors(errorList, 'none');
     expect(result).toHaveLength(2);
     expect(result).toEqual([anyOfDup1, oneOfDup1]);
   });
@@ -469,6 +475,9 @@ describe('transformRJSFValidationErrors', () => {
         data: {},
       },
     ];
+    it('filters duplicates when flag is "none"', () => {
+      expect(transformRJSFValidationErrors(twoAnyOfDupErrors, undefined, 'none')).toHaveLength(1);
+    });
     it('returns all errors unfiltered when flag is "all"', () => {
       expect(transformRJSFValidationErrors(twoAnyOfDupErrors, undefined, 'all')).toHaveLength(2);
     });

@@ -713,12 +713,14 @@ When AJV validates against `anyOf` or `oneOf` schemas, it generates a separate e
 By default, the validator filters out these duplicates so that only the first occurrence of each unique error is shown.
 Use `suppressDuplicateFiltering` to override this behavior when you need to see all errors from every branch.
 
-| Value                 | Behavior                                                                    |
-| --------------------- | --------------------------------------------------------------------------- |
-| `undefined` (default) | Duplicates filtered for both `anyOf` and `oneOf`                            |
-| `'anyOf'`             | `anyOf` duplicate filtering disabled; `oneOf` duplicates still filtered     |
-| `'oneOf'`             | `oneOf` duplicate filtering disabled; `anyOf` duplicates still filtered     |
-| `'all'`               | All duplicate filtering disabled; every error from every branch is returned |
+The option accepts a `SuppressDuplicateFilteringType` value (exported from `@rjsf/validator-ajv8`):
+
+| Value              | Behavior                                                                    |
+| ------------------ | --------------------------------------------------------------------------- |
+| `'none'` (default) | Duplicates filtered for both `anyOf` and `oneOf`                            |
+| `'anyOf'`          | `anyOf` duplicate filtering disabled; `oneOf` duplicates still filtered     |
+| `'oneOf'`          | `oneOf` duplicate filtering disabled; `anyOf` duplicates still filtered     |
+| `'all'`            | All duplicate filtering disabled; every error from every branch is returned |
 
 For a standard validator via `customizeValidator()`:
 

@@ -1,6 +1,6 @@
 import { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '@rjsf/utils';
 
-import { Localizer, ValidatorFunctions } from './types';
+import { Localizer, SuppressDuplicateFilteringType, ValidatorFunctions } from './types';
 import AJV8PrecompiledValidator from './precompiledValidator';
 
 /** Creates and returns a `ValidatorType` interface that is implemented with a precompiled validator. If a `localizer`
@@ -23,7 +23,7 @@ export default function createPrecompiledValidator<
   validateFns: ValidatorFunctions,
   rootSchema: S,
   localizer?: Localizer,
-  suppressDuplicateFiltering?: 'anyOf' | 'oneOf' | 'all',
+  suppressDuplicateFiltering?: SuppressDuplicateFilteringType,
 ): ValidatorType<T, S, F> {
   return new AJV8PrecompiledValidator<T, S, F>(validateFns, rootSchema, localizer, suppressDuplicateFiltering);
 }

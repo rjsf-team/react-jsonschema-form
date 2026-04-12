@@ -15,7 +15,7 @@ import {
   hashForSchema,
 } from '@rjsf/utils';
 
-import { CustomValidatorOptionsType, Localizer } from './types';
+import { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringType } from './types';
 import createAjvInstance from './createAjvInstance';
 import processRawValidationErrors, { RawValidationErrorsType } from './processRawValidationErrors';
 
@@ -42,7 +42,7 @@ export default class AJV8Validator<
    *
    * @private
    */
-  readonly suppressDuplicateFiltering?: 'anyOf' | 'oneOf' | 'all';
+  readonly suppressDuplicateFiltering?: SuppressDuplicateFilteringType;
 
   /** Constructs an `AJV8Validator` instance using the `options`
    *

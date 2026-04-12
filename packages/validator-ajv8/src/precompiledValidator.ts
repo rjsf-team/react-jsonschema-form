@@ -16,7 +16,7 @@ import {
   ValidatorType,
 } from '@rjsf/utils';
 
-import { CompiledValidateFunction, Localizer, ValidatorFunctions } from './types';
+import { CompiledValidateFunction, Localizer, SuppressDuplicateFilteringType, ValidatorFunctions } from './types';
 import processRawValidationErrors, { RawValidationErrorsType } from './processRawValidationErrors';
 
 /** `ValidatorType` implementation that uses an AJV 8 precompiled validator as created by the
@@ -55,7 +55,7 @@ export default class AJV8PrecompiledValidator<
    *
    * @private
    */
-  readonly suppressDuplicateFiltering?: 'anyOf' | 'oneOf' | 'all';
+  readonly suppressDuplicateFiltering?: SuppressDuplicateFilteringType;
 
   /** Constructs an `AJV8PrecompiledValidator` instance using the `validateFns` and `rootSchema`
    *
@@ -69,7 +69,7 @@ export default class AJV8PrecompiledValidator<
     validateFns: ValidatorFunctions,
     rootSchema: S,
     localizer?: Localizer,
-    suppressDuplicateFiltering?: 'anyOf' | 'oneOf' | 'all',
+    suppressDuplicateFiltering?: SuppressDuplicateFilteringType,
   ) {
     this.rootSchema = rootSchema;
     this.validateFns = validateFns;
