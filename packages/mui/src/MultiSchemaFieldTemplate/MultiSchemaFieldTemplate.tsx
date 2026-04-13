@@ -15,9 +15,9 @@ export interface MultiSchemaFieldTemplateMuiProps extends GenericObjectType {
   /** RJSF-specific slot props for targeting child elements of the MultiSchemaFieldTemplate. */
   rjsfSlotProps?: {
     /** Props applied to the wrapper `Box` container. */
-    box?: BoxProps;
+    multiBox?: BoxProps;
     /** Props applied to the MUI `FormControl` wrapping the selector. */
-    formControl?: FormControlProps;
+    multiFormControl?: FormControlProps;
   };
 }
 
@@ -32,8 +32,8 @@ export default function MultiSchemaFieldTemplate<
   const { rjsfSlotProps: muiSlotProps } = getMuiProps<T, S, F, MultiSchemaFieldTemplateMuiProps>(uiOptions);
 
   return (
-    <Box sx={{ mb: 2 }} {...muiSlotProps?.box}>
-      <FormControl fullWidth sx={{ mb: 2 }} {...muiSlotProps?.formControl}>
+    <Box sx={{ mb: 2 }} {...muiSlotProps?.multiBox}>
+      <FormControl fullWidth sx={{ mb: 2 }} {...muiSlotProps?.multiFormControl}>
         {selector}
       </FormControl>
       {optionSchemaField}

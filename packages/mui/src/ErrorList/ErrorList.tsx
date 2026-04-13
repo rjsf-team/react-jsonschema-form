@@ -22,19 +22,19 @@ export interface ErrorListMuiProps extends GenericObjectType {
   /** RJSF-specific slot props for targeting child elements of the ErrorList. */
   rjsfSlotProps?: {
     /** Props applied to the outermost `Paper` component. */
-    paper?: PaperProps;
+    errorPaper?: PaperProps;
     /** Props applied to the `Box` container. */
-    box?: BoxProps;
+    errorBox?: BoxProps;
     /** Props applied to the `Typography` element for the title. */
-    typography?: TypographyProps;
+    errorTypography?: TypographyProps;
     /** Props applied to the `List` container holding the errors. */
-    list?: ListProps;
+    errorList?: ListProps;
     /** Props applied to each `ListItem` representing an error. */
-    listItem?: ListItemProps;
+    errorListItem?: ListItemProps;
     /** Props applied to each `ListItemIcon` representing the error icon. */
-    listItemIcon?: ListItemIconProps;
+    errorListItemIcon?: ListItemIconProps;
     /** Props applied to each `ListItemText` representing the error message. */
-    listItemText?: ListItemTextProps;
+    errorListItemText?: ListItemTextProps;
   };
 }
 
@@ -53,19 +53,19 @@ export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSche
   const { rjsfSlotProps: muiSlotProps } = getMuiProps<T, S, F, ErrorListMuiProps>(uiOptions);
 
   return (
-    <Paper elevation={2} {...muiSlotProps?.paper}>
-      <Box mb={2} p={2} {...muiSlotProps?.box}>
-        <Typography variant='h6' {...muiSlotProps?.typography}>
+    <Paper elevation={2} {...muiSlotProps?.errorPaper}>
+      <Box mb={2} p={2} {...muiSlotProps?.errorBox}>
+        <Typography variant='h6' {...muiSlotProps?.errorTypography}>
           {translateString(TranslatableString.ErrorsLabel)}
         </Typography>
-        <List dense={true} {...muiSlotProps?.list}>
+        <List dense={true} {...muiSlotProps?.errorList}>
           {errors.map((error, i: number) => {
             return (
-              <ListItem key={i} {...muiSlotProps?.listItem}>
-                <ListItemIcon {...muiSlotProps?.listItemIcon}>
+              <ListItem key={i} {...muiSlotProps?.errorListItem}>
+                <ListItemIcon {...muiSlotProps?.errorListItemIcon}>
                   <ErrorIcon color='error' />
                 </ListItemIcon>
-                <ListItemText primary={error.stack} {...muiSlotProps?.listItemText} />
+                <ListItemText primary={error.stack} {...muiSlotProps?.errorListItemText} />
               </ListItem>
             );
           })}

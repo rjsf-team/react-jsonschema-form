@@ -17,17 +17,17 @@ export interface TitleFieldMuiProps extends GenericObjectType {
   /** RJSF-specific slot props for targeting child elements of the TitleField. */
   rjsfSlotProps?: {
     /** Props applied to the `Box` wrapper. */
-    box?: BoxProps;
+    titleBox?: BoxProps;
     /** Props applied to the `Divider` element. */
-    divider?: DividerProps;
+    titleDivider?: DividerProps;
     /** Props applied to the `Typography` element used for the title. */
-    typography?: TypographyProps;
+    titleTypography?: TypographyProps;
     /** Props applied to the `Grid` container used when `optionalDataControl` is present. */
-    gridContainer?: GridProps;
+    titleGridContainer?: GridProps;
     /** Props applied to the `Grid` item containing the title. */
-    gridItem?: GridProps;
+    titleGridItem?: GridProps;
     /** Props applied to the `Grid` item containing the `optionalDataControl`. */
-    optionalDataGridItem?: GridProps;
+    titleOptionalDataGridItem?: GridProps;
   };
 }
 
@@ -44,26 +44,26 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
   const { rjsfSlotProps: muiSlotProps } = getMuiProps<T, S, F, TitleFieldMuiProps>(uiOptions);
 
   let heading = (
-    <Typography variant='h5' {...muiSlotProps?.typography}>
+    <Typography variant='h5' {...muiSlotProps?.titleTypography}>
       {title}
     </Typography>
   );
   if (optionalDataControl) {
     heading = (
-      <Grid container={true} spacing={0} {...muiSlotProps?.gridContainer}>
-        <Grid size='grow' {...muiSlotProps?.gridItem}>
+      <Grid container={true} spacing={0} {...muiSlotProps?.titleGridContainer}>
+        <Grid size='grow' {...muiSlotProps?.titleGridItem}>
           {heading}
         </Grid>
-        <Grid justifyContent='flex-end' {...muiSlotProps?.optionalDataGridItem}>
+        <Grid justifyContent='flex-end' {...muiSlotProps?.titleOptionalDataGridItem}>
           {optionalDataControl}
         </Grid>
       </Grid>
     );
   }
   return (
-    <Box id={id} mb={1} mt={1} {...muiSlotProps?.box}>
+    <Box id={id} mb={1} mt={1} {...muiSlotProps?.titleBox}>
       {heading}
-      <Divider {...muiSlotProps?.divider} />
+      <Divider {...muiSlotProps?.titleDivider} />
     </Box>
   );
 }

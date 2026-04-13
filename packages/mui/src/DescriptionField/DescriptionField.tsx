@@ -15,7 +15,7 @@ export interface DescriptionFieldMuiProps extends GenericObjectType {
   /** RJSF-specific slot props for targeting child elements of the DescriptionField. */
   rjsfSlotProps?: {
     /** Props applied to the `Typography` element used for the description. */
-    typography?: TypographyProps;
+    descTypography?: TypographyProps;
   };
 }
 
@@ -36,7 +36,7 @@ export default function DescriptionField<
 
   if (description) {
     return (
-      <Typography id={id} variant='subtitle2' style={{ marginTop: '5px' }} {...muiSlotProps?.typography}>
+      <Typography id={id} variant='subtitle2' style={{ marginTop: '5px' }} {...muiSlotProps?.descTypography}>
         <RichDescription description={description} registry={registry} uiSchema={uiSchema} />
       </Typography>
     );

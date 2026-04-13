@@ -16,7 +16,7 @@ export interface FieldHelpTemplateMuiProps extends GenericObjectType {
   /** RJSF-specific slot props for targeting child elements of the FieldHelpTemplate. */
   rjsfSlotProps?: {
     /** Props applied to the `FormHelperText` used for help text. */
-    formHelperText?: FormHelperTextProps;
+    helpFormHelperText?: FormHelperTextProps;
   };
 }
 
@@ -43,7 +43,7 @@ export default function FieldHelpTemplate<
       component='div'
       id={helpId(fieldPathId)}
       style={{ marginTop: '5px' }}
-      {...muiSlotProps?.formHelperText}
+      {...muiSlotProps?.helpFormHelperText}
     >
       <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
     </FormHelperText>

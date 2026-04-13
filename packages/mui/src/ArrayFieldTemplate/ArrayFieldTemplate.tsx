@@ -18,15 +18,15 @@ export interface ArrayFieldTemplateMuiProps extends GenericObjectType {
   /** RJSF-specific slot props for targeting child elements of the ArrayFieldTemplate. */
   rjsfSlotProps?: {
     /** Props applied to the wrapper `Paper` material. */
-    paper?: PaperProps;
+    arrayPaper?: PaperProps;
     /** Props applied to the primary `Box` container. */
-    box?: BoxProps;
+    arrayBox?: BoxProps;
     /** Props applied to the wrapper `Grid` container next to the Add Button. */
-    addButtonGridContainer?: GridProps;
+    arrayAddButtonGridContainer?: GridProps;
     /** Props applied to the `Grid` item containing the Add Button. */
-    addButtonGridItem?: GridProps;
+    arrayAddButtonGridItem?: GridProps;
     /** Props applied to the `Box` containing the Add Button. */
-    addButtonBox?: BoxProps;
+    arrayAddButtonBox?: BoxProps;
   };
 }
 
@@ -73,8 +73,8 @@ export default function ArrayFieldTemplate<
   const { rjsfSlotProps: muiSlotProps } = getMuiProps<T, S, F, ArrayFieldTemplateMuiProps>(uiOptions);
 
   return (
-    <Paper elevation={2} {...muiSlotProps?.paper}>
-      <Box p={2} {...muiSlotProps?.box}>
+    <Paper elevation={2} {...muiSlotProps?.arrayPaper}>
+      <Box p={2} {...muiSlotProps?.arrayBox}>
         <ArrayFieldTitleTemplate
           fieldPathId={fieldPathId}
           title={uiOptions.title || title}
@@ -94,9 +94,9 @@ export default function ArrayFieldTemplate<
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
         {items}
         {canAdd && (
-          <Grid container justifyContent='flex-end' {...muiSlotProps?.addButtonGridContainer}>
-            <Grid {...muiSlotProps?.addButtonGridItem}>
-              <Box mt={2} {...muiSlotProps?.addButtonBox}>
+          <Grid container justifyContent='flex-end' {...muiSlotProps?.arrayAddButtonGridContainer}>
+            <Grid {...muiSlotProps?.arrayAddButtonGridItem}>
+              <Box mt={2} {...muiSlotProps?.arrayAddButtonBox}>
                 <AddButton
                   id={buttonId(fieldPathId, 'add')}
                   className='rjsf-array-item-add'

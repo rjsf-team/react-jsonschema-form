@@ -56,7 +56,7 @@ The `@rjsf/mui` package looks for a `mui` key inside the `ui:options` of your `u
     "ui:options": {
       "mui": {
         "rjsfSlotProps": {
-          "paper": {
+          "arrayPaper": {
             "elevation": 10
           }
         }
@@ -79,7 +79,7 @@ If you wish to specifically target the _individual array items_ handled by `Arra
       "ui:options": {
         "mui": {
           "rjsfSlotProps": {
-            "gridContainer": {
+            "arrayItemGridContainer": {
               "spacing": 2
             }
           }
@@ -97,23 +97,23 @@ Different templates and widgets expose different `rjsfSlotProps` targets based o
 | RJSF Component               | `rjsfSlotProps` targets available | Description                                                                           |
 | ---------------------------- | --------------------------------- | ------------------------------------------------------------------------------------- |
 | **BaseInputTemplate**        | _(uses native `slotProps`)_       | Uses MUI's `slotProps.htmlInput`, `slotProps.input`, `slotProps.inputLabel` directly. |
-| **FieldTemplate**            | `formControl`                     | Props passed to the outer `FormControl` wrapper.                                      |
-|                              | `typography`                      | Props passed to the `Typography` component used for the description.                  |
-| **ObjectFieldTemplate**      | `gridContainer`                   | Props passed to the outer `Grid` container.                                           |
-|                              | `gridItem`                        | Props passed to each property's `Grid` item.                                          |
-|                              | `addButtonGridContainer`          | Props passed to the `Grid` container adjacent to the Add button.                      |
-|                              | `addButtonGridItem`               | Props passed to the `Grid` item wrapping the Add button.                              |
-| **ArrayFieldTemplate**       | `box`                             | Props passed to the inner `Box` container holding the array items.                    |
-|                              | `paper`                           | Props passed to the outer `Paper` wrapper.                                            |
-|                              | `addButtonGridContainer`          | Props passed to the `Grid` container adjacent to the Add button.                      |
-|                              | `addButtonGridItem`               | Props passed to the `Grid` item wrapping the Add button.                              |
-|                              | `addButtonBox`                    | Props passed to the `Box` wrapping the Add button.                                    |
-| **ArrayFieldItemTemplate**   | `gridContainer`                   | Props passed to the outer `Grid` container for the item row.                          |
-|                              | `gridItem`                        | Props passed to the content `Grid` item.                                              |
-|                              | `outerBox`                        | Props passed to the outer `Box`.                                                      |
-|                              | `paper`                           | Props passed to the `Paper` elevation component.                                      |
-|                              | `innerBox`                        | Props passed to the inner `Box` holding the children.                                 |
-|                              | `toolbarGrid`                     | Props passed to the `Grid` holding the toolbar buttons.                               |
+| **FieldTemplate**            | `fieldFormControl`                | Props passed to the outer `FormControl` wrapper.                                      |
+|                              | `fieldTypography`                 | Props passed to the `Typography` component used for the description.                  |
+| **ObjectFieldTemplate**      | `objectGridContainer`             | Props passed to the outer `Grid` container.                                           |
+|                              | `objectGridItem`                  | Props passed to each property's `Grid` item.                                          |
+|                              | `objectAddButtonGridContainer`    | Props passed to the `Grid` container adjacent to the Add button.                      |
+|                              | `objectAddButtonGridItem`         | Props passed to the `Grid` item wrapping the Add button.                              |
+| **ArrayFieldTemplate**       | `arrayBox`                        | Props passed to the inner `Box` container holding the array items.                    |
+|                              | `arrayPaper`                      | Props passed to the outer `Paper` wrapper.                                            |
+|                              | `arrayAddButtonGridContainer`     | Props passed to the `Grid` container adjacent to the Add button.                      |
+|                              | `arrayAddButtonGridItem`          | Props passed to the `Grid` item wrapping the Add button.                              |
+|                              | `arrayAddButtonBox`               | Props passed to the `Box` wrapping the Add button.                                    |
+| **ArrayFieldItemTemplate**   | `arrayItemGridContainer`          | Props passed to the outer `Grid` container for the item row.                          |
+|                              | `arrayItemGridItem`               | Props passed to the content `Grid` item.                                              |
+|                              | `arrayItemOuterBox`               | Props passed to the outer `Box`.                                                      |
+|                              | `arrayItemPaper`                  | Props passed to the `Paper` elevation component.                                      |
+|                              | `arrayItemInnerBox`               | Props passed to the inner `Box` holding the children.                                 |
+|                              | `arrayItemToolbarGrid`            | Props passed to the `Grid` holding the toolbar buttons.                               |
 | **CheckboxesWidget**         | `formGroup`                       | Props passed to the `FormGroup` container.                                            |
 |                              | `checkbox`                        | Props passed to individual `Checkbox` components.                                     |
 |                              | `formControlLabel`                | Props passed to the `FormControlLabel` components wrapping each checkbox.             |
@@ -124,29 +124,29 @@ Different templates and widgets expose different `rjsfSlotProps` targets based o
 |                              | `formControlLabel`                | Props passed to the `FormControlLabel` components wrapping each radio.                |
 | **SelectWidget**             | `inputLabel`                      | Props passed to the native MUI `InputLabel` component.                                |
 |                              | `select`                          | Props passed to the native MUI `Select` component.                                    |
-| **ErrorList**                | `box`                             | Props passed to the inner `Box`.                                                      |
-|                              | `list`                            | Props passed to the `List` container.                                                 |
-|                              | `listItem`                        | Props passed to individual `ListItem` components wrapping each error.                 |
-|                              | `listItemIcon`                    | Props passed to the `ListItemIcon` next to each error.                                |
-|                              | `listItemText`                    | Props passed to the `ListItemText` displaying the error.                              |
-|                              | `paper`                           | Props passed to the outer `Paper` wrapper.                                            |
-|                              | `typography`                      | Props passed to the `Typography` displaying the "Errors" title.                       |
-| **FieldErrorTemplate**       | `list`                            | Props passed to the `List` container.                                                 |
-|                              | `listItem`                        | Props passed to individual `ListItem` components.                                     |
-|                              | `formHelperText`                  | Props passed to the `FormHelperText` displaying the error text.                       |
-| **FieldHelpTemplate**        | `formHelperText`                  | Props passed to the `FormHelperText` used for help text.                              |
-| **DescriptionField**         | `typography`                      | Props passed to the `Typography` component.                                           |
-| **TitleField**               | `box`                             | Props passed to the outer `Box` wrapper.                                              |
-|                              | `divider`                         | Props passed to the `Divider` element.                                                |
-|                              | `typography`                      | Props passed to the `Typography` component used for the title.                        |
-|                              | `gridContainer`                   | Props passed to `Grid` container when title has optional data controls.               |
-|                              | `gridItem`                        | Props passed to the `Grid` item containing the title.                                 |
-|                              | `optionalDataGridItem`            | Props passed to the `Grid` item containing the optional data control.                 |
-| **MultiSchemaFieldTemplate** | `box`                             | Props passed to the wrapper `Box`.                                                    |
-|                              | `formControl`                     | Props passed to the wrapper `FormControl`.                                            |
-| **SubmitButton**             | `box`                             | Props passed to the `Box` wrapping the submit button.                                 |
-|                              | `button`                          | Props passed to the `Button` element.                                                 |
-| **WrapIfAdditionalTemplate** | `gridContainer`                   | Props passed to the outer `Grid` container.                                           |
-|                              | `keyGridItem`                     | Props passed to the `Grid` item containing the key `TextField`.                       |
-|                              | `childrenGridItem`                | Props passed to the `Grid` item containing the field children.                        |
-|                              | `removeButtonGridItem`            | Props passed to the `Grid` item containing the remove button.                         |
+| **ErrorList**                | `errorBox`                        | Props passed to the inner `Box`.                                                      |
+|                              | `errorList`                       | Props passed to the `List` container.                                                 |
+|                              | `errorListItem`                   | Props passed to individual `ListItem` components wrapping each error.                 |
+|                              | `errorListItemIcon`               | Props passed to the `ListItemIcon` next to each error.                                |
+|                              | `errorListItemText`               | Props passed to the `ListItemText` displaying the error.                              |
+|                              | `errorPaper`                      | Props passed to the outer `Paper` wrapper.                                            |
+|                              | `errorTypography`                 | Props passed to the `Typography` displaying the "Errors" title.                       |
+| **FieldErrorTemplate**       | `fieldErrorList`                  | Props passed to the `List` container.                                                 |
+|                              | `fieldErrorListItem`              | Props passed to individual `ListItem` components.                                     |
+|                              | `fieldErrorFormHelperText`        | Props passed to the `FormHelperText` displaying the error text.                       |
+| **FieldHelpTemplate**        | `helpFormHelperText`              | Props passed to the `FormHelperText` used for help text.                              |
+| **DescriptionField**         | `descTypography`                  | Props passed to the `Typography` component.                                           |
+| **TitleField**               | `titleBox`                        | Props passed to the outer `Box` wrapper.                                              |
+|                              | `titleDivider`                    | Props passed to the `Divider` element.                                                |
+|                              | `titleTypography`                 | Props passed to the `Typography` component used for the title.                        |
+|                              | `titleGridContainer`              | Props passed to `Grid` container when title has optional data controls.               |
+|                              | `titleGridItem`                   | Props passed to the `Grid` item containing the title.                                 |
+|                              | `titleOptionalDataGridItem`       | Props passed to the `Grid` item containing the optional data control.                 |
+| **MultiSchemaFieldTemplate** | `multiBox`                        | Props passed to the wrapper `Box`.                                                    |
+|                              | `multiFormControl`                | Props passed to the wrapper `FormControl`.                                            |
+| **SubmitButton**             | `submitBox`                       | Props passed to the `Box` wrapping the submit button.                                 |
+|                              | `submitButton`                    | Props passed to the `Button` element.                                                 |
+| **WrapIfAdditionalTemplate** | `wrapGridContainer`               | Props passed to the outer `Grid` container.                                           |
+|                              | `wrapKeyGridItem`                 | Props passed to the `Grid` item containing the key `TextField`.                       |
+|                              | `wrapChildrenGridItem`            | Props passed to the `Grid` item containing the field children.                        |
+|                              | `wrapRemoveButtonGridItem`        | Props passed to the `Grid` item containing the remove button.                         |

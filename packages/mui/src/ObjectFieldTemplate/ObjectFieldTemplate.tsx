@@ -19,13 +19,13 @@ export interface ObjectFieldTemplateMuiProps extends GenericObjectType {
   /** RJSF-specific slot props for targeting child elements of the ObjectFieldTemplate. */
   rjsfSlotProps?: {
     /** Props applied to the outermost `Grid` container wrapping all object properties. */
-    gridContainer?: GridProps;
+    objectGridContainer?: GridProps;
     /** Props applied to the `Grid` item wrapping each individual object property. */
-    gridItem?: GridProps;
+    objectGridItem?: GridProps;
     /** Props applied to the wrapper `Grid` container next to the Add Button (when expandable). */
-    addButtonGridContainer?: GridProps;
+    objectAddButtonGridContainer?: GridProps;
     /** Props applied to the `Grid` item containing the Add Button. */
-    addButtonGridItem?: GridProps;
+    objectAddButtonGridItem?: GridProps;
   };
 }
 
@@ -92,7 +92,7 @@ export default function ObjectFieldTemplate<
           registry={registry}
         />
       )}
-      <Grid container spacing={2} style={{ marginTop: '10px' }} {...muiSlotProps?.gridContainer}>
+      <Grid container spacing={2} style={{ marginTop: '10px' }} {...muiSlotProps?.objectGridContainer}>
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
         {properties.map((element, index) =>
           // Remove the <Grid> if the inner element is hidden as the <Grid>
@@ -100,15 +100,15 @@ export default function ObjectFieldTemplate<
           element.hidden ? (
             element.content
           ) : (
-            <Grid size={{ xs: 12 }} key={index} style={{ marginBottom: '10px' }} {...muiSlotProps?.gridItem}>
+            <Grid size={{ xs: 12 }} key={index} style={{ marginBottom: '10px' }} {...muiSlotProps?.objectGridItem}>
               {element.content}
             </Grid>
           ),
         )}
       </Grid>
       {canExpand<T, S, F>(schema, uiSchema, formData) && (
-        <Grid container justifyContent='flex-end' {...muiSlotProps?.addButtonGridContainer}>
-          <Grid {...muiSlotProps?.addButtonGridItem}>
+        <Grid container justifyContent='flex-end' {...muiSlotProps?.objectAddButtonGridContainer}>
+          <Grid {...muiSlotProps?.objectAddButtonGridItem}>
             <AddButton
               id={buttonId(fieldPathId, 'add')}
               className='rjsf-object-property-expand'

@@ -16,9 +16,9 @@ export interface SubmitButtonMuiProps extends GenericObjectType {
   /** RJSF-specific slot props for targeting child elements of the SubmitButton. */
   rjsfSlotProps?: {
     /** Props applied to the `Box` wrapper. */
-    box?: BoxProps;
+    submitBox?: BoxProps;
     /** Props applied to the `Button` element. */
-    button?: ButtonProps;
+    submitButton?: ButtonProps;
   };
 }
 
@@ -38,14 +38,14 @@ export default function SubmitButton<
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, SubmitButtonMuiProps>(uiOptions);
 
   return (
-    <Box marginTop={3} {...muiSlotProps?.box}>
+    <Box marginTop={3} {...muiSlotProps?.submitBox}>
       <Button
         type='submit'
         variant='contained'
         color='primary'
         {...submitButtonProps}
         {...otherMuiProps}
-        {...muiSlotProps?.button}
+        {...muiSlotProps?.submitButton}
       >
         {submitText}
       </Button>

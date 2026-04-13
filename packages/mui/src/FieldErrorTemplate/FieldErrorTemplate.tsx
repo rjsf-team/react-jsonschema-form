@@ -17,11 +17,11 @@ export interface FieldErrorTemplateMuiProps extends GenericObjectType {
   /** RJSF-specific slot props for targeting child elements of the FieldErrorTemplate. */
   rjsfSlotProps?: {
     /** Props applied to the `List` container holding the errors. */
-    list?: ListProps;
+    fieldErrorList?: ListProps;
     /** Props applied to each `ListItem` representing an error. */
-    listItem?: ListItemProps;
+    fieldErrorListItem?: ListItemProps;
     /** Props applied to the `FormHelperText` displaying the actual error message. */
-    formHelperText?: FormHelperTextProps;
+    fieldErrorFormHelperText?: FormHelperTextProps;
   };
 }
 
@@ -45,11 +45,11 @@ export default function FieldErrorTemplate<
   const { rjsfSlotProps: muiSlotProps } = muiProps;
 
   return (
-    <List id={id} dense={true} disablePadding={true} {...muiSlotProps?.list}>
+    <List id={id} dense={true} disablePadding={true} {...muiSlotProps?.fieldErrorList}>
       {errors.map((error, i: number) => {
         return (
-          <ListItem key={i} disableGutters={true} {...muiSlotProps?.listItem}>
-            <FormHelperText component='div' id={`${id}-${i}`} {...muiSlotProps?.formHelperText}>
+          <ListItem key={i} disableGutters={true} {...muiSlotProps?.fieldErrorListItem}>
+            <FormHelperText component='div' id={`${id}-${i}`} {...muiSlotProps?.fieldErrorFormHelperText}>
               {error}
             </FormHelperText>
           </ListItem>

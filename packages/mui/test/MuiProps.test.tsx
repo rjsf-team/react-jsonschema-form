@@ -66,7 +66,7 @@ describe('MUI Theme-Specific Props', () => {
       'ui:options': {
         mui: {
           rjsfSlotProps: {
-            paper: { elevation: 10 },
+            arrayPaper: { elevation: 10 },
           },
         },
       },

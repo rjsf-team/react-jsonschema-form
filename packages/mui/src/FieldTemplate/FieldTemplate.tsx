@@ -16,9 +16,9 @@ export interface FieldTemplateMuiProps extends GenericObjectType {
   /** RJSF-specific slot props for targeting child elements of the FieldTemplate. */
   rjsfSlotProps?: {
     /** Props applied to the MUI `FormControl` wrapping the field. */
-    formControl?: FormControlProps;
+    fieldFormControl?: FormControlProps;
     /** Props applied to the MUI `Typography` element used for description. */
-    typography?: TypographyProps;
+    fieldTypography?: TypographyProps;
   };
 }
 
@@ -92,13 +92,13 @@ export default function FieldTemplate<
         fullWidth={true}
         error={rawErrors.length ? true : false}
         required={required}
-        {...muiSlotProps?.formControl}
+        {...muiSlotProps?.fieldFormControl}
         sx={otherMuiProps.sx}
         className={otherMuiProps.className}
       >
         {children}
         {displayLabel && !isCheckbox && rawDescription ? (
-          <Typography variant='caption' color='textSecondary' {...muiSlotProps?.typography}>
+          <Typography variant='caption' color='textSecondary' {...muiSlotProps?.fieldTypography}>
             {description}
           </Typography>
         ) : null}

@@ -18,13 +18,13 @@ export interface WrapIfAdditionalTemplateMuiProps extends GenericObjectType {
   /** RJSF-specific slot props for targeting child elements of the WrapIfAdditionalTemplate. */
   rjsfSlotProps?: {
     /** Props applied to the outermost `Grid` container. */
-    gridContainer?: GridProps;
+    wrapGridContainer?: GridProps;
     /** Props applied to the `Grid` item containing the key TextField. */
-    keyGridItem?: GridProps;
+    wrapKeyGridItem?: GridProps;
     /** Props applied to the `Grid` item containing the field children. */
-    childrenGridItem?: GridProps;
+    wrapChildrenGridItem?: GridProps;
     /** Props applied to the `Grid` item containing the remove button. */
-    removeButtonGridItem?: GridProps;
+    wrapRemoveButtonGridItem?: GridProps;
   };
 }
 
@@ -78,7 +78,7 @@ export default function WrapIfAdditionalTemplate<
     );
   }
 
-  const { gridContainer, keyGridItem, childrenGridItem, removeButtonGridItem } = muiSlotProps || {};
+  const { wrapGridContainer, wrapKeyGridItem, wrapChildrenGridItem, wrapRemoveButtonGridItem } = muiSlotProps || {};
 
   return (
     <Grid
@@ -88,9 +88,9 @@ export default function WrapIfAdditionalTemplate<
       spacing={2}
       className={classNames}
       style={style}
-      {...gridContainer}
+      {...wrapGridContainer}
     >
-      <Grid size={5.5} {...keyGridItem}>
+      <Grid size={5.5} {...wrapKeyGridItem}>
         <TextField
           key={label}
           fullWidth={true}
@@ -104,10 +104,10 @@ export default function WrapIfAdditionalTemplate<
           type='text'
         />
       </Grid>
-      <Grid size={5.5} {...childrenGridItem}>
+      <Grid size={5.5} {...wrapChildrenGridItem}>
         {children}
       </Grid>
-      <Grid sx={{ mt: 1.5 }} {...removeButtonGridItem}>
+      <Grid sx={{ mt: 1.5 }} {...wrapRemoveButtonGridItem}>
         <RemoveButton
           id={buttonId(id, 'remove')}
           className='rjsf-object-property-remove'
