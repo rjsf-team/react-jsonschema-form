@@ -16,12 +16,13 @@ export default function OptionalDataControlsTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: OptionalDataControlsTemplateProps<T, S, F>) {
-  const { id, registry, label, onAddClick, onRemoveClick } = props;
+  const { id, registry, label, onAddClick, onRemoveClick, uiSchema } = props;
   if (onAddClick) {
     return (
       <IconButton
         id={id}
         registry={registry}
+        uiSchema={uiSchema}
         className='rjsf-add-optional-data'
         onClick={onAddClick}
         title={label}
@@ -33,6 +34,7 @@ export default function OptionalDataControlsTemplate<
       <RemoveButton
         id={id}
         registry={registry}
+        uiSchema={uiSchema}
         className='rjsf-remove-optional-data'
         onClick={onRemoveClick}
         title={label}

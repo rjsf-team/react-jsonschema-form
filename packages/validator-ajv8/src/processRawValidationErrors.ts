@@ -20,22 +20,68 @@ import {
   ValidatorType,
 } from '@rjsf/utils';
 
+import { SuppressDuplicateFilteringType } from './types';
+
 export type RawValidationErrorsType<Result = any> = {
   errors?: Result[];
   validationError?: Error;
 };
+
+/** Filters duplicate errors from `anyOf`/`oneOf` schema paths according to the `suppressDuplicateFiltering` flag.
+ *
+ * @param errorList - The list of `RJSFValidationError`s to filter
+ * @param [suppressDuplicateFiltering='none'] - Controls which duplicate filtering is suppressed:
+ *   - `'none'` (default): filters duplicates for both `anyOf` and `oneOf`
+ *   - `'all'`: returns `errorList` unmodified
+ *   - `'anyOf'`: suppresses filtering for `anyOf` errors; `oneOf` duplicates are still filtered
+ *   - `'oneOf'`: suppresses filtering for `oneOf` errors; `anyOf` duplicates are still filtered
+ */
+export function filterDuplicateErrors(
+  errorList: RJSFValidationError[],
+  suppressDuplicateFiltering: SuppressDuplicateFilteringType = 'none',
+): RJSFValidationError[] {
+  if (suppressDuplicateFiltering === 'all') {
+    return errorList;
+  }
+  return errorList.reduce((acc: RJSFValidationError[], err: RJSFValidationError) => {
+    const { message, schemaPath } = err;
+    // Compute the index only when filtering for that keyword is not suppressed.
+    // 'all' is already handled above; within the reduce, only 'none', 'anyOf', and 'oneOf' are possible.
+    const anyOfIndex = suppressDuplicateFiltering !== 'anyOf' ? schemaPath?.indexOf(`/${ANY_OF_KEY}/`) : undefined;
+    const oneOfIndex = suppressDuplicateFiltering !== 'oneOf' ? schemaPath?.indexOf(`/${ONE_OF_KEY}/`) : undefined;
+    let schemaPrefix: string | undefined;
+    if (anyOfIndex && anyOfIndex >= 0) {
+      schemaPrefix = schemaPath?.substring(0, anyOfIndex);
+    } else if (oneOfIndex && oneOfIndex >= 0) {
+      schemaPrefix = schemaPath?.substring(0, oneOfIndex);
+    }
+    // If there is a schemaPrefix, then search for a duplicate message with the same prefix, otherwise undefined
+    const dup = schemaPrefix
+      ? acc.find((e: RJSFValidationError) => e.message === message && e.schemaPath?.startsWith(schemaPrefix))
+      : undefined;
+    if (!dup) {
+      acc.push(err);
+    }
+    return acc;
+  }, [] as RJSFValidationError[]);
+}
 
 /** Transforming the error output from ajv to format used by @rjsf/utils.
  * At some point, components should be updated to support ajv.
  *
  * @param errors - The list of AJV errors to convert to `RJSFValidationErrors`
  * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
+ * @param [suppressDuplicateFiltering] - Controls which duplicate filtering is suppressed; see `filterDuplicateErrors`
  */
 export function transformRJSFValidationErrors<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->(errors: ErrorObject[] = [], uiSchema?: UiSchema<T, S, F>): RJSFValidationError[] {
+>(
+  errors: ErrorObject[] = [],
+  uiSchema?: UiSchema<T, S, F>,
+  suppressDuplicateFiltering?: SuppressDuplicateFilteringType,
+): RJSFValidationError[] {
   const errorList = errors.map((e: ErrorObject) => {
     const { instancePath, keyword, params, schemaPath, parentSchema, ...rest } = e;
     let { message = '' } = rest;
@@ -107,28 +153,7 @@ export function transformRJSFValidationErrors<
       title: uiTitle,
     };
   });
-  // Filter out duplicates around anyOf/oneOf messages
-  return errorList.reduce((acc: RJSFValidationError[], err: RJSFValidationError) => {
-    const { message, schemaPath } = err;
-    const anyOfIndex = schemaPath?.indexOf(`/${ANY_OF_KEY}/`);
-    const oneOfIndex = schemaPath?.indexOf(`/${ONE_OF_KEY}/`);
-    let schemaPrefix: string | undefined;
-    // Look specifically for `/anyOr/` or `/oneOf/` within the schemaPath information
-    if (anyOfIndex && anyOfIndex >= 0) {
-      schemaPrefix = schemaPath?.substring(0, anyOfIndex);
-    } else if (oneOfIndex && oneOfIndex >= 0) {
-      schemaPrefix = schemaPath?.substring(0, oneOfIndex);
-    }
-    // If there is a schemaPrefix, then search for a duplicate message with the same prefix, otherwise undefined
-    const dup = schemaPrefix
-      ? acc.find((e: RJSFValidationError) => e.message === message && e.schemaPath?.startsWith(schemaPrefix))
-      : undefined;
-    if (!dup) {
-      // Only push an error that is not a duplicate
-      acc.push(err);
-    }
-    return acc;
-  }, [] as RJSFValidationError[]);
+  return filterDuplicateErrors(errorList, suppressDuplicateFiltering);
 }
 
 /** This function processes the `formData` with an optional user contributed `customValidate` function, which receives
@@ -143,6 +168,7 @@ export function transformRJSFValidationErrors<
  * @param [customValidate] - An optional function that is used to perform custom validation
  * @param [transformErrors] - An optional function that is used to transform errors after AJV validation
  * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
+ * @param [suppressDuplicateFiltering] - Controls which duplicate filtering is suppressed; see `filterDuplicateErrors`
  */
 export default function processRawValidationErrors<
   T = any,
@@ -156,9 +182,10 @@ export default function processRawValidationErrors<
   customValidate?: CustomValidator<T, S, F>,
   transformErrors?: ErrorTransformer<T, S, F>,
   uiSchema?: UiSchema<T, S, F>,
+  suppressDuplicateFiltering?: SuppressDuplicateFilteringType,
 ) {
   const { validationError: invalidSchemaError } = rawErrors;
-  let errors = transformRJSFValidationErrors<T, S, F>(rawErrors.errors, uiSchema);
+  let errors = transformRJSFValidationErrors<T, S, F>(rawErrors.errors, uiSchema, suppressDuplicateFiltering);
 
   if (invalidSchemaError) {
     errors = [...errors, { stack: invalidSchemaError!.message }];

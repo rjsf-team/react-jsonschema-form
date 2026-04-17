@@ -444,4 +444,10 @@ describe('AJV8PrecompiledValidator', () => {
       });
     });
   });
+  describe('with suppressDuplicateFiltering option', () => {
+    it('should store the suppressDuplicateFiltering value on the instance', () => {
+      const validator = new AJV8PrecompiledValidator(validateOptionsFns, rootSchema, undefined, 'all');
+      expect(validator.suppressDuplicateFiltering).toBe('all');
+    });
+  });
 });

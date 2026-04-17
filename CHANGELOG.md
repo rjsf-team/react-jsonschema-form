@@ -36,6 +36,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Included `button` elements in `focusOnError` querySelector so that radio and checkbox groups receive focus on validation error, fixing [#4870](https://github.com/rjsf-team/react-jsonschema-form/issues/4870)
 - Fixed focus being lost when renaming additional property keys by preserving React key for renamed properties ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
 - Removed `expandUiSchemaDefinitions` call at form init, now handled at runtime by `resolveUiSchema`, fixing [#4986](https://github.com/rjsf-team/react-jsonschema-form/issues/4986)
+- Used `useRef` to track latest `formData` in `handleKeyRename`, preventing stale closure data when multiple additional property keys are renamed in quick succession, fixing [#5021](https://github.com/rjsf-team/react-jsonschema-form/issues/5021)
 - Added opt-in `optionValueFormat: 'realValue'` support to `SelectWidget`, `RadioWidget`, and `CheckboxesWidget` for rendering real enum values in DOM attributes instead of array indices ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
 
 ## @rjsf/daisyui
@@ -79,6 +80,10 @@ should change the heading of the (upcoming) version to include a major version b
 - Added `key={label}` to key input in `WrapIfAdditionalTemplate` to reset input value after duplicate key rename ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
 - Added opt-in `optionValueFormat: 'realValue'` support to `SelectWidget`, `RadioWidget`, and `CheckboxesWidget` ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
 
+## @rjsf/mui
+
+- Added support for passing MUI-specific props (e.g., `sx`, `rjsfSlotProps`, `variant`) directly through `uiSchema` for all templates and widgets, fixing [#4996](https://github.com/rjsf-team/react-jsonschema-form/issues/4996)
+
 ## @rjsf/utils
 
 - Added `removeOptionalEmptyObjects` utility function to recursively strip fully empty optional objects based on their parent's `required` properties, fixing [#4954](https://github.com/rjsf-team/react-jsonschema-form/issues/4954)
@@ -88,9 +93,19 @@ should change the heading of the (upcoming) version to include a major version b
 - Added `enumOptionValueEncoder`, `enumOptionValueDecoder`, and `enumOptionSelectedValue` utilities for opt-in real enum value rendering in select/radio/checkbox widgets ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
 - Added `optionValueFormat: 'indexed' | 'realValue'` to `GlobalUISchemaOptions` and the `OptionValueFormat` type for opt-in real enum values in widget DOM attributes ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
 
+# @rjsf/validator-ajv8
+
+- Updated `CustomValidatorOptionsType` to add the new `suppressDuplicateFiltering` flag prop, updating the validators to pass it through to the `transformRJSFValidationErrors()` which suppresses the appropriate duplicate errors if specified, fixing [#5028](https://github.com/rjsf-team/react-jsonschema-form/issues/5028)
+
 ## Dev / docs / playground
 
 - Updated References playground sample to demonstrate `oneOf` with `ui:title` at recursive depth, related to [#4986](https://github.com/rjsf-team/react-jsonschema-form/issues/4986)
+- Updated the building of the `mantine` theme to properly support ESM, fixing [#5025](https://github.com/rjsf-team/react-jsonschema-form/issues/5025)
+- Updated the `validator-ajv8.md` and `validation.md` documetation for the new `suppressDuplicateFiltering` configuration prop
+
+## Dev / Docs / Playground
+
+- Added comprehensive documentation for `@rjsf/mui` customization via `uiSchema` (including `rjsfSlotProps` usage).
 
 # 6.4.2
 

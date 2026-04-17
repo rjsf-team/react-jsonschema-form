@@ -104,6 +104,31 @@ import { Theme } from '@rjsf/mui';
 const Form = withTheme(Theme);
 ```
 
+### Customizing MUI-specific props
+
+You can pass MUI-specific props (like `sx`, `rjsfSlotProps`, `variant`, etc.) directly to any MUI component rendered by a Template or Widget via `ui:options` in the `uiSchema`.
+
+```json
+"myField": {
+  "ui:options": {
+    "mui": {
+      "variant": "filled",
+      "sx": {
+        "backgroundColor": "background.paper"
+      },
+      "rjsfSlotProps": {
+        "input": {
+          "endAdornment": "kg"
+        }
+      }
+    }
+  }
+}
+```
+
+For more details on available properties and `rjsfSlotProps` targets, see the [Material UI Customization Documentation](https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/themes/mui/uiSchema/).
+
+
 <!-- ROADMAP -->
 
 ## Roadmap

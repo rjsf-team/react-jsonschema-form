@@ -1,13 +1,26 @@
-import FormControl from '@mui/material/FormControl';
-import Typography from '@mui/material/Typography';
+import FormControl, { FormControlProps } from '@mui/material/FormControl';
+import Typography, { TypographyProps } from '@mui/material/Typography';
 import {
   FieldTemplateProps,
   FormContextType,
+  GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
   getTemplate,
   getUiOptions,
 } from '@rjsf/utils';
+import { getMuiProps } from '../util';
+
+/** Properties available for the `rjsfSlotProps` target of the FieldTemplate. */
+export interface FieldTemplateMuiProps extends GenericObjectType {
+  /** RJSF-specific slot props for targeting child elements of the FieldTemplate. */
+  rjsfSlotProps?: {
+    /** Props applied to the MUI `FormControl` wrapping the field. */
+    fieldFormControl?: FormControlProps;
+    /** Props applied to the MUI `Typography` element used for description. */
+    fieldTypography?: TypographyProps;
+  };
+}
 
 /** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
  * content, (label, description, children, errors and help) inside of a `WrapIfAdditional` component.
@@ -55,6 +68,8 @@ export default function FieldTemplate<
 
   const isCheckbox = uiOptions.widget === 'checkbox';
 
+  const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, FieldTemplateMuiProps>(uiOptions);
+
   return (
     <WrapIfAdditionalTemplate
       classNames={classNames}
@@ -73,10 +88,17 @@ export default function FieldTemplate<
       uiSchema={uiSchema}
       registry={registry}
     >
-      <FormControl fullWidth={true} error={rawErrors.length ? true : false} required={required}>
+      <FormControl
+        fullWidth={true}
+        error={rawErrors.length ? true : false}
+        required={required}
+        {...muiSlotProps?.fieldFormControl}
+        sx={otherMuiProps.sx}
+        className={otherMuiProps.className}
+      >
         {children}
         {displayLabel && !isCheckbox && rawDescription ? (
-          <Typography variant='caption' color='textSecondary'>
+          <Typography variant='caption' color='textSecondary' {...muiSlotProps?.fieldTypography}>
             {description}
           </Typography>
         ) : null}

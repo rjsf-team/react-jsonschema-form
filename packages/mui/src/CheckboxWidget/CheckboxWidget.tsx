@@ -1,5 +1,5 @@
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
+import FormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel';
 import {
   ariaDescribedByIds,
   descriptionId,
@@ -7,10 +7,23 @@ import {
   labelValue,
   schemaRequiresTrueValue,
   FormContextType,
+  GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
+import { getMuiProps } from '../util';
+
+/** Properties available for the `rjsfSlotProps` target of the CheckboxWidget. */
+export interface CheckboxWidgetMuiProps extends GenericObjectType {
+  /** RJSF-specific slot props for targeting child elements of the CheckboxWidget. */
+  rjsfSlotProps?: {
+    /** Props applied to the individual `Checkbox` component. */
+    checkbox?: CheckboxProps;
+    /** Props applied to the `FormControlLabel` component wrapping the checkbox. */
+    formControlLabel?: FormControlLabelProps;
+  };
+}
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -54,6 +67,8 @@ export default function CheckboxWidget<
   const _onFocus: React.FocusEventHandler<HTMLButtonElement> = () => onFocus(id, value);
   const description = options.description ?? schema.description;
 
+  const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, CheckboxWidgetMuiProps>(options);
+
   return (
     <>
       {!hideLabel && description && (
@@ -66,6 +81,8 @@ export default function CheckboxWidget<
         />
       )}
       <FormControlLabel
+        {...otherMuiProps}
+        {...muiSlotProps?.formControlLabel}
         control={
           <Checkbox
             id={id}
@@ -78,6 +95,7 @@ export default function CheckboxWidget<
             onBlur={_onBlur}
             onFocus={_onFocus}
             aria-describedby={ariaDescribedByIds(id)}
+            {...muiSlotProps?.checkbox}
           />
         }
         label={labelValue(label, hideLabel, false)}

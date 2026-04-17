@@ -1,6 +1,9 @@
 import Ajv, { Options, ErrorObject } from 'ajv';
 import { FormatsPluginOptions } from 'ajv-formats';
 
+/** The type describing the value for the `suppressDuplicateFiltering` option */
+export type SuppressDuplicateFilteringType = 'anyOf' | 'oneOf' | 'all' | 'none';
+
 /** The type describing how to customize the AJV6 validator
  */
 export interface CustomValidatorOptionsType {
@@ -18,6 +21,13 @@ export interface CustomValidatorOptionsType {
   AjvClass?: typeof Ajv;
   /** A function to call to extend AJV, such as `ajvErrors()` */
   extenderFn?: (ajv: Ajv) => Ajv;
+  /** When set, suppresses duplicate error filtering for the specified keyword(s):
+   * - `'none'` (default): both `anyOf` and `oneOf` duplicate errors are filtered
+   * - `'all'`: disables all duplicate filtering
+   * - `'anyOf'`: disables filtering for `anyOf` errors only (oneOf duplicates are still filtered)
+   * - `'oneOf'`: disables filtering for `oneOf` errors only (anyOf duplicates are still filtered)
+   */
+  suppressDuplicateFiltering?: SuppressDuplicateFilteringType;
 }
 
 /** The type describing a function that takes a list of Ajv `ErrorObject`s and localizes them

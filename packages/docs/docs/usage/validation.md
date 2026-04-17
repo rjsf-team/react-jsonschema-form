@@ -707,6 +707,78 @@ const validator = customizeValidator({ extenderFn: ajvErrors });
 render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
+### suppressDuplicateFiltering
+
+When AJV validates against `anyOf` or `oneOf` schemas, it generates a separate error for each failed branch, which often produces many duplicate messages.
+By default, the validator filters out these duplicates so that only the first occurrence of each unique error is shown.
+Use `suppressDuplicateFiltering` to override this behavior when you need to see all errors from every branch.
+
+The option accepts a `SuppressDuplicateFilteringType` value (exported from `@rjsf/validator-ajv8`):
+
+| Value              | Behavior                                                                    |
+| ------------------ | --------------------------------------------------------------------------- |
+| `'none'` (default) | Duplicates filtered for both `anyOf` and `oneOf`                            |
+| `'anyOf'`          | `anyOf` duplicate filtering disabled; `oneOf` duplicates still filtered     |
+| `'oneOf'`          | `oneOf` duplicate filtering disabled; `anyOf` duplicates still filtered     |
+| `'all'`            | All duplicate filtering disabled; every error from every branch is returned |
+
+For a standard validator via `customizeValidator()`:
+
+```tsx
+import { Form } from '@rjsf/core';
+import { RJSFSchema } from '@rjsf/utils';
+import { customizeValidator } from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'object',
+  properties: {
+    asc: {
+      title: 'Low to high',
+      type: 'boolean',
+      default: true,
+    },
+    desc: {
+      title: 'High to low',
+      type: 'boolean',
+      default: true,
+    },
+  },
+  anyOf: [
+    {
+      required: ['asc'],
+      properties: {
+        asc: {
+          const: true,
+        },
+      },
+    },
+    {
+      required: ['desc'],
+      properties: {
+        desc: {
+          const: true,
+        },
+      },
+    },
+  ],
+};
+
+// Disable all duplicate filtering — show every error from every anyOf/oneOf branch
+const validator = customizeValidator({ suppressDuplicateFiltering: 'all' });
+
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+```
+
+For a precompiled validator, pass the value as the fourth argument to `createPrecompiledValidator()`:
+
+```tsx
+import { createPrecompiledValidator } from '@rjsf/validator-ajv8';
+import * as precompiledValidatorFns from 'path_to/yourCompiledSchema';
+import yourSchema from 'path_to/yourSchema';
+
+const validator = createPrecompiledValidator(precompiledValidatorFns, yourSchema, undefined, 'all');
+```
+
 ### Localization (L10n) support
 
 The Ajv 8 validator supports the localization of error messages using [ajv-i18n](https://github.com/ajv-validator/ajv-i18n).

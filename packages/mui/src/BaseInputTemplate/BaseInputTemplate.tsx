@@ -1,7 +1,8 @@
 import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
-
+import { InputProps as MuiInputProps } from '@mui/material/Input';
+import { InputLabelProps as MuiInputLabelProps } from '@mui/material/InputLabel';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -9,10 +10,27 @@ import {
   getInputProps,
   labelValue,
   FormContextType,
+  GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import { SchemaExamples } from '@rjsf/core';
+import { getMuiProps } from '../util';
+
+/** Properties available for the MUI `ui:options` of the BaseInputTemplate.
+ *  Unlike RJSF templates, `slotProps` here maps directly to MUI's native `TextField` `slotProps`,
+ *  enabling type-safe customization of the underlying MUI sub-components. */
+export interface BaseInputTemplateMuiProps extends GenericObjectType {
+  /** Native MUI `TextField` slotProps for targeting specific sub-components. */
+  slotProps?: {
+    /** Props applied to the base native HTML `<input>` or `<textarea>` element. */
+    htmlInput?: React.HTMLAttributes<HTMLInputElement | HTMLTextAreaElement>;
+    /** Props applied to the MUI `Input` element, useful for `endAdornment`/`startAdornment`. */
+    input?: MuiInputProps;
+    /** Props applied to the MUI `InputLabel` element. */
+    inputLabel?: MuiInputLabelProps;
+  };
+}
 
 const TYPES_THAT_SHRINK_LABEL = ['date', 'datetime-local', 'file', 'time'];
 
@@ -59,8 +77,13 @@ export default function BaseInputTemplate<
   const { ClearButton } = registry.templates.ButtonTemplates;
   // Now we need to pull out the step, min, max into an inner `inputProps` for material-ui
   const { step, min, max, accept, ...rest } = getInputProps<T, S, F>(schema, type, options);
+
+  const muiProps = getMuiProps<T, S, F, BaseInputTemplateMuiProps>(options);
+  const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
+
   const htmlInputProps = {
     ...slotProps?.htmlInput,
+    ...muiSlotProps?.htmlInput,
     step,
     min,
     max,
@@ -72,8 +95,8 @@ export default function BaseInputTemplate<
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
   const DisplayInputLabelProps = TYPES_THAT_SHRINK_LABEL.includes(type)
-    ? { ...slotProps?.inputLabel, ...InputLabelProps, shrink: true }
-    : { ...slotProps?.inputLabel, ...InputLabelProps };
+    ? { ...slotProps?.inputLabel, ...muiSlotProps?.inputLabel, ...InputLabelProps, shrink: true }
+    : { ...slotProps?.inputLabel, ...muiSlotProps?.inputLabel, ...InputLabelProps };
   const _onClear = useCallback(
     (e: MouseEvent) => {
       e.preventDefault();
@@ -82,7 +105,7 @@ export default function BaseInputTemplate<
     },
     [onChange, options.emptyValue],
   );
-  const inputProps = { ...InputProps, ...slotProps?.input };
+  const inputProps = { ...InputProps, ...slotProps?.input, ...muiSlotProps?.input };
   if (options.allowClearTextInputs && value && !readonly && !disabled) {
     const clearAdornment = (
       <InputAdornment position='end'>
@@ -111,6 +134,7 @@ export default function BaseInputTemplate<
         disabled={disabled || readonly}
         slotProps={{
           ...slotProps,
+          ...muiSlotProps,
           input: inputProps,
           htmlInput: htmlInputProps,
           inputLabel: DisplayInputLabelProps,
@@ -121,7 +145,7 @@ export default function BaseInputTemplate<
         onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        {...(textFieldProps as TextFieldProps)}
+        {...({ ...otherMuiProps, ...textFieldProps } as TextFieldProps)}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
       <SchemaExamples id={id} schema={schema} />

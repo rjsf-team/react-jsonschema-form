@@ -15,7 +15,7 @@ import {
   hashForSchema,
 } from '@rjsf/utils';
 
-import { CustomValidatorOptionsType, Localizer } from './types';
+import { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringType } from './types';
 import createAjvInstance from './createAjvInstance';
 import processRawValidationErrors, { RawValidationErrorsType } from './processRawValidationErrors';
 
@@ -38,14 +38,27 @@ export default class AJV8Validator<
    */
   readonly localizer?: Localizer;
 
+  /** Controls which duplicate error filtering is suppressed; see `filterDuplicateErrors`
+   *
+   * @private
+   */
+  readonly suppressDuplicateFiltering?: SuppressDuplicateFilteringType;
+
   /** Constructs an `AJV8Validator` instance using the `options`
    *
    * @param options - The `CustomValidatorOptionsType` options that are used to create the AJV instance
    * @param [localizer] - If provided, is used to localize a list of Ajv `ErrorObject`s
    */
   constructor(options: CustomValidatorOptionsType, localizer?: Localizer) {
-    const { additionalMetaSchemas, customFormats, ajvOptionsOverrides, ajvFormatOptions, AjvClass, extenderFn } =
-      options;
+    const {
+      additionalMetaSchemas,
+      customFormats,
+      ajvOptionsOverrides,
+      ajvFormatOptions,
+      AjvClass,
+      extenderFn,
+      suppressDuplicateFiltering,
+    } = options;
     this.ajv = createAjvInstance(
       additionalMetaSchemas,
       customFormats,
@@ -55,6 +68,7 @@ export default class AJV8Validator<
       extenderFn,
     );
     this.localizer = localizer;
+    this.suppressDuplicateFiltering = suppressDuplicateFiltering;
   }
 
   /** Resets the internal AJV validator to clear schemas from it. Can be helpful for resetting the validator for tests.
@@ -153,7 +167,16 @@ export default class AJV8Validator<
     uiSchema?: UiSchema<T, S, F>,
   ): ValidationData<T> {
     const rawErrors = this.rawValidation<ErrorObject>(schema, formData);
-    return processRawValidationErrors(this, rawErrors, formData, schema, customValidate, transformErrors, uiSchema);
+    return processRawValidationErrors(
+      this,
+      rawErrors,
+      formData,
+      schema,
+      customValidate,
+      transformErrors,
+      uiSchema,
+      this.suppressDuplicateFiltering,
+    );
   }
 
   /**
