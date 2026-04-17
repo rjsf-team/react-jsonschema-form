@@ -1,6 +1,18 @@
 import { EnumOptionsType, OptionValueFormat, StrictRJSFSchema, RJSFSchema } from './types';
 import enumOptionsValueForIndex from './enumOptionsValueForIndex';
 
+/** Resolves a single DOM value string back to its typed enum value in `'realValue'` mode.
+ *
+ * First attempts a reverse lookup by matching `String(opt.value)` against the input.
+ * If no option matches and the input parses as a valid index, falls back to the
+ * option at that index — this is how object/array enum values round-trip, since
+ * they are encoded as indices by the encoder.
+ *
+ * @param value - A single string value from a DOM attribute
+ * @param enumOptions - The available enum options
+ * @param emptyValue - The value to return when the input is empty, options are missing, or no match is found
+ * @returns The original typed enum value, or `emptyValue`
+ */
 function decodeSingle<S extends StrictRJSFSchema = RJSFSchema>(
   value: string,
   enumOptions: EnumOptionsType<S>[] | undefined,

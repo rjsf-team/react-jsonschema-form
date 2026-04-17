@@ -90,6 +90,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     name: htmlName || id,
     label: labelValue(label || undefined, hideLabel, false),
     data: selectOptions,
+    onChange: !readonly ? handleChange : undefined,
     onBlur: !readonly ? handleBlur : undefined,
     onFocus: !readonly ? handleFocus : undefined,
     autoFocus: autofocus,
@@ -107,13 +108,11 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     <MultiSelect
       {...sharedProps}
       value={enumOptionSelectedValue<S>(value, enumOptions, true, optionValueFormat, []) as string[]}
-      onChange={!readonly ? handleChange : undefined}
     />
   ) : (
     <Select
       {...sharedProps}
       value={enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat, null) as string | null}
-      onChange={!readonly ? handleChange : undefined}
     />
   );
 }

@@ -8,6 +8,7 @@ import {
   labelValue,
   EnumOptionsType,
   FormContextType,
+  OptionValueFormat,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
@@ -30,7 +31,7 @@ function createDefaultValueOptionsForDropDown<S extends StrictRJSFSchema = RJSFS
   enumDisabled?: UIOptionsType['enumDisabled'],
   showPlaceholderOption?: boolean,
   placeholder?: string,
-  format: 'indexed' | 'realValue' = 'indexed',
+  format: OptionValueFormat = 'indexed',
 ) {
   const disabledOptions = enumDisabled || [];
   const options: DropdownItemProps[] = map(enumOptions, ({ label, value }, index) => ({
