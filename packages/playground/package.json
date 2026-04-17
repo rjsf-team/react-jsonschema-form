@@ -54,7 +54,7 @@
     "@rjsf/validator-ajv8": "6.4.2",
     "ajv": "^8.18.0",
     "ajv-i18n": "^4.2.0",
-    "antd": "^5.29.3",
+    "antd": "^6.3.6",
     "atob": "^2.1.2",
     "chakra-react-select": "^6.1.1",
     "core-js": "^3.49.0",

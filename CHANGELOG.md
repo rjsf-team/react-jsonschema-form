@@ -24,6 +24,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `ErrorList` and `IconButton` to destructure icons imported from `@ant-design/icons`, fixing [#4953](https://github.com/rjsf-team/react-jsonschema-form/issues/4953)
 - Added `key={label}` to key input in `WrapIfAdditionalTemplate` to reset input value after duplicate key rename ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
 - Updated `BaseInputTemplate` to destructure and guard `min`/`max` before spreading onto `InputNumber`, fixing a build error caused by the widened `InputPropsType` (`number | string`)
+- Added support for Antd v6, addressing [#4995](https://github.com/rjsf-team/react-jsonschema-form/issues/4995)
 
 ## @rjsf/chakra-ui
 
