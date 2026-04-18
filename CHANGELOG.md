@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.5.1
+
+## Dev / docs / playground
+
+- Updated peer dependencies to 6.5.x
+
 # 6.5.0
 
 ## @rjsf/antd
@@ -60,6 +66,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Added `key={label}` to key input in `WrapIfAdditionalTemplate` to reset input value after duplicate key rename ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
 - Added opt-in `optionValueFormat: 'realValue'` support to `SelectWidget`, `RadioWidget`, and `CheckboxesWidget` ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
+- Added support for passing MUI-specific props (e.g., `sx`, `rjsfSlotProps`, `variant`) directly through `uiSchema` for all templates and widgets, fixing [#4996](https://github.com/rjsf-team/react-jsonschema-form/issues/4996)
 
 ## @rjsf/primereact
 
@@ -81,10 +88,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Added `key={label}` to key input in `WrapIfAdditionalTemplate` to reset input value after duplicate key rename ([#4999](https://github.com/rjsf-team/react-jsonschema-form/issues/4999))
 - Added opt-in `optionValueFormat: 'realValue'` support to `SelectWidget`, `RadioWidget`, and `CheckboxesWidget` ([#4693](https://github.com/rjsf-team/react-jsonschema-form/issues/4693))
 
-## @rjsf/mui
-
-- Added support for passing MUI-specific props (e.g., `sx`, `rjsfSlotProps`, `variant`) directly through `uiSchema` for all templates and widgets, fixing [#4996](https://github.com/rjsf-team/react-jsonschema-form/issues/4996)
-
 ## @rjsf/utils
 
 - Added `removeOptionalEmptyObjects` utility function to recursively strip fully empty optional objects based on their parent's `required` properties, fixing [#4954](https://github.com/rjsf-team/react-jsonschema-form/issues/4954)
@@ -103,9 +106,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated References playground sample to demonstrate `oneOf` with `ui:title` at recursive depth, related to [#4986](https://github.com/rjsf-team/react-jsonschema-form/issues/4986)
 - Updated the building of the `mantine` theme to properly support ESM, fixing [#5025](https://github.com/rjsf-team/react-jsonschema-form/issues/5025)
 - Updated the `validator-ajv8.md` and `validation.md` documetation for the new `suppressDuplicateFiltering` configuration prop
-
-## Dev / Docs / Playground
-
 - Added comprehensive documentation for `@rjsf/mui` customization via `uiSchema` (including `rjsfSlotProps` usage).
 
 # 6.4.2
