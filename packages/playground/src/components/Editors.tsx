@@ -3,12 +3,14 @@ import { styled } from '@mui/material/styles';
 import Accordion from '@mui/material/Accordion';
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
+import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MonacoEditor from '@monaco-editor/react';
 import { ErrorSchema, RJSFSchema, UiSchema } from '@rjsf/utils';
 import isEqualWith from 'lodash/isEqualWith';
+import { Panel, Group, Separator } from 'react-resizable-panels';
 
 import ThemeSelector, { ThemesType } from './ThemeSelector';
 import SubthemeSelector, { SubthemeType } from './SubthemeSelector';
@@ -60,7 +62,7 @@ function Editor({ title, code, onChange }: EditorProps) {
   const cls = valid ? 'valid' : 'invalid';
 
   return (
-    <div className='panel panel-default'>
+    <div className='panel panel-default' style={{ marginBottom: 0 }}>
       <div className='panel-heading'>
         <span className={`${cls} glyphicon glyphicon-${icon}`} />
         {' ' + title}
@@ -187,22 +189,29 @@ export default function Editors({
         </Grid>
       </AccordionSummary>
       <AccordionDetails sx={{ p: 0 }}>
-        <Grid container spacing={0.5}>
-          <Grid size={extraErrors ? 3 : 4}>
-            <Editor title='JSONSchema' code={toJson(schema)} onChange={onSchemaEdited} />
-          </Grid>
-          <Grid size={extraErrors ? 3 : 4}>
-            <Editor title={uiSchemaTitle} code={toJson(uiSchema)} onChange={onUISchemaEdited} />
-          </Grid>
-          <Grid size={extraErrors ? 3 : 4}>
-            <Editor title='formData' code={toJson(formData)} onChange={onFormDataEdited} />
-          </Grid>
-          {extraErrors && (
-            <Grid size={3}>
-              <Editor title='extraErrors' code={toJson(extraErrors || {})} onChange={onExtraErrorsEdited} />
-            </Grid>
-          )}
-        </Grid>
+        <Box sx={{ width: '100%' }}>
+          <Group orientation='horizontal'>
+            <Panel defaultSize={extraErrors ? '34%' : '25%'} minSize='10%'>
+              <Editor title='JSONSchema' code={toJson(schema)} onChange={onSchemaEdited} />
+            </Panel>
+            <Separator style={{ width: '4px', cursor: 'col-resize' }} />
+            <Panel defaultSize={extraErrors ? '33%' : '25%'} minSize='10%'>
+              <Editor title={uiSchemaTitle} code={toJson(uiSchema)} onChange={onUISchemaEdited} />
+            </Panel>
+            <Separator style={{ width: '4px', cursor: 'col-resize' }} />
+            <Panel defaultSize={extraErrors ? '33%' : '25%'} minSize='10%'>
+              <Editor title='formData' code={toJson(formData)} onChange={onFormDataEdited} />
+            </Panel>
+            {extraErrors && (
+              <>
+                <Separator style={{ width: '4px', cursor: 'col-resize' }} />
+                <Panel defaultSize='25%' minSize='10%'>
+                  <Editor title='extraErrors' code={toJson(extraErrors)} onChange={onExtraErrorsEdited} />
+                </Panel>
+              </>
+            )}
+          </Group>
+        </Box>
       </AccordionDetails>
     </Accordion>
   );

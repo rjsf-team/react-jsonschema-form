@@ -69,6 +69,7 @@
     "react-dom": "^18.3.1",
     "react-frame-component": "^5.3.2",
     "react-is": "^18.3.1",
+    "react-resizable-panels": "^4.10.0",
     "semantic-ui-react": "^2.1.5"
   },
   "devDependencies": {
