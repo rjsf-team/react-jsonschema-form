@@ -70,6 +70,20 @@ Otherwise, the string is wrapped by `Number()` and if that result is not `NaN`, 
 
 - undefined | null | string | number: The `value` converted to a number when appropriate, otherwise the `value`
 
+### bracketNameGenerator()
+
+Generates bracketed names for form fields.
+
+#### Parameters
+
+- path: FieldPathList - The path of field path units to use when generating the name
+- idPrefix: string - The prefix to use at the start of the generated name
+- [isMultiValue]: boolean | undefined - Optional flag, if true, will append `[]` to the end of the name for multi-value fields (e.g., checkboxes, multi-select)
+
+#### Returns
+
+- string: The generated bracketed name (e.g., `root[tasks][0][title]`, or `root[hobbies][]` for multi-value fields)
+
 ### buttonId()
 
 Return a consistent `id` for the `btn` button element
@@ -167,6 +181,20 @@ Return a consistent `id` for the field description element.
 
 - string: The consistent id for the field description element from the given `id`
 
+### dotNotationNameGenerator()
+
+Generates dot-notation names for form fields. Multi-value fields are handled the same as single-value fields in dot notation.
+
+#### Parameters
+
+- path: FieldPathList - The path of field path units to use when generating the name
+- idPrefix: string - The prefix to use at the start of the generated name
+- [_isMultiValue]: boolean | undefined - Optional flag (unused in dot notation)
+
+#### Returns
+
+- string: The generated dot-notation name (e.g., `root.tasks.0.title`)
+
 ### englishStringTranslator()
 
 Translates a `TranslatableString` value `stringToTranslate` into english.
@@ -196,6 +224,25 @@ If it is a single value, then if the enum option value with the `valueIndex` in 
 #### Returns
 
 - EnumOptionsType&lt;S>["value"][]: The updated `selected` list with the `value` removed from it
+
+### enumOptionSelectedValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Computes the value to pass to a select element's `value` attribute.
+When `format` is `'realValue'`, converts form data values to strings.
+When `format` is `'indexed'` (the default), resolves to index-based values via `enumOptionsIndexForValue`.
+Returns `emptyValue` when the current value is empty.
+
+#### Parameters
+
+- value: any - The current form data value
+- enumOptions: EnumOptionsType&lt;S>[] | undefined - The available enum options
+- multiple: boolean - Whether the select allows multiple selections
+- [format='indexed']: OptionValueFormat - How option values are encoded on the DOM
+- emptyValue: any - The value to return when the selection is empty
+
+#### Returns
+
+- any: The value to use for the select element's `value` attribute
 
 ### enumOptionsIndexForValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -256,6 +303,41 @@ If `valueIndex` is an array, AND it contains an invalid index, the returned arra
 #### Returns
 
 - EnumOptionsType&lt;S>["value"] | EnumOptionsType&lt;S>["value"][] | undefined: The single or list of values specified by the single or list of indexes if they are valid. Otherwise, `emptyValue` or an empty list.
+
+### enumOptionValueDecoder&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Decodes a string from a DOM value attribute back to a typed enum value.
+When `format` is `'realValue'`, does a reverse lookup: finds the enum option whose `String(value)` matches the input string and returns the original typed value.
+For object/array values that were encoded as indices, falls back to index resolution.
+When `format` is `'indexed'` (the default), uses index-based resolution via `enumOptionsValueForIndex`.
+
+#### Parameters
+
+- value: string | string[] - The string value(s) from the DOM
+- enumOptions: EnumOptionsType&lt;S>[] | undefined - The available enum options
+- [format='indexed']: OptionValueFormat - How the values were encoded on the DOM
+- emptyValue: unknown - The value to return for empty/missing selections
+
+#### Returns
+
+- unknown: The original typed enum value(s)
+
+### enumOptionValueEncoder()
+
+Encodes an enum option value into a string for a DOM value attribute.
+When `format` is `'realValue'`, primitive values are converted via `String()`.
+Non-primitive values (objects, arrays) fall back to the index since `String()` would produce `"[object Object]"`.
+When `format` is `'indexed'` (the default), returns the index as a string.
+
+#### Parameters
+
+- value: unknown - The typed enum value
+- index: number - The option's position in the enumOptions array
+- [format='indexed']: OptionValueFormat - How to encode the value for the DOM attribute
+
+#### Returns
+
+- string: The string to use as the DOM value attribute
 
 ### errorId()
 
@@ -382,6 +464,20 @@ This function does not work with discriminators of `"type": "object"` and `"type
 #### Returns
 
 - number | undefined: index of the matched option
+
+### getOptionValueFormat()
+
+Resolves the effective `optionValueFormat` for enum-backed widgets.
+Provides a single source of truth for the default DOM encoding format (`'indexed'`) used by `SelectWidget`, `RadioWidget`, and `CheckboxesWidget`.
+Widgets should call this helper once and pass the result to `enumOptionValueEncoder`, `enumOptionValueDecoder`, and `enumOptionSelectedValue` rather than reading `options.optionValueFormat` directly.
+
+#### Parameters
+
+- [options]: \{ optionValueFormat?: OptionValueFormat } | undefined - The widget options (typically from the `options` prop, already resolved from `ui:options` and `ui:globalOptions`)
+
+#### Returns
+
+- OptionValueFormat: The resolved `OptionValueFormat`, defaulting to `'indexed'` when not set
 
 ### getSchemaType()
 
@@ -858,6 +954,27 @@ When a `params` array is provided, each value in the array is used to replace an
 
 - string: The updated string with any replacement specifiers replaced
 
+### resolveUiSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+
+Resolves the uiSchema for a given schema, considering `ui:definitions` stored in the registry.
+Called at runtime for each field. When the schema contains a `$ref`, looks up the corresponding uiSchema definition from `registry.uiSchemaDefinitions` and merges it with local overrides.
+For schemas with `oneOf`/`anyOf` branches, also populates `uiSchema[keyword][i]` for branches whose `$ref` matches a definition, so `MultiSchemaField` can read dropdown option titles.
+
+Resolution order (later sources override earlier):
+
+1. `ui:definitions[$ref]` - base definition from registry
+2. `localUiSchema` - local overrides at current path
+
+#### Parameters
+
+- schema: S - The JSON schema (may contain `$ref` or `RJSF_REF_KEY`)
+- localUiSchema: UiSchema&lt;T, S, F> | undefined - The uiSchema at the current path (local overrides)
+- registry: Registry&lt;T, S, F> - The registry containing `uiSchemaDefinitions`
+
+#### Returns
+
+- UiSchema&lt;T, S, F>: The resolved uiSchema with definitions merged in
+
 ### schemaRequiresTrueValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Check to see if a `schema` specifies that a value must be true. This happens when:
@@ -874,6 +991,20 @@ Check to see if a `schema` specifies that a value must be true. This happens whe
 #### Returns
 
 - boolean: True if the schema specifies a value that must be true, false otherwise
+
+### shallowEquals()
+
+Implements a shallow equals comparison that uses `Object.is()` for comparing values.
+This function compares objects by checking if all keys and their values are equal using `Object.is()`.
+
+#### Parameters
+
+- a: any - The first element to compare
+- b: any - The second element to compare
+
+#### Returns
+
+- boolean: True if the `a` and `b` are shallow equal, false otherwise
 
 ### shouldRender()
 
@@ -1290,6 +1421,23 @@ Checks to see if the `schema` combination represents a select
 #### Returns
 
 - boolean: True if schema contains a select, otherwise false
+
+### removeOptionalEmptyObjects&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+
+Recursively removes optional objects from the `formData` that are empty (i.e., all their fields are undefined, null, empty strings, or themselves empty optional objects).
+This solves the problem where interacting with fields inside an optional object "activates" it permanently, making the form unsubmittable when the optional object has required inner fields.
+An object property is considered "optional" when it is NOT listed in its parent schema's `required` array.
+
+#### Parameters
+
+- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- schema: S - The JSON schema describing the `formData`
+- [rootSchema]: S | undefined - The root schema, used primarily to look up `$ref`s
+- [formData]: T | undefined - The current form data to prune
+
+#### Returns
+
+- T | undefined: A new copy of `formData` with empty optional objects removed, or `undefined` if the entire formData was pruned
 
 ### retrieveSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
