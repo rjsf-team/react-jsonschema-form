@@ -3,7 +3,6 @@ import { styled } from '@mui/material/styles';
 import Accordion from '@mui/material/Accordion';
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
-import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -189,29 +188,27 @@ export default function Editors({
         </Grid>
       </AccordionSummary>
       <AccordionDetails sx={{ p: 0 }}>
-        <Box sx={{ width: '100%' }}>
-          <Group orientation='horizontal'>
-            <Panel defaultSize={extraErrors ? '34%' : '25%'} minSize='10%'>
-              <Editor title='JSONSchema' code={toJson(schema)} onChange={onSchemaEdited} />
-            </Panel>
-            <Separator style={{ width: '4px', cursor: 'col-resize' }} />
-            <Panel defaultSize={extraErrors ? '33%' : '25%'} minSize='10%'>
-              <Editor title={uiSchemaTitle} code={toJson(uiSchema)} onChange={onUISchemaEdited} />
-            </Panel>
-            <Separator style={{ width: '4px', cursor: 'col-resize' }} />
-            <Panel defaultSize={extraErrors ? '33%' : '25%'} minSize='10%'>
-              <Editor title='formData' code={toJson(formData)} onChange={onFormDataEdited} />
-            </Panel>
-            {extraErrors && (
-              <>
-                <Separator style={{ width: '4px', cursor: 'col-resize' }} />
-                <Panel defaultSize='25%' minSize='10%'>
-                  <Editor title='extraErrors' code={toJson(extraErrors)} onChange={onExtraErrorsEdited} />
-                </Panel>
-              </>
-            )}
-          </Group>
-        </Box>
+        <Group orientation='horizontal'>
+          <Panel defaultSize={extraErrors ? '34%' : '25%'} minSize='10%'>
+            <Editor title='JSONSchema' code={toJson(schema)} onChange={onSchemaEdited} />
+          </Panel>
+          <Separator style={{ width: '4px', cursor: 'col-resize' }} />
+          <Panel defaultSize={extraErrors ? '33%' : '25%'} minSize='10%'>
+            <Editor title={uiSchemaTitle} code={toJson(uiSchema)} onChange={onUISchemaEdited} />
+          </Panel>
+          <Separator style={{ width: '4px', cursor: 'col-resize' }} />
+          <Panel defaultSize={extraErrors ? '33%' : '25%'} minSize='10%'>
+            <Editor title='formData' code={toJson(formData)} onChange={onFormDataEdited} />
+          </Panel>
+          {extraErrors && (
+            <>
+              <Separator style={{ width: '4px', cursor: 'col-resize' }} />
+              <Panel defaultSize='25%' minSize='10%'>
+                <Editor title='extraErrors' code={toJson(extraErrors)} onChange={onExtraErrorsEdited} />
+              </Panel>
+            </>
+          )}
+        </Group>
       </AccordionDetails>
     </Accordion>
   );
