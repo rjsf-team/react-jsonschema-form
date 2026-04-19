@@ -1,4 +1,4 @@
-import Form, { FormProps, FormState, IChangeEvent } from './components/Form';
+import Form, { FormProps, FormRef, FormState, IChangeEvent } from './components/Form';
 import RichDescription, { RichDescriptionProps } from './components/RichDescription';
 import RichHelp, { RichHelpProps } from './components/RichHelp';
 import SchemaExamples, { SchemaExamplesProps } from './components/SchemaExamples';
@@ -8,6 +8,7 @@ import getTestRegistry from './getTestRegistry';
 
 export type {
   FormProps,
+  FormRef,
   FormState,
   IChangeEvent,
   ThemeProps,

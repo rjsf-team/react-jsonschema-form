@@ -2,7 +2,7 @@ import { Component, createRef } from 'react';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
-import Form, { FormProps, ThemeProps, withTheme } from '../src';
+import { FormProps, FormRef, ThemeProps, withTheme } from '../src';
 import { createComponent } from './testUtils';
 
 function WrapperClassComponent(props: ThemeProps) {
@@ -294,7 +294,7 @@ describe('withTheme', () => {
   });
 
   it('should forward the ref', () => {
-    const ref = createRef<Form>();
+    const ref = createRef<FormRef>();
     const schema: RJSFSchema = {};
     const uiSchema = {};
 

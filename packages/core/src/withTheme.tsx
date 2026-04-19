@@ -1,5 +1,5 @@
 import { ComponentType, ForwardedRef, forwardRef } from 'react';
-import Form, { FormProps } from './components/Form';
+import Form, { FormProps, FormRef } from './components/Form';
 import { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 /** The properties for the `withTheme` function, essentially a subset of properties from the `FormProps` that can be
@@ -15,8 +15,8 @@ export default function withTheme<T = any, S extends StrictRJSFSchema = RJSFSche
   themeProps: ThemeProps<T, S, F>,
 ): ComponentType<FormProps<T, S, F>> {
   // @ts-expect-error TS2322 because the latest types complain about LegacyRef's string form not working with Form
-  return forwardRef<Form<T, S, F>, FormProps<T, S, F>>(
-    ({ fields, widgets, templates, ...directProps }: FormProps<T, S, F>, ref: ForwardedRef<Form<T, S, F>>) => {
+  return forwardRef<FormRef<T>, FormProps<T, S, F>>(
+    ({ fields, widgets, templates, ...directProps }: FormProps<T, S, F>, ref: ForwardedRef<FormRef<T>>) => {
       fields = { ...themeProps?.fields, ...fields };
       widgets = { ...themeProps?.widgets, ...widgets };
       templates = {
