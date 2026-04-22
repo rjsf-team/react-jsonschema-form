@@ -2,7 +2,7 @@ import { Component, createRef } from 'react';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
-import Form, { FormProps, ThemeProps, withTheme } from '../src';
+import { Form, FormProps, ThemeProps, withTheme } from '../src';
 import { createComponent } from './testUtils';
 
 function WrapperClassComponent(props: ThemeProps) {

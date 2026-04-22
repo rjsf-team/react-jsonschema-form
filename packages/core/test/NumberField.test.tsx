@@ -4,7 +4,7 @@ import { act, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import isEmpty from 'lodash/isEmpty';
 
-import Form from '../src';
+import type { Form } from '../src';
 import {
   createFormComponent,
   expectToHaveBeenCalledWithFormData,
