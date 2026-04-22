@@ -1,6 +1,6 @@
 {
   "verbose": true,
-  "setupFilesAfterEnv": ["../../testing/testSetup.ts"],
+  "setupFilesAfterEnv": ["../../testing/testSetup.ts", "./test/testSetup.ts"],
   "testEnvironment": "jsdom",
   "testEnvironmentOptions": {
     "browsers": ["chrome", "firefox", "safari"]

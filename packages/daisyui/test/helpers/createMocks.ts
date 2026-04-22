@@ -1,13 +1,5 @@
-import {
-  createSchemaUtils,
-  DEFAULT_ID_PREFIX,
-  DEFAULT_ID_SEPARATOR,
-  englishStringTranslator,
-  RJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
-import { getDefaultRegistry } from '@rjsf/core';
-import validator from '@rjsf/validator-ajv8';
+import { RJSFSchema, WidgetProps } from '@rjsf/utils';
+import { getTestRegistry } from '@rjsf/core';
 
 import Templates from '../../src/templates/Templates';
 import generateWidgets from '../../src/widgets/Widgets';
@@ -21,22 +13,8 @@ export const mockSchema: RJSFSchema = {
 
 export const mockEventHandlers = (): void => void 0;
 
-export const mockSchemaUtils = createSchemaUtils(validator, mockSchema);
-
 export function mockRegistry() {
-  return {
-    fields: {},
-    widgets: generateWidgets(),
-    templates: { ...getDefaultRegistry().templates, ...Templates },
-    formContext: {},
-    rootSchema: {},
-    schemaUtils: mockSchemaUtils,
-    translateString: englishStringTranslator,
-    globalFormOptions: {
-      idPrefix: DEFAULT_ID_PREFIX,
-      idSeparator: DEFAULT_ID_SEPARATOR,
-    },
-  };
+  return getTestRegistry({ templates: Templates, rootSchema: mockSchema, widgets: generateWidgets() });
 }
 
 export function makeWidgetMockProps(props: Partial<WidgetProps> = {}): WidgetProps {

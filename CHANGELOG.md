@@ -16,6 +16,13 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.5.2
+
+## Dev / docs / playground
+
+- Cleaned up testing to make registry mocks simpler using `getTestRegistry()` function
+- Refactored `antd` specific test setup out of `testing/testSetup.ts`
+
 # 6.5.1
 
 ## Dev / docs / playground

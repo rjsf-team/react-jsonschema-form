@@ -1,6 +1,5 @@
-import { createSchemaUtils, englishStringTranslator, WidgetProps, RJSFSchema } from '@rjsf/utils';
-import { getDefaultRegistry } from '@rjsf/core';
-import validator from '@rjsf/validator-ajv8';
+import { WidgetProps, RJSFSchema } from '@rjsf/utils';
+import { getTestRegistry } from '@rjsf/core';
 
 import Templates from '../../src/Templates';
 import BaseInputTemplate from '../../src/BaseInputTemplate';
@@ -14,18 +13,8 @@ export const mockSchema: RJSFSchema = {
 
 export const mockEventHandlers = (): void => void 0;
 
-export const mockSchemaUtils = createSchemaUtils(validator, mockSchema);
-
 export function mockRegistry() {
-  return {
-    fields: {},
-    widgets: { TextWidget: BaseInputTemplate },
-    templates: { ...getDefaultRegistry().templates, ...Templates },
-    formContext: {},
-    rootSchema: {},
-    schemaUtils: mockSchemaUtils,
-    translateString: englishStringTranslator,
-  };
+  return getTestRegistry({ templates: Templates, rootSchema: mockSchema, widgets: { TextWidget: BaseInputTemplate } });
 }
 
 export function makeWidgetMockProps(props: Partial<WidgetProps> = {}): WidgetProps {
