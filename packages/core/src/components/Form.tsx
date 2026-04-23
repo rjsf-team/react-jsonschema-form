@@ -374,11 +374,6 @@ export interface FormRef<T = any, S extends StrictRJSFSchema = RJSFSchema, F ext
   readonly state: FormState<T, S, F>;
 }
 
-/** Backward-compatible type alias for `FormRef`. Consumers who previously used the class-based
- * `Form` as a ref type (e.g. `createRef<Form>()`) can continue to do so via this alias.
- */
-export type { FormRef as Form };
-
 /** The definition of a pending change that will be processed in the `onChange` handler
  */
 interface PendingChange<T> {
@@ -394,6 +389,13 @@ interface PendingChange<T> {
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
+/** The inner implementation of the JSON Schema form. Accepts the full `FormProps` (minus the
+ * forwarded ref) and exposes an imperative `FormRef` handle via `forwardRef` so callers can
+ * programmatically submit, reset, or validate the form.
+ *
+ * @param props - All `FormProps` except `ref`; destructured internally for rendering and behaviour
+ * @param forwardedRef - The React ref that will be populated with the `FormRef` imperative handle
+ */
 function FormComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: Omit<FormProps<T, S, F>, 'ref'>,
   forwardedRef: ForwardedRef<FormRef<T, S, F>>,
@@ -535,11 +537,22 @@ function FormComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
 
   // ── Imperative helpers ────────────────────────────────────────────────────
 
+  /** Removes form data fields that do not appear in the current schema.
+   *
+   * @param formData - The form data to filter; defaults to `undefined`
+   * @returns - The filtered form data with extra fields removed, or `undefined` if nothing remains
+   */
   const omitExtraDataFn = useCallback((formData?: T): T | undefined => {
     const { schema: s, schemaUtils } = stateRef.current;
     return schemaUtils.omitExtraData(s, formData);
   }, []);
 
+  /** Moves browser focus to the form field associated with the given validation error. Derives the
+   * element id from the error's `property` path combined with the form's `idPrefix` and
+   * `idSeparator` settings.
+   *
+   * @param error - The validation error whose `property` path is used to locate the field element
+   */
   const focusOnError = useCallback((error: RJSFValidationError) => {
     const { idPrefix = 'root', idSeparator = '_' } = propsRef.current;
     const path = _toPath(error.property);
@@ -559,6 +572,14 @@ function FormComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     field?.focus();
   }, []);
 
+  /** Runs full schema validation against the supplied form data, dispatches error state, and
+   * optionally focuses the first error field. Merges in any `extraErrors` from props before
+   * deciding whether the form is valid.
+   *
+   * @param formData - The form data to validate; when omitted the current state's data is used
+   * @returns - `true` if the form is valid (no schema errors and no blocking extra errors);
+   *           `false` otherwise
+   */
   const validateFormWithFormData = useCallback(
     (formData?: T): boolean => {
       const { extraErrors, extraErrorsBlockSubmit, focusOnFirstError, onError, customValidate, transformErrors } =
@@ -760,6 +781,15 @@ function FormComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
 
   // ── Callbacks ─────────────────────────────────────────────────────────────
 
+  /** Enqueues a field value change and kicks off processing if no change is already in flight.
+   * Multiple rapid changes (e.g. two widgets updating in the same render cycle) are serialised
+   * through `pendingChangesRef` so each one is applied on top of the previous result.
+   *
+   * @param newValue - The new value for the field at `path`
+   * @param path - The dot-separated path into the form data tree identifying the changed field
+   * @param newErrorSchema - Optional field-level errors to merge into the error schema
+   * @param id - Optional widget element id forwarded to the `onChange` callback
+   */
   const handleChange = useCallback(
     (newValue: T | undefined, path: FieldPathList, newErrorSchema?: ErrorSchema<T>, id?: string) => {
       pendingChangesRef.current.push({ newValue, path, newErrorSchema, id });
@@ -770,6 +800,13 @@ function FormComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     [],
   );
 
+  /** Handles a field blur event. Forwards the event to `onBlur` and, when `liveValidate` or
+   * `liveOmit` is set to `'onBlur'`, re-runs the appropriate omit/validate pass and dispatches
+   * updated state.
+   *
+   * @param id - The element id of the field that lost focus
+   * @param data - The current value of the field at the time of the blur event
+   */
   const handleBlur = useCallback((id: string, data: any) => {
     const {
       onBlur,
@@ -831,10 +868,21 @@ function FormComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     }
   }, []);
 
+  /** Handles a field focus event by forwarding it to the `onFocus` prop callback.
+   *
+   * @param id - The element id of the field that received focus
+   * @param data - The current value of the field at the time of the focus event
+   */
   const handleFocus = useCallback((id: string, data: any) => {
     propsRef.current.onFocus?.(id, data);
   }, []);
 
+  /** Handles the native form `submit` event. Prevents the default browser submission, runs
+   * validation (unless `noValidate` is set), and — when the form is valid — dispatches clean
+   * error state and calls `onSubmit` with the current change event and the original DOM event.
+   *
+   * @param event - The React form submit event from the underlying `<form>` element
+   */
   const handleSubmit = useCallback((event: FormEvent<any>) => {
     event.preventDefault();
     if (event.target !== event.currentTarget) {
@@ -890,6 +938,10 @@ function FormComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     }
   }, []);
 
+  /** Resets the form to its initial state. Recomputes the default form data from either the
+   * `formData` prop or `initialFormData`, clears all errors and custom errors, and fires
+   * `onChange` with the freshly-reset state.
+   */
   const reset = useCallback(() => {
     const { formData: pFormData, initialFormData: initData = IS_RESET as T, onChange } = propsRef.current;
     const newState = getStateFromProps<T, S, F>(
@@ -925,6 +977,10 @@ function FormComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     );
   }, []);
 
+  /** Programmatically submits the form by dispatching a synthetic submit event on the underlying
+   * form element and then calling `requestSubmit()`, which respects native HTML5 constraint
+   * validation before triggering `handleSubmit`.
+   */
   const submit = useCallback(() => {
     if (formElement.current) {
       const submitEvent = new CustomEvent('submit', { cancelable: true });
@@ -934,6 +990,12 @@ function FormComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     }
   }, []);
 
+  /** Programmatically validates the form using the current state's form data. Applies
+   * `omitExtraData` and `removeEmptyOptionalObjects` pre-processing (when configured) before
+   * delegating to `validateFormWithFormData`.
+   *
+   * @returns - `true` if the form is valid; `false` otherwise
+   */
   const validateForm = useCallback((): boolean => {
     const { omitExtraData: omitExtraDataProp, removeEmptyOptionalObjects } = propsRef.current;
     const { schema: s, schemaUtils } = stateRef.current;
@@ -952,6 +1014,13 @@ function FormComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     return handleRef.current!.validateFormWithFormData(newFormData);
   }, []);
 
+  /** Sets the value of a single field identified by a dot-separated path string or a pre-split
+   * path array. Resolves the field's element id and delegates to `handleChange` so the change
+   * flows through the normal pending-change queue.
+   *
+   * @param fieldPath - Dot-separated path string (e.g. `'address.city'`) or a `FieldPathList` array
+   * @param newValue - The new value to set at the given path; omit or pass `undefined` to clear
+   */
   const setFieldValue = useCallback(
     (fieldPath: string | FieldPathList, newValue?: T) => {
       const { registry } = stateRef.current;
@@ -1003,12 +1072,19 @@ function FormComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
   if (disabled) {
     submitOptions = { ...submitOptions, props: { ...submitOptions.props, disabled: true } };
   }
+  /** Memoised uiSchema fragment passed to `SubmitButton`; rebuilt only when the effective submit
+   * button options change (e.g. when `disabled` toggles or `ui:submitButtonOptions` changes).
+   */
   const submitUiSchema = useMemo(
     () => ({ [UI_OPTIONS_KEY]: { [SUBMIT_BTN_OPTIONS_KEY]: submitOptions } }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [JSON.stringify(submitOptions)],
   );
 
+  /** Memoised error list element rendered above or below the fields (controlled by
+   * `showErrorList`). Returns `null` when there are no errors. Re-renders only when the errors,
+   * error schema, root schema, uiSchema, or registry reference changes.
+   */
   const errorList = useMemo(() => {
     if (!state.errors?.length) {
       return null;

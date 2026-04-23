@@ -7,6 +7,9 @@ import getDefaultRegistry from './getDefaultRegistry';
 import getTestRegistry from './getTestRegistry';
 
 export type {
+  /** Backward-compatible type alias for `FormRef`. Consumers who previously used the class-based
+   * `Form` as a ref type (e.g. `createRef<Form>()`) can continue to do so via this alias.
+   */
   FormRef as Form,
   FormRef,
   FormProps,

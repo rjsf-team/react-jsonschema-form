@@ -54,7 +54,7 @@ export function toIChangeEvent<T = any, S extends StrictRJSFSchema = RJSFSchema,
 /** Extracts the `GlobalFormOptions` from the given Form `props`.
  *
  * @param props - The form props from which to extract global options
- * @returns The `GlobalFormOptions` computed from the given props
+ * @returns - The `GlobalFormOptions` computed from the given props
  */
 export function getGlobalFormOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: FormProps<T, S, F>,
@@ -81,10 +81,10 @@ export function getGlobalFormOptions<T = any, S extends StrictRJSFSchema = RJSFS
  * supplied in `props`.
  *
  * @param props - The form props containing optional `fields`, `widgets`, `templates`, `formContext`, and
- *   `translateString` overrides
+ *          `translateString` overrides
  * @param schema - The resolved root JSON Schema that will be set as `rootSchema` on the registry
  * @param schemaUtils - The `SchemaUtilsType` instance to attach to the registry
- * @returns A fully-merged `Registry` ready for use by fields, widgets, and templates
+ * @returns - A fully-merged `Registry` ready for use by fields, widgets, and templates
  */
 export function buildRegistry<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: FormProps<T, S, F>,
@@ -118,10 +118,10 @@ export function buildRegistry<T = any, S extends StrictRJSFSchema = RJSFSchema, 
  *
  * @param schemaValidation - The base validation result (errors + errorSchema) from JSON Schema validation
  * @param extraErrors - Optional additional errors provided via the `extraErrors` prop; merged with
- *   `validationDataMerge` when present
+ *           `validationDataMerge` when present
  * @param customErrors - Optional custom errors accumulated during `onChange` via an `ErrorSchemaBuilder`;
- *   merged with `preventDuplicates` semantics when present
- * @returns A new `ValidationData` object containing the combined errors and errorSchema
+ *           merged with `preventDuplicates` semantics when present
+ * @returns - A new `ValidationData` object containing the combined errors and errorSchema
  */
 export function mergeErrors<T = any>(
   schemaValidation: ValidationData<T>,
@@ -147,13 +147,13 @@ export function mergeErrors<T = any>(
  * @param formData - The form data to validate
  * @param schema - The JSON Schema to validate against
  * @param schemaUtils - The `SchemaUtilsType` instance used to retrieve the resolved schema and run the
- *   validator
+ *           validator
  * @param customValidate - Optional custom validation function applied after JSON Schema validation
  * @param transformErrors - Optional function to transform or filter the raw validation errors
  * @param uiSchema - Optional UI schema passed through to the validator
  * @param retrievedSchema - Optional pre-resolved schema; when provided, skips the `retrieveSchema`
- *   call to preserve AJV cache hits
- * @returns The raw `ValidationData` (errors + errorSchema) produced by the validator
+ *           call to preserve AJV cache hits
+ * @returns - The raw `ValidationData` (errors + errorSchema) produced by the validator
  */
 export function runValidation<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   formData: T | undefined,
@@ -175,19 +175,19 @@ export function runValidation<T = any, S extends StrictRJSFSchema = RJSFSchema, 
  * @param rootSchema - The resolved root JSON Schema to validate against
  * @param schemaUtils - The `SchemaUtilsType` instance used to run validation
  * @param originalErrorSchema - The pre-existing `ErrorSchema` on the form; optionally merged into the
- *   result when `mergeIntoOriginalErrorSchema` is true
+ *           result when `mergeIntoOriginalErrorSchema` is true
  * @param formData - The form data to validate
  * @param extraErrors - Optional additional errors from the `extraErrors` prop; merged into the result
  * @param customErrors - Optional custom errors accumulated via `onChange`; merged into the result
  * @param retrievedSchema - Optional pre-resolved schema to avoid redundant `retrieveSchema` calls
  * @param mergeIntoOriginalErrorSchema - When `true`, merges `originalErrorSchema` into the schema
- *   validation result using `preventDuplicates` semantics (used when `retrievedSchema` was provided,
- *   indicating the schema has not changed since the last retrieve)
+ *           validation result using `preventDuplicates` semantics (used when `retrievedSchema` was
+ *           provided, indicating the schema has not changed since the last retrieve)
  * @param customValidate - Optional custom validation function applied after JSON Schema validation
  * @param transformErrors - Optional function to transform or filter the raw validation errors
  * @param uiSchema - Optional UI schema passed through to the validator
- * @returns An object containing the merged `errors`, `errorSchema`, and the raw
- *   `schemaValidationErrors` / `schemaValidationErrorSchema` before extra/custom error merging
+ * @returns - An object containing the merged `errors`, `errorSchema`, and the raw
+ *           `schemaValidationErrors` / `schemaValidationErrorSchema` before extra/custom error merging
  */
 export function performLiveValidate<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   rootSchema: S,
@@ -237,7 +237,7 @@ export function performLiveValidate<T = any, S extends StrictRJSFSchema = RJSFSc
  *
  * @param next - The freshly retrieved schema
  * @param current - The previously stored schema reference, or `undefined` on first call
- * @returns `current` when it is deeply equal to `next`; otherwise `next`
+ * @returns - `current` when it is deeply equal to `next`; otherwise `next`
  */
 export function stableRetrievedSchema<S>(next: S, current: S | undefined): S {
   return deepEquals(next, current) ? (current as S) : next;
@@ -249,18 +249,18 @@ export function stableRetrievedSchema<S>(next: S, current: S | undefined): S {
  *
  * @param props - The current form props
  * @param currentState - A partial snapshot of the existing state; used to preserve `schemaUtils`,
- *   cached errors, and other values that should only change when their inputs change
+ *           cached errors, and other values that should only change when their inputs change
  * @param inputFormData - The form data to use as the basis for default-filling and validation;
- *   pass `IS_RESET` to clear all data back to schema defaults
+ *           pass `IS_RESET` to clear all data back to schema defaults
  * @param retrievedSchema - Optional pre-resolved schema; when provided, skips `retrieveSchema` and
- *   opts into merging `originalErrorSchema` (since the schema hasn't changed)
+ *           opts into merging `originalErrorSchema` (since the schema hasn't changed)
  * @param isSchemaChanged - When `true`, existing validation errors are cleared because they no longer
- *   apply to the new schema
+ *           apply to the new schema
  * @param formDataChangedFields - List of top-level field paths that changed; errors for those fields
- *   are cleared when live validation is not active
+ *           are cleared when live validation is not active
  * @param skipLiveValidate - When `true`, live validation is skipped even if `liveValidate` is set;
- *   used to avoid a redundant validation pass when the state data hasn't changed
- * @returns A fully-computed `FormState` ready to be committed via `dispatch`
+ *           used to avoid a redundant validation pass when the state data hasn't changed
+ * @returns - A fully-computed `FormState` ready to be committed via `dispatch`
  */
 export function getStateFromProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: FormProps<T, S, F>,
@@ -468,7 +468,7 @@ export function formReducer<T, S extends StrictRJSFSchema, F extends FormContext
  *
  * @param prev - The previous render's props
  * @param next - The next render's props
- * @returns `true` when the component should skip re-rendering; `false` when it should re-render
+ * @returns - `true` when the component should skip re-rendering; `false` when it should re-render
  */
 export function propsAreEqual<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   prev: Readonly<Omit<FormProps<T, S, F>, 'ref'>>,
