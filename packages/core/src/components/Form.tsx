@@ -387,8 +387,6 @@ interface PendingChange<T> {
   id?: string;
 }
 
-// ─── Component ───────────────────────────────────────────────────────────────
-
 /** The inner implementation of the JSON Schema form. Accepts the full `FormProps` (minus the
  * forwarded ref) and exposes an imperative `FormRef` handle via `forwardRef` so callers can
  * programmatically submit, reset, or validate the form.
@@ -427,6 +425,9 @@ function FormComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
   }
 
   // ── Refs ──────────────────────────────────────────────────────────────────
+  /** The ref used to hold the `form` element, this needs to be `any` because `tagName` or `_internalFormWrapper` can
+   * provide any possible type here
+   */
   const formElement = useRef<any>(null);
   const pendingChangesRef = useRef<PendingChange<T>[]>([]);
   const isProcessingUserChangeRef = useRef(false);
@@ -723,7 +724,7 @@ function FormComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     }
 
     if (newErrorSchema) {
-      // @ts-expect-error TS2590
+      // @ts-expect-error TS2590, because getting from the error schema is confusing TS
       const oldValidationError = !isRootPath ? _get(schemaValidationErrorSchema, path) : schemaValidationErrorSchema;
       if (!_isEmpty(oldValidationError)) {
         if (!isRootPath) {
