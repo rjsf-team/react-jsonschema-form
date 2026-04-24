@@ -1,5 +1,5 @@
-import { Component, RefObject, createRef, useEffect, useState, useCallback } from 'react';
-import { fireEvent, act, render, waitFor } from '@testing-library/react';
+import { Component, RefObject, createRef, useEffect, useState, useCallback, useRef } from 'react';
+import { fireEvent, act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Portal } from 'react-portal';
 import {
@@ -21,7 +21,7 @@ import {
 } from '@rjsf/utils';
 import validator, { customizeValidator } from '@rjsf/validator-ajv8';
 
-import Form, { FormProps, IChangeEvent } from '../src';
+import Form, { FormProps, FormRef, IChangeEvent } from '../src';
 import {
   createComponent,
   createFormComponent,
@@ -3978,7 +3978,7 @@ describe('Form omitExtraData and liveOmit', () => {
     };
     const omitExtraData = true;
     const liveOmit = true;
-    const ref = createRef<Form>();
+    const ref = createRef<FormRef>();
 
     const { node } = createFormComponent({
       ref,
@@ -4010,7 +4010,7 @@ describe('Form omitExtraData and liveOmit', () => {
       foo: 'bar',
     };
     const omitExtraData = true;
-    const ref = createRef<Form>();
+    const ref = createRef<FormRef>();
     const { node } = createFormComponent({
       ref,
       schema,
@@ -4325,7 +4325,7 @@ describe('Form omitExtraData and liveOmit', () => {
 
     const onSubmit = jest.fn();
 
-    const formRef = createRef<Form>();
+    const formRef = createRef<FormRef>();
     const props: NoValFormProps = {
       ref: formRef,
       schema,
@@ -4366,7 +4366,7 @@ describe('omitExtraData on submit', () => {
       foo: '',
     };
     const omitExtraData = true;
-    const ref = createRef<Form>();
+    const ref = createRef<FormRef>();
     const { node } = createFormComponent({
       ref,
       schema,
@@ -4390,7 +4390,7 @@ describe('omitExtraData on submit', () => {
       },
     };
     const formData = { foo: 'bar', baz: 'baz' };
-    const formRef = createRef<Form>();
+    const formRef = createRef<FormRef>();
     const props: NoValFormProps = {
       ref: formRef,
       schema,
@@ -4412,7 +4412,7 @@ describe('omitExtraData on submit', () => {
       },
     };
     const formData = { foo: 'bar', baz: 'baz' };
-    const formRef = createRef<Form>();
+    const formRef = createRef<FormRef>();
     const props: NoValFormProps = {
       ref: formRef,
       schema,
@@ -4490,7 +4490,7 @@ describe('Async errors', () => {
       },
     } as unknown as ErrorSchema;
 
-    const formRef = createRef<Form>();
+    const formRef = createRef<FormRef>();
     const props: NoValFormProps = {
       ref: formRef,
       schema,
@@ -4525,7 +4525,7 @@ describe('Async errors', () => {
       },
     } as unknown as ErrorSchema;
 
-    const formRef = createRef<Form>();
+    const formRef = createRef<FormRef>();
     const props: NoValFormProps = {
       ref: formRef,
       schema,
@@ -4554,7 +4554,7 @@ describe('Async errors', () => {
       required: ['foo'],
     };
 
-    const formRef = createRef<Form>();
+    const formRef = createRef<FormRef>();
     const { rerender, node } = createFormComponent({
       ref: formRef,
       schema,
@@ -4610,7 +4610,7 @@ describe('Async errors', () => {
       },
     };
 
-    const formRef = createRef<Form>();
+    const formRef = createRef<FormRef>();
 
     function Wrapper() {
       const [formData, setFormData] = useState<Record<string, unknown>>({ values: [] });
@@ -4734,7 +4734,7 @@ describe('Calling reset from ref object', () => {
       title: 'Test form',
       type: 'string',
     };
-    const formRef = createRef<Form>();
+    const formRef = createRef<FormRef>();
     const props: NoValFormProps = {
       ref: formRef,
       schema,
@@ -4754,7 +4754,7 @@ describe('Calling reset from ref object', () => {
       title: 'Test form',
       type: 'number',
     };
-    const formRef = createRef<Form>();
+    const formRef = createRef<FormRef>();
     const props: NoValFormProps = {
       ref: formRef,
       schema,
@@ -4783,7 +4783,7 @@ describe('Calling reset from ref object', () => {
       type: 'string',
       default: 'Some-Value',
     };
-    const formRef = createRef<Form>();
+    const formRef = createRef<FormRef>();
     const props: NoValFormProps = {
       ref: formRef,
       schema: schemaWithDefault,
@@ -4806,7 +4806,7 @@ describe('Calling reset from ref object', () => {
 
   it('Reset button test with complex schema', () => {
     const schema = widgetsSchema as RJSFSchema;
-    const formRef = createRef<Form>();
+    const formRef = createRef<FormRef>();
     const props: NoValFormProps = {
       ref: formRef,
       schema,
@@ -4840,7 +4840,7 @@ describe('Calling reset from ref object', () => {
       title: 'Test form',
       type: 'string',
     };
-    const formRef = createRef<Form>();
+    const formRef = createRef<FormRef>();
     const props: NoValFormProps = {
       ref: formRef,
       initialFormData: 'foo',
@@ -4870,7 +4870,7 @@ describe('validateForm()', () => {
       },
     };
     const formData = { foo: 'bar', baz: 'baz' };
-    const formRef = createRef<Form>();
+    const formRef = createRef<FormRef>();
     const props: NoValFormProps = {
       ref: formRef,
       schema,
@@ -4894,7 +4894,7 @@ describe('validateForm()', () => {
       },
     };
     const formData = { foo: 'bar', baz: 'baz' };
-    const formRef = createRef<Form>();
+    const formRef = createRef<FormRef>();
     const props: NoValFormProps = {
       ref: formRef,
       schema,
@@ -4910,7 +4910,7 @@ describe('validateForm()', () => {
   });
 
   it('Should update state when data updated from invalid to valid', () => {
-    const ref = createRef<Form>();
+    const ref = createRef<FormRef>();
     const props: NoValFormProps = {
       schema: {
         type: 'object',
@@ -4955,7 +4955,7 @@ describe('validateForm()', () => {
   });
 
   it('Should keep non-blocking extraErrors in state when schema is valid and extraErrorsBlockSubmit is not set', () => {
-    const formRef = createRef<Form>();
+    const formRef = createRef<FormRef>();
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -4991,7 +4991,7 @@ describe('validateForm()', () => {
   });
 
   it('Should return false and call onError when extraErrors are present with extraErrorsBlockSubmit set', () => {
-    const formRef = createRef<Form>();
+    const formRef = createRef<FormRef>();
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -5029,7 +5029,7 @@ describe('validateForm()', () => {
   });
 
   it('Should show both schema and extraErrors in state when schema is invalid regardless of extraErrorsBlockSubmit', () => {
-    const formRef = createRef<Form>();
+    const formRef = createRef<FormRef>();
     const schema: RJSFSchema = {
       type: 'object',
       required: ['foo'],
@@ -5065,7 +5065,7 @@ describe('validateForm()', () => {
   });
 
   it('Should clear extraErrors from state when extraErrors prop is removed and validateForm is called again', () => {
-    const formRef = createRef<Form>();
+    const formRef = createRef<FormRef>();
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -5105,7 +5105,7 @@ describe('validateForm()', () => {
 
 describe('setFieldValue()', () => {
   it('Sets root to value using ""', () => {
-    const ref = createRef<Form>();
+    const ref = createRef<FormRef>();
     const props: NoValFormProps = {
       schema: {
         type: 'string',
@@ -5129,7 +5129,7 @@ describe('setFieldValue()', () => {
     expect(node.querySelector<HTMLInputElement>('input')).toHaveAttribute('value', 'populated value');
   });
   it('Sets root to value using []', () => {
-    const ref = createRef<Form>();
+    const ref = createRef<FormRef>();
     const props: NoValFormProps = {
       schema: {
         type: 'string',
@@ -5153,7 +5153,7 @@ describe('setFieldValue()', () => {
     expect(node.querySelector<HTMLInputElement>('input')).toHaveAttribute('value', 'populated value');
   });
   it('Sets field to new value via dotted path', () => {
-    const ref = createRef<Form>();
+    const ref = createRef<FormRef>();
     const props: NoValFormProps = {
       schema: {
         type: 'object',
@@ -5207,7 +5207,7 @@ describe('setFieldValue()', () => {
     expect(errors).toHaveLength(0);
   });
   it('Sets field to new value via field path list', () => {
-    const ref = createRef<Form>();
+    const ref = createRef<FormRef>();
     const props: NoValFormProps = {
       schema: {
         type: 'object',
@@ -5967,7 +5967,7 @@ describe('extraErrors set after submit (#4965)', () => {
       foo: { __errors: ['Server-side error'] },
     } as unknown as ErrorSchema;
 
-    const formRef = createRef<Form>();
+    const formRef = createRef<FormRef>();
 
     function Wrapper() {
       const [extraErrors, setExtraErrors] = useState<ErrorSchema>({} as ErrorSchema);
@@ -6000,5 +6000,92 @@ describe('extraErrors set after submit (#4965)', () => {
     // Also check DOM
     const errorItems = container.querySelectorAll('.error-detail li');
     expect(errorItems.length).toBeGreaterThan(0);
+  });
+});
+
+describe('validation after changing schema (#5034)', () => {
+  const schemaA: RJSFSchema = { type: 'string', minLength: 10, maxLength: 15 };
+
+  const schemaB: RJSFSchema = { type: 'string', minLength: 20 };
+
+  const valueA = 'invalid';
+
+  const valueB = 'this is also invalid';
+
+  function TestComponent() {
+    const [schema, setSchema] = useState(schemaA);
+    const [formData, setFormData] = useState(valueA);
+
+    const handleSchemaClick = useCallback(() => {
+      setSchema((prev) => (prev === schemaA ? schemaB : schemaA));
+    }, []);
+    const handleDataClick = useCallback(() => {
+      setFormData((prev) => (prev === valueA ? valueB : valueA));
+    }, []);
+    const ref = useRef<FormRef>(null);
+
+    useEffect(() => {
+      ref.current?.validateForm();
+    }, [schema, formData]);
+
+    return (
+      <div data-testid='component'>
+        <Form formData={formData} ref={ref} schema={schema} validator={validator} />
+        <button onClick={handleSchemaClick} data-testid='schema-button'>
+          Toggle Schema
+        </button>
+        <button onClick={handleDataClick} data-testid='data-button'>
+          Toggle Data
+        </button>
+        <p>
+          Schema: <output data-testid='output-schema'>{JSON.stringify(schema)}</output>
+        </p>
+        <p>
+          Data: <output data-testid='output-data'>{formData}</output>
+        </p>
+      </div>
+    );
+  }
+  it('initially has schemaA', () => {
+    render(<TestComponent />);
+    const component = screen.getByTestId('component');
+    expect(component).toBeInTheDocument();
+
+    const outputSchema = within(component).getByTestId('output-schema');
+    expect(outputSchema).toHaveTextContent(JSON.stringify(schemaA));
+    const outputData = within(component).getByTestId('output-data');
+    expect(outputData).toHaveTextContent(valueA);
+    const errors = component.querySelector('ul[id=root__error]');
+    expect(errors).toHaveTextContent('must NOT have fewer than 10 characters');
+  });
+  it('switches to schemaB when button is pushed', async () => {
+    render(<TestComponent />);
+    const component = screen.getByTestId('component');
+    expect(component).toBeInTheDocument();
+    const button = within(component).getByTestId('schema-button');
+    expect(button).toHaveTextContent('Toggle Schema');
+    await user.click(button);
+
+    const outputSchema = within(component).getByTestId('output-schema');
+    expect(outputSchema).toHaveTextContent(JSON.stringify(schemaB));
+    const outputData = within(component).getByTestId('output-data');
+    expect(outputData).toHaveTextContent(valueA);
+    const errors = component.querySelector('ul[id=root__error]');
+    expect(errors).toHaveTextContent('must NOT have fewer than 20 characters');
+  });
+  it('switches to valueB when button is pushed', async () => {
+    render(<TestComponent />);
+    const component = screen.getByTestId('component');
+    expect(component).toBeInTheDocument();
+    const button = within(component).getByTestId('data-button');
+    expect(button).toHaveTextContent('Toggle Data');
+    await user.click(button);
+
+    const outputSchema = within(component).getByTestId('output-schema');
+    expect(outputSchema).toHaveTextContent(JSON.stringify(schemaA));
+    const outputData = within(component).getByTestId('output-data');
+    expect(outputData).toHaveTextContent(valueB);
+    const errors = component.querySelector('ul[id=root__error]');
+    expect(errors).toHaveTextContent('must NOT have more than 15 characters');
   });
 });

@@ -1,6 +1,7 @@
-import { ComponentType, ForwardedRef, forwardRef } from 'react';
-import Form, { FormProps } from './components/Form';
+import { ComponentType, forwardRef } from 'react';
 import { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+
+import Form, { FormRef, FormProps } from './components/Form';
 
 /** The properties for the `withTheme` function, essentially a subset of properties from the `FormProps` that can be
  * overridden while creating a theme
@@ -14,9 +15,8 @@ export type ThemeProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
 export default function withTheme<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   themeProps: ThemeProps<T, S, F>,
 ): ComponentType<FormProps<T, S, F>> {
-  // @ts-expect-error TS2322 because the latest types complain about LegacyRef's string form not working with Form
-  return forwardRef<Form<T, S, F>, FormProps<T, S, F>>(
-    ({ fields, widgets, templates, ...directProps }: FormProps<T, S, F>, ref: ForwardedRef<Form<T, S, F>>) => {
+  return forwardRef<FormRef<T, S, F>, FormProps<T, S, F>>(
+    ({ fields, widgets, templates, ...directProps }: FormProps<T, S, F>, ref) => {
       fields = { ...themeProps?.fields, ...fields };
       widgets = { ...themeProps?.widgets, ...widgets };
       templates = {
@@ -39,5 +39,5 @@ export default function withTheme<T = any, S extends StrictRJSFSchema = RJSFSche
         />
       );
     },
-  );
+  ) as ComponentType<FormProps<T, S, F>>;
 }
