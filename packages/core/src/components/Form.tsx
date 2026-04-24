@@ -996,7 +996,11 @@ export default class Form<
       state = { formData: newFormData, ...liveValidation, customErrors };
     } else if (!noValidate && newErrorSchema) {
       // Merging 'newErrorSchema' into 'errorSchema' to display the custom raised errors.
-      const mergedErrors = this.mergeErrors({ errorSchema: originalErrorSchema, errors }, extraErrors, customErrors);
+      const mergedErrors = this.mergeErrors(
+        { errorSchema: schemaValidationErrorSchema as ErrorSchema<T>, errors },
+        extraErrors,
+        customErrors,
+      );
       state = {
         formData: newFormData,
         ...mergedErrors,

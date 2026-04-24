@@ -6002,3 +6002,47 @@ describe('extraErrors set after submit (#4965)', () => {
     expect(errorItems.length).toBeGreaterThan(0);
   });
 });
+
+describe('extraErrors not duplicated when sibling array field mutated (#5041)', () => {
+  it('should not accumulate duplicate extraErrors after array item is added', async () => {
+    // Reproduces https://github.com/rjsf-team/react-jsonschema-form/issues/5041
+    // processPendingChange() used originalErrorSchema (which already contains merged
+    // extraErrors) as the base for re-merging extraErrors, causing __errors to be
+    // appended again on every array mutation.
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        items: {
+          type: 'array',
+          items: { type: 'string' },
+        },
+      },
+    };
+
+    const extraErrors: ErrorSchema = {
+      name: { __errors: ['Name is required'] },
+    } as unknown as ErrorSchema;
+
+    const formRef = createRef<Form>();
+
+    function Wrapper() {
+      return <Form ref={formRef} schema={schema} validator={validator} extraErrors={extraErrors} />;
+    }
+
+    const { container } = render(<Wrapper />);
+    const form = container.firstElementChild!;
+
+    // Add an item to the sibling array field
+    const addBtn = form.querySelector('.btn-add');
+    await act(async () => {
+      fireEvent.click(addBtn!);
+    });
+
+    // The name field's extraErrors should still contain exactly one error
+    const state = formRef.current!.state;
+    const nameErrors = (state.errorSchema as any)?.name?.__errors ?? [];
+    expect(nameErrors).toHaveLength(1);
+    expect(nameErrors[0]).toBe('Name is required');
+  });
+});
