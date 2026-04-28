@@ -1,7 +1,7 @@
 import get from 'lodash/get';
-import isEqual from 'lodash/isEqual';
 
 import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY } from '../constants';
+import deepEquals from '../deepEquals';
 import { Experimental_CustomMergeAllOf, FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
 import retrieveSchema from './retrieveSchema';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
@@ -42,7 +42,7 @@ export default function findSelectedOptionInXxxOf<
     const data = get(formData, selectorField);
     if (data !== undefined) {
       return xxxOfs.find((xxx) => {
-        return isEqual(
+        return deepEquals(
           get(xxx, [PROPERTIES_KEY, selectorField, DEFAULT_KEY], get(xxx, [PROPERTIES_KEY, selectorField, CONST_KEY])),
           data,
         );
