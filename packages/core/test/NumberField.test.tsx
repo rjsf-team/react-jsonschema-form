@@ -4,7 +4,7 @@ import { act, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import isEmpty from 'lodash/isEmpty';
 
-import Form from '../src';
+import { FormRef } from '../src';
 import {
   createFormComponent,
   expectToHaveBeenCalledWithFormData,
@@ -309,7 +309,7 @@ describe('NumberField', () => {
           default: 1,
         };
 
-        const ref = createRef<Form>();
+        const ref = createRef<FormRef>();
 
         const { node, onChange } = createFormComponent({
           ref,

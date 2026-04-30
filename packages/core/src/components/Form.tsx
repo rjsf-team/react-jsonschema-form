@@ -1,61 +1,65 @@
-import { Component, ElementType, FormEvent, ReactNode, Ref, RefObject, createRef } from 'react';
 import {
-  createSchemaUtils,
+  ElementType,
+  forwardRef,
+  FormEvent,
+  memo,
+  ReactElement,
+  ReactNode,
+  Ref,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useReducer,
+  useRef,
+} from 'react';
+import {
+  ComponentUpdateStrategy,
   CustomValidator,
   deepEquals,
   ErrorSchema,
   ErrorSchemaBuilder,
   ErrorTransformer,
+  Experimental_CustomMergeAllOf,
+  Experimental_DefaultFormStateBehavior,
   FieldPathId,
   FieldPathList,
   FormContextType,
   getChangedFields,
   getTemplate,
   getUiOptions,
-  isObject,
-  mergeObjects,
-  PathSchema,
-  StrictRJSFSchema,
+  ID_KEY,
+  NameGeneratorFunction,
   Registry,
   RegistryFieldsType,
   RegistryWidgetsType,
+  removeOptionalEmptyObjects,
   RJSFSchema,
   RJSFValidationError,
-  removeOptionalEmptyObjects,
   SchemaUtilsType,
-  shouldRender,
+  shallowEquals,
+  StrictRJSFSchema,
   SUBMIT_BTN_OPTIONS_KEY,
   TemplatesType,
   toErrorList,
   toFieldPathId,
   UiSchema,
-  UI_DEFINITIONS_KEY,
-  UI_GLOBAL_OPTIONS_KEY,
   UI_OPTIONS_KEY,
-  ValidationData,
-  validationDataMerge,
   ValidatorType,
-  Experimental_DefaultFormStateBehavior,
-  Experimental_CustomMergeAllOf,
-  DEFAULT_ID_SEPARATOR,
-  DEFAULT_ID_PREFIX,
-  GlobalFormOptions,
-  ERRORS_KEY,
-  ID_KEY,
-  NameGeneratorFunction,
-  getUsedFormData,
-  getFieldNames,
 } from '@rjsf/utils';
-import _cloneDeep from 'lodash/cloneDeep';
-import _get from 'lodash/get';
-import _isEmpty from 'lodash/isEmpty';
-import _pick from 'lodash/pick';
-import _set from 'lodash/set';
 import _toPath from 'lodash/toPath';
-import _unset from 'lodash/unset';
 
 import getDefaultRegistry from '../getDefaultRegistry';
-import { ADDITIONAL_PROPERTY_KEY_REMOVE, IS_RESET } from './constants';
+import { IS_RESET } from './constants';
+import {
+  computeChangeNextState,
+  computeStateFromProps,
+  mergeErrors,
+  runLiveValidate,
+  runValidate,
+  toIChangeEvent,
+} from './formStateHelpers';
+import { usePendingChanges } from './hooks/usePendingChanges';
 
 /** Represents a boolean option that is deprecated.
  * @deprecated - In a future major release, this type will be removed
@@ -244,16 +248,16 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    */
   experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior;
   /**
-   * Controls the component update strategy used by the Form's `shouldComponentUpdate` lifecycle method.
+   * Controls the component update strategy used by the memoized `Form`.
    *
    * - `'customDeep'`: Uses RJSF's custom deep equality checks via the `deepEquals` utility function,
    *   which treats all functions as equivalent and provides optimized performance for form data comparisons.
-   * - `'shallow'`: Uses shallow comparison of props and state (only compares direct properties). This matches React's PureComponent behavior.
-   * - `'always'`: Always rerenders when called. This matches React's Component behavior.
+   * - `'shallow'`: Uses shallow comparison of props (only compares direct properties).
+   * - `'always'`: Always rerenders when called.
    *
    * @default 'customDeep'
    */
-  experimental_componentUpdateStrategy?: 'customDeep' | 'shallow' | 'always';
+  experimental_componentUpdateStrategy?: ComponentUpdateStrategy;
   /** Optional function that allows for custom merging of `allOf` schemas
    */
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>;
@@ -274,12 +278,16 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * Use at your own risk as this prop is private and may change at any time without notice.
    */
   _internalFormWrapper?: ElementType;
-  /** Support receiving a React ref to the Form
+  /** Support receiving a React ref to the Form. The ref's shape is `FormRef<T>` — a subset of the legacy class
+   * instance exposing only the documented public methods (`submit`, `reset`, `validateForm`, `setFieldValue`,
+   * `focusOnError`).
    */
-  ref?: Ref<Form<T, S, F>>;
+  ref?: Ref<FormRef<T>>;
 }
 
-/** The data that is contained within the state for the `Form` */
+/** The data that is contained within the state for the `Form`. Retained as an exported type for backwards
+ * compatibility and for use inside `IChangeEvent`.
+ */
 export interface FormState<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
   /** The JSON schema object for the form */
   schema: S;
@@ -308,14 +316,12 @@ export interface FormState<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   schemaValidationErrorSchema: ErrorSchema<T>;
   /** A container used to handle custom errors provided via `onChange` */
   customErrors?: ErrorSchemaBuilder<T>;
-  /** @description result of schemaUtils.retrieveSchema(schema, formData). This a memoized value to avoid re calculate at internal functions (getStateFromProps, onChange) */
+  /** The retrieved schema — `schemaUtils.retrieveSchema(schema, formData)` — memoized to avoid recomputation. */
   retrievedSchema: S;
   /** Flag indicating whether the initial form defaults have been generated */
   initialDefaultsGenerated: boolean;
   /** The registry (re)computed only when props changed */
   registry: Registry<T, S, F>;
-  /** Tracks the previous `extraErrors` prop reference so that `getDerivedStateFromProps` can detect changes */
-  _prevExtraErrors?: ErrorSchema<T>;
 }
 
 /** The event data passed when changes have been made to the form, includes everything from the `FormState` except
@@ -333,405 +339,544 @@ export interface IChangeEvent<
   status?: 'submitted';
 }
 
-/** Converts the full `FormState` into the `IChangeEvent` version by picking out the public values
- *
- * @param state - The state of the form
- * @param status - The status provided by the onSubmit
- * @returns - The `IChangeEvent` for the state
+/** The public imperative API exposed by `Form` via its `ref` prop. This is a deliberate subset of the legacy class
+ * component's instance surface — only the documented public methods remain.
  */
-function toIChangeEvent<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export interface FormRef<T = any> {
+  /** Programmatically submits the form (dispatches a cancelable `submit` event and calls `requestSubmit`). */
+  submit: () => void;
+  /** Resets the form back to its initial defaults (or `initialFormData` when provided). */
+  reset: () => void;
+  /** Validates the current form data and returns `true` when the form is valid. */
+  validateForm: () => boolean;
+  /** Imperatively sets the value at the given path. Equivalent to a user edit at that path. */
+  setFieldValue: (fieldPath: string | FieldPathList, newValue?: T) => void;
+  /** Attempts to focus on the field associated with the given `error` (using `error.property`). */
+  focusOnError: (error: RJSFValidationError) => void;
+}
+
+/** The set of actions that the `Form` reducer responds to. */
+type FormAction<T, S extends StrictRJSFSchema, F extends FormContextType> =
+  | { type: 'REPLACE'; nextState: FormState<T, S, F> }
+  | { type: 'APPLY_PARTIAL'; partial: Partial<FormState<T, S, F>> };
+
+/** Pure reducer for `Form`. All state transitions flow through this function. */
+function formReducer<T, S extends StrictRJSFSchema, F extends FormContextType>(
   state: FormState<T, S, F>,
-  status?: IChangeEvent['status'],
-): IChangeEvent<T, S, F> {
-  return {
-    ..._pick(state, ['schema', 'uiSchema', 'fieldPathId', 'schemaUtils', 'formData', 'edit', 'errors', 'errorSchema']),
-    ...(status !== undefined && { status }),
-  };
+  action: FormAction<T, S, F>,
+): FormState<T, S, F> {
+  switch (action.type) {
+    case 'REPLACE':
+      return action.nextState;
+    case 'APPLY_PARTIAL':
+      return { ...state, ...action.partial };
+    default:
+      return state;
+  }
 }
 
-/** The definition of a pending change that will be processed in the `onChange` handler
- */
-interface PendingChange<T> {
-  /** The path into the formData/errorSchema at which the `newValue`/`newErrorSchema` will be set */
-  path: FieldPathList;
-  /** The new value to set into the formData */
-  newValue?: T;
-  /** The new errors to be set into the errorSchema, if any */
-  newErrorSchema?: ErrorSchema<T>;
-  /** The optional id of the field for which the change is being made */
-  id?: string;
+/** Lazy initializer for the reducer: builds the initial `FormState` from the given `props`. */
+function initFormState<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  props: FormProps<T, S, F>,
+): FormState<T, S, F> {
+  if (!props.validator) {
+    throw new Error('A validator is required for Form functionality to work');
+  }
+  const inputFormData = props.formData ?? props.initialFormData;
+  return computeStateFromProps<T, S, F>(props, {}, inputFormData, {
+    skipLiveValidate: true,
+    defaultRegistry: getDefaultRegistry<T, S, F>(),
+    resetSentinel: IS_RESET,
+  });
 }
 
-/** The `Form` component renders the outer form and all the fields defined in the `schema` */
-export default class Form<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-> extends Component<FormProps<T, S, F>, FormState<T, S, F>> {
-  /** The ref used to hold the `form` element, this needs to be `any` because `tagName` or `_internalFormWrapper` can
-   * provide any possible type here
-   */
-  formElement: RefObject<any>;
+/** The `Form` component renders the outer form and all the fields defined in the `schema`. */
+function FormInner<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: FormProps<T, S, F>,
+  ref: Ref<FormRef<T>>,
+) {
+  const [reducerState, dispatch] = useReducer(
+    formReducer as (state: FormState<T, S, F>, action: FormAction<T, S, F>) => FormState<T, S, F>,
+    props,
+    initFormState<T, S, F>,
+  );
 
-  /** The list of pending changes
-   */
-  pendingChanges: PendingChange<T>[] = [];
+  // A stable default registry reference. Only the referential identity matters for the inner equality shortcuts.
+  const defaultRegistry = useMemo(() => getDefaultRegistry<T, S, F>(), []);
 
-  /** Flag to track when we're processing a user-initiated field change.
-   * This prevents componentDidUpdate from reverting oneOf/anyOf option switches.
-   */
-  private _isProcessingUserChange = false;
+  // --- Props-derived state ---
+  // When any input prop changes, recompute the base state from props. We detect the prop change in render and
+  // dispatch synchronously; React re-runs the render with the new state before committing, with no intermediate
+  // flash (the "setState during render" pattern from the React docs).
+  const prevPropsRef = useRef(props);
+  // Collects an `onChange` notification to fire after render commits, when prop-driven defaulting changed formData.
+  // Calling `onChange` during render itself is unsafe — parents may setState in response, triggering cascades.
+  const pendingOnChangeRef = useRef<FormState<T, S, F> | null>(null);
+  // Set when we process a user-initiated change via the pending-changes drain. Cleared on the next render after
+  // props change. This prevents the props-derivation block below from reverting a user's choice (most visibly,
+  // oneOf/anyOf option switches) when the parent echoes our own `onChange` back to us as a new `formData` prop
+  // that would, if re-defaulted, snap back to a different option.
+  const userChangeAppliedRef = useRef(false);
+  let state = reducerState;
+  if (prevPropsRef.current !== props && !deepEquals(prevPropsRef.current, props)) {
+    const wasUserChange = userChangeAppliedRef.current;
+    userChangeAppliedRef.current = false;
+    const prevProps = prevPropsRef.current;
+    const isSchemaChanged = !deepEquals(prevProps.schema, props.schema);
+    const formDataChangedFields = getChangedFields(props.formData, prevProps.formData);
+    const isFormDataChanged = formDataChangedFields.length > 0 || !deepEquals(prevProps.formData, props.formData);
+    const isStateDataChanged =
+      getChangedFields(props.formData, reducerState.formData).length > 0 ||
+      !deepEquals(reducerState.formData, props.formData);
+    const nextState = computeStateFromProps<T, S, F>(props, reducerState, props.formData, {
+      retrievedSchema: isSchemaChanged || isFormDataChanged ? undefined : reducerState.retrievedSchema,
+      isSchemaChanged,
+      formDataChangedFields,
+      skipLiveValidate: !isStateDataChanged,
+      defaultRegistry,
+      resetSentinel: IS_RESET,
+    });
+    // Only bail out when a user change was just applied AND the re-derived state would snap away from props.formData
+    // (i.e. defaulting would overwrite the user's choice, like a oneOf/null-option switch). When the computed state
+    // matches props.formData, the class's original bail-out wouldn't have fired either — fall through so controlled
+    // parents' prop echoes actually take effect.
+    const nextStateDiffersFromProps = !deepEquals(nextState.formData, props.formData);
+    const shouldBailOut = wasUserChange && nextStateDiffersFromProps;
+    if (!shouldBailOut && !deepEquals(nextState, reducerState)) {
+      state = nextState;
+      dispatch({ type: 'REPLACE', nextState });
+      // Mirror the class component's `componentDidUpdate` onChange semantics: notify the parent when the derived
+      // `formData` differs both from the raw `formData` prop AND from the prior state — i.e. props-driven
+      // defaulting changed the data the parent can observe.
+      if (nextStateDiffersFromProps && !deepEquals(nextState.formData, reducerState.formData)) {
+        pendingOnChangeRef.current = nextState;
+      }
+    }
+    prevPropsRef.current = props;
+  }
 
-  /** When the `extraErrors` prop changes, re-merges `schemaValidationErrors` + `extraErrors` + `customErrors` into
-   * state before render, ensuring the updated errors are visible immediately in a single render cycle.
-   *
-   * @param props - The current props
-   * @param state - The current state
-   * @returns Partial state with re-merged errors if `extraErrors` changed, or `null` if no update is needed
-   */
-  static getDerivedStateFromProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-    props: FormProps<T, S, F>,
-    state: FormState<T, S, F>,
-  ): Partial<FormState<T, S, F>> | null {
-    if (props.extraErrors !== state._prevExtraErrors) {
-      const baseErrors: ValidationData<T> = {
+  // --- extraErrors prop-change re-merge ---
+  // When the `extraErrors` prop changes by reference, re-merge the schema-validation errors with the new
+  // `extraErrors` (and any user-supplied `customErrors`) and write the merged result back into state via a
+  // synchronous dispatch. Mirrors the class component's `getDerivedStateFromProps`.
+  const prevExtraErrorsRef = useRef(props.extraErrors);
+  if (prevExtraErrorsRef.current !== props.extraErrors) {
+    prevExtraErrorsRef.current = props.extraErrors;
+    const merged = mergeErrors<T>(
+      {
         errors: state.schemaValidationErrors || [],
         errorSchema: (state.schemaValidationErrorSchema || {}) as ErrorSchema<T>,
-      };
-      let { errors, errorSchema } = baseErrors;
-      if (props.extraErrors) {
-        ({ errors, errorSchema } = validationDataMerge<T>(baseErrors, props.extraErrors));
-      }
-      if (state.customErrors) {
-        ({ errors, errorSchema } = validationDataMerge<T>(
-          { errors, errorSchema },
-          state.customErrors.ErrorSchema,
-          true,
-        ));
-      }
-      return { _prevExtraErrors: props.extraErrors, errors, errorSchema };
+      },
+      props.extraErrors,
+      state.customErrors,
+    );
+    if (!deepEquals(merged.errors, state.errors) || !deepEquals(merged.errorSchema, state.errorSchema)) {
+      state = { ...state, errors: merged.errors, errorSchema: merged.errorSchema };
+      dispatch({ type: 'APPLY_PARTIAL', partial: { errors: merged.errors, errorSchema: merged.errorSchema } });
     }
-    return null;
   }
 
-  /** Constructs the `Form` from the `props`. Will setup the initial state from the props. It will also call the
-   * `onChange` handler if the initially provided `formData` is modified to add missing default values as part of the
-   * state construction.
-   *
-   * @param props - The initial props for the `Form`
-   */
-  constructor(props: FormProps<T, S, F>) {
-    super(props);
+  // Mirror state into a ref for synchronous access from handler loops (pending-change drain, etc.).
+  const stateRef = useRef(state);
+  stateRef.current = state;
 
-    if (!props.validator) {
-      throw new Error('A validator is required for Form functionality to work');
-    }
+  // Mirror props into a ref for the same reason.
+  const propsRef = useRef(props);
+  propsRef.current = props;
 
-    const { formData: propsFormData, initialFormData, onChange } = props;
-    const formData = propsFormData ?? initialFormData;
-    this.state = {
-      ...this.getStateFromProps(props, formData, undefined, undefined, undefined, true),
-      _prevExtraErrors: props.extraErrors,
-    };
-    if (onChange && !deepEquals(this.state.formData, formData)) {
-      onChange(toIChangeEvent(this.state));
+  // On the very first render, if the initial default-filling pass modified the formData (e.g. schema defaults were
+  // injected), notify the parent via `onChange`. Mirrors the legacy class component's constructor-time `onChange`
+  // call, which runs *before* any children render or mount — important for tests (and consumers) that expect the
+  // initial defaults notification to arrive before child-triggered `onChange` calls. Guarded by a ref so it fires
+  // only once.
+  const didInitialOnChangeRef = useRef(false);
+  if (!didInitialOnChangeRef.current) {
+    didInitialOnChangeRef.current = true;
+    const rawFormData = props.formData ?? props.initialFormData;
+    if (props.onChange && !deepEquals(state.formData, rawFormData)) {
+      props.onChange(toIChangeEvent(state));
     }
-    this.formElement = createRef();
   }
 
-  /**
-   * `getSnapshotBeforeUpdate` is a React lifecycle method that is invoked right before the most recently rendered
-   * output is committed to the DOM. It enables your component to capture current values (e.g., scroll position) before
-   * they are potentially changed.
-   *
-   * In this case, it checks if the props have changed since the last render. If they have, it computes the next state
-   * of the component using `getStateFromProps` method and returns it along with a `shouldUpdate` flag set to `true` IF
-   * the `nextState` and `prevState` are different, otherwise `false`. This ensures that we have the most up-to-date
-   * state ready to be applied in `componentDidUpdate`.
-   *
-   * If `formData` hasn't changed, it simply returns an object with `shouldUpdate` set to `false`, indicating that a
-   * state update is not necessary.
-   *
-   * @param prevProps - The previous set of props before the update.
-   * @param prevState - The previous state before the update.
-   * @returns Either an object containing the next state and a flag indicating that an update should occur, or an object
-   *        with a flag indicating that an update is not necessary.
-   */
-  getSnapshotBeforeUpdate(
-    prevProps: FormProps<T, S, F>,
-    prevState: FormState<T, S, F>,
-  ): { nextState: FormState<T, S, F>; shouldUpdate: true } | { shouldUpdate: false } {
-    if (!deepEquals(this.props, prevProps)) {
-      // Compare the previous props formData against the current props formData
-      const formDataChangedFields = getChangedFields(this.props.formData, prevProps.formData);
-      // Compare the current props formData against the current state's formData to determine if the new props were the
-      // result of the onChange from the existing state formData
-      const stateDataChangedFields = getChangedFields(this.props.formData, this.state.formData);
-      const isSchemaChanged = !deepEquals(prevProps.schema, this.props.schema);
-      // When formData is not an object, getChangedFields returns an empty array.
-      // In this case, deepEquals is most needed to check again.
-      const isFormDataChanged =
-        formDataChangedFields.length > 0 || !deepEquals(prevProps.formData, this.props.formData);
-      const isStateDataChanged =
-        stateDataChangedFields.length > 0 || !deepEquals(this.state.formData, this.props.formData);
-      const nextState = this.getStateFromProps(
-        this.props,
-        this.props.formData,
-        // If the `schema` has changed, we need to update the retrieved schema.
-        // Or if the `formData` changes, for example in the case of a schema with dependencies that need to
-        //  match one of the subSchemas, the retrieved schema must be updated.
-        isSchemaChanged || isFormDataChanged ? undefined : this.state.retrievedSchema,
-        isSchemaChanged,
-        formDataChangedFields,
-        // Skip live validation for this request if no form data has changed from the last state
-        !isStateDataChanged,
+  // Fires the deferred `onChange` notification queued by the props-derivation block above, once per commit.
+  useEffect(() => {
+    if (pendingOnChangeRef.current && propsRef.current.onChange) {
+      propsRef.current.onChange(toIChangeEvent(pendingOnChangeRef.current));
+    }
+    pendingOnChangeRef.current = null;
+  });
+
+  // Drives the pending-change queue. The hook manages queue state internally and invokes this callback for each
+  // change as it is drained. `isLastInQueue` gates whether live validation runs on this iteration.
+  const { enqueue } = usePendingChanges<T>((change, isLastInQueue) => {
+    const currentProps = propsRef.current;
+    const currentState = stateRef.current;
+    const { partial } = computeChangeNextState<T, S, F>(currentProps, currentState, change, {
+      isLastInQueue,
+      defaultRegistry,
+      resetSentinel: IS_RESET,
+    });
+    const nextState: FormState<T, S, F> = { ...currentState, ...partial };
+    stateRef.current = nextState;
+    // Flag that a user-initiated change has just been applied. The props-derivation block above uses this to skip
+    // the next prop-echo that would otherwise re-default away from the user's choice.
+    userChangeAppliedRef.current = true;
+    dispatch({ type: 'APPLY_PARTIAL', partial });
+    if (currentProps.onChange) {
+      currentProps.onChange(toIChangeEvent(nextState), change.id);
+    }
+  });
+
+  const onChange = useCallback(
+    (newValue: T | undefined, path: FieldPathList, newErrorSchema?: ErrorSchema<T>, id?: string) => {
+      enqueue({ newValue, path, newErrorSchema, id });
+    },
+    [enqueue],
+  );
+
+  const onBlur = useCallback((id: string, data: any) => {
+    const currentProps = propsRef.current;
+    const currentState = stateRef.current;
+    const {
+      onBlur: onBlurProp,
+      omitExtraData,
+      liveOmit,
+      liveValidate,
+      removeEmptyOptionalObjects: removeEmptyOpt,
+      extraErrors,
+      onChange: onChangeProp,
+      customValidate,
+      transformErrors,
+      uiSchema,
+    } = currentProps;
+    if (onBlurProp) {
+      onBlurProp(id, data);
+    }
+    const shouldLiveOmit = omitExtraData === true && liveOmit === 'onBlur';
+    const shouldLiveValidate = liveValidate === 'onBlur';
+    if (!shouldLiveOmit && !shouldLiveValidate && !removeEmptyOpt) {
+      return;
+    }
+    const { formData, schemaUtils, schema, errorSchema, customErrors, retrievedSchema } = currentState;
+    let newFormData: T | undefined = formData;
+    let partial: Partial<FormState<T, S, F>> = { formData: newFormData };
+    if (shouldLiveOmit) {
+      newFormData = schemaUtils.omitExtraData(schema, newFormData);
+      partial = { formData: newFormData };
+    }
+    if (removeEmptyOpt) {
+      newFormData = removeOptionalEmptyObjects(
+        schemaUtils.getValidator(),
+        schema,
+        schemaUtils.getRootSchema(),
+        newFormData,
+      ) as T;
+      partial = { ...partial, formData: newFormData };
+    }
+    if (shouldLiveValidate) {
+      const liveValidation = runLiveValidate<T, S, F>(
+        schema,
+        schemaUtils,
+        errorSchema,
+        newFormData,
+        extraErrors,
+        customErrors,
+        retrievedSchema,
+        customValidate,
+        transformErrors,
+        uiSchema,
       );
-      const shouldUpdate = !deepEquals(nextState, prevState);
-      return { nextState, shouldUpdate };
+      partial = { formData: newFormData, ...liveValidation, customErrors };
     }
-    return { shouldUpdate: false };
-  }
+    const nextState: FormState<T, S, F> = { ...currentState, ...partial };
+    const hasChanges = Object.keys(partial)
+      .filter((key) => !key.startsWith('schemaValidation'))
+      .some((key) => {
+        const oldData = (currentState as any)[key];
+        const newData = (partial as any)[key];
+        return !deepEquals(oldData, newData);
+      });
+    stateRef.current = nextState;
+    dispatch({ type: 'APPLY_PARTIAL', partial });
+    if (onChangeProp && hasChanges) {
+      onChangeProp(toIChangeEvent(nextState), id);
+    }
+  }, []);
 
-  /**
-   * `componentDidUpdate` is a React lifecycle method that is invoked immediately after updating occurs. This method is
-   * not called for the initial render.
-   *
-   * Here, it checks if an update is necessary based on the `shouldUpdate` flag received from `getSnapshotBeforeUpdate`.
-   * If an update is required, it applies the next state and, if needed, triggers the `onChange` handler to inform about
-   * changes.
-   *
-   * @param _ - The previous set of props.
-   * @param prevState - The previous state of the component before the update.
-   * @param snapshot - The value returned from `getSnapshotBeforeUpdate`.
-   */
-  componentDidUpdate(
-    _: FormProps<T, S, F>,
-    prevState: FormState<T, S, F>,
-    snapshot: { nextState: FormState<T, S, F>; shouldUpdate: true } | { shouldUpdate: false },
-  ) {
-    if (snapshot.shouldUpdate) {
-      const { nextState } = snapshot;
+  const onFocus = useCallback((id: string, data: any) => {
+    const { onFocus: onFocusProp } = propsRef.current;
+    if (onFocusProp) {
+      onFocusProp(id, data);
+    }
+  }, []);
 
-      // Prevent oneOf/anyOf option switches from reverting when getStateFromProps
-      // re-evaluates and produces stale formData.
-      const nextStateDiffersFromProps = !deepEquals(nextState.formData, this.props.formData);
-      const wasProcessingUserChange = this._isProcessingUserChange;
-      this._isProcessingUserChange = false;
+  // The form element ref is used by submit() and focusOnError.
+  const formElement = useRef<any>(null);
 
-      if (wasProcessingUserChange && nextStateDiffersFromProps) {
-        // Skip - the user's option switch is already applied via processPendingChange
+  /** Attempts to focus on the field associated with the given `error`. */
+  const focusOnErrorImpl = useCallback((error: RJSFValidationError) => {
+    if (!formElement.current) {
+      return;
+    }
+    const { idPrefix = 'root', idSeparator = '_' } = propsRef.current;
+    const { property } = error;
+    const path = _toPath(property) as string[];
+    if (path[0] === '') {
+      path[0] = idPrefix;
+    } else {
+      path.unshift(idPrefix);
+    }
+    const elementId = path.join(idSeparator);
+    let field = formElement.current.elements[elementId];
+    if (!field) {
+      field = formElement.current.querySelector(`input[id^="${elementId}"], button[id^="${elementId}"]`);
+    }
+    if (field && field.length) {
+      field = field[0];
+    }
+    if (field) {
+      field.focus();
+    }
+  }, []);
+
+  /** Validate the given `formData` and update state accordingly. Returns `true` when the form is valid. */
+  const validateFormWithFormData = useCallback(
+    (formDataArg?: T): boolean => {
+      const currentProps = propsRef.current;
+      const currentState = stateRef.current;
+      const {
+        extraErrors,
+        extraErrorsBlockSubmit,
+        focusOnFirstError,
+        onError,
+        customValidate,
+        transformErrors,
+        uiSchema,
+      } = currentProps;
+      const { errors: prevErrors, schema, schemaUtils } = currentState;
+      const schemaValidation = runValidate<T, S, F>(
+        formDataArg,
+        schema,
+        schemaUtils,
+        undefined,
+        customValidate,
+        transformErrors,
+        uiSchema,
+      );
+      const { errors, errorSchema } = extraErrors ? mergeErrors<T>(schemaValidation, extraErrors) : schemaValidation;
+      const hasError = schemaValidation.errors.length > 0 || (!!extraErrors && !!extraErrorsBlockSubmit);
+      if (hasError) {
+        if (focusOnFirstError) {
+          if (typeof focusOnFirstError === 'function') {
+            focusOnFirstError(errors[0]);
+          } else {
+            focusOnErrorImpl(errors[0]);
+          }
+        }
+        const partial: Partial<FormState<T, S, F>> = {
+          errors,
+          errorSchema,
+          schemaValidationErrors: schemaValidation.errors,
+          schemaValidationErrorSchema: schemaValidation.errorSchema,
+        };
+        stateRef.current = { ...currentState, ...partial };
+        dispatch({ type: 'APPLY_PARTIAL', partial });
+        if (onError) {
+          onError(errors);
+        } else {
+          // eslint-disable-next-line no-console
+          console.error('Form validation failed', errors);
+        }
+      } else if (errors.length > 0) {
+        const partial: Partial<FormState<T, S, F>> = {
+          errors,
+          errorSchema,
+          schemaValidationErrors: [],
+          schemaValidationErrorSchema: {},
+        };
+        stateRef.current = { ...currentState, ...partial };
+        dispatch({ type: 'APPLY_PARTIAL', partial });
+      } else if (prevErrors.length > 0) {
+        const partial: Partial<FormState<T, S, F>> = {
+          errors: [],
+          errorSchema: {},
+          schemaValidationErrors: [],
+          schemaValidationErrorSchema: {},
+        };
+        stateRef.current = { ...currentState, ...partial };
+        dispatch({ type: 'APPLY_PARTIAL', partial });
+      }
+      return !hasError;
+    },
+    [focusOnErrorImpl],
+  );
+
+  const onSubmit = useCallback(
+    (event: FormEvent<any>) => {
+      event.preventDefault();
+      if (event.target !== event.currentTarget) {
         return;
       }
-
-      if (nextStateDiffersFromProps && !deepEquals(nextState.formData, prevState.formData) && this.props.onChange) {
-        this.props.onChange(toIChangeEvent(nextState));
+      event.persist();
+      const currentProps = propsRef.current;
+      const currentState = stateRef.current;
+      const {
+        omitExtraData,
+        extraErrors,
+        noValidate,
+        onSubmit: onSubmitProp,
+        removeEmptyOptionalObjects: rmOpt,
+      } = currentProps;
+      const { schema, schemaUtils } = currentState;
+      let newFormData: T | undefined = currentState.formData;
+      if (omitExtraData === true) {
+        newFormData = schemaUtils.omitExtraData(schema, newFormData);
       }
-      this.setState(nextState);
-    }
-  }
-
-  /** Extracts the updated state from the given `props` and `inputFormData`. As part of this process, the
-   * `inputFormData` is first processed to add any missing required defaults. After that, the data is run through the
-   * validation process IF required by the `props`.
-   *
-   * @param props - The props passed to the `Form`
-   * @param inputFormData - The new or current data for the `Form`
-   * @param retrievedSchema - An expanded schema, if not provided, it will be retrieved from the `schema` and `formData`.
-   * @param isSchemaChanged - A flag indicating whether the schema has changed.
-   * @param formDataChangedFields - The changed fields of `formData`
-   * @param skipLiveValidate - Optional flag, if true, means that we are not running live validation
-   * @returns - The new state for the `Form`
-   */
-  getStateFromProps(
-    props: FormProps<T, S, F>,
-    inputFormData?: T,
-    retrievedSchema?: S,
-    isSchemaChanged = false,
-    formDataChangedFields: string[] = [],
-    skipLiveValidate = false,
-  ): FormState<T, S, F> {
-    const state: FormState<T, S, F> = this.state || {};
-    const schema = 'schema' in props ? props.schema : this.props.schema;
-    const validator = 'validator' in props ? props.validator : this.props.validator;
-    const uiSchema: UiSchema<T, S, F> = ('uiSchema' in props ? props.uiSchema! : this.props.uiSchema!) || {};
-    const isUncontrolled = props.formData === undefined && this.props.formData === undefined;
-    const edit = typeof inputFormData !== 'undefined';
-    const liveValidate = 'liveValidate' in props ? props.liveValidate : this.props.liveValidate;
-    const mustValidate = edit && !props.noValidate && liveValidate;
-    const experimental_defaultFormStateBehavior =
-      'experimental_defaultFormStateBehavior' in props
-        ? props.experimental_defaultFormStateBehavior
-        : this.props.experimental_defaultFormStateBehavior;
-    const experimental_customMergeAllOf =
-      'experimental_customMergeAllOf' in props
-        ? props.experimental_customMergeAllOf
-        : this.props.experimental_customMergeAllOf;
-    let schemaUtils: SchemaUtilsType<T, S, F> = state.schemaUtils;
-    if (
-      !schemaUtils ||
-      schemaUtils.doesSchemaUtilsDiffer(
-        validator,
-        schema,
-        experimental_defaultFormStateBehavior,
-        experimental_customMergeAllOf,
-      )
-    ) {
-      schemaUtils = createSchemaUtils<T, S, F>(
-        validator,
-        schema,
-        experimental_defaultFormStateBehavior,
-        experimental_customMergeAllOf,
-      );
-    }
-
-    const rootSchema = schemaUtils.getRootSchema();
-
-    // Compute the formData for getDefaultFormState() function based on the inputFormData, isUncontrolled and state
-    let defaultsFormData = inputFormData;
-    if (inputFormData === IS_RESET) {
-      defaultsFormData = undefined;
-    } else if (inputFormData === undefined && isUncontrolled) {
-      defaultsFormData = state.formData;
-    }
-    const formData: T = schemaUtils.getDefaultFormState(
-      rootSchema,
-      defaultsFormData,
-      false,
-      state.initialDefaultsGenerated,
-    ) as T;
-    const _retrievedSchema = this.updateRetrievedSchema(
-      retrievedSchema ?? schemaUtils.retrieveSchema(rootSchema, formData),
-    );
-
-    const getCurrentErrors = (): ValidationData<T> => {
-      // If the `props.noValidate` option is set or the schema has changed, we reset the error state.
-      if (props.noValidate || isSchemaChanged) {
-        return { errors: [], errorSchema: {} };
-      } else if (!props.liveValidate) {
-        return {
-          errors: state.schemaValidationErrors || [],
-          errorSchema: state.schemaValidationErrorSchema || {},
+      if (rmOpt) {
+        newFormData = removeOptionalEmptyObjects(
+          schemaUtils.getValidator(),
+          schema,
+          schemaUtils.getRootSchema(),
+          newFormData,
+        ) as T;
+      }
+      if (noValidate || validateFormWithFormData(newFormData)) {
+        const errorSchema = extraErrors || {};
+        const errors = extraErrors ? toErrorList(extraErrors) : [];
+        const partial: Partial<FormState<T, S, F>> = {
+          formData: newFormData,
+          errors,
+          errorSchema,
+          schemaValidationErrors: [],
+          schemaValidationErrorSchema: {},
         };
+        const nextState: FormState<T, S, F> = { ...stateRef.current, ...partial };
+        stateRef.current = nextState;
+        dispatch({ type: 'APPLY_PARTIAL', partial });
+        if (onSubmitProp) {
+          onSubmitProp(toIChangeEvent({ ...nextState, formData: newFormData }, 'submitted'), event);
+        }
       }
-      return {
-        errors: state.errors || [],
-        errorSchema: state.errorSchema || {},
-      };
-    };
+    },
+    [validateFormWithFormData],
+  );
 
-    let errors: RJSFValidationError[];
-    let errorSchema: ErrorSchema<T> | undefined;
-    let schemaValidationErrors: RJSFValidationError[] = state.schemaValidationErrors;
-    let schemaValidationErrorSchema: ErrorSchema<T> = state.schemaValidationErrorSchema;
-    // If we are skipping live validate, it means that the state has already been updated with live validation errors
-    if (mustValidate && !skipLiveValidate) {
-      const liveValidation = this.liveValidate(
-        rootSchema,
-        schemaUtils,
-        state.errorSchema,
-        formData,
-        undefined,
-        state.customErrors,
-        retrievedSchema,
-        // If retrievedSchema is undefined which means the schema or formData has changed, we do not merge state.
-        // Else in the case where it hasn't changed,
-        retrievedSchema !== undefined,
-      );
-      errors = liveValidation.errors;
-      errorSchema = liveValidation.errorSchema;
-      schemaValidationErrors = liveValidation.schemaValidationErrors;
-      schemaValidationErrorSchema = liveValidation.schemaValidationErrorSchema;
-    } else {
-      const currentErrors = getCurrentErrors();
-      errors = currentErrors.errors;
-      errorSchema = currentErrors.errorSchema;
-      // We only update the error schema for changed fields if mustValidate is false
-      if (formDataChangedFields.length > 0 && !mustValidate) {
-        const newErrorSchema = formDataChangedFields.reduce(
-          (acc, key) => {
-            acc[key] = undefined;
-            return acc;
-          },
-          {} as Record<string, undefined>,
-        );
-        errorSchema = schemaValidationErrorSchema = mergeObjects(
-          currentErrors.errorSchema,
-          newErrorSchema,
-          'preventDuplicates',
-        ) as ErrorSchema<T>;
-      }
-      const mergedErrors = this.mergeErrors({ errorSchema, errors }, props.extraErrors, state.customErrors);
-      errors = mergedErrors.errors;
-      errorSchema = mergedErrors.errorSchema;
+  /** Reset the form back to its initial defaults (or `initialFormData`). */
+  const reset = useCallback(() => {
+    const currentProps = propsRef.current;
+    const { formData: propsFormData, initialFormData = IS_RESET as T, onChange: onChangeProp } = currentProps;
+    const newState = computeStateFromProps<T, S, F>(currentProps, stateRef.current, propsFormData ?? initialFormData, {
+      skipLiveValidate: true,
+      defaultRegistry,
+      resetSentinel: IS_RESET,
+    });
+    const partial: Partial<FormState<T, S, F>> = {
+      formData: newState.formData,
+      errorSchema: {},
+      errors: [],
+      schemaValidationErrors: [],
+      schemaValidationErrorSchema: {},
+      initialDefaultsGenerated: false,
+      customErrors: undefined,
+    };
+    const nextState: FormState<T, S, F> = { ...stateRef.current, ...partial };
+    stateRef.current = nextState;
+    dispatch({ type: 'APPLY_PARTIAL', partial });
+    if (onChangeProp) {
+      onChangeProp(toIChangeEvent(nextState));
     }
+  }, [defaultRegistry]);
 
-    // Only store a new registry when the props cause a different one to be created
-    const newRegistry = this.getRegistry(props, rootSchema, schemaUtils);
-    const registry = deepEquals(state.registry, newRegistry) ? state.registry : newRegistry;
+  /** Imperatively set a value at the given path, equivalent to a user edit at that path. */
+  const setFieldValue = useCallback(
+    (fieldPath: string | FieldPathList, newValue?: T) => {
+      const { registry } = stateRef.current;
+      const path = Array.isArray(fieldPath) ? fieldPath : fieldPath.split('.');
+      const fid = toFieldPathId('', registry.globalFormOptions, path);
+      onChange(newValue, path, undefined, fid[ID_KEY]);
+    },
+    [onChange],
+  );
 
-    // Only compute a new `fieldPathId` when the `idPrefix` is different than the existing fieldPathId's ID_KEY
-    const fieldPathId =
-      state.fieldPathId && state.fieldPathId?.[ID_KEY] === registry.globalFormOptions.idPrefix
-        ? state.fieldPathId
-        : toFieldPathId('', registry.globalFormOptions);
-    const nextState: FormState<T, S, F> = {
-      schemaUtils,
-      schema: rootSchema,
-      uiSchema,
-      fieldPathId,
-      formData,
-      edit,
-      errors,
-      errorSchema,
-      schemaValidationErrors,
-      schemaValidationErrorSchema,
-      retrievedSchema: _retrievedSchema,
-      initialDefaultsGenerated: true,
-      registry,
-    };
-    return nextState;
+  /** Programmatically submit the form (dispatches a cancelable submit event and calls `requestSubmit`). */
+  const submit = useCallback(() => {
+    if (formElement.current) {
+      const submitCustomEvent = new CustomEvent('submit', { cancelable: true });
+      submitCustomEvent.preventDefault();
+      formElement.current.dispatchEvent(submitCustomEvent);
+      formElement.current.requestSubmit();
+    }
+  }, []);
+
+  /** Programmatically validate the form. */
+  const validateForm = useCallback(() => {
+    const currentProps = propsRef.current;
+    const { omitExtraData, removeEmptyOptionalObjects: rmOpt } = currentProps;
+    const { schema, schemaUtils } = stateRef.current;
+    let newFormData: T | undefined = stateRef.current.formData;
+    if (omitExtraData === true) {
+      newFormData = schemaUtils.omitExtraData(schema, newFormData);
+    }
+    if (rmOpt) {
+      newFormData = removeOptionalEmptyObjects(
+        schemaUtils.getValidator(),
+        schema,
+        schemaUtils.getRootSchema(),
+        newFormData,
+      ) as T;
+    }
+    return validateFormWithFormData(newFormData);
+  }, [validateFormWithFormData]);
+
+  // Expose the 5 documented public methods via the ref prop.
+  useImperativeHandle(
+    ref,
+    () => ({
+      submit,
+      reset,
+      validateForm,
+      setFieldValue,
+      focusOnError: focusOnErrorImpl,
+    }),
+    [submit, reset, validateForm, setFieldValue, focusOnErrorImpl],
+  );
+
+  const {
+    children,
+    id,
+    className = '',
+    tagName,
+    name,
+    method,
+    target,
+    action,
+    autoComplete,
+    enctype,
+    acceptCharset,
+    noHtml5Validate = false,
+    disabled,
+    readonly,
+    showErrorList = 'top',
+    _internalFormWrapper,
+  } = props;
+
+  const { schema, uiSchema, formData, errorSchema, fieldPathId, registry, errors } = state;
+  const { SchemaField: _SchemaField } = registry.fields;
+  const { SubmitButton } = registry.templates.ButtonTemplates;
+
+  const as = _internalFormWrapper ? tagName : undefined;
+  const FormTag = _internalFormWrapper || tagName || 'form';
+
+  let { [SUBMIT_BTN_OPTIONS_KEY]: submitOptions = {} } = getUiOptions<T, S, F>(uiSchema);
+  if (disabled) {
+    submitOptions = { ...submitOptions, props: { ...submitOptions.props, disabled: true } };
   }
+  const submitUiSchema = { [UI_OPTIONS_KEY]: { [SUBMIT_BTN_OPTIONS_KEY]: submitOptions } };
 
-  /** React lifecycle method that is used to determine whether component should be updated.
-   *
-   * @param nextProps - The next version of the props
-   * @param nextState - The next version of the state
-   * @returns - True if the component should be updated, false otherwise
-   */
-  shouldComponentUpdate(nextProps: FormProps<T, S, F>, nextState: FormState<T, S, F>): boolean {
-    const { experimental_componentUpdateStrategy = 'customDeep' } = this.props;
-    return shouldRender(this, nextProps, nextState, experimental_componentUpdateStrategy);
-  }
-
-  /** Validates the `formData` against the `schema` using the `altSchemaUtils` (if provided otherwise it uses the
-   * `schemaUtils` in the state), returning the results.
-   *
-   * @param formData - The new form data to validate
-   * @param schema - The schema used to validate against
-   * @param [altSchemaUtils] - The alternate schemaUtils to use for validation
-   * @param [retrievedSchema] - An optionally retrieved schema for per
-   */
-  validate(
-    formData: T | undefined,
-    schema = this.state.schema,
-    altSchemaUtils?: SchemaUtilsType<T, S, F>,
-    retrievedSchema?: S,
-  ): ValidationData<T> {
-    const schemaUtils = altSchemaUtils ? altSchemaUtils : this.state.schemaUtils;
-    const { customValidate, transformErrors, uiSchema } = this.props;
-    const resolvedSchema = retrievedSchema ?? schemaUtils.retrieveSchema(schema, formData);
-    return schemaUtils
-      .getValidator()
-      .validateFormData(formData, resolvedSchema, customValidate, transformErrors, uiSchema);
-  }
-
-  /** Renders any errors contained in the `state` in using the `ErrorList`, if not disabled by `showErrorList`. */
-  renderErrors(registry: Registry<T, S, F>) {
-    const { errors, errorSchema, schema, uiSchema } = this.state;
-    const options = getUiOptions<T, S, F>(uiSchema);
-    const ErrorListTemplate = getTemplate<'ErrorListTemplate', T, S, F>('ErrorListTemplate', registry, options);
-
+  const renderErrors = () => {
     if (errors && errors.length) {
+      const options = getUiOptions<T, S, F>(uiSchema);
+      const ErrorListTemplate = getTemplate<'ErrorListTemplate', T, S, F>('ErrorListTemplate', registry, options);
       return (
         <ErrorListTemplate
           errors={errors}
@@ -743,698 +888,72 @@ export default class Form<
       );
     }
     return null;
-  }
-
-  /** Merges any `extraErrors` or `customErrors` into the given `schemaValidation` object, returning the result
-   *
-   * @param schemaValidation - The `ValidationData` object into which additional errors are merged
-   * @param [extraErrors] - The extra errors from the props
-   * @param [customErrors] - The customErrors from custom components
-   * @return - The `extraErrors` and `customErrors` merged into the `schemaValidation`
-   * @private
-   */
-  private mergeErrors(
-    schemaValidation: ValidationData<T>,
-    extraErrors?: FormProps['extraErrors'],
-    customErrors?: ErrorSchemaBuilder,
-  ): ValidationData<T> {
-    let errorSchema: ErrorSchema<T> = schemaValidation.errorSchema;
-    let errors: RJSFValidationError[] = schemaValidation.errors;
-    if (extraErrors) {
-      const merged = validationDataMerge(schemaValidation, extraErrors);
-      errorSchema = merged.errorSchema;
-      errors = merged.errors;
-    }
-    if (customErrors) {
-      const merged = validationDataMerge({ errors, errorSchema }, customErrors.ErrorSchema, true);
-      errorSchema = merged.errorSchema;
-      errors = merged.errors;
-    }
-    return { errors, errorSchema };
-  }
-
-  /** Performs live validation and then updates and returns the errors and error schemas by potentially merging in
-   * `extraErrors` and `customErrors`.
-   *
-   * @param rootSchema - The `rootSchema` from the state
-   * @param schemaUtils - The `SchemaUtilsType` from the state
-   * @param originalErrorSchema - The original `ErrorSchema` from the state
-   * @param [formData] - The new form data to validate
-   * @param [extraErrors] - The extra errors from the props
-   * @param [customErrors] - The customErrors from custom components
-   * @param [retrievedSchema] - An expanded schema, if not provided, it will be retrieved from the `schema` and `formData`
-   * @param [mergeIntoOriginalErrorSchema=false] - Optional flag indicating whether we merge into original schema
-   * @returns - An object containing `errorSchema`, `errors`, `schemaValidationErrors` and `schemaValidationErrorSchema`
-   * @private
-   */
-  private liveValidate(
-    rootSchema: S,
-    schemaUtils: SchemaUtilsType<T, S, F>,
-    originalErrorSchema: ErrorSchema<S>,
-    formData?: T,
-    extraErrors?: FormProps['extraErrors'],
-    customErrors?: ErrorSchemaBuilder<T>,
-    retrievedSchema?: S,
-    mergeIntoOriginalErrorSchema = false,
-  ) {
-    const schemaValidation = this.validate(formData, rootSchema, schemaUtils, retrievedSchema);
-    const errors = schemaValidation.errors;
-    let errorSchema = schemaValidation.errorSchema;
-    // We merge 'originalErrorSchema' with 'schemaValidation.errorSchema.'; This done to display the raised field error.
-    if (mergeIntoOriginalErrorSchema) {
-      errorSchema = mergeObjects(
-        originalErrorSchema,
-        schemaValidation.errorSchema,
-        'preventDuplicates',
-      ) as ErrorSchema<T>;
-    }
-    const schemaValidationErrors = errors;
-    const schemaValidationErrorSchema = errorSchema;
-    const mergedErrors = this.mergeErrors({ errorSchema, errors }, extraErrors, customErrors);
-    return { ...mergedErrors, schemaValidationErrors, schemaValidationErrorSchema };
-  }
-
-  /** Returns the `formData` with only the elements specified in the `fields` list
-   *
-   * @param formData - The data for the `Form`
-   * @param fields - The fields to keep while filtering
-   * @deprecated - To be removed as an exported `Form` function in a future release; there isn't a planned replacement
-   */
-  getUsedFormData = (formData: T | undefined, fields: string[]): T | undefined => {
-    return getUsedFormData(formData, fields);
   };
 
-  /** Returns the list of field names from inspecting the `pathSchema` as well as using the `formData`
-   *
-   * @param pathSchema - The `PathSchema` object for the form
-   * @param [formData] - The form data to use while checking for empty objects/arrays
-   * @deprecated - To be removed as an exported `Form` function in a future release; there isn't a planned replacement
-   */
-  getFieldNames = (pathSchema: PathSchema<T>, formData?: T): string[][] => {
-    return getFieldNames(pathSchema, formData);
-  };
-
-  /** Returns the `formData` after filtering to remove any extra data not in a form field
-   *
-   * @param formData - The data for the `Form`
-   * @returns The `formData` after omitting extra data
-   * @deprecated - To be removed as an exported `Form` function in a future release, use `SchemaUtils.omitExtraData`
-   *               instead.
-   */
-  omitExtraData = (formData?: T): T | undefined => {
-    const { schema, schemaUtils } = this.state;
-    return schemaUtils.omitExtraData(schema, formData);
-  };
-
-  /** Allows a user to set a value for the provided `fieldPath`, which must be either a dotted path to the field OR a
-   * `FieldPathList`. To set the root element, used either `''` or `[]` for the path. Passing undefined will clear the
-   * value in the field.
-   *
-   * @param fieldPath - Either a dotted path to the field or the `FieldPathList` to the field
-   * @param [newValue] - The new value for the field
-   */
-  setFieldValue = (fieldPath: string | FieldPathList, newValue?: T) => {
-    const { registry } = this.state;
-    const path = Array.isArray(fieldPath) ? fieldPath : fieldPath.split('.');
-    const fieldPathId = toFieldPathId('', registry.globalFormOptions, path);
-    this.onChange(newValue, path, undefined, fieldPathId[ID_KEY]);
-  };
-
-  /** Pushes the given change information into the `pendingChanges` array and then calls `processPendingChanges()` if
-   * the array only contains a single pending change.
-   *
-   * @param newValue - The new form data from a change to a field
-   * @param path - The path to the change into which to set the formData
-   * @param [newErrorSchema] - The new `ErrorSchema` based on the field change
-   * @param [id] - The id of the field that caused the change
-   */
-  onChange = (newValue: T | undefined, path: FieldPathList, newErrorSchema?: ErrorSchema<T>, id?: string) => {
-    this.pendingChanges.push({ newValue, path, newErrorSchema, id });
-    if (this.pendingChanges.length === 1) {
-      this.processPendingChange();
-    }
-  };
-
-  /** Function to handle changes made to a field in the `Form`. This handler gets the first change from the
-   * `pendingChanges` list, containing the `newValue` for the `formData` and the `path` at which the `newValue` is to be
-   * updated, along with a new, optional `ErrorSchema` for that same `path` and potentially the `id` of the field being
-   * changed. It will first update the `formData` with any missing default fields and then, if `omitExtraData` and
-   * `liveOmit` are turned on, the `formData` will be filtered to remove any extra data not in a form field. Then, the
-   * resulting `formData` will be validated if required. The state will be updated with the new updated (potentially
-   * filtered) `formData`, any errors that resulted from validation. Finally the `onChange` callback will be called, if
-   * specified, with the updated state and the `processPendingChange()` function is called again.
-   */
-  processPendingChange() {
-    if (this.pendingChanges.length === 0) {
-      return;
-    }
-    // Mark that we're processing a user-initiated change.
-    // This prevents componentDidUpdate from reverting oneOf/anyOf option switches.
-    this._isProcessingUserChange = true;
-    const { newValue, path, id } = this.pendingChanges[0];
-    const { newErrorSchema } = this.pendingChanges[0];
-    const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, onChange, removeEmptyOptionalObjects } =
-      this.props;
-    const { formData: oldFormData, schemaUtils, schema, fieldPathId, schemaValidationErrorSchema, errors } = this.state;
-    let { customErrors, errorSchema: originalErrorSchema } = this.state;
-    const rootPathId = fieldPathId.path[0] || '';
-
-    const isRootPath = !path || path.length === 0 || (path.length === 1 && path[0] === rootPathId);
-    let retrievedSchema = this.state.retrievedSchema;
-    let formData = isRootPath ? newValue : _cloneDeep(oldFormData);
-
-    // When switching from null to an object option in oneOf, MultiSchemaField sends
-    // an object with property names but undefined values (e.g., {types: undefined, content: undefined}).
-    // In this case, pass undefined to getStateFromProps to trigger fresh default computation.
-    // Only do this when the previous formData was null/undefined (switching FROM null).
-    const hasOnlyUndefinedValues =
-      isObject(formData) &&
-      Object.keys(formData as object).length > 0 &&
-      Object.values(formData as object).every((v) => v === undefined);
-    const wasPreviouslyNull = oldFormData === null || oldFormData === undefined;
-    const inputForDefaults = hasOnlyUndefinedValues && wasPreviouslyNull ? undefined : formData;
-
-    if (isObject(formData) || Array.isArray(formData)) {
-      if (newValue === ADDITIONAL_PROPERTY_KEY_REMOVE) {
-        // For additional properties, we were given the special remove this key value, so unset it
-        _unset(formData, path);
-      } else if (!isRootPath) {
-        // If the newValue is not on the root path, then set it into the form data
-        _set(formData, path, newValue);
-      }
-      // Pass true to skip live validation in `getStateFromProps()` since we will do it a bit later
-      const newState = this.getStateFromProps(this.props, inputForDefaults, undefined, undefined, undefined, true);
-      formData = newState.formData;
-      retrievedSchema = newState.retrievedSchema;
-    }
-
-    const mustValidate = !noValidate && (liveValidate === true || liveValidate === 'onChange');
-    let state: Partial<FormState<T, S, F>> = { formData, schema };
-    let newFormData = formData;
-
-    if (omitExtraData === true && (liveOmit === true || liveOmit === 'onChange')) {
-      newFormData = this.omitExtraData(formData);
-      state = {
-        formData: newFormData,
-      };
-    }
-
-    if (removeEmptyOptionalObjects) {
-      newFormData = removeOptionalEmptyObjects(
-        schemaUtils.getValidator(),
-        schema,
-        schemaUtils.getRootSchema(),
-        newFormData,
-      ) as T;
-      state = {
-        ...state,
-        formData: newFormData,
-      };
-    }
-
-    if (newErrorSchema) {
-      // First check to see if there is an existing validation error on this path...
-      // @ts-expect-error TS2590, because getting from the error schema is confusing TS
-      const oldValidationError = !isRootPath ? _get(schemaValidationErrorSchema, path) : schemaValidationErrorSchema;
-      // If there is an old validation error for this path, assume we are updating it directly
-      if (!_isEmpty(oldValidationError)) {
-        // Update the originalErrorSchema "in place" or replace it if it is the root
-        if (!isRootPath) {
-          _set(originalErrorSchema, path, newErrorSchema);
-        } else {
-          originalErrorSchema = newErrorSchema;
-        }
-      } else {
-        if (!customErrors) {
-          customErrors = new ErrorSchemaBuilder<T>();
-        }
-        if (isRootPath) {
-          const errors = _get(newErrorSchema, ERRORS_KEY);
-          if (errors) {
-            // only set errors when there are some
-            customErrors.setErrors(errors);
-          }
-        } else {
-          _set(customErrors.ErrorSchema, path, newErrorSchema);
-        }
-      }
-    } else if (customErrors && _get(customErrors.ErrorSchema, [...path, ERRORS_KEY])) {
-      // If we have custom errors and the path has an error, then we need to clear it
-      customErrors.clearErrors(path);
-    }
-    // If there are pending changes in the queue, skip live validation since it will happen with the last change
-    if (mustValidate && this.pendingChanges.length === 1) {
-      const liveValidation = this.liveValidate(
-        schema,
-        schemaUtils,
-        originalErrorSchema,
-        newFormData,
-        extraErrors,
-        customErrors,
-        retrievedSchema,
-      );
-      state = { formData: newFormData, ...liveValidation, customErrors };
-    } else if (!noValidate && newErrorSchema) {
-      // Merging 'newErrorSchema' into 'errorSchema' to display the custom raised errors.
-      const mergedErrors = this.mergeErrors({ errorSchema: originalErrorSchema, errors }, extraErrors, customErrors);
-      state = {
-        formData: newFormData,
-        ...mergedErrors,
-        customErrors,
-      };
-    }
-    this.setState(state as FormState<T, S, F>, () => {
-      if (onChange) {
-        onChange(toIChangeEvent({ ...this.state, ...state }), id);
-      }
-      // Now remove the change we just completed and call this again
-      this.pendingChanges.shift();
-      this.processPendingChange();
-    });
-  }
-
-  /**
-   * If the retrievedSchema has changed the new retrievedSchema is returned.
-   * Otherwise, the old retrievedSchema is returned to persist reference.
-   * -  This ensures that AJV retrieves the schema from the cache when it has not changed,
-   *    avoiding the performance cost of recompiling the schema.
-   *
-   * @param retrievedSchema The new retrieved schema.
-   * @returns The new retrieved schema if it has changed, else the old retrieved schema.
-   */
-  private updateRetrievedSchema(retrievedSchema: S) {
-    const isTheSame = deepEquals(retrievedSchema, this.state?.retrievedSchema);
-    return isTheSame ? this.state.retrievedSchema : retrievedSchema;
-  }
-
-  /**
-   * Callback function to handle reset form data.
-   * - Reset all fields with default values.
-   * - Reset validations and errors
-   *
-   */
-  reset = () => {
-    // Cast the IS_RESET symbol to T to avoid type issues, we use this symbol to detect reset mode
-    const { formData: propsFormData, initialFormData = IS_RESET as T, onChange } = this.props;
-    const newState = this.getStateFromProps(
-      this.props,
-      propsFormData ?? initialFormData,
-      undefined,
-      undefined,
-      undefined,
-      true,
-    );
-    const newFormData = newState.formData;
-    const state = {
-      formData: newFormData,
-      errorSchema: {},
-      errors: [] as unknown,
-      schemaValidationErrors: [] as unknown,
-      schemaValidationErrorSchema: {},
-      initialDefaultsGenerated: false,
-      customErrors: undefined,
-    } as FormState<T, S, F>;
-
-    this.setState(state, () => onChange && onChange(toIChangeEvent({ ...this.state, ...state })));
-  };
-
-  /** Callback function to handle when a field on the form is blurred. Calls the `onBlur` callback for the `Form` if it
-   * was provided. Also runs any live validation and/or live omit operations if the flags indicate they should happen
-   * during `onBlur`.
-   *
-   * @param id - The unique `id` of the field that was blurred
-   * @param data - The data associated with the field that was blurred
-   */
-  onBlur = (id: string, data: any) => {
-    const { onBlur, omitExtraData, liveOmit, liveValidate, removeEmptyOptionalObjects } = this.props;
-    if (onBlur) {
-      onBlur(id, data);
-    }
-    if ((omitExtraData === true && liveOmit === 'onBlur') || liveValidate === 'onBlur') {
-      const { onChange, extraErrors } = this.props;
-      const { formData, schemaUtils, schema } = this.state;
-      let newFormData: T | undefined = formData;
-      let state: Partial<FormState<T, S, F>> = { formData: newFormData };
-      if (omitExtraData === true && liveOmit === 'onBlur') {
-        newFormData = this.omitExtraData(formData);
-        state = { formData: newFormData };
-      }
-      if (removeEmptyOptionalObjects) {
-        newFormData = removeOptionalEmptyObjects(
-          schemaUtils.getValidator(),
-          schema,
-          schemaUtils.getRootSchema(),
-          newFormData,
-        ) as T;
-        state = { ...state, formData: newFormData };
-      }
-      if (liveValidate === 'onBlur') {
-        const { schema, schemaUtils, errorSchema, customErrors, retrievedSchema } = this.state;
-        const liveValidation = this.liveValidate(
-          schema,
-          schemaUtils,
-          errorSchema,
-          newFormData,
-          extraErrors,
-          customErrors,
-          retrievedSchema,
-        );
-        state = { formData: newFormData, ...liveValidation, customErrors };
-      }
-      const hasChanges = Object.keys(state)
-        // Filter out `schemaValidationErrors` and `schemaValidationErrorSchema` since they aren't IChangeEvent props
-        .filter((key) => !key.startsWith('schemaValidation'))
-        .some((key) => {
-          const oldData = _get(this.state, key);
-          const newData = _get(state, key);
-          return !deepEquals(oldData, newData);
-        });
-      this.setState(state as FormState<T, S, F>, () => {
-        if (onChange && hasChanges) {
-          onChange(toIChangeEvent({ ...this.state, ...state }), id);
-        }
-      });
-    }
-  };
-
-  /** Callback function to handle when a field on the form is focused. Calls the `onFocus` callback for the `Form` if it
-   * was provided.
-   *
-   * @param id - The unique `id` of the field that was focused
-   * @param data - The data associated with the field that was focused
-   */
-  onFocus = (id: string, data: any) => {
-    const { onFocus } = this.props;
-    if (onFocus) {
-      onFocus(id, data);
-    }
-  };
-
-  /** Callback function to handle when the form is submitted. First, it prevents the default event behavior. Nothing
-   * happens if the target and currentTarget of the event are not the same. It will omit any extra data in the
-   * `formData` in the state if `omitExtraData` is true. It will validate the resulting `formData`, reporting errors
-   * via the `onError()` callback unless validation is disabled. Finally, it will add in any `extraErrors` and then call
-   * back the `onSubmit` callback if it was provided.
-   *
-   * @param event - The submit HTML form event
-   */
-  onSubmit = (event: FormEvent<any>) => {
-    event.preventDefault();
-    if (event.target !== event.currentTarget) {
-      return;
-    }
-
-    event.persist();
-    const { omitExtraData, extraErrors, noValidate, onSubmit, removeEmptyOptionalObjects } = this.props;
-    let { formData: newFormData } = this.state;
-
-    if (omitExtraData === true) {
-      newFormData = this.omitExtraData(newFormData);
-    }
-
-    if (removeEmptyOptionalObjects) {
-      const { schemaUtils, schema } = this.state;
-      newFormData = removeOptionalEmptyObjects(
-        schemaUtils.getValidator(),
-        schema,
-        schemaUtils.getRootSchema(),
-        newFormData,
-      ) as T;
-    }
-
-    if (noValidate || this.validateFormWithFormData(newFormData)) {
-      // There are no errors generated through schema validation.
-      // Check for user provided errors and update state accordingly.
-      const errorSchema = extraErrors || {};
-      const errors = extraErrors ? toErrorList(extraErrors) : [];
-      this.setState(
-        {
-          formData: newFormData,
-          errors,
-          errorSchema,
-          schemaValidationErrors: [],
-          schemaValidationErrorSchema: {},
-        },
-        () => {
-          if (onSubmit) {
-            onSubmit(toIChangeEvent({ ...this.state, formData: newFormData }, 'submitted'), event);
-          }
-        },
-      );
-    }
-  };
-
-  /** Extracts the `GlobalFormOptions` from the given Form `props`
-   *
-   * @param props - The form props to extract the global form options from
-   * @returns - The `GlobalFormOptions` from the props
-   * @private
-   */
-  private getGlobalFormOptions(props: FormProps<T, S, F>): GlobalFormOptions {
-    const {
-      uiSchema = {},
-      experimental_componentUpdateStrategy,
-      idSeparator = DEFAULT_ID_SEPARATOR,
-      idPrefix = DEFAULT_ID_PREFIX,
-      nameGenerator,
-      useFallbackUiForUnsupportedType = false,
-    } = props;
-    const rootFieldId = uiSchema['ui:rootFieldId'];
-    // Omit any options that are undefined or null
-    return {
-      idPrefix: rootFieldId || idPrefix,
-      idSeparator,
-      useFallbackUiForUnsupportedType,
-      ...(experimental_componentUpdateStrategy !== undefined && { experimental_componentUpdateStrategy }),
-      ...(nameGenerator !== undefined && { nameGenerator }),
-    };
-  }
-
-  /** Computed the registry for the form using the given `props`, `schema` and `schemaUtils` */
-  getRegistry(props: FormProps<T, S, F>, schema: S, schemaUtils: SchemaUtilsType<T, S, F>): Registry<T, S, F> {
-    const { translateString: customTranslateString, uiSchema = {} } = props;
-    const { fields, templates, widgets, formContext, translateString } = getDefaultRegistry<T, S, F>();
-    return {
-      fields: { ...fields, ...props.fields },
-      templates: {
-        ...templates,
-        ...props.templates,
-        ButtonTemplates: {
-          ...templates.ButtonTemplates,
-          ...props.templates?.ButtonTemplates,
-        },
-      },
-      widgets: { ...widgets, ...props.widgets },
-      rootSchema: schema,
-      formContext: props.formContext || formContext,
-      schemaUtils,
-      translateString: customTranslateString || translateString,
-      globalUiOptions: uiSchema[UI_GLOBAL_OPTIONS_KEY],
-      globalFormOptions: this.getGlobalFormOptions(props),
-      uiSchemaDefinitions: uiSchema[UI_DEFINITIONS_KEY] ?? {},
-    };
-  }
-
-  /** Provides a function that can be used to programmatically submit the `Form` */
-  submit = () => {
-    if (this.formElement.current) {
-      const submitCustomEvent = new CustomEvent('submit', {
-        cancelable: true,
-      });
-      submitCustomEvent.preventDefault();
-      this.formElement.current.dispatchEvent(submitCustomEvent);
-      this.formElement.current.requestSubmit();
-    }
-  };
-
-  /** Attempts to focus on the field associated with the `error`. Uses the `property` field to compute path of the error
-   * field, then, using the `idPrefix` and `idSeparator` converts that path into an id. Then the input element with that
-   * id is attempted to be found using the `formElement` ref. If it is located, then it is focused.
-   *
-   * @param error - The error on which to focus
-   */
-  focusOnError(error: RJSFValidationError) {
-    const { idPrefix = 'root', idSeparator = '_' } = this.props;
-    const { property } = error;
-    const path = _toPath(property);
-    if (path[0] === '') {
-      // Most of the time the `.foo` property results in the first element being empty, so replace it with the idPrefix
-      path[0] = idPrefix;
-    } else {
-      // Otherwise insert the idPrefix into the first location using unshift
-      path.unshift(idPrefix);
-    }
-
-    const elementId = path.join(idSeparator);
-    let field = this.formElement.current.elements[elementId];
-    if (!field) {
-      // if not an exact match, try finding a focusable element starting with the element id (like radio buttons or checkboxes)
-      // some themes (e.g. shadcn) use button elements instead of native inputs for radio groups
-      field = this.formElement.current.querySelector(`input[id^="${elementId}"], button[id^="${elementId}"]`);
-    }
-    if (field && field.length) {
-      // If we got a list with length > 0
-      field = field[0];
-    }
-    if (field) {
-      field.focus();
-    }
-  }
-
-  /** Validates the form using the given `formData`. For use on form submission or on programmatic validation.
-   * If `onError` is provided, then it will be called with the list of errors.
-   *
-   * @param formData - The form data to validate
-   * @returns - True if the form is valid, false otherwise.
-   */
-  validateFormWithFormData = (formData?: T): boolean => {
-    const { extraErrors, extraErrorsBlockSubmit, focusOnFirstError, onError } = this.props;
-    const { errors: prevErrors } = this.state;
-    const schemaValidation = this.validate(formData);
-    // Always merge extraErrors so they remain visible in state regardless of extraErrorsBlockSubmit.
-    const { errors, errorSchema } = extraErrors ? this.mergeErrors(schemaValidation, extraErrors) : schemaValidation;
-    // hasError gates submission: schema errors always block; extraErrors only block when
-    // extraErrorsBlockSubmit is set (non-breaking default: extraErrors are informational only).
-    const hasError = schemaValidation.errors.length > 0 || (extraErrors && extraErrorsBlockSubmit);
-    if (hasError) {
-      if (focusOnFirstError) {
-        if (typeof focusOnFirstError === 'function') {
-          focusOnFirstError(errors[0]);
-        } else {
-          this.focusOnError(errors[0]);
-        }
-      }
-      this.setState(
-        {
-          errors,
-          errorSchema,
-          schemaValidationErrors: schemaValidation.errors,
-          schemaValidationErrorSchema: schemaValidation.errorSchema,
-        },
-        () => {
-          if (onError) {
-            onError(errors);
-          } else {
-            console.error('Form validation failed', errors);
-          }
-        },
-      );
-    } else if (errors.length > 0) {
-      // Non-blocking extraErrors are present — update display state without triggering onError.
-      this.setState({
-        errors,
-        errorSchema,
-        schemaValidationErrors: [],
-        schemaValidationErrorSchema: {},
-      });
-    } else if (prevErrors.length > 0) {
-      this.setState({
-        errors: [],
-        errorSchema: {},
-        schemaValidationErrors: [],
-        schemaValidationErrorSchema: {},
-      });
-    }
-    return !hasError;
-  };
-
-  /** Programmatically validate the form.  If `omitExtraData` is true, the `formData` will first be filtered to remove
-   * any extra data not in a form field. If `onError` is provided, then it will be called with the list of errors the
-   * same way as would happen on form submission.
-   *
-   * @returns - True if the form is valid, false otherwise.
-   */
-  validateForm() {
-    const { omitExtraData, removeEmptyOptionalObjects } = this.props;
-    let { formData: newFormData } = this.state;
-    if (omitExtraData === true) {
-      newFormData = this.omitExtraData(newFormData);
-    }
-    if (removeEmptyOptionalObjects) {
-      const { schemaUtils, schema } = this.state;
-      newFormData = removeOptionalEmptyObjects(
-        schemaUtils.getValidator(),
-        schema,
-        schemaUtils.getRootSchema(),
-        newFormData,
-      ) as T;
-    }
-    return this.validateFormWithFormData(newFormData);
-  }
-
-  /** Renders the `Form` fields inside the <form> | `tagName` or `_internalFormWrapper`, rendering any errors if
-   * needed along with the submit button or any children of the form.
-   */
-  render() {
-    const {
-      children,
-      id,
-      className = '',
-      tagName,
-      name,
-      method,
-      target,
-      action,
-      autoComplete,
-      enctype,
-      acceptCharset,
-      noHtml5Validate = false,
-      disabled,
-      readonly,
-      showErrorList = 'top',
-      _internalFormWrapper,
-    } = this.props;
-
-    const { schema, uiSchema, formData, errorSchema, fieldPathId, registry } = this.state;
-    const { SchemaField: _SchemaField } = registry.fields;
-    const { SubmitButton } = registry.templates.ButtonTemplates;
-    // The `semantic-ui` and `material-ui` themes have `_internalFormWrapper`s that take an `as` prop that is the
-    // PropTypes.elementType to use for the inner tag, so we'll need to pass `tagName` along if it is provided.
-    // NOTE, the `as` prop is native to `semantic-ui` and is emulated in the `material-ui` theme
-    const as = _internalFormWrapper ? tagName : undefined;
-    const FormTag = _internalFormWrapper || tagName || 'form';
-
-    let { [SUBMIT_BTN_OPTIONS_KEY]: submitOptions = {} } = getUiOptions<T, S, F>(uiSchema);
-    if (disabled) {
-      submitOptions = { ...submitOptions, props: { ...submitOptions.props, disabled: true } };
-    }
-    const submitUiSchema = { [UI_OPTIONS_KEY]: { [SUBMIT_BTN_OPTIONS_KEY]: submitOptions } };
-
-    return (
-      <FormTag
-        className={className ? className : 'rjsf'}
-        id={id}
-        name={name}
-        method={method}
-        target={target}
-        action={action}
-        autoComplete={autoComplete}
-        encType={enctype}
-        acceptCharset={acceptCharset}
-        noValidate={noHtml5Validate}
-        onSubmit={this.onSubmit}
-        as={as}
-        ref={this.formElement}
-      >
-        {showErrorList === 'top' && this.renderErrors(registry)}
-        <_SchemaField
-          name=''
-          schema={schema}
-          uiSchema={uiSchema}
-          errorSchema={errorSchema}
-          fieldPathId={fieldPathId}
-          formData={formData}
-          onChange={this.onChange}
-          onBlur={this.onBlur}
-          onFocus={this.onFocus}
-          registry={registry}
-          disabled={disabled}
-          readonly={readonly}
-        />
-
-        {children ? children : <SubmitButton uiSchema={submitUiSchema} registry={registry} />}
-        {showErrorList === 'bottom' && this.renderErrors(registry)}
-      </FormTag>
-    );
-  }
+  return (
+    <FormTag
+      className={className ? className : 'rjsf'}
+      id={id}
+      name={name}
+      method={method}
+      target={target}
+      action={action}
+      autoComplete={autoComplete}
+      encType={enctype}
+      acceptCharset={acceptCharset}
+      noValidate={noHtml5Validate}
+      onSubmit={onSubmit}
+      as={as}
+      ref={formElement}
+    >
+      {showErrorList === 'top' && renderErrors()}
+      <_SchemaField
+        name=''
+        schema={schema}
+        uiSchema={uiSchema}
+        errorSchema={errorSchema}
+        fieldPathId={fieldPathId}
+        formData={formData}
+        onChange={onChange}
+        onBlur={onBlur}
+        onFocus={onFocus}
+        registry={registry}
+        disabled={disabled}
+        readonly={readonly}
+      />
+      {children ? children : <SubmitButton uiSchema={submitUiSchema} registry={registry} />}
+      {showErrorList === 'bottom' && renderErrors()}
+    </FormTag>
+  );
 }
+
+/** Props-level comparator that honors `experimental_componentUpdateStrategy`. Replaces the legacy class component's
+ * `shouldComponentUpdate` bail-out at the render-gate level. Note: this only compares props — state-level bail-outs
+ * from the class's `shouldRender` are implicitly handled by only dispatching when state actually changes.
+ */
+function arePropsEqual<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  prev: FormProps<T, S, F>,
+  next: FormProps<T, S, F>,
+): boolean {
+  const strategy: ComponentUpdateStrategy = next.experimental_componentUpdateStrategy ?? 'customDeep';
+  if (strategy === 'always') {
+    return false;
+  }
+  if (strategy === 'shallow') {
+    return shallowEquals(prev, next);
+  }
+  return deepEquals(prev, next);
+}
+
+// Wrap with `forwardRef` so the `ref` prop is delivered as a second argument, then with `React.memo` to honor the
+// `experimental_componentUpdateStrategy` prop. The outer cast preserves the generic type parameters (both
+// `forwardRef` and `memo` drop generics otherwise — a known TypeScript/React limitation).
+const Form = memo(forwardRef(FormInner as any), arePropsEqual as any) as <
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>(
+  props: FormProps<T, S, F> & { ref?: Ref<FormRef<T>> },
+) => ReactElement | null;
+
+export default Form;
