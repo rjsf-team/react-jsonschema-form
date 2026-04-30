@@ -20,11 +20,11 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/utils
 
-- Switched `deepEquals` from `lodash.isEqualWith` to `fast-equals.createCustomEqual` with cycle detection enabled, and replaced direct `lodash.isEqual` usage in `useDeepCompareMemo`, `isRootSchema`, and `findSelectedOptionInXxxOf` with `deepEquals`, addressing [#4291](https://github.com/rjsf-team/react-jsonschema-form/issues/4291).
+- Switched `deepEquals` from `lodash.isEqualWith` to `fast-equals.createCustomEqual` with cycle detection enabled, and replaced direct `lodash.isEqual` usage in `useDeepCompareMemo`, `isRootSchema`, and `findSelectedOptionInXxxOf` with `deepEquals`, fixing [#4291](https://github.com/rjsf-team/react-jsonschema-form/issues/4291).
 
 ## @rjsf/validator-ajv8
 
-- Cached the most recent `rootSchema` reference in `handleSchemaUpdate` so repeated `isValid` calls with the same root schema skip the deep-equality check and Ajv re-registration, addressing [#4291](https://github.com/rjsf-team/react-jsonschema-form/issues/4291).
+- Cached the most recent `rootSchema` reference in `handleSchemaUpdate` so repeated `isValid` calls with the same root schema skip the deep-equality check and Ajv re-registration, fixing [#4291](https://github.com/rjsf-team/react-jsonschema-form/issues/4291).
 
 ## Dev / docs / playground
 
