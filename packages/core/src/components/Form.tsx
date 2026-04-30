@@ -896,7 +896,11 @@ export default class Form<
     const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, onChange, removeEmptyOptionalObjects } =
       this.props;
     const { formData: oldFormData, schemaUtils, schema, fieldPathId, schemaValidationErrorSchema, errors } = this.state;
-    let { customErrors, errorSchema: originalErrorSchema } = this.state;
+    let { customErrors } = this.state;
+    // Use the un-merged AJV-only schema as the base for re-merging extraErrors. Mirrors the
+    // pattern in getStateFromProps/getDerivedStateFromProps and avoids the duplication that
+    // happened when state.errorSchema (already containing merged extraErrors) was passed in.
+    let mergeBaseErrorSchema: ErrorSchema<T> = schemaValidationErrorSchema as ErrorSchema<T>;
     const rootPathId = fieldPathId.path[0] || '';
 
     const isRootPath = !path || path.length === 0 || (path.length === 1 && path[0] === rootPathId);
@@ -958,11 +962,13 @@ export default class Form<
       const oldValidationError = !isRootPath ? _get(schemaValidationErrorSchema, path) : schemaValidationErrorSchema;
       // If there is an old validation error for this path, assume we are updating it directly
       if (!_isEmpty(oldValidationError)) {
-        // Update the originalErrorSchema "in place" or replace it if it is the root
+        // Apply the user-supplied newErrorSchema onto a clone of the AJV-only base, so that
+        // mergeErrors below sees the user's error at this path without mutating shared state.
         if (!isRootPath) {
-          _set(originalErrorSchema, path, newErrorSchema);
+          mergeBaseErrorSchema = _cloneDeep(schemaValidationErrorSchema) as ErrorSchema<T>;
+          _set(mergeBaseErrorSchema, path, newErrorSchema);
         } else {
-          originalErrorSchema = newErrorSchema;
+          mergeBaseErrorSchema = newErrorSchema as ErrorSchema<T>;
         }
       } else {
         if (!customErrors) {
@@ -987,7 +993,7 @@ export default class Form<
       const liveValidation = this.liveValidate(
         schema,
         schemaUtils,
-        originalErrorSchema,
+        mergeBaseErrorSchema,
         newFormData,
         extraErrors,
         customErrors,
@@ -996,7 +1002,7 @@ export default class Form<
       state = { formData: newFormData, ...liveValidation, customErrors };
     } else if (!noValidate && newErrorSchema) {
       // Merging 'newErrorSchema' into 'errorSchema' to display the custom raised errors.
-      const mergedErrors = this.mergeErrors({ errorSchema: originalErrorSchema, errors }, extraErrors, customErrors);
+      const mergedErrors = this.mergeErrors({ errorSchema: mergeBaseErrorSchema, errors }, extraErrors, customErrors);
       state = {
         formData: newFormData,
         ...mergedErrors,

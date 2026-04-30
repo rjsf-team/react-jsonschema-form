@@ -18,6 +18,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.5.2
 
+## @rjsf/core
+
+- Fixed `processPendingChange()` using `originalErrorSchema` (which already contains merged `extraErrors`) as the base for `mergeErrors()`, causing sibling-field `extraErrors` to accumulate duplicate entries on every array mutation, fixing [#5041](https://github.com/rjsf-team/react-jsonschema-form/issues/5041)
+
 ## @rjsf/utils
 
 - Switched `deepEquals` from `lodash.isEqualWith` to `fast-equals.createCustomEqual` with cycle detection enabled, and replaced direct `lodash.isEqual` usage in `useDeepCompareMemo`, `isRootSchema`, and `findSelectedOptionInXxxOf` with `deepEquals`, fixing [#4291](https://github.com/rjsf-team/react-jsonschema-form/issues/4291).
