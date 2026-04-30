@@ -144,6 +144,54 @@ describe('AJV8Validator', () => {
         getSchemaSpy.mockRestore();
         expect(compileSpy).toHaveBeenCalledTimes(1);
       });
+      it('skips Ajv re-registration when handleSchemaUpdate is called repeatedly with the same rootSchema reference', () => {
+        const localValidator = new AJV8Validator({});
+        const rootSchema: RJSFSchema = {
+          type: 'object',
+          properties: { foo: { type: 'string' } },
+        };
+
+        const addSchemaSpy = jest.spyOn(localValidator.ajv, 'addSchema');
+        const removeSchemaSpy = jest.spyOn(localValidator.ajv, 'removeSchema');
+
+        localValidator.handleSchemaUpdate(rootSchema);
+        localValidator.handleSchemaUpdate(rootSchema);
+        localValidator.handleSchemaUpdate(rootSchema);
+        localValidator.handleSchemaUpdate(rootSchema);
+
+        expect(addSchemaSpy).toHaveBeenCalledTimes(1);
+        expect(removeSchemaSpy).not.toHaveBeenCalled();
+
+        addSchemaSpy.mockRestore();
+        removeSchemaSpy.mockRestore();
+      });
+      it('falls back to deep-equality when handleSchemaUpdate receives a different rootSchema reference', () => {
+        const localValidator = new AJV8Validator({});
+        const rootSchemaA: RJSFSchema = {
+          type: 'object',
+          properties: { foo: { type: 'string' } },
+        };
+        const rootSchemaAClone: RJSFSchema = JSON.parse(JSON.stringify(rootSchemaA));
+        const rootSchemaB: RJSFSchema = {
+          type: 'object',
+          properties: { foo: { type: 'number' } },
+        };
+
+        const addSchemaSpy = jest.spyOn(localValidator.ajv, 'addSchema');
+        const removeSchemaSpy = jest.spyOn(localValidator.ajv, 'removeSchema');
+
+        localValidator.handleSchemaUpdate(rootSchemaA);
+        localValidator.handleSchemaUpdate(rootSchemaAClone);
+        expect(addSchemaSpy).toHaveBeenCalledTimes(1);
+        expect(removeSchemaSpy).not.toHaveBeenCalled();
+
+        localValidator.handleSchemaUpdate(rootSchemaB);
+        expect(removeSchemaSpy).toHaveBeenCalledTimes(1);
+        expect(addSchemaSpy).toHaveBeenCalledTimes(2);
+
+        addSchemaSpy.mockRestore();
+        removeSchemaSpy.mockRestore();
+      });
     });
     describe('validator.validateFormData()', () => {
       describe('No custom validate function, single value', () => {

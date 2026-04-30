@@ -44,6 +44,18 @@ export default class AJV8Validator<
    */
   readonly suppressDuplicateFiltering?: SuppressDuplicateFilteringType;
 
+  /** Most recent `rootSchema` reference processed by `handleSchemaUpdate`.
+   *
+   * @private
+   */
+  private lastSeenRootSchema?: S;
+
+  /** True once a `rootSchema` has been registered with Ajv in this lifecycle.
+   *
+   * @private
+   */
+  private hasRegisteredRootSchema = false;
+
   /** Constructs an `AJV8Validator` instance using the `options`
    *
    * @param options - The `CustomValidatorOptionsType` options that are used to create the AJV instance
@@ -75,6 +87,8 @@ export default class AJV8Validator<
    */
   reset() {
     this.ajv.removeSchema();
+    this.lastSeenRootSchema = undefined;
+    this.hasRegisteredRootSchema = false;
   }
 
   /** Runs the pure validation of the `schema` and `formData` without any of the RJSF functionality. Provided for use
@@ -181,9 +195,14 @@ export default class AJV8Validator<
 
   /**
    * This function checks if a schema needs to be added and if the root schemas don't match it removes the old root schema from the ajv instance and adds the new one.
+   * When called repeatedly with the same `rootSchema` reference the deep-equality check is skipped.
+   *
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
   handleSchemaUpdate(rootSchema: S): void {
+    if (this.lastSeenRootSchema === rootSchema && this.hasRegisteredRootSchema) {
+      return;
+    }
     const rootSchemaId = rootSchema[ID_KEY] ?? ROOT_SCHEMA_PREFIX;
     // add the rootSchema ROOT_SCHEMA_PREFIX as id.
     // if schema validator instance doesn't exist, add it.
@@ -194,6 +213,8 @@ export default class AJV8Validator<
       this.ajv.removeSchema(rootSchemaId);
       this.ajv.addSchema(rootSchema, rootSchemaId);
     }
+    this.lastSeenRootSchema = rootSchema;
+    this.hasRegisteredRootSchema = true;
   }
 
   /** Validates data against a schema, returning true if the data is valid, or
