@@ -31,6 +31,20 @@ export function getMuiProps<
   return muiProps;
 }
 
+/**
+ * Merges default `sx` props with any `sx` provided on a MUI component's props, returning a value
+ * suitable for passing directly to the MUI `sx` prop.
+ *
+ * When `muiProps.sx` is an array (only valid for `GridProps`), the default sx object is prepended
+ * to produce an `sx` array, preserving MUI's array-merge semantics. Otherwise the two objects are
+ * shallow-merged, with `muiProps.sx` taking precedence over the `sxProps`.
+ *
+ * If `muiProps` is omitted the `sxProps`` are returned as-is.
+ *
+ * @param sxProps - The default sx styles to apply
+ * @param [muiProps] - The MUI component props that may contain a user-supplied `sx`
+ * @returns - The merged sx value
+ */
 export function computeSxProps<MuiProps extends GridProps>(
   sxProps: SxProps,
   muiProps: MuiProps & { sx: any[] },
