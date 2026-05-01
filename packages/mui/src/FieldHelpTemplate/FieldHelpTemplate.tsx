@@ -9,7 +9,7 @@ import {
   GenericObjectType,
 } from '@rjsf/utils';
 import FormHelperText, { FormHelperTextProps } from '@mui/material/FormHelperText';
-import { getMuiProps } from '../util';
+import { computeSxProps, getMuiProps } from '../util';
 
 /** Properties available for the `rjsfSlotProps` target of the FieldHelpTemplate. */
 export interface FieldHelpTemplateMuiProps extends GenericObjectType {
@@ -35,15 +35,14 @@ export default function FieldHelpTemplate<
   }
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const muiProps = getMuiProps<T, S, F, FieldHelpTemplateMuiProps>(uiOptions);
-  const { rjsfSlotProps: muiSlotProps } = muiProps;
+  const { rjsfSlotProps: { helpFormHelperText } = {} } = getMuiProps<T, S, F, FieldHelpTemplateMuiProps>(uiOptions);
 
   return (
     <FormHelperText
       component='div'
       id={helpId(fieldPathId)}
-      style={{ marginTop: '5px' }}
-      {...muiSlotProps?.helpFormHelperText}
+      {...helpFormHelperText}
+      sx={computeSxProps<FormHelperTextProps>({ mt: 0.625 }, helpFormHelperText)}
     >
       <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
     </FormHelperText>

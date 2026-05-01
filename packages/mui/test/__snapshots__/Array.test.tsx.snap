@@ -356,7 +356,7 @@ exports[`array fields array 1`] = `
       class="MuiBox-root emotion-8"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-9"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-9"
         tabindex="0"
         type="submit"
       >
@@ -447,6 +447,7 @@ exports[`array fields array icons 1`] = `
   width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 @media (min-width:600px) {
@@ -1176,7 +1177,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-4"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-5"
@@ -1321,7 +1321,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-4"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-5"
@@ -1500,7 +1499,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
       class="MuiBox-root emotion-48"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-49"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-49"
         tabindex="0"
         type="submit"
       >
@@ -1959,13 +1958,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
               aria-hidden="true"
               aria-invalid="false"
               class="MuiSelect-nativeInput emotion-4"
+              id=":r7:"
               name="root"
               tabindex="-1"
               value=""
             />
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconOutlined emotion-5"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon emotion-5"
               data-testid="ArrowDropDownIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -1997,7 +1997,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       class="MuiBox-root emotion-8"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-9"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-9"
         tabindex="0"
         type="submit"
       >
@@ -2045,6 +2045,7 @@ exports[`array fields empty errors array 1`] = `
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-1>* {
@@ -2070,6 +2071,7 @@ exports[`array fields empty errors array 1`] = `
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-4 {
@@ -2455,11 +2457,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
       >
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-string"
@@ -2515,7 +2515,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
       class="MuiBox-root emotion-10"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-11"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-11"
         tabindex="0"
         type="submit"
       >
@@ -2606,6 +2606,7 @@ exports[`array fields fixed array 1`] = `
   width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 @media (min-width:600px) {
@@ -2999,7 +3000,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-4"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-5"
@@ -3063,7 +3063,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-4"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-5"
@@ -3131,7 +3130,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
       class="MuiBox-root emotion-25"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-26"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-26"
         tabindex="0"
         type="submit"
       >
@@ -3205,7 +3204,7 @@ exports[`array fields has errors 1`] = `
 }
 
 .emotion-5 {
-  min-width: 56px;
+  min-width: 36px;
   color: rgba(0, 0, 0, 0.54);
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
@@ -3243,8 +3242,11 @@ exports[`array fields has errors 1`] = `
   margin-bottom: 4px;
 }
 
-.emotion-7 .MuiTypography-root:where( .MuiListItemText-primary),
-.emotion-7 .MuiTypography-root:where( .MuiListItemText-secondary) {
+.MuiTypography-root:where(.emotion-7 .MuiListItemText-primary) {
+  display: block;
+}
+
+.MuiTypography-root:where(.emotion-7 .MuiListItemText-secondary) {
   display: block;
 }
 
@@ -3292,6 +3294,7 @@ exports[`array fields has errors 1`] = `
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-10>* {
@@ -3317,6 +3320,7 @@ exports[`array fields has errors 1`] = `
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-13 {
@@ -3804,11 +3808,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
       >
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-10"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-11"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-string rjsf-field-error"
@@ -3879,7 +3881,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
       class="MuiBox-root emotion-22"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-23"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-23"
         tabindex="0"
         type="submit"
       >
@@ -3927,6 +3929,7 @@ exports[`array fields no errors 1`] = `
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-1>* {
@@ -3952,6 +3955,7 @@ exports[`array fields no errors 1`] = `
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-4 {
@@ -4337,11 +4341,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
       >
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-string"
@@ -4397,7 +4399,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
       class="MuiBox-root emotion-10"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-11"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-11"
         tabindex="0"
         type="submit"
       >
@@ -4488,6 +4490,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
   width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 @media (min-width:600px) {
@@ -4564,6 +4567,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-9>* {
@@ -4589,6 +4593,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-12 {
@@ -5339,7 +5344,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-4"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-5"
@@ -5359,11 +5363,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
                         >
                           <div
                             class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-9"
-                            style="margin-top: 10px;"
                           >
                             <div
                               class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-10"
-                              style="margin-bottom: 10px;"
                             >
                               <div
                                 class="rjsf-field rjsf-field-string"
@@ -5414,7 +5416,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
                             </div>
                             <div
                               class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-10"
-                              style="margin-bottom: 10px;"
                             >
                               <div
                                 class="rjsf-field rjsf-field-number"
@@ -5539,7 +5540,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-4"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-5"
@@ -5559,11 +5559,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
                         >
                           <div
                             class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-9"
-                            style="margin-top: 10px;"
                           >
                             <div
                               class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-10"
-                              style="margin-bottom: 10px;"
                             >
                               <div
                                 class="rjsf-field rjsf-field-string"
@@ -5614,7 +5612,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
                             </div>
                             <div
                               class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-10"
-                              style="margin-bottom: 10px;"
                             >
                               <div
                                 class="rjsf-field rjsf-field-number"
@@ -5773,7 +5770,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
       class="MuiBox-root emotion-68"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-69"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-69"
         tabindex="0"
         type="submit"
       >
@@ -5864,6 +5861,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
   width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 @media (min-width:600px) {
@@ -6593,7 +6591,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-4"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-5"
@@ -6719,7 +6716,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-4"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-5"
@@ -6879,7 +6875,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
       class="MuiBox-root emotion-44"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-45"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-45"
         tabindex="0"
         type="submit"
       >
@@ -7338,13 +7334,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
               aria-hidden="true"
               aria-invalid="false"
               class="MuiSelect-nativeInput emotion-4"
+              id=":r54:"
               name="root"
               tabindex="-1"
               value=""
             />
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconOutlined emotion-5"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon emotion-5"
               data-testid="ArrowDropDownIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -7376,7 +7373,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       class="MuiBox-root emotion-8"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-9"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-9"
         tabindex="0"
         type="submit"
       >
@@ -7467,6 +7464,7 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
   width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 @media (min-width:600px) {
@@ -7996,7 +7994,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-4"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-5"
@@ -8060,7 +8057,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-4"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-5"
@@ -8125,7 +8121,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-4"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-5"
@@ -8189,7 +8184,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
       class="MuiBox-root emotion-36"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-37"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-37"
         tabindex="0"
         type="submit"
       >
@@ -8280,6 +8275,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
   width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 @media (min-width:600px) {
@@ -9009,7 +9005,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-4"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-5"
@@ -9039,7 +9034,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                               >
                                 <div
                                   class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-4"
-                                  style="overflow: auto;"
                                 >
                                   <div
                                     class="MuiBox-root emotion-5"
@@ -9165,7 +9159,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                               >
                                 <div
                                   class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-4"
-                                  style="overflow: auto;"
                                 >
                                   <div
                                     class="MuiBox-root emotion-5"
@@ -9393,7 +9386,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-4"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-5"
@@ -9423,7 +9415,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                               >
                                 <div
                                   class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-4"
-                                  style="overflow: auto;"
                                 >
                                   <div
                                     class="MuiBox-root emotion-5"
@@ -9549,7 +9540,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                               >
                                 <div
                                   class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-4"
-                                  style="overflow: auto;"
                                 >
                                   <div
                                     class="MuiBox-root emotion-5"
@@ -9811,7 +9801,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
       class="MuiBox-root emotion-120"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-121"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-121"
         tabindex="0"
         type="submit"
       >
@@ -9902,6 +9892,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
   width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 @media (min-width:600px) {
@@ -9978,6 +9969,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-9>* {
@@ -10003,6 +9995,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-12 {
@@ -10753,7 +10746,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-4"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-5"
@@ -10773,11 +10765,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
                         >
                           <div
                             class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-9"
-                            style="margin-top: 10px;"
                           >
                             <div
                               class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-10"
-                              style="margin-bottom: 10px;"
                             >
                               <div
                                 class="rjsf-field rjsf-field-string"
@@ -10828,7 +10818,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
                             </div>
                             <div
                               class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-10"
-                              style="margin-bottom: 10px;"
                             >
                               <div
                                 class="rjsf-field rjsf-field-number"
@@ -10953,7 +10942,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-4"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-5"
@@ -10973,11 +10961,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
                         >
                           <div
                             class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-9"
-                            style="margin-top: 10px;"
                           >
                             <div
                               class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-10"
-                              style="margin-bottom: 10px;"
                             >
                               <div
                                 class="rjsf-field rjsf-field-string"
@@ -11028,7 +11014,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
                             </div>
                             <div
                               class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-10"
-                              style="margin-bottom: 10px;"
                             >
                               <div
                                 class="rjsf-field rjsf-field-number"
@@ -11187,7 +11172,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
       class="MuiBox-root emotion-68"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-69"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-69"
         tabindex="0"
         type="submit"
       >
@@ -11278,6 +11263,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
   width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 @media (min-width:600px) {
@@ -12007,7 +11993,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-4"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-5"
@@ -12133,7 +12118,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-4"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-5"
@@ -12293,7 +12277,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
       class="MuiBox-root emotion-44"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-45"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-45"
         tabindex="0"
         type="submit"
       >
@@ -12369,6 +12353,7 @@ exports[`with title and description array 1`] = `
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-7 {
@@ -12671,7 +12656,6 @@ exports[`with title and description array 1`] = `
             <h6
               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
               id="root__description"
-              style="margin-top: 5px;"
             >
               a test description
             </h6>
@@ -12714,7 +12698,7 @@ exports[`with title and description array 1`] = `
       class="MuiBox-root emotion-12"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-13"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-13"
         tabindex="0"
         type="submit"
       >
@@ -12790,6 +12774,7 @@ exports[`with title and description array icons 1`] = `
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-7 {
@@ -12839,6 +12824,7 @@ exports[`with title and description array icons 1`] = `
   width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 @media (min-width:600px) {
@@ -13670,7 +13656,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             <h6
               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
               id="root__description"
-              style="margin-top: 5px;"
             >
               a test description
             </h6>
@@ -13679,7 +13664,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-8"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-9"
@@ -13748,7 +13732,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                             <h6
                               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_0__description"
-                              style="margin-top: 5px;"
                             >
                               a test item description
                             </h6>
@@ -13846,7 +13829,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-8"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-9"
@@ -13915,7 +13897,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                             <h6
                               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_1__description"
-                              style="margin-top: 5px;"
                             >
                               a test item description
                             </h6>
@@ -14047,7 +14028,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
       class="MuiBox-root emotion-60"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-61"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-61"
         tabindex="0"
         type="submit"
       >
@@ -14422,6 +14403,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-11 {
@@ -14560,14 +14542,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
           aria-describedby="root__error root__description root__help"
           class="MuiFormControl-root MuiTextField-root emotion-1"
         >
-          <label
+          <div
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-2"
             data-shrink="false"
-            for="root"
             id="root-label"
           >
             Test field
-          </label>
+          </div>
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiSelect-root emotion-3"
           >
@@ -14591,13 +14572,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
               aria-hidden="true"
               aria-invalid="false"
               class="MuiSelect-nativeInput emotion-5"
+              id=":r12:"
               name="root"
               tabindex="-1"
               value=""
             />
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconOutlined emotion-6"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon emotion-6"
               data-testid="ArrowDropDownIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -14626,7 +14608,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
           <h6
             class="MuiTypography-root MuiTypography-subtitle2 emotion-10"
             id="root__description"
-            style="margin-top: 5px;"
           >
             a test description
           </h6>
@@ -14637,7 +14618,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
       class="MuiBox-root emotion-11"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-12"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-12"
         tabindex="0"
         type="submit"
       >
@@ -14713,6 +14694,7 @@ exports[`with title and description fixed array 1`] = `
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-7 {
@@ -14762,6 +14744,7 @@ exports[`with title and description fixed array 1`] = `
   width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 @media (min-width:600px) {
@@ -15238,7 +15221,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             <h6
               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
               id="root__description"
-              style="margin-top: 5px;"
             >
               a test description
             </h6>
@@ -15247,7 +15229,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-8"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-9"
@@ -15316,7 +15297,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                             <h6
                               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_0__description"
-                              style="margin-top: 5px;"
                             >
                               a test item description
                             </h6>
@@ -15333,7 +15313,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-8"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-9"
@@ -15403,7 +15382,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                             <h6
                               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_1__description"
-                              style="margin-top: 5px;"
                             >
                               a test item description
                             </h6>
@@ -15423,7 +15401,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
       class="MuiBox-root emotion-37"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-38"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-38"
         tabindex="0"
         type="submit"
       >
@@ -15499,6 +15477,7 @@ exports[`with title and description from both array 1`] = `
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-7 {
@@ -15801,7 +15780,6 @@ exports[`with title and description from both array 1`] = `
             <h6
               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
               id="root__description"
-              style="margin-top: 5px;"
             >
               a fancier description
             </h6>
@@ -15844,7 +15822,7 @@ exports[`with title and description from both array 1`] = `
       class="MuiBox-root emotion-12"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-13"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-13"
         tabindex="0"
         type="submit"
       >
@@ -15920,6 +15898,7 @@ exports[`with title and description from both array icons 1`] = `
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-7 {
@@ -15969,6 +15948,7 @@ exports[`with title and description from both array icons 1`] = `
   width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 @media (min-width:600px) {
@@ -16800,7 +16780,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             <h6
               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
               id="root__description"
-              style="margin-top: 5px;"
             >
               a fancier description
             </h6>
@@ -16809,7 +16788,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-8"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-9"
@@ -16878,7 +16856,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                             <h6
                               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_0__description"
-                              style="margin-top: 5px;"
                             >
                               a fancier item description
                             </h6>
@@ -16976,7 +16953,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-8"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-9"
@@ -17045,7 +17021,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                             <h6
                               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_1__description"
-                              style="margin-top: 5px;"
                             >
                               a fancier item description
                             </h6>
@@ -17177,7 +17152,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
       class="MuiBox-root emotion-60"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-61"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-61"
         tabindex="0"
         type="submit"
       >
@@ -17552,6 +17527,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-11 {
@@ -17690,14 +17666,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
           aria-describedby="root__error root__description root__help"
           class="MuiFormControl-root MuiTextField-root emotion-1"
         >
-          <label
+          <div
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-2"
             data-shrink="false"
-            for="root"
             id="root-label"
           >
             My Field
-          </label>
+          </div>
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiSelect-root emotion-3"
           >
@@ -17721,13 +17696,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
               aria-hidden="true"
               aria-invalid="false"
               class="MuiSelect-nativeInput emotion-5"
+              id=":r2c:"
               name="root"
               tabindex="-1"
               value=""
             />
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconOutlined emotion-6"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon emotion-6"
               data-testid="ArrowDropDownIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -17756,7 +17732,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
           <h6
             class="MuiTypography-root MuiTypography-subtitle2 emotion-10"
             id="root__description"
-            style="margin-top: 5px;"
           >
             a fancier description
           </h6>
@@ -17767,7 +17742,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
       class="MuiBox-root emotion-11"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-12"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-12"
         tabindex="0"
         type="submit"
       >
@@ -17843,6 +17818,7 @@ exports[`with title and description from both fixed array 1`] = `
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-7 {
@@ -17892,6 +17868,7 @@ exports[`with title and description from both fixed array 1`] = `
   width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 @media (min-width:600px) {
@@ -18368,7 +18345,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             <h6
               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
               id="root__description"
-              style="margin-top: 5px;"
             >
               a fancier description
             </h6>
@@ -18377,7 +18353,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-8"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-9"
@@ -18446,7 +18421,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                             <h6
                               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_0__description"
-                              style="margin-top: 5px;"
                             >
                               a fancier item description
                             </h6>
@@ -18463,7 +18437,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-8"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-9"
@@ -18533,7 +18506,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                             <h6
                               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_1__description"
-                              style="margin-top: 5px;"
                             >
                               a fancier item description
                             </h6>
@@ -18553,7 +18525,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
       class="MuiBox-root emotion-37"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-38"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-38"
         tabindex="0"
         type="submit"
       >
@@ -18629,6 +18601,7 @@ exports[`with title and description from uiSchema array 1`] = `
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-7 {
@@ -18931,7 +18904,6 @@ exports[`with title and description from uiSchema array 1`] = `
             <h6
               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
               id="root__description"
-              style="margin-top: 5px;"
             >
               a fancier description
             </h6>
@@ -18974,7 +18946,7 @@ exports[`with title and description from uiSchema array 1`] = `
       class="MuiBox-root emotion-12"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-13"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-13"
         tabindex="0"
         type="submit"
       >
@@ -19050,6 +19022,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-7 {
@@ -19099,6 +19072,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
   width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 @media (min-width:600px) {
@@ -19930,7 +19904,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             <h6
               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
               id="root__description"
-              style="margin-top: 5px;"
             >
               a fancier description
             </h6>
@@ -19939,7 +19912,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-8"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-9"
@@ -20008,7 +19980,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                             <h6
                               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_0__description"
-                              style="margin-top: 5px;"
                             >
                               a fancier item description
                             </h6>
@@ -20106,7 +20077,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-8"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-9"
@@ -20175,7 +20145,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                             <h6
                               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_1__description"
-                              style="margin-top: 5px;"
                             >
                               a fancier item description
                             </h6>
@@ -20307,7 +20276,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
       class="MuiBox-root emotion-60"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-61"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-61"
         tabindex="0"
         type="submit"
       >
@@ -20682,6 +20651,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-11 {
@@ -20820,14 +20790,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
           aria-describedby="root__error root__description root__help"
           class="MuiFormControl-root MuiTextField-root emotion-1"
         >
-          <label
+          <div
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-2"
             data-shrink="false"
-            for="root"
             id="root-label"
           >
             My Field
-          </label>
+          </div>
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiSelect-root emotion-3"
           >
@@ -20851,13 +20820,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
               aria-hidden="true"
               aria-invalid="false"
               class="MuiSelect-nativeInput emotion-5"
+              id=":r1n:"
               name="root"
               tabindex="-1"
               value=""
             />
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconOutlined emotion-6"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon emotion-6"
               data-testid="ArrowDropDownIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -20886,7 +20856,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
           <h6
             class="MuiTypography-root MuiTypography-subtitle2 emotion-10"
             id="root__description"
-            style="margin-top: 5px;"
           >
             a fancier description
           </h6>
@@ -20897,7 +20866,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
       class="MuiBox-root emotion-11"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-12"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-12"
         tabindex="0"
         type="submit"
       >
@@ -20973,6 +20942,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-7 {
@@ -21022,6 +20992,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
   width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 @media (min-width:600px) {
@@ -21498,7 +21469,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             <h6
               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
               id="root__description"
-              style="margin-top: 5px;"
             >
               a fancier description
             </h6>
@@ -21507,7 +21477,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-8"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-9"
@@ -21576,7 +21545,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                             <h6
                               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_0__description"
-                              style="margin-top: 5px;"
                             >
                               a fancier item description
                             </h6>
@@ -21593,7 +21561,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-8"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-9"
@@ -21663,7 +21630,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                             <h6
                               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_1__description"
-                              style="margin-top: 5px;"
                             >
                               a fancier item description
                             </h6>
@@ -21683,7 +21649,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
       class="MuiBox-root emotion-37"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-38"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-38"
         tabindex="0"
         type="submit"
       >
@@ -22050,7 +22016,7 @@ exports[`with title and description with global label off array 1`] = `
       class="MuiBox-root emotion-8"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-9"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-9"
         tabindex="0"
         type="submit"
       >
@@ -22141,6 +22107,7 @@ exports[`with title and description with global label off array icons 1`] = `
   width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 @media (min-width:600px) {
@@ -22870,7 +22837,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-4"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-5"
@@ -23015,7 +22981,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-4"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-5"
@@ -23194,7 +23159,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
       class="MuiBox-root emotion-48"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-49"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-49"
         tabindex="0"
         type="submit"
       >
@@ -23653,13 +23618,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
               aria-hidden="true"
               aria-invalid="false"
               class="MuiSelect-nativeInput emotion-4"
+              id=":r31:"
               name="root"
               tabindex="-1"
               value=""
             />
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconOutlined emotion-5"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon emotion-5"
               data-testid="ArrowDropDownIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -23691,7 +23657,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       class="MuiBox-root emotion-8"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-9"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-9"
         tabindex="0"
         type="submit"
       >
@@ -23782,6 +23748,7 @@ exports[`with title and description with global label off fixed array 1`] = `
   width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 @media (min-width:600px) {
@@ -24175,7 +24142,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-4"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-5"
@@ -24239,7 +24205,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
             >
               <div
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-4"
-                style="overflow: auto;"
               >
                 <div
                   class="MuiBox-root emotion-5"
@@ -24307,7 +24272,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
       class="MuiBox-root emotion-25"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-26"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-26"
         tabindex="0"
         type="submit"
       >
