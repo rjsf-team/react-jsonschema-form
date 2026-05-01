@@ -152,6 +152,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
   width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 @media (min-width:600px) {
@@ -1102,7 +1103,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                     >
                       <div
                         class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-10"
-                        style="overflow: auto;"
                       >
                         <div
                           class="MuiBox-root emotion-11"
@@ -1305,7 +1305,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                     >
                       <div
                         class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-10"
-                        style="overflow: auto;"
                       >
                         <div
                           class="MuiBox-root emotion-11"
@@ -1710,6 +1709,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
   width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 @media (min-width:600px) {
@@ -2545,7 +2545,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                     >
                       <div
                         class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-10"
-                        style="overflow: auto;"
                       >
                         <div
                           class="MuiBox-root emotion-11"
@@ -2682,7 +2681,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                     >
                       <div
                         class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-10"
-                        style="overflow: auto;"
                       >
                         <div
                           class="MuiBox-root emotion-11"
@@ -6732,6 +6730,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
   width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 @media (min-width:600px) {
@@ -7682,7 +7681,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                     >
                       <div
                         class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-10"
-                        style="overflow: auto;"
                       >
                         <div
                           class="MuiBox-root emotion-11"
@@ -7885,7 +7883,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                     >
                       <div
                         class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-10"
-                        style="overflow: auto;"
                       >
                         <div
                           class="MuiBox-root emotion-11"
@@ -8290,6 +8287,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
   width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 @media (min-width:600px) {
@@ -9125,7 +9123,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                     >
                       <div
                         class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-10"
-                        style="overflow: auto;"
                       >
                         <div
                           class="MuiBox-root emotion-11"
@@ -9262,7 +9259,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                     >
                       <div
                         class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-10"
-                        style="overflow: auto;"
                       >
                         <div
                           class="MuiBox-root emotion-11"
@@ -25408,6 +25404,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
   width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 @media (min-width:600px) {
@@ -26150,7 +26147,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
                     >
                       <div
                         class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-98"
-                        style="overflow: auto;"
                       >
                         <div
                           class="MuiBox-root emotion-99"
@@ -27228,6 +27224,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
   width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 @media (min-width:600px) {
@@ -27963,7 +27960,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
                     >
                       <div
                         class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-78"
-                        style="overflow: auto;"
                       >
                         <div
                           class="MuiBox-root emotion-79"

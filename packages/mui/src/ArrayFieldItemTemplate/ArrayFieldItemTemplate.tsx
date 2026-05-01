@@ -73,7 +73,11 @@ export default function ArrayFieldItemTemplate<
       {...arrayItemGridContainer}
       sx={computeSxProps<GridProps>({ alignItems: 'center' }, arrayItemGridContainer)}
     >
-      <Grid size={{ xs: 8, sm: 9, md: 10, lg: 11, xl: 11.25 }} style={{ overflow: 'auto' }} {...arrayItemGridItem}>
+      <Grid
+        size={{ xs: 8, sm: 9, md: 10, lg: 11, xl: 11.25 }}
+        {...arrayItemGridItem}
+        sx={computeSxProps({ overflow: 'auto' }, arrayItemGridItem)}
+      >
         <Box {...arrayItemOuterBox} sx={computeSxProps<BoxProps>({ mb: 2 }, arrayItemOuterBox)}>
           <Paper elevation={2} {...arrayItemPaper}>
             <Box {...arrayItemInnerBox} sx={computeSxProps<BoxProps>({ p: 2 }, arrayItemInnerBox)}>

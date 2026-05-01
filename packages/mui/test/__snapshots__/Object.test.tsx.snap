@@ -2341,6 +2341,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
   width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 @media (min-width:600px) {
@@ -3037,7 +3038,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                     >
                       <div
                         class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-33"
-                        style="overflow: auto;"
                       >
                         <div
                           class="MuiBox-root emotion-34"
@@ -3174,7 +3174,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                     >
                       <div
                         class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-33"
-                        style="overflow: auto;"
                       >
                         <div
                           class="MuiBox-root emotion-34"
@@ -5100,6 +5099,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
   width: calc(100% * 8 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 8) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 @media (min-width:600px) {
@@ -5768,7 +5768,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                     >
                       <div
                         class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-26"
-                        style="overflow: auto;"
                       >
                         <div
                           class="MuiBox-root emotion-27"
@@ -5905,7 +5904,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                     >
                       <div
                         class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-8 MuiGrid-grid-sm-9 MuiGrid-grid-md-10 MuiGrid-grid-lg-11 MuiGrid-grid-xl-11.25 emotion-26"
-                        style="overflow: auto;"
                       >
                         <div
                           class="MuiBox-root emotion-27"

@@ -98,7 +98,7 @@ export default function ObjectFieldTemplate<
         container
         spacing={2}
         {...objectGridContainer}
-        sx={computeSxProps<GridProps>({ mt: 1.25 }, objectGridContainer)} // convert to mt
+        sx={computeSxProps<GridProps>({ mt: 1.25 }, objectGridContainer)}
       >
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
         {properties.map((element, index) =>
