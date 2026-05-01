@@ -1028,10 +1028,12 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
    */
   const handleChange = useCallback(
     (value: any, path: FieldPathList, newErrorSchema?: ErrorSchema<T>, id?: string) => {
+      const lastPathIsItemIndex = typeof path.at(-1) === 'number';
       onChange(
         // We need to treat undefined items as nulls to have validation.
         // See https://github.com/tdegrunt/jsonschema/issues/206
-        value === undefined ? null : value,
+        // Only set to null for array items, and not for object properties within array items
+        lastPathIsItemIndex && value === undefined ? null : value,
         path,
         newErrorSchema as ErrorSchema<T[]>,
         id,
