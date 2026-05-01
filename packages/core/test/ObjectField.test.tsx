@@ -1,3 +1,4 @@
+import { createRef } from 'react';
 import {
   UI_GLOBAL_OPTIONS_KEY,
   RJSFSchema,
@@ -9,11 +10,15 @@ import {
   GenericObjectType,
 } from '@rjsf/utils';
 import { fireEvent, act } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
+import Form from '../src';
 import SchemaField from '../src/components/fields/SchemaField';
 import ObjectField from '../src/components/fields/ObjectField';
 import { TextWidgetTest } from './StringField.test';
-import { createFormComponent, submitForm } from './testUtils';
+import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils';
+
+const user = userEvent.setup();
 
 const ObjectFieldTest = (props: FieldProps) => {
   const onChangeTest = (newFormData: any, path: FieldPathList, errorSchema?: ErrorSchema, id?: string) => {
@@ -153,12 +158,7 @@ describe('ObjectField', () => {
         target: { value: 'changed' },
       });
 
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: expect.objectContaining({ foo: 'changed' }),
-        }),
-        'root_foo',
-      );
+      expectToHaveBeenCalledWithFormData(onChange, expect.objectContaining({ foo: 'changed' }), 'root_foo');
     });
 
     it('should handle object fields with blur events', () => {
@@ -775,12 +775,7 @@ describe('ObjectField', () => {
       });
 
       submitForm(node);
-      expect(onSubmit).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: { nonschema: 1 },
-        }),
-        expect.objectContaining({ type: 'submit' }),
-      );
+      expectToHaveBeenCalledWithFormData(onSubmit, { nonschema: 1 }, true);
 
       expect(onError).not.toHaveBeenCalled();
     });
@@ -889,12 +884,7 @@ describe('ObjectField', () => {
         target: { value: 'newFirst' },
       });
 
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: { newFirst: 1, first: undefined },
-        }),
-        'root',
-      );
+      expectToHaveBeenCalledWithFormData(onChange, { newFirst: 1, first: undefined }, 'root');
     });
 
     it('should retain and display user-input data if key-value pair has a title present in the schema when renaming key', () => {
@@ -914,12 +904,7 @@ describe('ObjectField', () => {
         target: { value: 'Renamed custom title' },
       });
 
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: { 'Renamed custom title': 1 },
-        }),
-        'root',
-      );
+      expectToHaveBeenCalledWithFormData(onChange, { 'Renamed custom title': 1 }, 'root');
 
       const keyInput = node.querySelector('#root_Renamed\\ custom\\ title-key');
       expect(keyInput).toHaveValue('Renamed custom title');
@@ -960,12 +945,48 @@ describe('ObjectField', () => {
         target: { value: 'newSecond' },
       });
 
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: { first: 1, newSecond: 2, third: 3 },
-        }),
-        'root',
-      );
+      expectToHaveBeenCalledWithFormData(onChange, { first: 1, newSecond: 2, third: 3 }, 'root');
+    });
+
+    it('should rename nested additionalProperties key when key input is blurred', async () => {
+      const nestedSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          options: {
+            type: 'object',
+            title: 'Options',
+            additionalProperties: {
+              type: 'object',
+              properties: {
+                option_name: { type: 'string', title: 'Option Name' },
+              },
+              required: ['option_name'],
+            },
+            default: {
+              efs: {
+                option_name: 'EFS',
+              },
+            },
+          },
+        },
+      };
+      const formRef = createRef<Form>();
+      const { node, onChange } = createFormComponent({
+        ref: formRef,
+        schema: nestedSchema,
+        formData: { options: { efs: { option_name: 'EFS' } } },
+      });
+
+      act(() => {
+        formRef.current!.reset();
+      });
+
+      const keyInput = node.querySelector('#root_options_efs-key');
+      await user.clear(keyInput!);
+      await user.type(keyInput!, 'efsKey');
+      await user.tab();
+
+      expectToHaveBeenCalledWithFormData(onChange, { options: { efsKey: { option_name: 'EFS' } } }, 'root_options');
     });
 
     it('should attach suffix to formData key if new key already exists when key input is renamed', () => {
@@ -983,12 +1004,7 @@ describe('ObjectField', () => {
         target: { value: 'second' },
       });
 
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: { second: 2, 'second-1': 1 },
-        }),
-        'root',
-      );
+      expectToHaveBeenCalledWithFormData(onChange, { second: 2, 'second-1': 1 }, 'root');
     });
 
     it('uses a custom separator between the duplicate key name and the suffix', () => {
@@ -1009,12 +1025,7 @@ describe('ObjectField', () => {
         target: { value: 'second' },
       });
 
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: { second: 2, second_1: 1 },
-        }),
-        'root',
-      );
+      expectToHaveBeenCalledWithFormData(onChange, { second: 2, second_1: 1 }, 'root');
     });
 
     it('uses a global custom separator between the duplicate key name and the suffix', () => {
@@ -1037,12 +1048,7 @@ describe('ObjectField', () => {
         target: { value: 'second' },
       });
 
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: { second: 2, second_1: 1 },
-        }),
-        'root',
-      );
+      expectToHaveBeenCalledWithFormData(onChange, { second: 2, second_1: 1 }, 'root');
     });
 
     it('should not attach suffix when input is only clicked', () => {
@@ -1081,19 +1087,18 @@ describe('ObjectField', () => {
         target: { value: 'second' },
       });
 
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: {
-            second: 2,
-            'second-1': 2,
-            'second-2': 2,
-            'second-3': 2,
-            'second-4': 2,
-            'second-5': 2,
-            'second-6': 2,
-            'second-7': 1,
-          },
-        }),
+      expectToHaveBeenCalledWithFormData(
+        onChange,
+        {
+          second: 2,
+          'second-1': 2,
+          'second-2': 2,
+          'second-3': 2,
+          'second-4': 2,
+          'second-5': 2,
+          'second-6': 2,
+          'second-7': 1,
+        },
         'root',
       );
     });
@@ -1151,14 +1156,13 @@ describe('ObjectField', () => {
       fireEvent.click(node.querySelector('.rjsf-object-property-expand button')!);
 
       // The last onChange call should have both renamed + new property, no value duplication
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: {
-            renamed: 1,
-            newKey: expect.any(String),
-            first: undefined,
-          },
-        }),
+      expectToHaveBeenCalledWithFormData(
+        onChange,
+        {
+          renamed: 1,
+          newKey: expect.any(String),
+          first: undefined,
+        },
         'root',
       );
     });
@@ -1187,12 +1191,7 @@ describe('ObjectField', () => {
       });
 
       expect(onChange).toHaveBeenCalledTimes(2);
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: { renamedFirst: 1, renamedSecond: 2, third: 3 },
-        }),
-        'root',
-      );
+      expectToHaveBeenCalledWithFormData(onChange, { renamedFirst: 1, renamedSecond: 2, third: 3 }, 'root');
     });
 
     it('should preserve focus across consecutive renames of the same property', () => {
@@ -1233,12 +1232,7 @@ describe('ObjectField', () => {
       expect(keyInput).not.toBeNull();
       fireEvent.blur(keyInput!, { target: { value: 'renamed' } });
 
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: { renamed: 'New Value' },
-        }),
-        'root',
-      );
+      expectToHaveBeenCalledWithFormData(onChange, { renamed: 'New Value' }, 'root');
     });
 
     it('should generate unique stable keys that do not collide with existing property names', () => {
@@ -1392,14 +1386,7 @@ describe('ObjectField', () => {
 
       fireEvent.click(node.querySelector('.rjsf-object-property-expand button')!);
 
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: {
-            newKey: 'New Value',
-          },
-        }),
-        'root',
-      );
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 'New Value' }, 'root');
     });
 
     it("should add a new property with suffix when clicking the expand button and 'newKey' already exists", () => {
@@ -1409,15 +1396,7 @@ describe('ObjectField', () => {
       });
 
       fireEvent.click(node.querySelector('.rjsf-object-property-expand button')!);
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: {
-            newKey: 1,
-            'newKey-1': 'New Value',
-          },
-        }),
-        'root',
-      );
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 1, 'newKey-1': 'New Value' }, 'root');
     });
 
     it('should add a property matching the additionalProperties schema', () => {
@@ -1438,14 +1417,7 @@ describe('ObjectField', () => {
 
       fireEvent.click(node.querySelector('.rjsf-object-property-expand button')!);
 
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: {
-            newKey: [],
-          },
-        }),
-        'root',
-      );
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: [] }, 'root');
     });
 
     it('should add a string item if additionalProperties is true', () => {
@@ -1461,14 +1433,7 @@ describe('ObjectField', () => {
 
       fireEvent.click(node.querySelector('.rjsf-object-property-expand button')!);
 
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: {
-            newKey: 'New Value',
-          },
-        }),
-        'root',
-      );
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 'New Value' }, 'root');
     });
 
     it("should add a new default item if default is provided in the additionalProperties' schema", () => {
@@ -1486,14 +1451,7 @@ describe('ObjectField', () => {
 
       fireEvent.click(node.querySelector('.rjsf-object-property-expand button')!);
 
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: {
-            newKey: 'default value',
-          },
-        }),
-        'root',
-      );
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 'default value' }, 'root');
     });
 
     it('should add a new default item even if the schema of default value is invalid', () => {
@@ -1511,14 +1469,7 @@ describe('ObjectField', () => {
 
       fireEvent.click(node.querySelector('.rjsf-object-property-expand button')!);
 
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: {
-            newKey: 1,
-          },
-        }),
-        'root',
-      );
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 1 }, 'root');
     });
 
     it('should generate the specified default key and value inputs if default is provided outside of additionalProperties schema', () => {
@@ -1533,13 +1484,7 @@ describe('ObjectField', () => {
         formData: {},
       });
 
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: {
-            defaultKey: 'defaultValue',
-          },
-        }),
-      );
+      expectToHaveBeenCalledWithFormData(onChange, { defaultKey: 'defaultValue' });
     });
 
     it('should generate the specified default key/value input with custom formData provided', () => {
@@ -1556,14 +1501,7 @@ describe('ObjectField', () => {
         },
       });
 
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: {
-            defaultKey: 'defaultValue',
-            someData: 'someValue',
-          },
-        }),
-      );
+      expectToHaveBeenCalledWithFormData(onChange, { defaultKey: 'defaultValue', someData: 'someValue' });
     });
 
     it('should edit the specified default key without duplicating', () => {
@@ -1580,14 +1518,7 @@ describe('ObjectField', () => {
 
       fireEvent.blur(node.querySelector('#root_defaultKey-key')!, { target: { value: 'newDefaultKey' } });
 
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: {
-            newDefaultKey: 'defaultValue',
-          },
-        }),
-        'root',
-      );
+      expectToHaveBeenCalledWithFormData(onChange, { newDefaultKey: 'defaultValue' }, 'root');
     });
 
     it('should remove the specified default key/value input item', () => {
@@ -1604,12 +1535,7 @@ describe('ObjectField', () => {
 
       fireEvent.click(node.querySelector('.rjsf-object-property-remove')!);
 
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: {},
-        }),
-        'root',
-      );
+      expectToHaveBeenCalledWithFormData(onChange, {}, 'root');
     });
 
     it('should handle nested additional property default key/value input generation', () => {
@@ -1641,18 +1567,14 @@ describe('ObjectField', () => {
         formData: {},
       });
 
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: {
-            defaultKey: 'defaultValue',
-            nested: {
-              bar: {
-                baz: 'value',
-              },
-            },
+      expectToHaveBeenCalledWithFormData(onChange, {
+        defaultKey: 'defaultValue',
+        nested: {
+          bar: {
+            baz: 'value',
           },
-        }),
-      );
+        },
+      });
     });
 
     it('should remove nested additional property default key/value input', () => {
@@ -1683,16 +1605,7 @@ describe('ObjectField', () => {
 
       fireEvent.click(node.querySelector('.rjsf-object-property-remove')!);
 
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: {
-            nested: {
-              bar: {},
-            },
-          },
-        }),
-        'root_nested_bar',
-      );
+      expectToHaveBeenCalledWithFormData(onChange, { nested: { bar: {} } }, 'root_nested_bar');
     });
 
     it('should not provide an expand button if length equals maxProperties', () => {
@@ -1793,12 +1706,7 @@ describe('ObjectField', () => {
         target: { value: '' },
       });
 
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: { first: '' },
-        }),
-        'root_first',
-      );
+      expectToHaveBeenCalledWithFormData(onChange, { first: '' }, 'root_first');
     });
 
     it('should change content of value input to boolean false', () => {
@@ -1814,12 +1722,7 @@ describe('ObjectField', () => {
         fireEvent.click(node.querySelector('#root_first')!);
       });
 
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: { first: false },
-        }),
-        'root_first',
-      );
+      expectToHaveBeenCalledWithFormData(onChange, { first: false }, 'root_first');
     });
 
     it('should change content of value input to number 0', () => {
@@ -1835,12 +1738,7 @@ describe('ObjectField', () => {
         target: { value: 0 },
       });
 
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: { first: 0 },
-        }),
-        'root_first',
-      );
+      expectToHaveBeenCalledWithFormData(onChange, { first: 0 }, 'root_first');
     });
 
     it('should change content of value input to null', () => {
@@ -1855,12 +1753,7 @@ describe('ObjectField', () => {
         });
       });
 
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: { first: '' },
-        }),
-        'root_first',
-      );
+      expectToHaveBeenCalledWithFormData(onChange, { first: '' }, 'root_first');
     });
   });
   describe('markdown', () => {
