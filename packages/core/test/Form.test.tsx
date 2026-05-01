@@ -1,5 +1,5 @@
-import { Component, RefObject, createRef, useEffect, useState, useCallback } from 'react';
-import { fireEvent, act, render, waitFor } from '@testing-library/react';
+import { Component, RefObject, createRef, useEffect, useState, useCallback, useRef } from 'react';
+import { fireEvent, act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Portal } from 'react-portal';
 import {
@@ -6028,5 +6028,92 @@ describe('extraErrors set after submit (#4965)', () => {
     // Also check DOM
     const errorItems = container.querySelectorAll('.error-detail li');
     expect(errorItems.length).toBeGreaterThan(0);
+  });
+});
+
+describe('validation after changing schema (#5034)', () => {
+  const schemaA: RJSFSchema = { type: 'string', minLength: 10, maxLength: 15 };
+
+  const schemaB: RJSFSchema = { type: 'string', minLength: 20 };
+
+  const valueA = 'invalid';
+
+  const valueB = 'this is also invalid';
+
+  function TestComponent() {
+    const [schema, setSchema] = useState(schemaA);
+    const [formData, setFormData] = useState(valueA);
+
+    const handleSchemaClick = useCallback(() => {
+      setSchema((prev) => (prev === schemaA ? schemaB : schemaA));
+    }, []);
+    const handleDataClick = useCallback(() => {
+      setFormData((prev) => (prev === valueA ? valueB : valueA));
+    }, []);
+    const ref = useRef<FormRef>(null);
+
+    useEffect(() => {
+      ref.current?.validateForm();
+    }, [schema, formData]);
+
+    return (
+      <div data-testid='component'>
+        <Form formData={formData} ref={ref} schema={schema} validator={validator} />
+        <button onClick={handleSchemaClick} data-testid='schema-button'>
+          Toggle Schema
+        </button>
+        <button onClick={handleDataClick} data-testid='data-button'>
+          Toggle Data
+        </button>
+        <p>
+          Schema: <output data-testid='output-schema'>{JSON.stringify(schema)}</output>
+        </p>
+        <p>
+          Data: <output data-testid='output-data'>{formData}</output>
+        </p>
+      </div>
+    );
+  }
+  it('initially has schemaA', () => {
+    render(<TestComponent />);
+    const component = screen.getByTestId('component');
+    expect(component).toBeInTheDocument();
+
+    const outputSchema = within(component).getByTestId('output-schema');
+    expect(outputSchema).toHaveTextContent(JSON.stringify(schemaA));
+    const outputData = within(component).getByTestId('output-data');
+    expect(outputData).toHaveTextContent(valueA);
+    const errors = component.querySelector('ul[id=root__error]');
+    expect(errors).toHaveTextContent('must NOT have fewer than 10 characters');
+  });
+  it('switches to schemaB when button is pushed', async () => {
+    render(<TestComponent />);
+    const component = screen.getByTestId('component');
+    expect(component).toBeInTheDocument();
+    const button = within(component).getByTestId('schema-button');
+    expect(button).toHaveTextContent('Toggle Schema');
+    await user.click(button);
+
+    const outputSchema = within(component).getByTestId('output-schema');
+    expect(outputSchema).toHaveTextContent(JSON.stringify(schemaB));
+    const outputData = within(component).getByTestId('output-data');
+    expect(outputData).toHaveTextContent(valueA);
+    const errors = component.querySelector('ul[id=root__error]');
+    expect(errors).toHaveTextContent('must NOT have fewer than 20 characters');
+  });
+  it('switches to valueB when button is pushed', async () => {
+    render(<TestComponent />);
+    const component = screen.getByTestId('component');
+    expect(component).toBeInTheDocument();
+    const button = within(component).getByTestId('data-button');
+    expect(button).toHaveTextContent('Toggle Data');
+    await user.click(button);
+
+    const outputSchema = within(component).getByTestId('output-schema');
+    expect(outputSchema).toHaveTextContent(JSON.stringify(schemaA));
+    const outputData = within(component).getByTestId('output-data');
+    expect(outputData).toHaveTextContent(valueB);
+    const errors = component.querySelector('ul[id=root__error]');
+    expect(errors).toHaveTextContent('must NOT have more than 15 characters');
   });
 });
