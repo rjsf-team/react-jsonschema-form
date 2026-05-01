@@ -3769,4 +3769,36 @@ describe('ArrayField', () => {
       expect(tagInputs.length).toBeGreaterThanOrEqual(3); // 2 tags in first item + 1 tag in second item
     });
   });
+
+  describe('Array of object items with optional number field', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        arrayList: {
+          type: 'array',
+          title: 'A list with a minimal number of items',
+          items: {
+            type: 'object',
+            properties: {
+              name: { type: 'string', default: 'Default name' },
+              age: { type: 'number' },
+            },
+          },
+        },
+      },
+    };
+
+    it('should not save null when clearing an optional number field and submitting', () => {
+      const { node, onSubmit } = createFormComponent({
+        schema,
+        formData: { arrayList: [{ name: 'John', age: 25 }] },
+      });
+
+      const ageInput = node.querySelector('#root_arrayList_0_age') as HTMLInputElement;
+      fireEvent.change(ageInput, { target: { value: '' } });
+      submitForm(node);
+
+      expectToHaveBeenCalledWithFormData(onSubmit, { arrayList: [{ name: 'John' }] }, true);
+    });
+  });
 });
