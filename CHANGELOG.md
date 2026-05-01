@@ -21,15 +21,17 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Fixed `processPendingChange()` using `originalErrorSchema` (which already contains merged `extraErrors`) as the base for `mergeErrors()`, causing sibling-field `extraErrors` to accumulate duplicate entries on every array mutation, fixing [#5041](https://github.com/rjsf-team/react-jsonschema-form/issues/5041)
+- Added `ObjectField` test for renaming a nested `additionalProperties` key using `userEvent` and `reset()` via a form ref, verifying fix for [#4948](https://github.com/rjsf-team/react-jsonschema-form/issues/4948)
 - Updated `ArrayField`'s change handling to only `null` out data for paths that are directly an array indexed value and not object properties within them, fixing [#4952](https://github.com/rjsf-team/react-jsonschema-form/issues/4952)
 
 ## @rjsf/utils
 
-- Switched `deepEquals` from `lodash.isEqualWith` to `fast-equals.createCustomEqual` with cycle detection enabled, and replaced direct `lodash.isEqual` usage in `useDeepCompareMemo`, `isRootSchema`, and `findSelectedOptionInXxxOf` with `deepEquals`, fixing [#4291](https://github.com/rjsf-team/react-jsonschema-form/issues/4291).
+- Switched `deepEquals` from `lodash.isEqualWith` to `fast-equals.createCustomEqual` with cycle detection enabled, and replaced direct `lodash.isEqual` usage in `useDeepCompareMemo`, `isRootSchema`, and `findSelectedOptionInXxxOf` with `deepEquals`, fixing [#4291](https://github.com/rjsf-team/react-jsonschema-form/issues/4291)
+- Fixed `getObjectDefaults` re-injecting stale schema-level `default` keys into an `additionalProperties` object when `formData` already contains its own keys (e.g. after a key rename), preventing ghost entries from reappearing, fixing [#4948](https://github.com/rjsf-team/react-jsonschema-form/issues/4948)
 
 ## @rjsf/validator-ajv8
 
-- Cached the most recent `rootSchema` reference in `handleSchemaUpdate` so repeated `isValid` calls with the same root schema skip the deep-equality check and Ajv re-registration, fixing [#4291](https://github.com/rjsf-team/react-jsonschema-form/issues/4291).
+- Cached the most recent `rootSchema` reference in `handleSchemaUpdate` so repeated `isValid` calls with the same root schema skip the deep-equality check and Ajv re-registration, fixing [#4291](https://github.com/rjsf-team/react-jsonschema-form/issues/4291)
 
 ## Dev / docs / playground
 

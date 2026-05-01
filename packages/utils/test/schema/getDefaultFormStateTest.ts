@@ -689,6 +689,60 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           });
         });
 
+        describe('an object with schema-level default and renamed additionalProperties key in formData', () => {
+          // Regression: when a schema has a top-level `default` that seeds additionalProperties keys,
+          // renaming one of those keys in formData should NOT re-inject the stale default key.
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              options: {
+                type: 'object',
+                title: 'Options',
+                additionalProperties: {
+                  type: 'object',
+                  properties: {
+                    option_name: { type: 'string', title: 'Option Name' },
+                  },
+                },
+                default: { efs: { option_name: 'EFS' } },
+              },
+            },
+          };
+
+          test('getDefaultFormState does not re-inject default key when formData has a renamed key', () => {
+            const rawFormData = { options: { efsKey: { option_name: 'EFS' } } };
+            expect(getDefaultFormState(testValidator, schema, rawFormData, schema)).toEqual({
+              options: { efsKey: { option_name: 'EFS' } },
+            });
+          });
+
+          test('getDefaultFormState seeds default keys when options formData is empty', () => {
+            const rawFormData = { options: {} };
+            expect(getDefaultFormState(testValidator, schema, rawFormData, schema)).toEqual({
+              options: { efs: { option_name: 'EFS' } },
+            });
+          });
+
+          test('getDefaultFormState seeds default when options is absent from formData', () => {
+            expect(getDefaultFormState(testValidator, schema, {}, schema)).toEqual({
+              options: { efs: { option_name: 'EFS' } },
+            });
+          });
+
+          test('getObjectDefaults does not re-inject default key when formData has a renamed key', () => {
+            const rawFormData = { options: { efsKey: { option_name: 'EFS' } } };
+            // getObjectDefaults only computes schema defaults, not formData values, so efsKey gets {}
+            // (the additionalProperties schema has no value defaults). The key point is that the stale
+            // schema-level default key 'efs' is NOT present in the result.
+            expect(
+              getObjectDefaults(testValidator, schema, {
+                rootSchema: schema,
+                rawFormData,
+              }),
+            ).toEqual({ options: { efsKey: {} } });
+          });
+        });
+
         describe('an object with additionalProperties type object with formdata and no defaults', () => {
           const schema: RJSFSchema = {
             type: 'object',

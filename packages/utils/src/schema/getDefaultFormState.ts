@@ -547,11 +547,6 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
         : {};
 
       const keys = new Set<string>();
-      if (isObject(defaults)) {
-        Object.keys(defaults as GenericObjectType)
-          .filter((key) => !retrievedSchema.properties || !retrievedSchema.properties[key])
-          .forEach((key) => keys.add(key));
-      }
       const formDataRequired: string[] = [];
       Object.keys(formData as GenericObjectType)
         .filter((key) => !retrievedSchema.properties || !retrievedSchema.properties[key])
@@ -559,6 +554,14 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
           keys.add(key);
           formDataRequired.push(key);
         });
+      // Only seed keys from schema defaults when formData has no additionalProperties of its own.
+      // If the user already has data (e.g. after a key rename), injecting default keys would
+      // re-add stale entries that no longer exist in formData.
+      if (isObject(defaults) && formDataRequired.length === 0) {
+        Object.keys(defaults as GenericObjectType)
+          .filter((key) => !retrievedSchema.properties || !retrievedSchema.properties[key])
+          .forEach((key) => keys.add(key));
+      }
       keys.forEach((key) => {
         const computedDefault = computeDefaults(validator, additionalPropertiesSchema as S, {
           rootSchema,
