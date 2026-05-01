@@ -10,7 +10,7 @@ import {
   StrictRJSFSchema,
   getUiOptions,
 } from '@rjsf/utils';
-import { getMuiProps } from '../util';
+import { computeSxProps, getMuiProps } from '../util';
 
 /** Properties available for the `rjsfSlotProps` target of the TitleField. */
 export interface TitleFieldMuiProps extends GenericObjectType {
@@ -41,29 +41,41 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
   const { id, title, optionalDataControl, uiSchema } = props;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const { rjsfSlotProps: muiSlotProps } = getMuiProps<T, S, F, TitleFieldMuiProps>(uiOptions);
+  const {
+    rjsfSlotProps: {
+      titleBox,
+      titleDivider,
+      titleTypography,
+      titleGridContainer,
+      titleGridItem,
+      titleOptionalDataGridItem,
+    } = {},
+  } = getMuiProps<T, S, F, TitleFieldMuiProps>(uiOptions);
 
   let heading = (
-    <Typography variant='h5' {...muiSlotProps?.titleTypography}>
+    <Typography variant='h5' {...titleTypography}>
       {title}
     </Typography>
   );
   if (optionalDataControl) {
     heading = (
-      <Grid container={true} spacing={0} {...muiSlotProps?.titleGridContainer}>
-        <Grid size='grow' {...muiSlotProps?.titleGridItem}>
+      <Grid container={true} spacing={0} {...titleGridContainer}>
+        <Grid size='grow' {...titleGridItem}>
           {heading}
         </Grid>
-        <Grid justifyContent='flex-end' {...muiSlotProps?.titleOptionalDataGridItem}>
+        <Grid
+          {...titleOptionalDataGridItem}
+          sx={computeSxProps<GridProps>({ justifyContent: 'flex-end' }, titleOptionalDataGridItem)}
+        >
           {optionalDataControl}
         </Grid>
       </Grid>
     );
   }
   return (
-    <Box id={id} mb={1} mt={1} {...muiSlotProps?.titleBox}>
+    <Box id={id} {...titleBox} sx={computeSxProps<BoxProps>({ mb: 1, mt: 1 }, titleBox)}>
       {heading}
-      <Divider {...muiSlotProps?.titleDivider} />
+      <Divider {...titleDivider} />
     </Box>
   );
 }

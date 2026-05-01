@@ -9,7 +9,7 @@ import {
   SubmitButtonProps,
   getUiOptions,
 } from '@rjsf/utils';
-import { getMuiProps } from '../util';
+import { computeSxProps, getMuiProps } from '../util';
 
 /** Properties available for the `rjsfSlotProps` target of the SubmitButton. */
 export interface SubmitButtonMuiProps extends GenericObjectType {
@@ -35,17 +35,22 @@ export default function SubmitButton<
   }
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, SubmitButtonMuiProps>(uiOptions);
+  const { rjsfSlotProps: { submitBox, submitButton } = {}, ...otherMuiProps } = getMuiProps<
+    T,
+    S,
+    F,
+    SubmitButtonMuiProps
+  >(uiOptions);
 
   return (
-    <Box marginTop={3} {...muiSlotProps?.submitBox}>
+    <Box {...submitBox} sx={computeSxProps<BoxProps>({ mt: 3 }, submitBox)}>
       <Button
         type='submit'
         variant='contained'
         color='primary'
         {...submitButtonProps}
         {...otherMuiProps}
-        {...muiSlotProps?.submitButton}
+        {...submitButton}
       >
         {submitText}
       </Button>

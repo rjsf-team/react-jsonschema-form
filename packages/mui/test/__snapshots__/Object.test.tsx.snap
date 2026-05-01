@@ -37,6 +37,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-1>* {
@@ -62,6 +63,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-4 {
@@ -472,11 +474,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
       >
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-object"
@@ -499,11 +499,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                 </div>
                 <div
                   class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
-                  style="margin-top: 10px;"
                 >
                   <div
                     class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-                    style="margin-bottom: 10px;"
                   >
                     <div
                       class="rjsf-field rjsf-field-string"
@@ -554,7 +552,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                   </div>
                   <div
                     class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-                    style="margin-bottom: 10px;"
                   >
                     <div
                       class="rjsf-field rjsf-field-object"
@@ -577,11 +574,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                         </div>
                         <div
                           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
-                          style="margin-top: 10px;"
                         >
                           <div
                             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-                            style="margin-bottom: 10px;"
                           >
                             <div
                               class="rjsf-field rjsf-field-string"
@@ -632,7 +627,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                           </div>
                           <div
                             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-                            style="margin-bottom: 10px;"
                           >
                             <div
                               class="rjsf-field rjsf-field-string"
@@ -683,7 +677,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                           </div>
                           <div
                             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-                            style="margin-bottom: 10px;"
                           >
                             <div
                               class="rjsf-field rjsf-field-string"
@@ -795,6 +788,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-1>* {
@@ -820,6 +814,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-4 {
@@ -1576,11 +1571,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
       >
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-string"
@@ -1631,7 +1624,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
           </div>
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 rjsf-field rjsf-field-string emotion-11"
@@ -1830,6 +1822,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-1>* {
@@ -1855,6 +1848,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-4 {
@@ -2862,11 +2856,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
       >
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-string"
@@ -2917,7 +2909,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
           </div>
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-number"
@@ -2969,7 +2960,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
           </div>
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-boolean"
@@ -3015,7 +3005,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
           </div>
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-array"
@@ -3408,6 +3397,7 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-1>* {
@@ -3433,6 +3423,7 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-4 {
@@ -3818,11 +3809,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
       >
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-string"
@@ -3873,7 +3862,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
           </div>
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-string"
@@ -3924,7 +3912,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
           </div>
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-number"
@@ -4029,6 +4016,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-1>* {
@@ -4054,6 +4042,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-4 {
@@ -4464,11 +4453,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
       >
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-object"
@@ -4491,11 +4478,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                 </div>
                 <div
                   class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
-                  style="margin-top: 10px;"
                 >
                   <div
                     class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-                    style="margin-bottom: 10px;"
                   >
                     <div
                       class="rjsf-field rjsf-field-string"
@@ -4546,7 +4531,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                   </div>
                   <div
                     class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-                    style="margin-bottom: 10px;"
                   >
                     <div
                       class="rjsf-field rjsf-field-object"
@@ -4569,11 +4553,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                         </div>
                         <div
                           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
-                          style="margin-top: 10px;"
                         >
                           <div
                             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-                            style="margin-bottom: 10px;"
                           >
                             <div
                               class="rjsf-field rjsf-field-string"
@@ -4624,7 +4606,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                           </div>
                           <div
                             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-                            style="margin-bottom: 10px;"
                           >
                             <div
                               class="rjsf-field rjsf-field-string"
@@ -4736,6 +4717,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-1>* {
@@ -4761,6 +4743,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-4 {
@@ -5649,11 +5632,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
       >
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-string"
@@ -5704,7 +5685,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
           </div>
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-number"
@@ -5756,7 +5736,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
           </div>
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-array"
@@ -6149,6 +6128,7 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-1>* {
@@ -6174,6 +6154,7 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-4 {
@@ -6559,11 +6540,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
       >
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-string"
@@ -6614,7 +6593,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
           </div>
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-string"
@@ -6665,7 +6643,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
           </div>
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-number"
@@ -6770,6 +6747,7 @@ exports[`object fields additionalProperties 1`] = `
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-1>* {
@@ -6795,6 +6773,7 @@ exports[`object fields additionalProperties 1`] = `
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-3 {
@@ -7551,11 +7530,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
       >
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 rjsf-field rjsf-field-string emotion-3"
@@ -7754,6 +7731,7 @@ exports[`object fields additionalProperties, array type 1`] = `
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-1>* {
@@ -7779,6 +7757,7 @@ exports[`object fields additionalProperties, array type 1`] = `
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-3 {
@@ -8509,11 +8488,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
       >
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 rjsf-field rjsf-field-array emotion-3"
@@ -8727,6 +8704,7 @@ exports[`object fields additionalProperties, description 1`] = `
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-1>* {
@@ -8752,6 +8730,7 @@ exports[`object fields additionalProperties, description 1`] = `
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-3 {
@@ -9159,6 +9138,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-21 {
@@ -9527,11 +9507,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
       >
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 rjsf-field rjsf-field-string emotion-3"
@@ -9626,7 +9604,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                     <h6
                       class="MuiTypography-root MuiTypography-subtitle2 emotion-20"
                       id="root_foo__description"
-                      style="margin-top: 5px;"
                     >
                       item description
                     </h6>
@@ -9741,6 +9718,7 @@ exports[`object fields additionalProperties, label off 1`] = `
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-1>* {
@@ -9766,6 +9744,7 @@ exports[`object fields additionalProperties, label off 1`] = `
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-3 {
@@ -10522,11 +10501,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
       >
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 rjsf-field rjsf-field-string emotion-3"
@@ -10725,6 +10702,7 @@ exports[`object fields additionalProperties, object type 1`] = `
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-1>* {
@@ -10750,6 +10728,7 @@ exports[`object fields additionalProperties, object type 1`] = `
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-3 {
@@ -11599,11 +11578,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
       >
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 rjsf-field rjsf-field-object emotion-3"
@@ -11669,11 +11646,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                   </div>
                   <div
                     class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
-                    style="margin-top: 10px;"
                   >
                     <div
                       class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-                      style="margin-bottom: 10px;"
                     >
                       <div
                         class="rjsf-field rjsf-field-string"
@@ -11833,6 +11808,7 @@ exports[`object fields object 1`] = `
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-1>* {
@@ -11858,6 +11834,7 @@ exports[`object fields object 1`] = `
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-4 {
@@ -12243,11 +12220,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
       >
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-string"
@@ -12298,7 +12273,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
           </div>
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-number"
@@ -12403,6 +12377,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-1>* {
@@ -12428,6 +12403,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-3 {
@@ -13184,11 +13160,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
       >
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 rjsf-field rjsf-field-string emotion-3"
@@ -13401,6 +13375,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-5 {
@@ -13421,6 +13396,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-5>* {
@@ -13446,6 +13422,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-7 {
@@ -14216,17 +14193,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
         <h6
           class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
           id="root__description"
-          style="margin-top: 5px;"
         >
           a test description
         </h6>
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-6"
-            style="margin-bottom: 10px;"
           >
             <div
               class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 rjsf-field rjsf-field-string emotion-7"
@@ -14439,6 +14413,7 @@ exports[`object fields with title and description from both additionalProperties
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-5 {
@@ -14459,6 +14434,7 @@ exports[`object fields with title and description from both additionalProperties
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-5>* {
@@ -14484,6 +14460,7 @@ exports[`object fields with title and description from both additionalProperties
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-7 {
@@ -15254,17 +15231,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
         <h6
           class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
           id="root__description"
-          style="margin-top: 5px;"
         >
           a fancier description
         </h6>
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-6"
-            style="margin-bottom: 10px;"
           >
             <div
               class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 rjsf-field rjsf-field-string emotion-7"
@@ -15477,6 +15451,7 @@ exports[`object fields with title and description from both object 1`] = `
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-5 {
@@ -15497,6 +15472,7 @@ exports[`object fields with title and description from both object 1`] = `
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-5>* {
@@ -15522,6 +15498,7 @@ exports[`object fields with title and description from both object 1`] = `
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-8 {
@@ -15931,17 +15908,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
         <h6
           class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
           id="root__description"
-          style="margin-top: 5px;"
         >
           a fancier description
         </h6>
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-6"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-string"
@@ -15993,7 +15967,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                   <h6
                     class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
                     id="root_a__description"
-                    style="margin-top: 5px;"
                   >
                     a fancier item A description
                   </h6>
@@ -16003,7 +15976,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
           </div>
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-6"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-number"
@@ -16056,7 +16028,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                   <h6
                     class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
                     id="root_b__description"
-                    style="margin-top: 5px;"
                   >
                     a fancier item B description
                   </h6>
@@ -16133,6 +16104,7 @@ exports[`object fields with title and description from uiSchema additionalProper
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-5 {
@@ -16153,6 +16125,7 @@ exports[`object fields with title and description from uiSchema additionalProper
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-5>* {
@@ -16178,6 +16151,7 @@ exports[`object fields with title and description from uiSchema additionalProper
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-7 {
@@ -16948,17 +16922,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
         <h6
           class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
           id="root__description"
-          style="margin-top: 5px;"
         >
           a fancier description
         </h6>
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-6"
-            style="margin-bottom: 10px;"
           >
             <div
               class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 rjsf-field rjsf-field-string emotion-7"
@@ -17171,6 +17142,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-5 {
@@ -17191,6 +17163,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-5>* {
@@ -17216,6 +17189,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-8 {
@@ -17625,17 +17599,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
         <h6
           class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
           id="root__description"
-          style="margin-top: 5px;"
         >
           a fancier description
         </h6>
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-6"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-string"
@@ -17687,7 +17658,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                   <h6
                     class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
                     id="root_a__description"
-                    style="margin-top: 5px;"
                   >
                     a fancier item A description
                   </h6>
@@ -17697,7 +17667,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
           </div>
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-6"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-number"
@@ -17750,7 +17719,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                   <h6
                     class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
                     id="root_b__description"
-                    style="margin-top: 5px;"
                   >
                     a fancier item B description
                   </h6>
@@ -17827,6 +17795,7 @@ exports[`object fields with title and description from uiSchema show add button 
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-5 {
@@ -17847,6 +17816,7 @@ exports[`object fields with title and description from uiSchema show add button 
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-5>* {
@@ -17872,6 +17842,7 @@ exports[`object fields with title and description from uiSchema show add button 
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-7 {
@@ -18642,17 +18613,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
         <h6
           class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
           id="root__description"
-          style="margin-top: 5px;"
         >
           a fancier description
         </h6>
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-6"
-            style="margin-bottom: 10px;"
           >
             <div
               class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 rjsf-field rjsf-field-string emotion-7"
@@ -18865,6 +18833,7 @@ exports[`object fields with title and description object 1`] = `
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-5 {
@@ -18885,6 +18854,7 @@ exports[`object fields with title and description object 1`] = `
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-5>* {
@@ -18910,6 +18880,7 @@ exports[`object fields with title and description object 1`] = `
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-8 {
@@ -19319,17 +19290,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
         <h6
           class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
           id="root__description"
-          style="margin-top: 5px;"
         >
           a test description
         </h6>
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-6"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-string"
@@ -19381,7 +19349,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                   <h6
                     class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
                     id="root_a__description"
-                    style="margin-top: 5px;"
                   >
                     A description
                   </h6>
@@ -19391,7 +19358,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
           </div>
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-6"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-number"
@@ -19444,7 +19410,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                   <h6
                     class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
                     id="root_b__description"
-                    style="margin-top: 5px;"
                   >
                     B description
                   </h6>
@@ -19521,6 +19486,7 @@ exports[`object fields with title and description show add button and fields if 
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-5 {
@@ -19541,6 +19507,7 @@ exports[`object fields with title and description show add button and fields if 
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-5>* {
@@ -19566,6 +19533,7 @@ exports[`object fields with title and description show add button and fields if 
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-7 {
@@ -20336,17 +20304,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
         <h6
           class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
           id="root__description"
-          style="margin-top: 5px;"
         >
           a test description
         </h6>
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-6"
-            style="margin-bottom: 10px;"
           >
             <div
               class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 rjsf-field rjsf-field-string emotion-7"
@@ -20545,6 +20510,7 @@ exports[`object fields with title and description with global label off addition
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-1>* {
@@ -20570,6 +20536,7 @@ exports[`object fields with title and description with global label off addition
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-3 {
@@ -21249,11 +21216,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
       >
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 rjsf-field rjsf-field-string emotion-3"
@@ -21442,6 +21407,7 @@ exports[`object fields with title and description with global label off object 1
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-1>* {
@@ -21467,6 +21433,7 @@ exports[`object fields with title and description with global label off object 1
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-4 {
@@ -21794,11 +21761,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
       >
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-string"
@@ -21844,7 +21809,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
           </div>
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-number"
@@ -21944,6 +21908,7 @@ exports[`object fields with title and description with global label off show add
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-1>* {
@@ -21969,6 +21934,7 @@ exports[`object fields with title and description with global label off show add
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-3 {
@@ -22648,11 +22614,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
       >
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 rjsf-field rjsf-field-string emotion-3"

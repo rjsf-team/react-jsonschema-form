@@ -2045,6 +2045,7 @@ exports[`array fields empty errors array 1`] = `
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-1>* {
@@ -2070,6 +2071,7 @@ exports[`array fields empty errors array 1`] = `
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-4 {
@@ -2455,11 +2457,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
       >
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-string"
@@ -3292,6 +3292,7 @@ exports[`array fields has errors 1`] = `
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-10>* {
@@ -3317,6 +3318,7 @@ exports[`array fields has errors 1`] = `
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-13 {
@@ -3804,11 +3806,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
       >
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-10"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-11"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-string rjsf-field-error"
@@ -3927,6 +3927,7 @@ exports[`array fields no errors 1`] = `
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-1>* {
@@ -3952,6 +3953,7 @@ exports[`array fields no errors 1`] = `
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-4 {
@@ -4337,11 +4339,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
       >
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
-          style="margin-top: 10px;"
         >
           <div
             class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
-            style="margin-bottom: 10px;"
           >
             <div
               class="rjsf-field rjsf-field-string"
@@ -4564,6 +4564,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-9>* {
@@ -4589,6 +4590,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-12 {
@@ -5359,11 +5361,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
                         >
                           <div
                             class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-9"
-                            style="margin-top: 10px;"
                           >
                             <div
                               class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-10"
-                              style="margin-bottom: 10px;"
                             >
                               <div
                                 class="rjsf-field rjsf-field-string"
@@ -5414,7 +5414,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
                             </div>
                             <div
                               class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-10"
-                              style="margin-bottom: 10px;"
                             >
                               <div
                                 class="rjsf-field rjsf-field-number"
@@ -5559,11 +5558,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
                         >
                           <div
                             class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-9"
-                            style="margin-top: 10px;"
                           >
                             <div
                               class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-10"
-                              style="margin-bottom: 10px;"
                             >
                               <div
                                 class="rjsf-field rjsf-field-string"
@@ -5614,7 +5611,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
                             </div>
                             <div
                               class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-10"
-                              style="margin-bottom: 10px;"
                             >
                               <div
                                 class="rjsf-field rjsf-field-number"
@@ -9978,6 +9974,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
 }
 
 .emotion-9>* {
@@ -10003,6 +10000,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
   width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .emotion-12 {
@@ -10773,11 +10771,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
                         >
                           <div
                             class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-9"
-                            style="margin-top: 10px;"
                           >
                             <div
                               class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-10"
-                              style="margin-bottom: 10px;"
                             >
                               <div
                                 class="rjsf-field rjsf-field-string"
@@ -10828,7 +10824,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
                             </div>
                             <div
                               class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-10"
-                              style="margin-bottom: 10px;"
                             >
                               <div
                                 class="rjsf-field rjsf-field-number"
@@ -10973,11 +10968,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
                         >
                           <div
                             class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-9"
-                            style="margin-top: 10px;"
                           >
                             <div
                               class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-10"
-                              style="margin-bottom: 10px;"
                             >
                               <div
                                 class="rjsf-field rjsf-field-string"
@@ -11028,7 +11021,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
                             </div>
                             <div
                               class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-10"
-                              style="margin-bottom: 10px;"
                             >
                               <div
                                 class="rjsf-field rjsf-field-number"
@@ -12369,6 +12361,7 @@ exports[`with title and description array 1`] = `
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-7 {
@@ -12671,7 +12664,6 @@ exports[`with title and description array 1`] = `
             <h6
               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
               id="root__description"
-              style="margin-top: 5px;"
             >
               a test description
             </h6>
@@ -12790,6 +12782,7 @@ exports[`with title and description array icons 1`] = `
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-7 {
@@ -13670,7 +13663,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             <h6
               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
               id="root__description"
-              style="margin-top: 5px;"
             >
               a test description
             </h6>
@@ -13748,7 +13740,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                             <h6
                               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_0__description"
-                              style="margin-top: 5px;"
                             >
                               a test item description
                             </h6>
@@ -13915,7 +13906,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                             <h6
                               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_1__description"
-                              style="margin-top: 5px;"
                             >
                               a test item description
                             </h6>
@@ -14422,6 +14412,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-11 {
@@ -14626,7 +14617,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
           <h6
             class="MuiTypography-root MuiTypography-subtitle2 emotion-10"
             id="root__description"
-            style="margin-top: 5px;"
           >
             a test description
           </h6>
@@ -14713,6 +14703,7 @@ exports[`with title and description fixed array 1`] = `
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-7 {
@@ -15238,7 +15229,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             <h6
               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
               id="root__description"
-              style="margin-top: 5px;"
             >
               a test description
             </h6>
@@ -15316,7 +15306,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                             <h6
                               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_0__description"
-                              style="margin-top: 5px;"
                             >
                               a test item description
                             </h6>
@@ -15403,7 +15392,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                             <h6
                               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_1__description"
-                              style="margin-top: 5px;"
                             >
                               a test item description
                             </h6>
@@ -15499,6 +15487,7 @@ exports[`with title and description from both array 1`] = `
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-7 {
@@ -15801,7 +15790,6 @@ exports[`with title and description from both array 1`] = `
             <h6
               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
               id="root__description"
-              style="margin-top: 5px;"
             >
               a fancier description
             </h6>
@@ -15920,6 +15908,7 @@ exports[`with title and description from both array icons 1`] = `
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-7 {
@@ -16800,7 +16789,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             <h6
               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
               id="root__description"
-              style="margin-top: 5px;"
             >
               a fancier description
             </h6>
@@ -16878,7 +16866,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                             <h6
                               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_0__description"
-                              style="margin-top: 5px;"
                             >
                               a fancier item description
                             </h6>
@@ -17045,7 +17032,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                             <h6
                               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_1__description"
-                              style="margin-top: 5px;"
                             >
                               a fancier item description
                             </h6>
@@ -17552,6 +17538,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-11 {
@@ -17756,7 +17743,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
           <h6
             class="MuiTypography-root MuiTypography-subtitle2 emotion-10"
             id="root__description"
-            style="margin-top: 5px;"
           >
             a fancier description
           </h6>
@@ -17843,6 +17829,7 @@ exports[`with title and description from both fixed array 1`] = `
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-7 {
@@ -18368,7 +18355,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             <h6
               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
               id="root__description"
-              style="margin-top: 5px;"
             >
               a fancier description
             </h6>
@@ -18446,7 +18432,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                             <h6
                               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_0__description"
-                              style="margin-top: 5px;"
                             >
                               a fancier item description
                             </h6>
@@ -18533,7 +18518,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                             <h6
                               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_1__description"
-                              style="margin-top: 5px;"
                             >
                               a fancier item description
                             </h6>
@@ -18629,6 +18613,7 @@ exports[`with title and description from uiSchema array 1`] = `
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-7 {
@@ -18931,7 +18916,6 @@ exports[`with title and description from uiSchema array 1`] = `
             <h6
               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
               id="root__description"
-              style="margin-top: 5px;"
             >
               a fancier description
             </h6>
@@ -19050,6 +19034,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-7 {
@@ -19930,7 +19915,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             <h6
               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
               id="root__description"
-              style="margin-top: 5px;"
             >
               a fancier description
             </h6>
@@ -20008,7 +19992,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                             <h6
                               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_0__description"
-                              style="margin-top: 5px;"
                             >
                               a fancier item description
                             </h6>
@@ -20175,7 +20158,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                             <h6
                               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_1__description"
-                              style="margin-top: 5px;"
                             >
                               a fancier item description
                             </h6>
@@ -20682,6 +20664,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-11 {
@@ -20886,7 +20869,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
           <h6
             class="MuiTypography-root MuiTypography-subtitle2 emotion-10"
             id="root__description"
-            style="margin-top: 5px;"
           >
             a fancier description
           </h6>
@@ -20973,6 +20955,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-7 {
@@ -21498,7 +21481,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             <h6
               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
               id="root__description"
-              style="margin-top: 5px;"
             >
               a fancier description
             </h6>
@@ -21576,7 +21558,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                             <h6
                               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_0__description"
-                              style="margin-top: 5px;"
                             >
                               a fancier item description
                             </h6>
@@ -21663,7 +21644,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                             <h6
                               class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_1__description"
-                              style="margin-top: 5px;"
                             >
                               a fancier item description
                             </h6>

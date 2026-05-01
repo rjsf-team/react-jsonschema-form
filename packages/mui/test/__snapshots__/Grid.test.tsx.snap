@@ -685,6 +685,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-78 {
@@ -1690,7 +1691,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                     <h6
                       class="MuiTypography-root MuiTypography-subtitle2 emotion-76"
                       id="root_person_race__description"
-                      style="margin-top: 5px;"
                     >
                       (Check all that apply)
                     </h6>
@@ -3145,6 +3145,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-78 {
@@ -4150,7 +4151,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                     <h6
                       class="MuiTypography-root MuiTypography-subtitle2 emotion-76"
                       id="root_person_race__description"
-                      style="margin-top: 5px;"
                     >
                       (Check all that apply)
                     </h6>
@@ -5655,6 +5655,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-78 {
@@ -6814,7 +6815,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                     <h6
                       class="MuiTypography-root MuiTypography-subtitle2 emotion-76"
                       id="root_person_race__description"
-                      style="margin-top: 5px;"
                     >
                       (Check all that apply)
                     </h6>
@@ -8084,6 +8084,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-78 {
@@ -9089,7 +9090,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                     <h6
                       class="MuiTypography-root MuiTypography-subtitle2 emotion-76"
                       id="root_person_race__description"
-                      style="margin-top: 5px;"
                     >
                       (Check all that apply)
                     </h6>
@@ -10504,6 +10504,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-74 {
@@ -11265,7 +11266,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                   <h6
                     class="MuiTypography-root MuiTypography-subtitle2 emotion-73"
                     id="root_person_race__description"
-                    style="margin-top: 5px;"
                   >
                     (Check all that apply)
                   </h6>
@@ -12175,6 +12175,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
   font-size: 0.875rem;
   line-height: 1.57;
   letter-spacing: 0.00714em;
+  margin-top: 5px;
 }
 
 .emotion-106 {
@@ -12923,7 +12924,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                   <h6
                     class="MuiTypography-root MuiTypography-subtitle2 emotion-73"
                     id="root_person_race__description"
-                    style="margin-top: 5px;"
                   >
                     (Check all that apply)
                   </h6>

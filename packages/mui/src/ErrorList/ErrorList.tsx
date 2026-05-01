@@ -15,7 +15,7 @@ import {
   TranslatableString,
   getUiOptions,
 } from '@rjsf/utils';
-import { getMuiProps } from '../util';
+import { computeSxProps, getMuiProps } from '../util';
 
 /** Properties available for the `rjsfSlotProps` target of the ErrorList. */
 export interface ErrorListMuiProps extends GenericObjectType {
@@ -50,22 +50,32 @@ export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSche
   const { translateString } = registry;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const { rjsfSlotProps: muiSlotProps } = getMuiProps<T, S, F, ErrorListMuiProps>(uiOptions);
+  const {
+    rjsfSlotProps: {
+      errorPaper,
+      errorBox,
+      errorTypography,
+      errorList,
+      errorListItem,
+      errorListItemIcon,
+      errorListItemText,
+    } = {},
+  } = getMuiProps<T, S, F, ErrorListMuiProps>(uiOptions);
 
   return (
-    <Paper elevation={2} {...muiSlotProps?.errorPaper}>
-      <Box mb={2} p={2} {...muiSlotProps?.errorBox}>
-        <Typography variant='h6' {...muiSlotProps?.errorTypography}>
+    <Paper elevation={2} {...errorPaper}>
+      <Box {...errorBox} sx={computeSxProps<BoxProps>({ mb: 2, p: 2 }, errorBox)}>
+        <Typography variant='h6' {...errorTypography}>
           {translateString(TranslatableString.ErrorsLabel)}
         </Typography>
-        <List dense={true} {...muiSlotProps?.errorList}>
+        <List dense={true} {...errorList}>
           {errors.map((error, i: number) => {
             return (
-              <ListItem key={i} {...muiSlotProps?.errorListItem}>
-                <ListItemIcon {...muiSlotProps?.errorListItemIcon}>
+              <ListItem key={i} {...errorListItem}>
+                <ListItemIcon {...errorListItemIcon}>
                   <ErrorIcon color='error' />
                 </ListItemIcon>
-                <ListItemText primary={error.stack} {...muiSlotProps?.errorListItemText} />
+                <ListItemText primary={error.stack} {...errorListItemText} />
               </ListItem>
             );
           })}

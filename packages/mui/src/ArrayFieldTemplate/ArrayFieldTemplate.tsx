@@ -11,7 +11,7 @@ import {
   buttonId,
   GenericObjectType,
 } from '@rjsf/utils';
-import { getMuiProps } from '../util';
+import { computeSxProps, getMuiProps } from '../util';
 
 /** Properties available for the `rjsfSlotProps` target of the ArrayFieldTemplate. */
 export interface ArrayFieldTemplateMuiProps extends GenericObjectType {
@@ -70,11 +70,19 @@ export default function ArrayFieldTemplate<
     ButtonTemplates: { AddButton },
   } = registry.templates;
 
-  const { rjsfSlotProps: muiSlotProps } = getMuiProps<T, S, F, ArrayFieldTemplateMuiProps>(uiOptions);
+  const {
+    rjsfSlotProps: {
+      arrayPaper,
+      arrayBox,
+      arrayAddButtonGridContainer,
+      arrayAddButtonGridItem,
+      arrayAddButtonBox,
+    } = {},
+  } = getMuiProps<T, S, F, ArrayFieldTemplateMuiProps>(uiOptions);
 
   return (
-    <Paper elevation={2} {...muiSlotProps?.arrayPaper}>
-      <Box p={2} {...muiSlotProps?.arrayBox}>
+    <Paper elevation={2} {...arrayPaper}>
+      <Box {...arrayBox} sx={computeSxProps<BoxProps>({ p: 2 }, arrayBox)}>
         <ArrayFieldTitleTemplate
           fieldPathId={fieldPathId}
           title={uiOptions.title || title}
@@ -94,9 +102,13 @@ export default function ArrayFieldTemplate<
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
         {items}
         {canAdd && (
-          <Grid container justifyContent='flex-end' {...muiSlotProps?.arrayAddButtonGridContainer}>
-            <Grid {...muiSlotProps?.arrayAddButtonGridItem}>
-              <Box mt={2} {...muiSlotProps?.arrayAddButtonBox}>
+          <Grid
+            container
+            {...arrayAddButtonGridContainer}
+            sx={computeSxProps<GridProps>({ justifyContent: 'flex-end' }, arrayAddButtonGridContainer)}
+          >
+            <Grid {...arrayAddButtonGridItem}>
+              <Box {...arrayAddButtonBox} sx={computeSxProps<BoxProps>({ mt: 2 }, arrayAddButtonBox)}>
                 <AddButton
                   id={buttonId(fieldPathId, 'add')}
                   className='rjsf-array-item-add'

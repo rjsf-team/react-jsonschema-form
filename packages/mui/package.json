@@ -62,8 +62,8 @@
   "peerDependencies": {
     "@emotion/react": "^11.7.0",
     "@emotion/styled": "^11.6.0",
-    "@mui/icons-material": "^7.0.0",
-    "@mui/material": "^7.0.0",
+    "@mui/icons-material": "^7.0.0 || ^9.0.0",
+    "@mui/material": "^7.0.0 || ^9.0.0",
     "@rjsf/core": "^6.5.x",
     "@rjsf/utils": "^6.5.x",
     "react": ">=18"

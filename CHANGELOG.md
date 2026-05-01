@@ -24,6 +24,13 @@ should change the heading of the (upcoming) version to include a major version b
 - Added `ObjectField` test for renaming a nested `additionalProperties` key using `userEvent` and `reset()` via a form ref, verifying fix for [#4948](https://github.com/rjsf-team/react-jsonschema-form/issues/4948)
 - Updated `ArrayField`'s change handling to only `null` out data for paths that are directly an array indexed value and not object properties within them, fixing [#4952](https://github.com/rjsf-team/react-jsonschema-form/issues/4952)
 
+## @rjsf/mui
+
+- Added `computeSxProp()` helper to `utils.ts`, ran the MUI `v9.0.0/system-props` codemod on the directory and then updated the `sx` changes to use `computeSxProps()`
+- Also transformed the use of `style` blocks for margins or explicit `marginTop` or `marginBottom` in MUI into `sx` values within `DescriptionField`, `FieldHelpTemplate`, `ObjectFieldTemplate` and `SubmitButton`,
+  - Updated snapshots accordingly
+- Upgraded the `peerDependencies` to add support for MUI v9
+
 ## @rjsf/utils
 
 - Switched `deepEquals` from `lodash.isEqualWith` to `fast-equals.createCustomEqual` with cycle detection enabled, and replaced direct `lodash.isEqual` usage in `useDeepCompareMemo`, `isRootSchema`, and `findSelectedOptionInXxxOf` with `deepEquals`, fixing [#4291](https://github.com/rjsf-team/react-jsonschema-form/issues/4291)
@@ -37,6 +44,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Cleaned up testing to make registry mocks simpler using `getTestRegistry()` function
 - Refactored `antd` specific test setup out of `testing/testSetup.ts`
+- Updated the Playground to use MUI v9
 
 # 6.5.1
 

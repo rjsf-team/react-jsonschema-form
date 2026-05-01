@@ -11,7 +11,7 @@ import {
   StrictRJSFSchema,
   GenericObjectType,
 } from '@rjsf/utils';
-import { getMuiProps } from '../util';
+import { computeSxProps, getMuiProps } from '../util';
 
 /** Properties available for the `rjsfSlotProps` target of the ArrayFieldItemTemplate. */
 export interface ArrayFieldItemTemplateMuiProps extends GenericObjectType {
@@ -56,25 +56,37 @@ export default function ArrayFieldItemTemplate<
     minWidth: 0,
   };
 
-  const { rjsfSlotProps: muiSlotProps } = getMuiProps<T, S, F, ArrayFieldItemTemplateMuiProps>(uiOptions);
+  const {
+    rjsfSlotProps: {
+      arrayItemGridContainer,
+      arrayItemGridItem,
+      arrayItemInnerBox,
+      arrayItemOuterBox,
+      arrayItemPaper,
+      arrayItemToolbarGrid,
+    } = {},
+  } = getMuiProps<T, S, F, ArrayFieldItemTemplateMuiProps>(uiOptions);
 
   return (
-    <Grid container={true} alignItems='center' {...muiSlotProps?.arrayItemGridContainer}>
-      <Grid
-        size={{ xs: 8, sm: 9, md: 10, lg: 11, xl: 11.25 }}
-        style={{ overflow: 'auto' }}
-        {...muiSlotProps?.arrayItemGridItem}
-      >
-        <Box mb={2} {...muiSlotProps?.arrayItemOuterBox}>
-          <Paper elevation={2} {...muiSlotProps?.arrayItemPaper}>
-            <Box p={2} {...muiSlotProps?.arrayItemInnerBox}>
+    <Grid
+      container
+      {...arrayItemGridContainer}
+      sx={computeSxProps<GridProps>({ alignItems: 'center' }, arrayItemGridContainer)}
+    >
+      <Grid size={{ xs: 8, sm: 9, md: 10, lg: 11, xl: 11.25 }} style={{ overflow: 'auto' }} {...arrayItemGridItem}>
+        <Box {...arrayItemOuterBox} sx={computeSxProps<BoxProps>({ mb: 2 }, arrayItemOuterBox)}>
+          <Paper elevation={2} {...arrayItemPaper}>
+            <Box {...arrayItemInnerBox} sx={computeSxProps<BoxProps>({ p: 2 }, arrayItemInnerBox)}>
               {children}
             </Box>
           </Paper>
         </Box>
       </Grid>
       {hasToolbar && (
-        <Grid sx={{ mt: hasDescription ? -5 : -1.5 }} {...muiSlotProps?.arrayItemToolbarGrid}>
+        <Grid
+          {...arrayItemToolbarGrid}
+          sx={computeSxProps<GridProps>({ mt: hasDescription ? -5 : -1.5 }, arrayItemToolbarGrid)}
+        >
           <ArrayFieldItemButtonsTemplate {...buttonsProps} style={btnStyle} />
         </Grid>
       )}

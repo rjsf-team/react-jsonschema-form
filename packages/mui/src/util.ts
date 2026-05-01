@@ -1,5 +1,7 @@
 import { FormContextType, RJSFSchema, StrictRJSFSchema, UIOptionsType, GenericObjectType } from '@rjsf/utils';
 
+import { BoxProps, FormHelperTextProps, GridProps, PaperProps, SxProps, TypographyProps } from '@mui/material';
+
 /**
  * Extract props meant for MUI components from the `options` field of the `uiSchema`.
  * @param {UIOptionsType} options - The options from the uiSchema
@@ -27,4 +29,24 @@ export function getMuiProps<
       }, {} as P);
   }
   return muiProps;
+}
+
+export function computeSxProps<MuiProps extends GridProps>(
+  sxProps: SxProps,
+  muiProps: MuiProps & { sx: any[] },
+): MuiProps['sx'] | MuiProps['sx'][];
+export function computeSxProps<MuiProps extends BoxProps | FormHelperTextProps | PaperProps | TypographyProps>(
+  sxProps: SxProps,
+  muiProps?: MuiProps,
+): MuiProps['sx'];
+export function computeSxProps<
+  MuiProps extends BoxProps | FormHelperTextProps | GridProps | PaperProps | TypographyProps,
+>(sxProps: SxProps, muiProps?: MuiProps): MuiProps['sx'] | MuiProps['sx'][] {
+  if (!muiProps) {
+    return sxProps;
+  }
+  if (Array.isArray(muiProps?.sx)) {
+    return [sxProps, ...muiProps.sx];
+  }
+  return { ...sxProps, ...muiProps?.sx } as MuiProps['sx'];
 }

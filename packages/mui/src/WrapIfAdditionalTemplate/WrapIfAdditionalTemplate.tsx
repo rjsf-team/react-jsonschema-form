@@ -12,7 +12,7 @@ import {
   WrapIfAdditionalTemplateProps,
   getUiOptions,
 } from '@rjsf/utils';
-import { getMuiProps } from '../util';
+import { computeSxProps, getMuiProps } from '../util';
 /** Properties available for the `rjsfSlotProps` target of the WrapIfAdditionalTemplate. */
 export interface WrapIfAdditionalTemplateMuiProps extends GenericObjectType {
   /** RJSF-specific slot props for targeting child elements of the WrapIfAdditionalTemplate. */
@@ -67,8 +67,8 @@ export default function WrapIfAdditionalTemplate<
   };
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const { rjsfSlotProps } = getMuiProps<T, S, F, WrapIfAdditionalTemplateMuiProps>(uiOptions);
-  const muiSlotProps = rjsfSlotProps;
+  const { rjsfSlotProps: { wrapGridContainer, wrapKeyGridItem, wrapChildrenGridItem, wrapRemoveButtonGridItem } = {} } =
+    getMuiProps<T, S, F, WrapIfAdditionalTemplateMuiProps>(uiOptions);
 
   if (!additional) {
     return (
@@ -78,17 +78,15 @@ export default function WrapIfAdditionalTemplate<
     );
   }
 
-  const { wrapGridContainer, wrapKeyGridItem, wrapChildrenGridItem, wrapRemoveButtonGridItem } = muiSlotProps || {};
-
   return (
     <Grid
       container
       key={`${id}-key`}
-      alignItems='flex-start'
       spacing={2}
       className={classNames}
       style={style}
       {...wrapGridContainer}
+      sx={computeSxProps<GridProps>({ alignItems: 'flex-start' }, wrapGridContainer)}
     >
       <Grid size={5.5} {...wrapKeyGridItem}>
         <TextField
@@ -107,7 +105,7 @@ export default function WrapIfAdditionalTemplate<
       <Grid size={5.5} {...wrapChildrenGridItem}>
         {children}
       </Grid>
-      <Grid sx={{ mt: 1.5 }} {...wrapRemoveButtonGridItem}>
+      <Grid {...wrapRemoveButtonGridItem} sx={computeSxProps<GridProps>({ mt: 1.5 }, wrapRemoveButtonGridItem)}>
         <RemoveButton
           id={buttonId(id, 'remove')}
           className='rjsf-object-property-remove'

@@ -8,7 +8,7 @@ import {
   getUiOptions,
 } from '@rjsf/utils';
 import { RichDescription } from '@rjsf/core';
-import { getMuiProps } from '../util';
+import { computeSxProps, getMuiProps } from '../util';
 
 /** Properties available for the `rjsfSlotProps` target of the DescriptionField. */
 export interface DescriptionFieldMuiProps extends GenericObjectType {
@@ -31,12 +31,16 @@ export default function DescriptionField<
   const { id, description, registry, uiSchema } = props;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const muiProps = getMuiProps<T, S, F, DescriptionFieldMuiProps>(uiOptions);
-  const { rjsfSlotProps: muiSlotProps } = muiProps;
+  const { rjsfSlotProps: { descTypography } = {} } = getMuiProps<T, S, F, DescriptionFieldMuiProps>(uiOptions);
 
   if (description) {
     return (
-      <Typography id={id} variant='subtitle2' style={{ marginTop: '5px' }} {...muiSlotProps?.descTypography}>
+      <Typography
+        id={id}
+        variant='subtitle2'
+        {...descTypography}
+        sx={computeSxProps<TypographyProps>({ mt: 0.625 }, descTypography)}
+      >
         <RichDescription description={description} registry={registry} uiSchema={uiSchema} />
       </Typography>
     );
