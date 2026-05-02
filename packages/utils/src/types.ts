@@ -22,7 +22,46 @@ export type GenericObjectType = {
 /** Map the JSONSchema7 to our own type so that we can easily bump to a more recent version at some future date and only
  * have to update this one type.
  */
-export type StrictRJSFSchema = JSONSchema7;
+export type StrictRJSFSchema = JSONSchema7 & {
+  /** The deprecated keyword is a boolean that indicates that the instance value the keyword applies to should not be
+   * used and may be removed in the future.
+   */
+  deprecated?: boolean;
+  /** Recursive support for StrictRJSFSchema in properties */
+  properties?: {
+    [key: string]: StrictRJSFSchema | boolean;
+  };
+  /** Recursive support for StrictRJSFSchema in items */
+  items?: StrictRJSFSchema | StrictRJSFSchema[] | boolean;
+  /** Recursive support for StrictRJSFSchema in additionalProperties */
+  additionalProperties?: StrictRJSFSchema | boolean;
+  /** Recursive support for StrictRJSFSchema in patternProperties */
+  patternProperties?: {
+    [key: string]: StrictRJSFSchema | boolean;
+  };
+  /** Recursive support for StrictRJSFSchema in definitions */
+  definitions?: {
+    [key: string]: StrictRJSFSchema | boolean;
+  };
+  /** Recursive support for StrictRJSFSchema in dependencies */
+  dependencies?: {
+    [key: string]: StrictRJSFSchema | boolean | string[];
+  };
+  /** Recursive support for StrictRJSFSchema in allOf */
+  allOf?: StrictRJSFSchema[];
+  /** Recursive support for StrictRJSFSchema in anyOf */
+  anyOf?: StrictRJSFSchema[];
+  /** Recursive support for StrictRJSFSchema in oneOf */
+  oneOf?: StrictRJSFSchema[];
+  /** Recursive support for StrictRJSFSchema in not */
+  not?: StrictRJSFSchema | boolean;
+  /** Recursive support for StrictRJSFSchema in if */
+  if?: StrictRJSFSchema | boolean;
+  /** Recursive support for StrictRJSFSchema in then */
+  then?: StrictRJSFSchema | boolean;
+  /** Recursive support for StrictRJSFSchema in else */
+  else?: StrictRJSFSchema | boolean;
+};
 
 /** Allow for more flexible schemas (i.e. draft-2019) than the strict JSONSchema7
  */
@@ -447,6 +486,12 @@ export type GlobalUISchemaOptions = GenericObjectType & {
    *  only affects the DOM-level encoding.
    */
   optionValueFormat?: OptionValueFormat;
+  /** Controls how a deprecated property is rendered.
+   * - `hide`: The field is completely hidden (via the `hidden` prop passed to FieldTemplate).
+   * - `disable`: The field is rendered but disabled.
+   * - `label`: The field is rendered with "(deprecated)" appended to its label.
+   */
+  deprecatedHandling?: 'hide' | 'disable' | 'label';
 };
 
 /** The set of options from the `Form` that will be available on the `Registry` for use in everywhere the `registry` is

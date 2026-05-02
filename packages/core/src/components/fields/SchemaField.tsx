@@ -133,7 +133,11 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   );
 
   const FieldComponent = getFieldComponent<T, S, F>(schema, uiOptions, registry);
-  const disabled = Boolean(uiOptions.disabled ?? props.disabled);
+
+  const isDeprecated = Boolean(schema.deprecated);
+  const deprecatedHandling = isDeprecated ? (uiOptions.deprecatedHandling ?? 'label') : undefined;
+
+  const disabled = Boolean(uiOptions.disabled ?? props.disabled) || deprecatedHandling === 'disable';
   const readonly = Boolean(uiOptions.readonly ?? (props.readonly || props.schema.readOnly || schema.readOnly));
   const uiSchemaHideError = uiOptions.hideError;
   // Set hideError to the value provided in the uiSchema, otherwise stick with the prop to propagate to children
@@ -214,9 +218,13 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
         : uiOptions.title || props.schema.title || schema.title || props.title || name;
   }
 
+  if (deprecatedHandling === 'label') {
+    label = `${label} (deprecated)`;
+  }
+
   const description = uiOptions.description || props.schema.description || schema.description || '';
   const help = uiOptions.help;
-  const hidden = uiOptions.widget === 'hidden';
+  const hidden = uiOptions.widget === 'hidden' || deprecatedHandling === 'hide';
 
   const classNames = ['rjsf-field', `rjsf-field-${getSchemaType(schema)}`];
   if (!hideError && __errors && __errors.length > 0) {
