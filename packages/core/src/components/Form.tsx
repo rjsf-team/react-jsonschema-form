@@ -45,6 +45,8 @@ import {
   NameGeneratorFunction,
   getUsedFormData,
   getFieldNames,
+  ANY_OF_KEY,
+  ONE_OF_KEY,
 } from '@rjsf/utils';
 import _cloneDeep from 'lodash/cloneDeep';
 import _get from 'lodash/get';
@@ -924,7 +926,30 @@ export default class Form<
         _unset(formData, path);
       } else if (!isRootPath) {
         // If the newValue is not on the root path, then set it into the form data
-        _set(formData, path, newValue);
+        if (newValue === undefined) {
+          const lastSegment = path[path.length - 1];
+          if (typeof lastSegment === 'number') {
+            // Array items: match ArrayField `handleChange` — AJV needs `null`, not a hole/undefined.
+            _set(formData, path, null);
+          } else {
+            const { field } = schemaUtils.findFieldInSchema(schema, path, oldFormData);
+            const leaf = field as RJSFSchema | undefined;
+            const isOneOfOrAnyOfLeaf = leaf && (ONE_OF_KEY in leaf || ANY_OF_KEY in leaf);
+            if (isOneOfOrAnyOfLeaf) {
+              // Keep explicit `undefined` so mergeDefaults does not immediately re-apply a branch default (e.g. cleared
+              // oneOf / anyOf widget).
+              _set(formData, path, newValue);
+            } else if (leaf !== undefined) {
+              // Plain leaves: omit the key instead of `{ key: undefined }`, which breaks `type: "string"` validation in
+              // AJV after clearing a text input (https://github.com/rjsf-team/react-jsonschema-form/issues/4518).
+              _unset(formData, path);
+            } else {
+              _set(formData, path, newValue);
+            }
+          }
+        } else {
+          _set(formData, path, newValue);
+        }
       }
       // Pass true to skip live validation in `getStateFromProps()` since we will do it a bit later
       const newState = this.getStateFromProps(this.props, inputForDefaults, undefined, undefined, undefined, true);
