@@ -9,6 +9,7 @@ import type {
   StyleHTMLAttributes,
 } from 'react';
 import { JSONSchema7 } from 'json-schema';
+
 import { TranslatableString } from './enums';
 import './jsonSchemaAugmentation';
 
