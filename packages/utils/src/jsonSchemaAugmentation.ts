@@ -1,3 +1,5 @@
+import type { JSONSchema7 } from 'json-schema';
+
 /**
  * This file is used to augment the `json-schema` module with the `deprecated` keyword.
  *
@@ -7,8 +9,6 @@
  * ensures the augmentation is correctly applied by the TypeScript compiler without
  * confusing runtime module resolvers.
  */
-import type { JSONSchema7 } from 'json-schema';
-
 declare module 'json-schema' {
   export interface JSONSchema7 {
     /** The deprecated keyword is a boolean that indicates that the instance value the keyword applies to should not be
