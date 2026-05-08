@@ -20,6 +20,8 @@ Those types are exported for use by `@rjsf/core` and all the themes, as well as 
 
 These types can be found on GitHub [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/types.ts).
 
+**`SchemaFieldPath`** — Used when navigating a JSON Schema subtree (for example with `getFromSchema` and `findFieldInSchema` on `SchemaUtilsType`, documented under [Validator-based utility functions](#validator-based-utility-functions)). It is `string | FieldPathList`: either a dotted path or an array of segments with the same rules as `FieldPathList` (`(string | number)[]`). A numeric segment denotes an array index or an object key that is numeric. Navigation skips only `undefined` or empty-string segments, so segment **`0`** is always honored (this avoids the bug from treating `0` as a falsy path unit).
+
 ## Enums
 
 There are enumerations in `@rjsf/utils` that are exported for use by `@rjsf/core` and all the themes, as well as any customizations you may build.
@@ -1251,20 +1253,20 @@ This is used in isValid to make references to the rootSchema
 
 ### findFieldInSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
-Returns the superset of `formData` that includes the given set updated to include any missing fields that have computed to have defaults provided in the `schema`.
+Finds the field at the given path within the root or a nested `schema` node, following `oneOf` / `anyOf` using `formData` where needed. If nothing matches the path, `{ field: undefined, isRequired: undefined }` is returned. When a leaf is found, the result includes whether that leaf is required under its parent.
 
 #### Parameters
 
 - validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
-- rootSchema: S | undefined - The root schema that will be forwarded to all the APIs
+- rootSchema: S - The root schema that will be forwarded to all the APIs
 - schema: S - The node within the JSON schema in which to search
-- path: string | string[] - The keys in the path to the desired field
+- path: SchemaFieldPath - Dotted path or segment list to the desired field; see [`SchemaFieldPath`](#types)
 - [formData={}]: T - The form data that is used to determine which anyOf/oneOf option to descend
 - [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
 
 #### Returns
 
-- FoundFieldType&lt;S>: An object that contains the field and its required state. If no field can be found then`{ field: undefined, isRequired: undefined }` is returned.
+- FoundFieldType&lt;S>: An object that contains the field and its required state. If no field can be found then `{ field: undefined, isRequired: undefined }` is returned.
 
 ### findSelectedOptionInXxxOf&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
@@ -1360,14 +1362,14 @@ Determines whether the combination of `schema` and `uiSchema` properties indicat
 
 ### getFromSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
-Helper that acts like lodash's `get` but additionally retrieves `$ref`s as needed to get the path for schemas containing potentially nested `$ref`s.
+Helper that acts like lodash's `get` but additionally retrieves `$ref`s as needed to get the path for schemas containing potentially nested `$ref`s. The `path` accepts a [`SchemaFieldPath`](#types) (dotted string or `FieldPathList`-style segment array).
 
 #### Parameters
 
 - validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
 - rootSchema: S - The root schema that will be forwarded to all the APIs
 - schema: S - The current node within the JSON schema recursion
-- path: string | string[] - The keys in the path to the desired field
+- path: SchemaFieldPath - Dotted path or segment list to the desired field; see [`SchemaFieldPath`](#types)
 - defaultValue: T | S - The value to return if a value is not found for the `pathList` path
 - [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
 
