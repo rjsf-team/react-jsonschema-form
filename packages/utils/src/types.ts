@@ -186,6 +186,9 @@ export type InputPropsType = {
  */
 export type FieldPathList = (string | number)[];
 
+/** Dot string or segment list for `getFromSchema` / `findFieldInSchema` (same segment rules as {@link FieldPathList}). */
+export type SchemaFieldPath = string | FieldPathList;
+
 /** Type describing an id and path used for a field */
 export type FieldPathId = {
   /** The id for a field */
@@ -1335,7 +1338,7 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    * @returns - An object that contains the field and its required state. If no field can be found then
    *            `{ field: undefined, isRequired: undefined }` is returned.
    */
-  findFieldInSchema(schema: S, path: string | string[], formData?: T): FoundFieldType<S>;
+  findFieldInSchema(schema: S, path: SchemaFieldPath, formData?: T): FoundFieldType<S>;
   /** Finds the oneOf option inside the `schema['any/oneOf']` list which has the `properties[selectorField].default` that
    * matches the `formData[selectorField]` value. For the purposes of this function, `selectorField` is either
    * `schema.discriminator.propertyName` or `fallbackField`.
@@ -1410,9 +1413,9 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    * @param defaultValue - The value to return if a value is not found for the `pathList` path
    * @returns - The internal schema from the `schema` for the given `path` or the `defaultValue` if not found
    */
-  getFromSchema(schema: S, path: string | string[], defaultValue: T): T;
-  getFromSchema(schema: S, path: string | string[], defaultValue: S): S;
-  getFromSchema(schema: S, path: string | string[], defaultValue: T | S): S | T;
+  getFromSchema(schema: S, path: SchemaFieldPath, defaultValue: T): T;
+  getFromSchema(schema: S, path: SchemaFieldPath, defaultValue: S): S;
+  getFromSchema(schema: S, path: SchemaFieldPath, defaultValue: T | S): S | T;
   /** Checks to see if the `schema` and `uiSchema` combination represents an array of files
    *
    * @param schema - The schema for which check for array of files flag is desired

@@ -20,22 +20,23 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 
-- Updated `ArrayField`'s change handling to only `null` out data for paths that are directly an array indexed value and not object properties within them, fixing [#4952](https://github.com/rjsf-team/react-jsonschema-form/issues/4952)
+- Fixed `processPendingChange` leaving optional object keys as `undefined` after clearing text inputs (invalid for AJV `type: "string"`), by unsetting keys for resolved non-oneOf/anyOf leaves while preserving explicit `undefined` for oneOf/anyOf branches, fixing [#4518](https://github.com/rjsf-team/react-jsonschema-form/issues/4518)
 - Added support for the JSON Schema `deprecated` keyword in `SchemaField`, providing options to hide, disable, or label deprecated fields via a new `deprecatedHandling` global UI option, fixing [#5024](https://github.com/rjsf-team/react-jsonschema-form/issues/5024)
+- Pass `FieldPathList` through to `findFieldInSchema` without per-segment string mapping now that `SchemaFieldPath` is supported in `@rjsf/utils` (follow-up to [#4518](https://github.com/rjsf-team/react-jsonschema-form/issues/4518) fix)
 
 ## @rjsf/utils
 
 - Added `deprecatedHandling` to `GlobalUISchemaOptions` and updated `StrictRJSFSchema` to be recursive, ensuring the `deprecated` keyword (and future extensions) are supported in all nested schema structures without requiring type casts, fixing [#5024](https://github.com/rjsf-team/react-jsonschema-form/issues/5024)
   - Also added `DeprecatedLabel` to `TranslatableString` to support internationalization of the deprecated field suffix
-- Added support for the JSON Schema `deprecated` keyword in `SchemaField`, providing options to hide, disable, or label deprecated fields via a new `deprecatedHandling` global UI option, fixing [#5024](https://github.com/rjsf-team/react-jsonschema-form/issues/5024)
+- Added `SchemaFieldPath` (`string | FieldPathList`) for `getFromSchema` / `findFieldInSchema`; fixed schema descent when a segment is numeric `0` (previously skipped due to falsy check); use string keys for `required` / oneOf fallback matching
 
 # 6.5.2
 
 ## @rjsf/core
 
-- Fixed `processPendingChange` leaving optional object keys as `undefined` after clearing text inputs (invalid for AJV `type: "string"`), by unsetting keys for resolved non-oneOf/anyOf leaves while preserving explicit `undefined` for oneOf/anyOf branches, fixing [#4518](https://github.com/rjsf-team/react-jsonschema-form/issues/4518)
 - Fixed `processPendingChange()` using `originalErrorSchema` (which already contains merged `extraErrors`) as the base for `mergeErrors()`, causing sibling-field `extraErrors` to accumulate duplicate entries on every array mutation, fixing [#5041](https://github.com/rjsf-team/react-jsonschema-form/issues/5041)
 - Added `ObjectField` test for renaming a nested `additionalProperties` key using `userEvent` and `reset()` via a form ref, verifying fix for [#4948](https://github.com/rjsf-team/react-jsonschema-form/issues/4948)
+- Updated `ArrayField`'s change handling to only `null` out data for paths that are directly an array indexed value and not object properties within them, fixing [#4952](https://github.com/rjsf-team/react-jsonschema-form/issues/4952)
 
 ## @rjsf/mui
 
