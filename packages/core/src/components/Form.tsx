@@ -938,16 +938,12 @@ export default class Form<
             const { field } = schemaUtils.findFieldInSchema(schema, path, oldFormData);
             const leaf = field as RJSFSchema | undefined;
             const isOneOfOrAnyOfLeaf = leaf && (ONE_OF_KEY in leaf || ANY_OF_KEY in leaf);
-            if (isOneOfOrAnyOfLeaf) {
-              // Keep explicit `undefined` so mergeDefaults does not immediately re-apply a branch default (e.g. cleared
-              // oneOf / anyOf widget).
-              valueForPath = newValue;
-            } else if (leaf !== undefined) {
-              // Plain leaves: omit the key instead of `{ key: undefined }`, which breaks `type: "string"` validation in
-              // AJV after clearing a text input (https://github.com/rjsf-team/react-jsonschema-form/issues/4518).
+            // Plain leaves: omit the key instead of `{ key: undefined }`, which breaks `type: "string"` validation in
+            // AJV after clearing a text input (https://github.com/rjsf-team/react-jsonschema-form/issues/4518).
+            // oneOf/anyOf leaves and unresolved leaves: keep `valueForPath === newValue` (already `undefined`) so
+            // mergeDefaults does not immediately re-apply a branch default when clearing those widgets.
+            if (!isOneOfOrAnyOfLeaf && leaf !== undefined) {
               unsetPath = true;
-            } else {
-              valueForPath = newValue;
             }
           }
         }
