@@ -937,8 +937,8 @@ export default class Form<
           } else {
             const { field } = schemaUtils.findFieldInSchema(
               schema,
-              // `findFieldInSchema` typings use `string[]`; paths may include numeric segments (same as lodash `get`).
-              path as string[],
+              // `FieldPathList` allows numeric segments; normalize so `findFieldInSchema` receives `string[]`.
+              path.map((segment) => String(segment)),
               oldFormData,
             );
             const leaf = field as RJSFSchema | undefined;
