@@ -489,7 +489,7 @@ export type GlobalUISchemaOptions = GenericObjectType & {
   /** Controls how a deprecated property is rendered.
    * - `hide`: The field is completely hidden (via the `hidden` prop passed to FieldTemplate).
    * - `disable`: The field is rendered but disabled.
-   * - `label`: The field is rendered with "(deprecated)" appended to its label.
+   * - `label` (default): The field is rendered with "(deprecated)" appended to its label.
    */
   deprecatedHandling?: 'hide' | 'disable' | 'label';
 };

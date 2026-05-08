@@ -23,6 +23,7 @@ import {
   shouldRenderOptionalField,
   StrictRJSFSchema,
   toFieldPathId,
+  TranslatableString,
   UI_OPTIONS_KEY,
   UIOptionsType,
 } from '@rjsf/utils';
@@ -219,7 +220,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   }
 
   if (deprecatedHandling === 'label') {
-    label = `${label} (deprecated)`;
+    label = registry.translateString(TranslatableString.DeprecatedLabel, [label]);
   }
 
   const description = uiOptions.description || props.schema.description || schema.description || '';
