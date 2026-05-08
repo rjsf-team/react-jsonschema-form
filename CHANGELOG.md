@@ -20,9 +20,9 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 
+- Fixed `processPendingChange` leaving optional object keys as `undefined` after clearing text inputs (invalid for AJV `type: "string"`), by unsetting keys for resolved non-oneOf/anyOf leaves while preserving explicit `undefined` for oneOf/anyOf branches, fixing [#4518](https://github.com/rjsf-team/react-jsonschema-form/issues/4518)
 - Added support for the JSON Schema `deprecated` keyword in `SchemaField`, providing options to hide, disable, or label deprecated fields via a new `deprecatedHandling` global UI option, fixing [#5024](https://github.com/rjsf-team/react-jsonschema-form/issues/5024)
 - Pass `FieldPathList` through to `findFieldInSchema` without per-segment string mapping now that `SchemaFieldPath` is supported in `@rjsf/utils` (follow-up to [#4518](https://github.com/rjsf-team/react-jsonschema-form/issues/4518) fix)
-- Fixed `processPendingChange` leaving optional object keys as `undefined` after clearing text inputs (invalid for AJV `type: "string"`), by unsetting keys for resolved non-oneOf/anyOf leaves while preserving explicit `undefined` for oneOf/anyOf branches, fixing [#4518](https://github.com/rjsf-team/react-jsonschema-form/issues/4518)
 
 ## @rjsf/utils
 
