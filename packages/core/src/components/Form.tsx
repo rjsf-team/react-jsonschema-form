@@ -926,11 +926,14 @@ export default class Form<
         _unset(formData, path);
       } else if (!isRootPath) {
         // If the newValue is not on the root path, then set it into the form data
+        let unsetPath = false;
+        let valueForPath: T | null | undefined = newValue;
+
         if (newValue === undefined) {
           const lastSegment = path[path.length - 1];
           if (typeof lastSegment === 'number') {
-            // Array items: match ArrayField `handleChange` — AJV needs `null`, not a hole/undefined.
-            _set(formData, path, null);
+            // Array items: match ArrayField `handleChange` — AJV needs `null`, not undefined.
+            valueForPath = null as unknown as T;
           } else {
             const { field } = schemaUtils.findFieldInSchema(schema, path, oldFormData);
             const leaf = field as RJSFSchema | undefined;
@@ -938,17 +941,21 @@ export default class Form<
             if (isOneOfOrAnyOfLeaf) {
               // Keep explicit `undefined` so mergeDefaults does not immediately re-apply a branch default (e.g. cleared
               // oneOf / anyOf widget).
-              _set(formData, path, newValue);
+              valueForPath = newValue;
             } else if (leaf !== undefined) {
               // Plain leaves: omit the key instead of `{ key: undefined }`, which breaks `type: "string"` validation in
               // AJV after clearing a text input (https://github.com/rjsf-team/react-jsonschema-form/issues/4518).
-              _unset(formData, path);
+              unsetPath = true;
             } else {
-              _set(formData, path, newValue);
+              valueForPath = newValue;
             }
           }
+        }
+
+        if (unsetPath) {
+          _unset(formData, path);
         } else {
-          _set(formData, path, newValue);
+          _set(formData, path, valueForPath);
         }
       }
       // Pass true to skip live validation in `getStateFromProps()` since we will do it a bit later
