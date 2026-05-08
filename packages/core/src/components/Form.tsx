@@ -935,7 +935,12 @@ export default class Form<
             // Array items: match ArrayField `handleChange` — AJV needs `null`, not undefined.
             valueForPath = null as unknown as T;
           } else {
-            const { field } = schemaUtils.findFieldInSchema(schema, path, oldFormData);
+            const { field } = schemaUtils.findFieldInSchema(
+              schema,
+              // `findFieldInSchema` typings use `string[]`; paths may include numeric segments (same as lodash `get`).
+              path as string[],
+              oldFormData,
+            );
             const leaf = field as RJSFSchema | undefined;
             const isOneOfOrAnyOfLeaf = leaf && (ONE_OF_KEY in leaf || ANY_OF_KEY in leaf);
             // Plain leaves: omit the key instead of `{ key: undefined }`, which breaks `type: "string"` validation in
