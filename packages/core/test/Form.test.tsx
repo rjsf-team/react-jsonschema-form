@@ -6046,3 +6046,57 @@ describe('extraErrors not duplicated when sibling array field mutated (#5041)', 
     expect(nameErrors[0]).toBe('Name is required');
   });
 });
+
+describe('patternProperties with fixed properties (#4518)', () => {
+  it('should submit valid formData after a nested string field is cleared (no undefined leaf values)', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        annotations: {
+          type: 'object',
+          additionalProperties: {
+            type: 'string',
+          },
+          patternProperties: {
+            '^.+$': {
+              type: 'string',
+            },
+          },
+          description: 'A set of key-value annotations.',
+          properties: {
+            testEmptyAnnotation1: {
+              type: 'string',
+              title: 'annotation1',
+            },
+            testEmptyAnnotation2: {
+              type: 'string',
+              title: 'annotation2',
+            },
+          },
+        },
+      },
+    };
+
+    const { container, node, onSubmit, onError } = createFormComponent({
+      schema,
+      formData: { annotations: {} },
+    });
+
+    submitForm(node);
+    expect(onError).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalled();
+    onSubmit.mockClear();
+    onError.mockClear();
+
+    const input = container.querySelector<HTMLInputElement>('#root_annotations_testEmptyAnnotation1');
+    expect(input).toBeInTheDocument();
+    await user.type(input!, 'hello');
+    await user.clear(input!);
+
+    submitForm(node);
+    expect(onError).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalled();
+    const { formData } = onSubmit.mock.calls[onSubmit.mock.calls.length - 1][0];
+    expect(formData).toEqual({ annotations: {} });
+  });
+});

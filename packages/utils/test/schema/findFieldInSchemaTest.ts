@@ -87,6 +87,26 @@ export default function findFieldInSchemaTest(testValidator: TestValidatorType) 
         isRequired: false,
       });
     });
+    it('resolves fields when path segments are numeric (coerced to string keys, as from FieldPathList)', () => {
+      const schemaWithNumericPropertyName: RJSFSchema = {
+        type: 'object',
+        properties: {
+          '0': {
+            type: 'string',
+          },
+        },
+      };
+      const fieldPathList = [0] as (string | number)[];
+      expect(
+        schemaUtils.findFieldInSchema(
+          schemaWithNumericPropertyName,
+          fieldPathList.map((s) => String(s)),
+        ),
+      ).toEqual({
+        field: { type: 'string' },
+        isRequired: false,
+      });
+    });
     it('schema has oneOf field in properties key and isRequired true', () => {
       const path = 'answer';
       expect(schemaUtils.findFieldInSchema(testOneOfSchema, path, ANSWER_1)).toEqual({

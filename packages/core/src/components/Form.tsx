@@ -45,6 +45,8 @@ import {
   NameGeneratorFunction,
   getUsedFormData,
   getFieldNames,
+  ANY_OF_KEY,
+  ONE_OF_KEY,
 } from '@rjsf/utils';
 import _cloneDeep from 'lodash/cloneDeep';
 import _get from 'lodash/get';
@@ -924,7 +926,38 @@ export default class Form<
         _unset(formData, path);
       } else if (!isRootPath) {
         // If the newValue is not on the root path, then set it into the form data
-        _set(formData, path, newValue);
+        let unsetPath = false;
+        let valueForPath: T | null | undefined = newValue;
+
+        if (newValue === undefined) {
+          const lastSegment = path[path.length - 1];
+          if (typeof lastSegment === 'number') {
+            // Array items: match ArrayField `handleChange` — AJV needs `null`, not undefined.
+            valueForPath = null as unknown as T;
+          } else {
+            const { field } = schemaUtils.findFieldInSchema(
+              schema,
+              // `FieldPathList` allows numeric segments; normalize so `findFieldInSchema` receives `string[]`.
+              path.map((segment) => String(segment)),
+              oldFormData,
+            );
+            const leaf = field as RJSFSchema | undefined;
+            const isOneOfOrAnyOfLeaf = leaf && (ONE_OF_KEY in leaf || ANY_OF_KEY in leaf);
+            // Plain leaves: omit the key instead of `{ key: undefined }`, which breaks `type: "string"` validation in
+            // AJV after clearing a text input (https://github.com/rjsf-team/react-jsonschema-form/issues/4518).
+            // oneOf/anyOf leaves and unresolved leaves: keep `valueForPath === newValue` (already `undefined`) so
+            // mergeDefaults does not immediately re-apply a branch default when clearing those widgets.
+            if (!isOneOfOrAnyOfLeaf && leaf !== undefined) {
+              unsetPath = true;
+            }
+          }
+        }
+
+        if (unsetPath) {
+          _unset(formData, path);
+        } else {
+          _set(formData, path, valueForPath);
+        }
       }
       // Pass true to skip live validation in `getStateFromProps()` since we will do it a bit later
       const newState = this.getStateFromProps(this.props, inputForDefaults, undefined, undefined, undefined, true);
