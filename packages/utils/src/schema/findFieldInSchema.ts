@@ -9,6 +9,7 @@ import {
   FormContextType,
   FoundFieldType,
   RJSFSchema,
+  SchemaFieldPath,
   StrictRJSFSchema,
   ValidatorType,
 } from '../types';
@@ -37,7 +38,7 @@ export default function findFieldInSchema<
   validator: ValidatorType<T, S, F>,
   rootSchema: S,
   schema: S,
-  path: string | string[],
+  path: SchemaFieldPath,
   formData: T = {} as T,
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): FoundFieldType<S> {
@@ -46,6 +47,7 @@ export default function findFieldInSchema<
 
   // store the desired field into a variable and removing it from the `pathList`
   const fieldName = pathList.pop()!;
+  const fieldNameKey = String(fieldName);
 
   if (pathList.length) {
     // drilling into the schema for each sub-path and taking into account of the any/oneOfs
@@ -64,7 +66,7 @@ export default function findFieldInSchema<
           validator,
           rootSchema,
           parentField,
-          fieldName,
+          fieldNameKey,
           ONE_OF_KEY,
           get(formData, subPath),
           experimental_customMergeAllOf,
@@ -75,7 +77,7 @@ export default function findFieldInSchema<
           validator,
           rootSchema,
           parentField,
-          fieldName,
+          fieldNameKey,
           ANY_OF_KEY,
           get(formData, subPath),
           experimental_customMergeAllOf,
@@ -90,7 +92,7 @@ export default function findFieldInSchema<
       validator,
       rootSchema,
       parentField,
-      fieldName,
+      fieldNameKey,
       ONE_OF_KEY,
       formData,
       experimental_customMergeAllOf,
@@ -101,7 +103,7 @@ export default function findFieldInSchema<
       validator,
       rootSchema,
       parentField,
-      fieldName,
+      fieldNameKey,
       ANY_OF_KEY,
       formData,
       experimental_customMergeAllOf,
@@ -131,7 +133,7 @@ export default function findFieldInSchema<
   );
   let isRequired: boolean | undefined;
   if (field && Array.isArray(requiredArray)) {
-    isRequired = requiredArray.includes(fieldName);
+    isRequired = requiredArray.includes(fieldNameKey);
   }
 
   return { field, isRequired };

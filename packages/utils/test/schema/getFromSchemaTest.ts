@@ -90,6 +90,16 @@ export default function getFromSchemaTest(testValidator: TestValidatorType) {
       const field = schemaUtils.getFromSchema(testSchema, [PROPERTIES_KEY, 'patient', 'telecom'], defaultValue);
       expect(field).toEqual(defaultValue);
     });
+    it('descends into a property whose key is the number 0 (FieldPathList segment)', () => {
+      const schemaNumericKey: RJSFSchema = {
+        type: 'object',
+        properties: {
+          '0': { type: 'string', title: 'zero' },
+        },
+      };
+      const got = schemaUtils.getFromSchema(schemaNumericKey, [PROPERTIES_KEY, 0], undefined);
+      expect(got).toEqual({ type: 'string', title: 'zero' });
+    });
     it('returns the default schema value when passed an invalid path', () => {
       const defaultValue = { title: 'nothing' } as RJSFSchema;
       const field = schemaUtils.getFromSchema(testSchema, [PROPERTIES_KEY, 'patient', 'telecom'], defaultValue);

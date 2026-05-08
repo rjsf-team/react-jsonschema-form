@@ -7,6 +7,7 @@ import {
   GlobalUISchemaOptions,
   PathSchema,
   RJSFSchema,
+  SchemaFieldPath,
   SchemaUtilsType,
   StrictRJSFSchema,
   UiSchema,
@@ -127,7 +128,7 @@ class SchemaUtils<
    * @returns - An object that contains the field and its required state. If no field can be found then
    *            `{ field: undefined, isRequired: undefined }` is returned.
    */
-  findFieldInSchema(schema: S, path: string | string[], formData?: T): FoundFieldType<S> {
+  findFieldInSchema(schema: S, path: SchemaFieldPath, formData?: T): FoundFieldType<S> {
     return findFieldInSchema(
       this.validator,
       this.rootSchema,
@@ -259,9 +260,9 @@ class SchemaUtils<
    * @param defaultValue - The value to return if a value is not found for the `pathList` path
    * @returns - The internal schema from the `schema` for the given `path` or the `defaultValue` if not found
    */
-  getFromSchema(schema: S, path: string | string[], defaultValue: T): T;
-  getFromSchema(schema: S, path: string | string[], defaultValue: S): S;
-  getFromSchema(schema: S, path: string | string[], defaultValue: T | S): T | S {
+  getFromSchema(schema: S, path: SchemaFieldPath, defaultValue: T): T;
+  getFromSchema(schema: S, path: SchemaFieldPath, defaultValue: S): S;
+  getFromSchema(schema: S, path: SchemaFieldPath, defaultValue: T | S): T | S {
     return getFromSchema<T, S, F>(
       this.validator,
       this.rootSchema,

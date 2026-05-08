@@ -3,7 +3,14 @@ import has from 'lodash/has';
 import isEmpty from 'lodash/isEmpty';
 
 import retrieveSchema from './retrieveSchema';
-import { Experimental_CustomMergeAllOf, FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
+import {
+  Experimental_CustomMergeAllOf,
+  FormContextType,
+  RJSFSchema,
+  SchemaFieldPath,
+  StrictRJSFSchema,
+  ValidatorType,
+} from '../types';
 import { REF_KEY } from '../constants';
 
 /** Internal helper function that acts like lodash's `get` but additionally retrieves `$ref`s as needed to get the path
@@ -20,7 +27,7 @@ function getFromSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema,
   validator: ValidatorType<T, S, F>,
   rootSchema: S,
   schema: S,
-  path: string | string[],
+  path: SchemaFieldPath,
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): T | S | undefined {
   let fieldSchema = schema;
@@ -30,9 +37,9 @@ function getFromSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema,
   if (isEmpty(path)) {
     return fieldSchema;
   }
-  const pathList = Array.isArray(path) ? path : path.split('.');
+  const pathList = Array.isArray(path) ? [...path] : path.split('.');
   const [part, ...nestedPath] = pathList;
-  if (part && has(fieldSchema, part)) {
+  if (part !== undefined && part !== '' && has(fieldSchema, part)) {
     fieldSchema = get(fieldSchema, part) as S;
     return getFromSchemaInternal<T, S, F>(
       validator,
@@ -64,7 +71,7 @@ export default function getFromSchema<
   validator: ValidatorType<T, S, F>,
   rootSchema: S,
   schema: S,
-  path: string | string[],
+  path: SchemaFieldPath,
   defaultValue: T,
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): T;
@@ -76,7 +83,7 @@ export default function getFromSchema<
   validator: ValidatorType<T, S, F>,
   rootSchema: S,
   schema: S,
-  path: string | string[],
+  path: SchemaFieldPath,
   defaultValue: S,
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): S;
@@ -88,7 +95,7 @@ export default function getFromSchema<
   validator: ValidatorType<T, S, F>,
   rootSchema: S,
   schema: S,
-  path: string | string[],
+  path: SchemaFieldPath,
   defaultValue: T | S,
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): T | S {

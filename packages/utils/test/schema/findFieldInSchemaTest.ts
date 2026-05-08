@@ -87,7 +87,7 @@ export default function findFieldInSchemaTest(testValidator: TestValidatorType) 
         isRequired: false,
       });
     });
-    it('resolves fields when path segments are numeric (coerced to string keys, as from FieldPathList)', () => {
+    it('resolves numeric path segments (FieldPathList) the same as string keys', () => {
       const schemaWithNumericPropertyName: RJSFSchema = {
         type: 'object',
         properties: {
@@ -97,12 +97,7 @@ export default function findFieldInSchemaTest(testValidator: TestValidatorType) 
         },
       };
       const fieldPathList = [0] as (string | number)[];
-      expect(
-        schemaUtils.findFieldInSchema(
-          schemaWithNumericPropertyName,
-          fieldPathList.map((s) => String(s)),
-        ),
-      ).toEqual({
+      expect(schemaUtils.findFieldInSchema(schemaWithNumericPropertyName, fieldPathList)).toEqual({
         field: { type: 'string' },
         isRequired: false,
       });
