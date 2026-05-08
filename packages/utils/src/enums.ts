@@ -68,6 +68,8 @@ export enum TranslatableString {
   TitleOptionPrefix = '%1 option %2',
   /** Key label, where %1 will be replaced by the label as provided by WrapIfAdditionalTemplate */
   KeyLabel = '%1 Key',
+  /** Deprecated label, where %1 will be replaced by the label as provided by SchemaField */
+  DeprecatedLabel = '%1 (deprecated)',
   // Strings with replaceable parameters AND/OR that support markdown and html
   /** Invalid object field configuration as provided by the ObjectField.
    * NOTE: Use markdown notation rather than html tags.

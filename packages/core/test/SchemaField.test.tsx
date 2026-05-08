@@ -380,6 +380,51 @@ describe('SchemaField', () => {
     });
   });
 
+  describe('deprecatedHandling', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string', deprecated: true },
+        bar: { type: 'string' },
+      },
+    };
+
+    it('should append (deprecated) to label by default', () => {
+      const { node } = createFormComponent({ schema });
+      const labels = node.querySelectorAll('label');
+      expect(labels[0]).toHaveTextContent('foo (deprecated)');
+      expect(labels[1]).toHaveTextContent('bar');
+    });
+
+    it('should not append (deprecated) if deprecatedHandling is not label', () => {
+      const uiSchema: UiSchema = {
+        'ui:globalOptions': { deprecatedHandling: 'disable' },
+      };
+      const { node } = createFormComponent({ schema, uiSchema });
+      const labels = node.querySelectorAll('label');
+      expect(labels[0]).toHaveTextContent('foo');
+    });
+
+    it('should disable field if deprecatedHandling is disable', () => {
+      const uiSchema: UiSchema = {
+        'ui:globalOptions': { deprecatedHandling: 'disable' },
+      };
+      const { node } = createFormComponent({ schema, uiSchema });
+      const inputs = node.querySelectorAll('input');
+      expect(inputs[0]).toBeDisabled();
+      expect(inputs[1]).not.toBeDisabled();
+    });
+
+    it('should hide field if deprecatedHandling is hide', () => {
+      const uiSchema: UiSchema = {
+        'ui:globalOptions': { deprecatedHandling: 'hide' },
+      };
+      const { node } = createFormComponent({ schema, uiSchema });
+      const hiddenFields = node.querySelectorAll('.hidden');
+      expect(hiddenFields.length).toBe(1);
+    });
+  });
+
   describe('description support', () => {
     const schema: RJSFSchema = {
       type: 'object',

@@ -20,11 +20,14 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 
+- Added support for the JSON Schema `deprecated` keyword in `SchemaField`, providing options to hide, disable, or label deprecated fields via a new `deprecatedHandling` global UI option, fixing [#5024](https://github.com/rjsf-team/react-jsonschema-form/issues/5024)
 - Pass `FieldPathList` through to `findFieldInSchema` without per-segment string mapping now that `SchemaFieldPath` is supported in `@rjsf/utils` (follow-up to [#4518](https://github.com/rjsf-team/react-jsonschema-form/issues/4518) fix)
 - Fixed `processPendingChange` leaving optional object keys as `undefined` after clearing text inputs (invalid for AJV `type: "string"`), by unsetting keys for resolved non-oneOf/anyOf leaves while preserving explicit `undefined` for oneOf/anyOf branches, fixing [#4518](https://github.com/rjsf-team/react-jsonschema-form/issues/4518)
 
 ## @rjsf/utils
 
+- Added `deprecatedHandling` to `GlobalUISchemaOptions` and updated `StrictRJSFSchema` to be recursive, ensuring the `deprecated` keyword (and future extensions) are supported in all nested schema structures without requiring type casts, fixing [#5024](https://github.com/rjsf-team/react-jsonschema-form/issues/5024)
+  - Also added `DeprecatedLabel` to `TranslatableString` to support internationalization of the deprecated field suffix
 - Added `SchemaFieldPath` (`string | FieldPathList`) for `getFromSchema` / `findFieldInSchema`; fixed schema descent when a segment is numeric `0` (previously skipped due to falsy check); use string keys for `required` / oneOf fallback matching
 
 # 6.5.2

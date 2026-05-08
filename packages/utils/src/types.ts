@@ -11,6 +11,7 @@ import type {
 import { JSONSchema7 } from 'json-schema';
 
 import { TranslatableString } from './enums';
+import './jsonSchemaAugmentation';
 
 /** The representation of any generic object type, usually used as an intersection on other types to make them more
  * flexible in the properties they support (i.e. anything else)
@@ -450,6 +451,12 @@ export type GlobalUISchemaOptions = GenericObjectType & {
    *  only affects the DOM-level encoding.
    */
   optionValueFormat?: OptionValueFormat;
+  /** Controls how a deprecated property is rendered.
+   * - `hide`: The field is completely hidden (via the `hidden` prop passed to FieldTemplate).
+   * - `disable`: The field is rendered but disabled.
+   * - `label` (default): The field is rendered with "(deprecated)" appended to its label.
+   */
+  deprecatedHandling?: 'hide' | 'disable' | 'label';
 };
 
 /** The set of options from the `Form` that will be available on the `Registry` for use in everywhere the `registry` is
