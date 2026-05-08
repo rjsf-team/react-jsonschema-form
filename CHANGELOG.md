@@ -16,6 +16,19 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.5.3
+
+## @rjsf/core
+
+- Updated `ArrayField`'s change handling to only `null` out data for paths that are directly an array indexed value and not object properties within them, fixing [#4952](https://github.com/rjsf-team/react-jsonschema-form/issues/4952)
+- Added support for the JSON Schema `deprecated` keyword in `SchemaField`, providing options to hide, disable, or label deprecated fields via a new `deprecatedHandling` global UI option, fixing [#5024](https://github.com/rjsf-team/react-jsonschema-form/issues/5024)
+
+## @rjsf/utils
+
+- Added `deprecatedHandling` to `GlobalUISchemaOptions` and updated `StrictRJSFSchema` to be recursive, ensuring the `deprecated` keyword (and future extensions) are supported in all nested schema structures without requiring type casts, fixing [#5024](https://github.com/rjsf-team/react-jsonschema-form/issues/5024)
+  - Also added `DeprecatedLabel` to `TranslatableString` to support internationalization of the deprecated field suffix
+- Added support for the JSON Schema `deprecated` keyword in `SchemaField`, providing options to hide, disable, or label deprecated fields via a new `deprecatedHandling` global UI option, fixing [#5024](https://github.com/rjsf-team/react-jsonschema-form/issues/5024)
+
 # 6.5.2
 
 ## @rjsf/core
@@ -23,8 +36,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `processPendingChange` leaving optional object keys as `undefined` after clearing text inputs (invalid for AJV `type: "string"`), by unsetting keys for resolved non-oneOf/anyOf leaves while preserving explicit `undefined` for oneOf/anyOf branches, fixing [#4518](https://github.com/rjsf-team/react-jsonschema-form/issues/4518)
 - Fixed `processPendingChange()` using `originalErrorSchema` (which already contains merged `extraErrors`) as the base for `mergeErrors()`, causing sibling-field `extraErrors` to accumulate duplicate entries on every array mutation, fixing [#5041](https://github.com/rjsf-team/react-jsonschema-form/issues/5041)
 - Added `ObjectField` test for renaming a nested `additionalProperties` key using `userEvent` and `reset()` via a form ref, verifying fix for [#4948](https://github.com/rjsf-team/react-jsonschema-form/issues/4948)
-- Updated `ArrayField`'s change handling to only `null` out data for paths that are directly an array indexed value and not object properties within them, fixing [#4952](https://github.com/rjsf-team/react-jsonschema-form/issues/4952)
-- Added support for the JSON Schema `deprecated` keyword in `SchemaField`, providing options to hide, disable, or label deprecated fields via a new `deprecatedHandling` global UI option, fixing [#5024](https://github.com/rjsf-team/react-jsonschema-form/issues/5024)
 
 ## @rjsf/mui
 
@@ -37,10 +48,6 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Switched `deepEquals` from `lodash.isEqualWith` to `fast-equals.createCustomEqual` with cycle detection enabled, and replaced direct `lodash.isEqual` usage in `useDeepCompareMemo`, `isRootSchema`, and `findSelectedOptionInXxxOf` with `deepEquals`, fixing [#4291](https://github.com/rjsf-team/react-jsonschema-form/issues/4291)
 - Fixed `getObjectDefaults` re-injecting stale schema-level `default` keys into an `additionalProperties` object when `formData` already contains its own keys (e.g. after a key rename), preventing ghost entries from reappearing, fixing [#4948](https://github.com/rjsf-team/react-jsonschema-form/issues/4948)
-- Added support for the JSON Schema `deprecated` keyword in `SchemaField`, providing options to hide, disable, or label deprecated fields via a new `deprecatedHandling` global UI option, fixing [#5024](https://github.com/rjsf-team/react-jsonschema-form/issues/5024)
-- Added `deprecatedHandling` to `GlobalUISchemaOptions` and updated `StrictRJSFSchema` to be recursive, ensuring the `deprecated` keyword (and future extensions) are supported in all nested schema structures without requiring type casts, fixing [#5024](https://github.com/rjsf-team/react-jsonschema-form/issues/5024)
-  - Also added `DeprecatedLabel` to `TranslatableString` to support internationalization of the deprecated field suffix
-
 
 ## @rjsf/validator-ajv8
 
