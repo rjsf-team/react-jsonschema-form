@@ -1,0 +1,20 @@
+{
+  "verbose": true,
+  "testEnvironment": "jsdom",
+  "testEnvironmentOptions": {
+    "browsers": ["chrome", "firefox", "safari"]
+  },
+  "testMatch": ["**/test/**/*.test.ts?(x)"],
+  "transformIgnorePatterns": ["/node_modules/(?!(@x0k/json-schema-merge|deep-freeze-es6))"],
+  "coverageDirectory": "<rootDir>/coverage/",
+  "collectCoverage": true,
+  "coveragePathIgnorePatterns": ["<rootDir>/node_modules/", "<rootDir>/test"],
+  "coverageThreshold": {
+    "global": {
+      "branches": 70,
+      "functions": 80,
+      "lines": 80,
+      "statements": 80
+    }
+  }
+}

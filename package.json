@@ -101,6 +101,7 @@
     "packages/semantic-ui",
     "packages/utils",
     "packages/validator-ajv8",
+    "packages/validator-ata",
     "packages/snapshot-tests",
     "packages/shadcn"
   ]
