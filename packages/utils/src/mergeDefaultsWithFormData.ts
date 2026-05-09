@@ -68,7 +68,8 @@ export default function mergeDefaultsWithFormData<T = any>(
       const keyExistsInDefaults = isObject(defaults) && key in (defaults as GenericObjectType);
       const keyExistsInFormData = key in (formData as GenericObjectType);
       const keyDefault = get(defaults, key) ?? {};
-      const defaultValueIsNestedObject = keyExistsInDefaults && Object.entries(keyDefault).some(([, v]) => isObject(v));
+      const defaultValueIsNestedObject =
+        keyExistsInDefaults && isObject(keyDefault) && Object.values(keyDefault).some((v) => isObject(v));
 
       const keyDefaultIsObject = keyExistsInDefaults && isObject(get(defaults, key));
       const keyHasFormDataObject = keyExistsInFormData && isObject(keyValue);
