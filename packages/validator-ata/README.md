@@ -83,7 +83,7 @@ The `ValidatorType` contract is identical, and the shared `@rjsf/utils` schema t
 
 - **Precompiled validators** are not yet wired through. The `compileSchemaValidators` and `createPrecompiledValidator` entrypoints exposed by `validator-ajv8` are slated for a follow-up release that adapts ata's `bundleStandalone` codegen to the RJSF-expected `ValidatorFunctions` shape.
 - **`ajvOptionsOverrides`, `ajvFormatOptions`, `AjvClass`** have no equivalents and are intentionally not accepted. `ataOptionsOverrides` replaces the first; built-in formats are always installed and don't require an opt-in flag.
-- **`getDefaultFormState` with `oneOf`/`anyOf` defaults** has known divergences in 16 of the 2107 shared schema tests, all clustered around merging defaults from non-matching options when the option schemas are minimally typed. The validation result for the form data itself is correct; only the populated default values differ on these specific cases. Tracked for a follow-up release.
+- **`isValid` and `rawValidation` deep-clone `formData` before passing it to ata**. ata's default-applier writes `default` values into the input object during validation, while AJV treats validation as a pure operation. The clone preserves the AJV contract RJSF expects when probing data through repeated `isValid` calls (oneOf/anyOf option resolution).
 - **Custom-keyword extensions** (e.g. `ajv-errors`, `ajv-merge-patch`) have no ata-side counterpart yet. Schemas using these keywords will validate (ata silently ignores unknown keywords) but the extension semantics are not applied.
 
 ## Contributing

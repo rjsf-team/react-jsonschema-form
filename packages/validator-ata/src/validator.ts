@@ -88,6 +88,26 @@ export default class ATAValidator<
    */
   private cachedRootSchema?: object;
 
+  /** Returns a structural copy of `formData` so ata's default-applier
+   * (which writes `default` values into the input object during validation)
+   * doesn't leak a mutation back to the caller. RJSF probes the same data
+   * through `isValid` repeatedly while resolving oneOf/anyOf options, and
+   * a mutated probe changes subsequent answers, so the wrapper has to
+   * preserve referential purity that AJV provides by default.
+   */
+  private cloneForValidation<D>(data: D): D {
+    if (data === null || typeof data !== 'object') {
+      return data;
+    }
+    if (typeof globalThis.structuredClone === 'function') {
+      return globalThis.structuredClone(data);
+    }
+    // jsdom test environments and older runtimes ship without
+    // `structuredClone`. JSON round-tripping is sufficient here because
+    // form data is JSON-shaped by definition.
+    return JSON.parse(JSON.stringify(data));
+  }
+
   /** Returns the cached ata `Validator` for the given id, or builds and
    * caches a new one. When a rootSchema has been registered via
    * `handleSchemaUpdate`, it is supplied as a sibling schema so `$ref` to
@@ -125,7 +145,7 @@ export default class ATAValidator<
     try {
       const id = (schema[ID_KEY] as string | undefined) ?? hashForSchema(schema);
       const validator = this.getOrBuild(id, schema);
-      const result = validator.validate(formData);
+      const result = validator.validate(this.cloneForValidation(formData));
       errors = result.valid ? undefined : result.errors;
 
       if (errors && typeof this.localizer === 'function') {
@@ -203,7 +223,7 @@ export default class ATAValidator<
       const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema) as S;
       const id = (schemaWithIdRefPrefix[ID_KEY] as string | undefined) ?? hashForSchema(schemaWithIdRefPrefix);
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
-      return validator.validate(formData).valid;
+      return validator.validate(this.cloneForValidation(formData)).valid;
     } catch (e) {
       // eslint-disable-next-line no-console
       console.warn('Error encountered compiling schema:', e);

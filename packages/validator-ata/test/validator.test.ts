@@ -279,3 +279,41 @@ describe('createAtaInstance defaults', () => {
     expect(validator.validate('hello').valid).toBe(true);
   });
 });
+
+describe('cloneForValidation', () => {
+  it('uses globalThis.structuredClone when available', () => {
+    // jsdom strips structuredClone, so we provide it for this test to cover
+    // the modern-runtime branch alongside the JSON-roundtrip fallback.
+    const original = globalThis.structuredClone;
+    const spy = jest.fn((v: unknown) => JSON.parse(JSON.stringify(v)));
+    Object.defineProperty(globalThis, 'structuredClone', {
+      value: spy,
+      configurable: true,
+      writable: true,
+    });
+    try {
+      const v = customizeValidator();
+      const schema: RJSFSchema = { type: 'object', properties: { x: { type: 'string' } } };
+      v.isValid(schema, { x: 'a' }, schema);
+      expect(spy).toHaveBeenCalled();
+    } finally {
+      if (original === undefined) {
+        delete (globalThis as { structuredClone?: unknown }).structuredClone;
+      } else {
+        Object.defineProperty(globalThis, 'structuredClone', {
+          value: original,
+          configurable: true,
+          writable: true,
+        });
+      }
+    }
+  });
+
+  it('returns primitives untouched', () => {
+    const v = customizeValidator();
+    // Primitive formData skips the clone path; verify validation still works.
+    const schema: RJSFSchema = { type: 'string' };
+    expect(v.isValid(schema, 'hello', schema)).toBe(true);
+    expect(v.isValid(schema, undefined, schema)).toBe(false);
+  });
+});
