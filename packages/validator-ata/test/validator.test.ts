@@ -1,5 +1,8 @@
-import { ErrorSchemaBuilder, RJSFSchema } from '@rjsf/utils';
+import { ErrorSchemaBuilder, ID_KEY, ROOT_SCHEMA_PREFIX, RJSFSchema } from '@rjsf/utils';
 
+// Static import of the package surface so its top-level evaluation
+// (`export default customizeValidator()`) is included in coverage.
+import * as pkg from '../src';
 import customizeValidator from '../src/customizeValidator';
 import ATAValidator from '../src/validator';
 
@@ -177,5 +180,102 @@ describe('ATAValidator', () => {
       // (and rebuilds the validator under the hood).
       expect(v.isValid(schema, 'b', schema)).toBe(true);
     });
+  });
+
+  describe('isValid() error handling', () => {
+    it('returns false (and warns) when the schema-build path throws', () => {
+      const v = customizeValidator();
+      // `null` as a schema body throws at ata's compile step. The catch in
+      // isValid swallows it and returns false rather than propagating to RJSF.
+      const broken = null as unknown as RJSFSchema;
+      const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+      expect(v.isValid(broken, {}, broken)).toBe(false);
+      expect(warn).toHaveBeenCalled();
+      warn.mockRestore();
+    });
+  });
+
+  describe('additionalMetaSchemas and extenderFn options', () => {
+    it('registers each additional meta schema via Validator#addSchema', () => {
+      const meta = { $id: 'https://example.com/meta-schema', type: 'object' };
+      const v = customizeValidator({ additionalMetaSchemas: [meta] });
+      // Smoke check: validator constructs successfully and validates against
+      // a schema that uses the registered meta-schema $id via $ref.
+      const schema: RJSFSchema = { $ref: 'https://example.com/meta-schema' };
+      expect(v.isValid(schema, {}, schema)).toBe(true);
+    });
+
+    it('passes the constructed Validator through extenderFn', () => {
+      const extenderFn = jest.fn((validator) => validator);
+      const v = customizeValidator({ extenderFn });
+      v.isValid({ type: 'string' } as RJSFSchema, 'a', { type: 'string' } as RJSFSchema);
+      expect(extenderFn).toHaveBeenCalled();
+    });
+  });
+});
+
+describe('package surface', () => {
+  it('re-exports customizeValidator and ATAValidator from index.ts', () => {
+    expect(typeof pkg.customizeValidator).toBe('function');
+    expect(typeof pkg.ATAValidator).toBe('function');
+    expect(pkg.default).toBeInstanceOf(pkg.ATAValidator);
+  });
+});
+
+describe('customFormats option (extra spec shapes)', () => {
+  it('accepts a regex source string', () => {
+    const v = customizeValidator({
+      customFormats: { 'lower-letters': '^[a-z]+$' },
+    });
+    const schema: RJSFSchema = { type: 'string', format: 'lower-letters' };
+    expect(v.isValid(schema, 'abc', schema)).toBe(true);
+    expect(v.isValid(schema, 'ABC', schema)).toBe(false);
+  });
+});
+
+describe('handleSchemaUpdate', () => {
+  it('reuses the existing rootSchema entry when $id matches the prefix', () => {
+    const v = customizeValidator() as ATAValidator;
+    // A rootSchema that already carries ROOT_SCHEMA_PREFIX as $id exercises
+    // the equality branch that skips the spread-clone in handleSchemaUpdate.
+    const rootSchema = { [ID_KEY]: ROOT_SCHEMA_PREFIX, type: 'string' } as unknown as RJSFSchema;
+    expect(v.isValid(rootSchema, 'a', rootSchema)).toBe(true);
+    // Second call with the same reference takes the early-return fast path.
+    expect(v.isValid(rootSchema, 'b', rootSchema)).toBe(true);
+  });
+
+  it('rebuilds the cached entry when a different rootSchema is provided', () => {
+    const v = customizeValidator() as ATAValidator;
+    // First call seeds the cache; second call passes a structurally-different
+    // rootSchema (same id slot, different schema body), exercising the
+    // deep-equality refresh branch.
+    const a: RJSFSchema = { type: 'object', properties: { x: { type: 'string' } } };
+    const b: RJSFSchema = { type: 'object', properties: { x: { type: 'number' } } };
+    expect(v.isValid(a, { x: 'a' }, a)).toBe(true);
+    expect(v.isValid(b, { x: 1 }, b)).toBe(true);
+    // After the rebuild, the new shape applies, so a string in slot x fails.
+    expect(v.isValid(b, { x: 'a' }, b)).toBe(false);
+  });
+
+  it('reuses the cached entry when a structurally-identical rootSchema arrives', () => {
+    const v = customizeValidator() as ATAValidator;
+    // Same content, different reference. The reference-equality fast path at
+    // the top of handleSchemaUpdate misses, but the deep-equality cache hit
+    // below it should keep us from rebuilding.
+    const first: RJSFSchema = { type: 'object', properties: { x: { type: 'string' } } };
+    const second: RJSFSchema = { type: 'object', properties: { x: { type: 'string' } } };
+    expect(v.isValid(first, { x: 'a' }, first)).toBe(true);
+    expect(v.isValid(second, { x: 'b' }, second)).toBe(true);
+  });
+});
+
+describe('createAtaInstance defaults', () => {
+  it('builds a Validator when called with no options', async () => {
+    // The factory has a default `options = {}` parameter that customizeValidator
+    // never triggers (it always passes an options object). Cover it directly.
+    const { default: createAtaInstance } = await import('../src/createAtaInstance');
+    const validator = createAtaInstance({ type: 'string' });
+    expect(validator).toBeDefined();
+    expect(validator.validate('hello').valid).toBe(true);
   });
 });
