@@ -4426,6 +4426,113 @@ describe('omitExtraData on submit', () => {
   });
 });
 
+describe('omitExtraData prunes empty optional objects', () => {
+  // Schema with an optional nested object whose inner field is required
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: {
+      name: { type: 'string' },
+      address: {
+        type: 'object',
+        properties: {
+          street: { type: 'string' },
+        },
+      },
+    },
+    required: ['name'],
+  };
+
+  it('prunes an empty optional object on submit when omitExtraData is true', () => {
+    const { node, onSubmit } = createFormComponent({
+      schema,
+      formData: { name: 'Alice', address: {} },
+      omitExtraData: true,
+    });
+
+    act(() => {
+      fireEvent.submit(node);
+    });
+
+    expectToHaveBeenCalledWithFormData(onSubmit, { name: 'Alice' }, true);
+  });
+
+  it('does not prune a required object even when all its fields are empty', () => {
+    const requiredAddressSchema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        address: {
+          type: 'object',
+          properties: {
+            street: { type: 'string' },
+          },
+        },
+      },
+      required: ['name', 'address'],
+    };
+
+    const { node, onSubmit } = createFormComponent({
+      schema: requiredAddressSchema,
+      formData: { name: 'Alice', address: {} },
+      omitExtraData: true,
+    });
+
+    act(() => {
+      fireEvent.submit(node);
+    });
+
+    expectToHaveBeenCalledWithFormData(onSubmit, { name: 'Alice', address: {} }, true);
+  });
+
+  it('keeps an optional object when it has a non-empty field', () => {
+    const { node, onSubmit } = createFormComponent({
+      schema,
+      formData: { name: 'Alice', address: { street: '123 Main St' } },
+      omitExtraData: true,
+    });
+
+    act(() => {
+      fireEvent.submit(node);
+    });
+
+    expectToHaveBeenCalledWithFormData(onSubmit, { name: 'Alice', address: { street: '123 Main St' } }, true);
+  });
+
+  it('prunes an empty optional object on change when omitExtraData and liveOmit are true', () => {
+    const { node, onChange } = createFormComponent({
+      schema,
+      formData: { name: 'Alice', address: { street: 'value' } },
+      omitExtraData: true,
+      liveOmit: true,
+    });
+
+    fireEvent.change(node.querySelector('#root_address_street')!, {
+      target: { value: '' },
+    });
+
+    expectToHaveBeenCalledWithFormData(onChange, { name: 'Alice' }, 'root_address_street');
+  });
+
+  it('prunes an empty optional object on blur when omitExtraData is true and liveOmit is onBlur', () => {
+    const { node, onChange } = createFormComponent({
+      schema,
+      formData: { name: 'Alice', address: { street: 'value' } },
+      omitExtraData: true,
+      liveOmit: 'onBlur',
+    });
+
+    const streetInput = node.querySelector<HTMLInputElement>('#root_address_street')!;
+
+    fireEvent.change(streetInput, { target: { value: '' } });
+    fireEvent.blur(streetInput);
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { name: 'Alice' } }),
+      'root_address_street',
+    );
+  });
+});
+
 describe('Async errors', () => {
   it('should render the async errors', () => {
     const schema: RJSFSchema = {

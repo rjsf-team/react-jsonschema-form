@@ -205,7 +205,9 @@ export type FieldPath = {
   $name: string;
 };
 
-/** Type describing a recursive structure of `FieldPath`s for an object with a non-empty set of keys */
+/** Type describing a recursive structure of `FieldPath`s for an object with a non-empty set of keys
+ * @deprecated - To be removed as an exported `@rjsf/utils` type in a future release
+ */
 export type PathSchema<T = any> =
   T extends Array<infer U>
     ? FieldPath & {
@@ -1473,6 +1475,7 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    * @param [name] - The base name for the schema
    * @param [formData] - The current formData, if any, onto which to provide any missing defaults
    * @returns - The `PathSchema` object for the `schema`
+   * @deprecated - To be removed as an exported `@rjsf/utils` function in a future release
    */
   toPathSchema(schema: S, name?: string, formData?: T): PathSchema<T>;
 }

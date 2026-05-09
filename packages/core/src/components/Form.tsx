@@ -21,7 +21,6 @@ import {
   RegistryWidgetsType,
   RJSFSchema,
   RJSFValidationError,
-  removeOptionalEmptyObjects,
   SchemaUtilsType,
   shouldRender,
   SUBMIT_BTN_OPTIONS_KEY,
@@ -210,10 +209,9 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * called. Set to `false` by default.
    */
   omitExtraData?: boolean;
-  /** If set to true, optional object properties whose fields are all empty (undefined, null, or empty string)
-   * will be automatically removed from formData. This prevents the scenario where interacting with fields inside
-   * an optional object "activates" it permanently, making the form unsubmittable when the optional object has
-   * required inner fields. This works independently of `omitExtraData`. Set to `false` by default.
+  /** This option no longer does anything as it has been co-opted into `omitExtraData`
+   *
+   * @deprecated - Will be removed in a future release use `omitExtraData` instead
    */
   removeEmptyOptionalObjects?: boolean;
   /** When this prop is set to `top` or 'bottom', a list of errors (or the custom error list defined in the `ErrorList`) will also
@@ -895,8 +893,7 @@ export default class Form<
     this._isProcessingUserChange = true;
     const { newValue, path, id } = this.pendingChanges[0];
     const { newErrorSchema } = this.pendingChanges[0];
-    const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, onChange, removeEmptyOptionalObjects } =
-      this.props;
+    const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, onChange } = this.props;
     const { formData: oldFormData, schemaUtils, schema, fieldPathId, schemaValidationErrorSchema, errors } = this.state;
     let { customErrors } = this.state;
     // Use the un-merged AJV-only schema as the base for re-merging extraErrors. Mirrors the
@@ -967,19 +964,6 @@ export default class Form<
     if (omitExtraData === true && (liveOmit === true || liveOmit === 'onChange')) {
       newFormData = this.omitExtraData(formData);
       state = {
-        formData: newFormData,
-      };
-    }
-
-    if (removeEmptyOptionalObjects) {
-      newFormData = removeOptionalEmptyObjects(
-        schemaUtils.getValidator(),
-        schema,
-        schemaUtils.getRootSchema(),
-        newFormData,
-      ) as T;
-      state = {
-        ...state,
         formData: newFormData,
       };
     }
@@ -1100,27 +1084,18 @@ export default class Form<
    * @param data - The data associated with the field that was blurred
    */
   onBlur = (id: string, data: any) => {
-    const { onBlur, omitExtraData, liveOmit, liveValidate, removeEmptyOptionalObjects } = this.props;
+    const { onBlur, omitExtraData, liveOmit, liveValidate } = this.props;
     if (onBlur) {
       onBlur(id, data);
     }
     if ((omitExtraData === true && liveOmit === 'onBlur') || liveValidate === 'onBlur') {
       const { onChange, extraErrors } = this.props;
-      const { formData, schemaUtils, schema } = this.state;
+      const { formData } = this.state;
       let newFormData: T | undefined = formData;
       let state: Partial<FormState<T, S, F>> = { formData: newFormData };
       if (omitExtraData === true && liveOmit === 'onBlur') {
         newFormData = this.omitExtraData(formData);
         state = { formData: newFormData };
-      }
-      if (removeEmptyOptionalObjects) {
-        newFormData = removeOptionalEmptyObjects(
-          schemaUtils.getValidator(),
-          schema,
-          schemaUtils.getRootSchema(),
-          newFormData,
-        ) as T;
-        state = { ...state, formData: newFormData };
       }
       if (liveValidate === 'onBlur') {
         const { schema, schemaUtils, errorSchema, customErrors, retrievedSchema } = this.state;
@@ -1179,21 +1154,11 @@ export default class Form<
     }
 
     event.persist();
-    const { omitExtraData, extraErrors, noValidate, onSubmit, removeEmptyOptionalObjects } = this.props;
+    const { omitExtraData, extraErrors, noValidate, onSubmit } = this.props;
     let { formData: newFormData } = this.state;
 
     if (omitExtraData === true) {
       newFormData = this.omitExtraData(newFormData);
-    }
-
-    if (removeEmptyOptionalObjects) {
-      const { schemaUtils, schema } = this.state;
-      newFormData = removeOptionalEmptyObjects(
-        schemaUtils.getValidator(),
-        schema,
-        schemaUtils.getRootSchema(),
-        newFormData,
-      ) as T;
     }
 
     if (noValidate || this.validateFormWithFormData(newFormData)) {
@@ -1379,19 +1344,10 @@ export default class Form<
    * @returns - True if the form is valid, false otherwise.
    */
   validateForm() {
-    const { omitExtraData, removeEmptyOptionalObjects } = this.props;
+    const { omitExtraData } = this.props;
     let { formData: newFormData } = this.state;
     if (omitExtraData === true) {
       newFormData = this.omitExtraData(newFormData);
-    }
-    if (removeEmptyOptionalObjects) {
-      const { schemaUtils, schema } = this.state;
-      newFormData = removeOptionalEmptyObjects(
-        schemaUtils.getValidator(),
-        schema,
-        schemaUtils.getRootSchema(),
-        newFormData,
-      ) as T;
     }
     return this.validateFormWithFormData(newFormData);
   }

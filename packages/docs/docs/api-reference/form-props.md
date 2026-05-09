@@ -585,9 +585,11 @@ render(<Form schema={schema} validator={validator} onSubmit={onSubmit} />, docum
 
 ## removeEmptyOptionalObjects
 
+> **Deprecated**: This prop no longer has any effect and will be removed in a future release. The behavior of pruning optional empty objects is now built into [`omitExtraData`](#omitextradata) — enable that prop instead.
+
 When a JSON Schema has a required field inside an optional object, any user interaction with that optional object "activates" it. Even if the user clears all the fields within that object, the empty object property (e.g., `{ test: {} }` or `{ test: { field1: "" } }`) remains in the `formData`. Because the object contains required fields that are now empty, the form becomes unsubmittable.
 
-Setting `removeEmptyOptionalObjects` to `true` causes the form to recursively prune these optional empty objects from the `formData` during `onChange`, `onBlur`, and `onSubmit`. This also applies to objects within array items. An object is considered "optional" if it is not explicitly listed in its parent's `required` array.
+Previously, setting `removeEmptyOptionalObjects` to `true` caused the form to recursively prune these optional empty objects from the `formData` during `onChange`, `onBlur`, and `onSubmit`. This pruning is now performed automatically by `omitExtraData`.
 
 ## schema
 
