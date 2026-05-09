@@ -59,9 +59,20 @@ The set of globally relevant `UiSchema` options that are read from the root-leve
 import { UiSchema } from '@rjsf/utils';
 
 const uiSchema: UiSchema = {
-  'ui:globalOptions': { copyable: true },
+  'ui:globalOptions': {
+    copyable: true,
+    deprecatedHandling: 'disable',
+  },
 };
 ```
+
+#### deprecatedHandling
+
+Controls how fields marked as `deprecated: true` in the JSON Schema are rendered.
+
+- `'label'` (default): Appends ` (deprecated)` to the field label.
+- `'disable'`: The field is rendered but disabled.
+- `'hide'`: The field is completely hidden.
 
 ### ui:definitions
 
@@ -332,6 +343,34 @@ const uiSchema: UiSchema = {
   'ui:description': 'The best password',
 };
 ```
+
+### deprecated
+
+The JSON Schema `deprecated` keyword can be used to indicate that a field is no longer supported. By default, RJSF will append ` (deprecated)` to the field label. You can customize this behavior using the `deprecatedHandling` option.
+
+```tsx
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+
+const schema: RJSFSchema = {
+  type: 'object',
+  properties: {
+    oldField: {
+      type: 'string',
+      deprecated: true,
+    },
+  },
+};
+
+const uiSchema: UiSchema = {
+  oldField: {
+    'ui:options': {
+      deprecatedHandling: 'hide',
+    },
+  },
+};
+```
+
+See [deprecatedHandling](#deprecatedhandling) for more details on available modes.
 
 ### disabled
 
