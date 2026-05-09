@@ -1362,7 +1362,8 @@ Determines whether the combination of `schema` and `uiSchema` properties indicat
 
 ### getFromSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
-Helper that acts like lodash's `get` but additionally retrieves `$ref`s as needed to get the path for schemas containing potentially nested `$ref`s. The `path` accepts a [`SchemaFieldPath`](#types) (dotted string or `FieldPathList`-style segment array).
+Helper that acts like lodash's `get` but additionally retrieves `$ref`s as needed to get the path for schemas containing potentially nested `$ref`s.
+The `path` accepts a [`SchemaFieldPath`](#types) (dotted string or `FieldPathList`-style segment array).
 
 #### Parameters
 
