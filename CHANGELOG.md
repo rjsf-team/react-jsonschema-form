@@ -29,6 +29,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Added `deprecatedHandling` to `GlobalUISchemaOptions` and updated `StrictRJSFSchema` to be recursive, ensuring the `deprecated` keyword (and future extensions) are supported in all nested schema structures without requiring type casts, fixing [#5024](https://github.com/rjsf-team/react-jsonschema-form/issues/5024)
   - Also added `DeprecatedLabel` to `TranslatableString` to support internationalization of the deprecated field suffix
 - Added `SchemaFieldPath` (`string | FieldPathList`) for `getFromSchema` / `findFieldInSchema`; fixed schema descent when a segment is numeric `0` (previously skipped due to falsy check); use string keys for `required` / oneOf fallback matching
+- Fixed `mergeDefaultsWithFormData` calling `Object.entries` on non-object defaults (e.g. long `data:` URL strings for single file fields), which iterated every character and caused severe UI freezes, fixing [#5055](https://github.com/rjsf-team/react-jsonschema-form/issues/5055)
 
 # 6.5.2
 

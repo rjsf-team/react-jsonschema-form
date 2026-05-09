@@ -148,6 +148,14 @@ describe('mergeDefaultsWithFormData()', () => {
     expect(mergeDefaultsWithFormData(obj1, obj2)?.a).toBeInstanceOf(File);
   });
 
+  it('should merge quickly when the default for a key is a long string (e.g. data-url file value)', () => {
+    const largeDefault = `data:application/octet-stream;base64,${'A'.repeat(200_000)}`;
+    const formValue = 'data:application/octet-stream;base64,B';
+    expect(mergeDefaultsWithFormData<{ file: string }>({ file: largeDefault }, { file: formValue })).toEqual({
+      file: formValue,
+    });
+  });
+
   describe('test with overrideFormDataWithDefaults set to true', () => {
     it('should return data in formData when no defaults', () => {
       expect(mergeDefaultsWithFormData(undefined, [2], undefined, undefined, true)).toEqual([2]);
