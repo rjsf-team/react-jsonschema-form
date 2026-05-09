@@ -182,7 +182,7 @@ export default class ATAValidator<
     // resolve `<rootSchemaId>#/...` refs produced by `withIdRefPrefix`.
     // The original user-supplied schema is left untouched.
     const rootWithId =
-      (rootSchema as { [k: string]: unknown })[ID_KEY] === rootSchemaId
+      rootSchema[ID_KEY] === rootSchemaId
         ? (rootSchema as object)
         : { ...(rootSchema as object), [ID_KEY]: rootSchemaId };
     this.cachedRootSchema = rootWithId;
