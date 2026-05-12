@@ -48,6 +48,8 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 
 The JSON Schema `deprecated` keyword can be used to indicate that a field is no longer supported.
 
+The `deprecated` keyword is a JSON Schema Draft 2019-09 feature. You may need to configure your schema validator to properly recognize it. See the [Validation](../usage/validation.md#ajvclass) documentation for more details.
+
 ```tsx
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
