@@ -1,4 +1,5 @@
 import type { ValidationError, Validator } from 'ata-validator';
+import cloneDeep from 'lodash/cloneDeep';
 import {
   CustomValidator,
   deepEquals,
@@ -102,10 +103,7 @@ export default class ATAValidator<
     if (typeof globalThis.structuredClone === 'function') {
       return globalThis.structuredClone(data);
     }
-    // jsdom test environments and older runtimes ship without
-    // `structuredClone`. JSON round-tripping is sufficient here because
-    // form data is JSON-shaped by definition.
-    return JSON.parse(JSON.stringify(data));
+    return cloneDeep(data);
   }
 
   /** Returns the cached ata `Validator` for the given id, or builds and
