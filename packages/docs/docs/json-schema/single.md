@@ -44,6 +44,26 @@ const schema: RJSFSchema = {
 render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
+## Deprecated fields
+
+The JSON Schema `deprecated` keyword can be used to indicate that a field is no longer supported.
+
+The `deprecated` keyword is a JSON Schema Draft 2019-09 feature. You may need to configure your schema validator to properly recognize it. See the [Validation](../usage/validation.md#ajvclass) documentation for more details.
+
+```tsx
+import { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'string',
+  deprecated: true,
+};
+
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+```
+
+By default, RJSF will append ` (deprecated)` to the field label. You can customize this behavior using the `deprecatedHandling` option in the uiSchema. See [deprecatedHandling](../api-reference/uiSchema.md#deprecatedhandling) for more details.
+
 ## Enumerated values
 
 All base schema types support the `enum` attribute, which restricts the user to select among a list of options. For example:

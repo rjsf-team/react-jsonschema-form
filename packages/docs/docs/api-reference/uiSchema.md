@@ -333,6 +333,59 @@ const uiSchema: UiSchema = {
 };
 ```
 
+### deprecatedHandling
+
+The `ui:deprecatedHandling` uiSchema directive controls how a field marked as `deprecated` in the JSON Schema is rendered.
+
+Accepts one of three values:
+
+- `'label'` (default): The field is rendered normally with `"(deprecated)"` appended to its label.
+- `'disable'`: The field is rendered but all its child widgets are disabled.
+- `'hide'`: The field is completely hidden from the form.
+
+```tsx
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+
+const schema: RJSFSchema = {
+  type: 'object',
+  properties: {
+    legacyField: { type: 'string', deprecated: true },
+  },
+};
+
+const uiSchema: UiSchema = {
+  legacyField: {
+    'ui:options': {
+      deprecatedHandling: 'disable',
+    },
+  },
+};
+```
+
+It can also be set globally by specifying the `deprecatedHandling` option in the `ui:globalOptions` uiSchema directive, which applies the chosen behavior to every deprecated field in the form.
+
+```tsx
+import { Form } from '@rjsf/core';
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'object',
+  properties: {
+    legacyField: { type: 'string', deprecated: true },
+    anotherOldField: { type: 'number', deprecated: true },
+  },
+};
+
+const uiSchema: UiSchema = {
+  'ui:globalOptions': {
+    deprecatedHandling: 'hide',
+  },
+};
+
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+```
+
 ### disabled
 
 The `ui:disabled` uiSchema directive will disable all child widgets from a given field.
