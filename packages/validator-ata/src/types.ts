@@ -1,4 +1,4 @@
-import type { ValidationError, ValidatorOptions } from 'ata-validator';
+import type { ValidationError, Validator, ValidatorOptions } from 'ata-validator';
 
 /** Custom format checker. Receives a string and returns true when the value
  * is considered valid for this format. Mirrors the function shape used by
@@ -50,7 +50,7 @@ export interface CustomValidatorOptionsType {
   /** Hook for applying additional setup against a freshly-built `Validator`.
    * Returning a different instance is supported.
    */
-  extenderFn?: (validator: import('ata-validator').Validator) => import('ata-validator').Validator;
+  extenderFn?: (validator: Validator) => Validator;
 
   /** Suppress duplicate error filtering for the specified keyword(s). See
    * `processRawValidationErrors#filterDuplicateErrors`.
