@@ -1,6 +1,7 @@
 import get from 'lodash/get';
 import has from 'lodash/has';
 
+import deepEquals from '../deepEquals';
 import { PROPERTIES_KEY, REF_KEY } from '../constants';
 import {
   Experimental_CustomMergeAllOf,
@@ -13,6 +14,42 @@ import {
 import retrieveSchema from './retrieveSchema';
 
 const NO_VALUE = Symbol('no Value');
+
+function enumValuesForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S): any[] | undefined {
+  if (Array.isArray(schema.enum)) {
+    return schema.enum;
+  }
+
+  const options = (schema.oneOf || schema.anyOf) as S[] | undefined;
+  if (!Array.isArray(options)) {
+    return undefined;
+  }
+
+  const values = options
+    .map((option) => {
+      if ('const' in option) {
+        return option.const;
+      }
+      return Array.isArray(option.enum) && option.enum.length === 1 ? option.enum[0] : NO_VALUE;
+    })
+    .filter((value) => value !== NO_VALUE);
+
+  return values.length > 0 ? values : undefined;
+}
+
+function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>(schema: S, formValue: any) {
+  const enumValues = enumValuesForSchema(schema);
+  if (!enumValues || enumValues.some((value) => deepEquals(value, formValue))) {
+    return NO_VALUE;
+  }
+
+  const defaultValue = get(schema, 'default', NO_VALUE);
+  if (defaultValue !== NO_VALUE && enumValues.some((value) => deepEquals(value, defaultValue))) {
+    return defaultValue;
+  }
+
+  return enumValues.length === 1 ? enumValues[0] : undefined;
+}
 
 /** Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`. If the new
  * schema does not contain any properties, then `undefined` is returned to clear all the form data. Due to the nature
@@ -159,6 +196,13 @@ export default function sanitizeDataForNewSchema<
           if (newOptionConst !== NO_VALUE && newOptionConst !== formValue) {
             // Since this is a const, if the old value matches, replace the value with the new const otherwise clear it
             removeOldSchemaData[key] = oldOptionConst === formValue ? newOptionConst : undefined;
+          }
+
+          if (has(data, key)) {
+            const enumReplacement = replacementForInvalidEnumValue(newKeyedSchema, formValue);
+            if (enumReplacement !== NO_VALUE) {
+              removeOldSchemaData[key] = enumReplacement;
+            }
           }
         }
       }

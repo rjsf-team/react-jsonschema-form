@@ -3104,6 +3104,66 @@ describeRepeated('Form common', (createFormComponent) => {
           'root_branch',
         );
       });
+
+      it('should sanitize stale enum data when dependencies change available options', () => {
+        const dependentEnumSchema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            animal: {
+              type: 'string',
+              enum: ['Cat', 'Fish'],
+            },
+          },
+          dependencies: {
+            animal: {
+              oneOf: [
+                {
+                  properties: {
+                    animal: {
+                      enum: ['Cat'],
+                    },
+                    food: {
+                      type: 'string',
+                      enum: ['meat'],
+                    },
+                  },
+                },
+                {
+                  properties: {
+                    animal: {
+                      enum: ['Fish'],
+                    },
+                    food: {
+                      type: 'string',
+                      enum: ['worms'],
+                    },
+                    water: {
+                      type: 'string',
+                      enum: ['lake'],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+        const { node, onChange } = createFormComponent({
+          schema: dependentEnumSchema,
+          formData: { animal: 'Fish', food: 'worms', water: 'lake' },
+        });
+
+        act(() => {
+          fireEvent.change(node.querySelector('#root_animal')!, {
+            target: { value: 0 },
+          });
+        });
+
+        expectToHaveBeenCalledWithFormData(
+          onChange,
+          { animal: 'Cat', food: 'meat', water: undefined },
+          'root_animal',
+        );
+      });
     });
 
     describe('customValidate errors, live validation', () => {

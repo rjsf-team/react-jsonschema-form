@@ -918,6 +918,7 @@ export default class Form<
     const inputForDefaults = hasOnlyUndefinedValues && wasPreviouslyNull ? undefined : formData;
 
     if (isObject(formData) || Array.isArray(formData)) {
+      const previousRetrievedSchema = retrievedSchema;
       if (newValue === ADDITIONAL_PROPERTY_KEY_REMOVE) {
         // For additional properties, we were given the special remove this key value, so unset it
         _unset(formData, path);
@@ -955,6 +956,26 @@ export default class Form<
       const newState = this.getStateFromProps(this.props, inputForDefaults, undefined, undefined, undefined, true);
       formData = newState.formData;
       retrievedSchema = newState.retrievedSchema;
+
+      if (previousRetrievedSchema && !deepEquals(previousRetrievedSchema, retrievedSchema)) {
+        const sanitizedFormData = schemaUtils.sanitizeDataForNewSchema(
+          retrievedSchema,
+          previousRetrievedSchema,
+          formData,
+        );
+        if (!deepEquals(sanitizedFormData, formData)) {
+          const sanitizedState = this.getStateFromProps(
+            this.props,
+            sanitizedFormData,
+            undefined,
+            undefined,
+            undefined,
+            true,
+          );
+          formData = sanitizedState.formData;
+          retrievedSchema = sanitizedState.retrievedSchema;
+        }
+      }
     }
 
     const mustValidate = !noValidate && (liveValidate === true || liveValidate === 'onChange');
