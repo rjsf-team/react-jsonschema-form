@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/validator-ajv8",
-  "version": "6.5.2",
+  "version": "6.5.3",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -86,7 +86,7 @@
     "@rjsf/utils": "^6.5.x"
   },
   "devDependencies": {
-    "@rjsf/utils": "6.5.2",
+    "@rjsf/utils": "6.5.3",
     "@types/json-schema": "^7.0.15",
     "ajv-i18n": "^4.2.0",
     "eslint": "^8.57.1"
