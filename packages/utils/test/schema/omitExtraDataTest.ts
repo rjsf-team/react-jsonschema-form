@@ -446,6 +446,23 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
       expect(schemaUtils.omitExtraData(schema, strippedData)).toEqual({ discriminator: 'bar' });
     });
 
+    it('preserves properties from non-matching oneOf options when parent allows additionalProperties', () => {
+      // When the parent schema has additionalProperties, keys not in the parent's own `properties`
+      // are processed by additionalProperties at the parent level — including keys defined only in
+      // the non-selected oneOf branch. This is correct JSON Schema behaviour: the parent's
+      // additionalProperties constraint applies to all keys regardless of which oneOf option matched.
+      const schema: RJSFSchema = {
+        type: 'object',
+        oneOf: [
+          { properties: { kind: { const: 'a' }, foo: { type: 'string' } } },
+          { properties: { kind: { const: 'b' }, bar: { type: 'string' } } },
+        ],
+        additionalProperties: { type: 'string' },
+      };
+      const formData = { kind: 'a', bar: 'hello', extra: 'keep me' };
+      expect(omitExtraData(testValidator, schema, schema, formData)).toEqual(formData);
+    });
+
     it('should strip extras from within additional property values with strict schemas', () => {
       const schema: RJSFSchema = {
         oneOf: [
@@ -488,10 +505,14 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
     // ---------------------------------------------------------------------------
     // Scenarios adapted from removeOptionalEmptyObjects.test.ts.
     //
-    // omitExtraData filters by schema structure AND prunes optional object properties
-    // whose schema-filtered content is entirely empty (null / undefined / '' / [] / {}).
-    // Scalar properties (string, number, boolean, null) are always kept when schema-defined.
-    // Required properties are never pruned regardless of their value.
+    // omitExtraData filters by schema structure AND prunes optional object properties when
+    // every key in the schema-filtered result is both optional (in the inner schema's
+    // `required`) and has an empty value (per `isValueEmpty`). Key invariants:
+    //   - Scalar properties (string, number, boolean, null) are always kept when schema-defined.
+    //   - Required properties are never pruned regardless of their value.
+    //   - Optional objects whose required children have empty values are kept — having any
+    //     required key in the result prevents the parent from being pruned.
+    //   - Optional objects whose only content is optional-and-empty values are pruned.
     // Tests that differ from removeOptionalEmptyObjects are annotated.
     // ---------------------------------------------------------------------------
 
@@ -568,9 +589,11 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         },
       };
 
-      it('prunes the optional object when all schema-filtered values are empty', () => {
+      it('keeps the optional object when its only content is required-but-empty fields', () => {
+        // field1 and field2 are required, so they are preserved by setProperty even though empty.
+        // The parent object is not dropped because it still has keys after depth-first filtering.
         const formData = { test: { field1: '', field2: '' } };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({});
+        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({ test: { field1: '', field2: '' } });
       });
 
       it('should keep the optional object when at least one field has a value', () => {
@@ -653,12 +676,13 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         },
       };
 
-      it('prunes optional_object when all its schema-filtered values are empty', () => {
-        // name='' and age=undefined → schema-filtered result is {name:''}, which is all-empty,
-        // so the optional optional_object property is pruned entirely.
+      it('keeps optional_object when its only content is required-but-empty fields', () => {
+        // name is required so it is kept as '' even though empty; age is undefined so it is absent.
+        // optional_object still has the 'name' key after depth-first filtering, so it is not pruned.
         const formData = { required_field: 'hello', optional_object: { name: '', age: undefined } };
         expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({
           required_field: 'hello',
+          optional_object: { name: '' },
         });
       });
 
@@ -959,6 +983,41 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         };
         const formData = { foo: 'hello', bar: 42, extra: 'drop' };
         expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({ foo: 'hello', bar: 42 });
+      });
+
+      it('treats every key as optional when a property schema is boolean true (no required list)', () => {
+        // boolean true is a JSON Schema shorthand for "allow anything". It carries no required list,
+        // so setProperty treats all keys in the object value as optional.
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { flexible: true as any },
+        };
+        // All values in flexible are optional-and-empty → flexible is pruned.
+        expect(omitExtraData(testValidator, schema, schema, { flexible: { nested: '' } })).toEqual({});
+        // A non-empty value keeps flexible.
+        expect(omitExtraData(testValidator, schema, schema, { flexible: { nested: 'hi' } })).toEqual({
+          flexible: { nested: 'hi' },
+        });
+      });
+
+      it('keeps optional object with required-but-empty fields when the property schema is a $ref', () => {
+        // Exercises the $ref resolution path inside setProperty: the required list comes from the
+        // referenced definition, not the $ref wrapper schema.
+        const schema: RJSFSchema = {
+          type: 'object',
+          definitions: {
+            Inner: {
+              type: 'object',
+              required: ['name'],
+              properties: { name: { type: 'string' } },
+            },
+          },
+          properties: {
+            inner: { $ref: '#/definitions/Inner' },
+          },
+        };
+        const formData = { inner: { name: '' } };
+        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({ inner: { name: '' } });
       });
 
       it('uses experimental_customMergeAllOf when provided', () => {

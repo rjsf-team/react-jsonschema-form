@@ -171,9 +171,12 @@ export default function omitExtraData<
 
   /** Copies schema-defined properties from `source` into `target`, applying `omit` recursively for
    * each value. Handles `properties`, `patternProperties`, `additionalProperties`, and `propertyNames`.
-   * Optional object-valued properties whose filtered result is entirely empty (per `isValueEmpty`) are
-   * silently dropped; required properties and scalar values are always written when defined. Always
-   * returns `target` — pruning of the object itself is the caller's responsibility.
+   * Optional object-valued properties are pruned when every key in the filtered result is both
+   * optional (per the inner schema's `required`) and empty (per `isValueEmpty`). This preserves
+   * optional objects whose required children have empty values, while still dropping objects whose
+   * schema-filtered content is entirely optional-and-empty. Required properties and scalar values
+   * are always written when defined. Always returns `target` — pruning of the object itself is
+   * the caller's responsibility.
    *
    * @param schema - The object schema describing which properties are allowed
    * @param source - The source form data object to read values from
@@ -185,8 +188,12 @@ export default function omitExtraData<
     const requiredSet = new Set((schema.required ?? []) as string[]);
 
     /** Recursively omits extra data from `value` via `omit`, then conditionally writes the result to
-     * `target[key]`. Optional properties whose filtered value is a plain object considered entirely
-     * empty by `isValueEmpty` are dropped; all other defined values are written when not `undefined`.
+     * `target[key]`. Optional object-valued properties are dropped when every key in the filtered
+     * result is both optional (within the inner schema's `required` list) and has an empty value per
+     * `isValueEmpty`. This per-key approach prevents required-but-empty child properties — kept by
+     * inner `setProperty` calls — from inadvertently causing the parent optional object to be dropped,
+     * while still pruning optional objects whose schema-filtered content is entirely empty. Vacuously
+     * true for `{}`, so empty results are always dropped. Scalar and array values are not pruned here.
      *
      * @param key - The property key to write on `target`
      * @param schemaDef - The schema (or boolean shorthand) that governs the value at `key`
@@ -195,8 +202,21 @@ export default function omitExtraData<
      */
     function setProperty(key: string, schemaDef: S | boolean, value: unknown, required = false) {
       const v = omit(schemaDef, value, target[key]);
-      if (!required && isObject(v) && isValueEmpty(v as GenericObjectType)) {
-        return;
+      if (!required && isObject(v)) {
+        // Resolve $ref so we can inspect the effective required list for the inner schema.
+        let sd = isSchemaObj(schemaDef as S | boolean) ? (schemaDef as S) : ({} as S);
+        if (sd.$ref !== undefined) {
+          sd = findSchemaDefinition(sd.$ref, rootSchema) as S;
+        }
+        const innerRequired = new Set((sd.required ?? []) as string[]);
+        // Drop this optional object when every key in v is both optional in the inner schema
+        // and has an empty value. Vacuously true for {} so empty objects are always dropped.
+        const shouldDrop = Object.entries(v as GenericObjectType).every(
+          ([k, val]) => !innerRequired.has(k) && isValueEmpty(val),
+        );
+        if (shouldDrop) {
+          return;
+        }
       }
       if (v !== undefined) {
         target[key] = v;
@@ -231,6 +251,8 @@ export default function omitExtraData<
       }
     }
 
+    // JSON Schema spec: absent additionalProperties defaults to true (allow all extra keys). Here
+    // we treat it as false so omitExtraData never inadvertently passes through undescribed keys.
     if (additionalProperties !== undefined && additionalProperties !== false) {
       const addlSchema = additionalProperties as S | boolean;
       if (patternPropertiesRest !== undefined) {
@@ -330,7 +352,11 @@ export default function omitExtraData<
     if (!Array.isArray(oneOf) || isSelect(validator, schema, rootSchema, experimental_customMergeAllOf)) {
       return target;
     }
-    // Mirror svelte: relax additionalProperties:false so getClosestMatchingOption can validate data freely.
+    // Mirror svelte: relax additionalProperties:false so getClosestMatchingOption can score options
+    // without false negatives from strict property checks. Note: these mutated schema objects will
+    // not be present in a precompiled validator's compiled set, so precompiled validators may not
+    // work correctly here. This is the same limitation that already exists elsewhere in the codebase
+    // (e.g. MultiSchemaField) when getClosestMatchingOption is used with dynamic schemas.
     const options = (oneOf as Array<S | boolean>).map((d) => {
       if (!isSchemaObj(d)) {
         return (d ? {} : { not: {} }) as S;
