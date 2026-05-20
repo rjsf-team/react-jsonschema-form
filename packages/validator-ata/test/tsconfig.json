@@ -1,0 +1,19 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "include": ["./", "./**/*.json"],
+  "compilerOptions": {
+    "rootDir": "./",
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "baseUrl": "../",
+    "jsx": "react-jsx"
+  },
+  "references": [
+    {
+      "path": "../src"
+    },
+    {
+      "path": "../../utils/test"
+    }
+  ]
+}

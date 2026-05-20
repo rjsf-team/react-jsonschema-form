@@ -16,6 +16,17 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.6.0
+
+## @rjsf/validator-ata
+
+- Added `@rjsf/validator-ata`, an `ata-validator` backed alternative to `@rjsf/validator-ajv8`. The public surface mirrors the AJV package (`customizeValidator()`, `ValidatorType<T, S, F>`, custom formats, `transformErrors`, `customValidate`, `suppressDuplicateFiltering`), so swapping the import is enough for existing forms to keep working. AJV-only options (`AjvClass`, `ajvFormatOptions`, `ajvOptionsOverrides`) are replaced by `ataOptionsOverrides`, the `ata-validator` format set is always installed, and precompiled validators (`compileSchemaValidators` / `createPrecompiledValidator`) are not yet wired through. Depends on `ata-validator` `^0.15.0`, which carries stable `ATA####` error codes and rich error metadata (`expected`, `received`, `schemaSource`, `dataFrame`, `suggestion`, `docUrl`) that `transformErrors` can consume. See the [validator-ata API reference](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/api-reference/validator-ata.md) for the full list of differences ([#5063](https://github.com/rjsf-team/react-jsonschema-form/pull/5063))
+
+## Dev / docs / playground
+
+- Added a `validator-ata` API reference page under `api-reference` describing the package and its differences from `validator-ajv8` ([#5063](https://github.com/rjsf-team/react-jsonschema-form/pull/5063))
+- Added `ATA` and `ATA (coerceTypes)` choices to the playground validator picker ([#5063](https://github.com/rjsf-team/react-jsonschema-form/pull/5063))
+
 # 6.5.3
 
 ## @rjsf/core

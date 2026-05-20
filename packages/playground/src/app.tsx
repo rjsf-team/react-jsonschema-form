@@ -9,6 +9,7 @@ import { Theme as shadcnTheme } from '@rjsf/shadcn';
 import { Theme as DaisyUITheme } from '@rjsf/daisyui';
 import { Theme as PrimeReactTheme } from '@rjsf/primereact';
 import v8Validator, { customizeValidator } from '@rjsf/validator-ajv8';
+import ataValidator, { customizeValidator as customizeAtaValidator } from '@rjsf/validator-ata';
 import Ajv2019 from 'ajv/dist/2019.js';
 import Ajv2020 from 'ajv/dist/2020.js';
 import localize_es from 'ajv-i18n/localize/es';
@@ -21,6 +22,7 @@ const AJV8_2019 = customizeValidator({ AjvClass: Ajv2019 });
 const AJV8_2020 = customizeValidator({ AjvClass: Ajv2020 });
 const AJV8_DISC = customizeValidator({ ajvOptionsOverrides: { discriminator: true } });
 const AJV8_DATA_REF = customizeValidator({ ajvOptionsOverrides: { $data: true } });
+const ataCoerce = customizeAtaValidator({ ataOptionsOverrides: { coerceTypes: true } });
 
 const validators: PlaygroundProps['validators'] = {
   AJV8: v8Validator,
@@ -29,6 +31,8 @@ const validators: PlaygroundProps['validators'] = {
   AJV8_es: esV8Validator,
   'AJV8 (2019)': AJV8_2019,
   'AJV8 (2020)': AJV8_2020,
+  ATA: ataValidator,
+  'ATA (coerceTypes)': ataCoerce,
 };
 
 const themes: PlaygroundProps['themes'] = {
