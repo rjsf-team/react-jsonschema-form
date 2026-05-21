@@ -9,7 +9,7 @@ import isFilesArray from './isFilesArray';
 import isMultiSelect from './isMultiSelect';
 import isSelect from './isSelect';
 import omitExtraData, { getUsedFormData, getFieldNames, isValueEmpty } from './omitExtraData';
-import retrieveSchema, { relaxOptionsForScoring } from './retrieveSchema';
+import retrieveSchema from './retrieveSchema';
 import sanitizeDataForNewSchema from './sanitizeDataForNewSchema';
 import toPathSchema from './toPathSchema';
 
@@ -28,7 +28,6 @@ export {
   isSelect,
   isValueEmpty,
   omitExtraData,
-  relaxOptionsForScoring,
   retrieveSchema,
   sanitizeDataForNewSchema,
   toPathSchema,
