@@ -36,6 +36,7 @@ import {
   ValidatorType,
 } from '../types';
 import getFirstMatchingOption from './getFirstMatchingOption';
+import shallowAllOfMerge from './shallowAllOfMerge';
 import deepEquals from '../deepEquals';
 
 /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and dependencies
@@ -511,8 +512,6 @@ export function stubExistingAdditionalProperties<
 
   return schema;
 }
-
-import shallowAllOfMerge from './shallowAllOfMerge';
 
 /**
  * Internal helper that merges allOf schemas using @x0k/json-schema-merge's shallow allOf merge
