@@ -1,5 +1,3 @@
-import { createComparator, createMerger, createShallowAllOfMerge } from '@x0k/json-schema-merge';
-import { createDeduplicator, createIntersector } from '@x0k/json-schema-merge/lib/array';
 import pick from 'lodash/pick';
 import isEmpty from 'lodash/isEmpty';
 import isNil from 'lodash/isNil';
@@ -22,6 +20,7 @@ import {
 import getClosestMatchingOption from './getClosestMatchingOption';
 import isSelect from './isSelect';
 import { relaxOptionsForScoring, resolveAllReferences } from './retrieveSchema';
+import shallowAllOfMerge from './shallowAllOfMerge';
 
 /** Returns the `formData` with only the elements specified in the `fields` list
  *
@@ -83,14 +82,6 @@ export function getFieldNames<T = any>(pathSchema: PathSchema<T>, formData?: T):
 
   return getAllPaths(pathSchema);
 }
-
-// Mirror the same allOf merge setup used in retrieveSchema.ts
-const { compareSchemaDefinitions, compareSchemaValues } = createComparator();
-const { mergeArrayOfSchemaDefinitions } = createMerger({
-  intersectJson: createIntersector(compareSchemaValues),
-  deduplicateJsonSchemaDef: createDeduplicator(compareSchemaDefinitions),
-});
-const shallowAllOfMerge = createShallowAllOfMerge(mergeArrayOfSchemaDefinitions);
 
 /** Returns true when a form value is considered empty: null/undefined/'', an empty array, or a plain
  * object whose every own value is itself empty (recursive). Scalars like `0` and `false` are not empty.

@@ -26,12 +26,14 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Adopted the `svelte-jsonschema-form` algorithm for `omitExtraData()`, adding in support for the code from `removeOptionalEmptyObjects()`, exporting the `isValueEmpty()` function from the library
 - Deprecated the `removeOptionalEmptyObject()` and `toPathSchema()` functions, `toPathSchema()` on `SchemaUtilsType` and the `PathSchema` type
-- Added `relaxOptionsForScoring()` utility that normalizes a `oneOf`/`anyOf` option list for scoring: converts boolean schemas to object equivalents and widens `additionalProperties: false → true` so that `getClosestMatchingOption` does not produce false negatives when form data contains keys not declared in `properties` ([#5065](https://github.com/rjsf-team/react-jsonschema-form/pull/5065))
-- Fixed `resolveAnyOrOneOfSchemas` (called by `schemaParser` with `expandAllBranches=true`) to use `getFirstMatchingOption` on the options returned from `relaxOptionsForScoring()`
+- Added `relaxOptionsForScoring()` utility that normalizes a `oneOf`/`anyOf` option list for scoring with optional `$ref`s resolution
+  Converts boolean schemas to object equivalents and widens `additionalProperties: false → true` so that `getClosestMatchingOption` does not produce false negatives when form data contains keys not declared in `properties`
+- Fixed `resolveAnyOrOneOfSchemas` (called by `schemaParser` with `expandAllBranches=true`) to use `getFirstMatchingOption` on the options returned from `relaxOptionsForScoring()` so that they are captured for precompiled validators
+- Extracted the `shallowAllOfMerge()` function from `retrieveSchema.ts` into its own file for additional use in `omitExtraData.ts`
 
 ## @rjsf/validator-ajv8
 
-- Added integration tests verifying that `getFirstMatchingOption`, `getClosestMatchingOption`, and `omitExtraData` work correctly when given an `AJV8PrecompiledValidator` compiled from a `oneOf` schema whose branches carry `additionalProperties: false` (both direct options and options defined via `$ref`) ([#5065](https://github.com/rjsf-team/react-jsonschema-form/pull/5065))
+- Added integration tests verifying that `getFirstMatchingOption`, `getClosestMatchingOption`, and `omitExtraData` work correctly when given an `AJV8PrecompiledValidator` compiled from a `oneOf` schema whose branches carry `additionalProperties: false` (both direct options and options defined via `$ref`)
 
 ## @rjsf/validator-ata
 

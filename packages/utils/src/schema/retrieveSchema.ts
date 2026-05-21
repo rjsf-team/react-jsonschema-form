@@ -6,8 +6,6 @@ import merge from 'lodash/merge';
 import flattenDeep from 'lodash/flattenDeep';
 import uniq from 'lodash/uniq';
 import isEmpty from 'lodash/isEmpty';
-import { createComparator, createMerger, createShallowAllOfMerge } from '@x0k/json-schema-merge';
-import { createDeduplicator, createIntersector } from '@x0k/json-schema-merge/lib/array';
 
 import {
   ADDITIONAL_PROPERTIES_KEY,
@@ -514,14 +512,7 @@ export function stubExistingAdditionalProperties<
   return schema;
 }
 
-// Set up @x0k/json-schema-merge utilities
-const { compareSchemaDefinitions, compareSchemaValues } = createComparator();
-const { mergeArrayOfSchemaDefinitions } = createMerger({
-  intersectJson: createIntersector(compareSchemaValues),
-  deduplicateJsonSchemaDef: createDeduplicator(compareSchemaDefinitions),
-});
-
-const shallowAllOfMerge = createShallowAllOfMerge(mergeArrayOfSchemaDefinitions);
+import shallowAllOfMerge from './shallowAllOfMerge';
 
 /**
  * Internal helper that merges allOf schemas using @x0k/json-schema-merge's shallow allOf merge
