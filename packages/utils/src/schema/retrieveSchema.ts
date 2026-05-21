@@ -700,7 +700,7 @@ export function resolveAnyOrOneOfSchemas<
       // Using getFirstMatchingOption (rather than calling isValid directly) ensures that the augmented forms
       // of each option (as constructed internally by getFirstMatchingOption for options with properties) are
       // also captured. The return value is discarded — the call is purely for ParserValidator's side effect.
-      const relaxed = relaxOptionsForScoring<S>(anyOrOneOf);
+      const relaxed = relaxOptionsForScoring<S>(anyOrOneOf, false, rootSchema);
       getFirstMatchingOption<T, S, F>(validator, formData, relaxed, rootSchema, discriminator);
       return anyOrOneOf.map((item) => mergeSchemas(remaining, item) as S);
     }
@@ -711,19 +711,29 @@ export function resolveAnyOrOneOfSchemas<
 
 /** Normalises a list of `oneOf`/`anyOf` options for use in option-scoring only (not for filtering).
  * Boolean schemas are converted to their object equivalents (`true` → `{}`, `false` → `{not:{}}`).
+ * When `resolveRefs` is `true`, each object option is first passed through `resolveAllReferences`
+ * so that `$ref`-based options expose their `additionalProperties` constraint before relaxation.
  * Any option whose `additionalProperties` is `false` is widened to `true` so that
  * `getClosestMatchingOption` / `validator.isValid()` does not produce false negatives when the
  * form data contains keys not listed in `properties`.
  *
  * @param options - The raw `oneOf`/`anyOf` array, which may contain boolean schemas
+ * @param [resolveRefs=false] - When `true`, resolve `$ref`s in each option before relaxing; pass
+ *   `rootSchema` as well. Set `false` (default) when refs are already resolved at the call site.
+ * @param [rootSchema] - Required when `resolveRefs` is `true`; the root schema used to look up `$ref`s
  * @returns - A new array of plain schema objects with `additionalProperties` relaxed where needed
  */
-export function relaxOptionsForScoring<S extends StrictRJSFSchema = RJSFSchema>(options: Array<S | boolean>): S[] {
+export function relaxOptionsForScoring<S extends StrictRJSFSchema = RJSFSchema>(
+  options: Array<S | boolean>,
+  resolveRefs = false,
+  rootSchema?: S,
+): S[] {
   return options.map((d) => {
     if (!isObject(d)) {
       return (d ? {} : { not: {} }) as S;
     }
-    return (d as S).additionalProperties === false ? { ...(d as S), additionalProperties: true } : (d as S);
+    const schema = resolveRefs && rootSchema ? resolveAllReferences<S>(d as S, rootSchema, []) : (d as S);
+    return schema.additionalProperties === false ? { ...schema, additionalProperties: true } : schema;
   });
 }
 

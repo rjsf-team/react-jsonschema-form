@@ -18,6 +18,21 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.6.0
 
+## @rjsf/core
+
+- Updated `Form` to stop using `removeOptionalEmptyObjects()` and deprecating `removeEmptyOptionalObjects` prop
+
+## @rjsf/utils
+
+- Adopted the `svelte-jsonschema-form` algorithm for `omitExtraData()`, adding in support for the code from `removeOptionalEmptyObjects()`, exporting the `isValueEmpty()` function from the library
+- Deprecated the `removeOptionalEmptyObject()` and `toPathSchema()` functions, `toPathSchema()` on `SchemaUtilsType` and the `PathSchema` type
+- Added `relaxOptionsForScoring()` utility that normalizes a `oneOf`/`anyOf` option list for scoring: converts boolean schemas to object equivalents and widens `additionalProperties: false → true` so that `getClosestMatchingOption` does not produce false negatives when form data contains keys not declared in `properties` ([#5065](https://github.com/rjsf-team/react-jsonschema-form/pull/5065))
+- Fixed `resolveAnyOrOneOfSchemas` (called by `schemaParser` with `expandAllBranches=true`) to use `getFirstMatchingOption` on the options returned from `relaxOptionsForScoring()`
+
+## @rjsf/validator-ajv8
+
+- Added integration tests verifying that `getFirstMatchingOption`, `getClosestMatchingOption`, and `omitExtraData` work correctly when given an `AJV8PrecompiledValidator` compiled from a `oneOf` schema whose branches carry `additionalProperties: false` (both direct options and options defined via `$ref`) ([#5065](https://github.com/rjsf-team/react-jsonschema-form/pull/5065))
+
 ## @rjsf/validator-ata
 
 - Added `@rjsf/validator-ata`, an `ata-validator` backed alternative to `@rjsf/validator-ajv8`. The public surface mirrors the AJV package (`customizeValidator()`, `ValidatorType<T, S, F>`, custom formats, `transformErrors`, `customValidate`, `suppressDuplicateFiltering`), so swapping the import is enough for existing forms to keep working. AJV-only options (`AjvClass`, `ajvFormatOptions`, `ajvOptionsOverrides`) are replaced by `ataOptionsOverrides`, the `ata-validator` format set is always installed, and precompiled validators (`compileSchemaValidators` / `createPrecompiledValidator`) are not yet wired through. Depends on `ata-validator` `^0.15.0`, which carries stable `ATA####` error codes and rich error metadata (`expected`, `received`, `schemaSource`, `dataFrame`, `suggestion`, `docUrl`) that `transformErrors` can consume. See the [validator-ata API reference](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/api-reference/validator-ata.md) for the full list of differences ([#5063](https://github.com/rjsf-team/react-jsonschema-form/pull/5063))
@@ -26,6 +41,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Added a `validator-ata` API reference page under `api-reference` describing the package and its differences from `validator-ajv8` ([#5063](https://github.com/rjsf-team/react-jsonschema-form/pull/5063))
 - Added `ATA` and `ATA (coerceTypes)` choices to the playground validator picker ([#5063](https://github.com/rjsf-team/react-jsonschema-form/pull/5063))
+- Updated the `form-props.md` and `utility-functions.md` to document the deprecations and `uiSchema.md` to cleanup the `enumNames` docs slightly
 
 # 6.5.3
 
@@ -49,7 +65,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `processPendingChange()` using `originalErrorSchema` (which already contains merged `extraErrors`) as the base for `mergeErrors()`, causing sibling-field `extraErrors` to accumulate duplicate entries on every array mutation, fixing [#5041](https://github.com/rjsf-team/react-jsonschema-form/issues/5041)
 - Added `ObjectField` test for renaming a nested `additionalProperties` key using `userEvent` and `reset()` via a form ref, verifying fix for [#4948](https://github.com/rjsf-team/react-jsonschema-form/issues/4948)
 - Updated `ArrayField`'s change handling to only `null` out data for paths that are directly an array indexed value and not object properties within them, fixing [#4952](https://github.com/rjsf-team/react-jsonschema-form/issues/4952)
-- Updated `Form` to stop using `removeOptionalEmptyObjects()` and deprecating `removeEmptyOptionalObjects` prop
 
 ## @rjsf/mui
 
@@ -62,8 +77,6 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Switched `deepEquals` from `lodash.isEqualWith` to `fast-equals.createCustomEqual` with cycle detection enabled, and replaced direct `lodash.isEqual` usage in `useDeepCompareMemo`, `isRootSchema`, and `findSelectedOptionInXxxOf` with `deepEquals`, fixing [#4291](https://github.com/rjsf-team/react-jsonschema-form/issues/4291)
 - Fixed `getObjectDefaults` re-injecting stale schema-level `default` keys into an `additionalProperties` object when `formData` already contains its own keys (e.g. after a key rename), preventing ghost entries from reappearing, fixing [#4948](https://github.com/rjsf-team/react-jsonschema-form/issues/4948)
-- Adopted the `svelte-jsonschema-form` algorithm for `omitExtraData()`, adding in support for the code from `removeOptionalEmptyObjects()`, exporting the `isValueEmpty()` function from the library
-- Deprecated the `removeOptionalEmptyObject()` and `toPathSchema()` functions, `toPathSchema()` on `SchemaUtilsType` and the `PathSchema` type
 
 ## @rjsf/validator-ajv8
 
@@ -74,7 +87,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Cleaned up testing to make registry mocks simpler using `getTestRegistry()` function
 - Refactored `antd` specific test setup out of `testing/testSetup.ts`
 - Updated the Playground to use MUI v9
-- Updated the `form-props.md` and `utility-functions.md` to document the deprecations and `uiSchema.md` to cleanup the `enumNames` docs slightly
 
 # 6.5.1
 

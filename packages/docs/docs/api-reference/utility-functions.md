@@ -1437,6 +1437,23 @@ Checks to see if the `schema` combination represents a select
 
 - boolean: True if schema contains a select, otherwise false
 
+### relaxOptionsForScoring&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Normalises a list of `oneOf`/`anyOf` options for use in option-scoring only (not for filtering).
+Boolean schemas are converted to their object equivalents (`true` → `{}`, `false` → `{not:{}}`).
+When `resolveRefs` is `true`, each object option is first passed through `resolveAllReferences` so that `$ref`-based options expose their `additionalProperties` constraint before relaxation.
+Any option whose `additionalProperties` is `false` is widened to `true` so that `getClosestMatchingOption` / `validator.isValid()` does not produce false negatives when the form data contains keys not listed in `properties`.
+
+#### Parameters
+
+- options: Array&lt;S | boolean> - The raw `oneOf`/`anyOf` array, which may contain boolean schemas
+- [resolveRefs=false]: boolean - When `true`, resolve `$ref`s in each option before relaxing; pass `rootSchema` as well. Set `false` (default) when refs are already resolved at the call site
+- [rootSchema]: S | undefined - Required when `resolveRefs` is `true`; the root schema used to look up `$ref`s
+
+#### Returns
+
+- S[]: A new array of plain schema objects with `additionalProperties` relaxed where needed
+
 ### removeOptionalEmptyObjects&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 > NOTE: This function is deprecated and will be removed in a future release. The equivalent pruning behavior is now built into `omitExtraData` — use that instead.

@@ -353,15 +353,10 @@ export default function omitExtraData<
     if (!Array.isArray(oneOf) || isSelect(validator, schema, rootSchema, experimental_customMergeAllOf)) {
       return target;
     }
-    // Resolve $refs first so that nested additionalProperties:false is visible before relaxation.
-    // Boolean schemas are converted to their object equivalents.
-    const resolved: S[] = (oneOf as Array<S | boolean>).map((d) =>
-      isObject(d) ? resolveAllReferences<S>(d as S, rootSchema, []) : ((d ? {} : { not: {} }) as S),
-    );
-    // Relax additionalProperties:false for scoring only so getClosestMatchingOption does not produce
-    // false negatives. schemaParser captures these hashes via resolveAnyOrOneOfSchemas(expandAllBranches=true)
-    // so precompiled validators can find them. The unrelaxed resolved schema is used for actual filtering.
-    const scoringOptions = relaxOptionsForScoring<S>(resolved);
+    // Resolve $refs and relax additionalProperties:false → true in one pass for scoring only.
+    // The unrelaxed resolved schema is re-derived for the winning option so that omit() still
+    // respects additionalProperties:false during filtering.
+    const scoringOptions = relaxOptionsForScoring<S>(oneOf as Array<S | boolean>, true, rootSchema);
     const bestIndex = getClosestMatchingOption<T, S, F>(
       validator,
       rootSchema,
@@ -371,7 +366,13 @@ export default function omitExtraData<
       getDiscriminatorFieldFromSchema<S>(schema),
       experimental_customMergeAllOf,
     );
-    return omit(resolved[bestIndex], source, target);
+    const winning = (oneOf as Array<S | boolean>)[bestIndex];
+    // For object options, re-resolve without relaxation so additionalProperties:false is respected.
+    // For boolean options, scoringOptions already holds the converted schema (true→{}, false→{not:{}}).
+    const resolved: S = isObject(winning)
+      ? resolveAllReferences<S>(winning as S, rootSchema, [])
+      : scoringOptions[bestIndex];
+    return omit(resolved, source, target);
   }
 
   /** Applies `anyOf` branches from `schema` to `source`, merging results into `target`. When `anyOf`

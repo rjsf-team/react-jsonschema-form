@@ -1944,6 +1944,47 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           { type: 'object', additionalProperties: true },
         ]);
       });
+      describe('resolveRefs=true', () => {
+        it('resolves a $ref and widens additionalProperties:false to true', () => {
+          const rootSchema: RJSFSchema = {
+            definitions: {
+              Strict: { type: 'object', properties: { a: { type: 'string' } }, additionalProperties: false },
+            },
+          };
+          expect(relaxOptionsForScoring<RJSFSchema>([{ $ref: '#/definitions/Strict' }], true, rootSchema)).toEqual([
+            expect.objectContaining({
+              type: 'object',
+              properties: { a: { type: 'string' } },
+              additionalProperties: true,
+            }),
+          ]);
+        });
+        it('resolves a $ref without additionalProperties constraint and leaves it unchanged', () => {
+          const rootSchema: RJSFSchema = {
+            definitions: { Open: { type: 'object', properties: { b: { type: 'number' } } } },
+          };
+          expect(relaxOptionsForScoring<RJSFSchema>([{ $ref: '#/definitions/Open' }], true, rootSchema)).toEqual([
+            expect.objectContaining({ type: 'object', properties: { b: { type: 'number' } } }),
+          ]);
+        });
+        it('leaves a plain schema (no $ref) unchanged when there is no additionalProperties:false', () => {
+          const schema: RJSFSchema = { type: 'object', properties: { c: { type: 'string' } } };
+          expect(relaxOptionsForScoring<RJSFSchema>([schema], true, {})).toEqual([schema]);
+        });
+        it('does not resolve refs when resolveRefs is false (default)', () => {
+          const rootSchema: RJSFSchema = {
+            definitions: {
+              Strict: { type: 'object', properties: { a: { type: 'string' } }, additionalProperties: false },
+            },
+          };
+          const ref: RJSFSchema = { $ref: '#/definitions/Strict' };
+          expect(relaxOptionsForScoring<RJSFSchema>([ref], false, rootSchema)).toEqual([ref]);
+        });
+        it('does not resolve refs when resolveRefs is true but rootSchema is omitted', () => {
+          const ref: RJSFSchema = { $ref: '#/definitions/Strict' };
+          expect(relaxOptionsForScoring<RJSFSchema>([ref], true)).toEqual([ref]);
+        });
+      });
     });
     describe('resolveCondition()', () => {
       it('returns both conditions with expandAll', () => {
