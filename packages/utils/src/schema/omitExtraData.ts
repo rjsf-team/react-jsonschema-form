@@ -21,6 +21,7 @@ import {
 } from '../types';
 import getClosestMatchingOption from './getClosestMatchingOption';
 import isSelect from './isSelect';
+import { relaxOptionsForScoring, resolveAllReferences } from './retrieveSchema';
 
 /** Returns the `formData` with only the elements specified in the `fields` list
  *
@@ -352,27 +353,25 @@ export default function omitExtraData<
     if (!Array.isArray(oneOf) || isSelect(validator, schema, rootSchema, experimental_customMergeAllOf)) {
       return target;
     }
-    // Mirror svelte: relax additionalProperties:false so getClosestMatchingOption can score options
-    // without false negatives from strict property checks. Note: these mutated schema objects will
-    // not be present in a precompiled validator's compiled set, so precompiled validators may not
-    // work correctly here. This is the same limitation that already exists elsewhere in the codebase
-    // (e.g. MultiSchemaField) when getClosestMatchingOption is used with dynamic schemas.
-    const options = (oneOf as Array<S | boolean>).map((d) => {
-      if (!isSchemaObj(d)) {
-        return (d ? {} : { not: {} }) as S;
-      }
-      return d.additionalProperties === false ? ({ ...d, additionalProperties: true } as S) : d;
-    });
+    // Resolve $refs first so that nested additionalProperties:false is visible before relaxation.
+    // Boolean schemas are converted to their object equivalents.
+    const resolved: S[] = (oneOf as Array<S | boolean>).map((d) =>
+      isObject(d) ? resolveAllReferences(d as S, rootSchema, []) : ((d ? {} : { not: {} }) as S),
+    );
+    // Relax additionalProperties:false for scoring only so getClosestMatchingOption does not produce
+    // false negatives. schemaParser captures these hashes via resolveAnyOrOneOfSchemas(expandAllBranches=true)
+    // so precompiled validators can find them. The unrelaxed resolved schema is used for actual filtering.
+    const scoringOptions = relaxOptionsForScoring<S>(resolved);
     const bestIndex = getClosestMatchingOption(
       validator,
       rootSchema,
       source as T,
-      options,
+      scoringOptions,
       0,
       getDiscriminatorFieldFromSchema(schema),
       experimental_customMergeAllOf,
     );
-    return omit((oneOf as Array<S | boolean>)[bestIndex], source, target);
+    return omit(resolved[bestIndex], source, target);
   }
 
   /** Applies `anyOf` branches from `schema` to `source`, merging results into `target`. When `anyOf`

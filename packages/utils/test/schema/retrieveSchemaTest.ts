@@ -3,6 +3,7 @@ import get from 'lodash/get';
 import { ADDITIONAL_PROPERTY_FLAG, createSchemaUtils, PROPERTIES_KEY, retrieveSchema, RJSFSchema } from '../../src';
 import {
   getAllPermutationsOfXxxOf,
+  relaxOptionsForScoring,
   resolveAnyOrOneOfSchemas,
   resolveCondition,
   retrieveSchemaInternal,
@@ -1907,6 +1908,40 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
               __rjsf_ref: '#/definitions/bObject',
             },
           },
+        ]);
+      });
+    });
+    describe('relaxOptionsForScoring()', () => {
+      it('converts boolean true to an empty schema', () => {
+        expect(relaxOptionsForScoring([true])).toEqual([{}]);
+      });
+      it('converts boolean false to a {not:{}} schema', () => {
+        expect(relaxOptionsForScoring([false])).toEqual([{ not: {} }]);
+      });
+      it('widens additionalProperties:false to true', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          additionalProperties: false,
+        };
+        expect(relaxOptionsForScoring([schema])).toEqual([
+          { type: 'object', properties: { a: { type: 'string' } }, additionalProperties: true },
+        ]);
+      });
+      it('leaves schemas without additionalProperties unchanged', () => {
+        const schema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+        expect(relaxOptionsForScoring([schema])).toEqual([schema]);
+      });
+      it('leaves schemas with additionalProperties:true unchanged', () => {
+        const schema: RJSFSchema = { type: 'object', additionalProperties: true };
+        expect(relaxOptionsForScoring([schema])).toEqual([schema]);
+      });
+      it('handles a mixed array of booleans and schemas', () => {
+        const schemaFalse: RJSFSchema = { type: 'object', additionalProperties: false };
+        expect(relaxOptionsForScoring<RJSFSchema>([true, false, schemaFalse])).toEqual([
+          {},
+          { not: {} },
+          { type: 'object', additionalProperties: true },
         ]);
       });
     });

@@ -1258,6 +1258,28 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
       });
     });
 
+    describe('oneOf with $ref options resolves references before scoring', () => {
+      it('resolves a $ref option and relaxes additionalProperties:false before scoring', () => {
+        const schema: RJSFSchema = {
+          definitions: {
+            Strict: {
+              type: 'object',
+              properties: { name: { type: 'string' } },
+              additionalProperties: false,
+            },
+          },
+          oneOf: [{ $ref: '#/definitions/Strict' }, { type: 'object', properties: { age: { type: 'number' } } }],
+        };
+        const formData = { name: 'Alice', extra: 'drop' };
+        // Scoring uses the resolved+relaxed schema so isValid sees the Strict definition without
+        // additionalProperties:false — the first option matches.
+        testValidator.setReturnValues({ isValid: [false, true, false, true] });
+        const result = omitExtraData(testValidator, schema, schema, formData);
+        // The best-matching option is the resolved Strict schema; extra key is dropped.
+        expect(result).toEqual({ name: 'Alice' });
+      });
+    });
+
     describe('getFieldNames() — array formValue branch', () => {
       it('includes path when formValue is a non-empty array of scalars and the node is not a leaf', () => {
         // isLeaf is false when the pathSchema node has keys beyond NAME_KEY (here '0').
