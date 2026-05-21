@@ -874,30 +874,6 @@ exports[`schemaParser() parses superSchema properly 1`] = `
     },
     "type": "object",
   },
-  "-17144d6a": {
-    "$id": "-17144d6a",
-    "properties": {
-      "idCode": {
-        "__rjsf_ref": "#/definitions/test",
-        "type": "string",
-      },
-    },
-    "title": "Second method of identification",
-  },
-  "-2b64c58c": {
-    "$id": "-2b64c58c",
-    "properties": {
-      "firstName": {
-        "title": "First name",
-        "type": "string",
-      },
-      "lastName": {
-        "__rjsf_ref": "#/definitions/test",
-        "type": "string",
-      },
-    },
-    "title": "First method of identification",
-  },
   "-42ce06f5": {
     "$id": "-42ce06f5",
     "anyOf": [
@@ -924,37 +900,6 @@ exports[`schemaParser() parses superSchema properly 1`] = `
     },
     "title": "First method of identification",
   },
-  "-63a49c88": {
-    "$id": "-63a49c88",
-    "__rjsf_ref": "#/definitions/choice2",
-    "properties": {
-      "choice": {
-        "const": "two",
-        "type": "string",
-      },
-      "more": {
-        "type": "string",
-      },
-    },
-    "type": "object",
-  },
-  "20ed44b8": {
-    "$id": "20ed44b8",
-    "__rjsf_ref": "#/definitions/choice1",
-    "properties": {
-      "choice": {
-        "const": "one",
-        "type": "string",
-      },
-      "other": {
-        "type": "number",
-      },
-    },
-    "required": [
-      "more",
-    ],
-    "type": "object",
-  },
   "237b1633": {
     "$id": "237b1633",
     "__rjsf_ref": "#/definitions/choice2",
@@ -976,16 +921,6 @@ exports[`schemaParser() parses superSchema properly 1`] = `
         "type": "string",
       },
       "more": {
-        "type": "string",
-      },
-    },
-    "type": "object",
-  },
-  "24c97086": {
-    "$id": "24c97086",
-    "__rjsf_ref": "#/definitions/foo",
-    "properties": {
-      "name": {
         "type": "string",
       },
     },

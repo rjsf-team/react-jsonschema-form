@@ -697,10 +697,11 @@ export function resolveAnyOrOneOfSchemas<
       // Also trigger isValid() for the relaxed variants so that precompiled validators capture their hashes.
       // omitExtraData's handleOneOf relaxes additionalProperties:false → true before scoring; those mutated
       // schemas must be present in a precompiled validator's compiled set or isValid() will throw at runtime.
+      // Using getFirstMatchingOption (rather than calling isValid directly) ensures that the augmented forms
+      // of each option (as constructed internally by getFirstMatchingOption for options with properties) are
+      // also captured. The return value is discarded — the call is purely for ParserValidator's side effect.
       const relaxed = relaxOptionsForScoring<S>(anyOrOneOf);
-      for (const relaxedOption of relaxed) {
-        validator.isValid(relaxedOption, formData, rootSchema);
-      }
+      getFirstMatchingOption<T, S, F>(validator, formData, relaxed, rootSchema, discriminator);
       return anyOrOneOf.map((item) => mergeSchemas(remaining, item) as S);
     }
     schema = mergeSchemas(remaining, anyOrOneOf[option]) as S;

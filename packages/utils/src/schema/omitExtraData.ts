@@ -356,19 +356,19 @@ export default function omitExtraData<
     // Resolve $refs first so that nested additionalProperties:false is visible before relaxation.
     // Boolean schemas are converted to their object equivalents.
     const resolved: S[] = (oneOf as Array<S | boolean>).map((d) =>
-      isObject(d) ? resolveAllReferences(d as S, rootSchema, []) : ((d ? {} : { not: {} }) as S),
+      isObject(d) ? resolveAllReferences<S>(d as S, rootSchema, []) : ((d ? {} : { not: {} }) as S),
     );
     // Relax additionalProperties:false for scoring only so getClosestMatchingOption does not produce
     // false negatives. schemaParser captures these hashes via resolveAnyOrOneOfSchemas(expandAllBranches=true)
     // so precompiled validators can find them. The unrelaxed resolved schema is used for actual filtering.
     const scoringOptions = relaxOptionsForScoring<S>(resolved);
-    const bestIndex = getClosestMatchingOption(
+    const bestIndex = getClosestMatchingOption<T, S, F>(
       validator,
       rootSchema,
       source as T,
       scoringOptions,
       0,
-      getDiscriminatorFieldFromSchema(schema),
+      getDiscriminatorFieldFromSchema<S>(schema),
       experimental_customMergeAllOf,
     );
     return omit(resolved[bestIndex], source, target);
@@ -450,15 +450,15 @@ export default function omitExtraData<
     const { $ref: ref, allOf } = schema;
 
     if (ref !== undefined) {
-      return omit(findSchemaDefinition(ref, rootSchema), source, target);
+      return omit(findSchemaDefinition<S>(ref, rootSchema), source, target);
     }
     if (allOf) {
-      schema = doMergeAllOf(schema, experimental_customMergeAllOf);
+      schema = doMergeAllOf<S>(schema, experimental_customMergeAllOf);
     }
 
     target = handleAnyOf(schema, source, handleOneOf(schema.oneOf, schema, source, target));
 
-    const type = getSchemaType(schema);
+    const type = getSchemaType<S>(schema);
     if (type === 'object') {
       if (!isObjectValue(source)) {
         return undefined;
