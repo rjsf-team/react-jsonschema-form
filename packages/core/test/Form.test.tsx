@@ -3158,11 +3158,7 @@ describeRepeated('Form common', (createFormComponent) => {
           });
         });
 
-        expectToHaveBeenCalledWithFormData(
-          onChange,
-          { animal: 'Cat', food: 'meat', water: undefined },
-          'root_animal',
-        );
+        expectToHaveBeenCalledWithFormData(onChange, { animal: 'Cat', food: 'meat', water: undefined }, 'root_animal');
       });
     });
 
