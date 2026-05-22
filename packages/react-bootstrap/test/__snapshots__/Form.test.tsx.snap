@@ -3448,9 +3448,7 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
                         class="mb-3"
                         id="root_my-field__description"
                       >
-                        <span>
-                          some other description
-                        </span>
+                        some other description
                       </div>
                     </div>
                   </small>
