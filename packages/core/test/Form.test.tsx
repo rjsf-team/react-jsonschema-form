@@ -136,7 +136,6 @@ describeRepeated('Form common', (createFormComponent) => {
       options = node.querySelectorAll<HTMLOptionElement>('select option');
       // Change the fallback type to 'boolean'
       await user.selectOptions(select, options[2]);
-      console.log('boolean', node.innerHTML);
       expect(options[2]).toHaveTextContent('boolean');
       expect(options[2].selected).toBe(true);
       expect(node.querySelector<HTMLInputElement>('input[type=checkbox]')).toBeInTheDocument();

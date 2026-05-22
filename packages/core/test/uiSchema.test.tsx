@@ -1,5 +1,6 @@
 import { CSSProperties } from 'react';
 import { render, fireEvent, act, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { GenericObjectType, RJSFSchema, UiSchema, Widget, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -7,6 +8,8 @@ import SelectWidget from '../src/components/widgets/SelectWidget';
 import RadioWidget from '../src/components/widgets/RadioWidget';
 import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils';
 import Form from '../src';
+
+const user = userEvent.setup();
 
 describe('uiSchema', () => {
   let consoleWarnSpy: jest.SpyInstance;
@@ -909,7 +912,7 @@ describe('uiSchema', () => {
         expect(node.querySelector('textarea')).toHaveValue('a');
       });
 
-      it('should call onChange handler when text is updated', () => {
+      it('should call onChange handler when text is updated', async () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -918,13 +921,8 @@ describe('uiSchema', () => {
           },
         });
 
-        act(() => {
-          fireEvent.change(node.querySelector('textarea')!, {
-            target: {
-              value: 'b',
-            },
-          });
-        });
+        await user.clear(node.querySelector('textarea')!);
+        await user.type(node.querySelector('textarea')!, 'b');
 
         expectToHaveBeenCalledWithFormData(onChange, { foo: 'b' }, 'root_foo');
       });
@@ -962,7 +960,7 @@ describe('uiSchema', () => {
         expect(node.querySelector('[type=password]')).toHaveValue('a');
       });
 
-      it('should call onChange handler when text is updated is checked', () => {
+      it('should call onChange handler when text is updated is checked', async () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -971,13 +969,8 @@ describe('uiSchema', () => {
           },
         });
 
-        act(() => {
-          fireEvent.change(node.querySelector('[type=password]')!, {
-            target: {
-              value: 'b',
-            },
-          });
-        });
+        await user.clear(node.querySelector('[type=password]')!);
+        await user.type(node.querySelector('[type=password]')!, 'b');
 
         expectToHaveBeenCalledWithFormData(onChange, { foo: 'b' }, 'root_foo');
       });
@@ -1023,6 +1016,10 @@ describe('uiSchema', () => {
           },
         });
 
+        // fireEvent.change is used instead of user.paste() because jsdom does not process paste
+        // events on color inputs — they have no editable text field in the DOM model and ignore
+        // clipboard events entirely. user.type() also fails because jsdom's sanitization algorithm
+        // rejects each intermediate character as an invalid color string.
         act(() => {
           fireEvent.change(node.querySelector('[type=color]')!, {
             target: {
@@ -1112,7 +1109,7 @@ describe('uiSchema', () => {
         expect(node.querySelectorAll('[type=radio]')[1]).toBeChecked();
       });
 
-      it('should call onChange handler when value is updated', () => {
+      it('should call onChange handler when value is updated', async () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -1121,9 +1118,7 @@ describe('uiSchema', () => {
           },
         });
 
-        act(() => {
-          fireEvent.click(node.querySelectorAll('[type=radio]')[1]);
-        });
+        await user.click(node.querySelectorAll('[type=radio]')[1]);
 
         expectToHaveBeenCalledWithFormData(onChange, { foo: 'b' }, 'root_foo');
       });
@@ -1168,7 +1163,7 @@ describe('uiSchema', () => {
         expect(node.querySelector('[type=number]')).toHaveValue(3.14);
       });
 
-      it('should call onChange handler when value is updated', () => {
+      it('should call onChange handler when value is updated', async () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -1177,13 +1172,8 @@ describe('uiSchema', () => {
           },
         });
 
-        act(() => {
-          fireEvent.change(node.querySelector('[type=number]')!, {
-            target: {
-              value: '6.28',
-            },
-          });
-        });
+        await user.clear(node.querySelector('[type=number]')!);
+        await user.type(node.querySelector('[type=number]')!, '6.28');
 
         expectToHaveBeenCalledWithFormData(onChange, { foo: 6.28 }, 'root_foo');
       });
@@ -1261,6 +1251,8 @@ describe('uiSchema', () => {
           },
         });
 
+        // fireEvent.change is used instead of user.type() because jsdom does not process character
+        // input for range inputs — the slider value is controlled by pointer/arrow events, not text input.
         act(() => {
           fireEvent.change(node.querySelector('[type=range]')!, {
             target: {
@@ -1354,10 +1346,7 @@ describe('uiSchema', () => {
           },
         });
 
-        act(() => {
-          // Click on the radio button to change it
-          fireEvent.click(node.querySelectorAll('[type=radio]')[2]);
-        });
+        await user.click(node.querySelectorAll('[type=radio]')[2]);
 
         await waitFor(() => {
           expectToHaveBeenCalledWithFormData(onChange, { foo: 1.4142 }, 'root_foo');
@@ -1441,7 +1430,7 @@ describe('uiSchema', () => {
         expect(node.querySelector('[type=number]')).toHaveValue(3);
       });
 
-      it('should call onChange handler when value is updated', () => {
+      it('should call onChange handler when value is updated', async () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -1450,13 +1439,8 @@ describe('uiSchema', () => {
           },
         });
 
-        act(() => {
-          fireEvent.change(node.querySelector('[type=number]')!, {
-            target: {
-              value: '6',
-            },
-          });
-        });
+        await user.clear(node.querySelector('[type=number]')!);
+        await user.type(node.querySelector('[type=number]')!, '6');
 
         expectToHaveBeenCalledWithFormData(onChange, { foo: 6 }, 'root_foo');
       });
@@ -1496,6 +1480,8 @@ describe('uiSchema', () => {
           },
         });
 
+        // fireEvent.change is used instead of user.type() because jsdom does not process character
+        // input for range inputs — the slider value is controlled by pointer/arrow events, not text input.
         act(() => {
           fireEvent.change(node.querySelector('[type=range]')!, {
             target: {
@@ -1543,7 +1529,7 @@ describe('uiSchema', () => {
         expect(node.querySelectorAll('[type=radio]')[1]).toBeChecked();
       });
 
-      it('should call onChange handler when value is updated', () => {
+      it('should call onChange handler when value is updated', async () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -1552,9 +1538,7 @@ describe('uiSchema', () => {
           },
         });
 
-        act(() => {
-          fireEvent.click(node.querySelectorAll('[type=radio]')[1]);
-        });
+        await user.click(node.querySelectorAll('[type=radio]')[1]);
 
         expectToHaveBeenCalledWithFormData(onChange, { foo: 2 }, 'root_foo');
       });
@@ -1648,7 +1632,7 @@ describe('uiSchema', () => {
         expect(node.querySelectorAll('[type=radio]')[1]).toBeChecked();
       });
 
-      it('should call onChange handler when false is checked', () => {
+      it('should call onChange handler when false is checked', async () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -1657,14 +1641,12 @@ describe('uiSchema', () => {
           },
         });
 
-        act(() => {
-          fireEvent.click(node.querySelectorAll('[type=radio]')[1]);
-        });
+        await user.click(node.querySelectorAll('[type=radio]')[1]);
 
         expectToHaveBeenCalledWithFormData(onChange, { foo: false }, 'root_foo');
       });
 
-      it('should call onChange handler when true is checked', () => {
+      it('should call onChange handler when true is checked', async () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -1673,9 +1655,7 @@ describe('uiSchema', () => {
           },
         });
 
-        act(() => {
-          fireEvent.click(node.querySelectorAll('[type=radio]')[0]);
-        });
+        await user.click(node.querySelectorAll('[type=radio]')[0]);
 
         expectToHaveBeenCalledWithFormData(onChange, { foo: true }, 'root_foo');
       });
@@ -1701,7 +1681,7 @@ describe('uiSchema', () => {
         expect(node.querySelectorAll('option')[2]).toHaveTextContent('No');
       });
 
-      it('should call onChange handler when true is selected', () => {
+      it('should call onChange handler when true is selected', async () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -1710,19 +1690,13 @@ describe('uiSchema', () => {
           },
         });
 
-        act(() => {
-          fireEvent.change(node.querySelector('select')!, {
-            // DOM option change events always return strings
-            target: {
-              value: 0, // use index
-            },
-          });
-        });
+        const $select = node.querySelector<HTMLSelectElement>('select')!;
+        await user.selectOptions($select, $select.querySelectorAll('option')[1]); // 'Yes' → true
 
         expectToHaveBeenCalledWithFormData(onChange, { foo: true }, 'root_foo');
       });
 
-      it('should call onChange handler when false is selected', () => {
+      it('should call onChange handler when false is selected', async () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -1731,13 +1705,8 @@ describe('uiSchema', () => {
           },
         });
 
-        act(() => {
-          fireEvent.change(node.querySelector('select')!, {
-            target: {
-              value: 1, // use index
-            },
-          });
-        });
+        const $select = node.querySelector<HTMLSelectElement>('select')!;
+        await user.selectOptions($select, $select.querySelectorAll('option')[2]); // 'No' → false
 
         expectToHaveBeenCalledWithFormData(onChange, { foo: false }, 'root_foo');
       });

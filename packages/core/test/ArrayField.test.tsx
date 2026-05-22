@@ -13,12 +13,14 @@ import {
   WidgetProps,
   FormValidation,
 } from '@rjsf/utils';
-import { fireEvent, act } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils';
 import SchemaField from '../src/components/fields/SchemaField';
 import ArrayField from '../src/components/fields/ArrayField';
 import { TextWidgetTest } from './StringField.test';
+
+const user = userEvent.setup();
 
 const ArrayKeyDataAttr = 'data-rjsf-itemkey';
 const ExposedArrayKeyItemTemplate = function (props: ArrayFieldItemTemplateProps) {
@@ -449,30 +451,26 @@ describe('ArrayField', () => {
       expect(node.querySelector('.rjsf-array-item-add button')).toBeNull();
     });
 
-    it('should add a new field when clicking the add button', () => {
+    it('should add a new field when clicking the add button', async () => {
       const { node } = createFormComponent({ schema });
 
-      act(() => {
-        fireEvent.click(node.querySelector('.rjsf-array-item-add button')!);
-      });
+      await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
       expect(node.querySelectorAll('.rjsf-field-string')).toHaveLength(1);
     });
 
-    it('should assign new keys/ids when clicking the add button', () => {
+    it('should assign new keys/ids when clicking the add button', async () => {
       const { node } = createFormComponent({
         schema,
         templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate, ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate },
       });
 
-      act(() => {
-        fireEvent.click(node.querySelector('.rjsf-array-item-add button')!);
-      });
+      await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
       expect(node.querySelector('.rjsf-array-item')).toHaveAttribute(ArrayKeyDataAttr);
     });
 
-    it('should add a field when clicking add button even if event is not passed to onAddClick', () => {
+    it('should add a field when clicking add button even if event is not passed to onAddClick', async () => {
       const { node } = createFormComponent({
         schema,
         templates: {
@@ -481,9 +479,7 @@ describe('ArrayField', () => {
         },
       });
 
-      act(() => {
-        fireEvent.click(node.querySelector('.rjsf-array-item-add button')!);
-      });
+      await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
       expect(node.querySelector('.rjsf-array-item')).not.toBeNull();
     });
@@ -506,7 +502,7 @@ describe('ArrayField', () => {
       expect(node.querySelector('.rjsf-array-item-add button')).not.toBeNull();
     });
 
-    it('should retain existing row keys/ids when adding new row', () => {
+    it('should retain existing row keys/ids when adding new row', async () => {
       const { node } = createFormComponent({
         schema: { maxItems: 2, ...schema },
         formData: ['foo'],
@@ -517,9 +513,7 @@ describe('ArrayField', () => {
       const startRow1_key = startRows[0].getAttribute(ArrayKeyDataAttr);
       const startRow2_key = startRows[1] ? startRows[1].getAttribute(ArrayKeyDataAttr) : undefined;
 
-      act(() => {
-        fireEvent.click(node.querySelector('.rjsf-array-item-add button')!);
-      });
+      await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
       const endRows = node.querySelectorAll('.rjsf-array-item');
       const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
@@ -561,12 +555,10 @@ describe('ArrayField', () => {
       expect(node.querySelector('.rjsf-array-item-add button')).toBeNull();
     });
 
-    it('should mark a non-null array item widget as required', () => {
+    it('should mark a non-null array item widget as required', async () => {
       const { node } = createFormComponent({ schema });
 
-      act(() => {
-        fireEvent.click(node.querySelector('.rjsf-array-item-add button')!);
-      });
+      await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
       expect(node.querySelector('.rjsf-field-string input[type=text]')).toBeRequired();
     });
@@ -600,16 +592,14 @@ describe('ArrayField', () => {
       expect(node.querySelector('.rjsf-array-item-move-down')).not.toBeNull();
     });
 
-    it('should move down a field from the list', () => {
+    it('should move down a field from the list', async () => {
       const { node } = createFormComponent({
         schema,
         formData: ['foo', 'bar', 'baz'],
       });
       const moveDownBtns = node.querySelectorAll('.rjsf-array-item-move-down');
 
-      act(() => {
-        fireEvent.click(moveDownBtns[0]);
-      });
+      await user.click(moveDownBtns[0]);
 
       const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
       expect(inputs).toHaveLength(3);
@@ -618,16 +608,14 @@ describe('ArrayField', () => {
       expect(inputs[2]).toHaveValue('baz');
     });
 
-    it('should move up a field from the list', () => {
+    it('should move up a field from the list', async () => {
       const { node } = createFormComponent({
         schema,
         formData: ['foo', 'bar', 'baz'],
       });
       const moveUpBtns = node.querySelectorAll('.rjsf-array-item-move-up');
 
-      act(() => {
-        fireEvent.click(moveUpBtns[2]);
-      });
+      await user.click(moveUpBtns[2]);
 
       const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
       expect(inputs).toHaveLength(3);
@@ -636,7 +624,7 @@ describe('ArrayField', () => {
       expect(inputs[2]).toHaveValue('bar');
     });
 
-    it('should retain row keys/ids when moving down', () => {
+    it('should retain row keys/ids when moving down', async () => {
       const { node } = createFormComponent({
         schema,
         formData: ['foo', 'bar', 'baz'],
@@ -648,9 +636,7 @@ describe('ArrayField', () => {
       const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
       const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
 
-      act(() => {
-        fireEvent.click(moveDownBtns[0]);
-      });
+      await user.click(moveDownBtns[0]);
 
       const endRows = node.querySelectorAll('.rjsf-array-item');
       const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
@@ -666,7 +652,7 @@ describe('ArrayField', () => {
       expect(endRows[2]).toHaveAttribute(ArrayKeyDataAttr);
     });
 
-    it('should retain row keys/ids when moving up', () => {
+    it('should retain row keys/ids when moving up', async () => {
       const { node } = createFormComponent({
         schema,
         formData: ['foo', 'bar', 'baz'],
@@ -678,9 +664,7 @@ describe('ArrayField', () => {
       const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
       const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
 
-      act(() => {
-        fireEvent.click(moveUpBtns[2]);
-      });
+      await user.click(moveUpBtns[2]);
 
       const endRows = node.querySelectorAll('.rjsf-array-item');
       const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
@@ -749,45 +733,40 @@ describe('ArrayField', () => {
       expect(moveDownBtns).toBeNull();
     });
 
-    it('should remove a field from the list', () => {
+    it('should remove a field from the list', async () => {
       const { node } = createFormComponent({
         schema,
         formData: ['foo', 'bar'],
       });
       const dropBtns = node.querySelectorAll('.rjsf-array-item-remove');
 
-      act(() => {
-        fireEvent.click(dropBtns[0]);
-      });
+      await user.click(dropBtns[0]);
 
       const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
       expect(inputs).toHaveLength(1);
       expect(inputs[0]).toHaveValue('bar');
     });
 
-    it('should delete item from list and correct indices', () => {
+    it('should delete item from list and correct indices', async () => {
       const { node } = createFormComponent({
         schema,
         formData: ['foo', 'bar', 'baz'],
       });
       const deleteBtns = node.querySelectorAll('.rjsf-array-item-remove');
 
-      act(() => {
-        fireEvent.click(deleteBtns[0]);
-      });
+      await user.click(deleteBtns[0]);
 
       const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
 
-      act(() => {
-        fireEvent.change(inputs[0], { target: { value: 'fuzz' } });
-      });
+      await user.clear(inputs[0]);
+      await user.type(inputs[0], 'fuzz');
 
       expect(inputs).toHaveLength(2);
       expect(inputs[0]).toHaveValue('fuzz');
       expect(inputs[1]).toHaveValue('baz');
     });
 
-    it('should retain row keys/ids of remaining rows when a row is removed', () => {
+    it('should retain row keys/ids of remaining rows when a row is removed', async () => {
       const { node } = createFormComponent({
         schema,
         formData: ['foo', 'bar'],
@@ -798,9 +777,7 @@ describe('ArrayField', () => {
       const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
 
       const dropBtns = node.querySelectorAll('.rjsf-array-item-remove');
-      act(() => {
-        fireEvent.click(dropBtns[0]);
-      });
+      await user.click(dropBtns[0]);
 
       const endRows = node.querySelectorAll('.rjsf-array-item');
       const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
@@ -842,7 +819,7 @@ describe('ArrayField', () => {
       expect(dropBtn).toBeNull();
     });
 
-    it('should force revalidation when a field is removed', () => {
+    it('should force revalidation when a field is removed', async () => {
       // refs #195
       const { node } = createFormComponent({
         schema: {
@@ -853,9 +830,7 @@ describe('ArrayField', () => {
       });
 
       try {
-        act(() => {
-          fireEvent.submit(node);
-        });
+        submitForm(node);
       } catch {
         // Silencing error thrown as failure is expected here
       }
@@ -864,9 +839,7 @@ describe('ArrayField', () => {
 
       const dropBtns = node.querySelectorAll('.rjsf-array-item-remove');
 
-      act(() => {
-        fireEvent.click(dropBtns[0]);
-      });
+      await user.click(dropBtns[0]);
 
       expect(node.querySelectorAll('.has-error .error-detail')).toHaveLength(0);
     });
@@ -914,7 +887,7 @@ describe('ArrayField', () => {
       expect(dropBtn).not.toBeNull();
     });
 
-    it('should copy a field in the list just below the item clicked', () => {
+    it('should copy a field in the list just below the item clicked', async () => {
       const { node } = createFormComponent({
         schema,
         formData: ['foo', 'bar'],
@@ -922,9 +895,7 @@ describe('ArrayField', () => {
       });
       const copyBtns = node.querySelectorAll('.rjsf-array-item-copy');
 
-      act(() => {
-        fireEvent.click(copyBtns[0]);
-      });
+      await user.click(copyBtns[0]);
 
       const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
       expect(inputs).toHaveLength(3);
@@ -933,7 +904,7 @@ describe('ArrayField', () => {
       expect(inputs[2]).toHaveValue('bar');
     });
 
-    it('should handle cleared field values in the array', () => {
+    it('should handle cleared field values in the array', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         items: { type: 'integer' },
@@ -945,11 +916,7 @@ describe('ArrayField', () => {
         formData,
       });
 
-      act(() => {
-        fireEvent.change(node.querySelector('#root_1')!, {
-          target: { value: '' },
-        });
-      });
+      await user.clear(node.querySelector('#root_1')!);
 
       expect(onChange).toHaveBeenLastCalledWith(
         expect.objectContaining({
@@ -1262,51 +1229,32 @@ describe('ArrayField', () => {
         const { node, onChange } = createFormComponent({ schema });
 
         const select = node.querySelector<HTMLSelectElement>('.rjsf-field select')!;
-        const options = select.querySelectorAll('option');
-        act(() => {
-          // Preselect the options on the select before firing the evant
-          options[0].selected = true;
-          options[1].selected = true;
-          options[2].selected = false;
-
-          fireEvent.change(select);
-        });
+        const options = select.querySelectorAll<HTMLOptionElement>('option');
+        await user.selectOptions(select, [options[0], options[1]]);
 
         expectToHaveBeenCalledWithFormData(onChange, ['foo', 'bar'], 'root');
       });
 
-      it('should handle a blur event', () => {
+      it('should handle a blur event', async () => {
         const onBlur = jest.fn();
         const { node } = createFormComponent({ schema, onBlur });
 
-        const select = node.querySelector('.rjsf-field select')!;
-        const options = select.querySelectorAll('option');
-        act(() => {
-          options[0].selected = true;
-          options[1].selected = true;
-          options[2].selected = false;
+        const select = node.querySelector<HTMLSelectElement>('.rjsf-field select')!;
+        const options = select.querySelectorAll<HTMLOptionElement>('option');
+        await user.selectOptions(select, [options[0], options[1]]);
+        await user.tab();
 
-          fireEvent.blur(select);
-        });
-
-        expect(onBlur).toHaveBeenLastCalledWith(select?.id, ['foo', 'bar']);
+        expect(onBlur).toHaveBeenLastCalledWith(select.id, ['foo', 'bar']);
       });
 
-      it('should handle a focus event', () => {
+      it('should handle a focus event', async () => {
         const onFocus = jest.fn();
-        const { node } = createFormComponent({ schema, onFocus });
+        const { node } = createFormComponent({ schema, onFocus, formData: ['foo', 'bar'] });
 
-        const select = node.querySelector('.rjsf-field select')!;
-        const options = select.querySelectorAll('option');
-        act(() => {
-          options[0].selected = true;
-          options[1].selected = true;
-          options[2].selected = false;
+        const select = node.querySelector<HTMLSelectElement>('.rjsf-field select')!;
+        await user.click(select);
 
-          fireEvent.focus(select);
-        });
-
-        expect(onFocus).toHaveBeenLastCalledWith(select?.id, ['foo', 'bar']);
+        expect(onFocus).toHaveBeenLastCalledWith(select.id, ['foo', 'bar']);
       });
 
       it('should fill field with data', () => {
@@ -1435,23 +1383,19 @@ describe('ArrayField', () => {
         expect(labels).toEqual(['foo', 'bar', 'fuzz']);
       });
 
-      it('should handle a change event', () => {
+      it('should handle a change event', async () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
         });
 
-        act(() => {
-          fireEvent.click(node.querySelectorAll('[type=checkbox]')[0]);
-        });
-        act(() => {
-          fireEvent.click(node.querySelectorAll('[type=checkbox]')[2]);
-        });
+        await user.click(node.querySelectorAll('[type=checkbox]')[0]);
+        await user.click(node.querySelectorAll('[type=checkbox]')[2]);
 
         expectToHaveBeenCalledWithFormData(onChange, ['foo', 'fuzz'], 'root');
       });
 
-      it('should fill properly field with data that is not an array and handle change event', () => {
+      it('should fill properly field with data that is not an array and handle change event', async () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -1461,9 +1405,7 @@ describe('ArrayField', () => {
         let labels = [].map.call(node.querySelectorAll('[type=checkbox]'), (node: HTMLInputElement) => node.checked);
         expect(labels).toEqual([true, false, false]);
 
-        act(() => {
-          fireEvent.click(node.querySelectorAll('[type=checkbox]')[2]);
-        });
+        await user.click(node.querySelectorAll('[type=checkbox]')[2]);
 
         expectToHaveBeenCalledWithFormData(onChange, ['foo', 'fuzz'], 'root');
         labels = [].map.call(node.querySelectorAll('[type=checkbox]'), (node: HTMLInputElement) => node.checked);
@@ -1585,31 +1527,17 @@ describe('ArrayField', () => {
     it('should handle a two change events that results in two items in the list', async () => {
       const { node, onChange } = createFormComponent({ schema });
 
-      act(() => {
-        fireEvent.change(node.querySelector('.rjsf-field input[type=file]')!, {
-          target: {
-            files: [{ name: 'file1.txt', size: 1, type: 'type' }],
-          },
-        });
-      });
-
-      await act(() => {
-        new Promise(setImmediate);
-      });
+      await user.upload(
+        node.querySelector('.rjsf-field input[type=file]')!,
+        new File([''], 'file1.txt', { type: 'text/plain' }),
+      );
 
       expectToHaveBeenCalledWithFormData(onChange, ['data:text/plain;name=file1.txt;base64,x='], 'root');
 
-      act(() => {
-        fireEvent.change(node.querySelector('.rjsf-field input[type=file]')!, {
-          target: {
-            files: [{ name: 'file2.txt', size: 2, type: 'type' }],
-          },
-        });
-      });
-
-      await act(() => {
-        new Promise(setImmediate);
-      });
+      await user.upload(
+        node.querySelector('.rjsf-field input[type=file]')!,
+        new File([''], 'file2.txt', { type: 'text/plain' }),
+      );
 
       expectToHaveBeenCalledWithFormData(
         onChange,
@@ -1621,20 +1549,10 @@ describe('ArrayField', () => {
     it('should handle a change event with multiple files that results the same items in the list', async () => {
       const { node, onChange } = createFormComponent({ schema });
 
-      act(() => {
-        fireEvent.change(node.querySelector('.rjsf-field input[type=file]')!, {
-          target: {
-            files: [
-              { name: 'file1.txt', size: 1, type: 'type' },
-              { name: 'file2.txt', size: 2, type: 'type' },
-            ],
-          },
-        });
-      });
-
-      await act(() => {
-        new Promise(setImmediate);
-      });
+      await user.upload(node.querySelector('.rjsf-field input[type=file]')!, [
+        new File([''], 'file1.txt', { type: 'text/plain' }),
+        new File([''], 'file2.txt', { type: 'text/plain' }),
+      ]);
 
       expectToHaveBeenCalledWithFormData(
         onChange,
@@ -1741,13 +1659,11 @@ describe('ArrayField', () => {
       expect(node.querySelectorAll('fieldset fieldset')).toHaveLength(2);
     });
 
-    it('should add an inner list when clicking the add button', () => {
+    it('should add an inner list when clicking the add button', async () => {
       const { node } = createFormComponent({ schema });
       expect(node.querySelectorAll('fieldset fieldset')).toHaveLength(0);
 
-      act(() => {
-        fireEvent.click(node.querySelector('.rjsf-array-item-add button')!);
-      });
+      await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
       expect(node.querySelectorAll('fieldset fieldset')).toHaveLength(1);
     });
@@ -1869,18 +1785,13 @@ describe('ArrayField', () => {
       expect(numInput).toHaveValue(42);
     });
 
-    it('should handle change events', () => {
+    it('should handle change events', async () => {
       const { node, onChange } = createFormComponent({ schema });
-      const strInput = node.querySelector('fieldset .rjsf-field-string input[type=text]');
-      const numInput = node.querySelector('fieldset .rjsf-field-number input[type=number]');
+      const strInput = node.querySelector('fieldset .rjsf-field-string input[type=text]')!;
+      const numInput = node.querySelector('fieldset .rjsf-field-number input[type=number]')!;
 
-      act(() => {
-        fireEvent.change(strInput!, { target: { value: 'bar' } });
-      });
-
-      act(() => {
-        fireEvent.change(numInput!, { target: { value: '101' } });
-      });
+      await user.type(strInput, 'bar');
+      await user.type(numInput, '101');
 
       expectToHaveBeenCalledWithFormData(onChange, ['bar', 101], 'root_1');
     });
@@ -2030,7 +1941,7 @@ describe('ArrayField', () => {
     });
 
     describe('operations for additional items', () => {
-      it('should add a field when clicking add button', () => {
+      it('should add a field when clicking add button', async () => {
         const { node, onChange } = createFormComponent({
           schema: schemaAdditional,
           formData: [1, 2, 'foo'],
@@ -2042,16 +1953,14 @@ describe('ArrayField', () => {
 
         const addBtn = node.querySelector('.rjsf-array-item-add button');
 
-        act(() => {
-          fireEvent.click(addBtn!);
-        });
+        await user.click(addBtn!);
 
         expect(node.querySelectorAll('.rjsf-field-string')).toHaveLength(2);
 
         expectToHaveBeenCalledWithFormData(onChange, [1, 2, 'foo', undefined], 'root');
       });
 
-      it('should retain existing row keys/ids when adding additional items', () => {
+      it('should retain existing row keys/ids when adding additional items', async () => {
         const { node } = createFormComponent({
           schema: schemaAdditional,
           formData: [1, 2, 'foo'],
@@ -2069,9 +1978,7 @@ describe('ArrayField', () => {
 
         const addBtn = node.querySelector('.rjsf-array-item-add button');
 
-        act(() => {
-          fireEvent.click(addBtn!);
-        });
+        await user.click(addBtn!);
 
         const endRows = node.querySelectorAll('.rjsf-array-item');
         const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
@@ -2091,7 +1998,7 @@ describe('ArrayField', () => {
         expect(endRows[3]).toHaveAttribute(ArrayKeyDataAttr);
       });
 
-      it('should change the state when changing input value', () => {
+      it('should change the state when changing input value', async () => {
         const { node, onChange } = createFormComponent({
           schema: schemaAdditional,
           formData: [1, 2, 'foo'],
@@ -2103,24 +2010,18 @@ describe('ArrayField', () => {
 
         const addBtn = node.querySelector('.rjsf-array-item-add button');
 
-        act(() => {
-          fireEvent.click(addBtn!);
-        });
+        await user.click(addBtn!);
 
         const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
 
-        act(() => {
-          fireEvent.change(inputs[0], { target: { value: 'bar' } });
-        });
-
-        act(() => {
-          fireEvent.change(inputs[1], { target: { value: 'baz' } });
-        });
+        await user.clear(inputs[0]);
+        await user.type(inputs[0], 'bar');
+        await user.type(inputs[1], 'baz');
 
         expectToHaveBeenCalledWithFormData(onChange, [1, 2, 'bar', 'baz'], 'root_3');
       });
 
-      it('should remove array items when clicking remove buttons', () => {
+      it('should remove array items when clicking remove buttons', async () => {
         const { node, onChange } = createFormComponent({
           schema: schemaAdditional,
           formData: [1, 2, 'foo'],
@@ -2132,28 +2033,20 @@ describe('ArrayField', () => {
 
         const addBtn = node.querySelector('.rjsf-array-item-add button');
 
-        act(() => {
-          fireEvent.click(addBtn!);
-        });
+        await user.click(addBtn!);
 
         let dropBtns = node.querySelectorAll('.rjsf-array-item-remove');
 
-        act(() => {
-          fireEvent.click(dropBtns[0]);
-        });
+        await user.click(dropBtns[0]);
 
         expect(node.querySelectorAll('.rjsf-field-string')).toHaveLength(1);
         const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
-        act(() => {
-          fireEvent.change(inputs[0], { target: { value: 'baz' } });
-        });
+        await user.type(inputs[0], 'baz');
 
         expectToHaveBeenCalledWithFormData(onChange, [1, 2, 'baz'], 'root_2');
 
         dropBtns = node.querySelectorAll('.rjsf-array-item-remove');
-        act(() => {
-          fireEvent.click(dropBtns[0]);
-        });
+        await user.click(dropBtns[0]);
 
         expect(node.querySelectorAll('.rjsf-field-string')).toHaveLength(0);
         expectToHaveBeenCalledWithFormData(onChange, [1, 2], 'root');
@@ -2172,18 +2065,12 @@ describe('ArrayField', () => {
       uniqueItems: true,
     };
 
-    it("should convert array of strings to numbers if type of items is 'number'", () => {
+    it("should convert array of strings to numbers if type of items is 'number'", async () => {
       const { node, onChange } = createFormComponent({ schema });
 
-      const select = node.querySelector('.rjsf-field select')!;
-      const options = select.querySelectorAll('option');
-      act(() => {
-        options[0].selected = true;
-        options[1].selected = true;
-        options[2].selected = false;
-
-        fireEvent.change(select);
-      });
+      const select = node.querySelector<HTMLSelectElement>('.rjsf-field select')!;
+      const options = select.querySelectorAll<HTMLOptionElement>('option');
+      await user.selectOptions(select, [options[0], options[1]]);
 
       expectToHaveBeenCalledWithFormData(onChange, [1, 2], 'root');
     });
@@ -2468,7 +2355,7 @@ describe('ArrayField', () => {
         },
       ];
 
-      it("Should show indexed title for the `CheckboxWidget` widget if no title is mentioned in it's UI Schema", () => {
+      it("Should show indexed title for the `CheckboxWidget` widget if no title is mentioned in it's UI Schema", async () => {
         const CheckboxWidget = (props: WidgetProps) => <div id={`title-${props.label}`} />;
 
         const widgets = { CheckboxWidget };
@@ -2486,14 +2373,12 @@ describe('ArrayField', () => {
           widgets,
         });
 
-        act(() => {
-          fireEvent.click(node.querySelector('.rjsf-array-item-add button')!);
-        });
+        await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
         expect(node.querySelector('#title-Array-1')).not.toBeNull();
       });
 
-      it("Should not show indexed title for the `CheckboxWidget` widget if title is mentioned in it's UI Schema", () => {
+      it("Should not show indexed title for the `CheckboxWidget` widget if title is mentioned in it's UI Schema", async () => {
         const CheckboxWidget = (props: WidgetProps) => <div id={`title-${props.label}`} />;
 
         const widgets = { CheckboxWidget };
@@ -2512,9 +2397,7 @@ describe('ArrayField', () => {
           widgets,
         });
 
-        act(() => {
-          fireEvent.click(node.querySelector('.rjsf-array-item-add button')!);
-        });
+        await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
         expect(node.querySelector('#title-Boolean')).not.toBeNull();
         expect(node.querySelector('#title-Array-1')).toBeNull();
@@ -2522,7 +2405,7 @@ describe('ArrayField', () => {
 
       it.each(widgetTestData)(
         "Should show indexed title for the `$widgetName` widget if no title is mentioned in it's UI Schema",
-        ({ itemSchema, itemUiSchema }) => {
+        async ({ itemSchema, itemUiSchema }) => {
           const schema: RJSFSchema = {
             type: 'array',
             title: 'Array',
@@ -2538,9 +2421,7 @@ describe('ArrayField', () => {
             uiSchema,
           });
 
-          act(() => {
-            fireEvent.click(node.querySelector('.rjsf-array-item-add button')!);
-          });
+          await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
           expect(node.querySelector('label[for="root_0"]')).toHaveTextContent('Array-1');
         },
@@ -2548,7 +2429,7 @@ describe('ArrayField', () => {
 
       it.each(widgetTestData)(
         "Should not show indexed title for the `$widgetName` widget if title is mentioned in it's UI Schema",
-        ({ itemSchema, itemUiSchema }) => {
+        async ({ itemSchema, itemUiSchema }) => {
           const schema: RJSFSchema = {
             type: 'array',
             title: 'Array',
@@ -2567,9 +2448,7 @@ describe('ArrayField', () => {
             uiSchema,
           });
 
-          act(() => {
-            fireEvent.click(node.querySelector('.rjsf-array-item-add button')!);
-          });
+          await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
           const widgetLabelText = node.querySelector('label[for="root_0"]');
 
@@ -2658,7 +2537,7 @@ describe('ArrayField', () => {
 
       it.each(fieldTestDataWithLegend)(
         "Should show indexed title for the $fieldName field if no title is mentioned in it's UI Schema",
-        ({ itemSchema }) => {
+        async ({ itemSchema }) => {
           const schema: RJSFSchema = {
             type: 'array',
             title: 'Array',
@@ -2669,9 +2548,7 @@ describe('ArrayField', () => {
             schema,
           });
 
-          act(() => {
-            fireEvent.click(node.querySelector('.rjsf-array-item-add button')!);
-          });
+          await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
           expect(node.querySelector('legend#root_0__title')).toHaveTextContent('Array-1');
         },
@@ -2679,7 +2556,7 @@ describe('ArrayField', () => {
 
       it.each(fieldTestDataWithLegend)(
         "Should not show indexed title for the $fieldName field if title is mentioned in it's UI Schema",
-        ({ itemSchema }) => {
+        async ({ itemSchema }) => {
           const schema: RJSFSchema = {
             type: 'array',
             title: 'Array',
@@ -2693,9 +2570,7 @@ describe('ArrayField', () => {
             schema,
           });
 
-          act(() => {
-            fireEvent.click(node.querySelector('.rjsf-array-item-add button')!);
-          });
+          await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
           const legendText = node.querySelector('legend#root_0__title');
 
@@ -2706,7 +2581,7 @@ describe('ArrayField', () => {
 
       it.each(fieldTestDataWithLabel)(
         "Should show indexed title for the $fieldName field if no title is mentioned in it's UI Schema",
-        ({ itemSchema }) => {
+        async ({ itemSchema }) => {
           const schema: RJSFSchema = {
             type: 'array',
             title: 'Array',
@@ -2717,9 +2592,7 @@ describe('ArrayField', () => {
             schema,
           });
 
-          act(() => {
-            fireEvent.click(node.querySelector('.rjsf-array-item-add button')!);
-          });
+          await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
           expect(node.querySelector('label[for="root_0"]')).toHaveTextContent('Array-1');
         },
@@ -2727,7 +2600,7 @@ describe('ArrayField', () => {
 
       it.each(fieldTestDataWithLabel)(
         "Should not show indexed title for the $fieldName field if title is mentioned in it's UI Schema",
-        ({ itemSchema }) => {
+        async ({ itemSchema }) => {
           const schema: RJSFSchema = {
             type: 'array',
             title: 'Array',
@@ -2741,9 +2614,7 @@ describe('ArrayField', () => {
             schema,
           });
 
-          act(() => {
-            fireEvent.click(node.querySelector('.rjsf-array-item-add button')!);
-          });
+          await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
           const labelText = node.querySelector('label[for="root_0"]');
 
@@ -2821,9 +2692,7 @@ describe('ArrayField', () => {
         customValidate,
       });
 
-      act(() => {
-        fireEvent.submit(node);
-      });
+      submitForm(node);
 
       const inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
       expect(inputs[0]).toHaveAttribute('id', 'root_foo_0_bar');
@@ -2841,7 +2710,7 @@ describe('ArrayField', () => {
         customValidate,
         showErrorList: false,
       });
-      fireEvent.submit(node);
+      submitForm(node);
 
       const inputsNoError = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
       expect(inputsNoError).toHaveLength(0);
@@ -2955,22 +2824,18 @@ describe('ArrayField', () => {
       },
     ];
 
-    it('swaps errors when swapping elements', () => {
+    it('swaps errors when swapping elements', async () => {
       const { node, onChange } = createFormComponent({
         schema,
         formData,
         templates,
       });
 
-      act(() => {
-        submitForm(node);
-      });
+      submitForm(node);
 
       const button = node.querySelector('[title="move-up"]');
 
-      act(() => {
-        button!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-      });
+      await user.click(button!);
 
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange).toHaveBeenLastCalledWith(
@@ -2988,22 +2853,18 @@ describe('ArrayField', () => {
       );
     });
 
-    it('leaves errors when removing higher elements', () => {
+    it('leaves errors when removing higher elements', async () => {
       const { node, onChange } = createFormComponent({
         schema,
         formData,
         templates,
       });
 
-      act(() => {
-        submitForm(node);
-      });
+      submitForm(node);
 
       const button = node.querySelectorAll('[title="remove"]')[1];
 
-      act(() => {
-        button.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-      });
+      await user.click(button);
 
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange).toHaveBeenLastCalledWith(
@@ -3021,22 +2882,18 @@ describe('ArrayField', () => {
       );
     });
 
-    it('removes errors when removing elements', () => {
+    it('removes errors when removing elements', async () => {
       const { node, onChange } = createFormComponent({
         schema,
         formData,
         templates,
       });
 
-      act(() => {
-        submitForm(node);
-      });
+      submitForm(node);
 
       const button = node.querySelector('[title="remove"]');
 
-      act(() => {
-        button!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-      });
+      await user.click(button!);
 
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange).toHaveBeenLastCalledWith(
@@ -3048,22 +2905,18 @@ describe('ArrayField', () => {
       );
     });
 
-    it('leaves errors in place when inserting elements', () => {
+    it('leaves errors in place when inserting elements', async () => {
       const { node, onChange } = createFormComponent({
         schema,
         formData,
         templates,
       });
 
-      act(() => {
-        submitForm(node);
-      });
+      submitForm(node);
 
       const button = node.querySelector('[title="insert"]');
 
-      act(() => {
-        button!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-      });
+      await user.click(button!);
 
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange).toHaveBeenLastCalledWith(
@@ -3081,22 +2934,18 @@ describe('ArrayField', () => {
       );
     });
 
-    it('moves errors when inserting elements', () => {
+    it('moves errors when inserting elements', async () => {
       const { node, onChange } = createFormComponent({
         schema,
         formData: [{ text: 'y' }, {}],
         templates,
       });
 
-      act(() => {
-        submitForm(node);
-      });
+      submitForm(node);
 
       const button = node.querySelector('[title="insert"]');
 
-      act(() => {
-        button!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-      });
+      await user.click(button!);
 
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange).toHaveBeenLastCalledWith(
@@ -3114,7 +2963,7 @@ describe('ArrayField', () => {
       );
     });
 
-    it('leaves errors in place when copying elements', () => {
+    it('leaves errors in place when copying elements', async () => {
       const { node, onChange } = createFormComponent({
         schema,
         uiSchema,
@@ -3122,15 +2971,11 @@ describe('ArrayField', () => {
         templates,
       });
 
-      act(() => {
-        submitForm(node);
-      });
+      submitForm(node);
 
       const button = node.querySelector('[title="copy"]');
 
-      act(() => {
-        button!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-      });
+      await user.click(button!);
 
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange).toHaveBeenLastCalledWith(
@@ -3148,7 +2993,7 @@ describe('ArrayField', () => {
       );
     });
 
-    it('moves errors when copying elements', () => {
+    it('moves errors when copying elements', async () => {
       const { node, onChange } = createFormComponent({
         schema,
         uiSchema,
@@ -3156,15 +3001,11 @@ describe('ArrayField', () => {
         templates,
       });
 
-      act(() => {
-        submitForm(node);
-      });
+      submitForm(node);
 
       const button = node.querySelector('[title="copy"]');
 
-      act(() => {
-        button!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-      });
+      await user.click(button!);
 
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange).toHaveBeenLastCalledWith(
@@ -3202,7 +3043,7 @@ describe('ArrayField', () => {
       expect(node.querySelectorAll('#root_0_text__error')).toHaveLength(0);
     });
 
-    it('raise an error and check if the error is displayed', () => {
+    it('raise an error and check if the error is displayed', async () => {
       const { node } = createFormComponent({
         schema,
         formData: [
@@ -3217,9 +3058,8 @@ describe('ArrayField', () => {
       });
 
       const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
-      act(() => {
-        fireEvent.change(inputs[0], { target: { value: 'test' } });
-      });
+      await user.clear(inputs[0]);
+      await user.type(inputs[0], 'test');
 
       const errorMessages = node.querySelectorAll('#root_0_text__error');
       expect(errorMessages).toHaveLength(1);
@@ -3227,7 +3067,7 @@ describe('ArrayField', () => {
       expect(errorMessage).toHaveTextContent('Value must be "Appie"');
     });
 
-    it('should not raise an error if value is correct', () => {
+    it('should not raise an error if value is correct', async () => {
       const { node } = createFormComponent({
         schema,
         formData: [
@@ -3242,15 +3082,14 @@ describe('ArrayField', () => {
       });
 
       const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
-      act(() => {
-        fireEvent.change(inputs[0], { target: { value: 'Appie' } });
-      });
+      await user.clear(inputs[0]);
+      await user.type(inputs[0], 'Appie');
 
       const errorMessages = node.querySelectorAll('#root_0_text__error');
       expect(errorMessages).toHaveLength(0);
     });
 
-    it('should clear an error if value is entered correctly', () => {
+    it('should clear an error if value is entered correctly', async () => {
       const { node } = createFormComponent({
         schema,
         formData: [
@@ -3265,24 +3104,22 @@ describe('ArrayField', () => {
       });
 
       const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
-      act(() => {
-        fireEvent.change(inputs[0], { target: { value: 'test' } });
-      });
+      await user.clear(inputs[0]);
+      await user.type(inputs[0], 'test');
 
       let errorMessages = node.querySelectorAll('#root_0_text__error');
       expect(errorMessages).toHaveLength(1);
       const errorMessage = node.querySelector('#root_0_text__error .text-danger');
       expect(errorMessage).toHaveTextContent('Value must be "Appie"');
 
-      act(() => {
-        fireEvent.change(inputs[0], { target: { value: 'Appie' } });
-      });
+      await user.clear(inputs[0]);
+      await user.type(inputs[0], 'Appie');
 
       errorMessages = node.querySelectorAll('#root_0_text__error');
       expect(errorMessages).toHaveLength(0);
     });
 
-    it('raise an error and check if the error is displayed using custom text widget', () => {
+    it('raise an error and check if the error is displayed using custom text widget', async () => {
       const { node } = createFormComponent({
         schema,
         formData: [
@@ -3297,9 +3134,8 @@ describe('ArrayField', () => {
       });
 
       const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
-      act(() => {
-        fireEvent.change(inputs[0], { target: { value: 'hello' } });
-      });
+      await user.clear(inputs[0]);
+      await user.type(inputs[0], 'hello');
 
       const errorMessages = node.querySelectorAll('#root_0_text__error');
       expect(errorMessages).toHaveLength(1);
@@ -3307,7 +3143,7 @@ describe('ArrayField', () => {
       expect(errorMessage).toHaveTextContent('Value must be "test"');
     });
 
-    it('should not raise an error if value is correct using custom text widget', () => {
+    it('should not raise an error if value is correct using custom text widget', async () => {
       const { node } = createFormComponent({
         schema,
         formData: [
@@ -3322,15 +3158,14 @@ describe('ArrayField', () => {
       });
 
       const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
-      act(() => {
-        fireEvent.change(inputs[0], { target: { value: 'test' } });
-      });
+      await user.clear(inputs[0]);
+      await user.type(inputs[0], 'test');
 
       const errorMessages = node.querySelectorAll('#root_0_text__error');
       expect(errorMessages).toHaveLength(0);
     });
 
-    it('should clear an error if value is entered correctly using custom text widget', () => {
+    it('should clear an error if value is entered correctly using custom text widget', async () => {
       const { node } = createFormComponent({
         schema,
         formData: [
@@ -3345,18 +3180,16 @@ describe('ArrayField', () => {
       });
 
       const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
-      act(() => {
-        fireEvent.change(inputs[0], { target: { value: 'hello' } });
-      });
+      await user.clear(inputs[0]);
+      await user.type(inputs[0], 'hello');
 
       let errorMessages = node.querySelectorAll('#root_0_text__error');
       expect(errorMessages).toHaveLength(1);
       const errorMessage = node.querySelector('#root_0_text__error .text-danger');
       expect(errorMessage).toHaveTextContent('Value must be "test"');
 
-      act(() => {
-        fireEvent.change(inputs[0], { target: { value: 'test' } });
-      });
+      await user.clear(inputs[0]);
+      await user.type(inputs[0], 'test');
 
       errorMessages = node.querySelectorAll('#root_0_text__error');
       expect(errorMessages).toHaveLength(0);
@@ -3669,7 +3502,7 @@ describe('ArrayField', () => {
       expect(addButton).toBeInTheDocument();
     });
 
-    it('should update dynamically when array items are added', () => {
+    it('should update dynamically when array items are added', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         items: {
@@ -3702,9 +3535,7 @@ describe('ArrayField', () => {
 
       // Add a new item
       const addButton = node.querySelector('.rjsf-array-item-add button');
-      act(() => {
-        fireEvent.click(addButton!);
-      });
+      await user.click(addButton!);
 
       // Should now have called function for both items (3 total: 1 initial + 2 for re-render)
       expect(callCount).toBeGreaterThanOrEqual(3);
@@ -3788,14 +3619,14 @@ describe('ArrayField', () => {
       },
     };
 
-    it('should not save null when clearing an optional number field and submitting', () => {
+    it('should not save null when clearing an optional number field and submitting', async () => {
       const { node, onSubmit } = createFormComponent({
         schema,
         formData: { arrayList: [{ name: 'John', age: 25 }] },
       });
 
-      const ageInput = node.querySelector('#root_arrayList_0_age') as HTMLInputElement;
-      fireEvent.change(ageInput, { target: { value: '' } });
+      const ageInput = node.querySelector<HTMLInputElement>('#root_arrayList_0_age')!;
+      await user.clear(ageInput);
       submitForm(node);
 
       expectToHaveBeenCalledWithFormData(onSubmit, { arrayList: [{ name: 'John' }] }, true);
