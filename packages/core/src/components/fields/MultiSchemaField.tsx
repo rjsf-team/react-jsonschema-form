@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import omit from 'lodash/omit';
@@ -21,6 +21,14 @@ import {
   TranslatableString,
   UiSchema,
 } from '@rjsf/utils';
+
+/** Type used for the state of the `AnyOfField` component */
+type AnyOfFieldState<S extends StrictRJSFSchema = RJSFSchema> = {
+  /** The currently selected option */
+  selectedOption: number;
+  /** The option schemas after retrieving all $refs */
+  retrievedOptions: S[];
+};
 
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It tracks
  * the currently selected option and cleans up any irrelevant data in `formData`.
@@ -51,10 +59,7 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
   const fieldPathIdId = fieldPathId.$id;
   const fieldPathIdPath = fieldPathId.path;
 
-  const [{ selectedOption, retrievedOptions }, setState] = useState<{
-    selectedOption: number;
-    retrievedOptions: S[];
-  }>(() => {
+  const [{ selectedOption, retrievedOptions }, setState] = useState<AnyOfFieldState<S>>(() => {
     // cache the retrieved options in state in case they have $refs to save doing it later
     const retrieved = options.map((opt: S) => schemaUtils.retrieveSchema(opt, formData));
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
@@ -64,46 +69,49 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     };
   });
 
-  const prevOptionsRef = useRef(options);
-  const prevFormDataRef = useRef(formData);
-  const prevFieldPathIdIdRef = useRef(fieldPathIdId);
+  // Track previous prop values in state so we can derive state changes during render,
+  // avoiding the need for a useEffect + refs to replicate componentDidUpdate behaviour.
+  const [prevOptions, setPrevOptions] = useState(options);
+  const [prevFormData, setPrevFormData] = useState(formData);
+  const [prevFieldPathIdId, setPrevFieldPathIdId] = useState(fieldPathIdId);
 
-  useEffect(() => {
-    const prevOptions = prevOptionsRef.current;
-    const prevFormData = prevFormDataRef.current;
-    const prevFieldPathIdId = prevFieldPathIdIdRef.current;
+  // Compute up-to-date values for this render, updating state when props have changed.
+  // React re-renders the component immediately after returning when setState is called here.
+  let currentRetrieved = retrievedOptions;
+  let currentSelected = selectedOption;
+  let stateChanged = false;
 
-    prevOptionsRef.current = options;
-    prevFormDataRef.current = formData;
-    prevFieldPathIdIdRef.current = fieldPathIdId;
+  if (!deepEquals(prevOptions, options)) {
+    // re-cache the retrieved options in state in case they have $refs to save doing it later
+    currentRetrieved = options.map((opt: S) => schemaUtils.retrieveSchema(opt, formData));
+    setPrevOptions(options);
+    stateChanged = true;
+  }
 
-    setState((currentState) => {
-      let { selectedOption: currentSelected, retrievedOptions: currentRetrieved } = currentState;
-      let changed = false;
-
-      if (!deepEquals(prevOptions, options)) {
-        // re-cache the retrieved options in state in case they have $refs to save doing it later
-        currentRetrieved = options.map((opt: S) => schemaUtils.retrieveSchema(opt, formData));
-        changed = true;
+  if (!deepEquals(formData, prevFormData)) {
+    setPrevFormData(formData);
+    if (fieldPathIdId === prevFieldPathIdId) {
+      const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
+      const matchingOption = schemaUtils.getClosestMatchingOption(
+        formData,
+        currentRetrieved,
+        currentSelected,
+        discriminator,
+      );
+      if (matchingOption !== currentSelected) {
+        currentSelected = matchingOption;
+        stateChanged = true;
       }
+    }
+  }
 
-      if (!deepEquals(formData, prevFormData) && fieldPathIdId === prevFieldPathIdId) {
-        const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
-        const matchingOption = schemaUtils.getClosestMatchingOption(
-          formData,
-          currentRetrieved,
-          currentSelected,
-          discriminator,
-        );
-        if (matchingOption !== currentSelected) {
-          currentSelected = matchingOption;
-          changed = true;
-        }
-      }
+  if (fieldPathIdId !== prevFieldPathIdId) {
+    setPrevFieldPathIdId(fieldPathIdId);
+  }
 
-      return changed ? { selectedOption: currentSelected, retrievedOptions: currentRetrieved } : currentState;
-    });
-  }, [options, formData, fieldPathIdId, schema, schemaUtils]);
+  if (stateChanged) {
+    setState({ selectedOption: currentSelected, retrievedOptions: currentRetrieved });
+  }
 
   const fieldId = `${fieldPathIdId}${schema.oneOf ? '__oneof_select' : '__anyof_select'}`;
 
@@ -116,11 +124,11 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
   const onOptionChange = useCallback(
     (option?: string) => {
       const intOption = option !== undefined ? parseInt(option, 10) : -1;
-      if (intOption === selectedOption) {
+      if (intOption === currentSelected) {
         return;
       }
-      const newOption = intOption >= 0 ? retrievedOptions[intOption] : undefined;
-      const oldOption = selectedOption >= 0 ? retrievedOptions[selectedOption] : undefined;
+      const newOption = intOption >= 0 ? currentRetrieved[intOption] : undefined;
+      const oldOption = currentSelected >= 0 ? currentRetrieved[currentSelected] : undefined;
 
       let newFormData = schemaUtils.sanitizeDataForNewSchema(newOption, oldOption, formData);
       if (newOption) {
@@ -129,10 +137,10 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         newFormData = schemaUtils.getDefaultFormState(newOption, newFormData, 'excludeObjectChildren') as T;
       }
 
-      setState({ selectedOption: intOption, retrievedOptions });
+      setState({ selectedOption: intOption, retrievedOptions: currentRetrieved });
       onChange(newFormData, fieldPathIdPath, undefined, fieldId);
     },
-    [selectedOption, retrievedOptions, schemaUtils, formData, onChange, fieldPathIdPath, fieldId],
+    [currentSelected, currentRetrieved, schemaUtils, formData, onChange, fieldPathIdPath, fieldId],
   );
 
   const { SchemaField: _SchemaField } = fields;
@@ -157,7 +165,7 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
   const fieldErrorSchema = omit(errorSchema, [ERRORS_KEY]);
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
 
-  const option = selectedOption >= 0 ? retrievedOptions[selectedOption] || null : null;
+  const option = currentSelected >= 0 ? currentRetrieved[currentSelected] || null : null;
   let optionSchema: S | undefined | null;
 
   if (option) {
@@ -184,15 +192,15 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
   }
   // Then we pick the one that matches the selected option index, if one exists otherwise default to the main uiSchema
   let optionUiSchema = uiSchema;
-  if (selectedOption >= 0 && optionsUiSchema.length > selectedOption) {
-    optionUiSchema = optionsUiSchema[selectedOption];
+  if (currentSelected >= 0 && optionsUiSchema.length > currentSelected) {
+    optionUiSchema = optionsUiSchema[currentSelected];
   }
 
   const translateEnum: TranslatableString = title
     ? TranslatableString.TitleOptionPrefix
     : TranslatableString.OptionPrefix;
   const translateParams = title ? [title] : [];
-  const enumOptions = retrievedOptions.map((opt: { title?: string }, index: number) => {
+  const enumOptions = currentRetrieved.map((opt: { title?: string }, index: number) => {
     // Also see if there is an override title in the uiSchema for each option, otherwise use the title from the option
     const { title: uiTitle = opt.title } = getUiOptions<T, S, F>(optionsUiSchema[index]);
     return {
@@ -214,7 +222,7 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         multiple={false}
         rawErrors={rawErrors}
         errorSchema={fieldErrorSchema}
-        value={selectedOption >= 0 ? selectedOption : undefined}
+        value={currentSelected >= 0 ? currentSelected : undefined}
         options={{ enumOptions, ...uiOptions }}
         registry={registry}
         placeholder={placeholder}
