@@ -1,9 +1,11 @@
-import { fireEvent, act } from '@testing-library/react';
 import { ErrorListProps, FormValidation, GenericObjectType, RJSFSchema } from '@rjsf/utils';
 import { customizeValidator as customizeV8Validator } from '@rjsf/validator-ajv8';
+import userEvent from '@testing-library/user-event';
 
 import { FormProps } from '../src';
 import { createFormComponent, submitForm } from './testUtils';
+
+const user = userEvent.setup();
 
 describe('Validation', () => {
   describe('Form integration, v8 validator', () => {
@@ -123,7 +125,7 @@ describe('Validation', () => {
         expect(onError).toHaveBeenLastCalledWith([{ property: '.', message: 'Invalid', stack: '. Invalid' }]);
       });
 
-      it('should live validate a simple string value when liveValidate is set to true', () => {
+      it('should live validate a simple string value when liveValidate is set to true', async () => {
         const schema: RJSFSchema = { type: 'string' };
         const formData = 'a';
 
@@ -141,11 +143,9 @@ describe('Validation', () => {
           liveValidate: true,
         });
 
-        act(() => {
-          fireEvent.change(node.querySelector('input')!, {
-            target: { value: '1234' },
-          });
-        });
+        const input = node.querySelector('input')!;
+        await user.clear(input);
+        await user.type(input, '1234');
 
         expect(onChange).toHaveBeenLastCalledWith(
           expect.objectContaining({
@@ -467,7 +467,7 @@ describe('Validation', () => {
         onError = withMetaSchema.onError;
         submitForm(node);
       });
-      it('should be used to validate schema', () => {
+      it('should be used to validate schema', async () => {
         expect(node.querySelectorAll('.errors li')).toHaveLength(1);
         expect(onError).toHaveBeenLastCalledWith([
           {
@@ -482,11 +482,9 @@ describe('Validation', () => {
         ]);
         onError.mockClear();
 
-        act(() => {
-          fireEvent.change(node.querySelector('input')!, {
-            target: { value: '1234' },
-          });
-        });
+        const input = node.querySelector('input')!;
+        await user.clear(input);
+        await user.type(input, '1234');
         expect(node.querySelectorAll('.errors li')).toHaveLength(0);
         expect(onError).not.toHaveBeenCalled();
       });

@@ -1,8 +1,10 @@
 import { PureComponent } from 'react';
 import { ArrayFieldTemplateProps, ArrayFieldItemTemplateProps, RJSFSchema, getUiOptions } from '@rjsf/utils';
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { createFormComponent } from './testUtils';
+
+const user = userEvent.setup();
 
 const formData = ['one', 'two', 'three'];
 
@@ -298,7 +300,7 @@ describe('ArrayFieldTemplate', () => {
       });
     });
 
-    it('should pass formData so it is in sync with items', () => {
+    it('should pass formData so it is in sync with items', async () => {
       const ArrayFieldTemplate = ({ formData, items, onAddClick }: ArrayFieldTemplateProps) => {
         if (formData.length !== items.length) {
           throw 'Error';
@@ -323,7 +325,7 @@ describe('ArrayFieldTemplate', () => {
       expect(data).toHaveLength(formData.length);
       const button = node.querySelector('.rjsf-array-item-add');
       expect(button).toBeInTheDocument();
-      fireEvent.click(button!);
+      await user.click(button!);
       data = node.querySelectorAll('.test-data');
       expect(data).toHaveLength(formData.length + 1);
     });

@@ -1,5 +1,5 @@
-import { fireEvent, act } from '@testing-library/react';
 import { RJSFSchema, WidgetProps } from '@rjsf/utils';
+import userEvent from '@testing-library/user-event';
 
 import {
   createFormComponent,
@@ -7,6 +7,8 @@ import {
   getSelectedOptionValue,
   submitForm,
 } from './testUtils';
+
+const user = userEvent.setup();
 
 const CustomWidget = () => <div id='custom' />;
 
@@ -258,8 +260,10 @@ describe('BooleanField', () => {
     let errorInputs = node.querySelectorAll('.form-group.rjsf-field-error input[id^=root_bool]');
     expect(errorInputs).toHaveLength(0);
     // Since programmatically triggering focus does not call onFocus, change the focus method to a spy
-    (inputs[0] as HTMLInputElement).focus = focusSpys[0];
-    (inputs[1] as HTMLInputElement).focus = focusSpys[1];
+    // Object.defineProperty is used because userEvent.setup() patches HTMLElement.prototype.focus as
+    // a getter-only, making simple assignment throw in strict mode
+    Object.defineProperty(inputs[0], 'focus', { value: focusSpys[0], writable: true, configurable: true });
+    Object.defineProperty(inputs[1], 'focus', { value: focusSpys[1], writable: true, configurable: true });
     submitForm(node);
     expect(onError).toHaveBeenLastCalledWith([
       expect.objectContaining({ message: "must have required property 'bool'" }),
@@ -290,8 +294,10 @@ describe('BooleanField', () => {
     let errorInputs = node.querySelectorAll('.form-group.rjsf-field-error input[id^=root_bool]');
     expect(errorInputs).toHaveLength(0);
     // Since programmatically triggering focus does not call onFocus, change the focus method to a spy
-    (inputs[0] as HTMLInputElement).focus = focusSpys[0];
-    (inputs[1] as HTMLInputElement).focus = focusSpys[1];
+    // Object.defineProperty is used because userEvent.setup() patches HTMLElement.prototype.focus as
+    // a getter-only, making simple assignment throw in strict mode
+    Object.defineProperty(inputs[0], 'focus', { value: focusSpys[0], writable: true, configurable: true });
+    Object.defineProperty(inputs[1], 'focus', { value: focusSpys[1], writable: true, configurable: true });
     submitForm(node);
     expect(onError).toHaveBeenLastCalledWith([
       expect.objectContaining({ message: "must have required property 'bool'" }),
@@ -302,7 +308,7 @@ describe('BooleanField', () => {
     expect(errorInputs).toHaveLength(0);
   });
 
-  it('should handle a change event', () => {
+  it('should handle a change event', async () => {
     const { node, onChange } = createFormComponent({
       schema: {
         type: 'boolean',
@@ -310,9 +316,7 @@ describe('BooleanField', () => {
       },
     });
 
-    act(() => {
-      fireEvent.click(node.querySelector('input')!);
-    });
+    await user.click(node.querySelector('input')!);
 
     expectToHaveBeenCalledWithFormData(onChange, true, 'root');
   });
@@ -479,7 +483,7 @@ describe('BooleanField', () => {
     expect(node.querySelectorAll('.radio-inline')).toHaveLength(2);
   });
 
-  it('should handle a focus event for radio widgets', () => {
+  it('should handle a focus event for radio widgets', async () => {
     const onFocus = jest.fn();
     const { node } = createFormComponent({
       schema: {
@@ -493,15 +497,11 @@ describe('BooleanField', () => {
     });
 
     const element = node.querySelector('.field-radio-group');
-    fireEvent.focus(node.querySelector('input')!, {
-      target: {
-        value: 1, // use index
-      },
-    });
+    await user.click(node.querySelectorAll('input')[1]); // click "No" (false) radio at index 1
     expect(onFocus).toHaveBeenLastCalledWith(element?.id, false);
   });
 
-  it('should handle a blur event for radio widgets', () => {
+  it('should handle a blur event for radio widgets', async () => {
     const onBlur = jest.fn();
     const { node } = createFormComponent({
       schema: {
@@ -515,11 +515,8 @@ describe('BooleanField', () => {
     });
 
     const element = node.querySelector('.field-radio-group');
-    fireEvent.blur(node.querySelector('input')!, {
-      target: {
-        value: 1, // use index
-      },
-    });
+    await user.click(node.querySelectorAll('input')[1]); // focus "No" (false) radio at index 1
+    await user.tab();
     expect(onBlur).toHaveBeenLastCalledWith(element?.id, false);
   });
 
@@ -534,7 +531,7 @@ describe('BooleanField', () => {
     expect(labels).toEqual(['', 'Si!', 'No!']);
   });
 
-  it('should handle a focus event with checkbox', () => {
+  it('should handle a focus event with checkbox', async () => {
     const onFocus = jest.fn();
     const { node } = createFormComponent({
       schema: {
@@ -548,15 +545,11 @@ describe('BooleanField', () => {
     });
 
     const element = node.querySelector('select');
-    fireEvent.focus(element!, {
-      target: {
-        value: 1, // use index
-      },
-    });
+    await user.click(element!); // focus select (currently has "false" selected at index 1)
     expect(onFocus).toHaveBeenLastCalledWith(element?.id, false);
   });
 
-  it('should handle a blur event with select', () => {
+  it('should handle a blur event with select', async () => {
     const onBlur = jest.fn();
     const { node } = createFormComponent({
       schema: {
@@ -570,11 +563,8 @@ describe('BooleanField', () => {
     });
 
     const element = node.querySelector('select');
-    fireEvent.blur(element!, {
-      target: {
-        value: 1, // use index
-      },
-    });
+    await user.click(element!); // focus select (currently has "false" selected at index 1)
+    await user.tab();
     expect(onBlur).toHaveBeenLastCalledWith(element?.id, false);
   });
 
@@ -601,7 +591,7 @@ describe('BooleanField', () => {
     expect(node.querySelector('#custom')).toBeInTheDocument();
   });
 
-  it('should handle a focus event with checkbox', () => {
+  it('should handle a focus event with checkbox', async () => {
     const onFocus = jest.fn();
     const { node } = createFormComponent({
       schema: {
@@ -615,15 +605,11 @@ describe('BooleanField', () => {
     });
 
     const element = node.querySelector('input');
-    fireEvent.focus(element!, {
-      target: {
-        checked: false,
-      },
-    });
+    await user.tab(); // tab to focus the checkbox without toggling it
     expect(onFocus).toHaveBeenLastCalledWith(element?.id, false);
   });
 
-  it('should handle a blur event with checkbox', () => {
+  it('should handle a blur event with checkbox', async () => {
     const onBlur = jest.fn();
     const { node } = createFormComponent({
       schema: {
@@ -637,11 +623,8 @@ describe('BooleanField', () => {
     });
 
     const element = node.querySelector('input');
-    fireEvent.blur(element!, {
-      target: {
-        checked: false,
-      },
-    });
+    await user.tab(); // tab to focus the checkbox
+    await user.tab(); // tab again to blur it
     expect(onBlur).toHaveBeenLastCalledWith(element?.id, false);
   });
 
@@ -706,7 +689,7 @@ describe('BooleanField', () => {
       expect(node.querySelectorAll('.rjsf-field select')).toHaveLength(1);
     });
 
-    it('should infer the value from an enum on change', () => {
+    it('should infer the value from an enum on change', async () => {
       const { node, onChange } = createFormComponent({
         schema: {
           enum: [true, false],
@@ -716,12 +699,9 @@ describe('BooleanField', () => {
       expect(node.querySelectorAll('.rjsf-field select')).toHaveLength(1);
       const $select = node.querySelector<HTMLSelectElement>('.rjsf-field select');
       expect($select).toHaveValue('');
+      const options = $select!.querySelectorAll('option');
 
-      act(() => {
-        fireEvent.change($select!, {
-          target: { value: 0 }, // use index
-        });
-      });
+      await user.selectOptions($select!, options[1]); // skip blank option, select enum[0] = true
       expect(getSelectedOptionValue($select!)).toEqual('true');
       expectToHaveBeenCalledWithFormData(onChange, true, 'root');
     });
@@ -747,18 +727,16 @@ describe('BooleanField', () => {
       expectToHaveBeenCalledWithFormData(onChange, true);
     });
 
-    it('should handle a change event', () => {
+    it('should handle a change event', async () => {
       const { node, onChange } = createFormComponent({
         schema: {
           enum: [true, false],
         },
       });
 
-      act(() => {
-        fireEvent.change(node.querySelector('select')!, {
-          target: { value: 1 }, // use index
-        });
-      });
+      const $select = node.querySelector<HTMLSelectElement>('select')!;
+      const options = $select.querySelectorAll('option');
+      await user.selectOptions($select, options[2]); // skip blank option, select enum[1] = false
 
       expectToHaveBeenCalledWithFormData(onChange, false, 'root');
     });

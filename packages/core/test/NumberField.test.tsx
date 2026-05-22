@@ -1,6 +1,6 @@
 import { createRef } from 'react';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
-import { act, fireEvent } from '@testing-library/react';
+import { act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import isEmpty from 'lodash/isEmpty';
 
@@ -152,7 +152,7 @@ describe('NumberField', () => {
         expectToHaveBeenCalledWithFormData(onChange, 2, 'root');
       });
 
-      it('should handle a blur event', () => {
+      it('should handle a blur event', async () => {
         const onBlur = jest.fn();
         const { node } = createFormComponent({
           schema: {
@@ -162,15 +162,14 @@ describe('NumberField', () => {
           onBlur,
         });
 
-        const input = node.querySelector('input');
-        fireEvent.blur(input!, {
-          target: { value: '2' },
-        });
+        const input = node.querySelector('input')!;
+        await user.type(input, '2');
+        await user.tab();
 
-        expect(onBlur).toHaveBeenCalledWith(input?.id, '2');
+        expect(onBlur).toHaveBeenCalledWith(input.id, '2');
       });
 
-      it('should handle a focus event', () => {
+      it('should handle a focus event', async () => {
         const onFocus = jest.fn();
         const { node } = createFormComponent({
           schema: {
@@ -178,14 +177,13 @@ describe('NumberField', () => {
           },
           uiSchema,
           onFocus,
+          formData: 2,
         });
 
-        const input = node.querySelector('input');
-        fireEvent.focus(input!, {
-          target: { value: '2' },
-        });
+        const input = node.querySelector('input')!;
+        await user.click(input);
 
-        expect(onFocus).toHaveBeenCalledWith(input?.id, '2');
+        expect(onFocus).toHaveBeenCalledWith(input.id, '2');
       });
 
       it('should fill field with data', () => {
@@ -427,7 +425,7 @@ describe('NumberField', () => {
       expect(node.querySelectorAll('.rjsf-field select')).toHaveLength(1);
     });
 
-    it('should infer the value from an enum on change', () => {
+    it('should infer the value from an enum on change', async () => {
       const { node, onChange } = createFormComponent({
         schema: {
           enum: [1, 2],
@@ -435,15 +433,13 @@ describe('NumberField', () => {
       });
 
       expect(node.querySelectorAll('.rjsf-field select')).toHaveLength(1);
-      const $select = node.querySelector<HTMLSelectElement>('.rjsf-field select');
+      const $select = node.querySelector<HTMLSelectElement>('.rjsf-field select')!;
       expect($select).not.toHaveAttribute('value');
+      const options = $select.querySelectorAll('option');
 
-      act(() => {
-        fireEvent.change(node.querySelector('.rjsf-field select')!, {
-          target: { value: 0 }, // use index
-        });
-      });
-      expect(getSelectedOptionValue($select!)).toEqual('1');
+      await user.selectOptions($select, options[1]); // skip blank option, select enum[0] = 1
+
+      expect(getSelectedOptionValue($select)).toEqual('1');
       expectToHaveBeenCalledWithFormData(onChange, 1, 'root');
     });
 
@@ -473,7 +469,7 @@ describe('NumberField', () => {
       expectToHaveBeenCalledWithFormData(onChange, 1);
     });
 
-    it('should handle a change event', () => {
+    it('should handle a change event', async () => {
       const { node, onChange } = createFormComponent({
         schema: {
           type: 'number',
@@ -481,11 +477,9 @@ describe('NumberField', () => {
         },
       });
 
-      act(() => {
-        fireEvent.change(node.querySelector('select')!, {
-          target: { value: 1 }, // useIndex
-        });
-      });
+      const $select = node.querySelector<HTMLSelectElement>('select')!;
+      const options = $select.querySelectorAll('option');
+      await user.selectOptions($select, options[2]); // skip blank option, select enum[1] = 2
 
       expectToHaveBeenCalledWithFormData(onChange, 2, 'root');
     });
@@ -576,7 +570,6 @@ describe('NumberField', () => {
         schema,
       });
 
-      console.log(node.innerHTML);
       const selects = node.querySelectorAll('select');
       expect(selects[0]).not.toHaveAttribute('value');
 
