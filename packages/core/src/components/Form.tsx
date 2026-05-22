@@ -957,7 +957,16 @@ export default class Form<
       formData = newState.formData;
       retrievedSchema = newState.retrievedSchema;
 
-      if (previousRetrievedSchema && !deepEquals(previousRetrievedSchema, retrievedSchema)) {
+      if (
+        previousRetrievedSchema &&
+        !isRootPath &&
+        !isObject(newValue) &&
+        !Array.isArray(newValue) &&
+        !this.props.disabled &&
+        !this.props.readonly &&
+        _get(schema, 'readOnly') !== true &&
+        !deepEquals(previousRetrievedSchema, retrievedSchema)
+      ) {
         const sanitizedFormData = schemaUtils.sanitizeDataForNewSchema(
           retrievedSchema,
           previousRetrievedSchema,
@@ -1042,6 +1051,11 @@ export default class Form<
         customErrors,
       };
     }
+    state = {
+      ...state,
+      retrievedSchema,
+    };
+
     this.setState(state as FormState<T, S, F>, () => {
       if (onChange) {
         onChange(toIChangeEvent({ ...this.state, ...state }), id);

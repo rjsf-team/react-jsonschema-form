@@ -258,6 +258,169 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         }),
       ).toEqual({});
     });
+    it('replaces invalid enum data with the only allowed enum value', () => {
+      const oldSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          enumField: {
+            type: 'string',
+            enum: ['oldData'],
+          },
+        },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          enumField: {
+            type: 'string',
+            enum: ['newData'],
+          },
+        },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { enumField: 'oldData' })).toEqual({
+        enumField: 'newData',
+      });
+    });
+    it('keeps enum data that is still allowed by the new schema', () => {
+      const oldSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          enumField: {
+            type: 'string',
+            enum: ['keptData'],
+          },
+        },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          enumField: {
+            type: 'string',
+            enum: ['keptData', 'newData'],
+          },
+        },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { enumField: 'keptData' })).toEqual({
+        enumField: 'keptData',
+      });
+    });
+    it('replaces invalid enum data with a valid new default when multiple enum values are allowed', () => {
+      const oldSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          enumField: {
+            type: 'string',
+            enum: ['oldData'],
+          },
+        },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          enumField: {
+            type: 'string',
+            enum: ['newData', 'defaultData'],
+            default: 'defaultData',
+          },
+        },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { enumField: 'oldData' })).toEqual({
+        enumField: 'defaultData',
+      });
+    });
+    it('clears invalid enum data when multiple values are allowed and no valid default exists', () => {
+      const oldSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          enumField: {
+            type: 'string',
+            enum: ['oldData'],
+          },
+        },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          enumField: {
+            type: 'string',
+            enum: ['newData', 'otherData'],
+          },
+        },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { enumField: 'oldData' })).toEqual({
+        enumField: undefined,
+      });
+    });
+    it('replaces invalid oneOf const and enum data', () => {
+      const oldSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          enumField: {
+            type: 'string',
+            enum: ['oldData'],
+          },
+        },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          enumField: {
+            type: 'string',
+            oneOf: [{ const: 'newData' }, { enum: ['otherData'] }, { enum: ['ignoredData', 'extraIgnoredData'] }],
+            default: 'otherData',
+          },
+        },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { enumField: 'oldData' })).toEqual({
+        enumField: 'otherData',
+      });
+    });
+    it('replaces invalid anyOf const data with the only allowed value', () => {
+      const oldSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          enumField: {
+            type: 'string',
+            enum: ['oldData'],
+          },
+        },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          enumField: {
+            type: 'string',
+            anyOf: [{ const: 'newData' }],
+          },
+        },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { enumField: 'oldData' })).toEqual({
+        enumField: 'newData',
+      });
+    });
+    it('keeps invalid data when oneOf does not provide enum-like values', () => {
+      const oldSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          enumField: {
+            type: 'string',
+            enum: ['oldData'],
+          },
+        },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          enumField: {
+            type: 'string',
+            oneOf: [{ enum: ['ignoredData', 'extraIgnoredData'] }],
+          },
+        },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { enumField: 'oldData' })).toEqual({
+        enumField: 'oldData',
+      });
+    });
     it('returns empty formData after resolving schema refs', () => {
       const rootSchema: RJSFSchema = {
         definitions: {
