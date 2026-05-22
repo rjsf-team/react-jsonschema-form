@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useReducer } from 'react';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import omit from 'lodash/omit';
@@ -28,7 +28,40 @@ type AnyOfFieldState<S extends StrictRJSFSchema = RJSFSchema> = {
   selectedOption: number;
   /** The option schemas after retrieving all $refs */
   retrievedOptions: S[];
+  /** Previous value of the `options` prop for change detection */
+  prevOptions: S[];
+  /** Previous value of the `formData` prop for change detection */
+  prevFormData: unknown;
+  /** Previous value of `fieldPathId.$id` for change detection */
+  prevFieldPathIdId: string;
 };
+
+/** Actions for the `AnyOfField` reducer */
+type AnyOfFieldAction<S extends StrictRJSFSchema = RJSFSchema> =
+  /** Synchronise state when tracked props change; all new values are pre-computed before dispatch */
+  | { type: 'SYNC_PROPS'; selectedOption: number; retrievedOptions: S[]; prevOptions: S[]; prevFormData: unknown; prevFieldPathIdId: string }
+  /** Record the option the user explicitly picked from the selector widget */
+  | { type: 'SELECT_OPTION'; selectedOption: number; retrievedOptions: S[] };
+
+function anyOfFieldReducer<S extends StrictRJSFSchema = RJSFSchema>(
+  state: AnyOfFieldState<S>,
+  action: AnyOfFieldAction<S>,
+): AnyOfFieldState<S> {
+  switch (action.type) {
+    case 'SYNC_PROPS':
+      return {
+        selectedOption: action.selectedOption,
+        retrievedOptions: action.retrievedOptions,
+        prevOptions: action.prevOptions,
+        prevFormData: action.prevFormData,
+        prevFieldPathIdId: action.prevFieldPathIdId,
+      };
+    case 'SELECT_OPTION':
+      return { ...state, selectedOption: action.selectedOption, retrievedOptions: action.retrievedOptions };
+    default:
+      return state;
+  }
+}
 
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It tracks
  * the currently selected option and cleans up any irrelevant data in `formData`.
@@ -59,37 +92,39 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
   const fieldPathIdId = fieldPathId.$id;
   const fieldPathIdPath = fieldPathId.path;
 
-  const [{ selectedOption, retrievedOptions }, setState] = useState<AnyOfFieldState<S>>(() => {
-    // cache the retrieved options in state in case they have $refs to save doing it later
-    const retrieved = options.map((opt: S) => schemaUtils.retrieveSchema(opt, formData));
-    const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
-    return {
-      retrievedOptions: retrieved,
-      selectedOption: schemaUtils.getClosestMatchingOption(formData, retrieved, 0, discriminator),
-    };
-  });
+  const [state, dispatch] = useReducer(
+    anyOfFieldReducer as React.Reducer<AnyOfFieldState<S>, AnyOfFieldAction<S>>,
+    undefined,
+    (_: undefined): AnyOfFieldState<S> => {
+      // cache the retrieved options in state in case they have $refs to save doing it later
+      const retrieved = options.map((opt: S) => schemaUtils.retrieveSchema(opt, formData));
+      const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
+      return {
+        retrievedOptions: retrieved,
+        selectedOption: schemaUtils.getClosestMatchingOption(formData, retrieved, 0, discriminator),
+        prevOptions: options,
+        prevFormData: formData,
+        prevFieldPathIdId: fieldPathIdId,
+      };
+    },
+  );
 
-  // Track previous prop values in state so we can derive state changes during render,
-  // avoiding the need for a useEffect + refs to replicate componentDidUpdate behaviour.
-  const [prevOptions, setPrevOptions] = useState(options);
-  const [prevFormData, setPrevFormData] = useState(formData);
-  const [prevFieldPathIdId, setPrevFieldPathIdId] = useState(fieldPathIdId);
+  const { selectedOption, retrievedOptions, prevOptions, prevFormData, prevFieldPathIdId } = state;
 
-  // Compute up-to-date values for this render, updating state when props have changed.
-  // React re-renders the component immediately after returning when setState is called here.
+  // Track previous prop values in state so we can derive state changes during render.
+  // React re-renders immediately after a dispatch that occurs during rendering.
   let currentRetrieved = retrievedOptions;
   let currentSelected = selectedOption;
-  let stateChanged = false;
+  let needsSync = false;
 
   if (!deepEquals(prevOptions, options)) {
     // re-cache the retrieved options in state in case they have $refs to save doing it later
     currentRetrieved = options.map((opt: S) => schemaUtils.retrieveSchema(opt, formData));
-    setPrevOptions(options);
-    stateChanged = true;
+    needsSync = true;
   }
 
   if (!deepEquals(formData, prevFormData)) {
-    setPrevFormData(formData);
+    needsSync = true;
     if (fieldPathIdId === prevFieldPathIdId) {
       const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
       const matchingOption = schemaUtils.getClosestMatchingOption(
@@ -100,17 +135,23 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
       );
       if (matchingOption !== currentSelected) {
         currentSelected = matchingOption;
-        stateChanged = true;
       }
     }
   }
 
   if (fieldPathIdId !== prevFieldPathIdId) {
-    setPrevFieldPathIdId(fieldPathIdId);
+    needsSync = true;
   }
 
-  if (stateChanged) {
-    setState({ selectedOption: currentSelected, retrievedOptions: currentRetrieved });
+  if (needsSync) {
+    dispatch({
+      type: 'SYNC_PROPS',
+      selectedOption: currentSelected,
+      retrievedOptions: currentRetrieved,
+      prevOptions: options,
+      prevFormData: formData,
+      prevFieldPathIdId: fieldPathIdId,
+    });
   }
 
   const fieldId = `${fieldPathIdId}${schema.oneOf ? '__oneof_select' : '__anyof_select'}`;
@@ -137,7 +178,7 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         newFormData = schemaUtils.getDefaultFormState(newOption, newFormData, 'excludeObjectChildren') as T;
       }
 
-      setState({ selectedOption: intOption, retrievedOptions: currentRetrieved });
+      dispatch({ type: 'SELECT_OPTION', selectedOption: intOption, retrievedOptions: currentRetrieved });
       onChange(newFormData, fieldPathIdPath, undefined, fieldId);
     },
     [currentSelected, currentRetrieved, schemaUtils, formData, onChange, fieldPathIdPath, fieldId],
