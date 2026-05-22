@@ -1,4 +1,3 @@
-import { fireEvent, act } from '@testing-library/react';
 import {
   DEFAULT_ID_PREFIX,
   DEFAULT_ID_SEPARATOR,
@@ -14,10 +13,13 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
+import userEvent from '@testing-library/user-event';
 
 import { getDefaultRegistry } from '../src';
 import SchemaField from '../src/components/fields/SchemaField';
-import { createFormComponent } from './testUtils';
+import { createFormComponent, submitForm } from './testUtils';
+
+const user = userEvent.setup();
 
 describe('SchemaField', () => {
   describe('registry', () => {
@@ -505,39 +507,35 @@ describe('SchemaField', () => {
       return errors;
     }
 
-    it('should render its own errors', () => {
+    it('should render its own errors', async () => {
       const { node } = createFormComponent({
         schema,
         uiSchema,
         customValidate,
       });
 
-      act(() => {
-        fireEvent.submit(node);
-      });
+      await submitForm(node, user);
 
       const matches = node.querySelectorAll('form > .form-group > div > .error-detail .text-danger');
       expect(matches).toHaveLength(1);
       expect(matches[0]).toHaveTextContent('container');
     });
 
-    it('should pass errors to child component', () => {
+    it('should pass errors to child component', async () => {
       const { node } = createFormComponent({
         schema,
         uiSchema,
         customValidate,
       });
 
-      act(() => {
-        fireEvent.submit(node);
-      });
+      await submitForm(node, user);
 
       const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
       expect(matches).toHaveLength(1);
       expect(matches[0]).toHaveTextContent('test');
     });
 
-    it('should ignore errors for top level anyOf/oneOf and show only one in child schema', () => {
+    it('should ignore errors for top level anyOf/oneOf and show only one in child schema', async () => {
       const testSchema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -562,16 +560,14 @@ describe('SchemaField', () => {
         customValidate,
       });
 
-      act(() => {
-        fireEvent.submit(node);
-      });
+      await submitForm(node, user);
 
       const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
       expect(matches).toHaveLength(1);
       expect(matches[0]).toHaveTextContent('test');
     });
 
-    it('should show errors for top level anyOf/oneOf when schema is select control', () => {
+    it('should show errors for top level anyOf/oneOf when schema is select control', async () => {
       const testSchema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -601,16 +597,14 @@ describe('SchemaField', () => {
         customValidate,
       });
 
-      act(() => {
-        fireEvent.submit(node);
-      });
+      await submitForm(node, user);
 
       const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
       expect(matches).toHaveLength(1);
       expect(matches[0]).toHaveTextContent('test');
     });
 
-    it('should pass errors to custom FieldErrorTemplate', () => {
+    it('should pass errors to custom FieldErrorTemplate', async () => {
       const customFieldError = (props: FieldErrorProps) => {
         return <div className='custom-field-error'>{props.errors}</div>;
       };
@@ -621,9 +615,7 @@ describe('SchemaField', () => {
         templates: { FieldErrorTemplate: customFieldError },
       });
 
-      act(() => {
-        fireEvent.submit(node);
-      });
+      await submitForm(node, user);
 
       const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
       expect(matches).toHaveLength(0);
@@ -632,7 +624,7 @@ describe('SchemaField', () => {
       expect(customMatches[0]).toHaveTextContent('test');
     });
 
-    it('should pass errors to custom FieldErrorTemplate, via uiSchema', () => {
+    it('should pass errors to custom FieldErrorTemplate, via uiSchema', async () => {
       const customFieldError = (props: FieldErrorProps) => {
         return <div className='custom-field-error'>{props.errors}</div>;
       };
@@ -649,9 +641,7 @@ describe('SchemaField', () => {
         customValidate,
       });
 
-      act(() => {
-        fireEvent.submit(node);
-      });
+      await submitForm(node, user);
 
       const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
       expect(matches).toHaveLength(0);
@@ -665,7 +655,7 @@ describe('SchemaField', () => {
         return <div className='custom-text-widget'>{props.rawErrors}</div>;
       };
 
-      it('should pass rawErrors down to custom widgets', () => {
+      it('should pass rawErrors down to custom widgets', async () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
@@ -673,9 +663,7 @@ describe('SchemaField', () => {
           templates: { BaseInputTemplate: customStringWidget },
         });
 
-        act(() => {
-          fireEvent.submit(node);
-        });
+        await submitForm(node, user);
 
         const matches = node.querySelectorAll('.custom-text-widget');
         expect(matches).toHaveLength(1);
@@ -689,31 +677,27 @@ describe('SchemaField', () => {
         ...uiSchema,
       };
 
-      it('should not render its own default errors', () => {
+      it('should not render its own default errors', async () => {
         const { node } = createFormComponent({
           schema,
           uiSchema: hideUiSchema,
           customValidate,
         });
 
-        act(() => {
-          fireEvent.submit(node);
-        });
+        await submitForm(node, user);
 
         const matches = node.querySelectorAll('form > .form-group > div > .error-detail .text-danger');
         expect(matches).toHaveLength(0);
       });
 
-      it('should not show default errors in child component', () => {
+      it('should not show default errors in child component', async () => {
         const { node } = createFormComponent({
           schema,
           uiSchema: hideUiSchema,
           customValidate,
         });
 
-        act(() => {
-          fireEvent.submit(node);
-        });
+        await submitForm(node, user);
 
         const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
         expect(matches).toHaveLength(0);
@@ -724,7 +708,7 @@ describe('SchemaField', () => {
           return <div className='custom-text-widget'>{props.rawErrors}</div>;
         };
 
-        it('should pass rawErrors down to custom widgets and render them', () => {
+        it('should pass rawErrors down to custom widgets and render them', async () => {
           const { node } = createFormComponent({
             schema,
             uiSchema: hideUiSchema,
@@ -732,9 +716,7 @@ describe('SchemaField', () => {
             templates: { BaseInputTemplate: customStringWidget },
           });
 
-          act(() => {
-            fireEvent.submit(node);
-          });
+          await submitForm(node, user);
 
           const matches = node.querySelectorAll('.custom-text-widget');
           expect(matches).toHaveLength(1);
@@ -753,31 +735,27 @@ describe('SchemaField', () => {
         },
       };
 
-      it('should not render its own default errors', () => {
+      it('should not render its own default errors', async () => {
         const { node } = createFormComponent({
           schema,
           uiSchema: hideUiSchema,
           customValidate,
         });
 
-        act(() => {
-          fireEvent.submit(node);
-        });
+        await submitForm(node, user);
 
         const matches = node.querySelectorAll('form > .form-group > div > .error-detail .text-danger');
         expect(matches).toHaveLength(0);
       });
 
-      it('should show errors on child component', () => {
+      it('should show errors on child component', async () => {
         const { node } = createFormComponent({
           schema,
           uiSchema: hideUiSchema,
           customValidate,
         });
 
-        act(() => {
-          fireEvent.submit(node);
-        });
+        await submitForm(node, user);
 
         const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
         expect(matches).toHaveLength(1);
@@ -797,22 +775,20 @@ describe('SchemaField', () => {
       foo: { 'ui:help': helpText },
     };
 
-    it('should render its own help', () => {
+    it('should render its own help', async () => {
       const { node } = createFormComponent({
         schema,
         uiSchema,
       });
 
-      act(() => {
-        fireEvent.submit(node);
-      });
+      await submitForm(node, user);
 
       const matches = node.querySelectorAll('form .form-group .form-group .help-block');
       expect(matches).toHaveLength(1);
       expect(matches[0]).toHaveTextContent(helpText);
     });
 
-    it('should pass help to custom FieldHelpTemplate', () => {
+    it('should pass help to custom FieldHelpTemplate', async () => {
       const customFieldHelp = (props: FieldHelpProps) => {
         return <div className='custom-field-help'>{props.help}</div>;
       };
@@ -822,9 +798,7 @@ describe('SchemaField', () => {
         templates: { FieldHelpTemplate: customFieldHelp },
       });
 
-      act(() => {
-        fireEvent.submit(node);
-      });
+      await submitForm(node, user);
 
       const matches = node.querySelectorAll('form .form-group .form-group .help-block');
       expect(matches).toHaveLength(0);
@@ -833,7 +807,7 @@ describe('SchemaField', () => {
       expect(customMatches[0]).toHaveTextContent(helpText);
     });
 
-    it('should pass errors to custom FieldErrorTemplate, via uiSchema', () => {
+    it('should pass errors to custom FieldErrorTemplate, via uiSchema', async () => {
       const customFieldHelp = (props: FieldHelpProps) => {
         return <div className='custom-field-help'>{props.help}</div>;
       };
@@ -846,9 +820,7 @@ describe('SchemaField', () => {
         uiSchema,
       });
 
-      act(() => {
-        fireEvent.submit(node);
-      });
+      await submitForm(node, user);
 
       const matches = node.querySelectorAll('form .form-group .form-group .help-block');
       expect(matches).toHaveLength(0);

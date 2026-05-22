@@ -1,4 +1,8 @@
+import userEvent from '@testing-library/user-event';
+
 import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils';
+
+const user = userEvent.setup();
 
 describe('NullField', () => {
   describe('No widget', () => {
@@ -34,7 +38,7 @@ describe('NullField', () => {
       expectToHaveBeenCalledWithFormData(onChange, null);
     });
 
-    it('should not overwrite existing data', () => {
+    it('should not overwrite existing data', async () => {
       const { node, onSubmit } = createFormComponent({
         schema: {
           type: 'null',
@@ -43,7 +47,7 @@ describe('NullField', () => {
         noValidate: true,
       });
 
-      submitForm(node);
+      await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, 3, true);
     });
   });

@@ -268,7 +268,7 @@ describe('ObjectField', () => {
       );
     });
 
-    it('should validate AJV $data reference ', () => {
+    it('should validate AJV $data reference ', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -297,7 +297,7 @@ describe('ObjectField', () => {
       });
 
       // trigger the errors by submitting the form since initial render no longer shows them
-      submitForm(node);
+      await submitForm(node, user);
 
       const errorMessages = node.querySelectorAll('#root_emailConfirm__error');
       expect(errorMessages).toHaveLength(1);
@@ -314,7 +314,7 @@ describe('ObjectField', () => {
       expect(node.querySelectorAll('#root_foo__error')).toHaveLength(0);
     });
 
-    it('Check that when formData changes, the form should re-validate', () => {
+    it('Check that when formData changes, the form should re-validate', async () => {
       const { node, rerender } = createFormComponent({
         schema,
         formData: {
@@ -323,8 +323,10 @@ describe('ObjectField', () => {
         liveValidate: true,
       });
 
-      // trigger the errors by submitting the form since initial render no longer shows them
-      submitForm(node);
+      // trigger the errors by submitting the form since initial render no longer shows them.
+      // forceFireEvent=true: clicking the submit button focuses it, blurring any focused
+      // field and firing onChange, which can mutate formData before the submit runs.
+      await submitForm(node, user, true);
 
       const errorMessages = node.querySelectorAll('#root_foo__error');
       expect(errorMessages).toHaveLength(1);
@@ -464,7 +466,7 @@ describe('ObjectField', () => {
       expect(errorMessages).toHaveLength(0);
     });
 
-    it('should not copy errors when name has dotted-path similar to real property', () => {
+    it('should not copy errors when name has dotted-path similar to real property', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -491,7 +493,7 @@ describe('ObjectField', () => {
       };
       const { node } = createFormComponent({ schema, formData });
       // click submit
-      submitForm(node);
+      await submitForm(node, user);
       const fooDotBarErrors = node.querySelectorAll('#root_Foo.Bar__error');
       expect(fooDotBarErrors).toHaveLength(0);
       const fooBarErrors = node.querySelectorAll('#root_Foo_Bar__error');
@@ -763,7 +765,7 @@ describe('ObjectField', () => {
       expect(objectTitle).toHaveTextContent('CustomName');
     });
 
-    it('should not throw validation errors if additionalProperties is undefined', () => {
+    it('should not throw validation errors if additionalProperties is undefined', async () => {
       const undefinedAPSchema: RJSFSchema = {
         ...schema,
         properties: { second: { type: 'string' } },
@@ -774,13 +776,13 @@ describe('ObjectField', () => {
         formData: { nonschema: 1 },
       });
 
-      submitForm(node);
+      await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, { nonschema: 1 }, true);
 
       expect(onError).not.toHaveBeenCalled();
     });
 
-    it('should throw a validation error if additionalProperties is false', () => {
+    it('should throw a validation error if additionalProperties is false', async () => {
       const { node, onSubmit, onError } = createFormComponent({
         schema: {
           ...schema,
@@ -789,7 +791,7 @@ describe('ObjectField', () => {
         },
         formData: { nonschema: 1 },
       });
-      submitForm(node);
+      await submitForm(node, user);
       expect(onSubmit).not.toHaveBeenCalled();
       expect(onError).toHaveBeenLastCalledWith([
         {

@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react';
 import { render, fireEvent, act } from '@testing-library/react';
+import type { UserEvent } from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { GenericObjectType, ValidatorType } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -60,10 +61,16 @@ export function describeRepeated(title: string, fn: CreatorFn) {
   }
 }
 
-export function submitForm(node: Element) {
-  act(() => {
-    fireEvent.submit(node);
-  });
+export async function submitForm(node: Element, user: UserEvent, forceFireEvent = false) {
+  const submitButton = node.querySelector('[type="submit"]');
+  if (submitButton && !forceFireEvent) {
+    await user.click(submitButton);
+  } else {
+    // fallback if there isn't a submit button
+    act(() => {
+      fireEvent.submit(node);
+    });
+  }
 }
 
 export function getSelectedOptionValue(selectNode: HTMLSelectElement) {

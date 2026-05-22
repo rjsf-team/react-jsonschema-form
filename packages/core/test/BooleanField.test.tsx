@@ -231,16 +231,16 @@ describe('BooleanField', () => {
     expect(node.querySelector('.rjsf-field input')).toHaveAttribute('checked', '');
   });
 
-  it('formData should default to undefined', () => {
+  it('formData should default to undefined', async () => {
     const { node, onSubmit } = createFormComponent({
       schema: { type: 'boolean' },
       noValidate: true,
     });
-    submitForm(node);
+    await submitForm(node, user);
     expectToHaveBeenCalledWithFormData(onSubmit, undefined, true);
   });
 
-  it('should focus on required radio missing data when focusOnFirstField and shows error', () => {
+  it('should focus on required radio missing data when focusOnFirstField and shows error', async () => {
     const { node, onError } = createFormComponent({
       schema: {
         type: 'object',
@@ -264,7 +264,8 @@ describe('BooleanField', () => {
     // a getter-only, making simple assignment throw in strict mode
     Object.defineProperty(inputs[0], 'focus', { value: focusSpys[0], writable: true, configurable: true });
     Object.defineProperty(inputs[1], 'focus', { value: focusSpys[1], writable: true, configurable: true });
-    submitForm(node);
+    // The focus overrides don't work unless fire event happens
+    await submitForm(node, user, true);
     expect(onError).toHaveBeenLastCalledWith([
       expect.objectContaining({ message: "must have required property 'bool'" }),
     ]);
@@ -274,7 +275,7 @@ describe('BooleanField', () => {
     expect(errorInputs).toHaveLength(2);
   });
 
-  it('should focus on required radio missing data when focusOnFirstField and hides error', () => {
+  it('should focus on required radio missing data when focusOnFirstField and hides error', async () => {
     const { node, onError } = createFormComponent({
       schema: {
         type: 'object',
@@ -298,7 +299,8 @@ describe('BooleanField', () => {
     // a getter-only, making simple assignment throw in strict mode
     Object.defineProperty(inputs[0], 'focus', { value: focusSpys[0], writable: true, configurable: true });
     Object.defineProperty(inputs[1], 'focus', { value: focusSpys[1], writable: true, configurable: true });
-    submitForm(node);
+    // The focus overrides don't work unless fire event happens
+    await submitForm(node, user, true);
     expect(onError).toHaveBeenLastCalledWith([
       expect.objectContaining({ message: "must have required property 'bool'" }),
     ]);
