@@ -1,31 +1,6 @@
-import isNil from 'lodash/isNil';
-
 import isObject from './isObject';
+import { isValueEmpty, retrieveSchema } from './schema';
 import { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, ValidatorType } from './types';
-import retrieveSchema from './schema/retrieveSchema';
-
-/** Determines whether a value is considered "empty" for the purposes of optional object pruning.
- * A value is empty if it is `undefined`, `null`, an empty string, or an object where all own
- * properties are themselves empty.
- *
- * @param value - The value to check
- * @returns True if the value is considered empty
- */
-function isValueEmpty(value: unknown): boolean {
-  if (isNil(value) || value === '') {
-    return true;
-  }
-  if (Array.isArray(value)) {
-    // An empty array is considered empty; a non-empty array is not
-    return value.length === 0;
-  }
-  if (isObject(value)) {
-    const obj = value as GenericObjectType;
-    const keys = Object.keys(obj);
-    return keys.every((key) => isValueEmpty(obj[key]));
-  }
-  return false;
-}
 
 /** Recursively removes optional objects from the `formData` that are empty (i.e., all their fields
  * are undefined, null, empty strings, or themselves empty optional objects). This solves the problem
@@ -41,7 +16,10 @@ function isValueEmpty(value: unknown): boolean {
  * @param [formData] - The current form data to prune
  * @returns - A new copy of `formData` with empty optional objects removed, or `undefined` if the
  *           entire formData was pruned
+ * @deprecated - This function will be removed in a future release. The equivalent pruning behavior
+ *   is now built into `omitExtraData` — use that instead.
  */
+// eslint-disable-next-line @typescript-eslint/no-deprecated
 export default function removeOptionalEmptyObjects<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
@@ -65,6 +43,7 @@ export default function removeOptionalEmptyObjects<
       if (Array.isArray(itemsSchema)) {
         itemSchema = itemsSchema[index] || (resolvedSchema.additionalItems as S) || ({} as S);
       }
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
       const cleaned = removeOptionalEmptyObjects<T, S, F>(validator, itemSchema, rootSchema, item);
       if (cleaned !== item) {
         hasChanges = true;
@@ -97,6 +76,7 @@ export default function removeOptionalEmptyObjects<
 
     if ((isObj || isArr) && properties[key]) {
       // Recursively process nested objects and arrays
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
       const cleaned = removeOptionalEmptyObjects<T, S, F>(validator, propertySchema, rootSchema, value as T);
 
       if (!isRequired && isValueEmpty(cleaned)) {
@@ -106,10 +86,8 @@ export default function removeOptionalEmptyObjects<
 
       result[key] = cleaned;
       hasAnyValue = true;
-    } else if (!isRequired && isValueEmpty(value) && properties[key]) {
-      // Optional scalar property that is empty — omit it
-      continue;
-    } else {
+    } else if (isRequired || !isValueEmpty(value) || !properties[key]) {
+      // Keep: required, non-empty, or not schema-defined; skip optional empty scalars silently
       result[key] = value;
       if (!isValueEmpty(value)) {
         hasAnyValue = true;

@@ -570,12 +570,12 @@ const schema: RJSFSchema = {
 };
 
 // Array form (matched by index)
-const uiSchema: UiSchema = {
+const uiSchemaArray: UiSchema = {
   'ui:enumNames': ['one', 'two', 'three'],
 };
 
 // Map form (matched by value)
-const uiSchema: UiSchema = {
+const uiSchemaMap: UiSchema = {
   'ui:enumNames': { 1: 'one', 2: 'two', 3: 'three' },
 };
 ```

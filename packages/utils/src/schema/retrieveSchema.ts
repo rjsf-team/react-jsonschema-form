@@ -6,8 +6,6 @@ import merge from 'lodash/merge';
 import flattenDeep from 'lodash/flattenDeep';
 import uniq from 'lodash/uniq';
 import isEmpty from 'lodash/isEmpty';
-import { createComparator, createMerger, createShallowAllOfMerge } from '@x0k/json-schema-merge';
-import { createDeduplicator, createIntersector } from '@x0k/json-schema-merge/lib/array';
 
 import {
   ADDITIONAL_PROPERTIES_KEY,
@@ -38,6 +36,7 @@ import {
   ValidatorType,
 } from '../types';
 import getFirstMatchingOption from './getFirstMatchingOption';
+import shallowAllOfMerge from './shallowAllOfMerge';
 import deepEquals from '../deepEquals';
 
 /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and dependencies
@@ -514,15 +513,6 @@ export function stubExistingAdditionalProperties<
   return schema;
 }
 
-// Set up @x0k/json-schema-merge utilities
-const { compareSchemaDefinitions, compareSchemaValues } = createComparator();
-const { mergeArrayOfSchemaDefinitions } = createMerger({
-  intersectJson: createIntersector(compareSchemaValues),
-  deduplicateJsonSchemaDef: createDeduplicator(compareSchemaDefinitions),
-});
-
-const shallowAllOfMerge = createShallowAllOfMerge(mergeArrayOfSchemaDefinitions);
-
 /**
  * Internal helper that merges allOf schemas using @x0k/json-schema-merge's shallow allOf merge
  * @param schema - The schema containing an `allOf` keyword
@@ -694,11 +684,47 @@ export function resolveAnyOrOneOfSchemas<
     // Call this to trigger the set of isValid() calls that the schema parser will need
     const option = getFirstMatchingOption<T, S, F>(validator, formData, anyOrOneOf, rootSchema, discriminator);
     if (expandAllBranches) {
+      // Also trigger isValid() for the relaxed variants so that precompiled validators capture their hashes.
+      // omitExtraData's handleOneOf relaxes additionalProperties:false → true before scoring; those mutated
+      // schemas must be present in a precompiled validator's compiled set or isValid() will throw at runtime.
+      // Using getFirstMatchingOption (rather than calling isValid directly) ensures that the augmented forms
+      // of each option (as constructed internally by getFirstMatchingOption for options with properties) are
+      // also captured. The return value is discarded — the call is purely for ParserValidator's side effect.
+      const relaxed = relaxOptionsForScoring<S>(anyOrOneOf, false, rootSchema);
+      getFirstMatchingOption<T, S, F>(validator, formData, relaxed, rootSchema, discriminator);
       return anyOrOneOf.map((item) => mergeSchemas(remaining, item) as S);
     }
     schema = mergeSchemas(remaining, anyOrOneOf[option]) as S;
   }
   return [schema];
+}
+
+/** Normalises a list of `oneOf`/`anyOf` options for use in option-scoring only (not for filtering).
+ * Boolean schemas are converted to their object equivalents (`true` → `{}`, `false` → `{not:{}}`).
+ * When `resolveRefs` is `true`, each object option is first passed through `resolveAllReferences`
+ * so that `$ref`-based options expose their `additionalProperties` constraint before relaxation.
+ * Any option whose `additionalProperties` is `false` is widened to `true` so that
+ * `getClosestMatchingOption` / `validator.isValid()` does not produce false negatives when the
+ * form data contains keys not listed in `properties`.
+ *
+ * @param options - The raw `oneOf`/`anyOf` array, which may contain boolean schemas
+ * @param [resolveRefs=false] - When `true`, resolve `$ref`s in each option before relaxing; pass
+ *   `rootSchema` as well. Set `false` (default) when refs are already resolved at the call site.
+ * @param [rootSchema] - Required when `resolveRefs` is `true`; the root schema used to look up `$ref`s
+ * @returns - A new array of plain schema objects with `additionalProperties` relaxed where needed
+ */
+export function relaxOptionsForScoring<S extends StrictRJSFSchema = RJSFSchema>(
+  options: Array<S | boolean>,
+  resolveRefs = false,
+  rootSchema?: S,
+): S[] {
+  return options.map((d) => {
+    if (!isObject(d)) {
+      return (d ? {} : { not: {} }) as S;
+    }
+    const schema = resolveRefs && rootSchema ? resolveAllReferences<S>(d as S, rootSchema, []) : (d as S);
+    return schema.additionalProperties === false ? { ...schema, additionalProperties: true } : schema;
+  });
 }
 
 /** Resolves dependencies within a schema and its 'anyOf/oneOf' children. Passes the `expandAllBranches` flag down to

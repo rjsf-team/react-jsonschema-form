@@ -18,6 +18,23 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.6.0
 
+## @rjsf/core
+
+- Updated `Form` to stop using `removeOptionalEmptyObjects()` and deprecating `removeEmptyOptionalObjects` prop
+
+## @rjsf/utils
+
+- Adopted the `svelte-jsonschema-form` algorithm for `omitExtraData()`, adding in support for the code from `removeOptionalEmptyObjects()`, exporting the `isValueEmpty()` function from the library
+- Deprecated the `removeOptionalEmptyObject()` and `toPathSchema()` functions, `toPathSchema()` on `SchemaUtilsType` and the `PathSchema` type
+- Added `relaxOptionsForScoring()` utility that normalizes a `oneOf`/`anyOf` option list for scoring with optional `$ref`s resolution
+  Converts boolean schemas to object equivalents and widens `additionalProperties: false → true` so that `getClosestMatchingOption` does not produce false negatives when form data contains keys not declared in `properties`
+- Fixed `resolveAnyOrOneOfSchemas` (called by `schemaParser` with `expandAllBranches=true`) to use `getFirstMatchingOption` on the options returned from `relaxOptionsForScoring()` so that they are captured for precompiled validators
+- Extracted the `shallowAllOfMerge()` function from `retrieveSchema.ts` into its own file for additional use in `omitExtraData.ts`
+
+## @rjsf/validator-ajv8
+
+- Added integration tests verifying that `getFirstMatchingOption`, `getClosestMatchingOption`, and `omitExtraData` work correctly when given an `AJV8PrecompiledValidator` compiled from a `oneOf` schema whose branches carry `additionalProperties: false` (both direct options and options defined via `$ref`)
+
 ## @rjsf/validator-ata
 
 - Added `@rjsf/validator-ata`, an `ata-validator` backed alternative to `@rjsf/validator-ajv8`. The public surface mirrors the AJV package (`customizeValidator()`, `ValidatorType<T, S, F>`, custom formats, `transformErrors`, `customValidate`, `suppressDuplicateFiltering`), so swapping the import is enough for existing forms to keep working. AJV-only options (`AjvClass`, `ajvFormatOptions`, `ajvOptionsOverrides`) are replaced by `ataOptionsOverrides`, the `ata-validator` format set is always installed, and precompiled validators (`compileSchemaValidators` / `createPrecompiledValidator`) are not yet wired through. Depends on `ata-validator` `^0.15.0`, which carries stable `ATA####` error codes and rich error metadata (`expected`, `received`, `schemaSource`, `dataFrame`, `suggestion`, `docUrl`) that `transformErrors` can consume. See the [validator-ata API reference](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/api-reference/validator-ata.md) for the full list of differences ([#5063](https://github.com/rjsf-team/react-jsonschema-form/pull/5063))
@@ -26,6 +43,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Added a `validator-ata` API reference page under `api-reference` describing the package and its differences from `validator-ajv8` ([#5063](https://github.com/rjsf-team/react-jsonschema-form/pull/5063))
 - Added `ATA` and `ATA (coerceTypes)` choices to the playground validator picker ([#5063](https://github.com/rjsf-team/react-jsonschema-form/pull/5063))
+- Updated the `form-props.md` and `utility-functions.md` to document the deprecations and `uiSchema.md` to cleanup the `enumNames` docs slightly
 
 # 6.5.3
 
