@@ -48,6 +48,8 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
   } = props;
 
   const { widgets, fields, translateString, globalUiOptions, schemaUtils } = registry;
+  const fieldPathIdId = fieldPathId.$id;
+  const fieldPathIdPath = fieldPathId.path;
 
   const [{ selectedOption, retrievedOptions }, setState] = useState<{
     selectedOption: number;
@@ -64,16 +66,16 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
 
   const prevOptionsRef = useRef(options);
   const prevFormDataRef = useRef(formData);
-  const prevFieldPathIdRef = useRef(fieldPathId);
+  const prevFieldPathIdIdRef = useRef(fieldPathIdId);
 
   useEffect(() => {
     const prevOptions = prevOptionsRef.current;
     const prevFormData = prevFormDataRef.current;
-    const prevFieldPathId = prevFieldPathIdRef.current;
+    const prevFieldPathIdId = prevFieldPathIdIdRef.current;
 
     prevOptionsRef.current = options;
     prevFormDataRef.current = formData;
-    prevFieldPathIdRef.current = fieldPathId;
+    prevFieldPathIdIdRef.current = fieldPathIdId;
 
     setState((currentState) => {
       let { selectedOption: currentSelected, retrievedOptions: currentRetrieved } = currentState;
@@ -85,7 +87,7 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         changed = true;
       }
 
-      if (!deepEquals(formData, prevFormData) && fieldPathId.$id === prevFieldPathId.$id) {
+      if (!deepEquals(formData, prevFormData) && fieldPathIdId === prevFieldPathIdId) {
         const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
         const matchingOption = schemaUtils.getClosestMatchingOption(
           formData,
@@ -101,9 +103,9 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
 
       return changed ? { selectedOption: currentSelected, retrievedOptions: currentRetrieved } : currentState;
     });
-  }, [options, formData, fieldPathId, schema, schemaUtils]);
+  }, [options, formData, fieldPathIdId, schema, schemaUtils]);
 
-  const fieldId = `${fieldPathId.$id}${schema.oneOf ? '__oneof_select' : '__anyof_select'}`;
+  const fieldId = `${fieldPathIdId}${schema.oneOf ? '__oneof_select' : '__anyof_select'}`;
 
   /** Callback handler to remember what the currently selected option is. In addition to that the `formData` is updated
    * to remove properties that are not part of the newly selected option schema, and then the updated data is passed to
@@ -128,9 +130,9 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
       }
 
       setState({ selectedOption: intOption, retrievedOptions });
-      onChange(newFormData, fieldPathId.path, undefined, fieldId);
+      onChange(newFormData, fieldPathIdPath, undefined, fieldId);
     },
-    [selectedOption, retrievedOptions, schemaUtils, formData, onChange, fieldPathId, fieldId],
+    [selectedOption, retrievedOptions, schemaUtils, formData, onChange, fieldPathIdPath, fieldId],
   );
 
   const { SchemaField: _SchemaField } = fields;
