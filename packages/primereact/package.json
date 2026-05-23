@@ -39,16 +39,17 @@
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/primereact.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/primereact.esm.js --format=umd --file=dist/primereact.umd.js --name=@rjsf/primereact",
     "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
-    "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
-    "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
-    "lint": "eslint src test",
+    "cs-check": "oxfmt --check \"{src,test}/**/*.{ts,tsx}\"",
+    "cs-format": "oxfmt \"{src,test}/**/*.{ts,tsx}\"",
+    "lint": "oxlint src test",
     "precommit": "lint-staged",
     "test": "jest",
     "test:update": "jest --u"
   },
   "lint-staged": {
-    "{src,test}/**/*.ts?(x)": [
-      "eslint --fix"
+    "{src,test}/**/*.{ts,tsx}": [
+      "oxlint --fix",
+      "oxfmt"
     ]
   },
   "files": [
@@ -73,7 +74,6 @@
     "@rjsf/utils": "6.5.3",
     "@rjsf/validator-ajv8": "6.5.3",
     "@rollup/plugin-replace": "^6.0.3",
-    "eslint": "^8.57.1",
     "primeflex": "^4.0.0",
     "primeicons": "^7.0.0",
     "primereact": "^10.9.8"

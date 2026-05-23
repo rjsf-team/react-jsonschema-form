@@ -48,16 +48,17 @@
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/semantic-ui.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/semantic-ui.esm.js --format=umd --file=dist/semantic-ui.umd.js --name=@rjsf/semantic-ui",
     "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
-    "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
-    "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
-    "lint": "eslint src test",
+    "cs-check": "oxfmt --check \"{src,test}/**/*.{ts,tsx}\"",
+    "cs-format": "oxfmt \"{src,test}/**/*.{ts,tsx}\"",
+    "lint": "oxlint src test",
     "precommit": "lint-staged",
     "test": "jest",
     "test:update": "jest --u"
   },
   "lint-staged": {
     "{src,test}/**/*.ts(x)": [
-      "eslint --fix"
+      "oxlint --fix",
+      "oxfmt"
     ]
   },
   "peerDependencies": {
@@ -72,7 +73,6 @@
     "@rjsf/utils": "6.5.3",
     "@rjsf/validator-ajv8": "6.5.3",
     "atob": "^2.1.2",
-    "eslint": "^8.57.1",
     "semantic-ui-react": "^2.1.5"
   },
   "publishConfig": {

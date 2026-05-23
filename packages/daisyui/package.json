@@ -48,9 +48,9 @@
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/chakra-ui.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/chakra-ui.esm.js --format=umd --file=dist/chakra-ui.umd.js --name=@rjsf/chakra-ui",
     "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
-    "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
-    "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
-    "lint": "eslint src test",
+    "cs-check": "oxfmt --check \"{src,test}/**/*.{ts,tsx}\"",
+    "cs-format": "oxfmt \"{src,test}/**/*.{ts,tsx}\"",
+    "lint": "oxlint src test",
     "precommit": "lint-staged",
     "test": "jest",
     "test:update": "jest --u",
@@ -58,8 +58,9 @@
     "test:debug": "node --inspect-brk ../../node_modules/.bin/jest"
   },
   "lint-staged": {
-    "{src,test}/**/*.ts?(x)": [
-      "eslint --fix"
+    "{src,test}/**/*.{ts,tsx}": [
+      "oxlint --fix",
+      "oxfmt"
     ]
   },
   "dependencies": {

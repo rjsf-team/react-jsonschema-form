@@ -9,9 +9,9 @@
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/index.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/index.esm.js --format=umd --file=dist/core.umd.js --name=JSONSchemaForm",
     "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
-    "cs-check": "prettier -l \"{src,test}/**/*.[jt]s?(x)\"",
-    "cs-format": "prettier \"{src,test}/**/*.[jt]s?(x)\" --write",
-    "lint": "eslint src test",
+    "cs-check": "oxfmt --check \"{src,test}/**/*.{ts,tsx,js,jsx}\"",
+    "cs-format": "oxfmt \"{src,test}/**/*.{ts,tsx,js,jsx}\"",
+    "lint": "oxlint src test",
     "precommit": "lint-staged",
     "publish-to-npm": "npm run build && npm publish",
     "test": "jest",
@@ -21,8 +21,9 @@
     "test-coverage": "jest --coverage"
   },
   "lint-staged": {
-    "{src,test}/**/*.[jt]s?(x)": [
-      "eslint --fix"
+    "{src,test}/**/*.{ts,tsx,js,jsx}": [
+      "oxlint --fix",
+      "oxfmt"
     ]
   },
   "main": "dist/index.js",
@@ -85,7 +86,6 @@
     "@types/react-portal": "^4.0.7",
     "ajv": "^8.20.0",
     "atob": "^2.1.2",
-    "eslint": "^8.57.1",
     "jsdom": "^29.1.1",
     "react-portal": "^4.3.0"
   },
