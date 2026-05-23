@@ -2,6 +2,7 @@ import { RJSFSchema, StrictRJSFSchema, schemaParser } from '@rjsf/utils';
 import { Validator } from 'ata-validator';
 
 import { CustomValidatorOptionsType } from './types';
+import { COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from './createAtaInstance';
 
 /** Compiles a schema into a precompiled validator module. ata's
  * `bundleStandalone` emits `module.exports = [fn, ...]`, one validator per
@@ -23,31 +24,32 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
 
   const { customFormats, ataOptionsOverrides = {} } = options;
 
-  // bundleStandalone serializes format functions via toString(), so each function
-  // must be self-contained (no references to outer-scope variables).
-  // eslint-disable-next-line no-useless-escape
-  const formats: Record<string, (value: string) => boolean> = {
-    // eslint-disable-next-line no-useless-escape
-    color: (v: string) =>
-      /^(#?([0-9A-Fa-f]{3}){1,2}\b|aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|teal|white|yellow|(rgb\(\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*\))|(rgb\(\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*\)))$/.test(
-        v,
-      ),
-    'data-url': (v: string) => /^data:([a-z]+\/[a-z0-9-+.]+)?;(?:name=(.*);)?base64,(.*)$/.test(v),
+  // Format checkers are serialized into the standalone module via Function#toString,
+  // so they must carry no closure references or build-time instrumentation (a plain
+  // arrow over the source file picks up coverage counters). Building each from its
+  // regex via `new Function` produces a function whose source is exactly its body.
+  const regexFormats: Record<string, RegExp> = {
+    color: COLOR_FORMAT_REGEX,
+    'data-url': DATA_URL_FORMAT_REGEX,
   };
   if (customFormats) {
     for (const [name, check] of Object.entries(customFormats)) {
       if (typeof check === 'function') {
-        formats[name] = check;
-      } else {
-        const src = typeof check === 'string' ? check : check.source;
-        const flags = typeof check === 'string' ? '' : check.flags;
-        // Wrap in a self-contained function so toString() bakes in the literal.
-        formats[name] = new Function(
-          'v',
-          `return new RegExp(${JSON.stringify(src)}, ${JSON.stringify(flags)}).test(v)`,
-        ) as (value: string) => boolean;
+        // A function checker would be serialized via toString, which is unsafe in a
+        // precompiled bundle: transpilers, minifiers, and coverage tools rewrite the
+        // body and leave references that do not exist in the generated module. Only
+        // RegExp/string patterns can be embedded reliably here.
+        throw new Error(
+          `@rjsf/validator-ata: custom format "${name}" is a function, which is not supported by the precompiled validator; provide a RegExp or string pattern instead`,
+        );
       }
+      regexFormats[name] = typeof check === 'string' ? new RegExp(check) : check;
     }
+  }
+  const formats: Record<string, (value: string) => boolean> = {};
+  for (const [name, re] of Object.entries(regexFormats)) {
+    // eslint-disable-next-line no-new-func
+    formats[name] = new Function('value', `return ${re.toString()}.test(value)`) as (value: string) => boolean;
   }
 
   const bundle = Validator.bundleStandalone(schemas, {
@@ -56,7 +58,9 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
     formats,
   });
 
-  const entries = keys.map((key, index) => `  ${JSON.stringify(key)}: wrap(validators[${index}]),`).join('\n');
+  const entries = keys
+    .map((key, index) => `  ${JSON.stringify(key)}: wrap(validators[${index}], ${JSON.stringify(key)}),`)
+    .join('\n');
 
   return [
     'const validators = (function () {',
@@ -64,8 +68,11 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
     bundle,
     '  return module.exports;',
     '})();',
-    'function wrap(fn) {',
+    'function wrap(fn, key) {',
     '  function validate(data) {',
+    "    if (typeof fn !== 'function') {",
+    "      throw new Error('@rjsf/validator-ata: schema \"' + key + '\" was not compiled to a standalone validator');",
+    '    }',
     '    const result = fn(data);',
     '    validate.errors = result.valid ? null : result.errors;',
     '    return result.valid;',

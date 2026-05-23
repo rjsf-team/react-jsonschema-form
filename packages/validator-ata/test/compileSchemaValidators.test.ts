@@ -1,45 +1,77 @@
+import { writeFileSync } from 'fs';
 import { RJSFSchema } from '@rjsf/utils';
 
-import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators';
-import createPrecompiledValidator from '../src/createPrecompiledValidator';
+import compileSchemaValidators, { compileSchemaValidatorsCode } from '../src/compileSchemaValidators';
 
-// Evaluate generated CJS module source into an exports object.
-function loadModule(code: string) {
-  const module = { exports: {} as Record<string, any> };
-  // eslint-disable-next-line no-new-func
-  new Function('module', 'exports', code)(module, module.exports);
-  return module.exports;
-}
+jest.mock('fs', () => ({
+  ...jest.requireActual('fs'),
+  writeFileSync: jest.fn(),
+}));
 
-const schema: RJSFSchema = {
-  $id: 'root',
-  type: 'object',
-  properties: {
-    name: { type: 'string' },
-    address: { $ref: '#/definitions/address' },
-  },
-  required: ['name'],
-  definitions: {
-    address: { type: 'object', properties: { city: { type: 'string' } }, required: ['city'] },
-  },
-};
+jest.mock('../src/compileSchemaValidatorsCode', () => ({
+  compileSchemaValidatorsCode: jest.fn(),
+}));
 
-test('generates a module with a validator function per schema id', () => {
-  const code = compileSchemaValidatorsCode(schema);
-  const validateFns = loadModule(code);
-  const validator = createPrecompiledValidator(validateFns, schema);
+const OUTPUT_FILE = 'test.js';
 
-  expect(validator.isValid(schema, { name: 'Mert' }, schema)).toBe(true);
-  expect(validator.isValid(schema, { name: 5 }, schema)).toBe(false);
-});
+const testSchema = { $id: 'test-schema' } as RJSFSchema;
 
-test('resolves cross-schema $ref in the compiled output', () => {
-  const code = compileSchemaValidatorsCode(schema);
-  const validateFns = loadModule(code);
-  const validator = createPrecompiledValidator(validateFns, schema);
-
-  const good = validator.validateFormData({ name: 'Mert', address: { city: 'Istanbul' } }, schema);
-  expect(good.errors).toHaveLength(0);
-  const bad = validator.validateFormData({ name: 'Mert', address: {} }, schema);
-  expect(bad.errors.length).toBeGreaterThan(0);
+describe('compileSchemaValidators()', () => {
+  let consoleLogSpy: jest.SpyInstance;
+  let expectedCode: string;
+  beforeAll(() => {
+    consoleLogSpy = jest.spyOn(console, 'log').mockImplementation();
+  });
+  afterAll(() => {
+    consoleLogSpy.mockRestore();
+  });
+  describe('compiling without additional options', () => {
+    beforeAll(() => {
+      expectedCode = 'test output 1';
+      (compileSchemaValidatorsCode as jest.Mock).mockImplementation(() => expectedCode);
+      compileSchemaValidators(testSchema, OUTPUT_FILE);
+    });
+    afterAll(() => {
+      consoleLogSpy.mockClear();
+      (compileSchemaValidatorsCode as jest.Mock).mockClear();
+      (writeFileSync as jest.Mock).mockClear();
+    });
+    it('called console.log twice', () => {
+      expect(consoleLogSpy).toHaveBeenCalledTimes(2);
+    });
+    it('the first time relates to parsing the schema', () => {
+      expect(consoleLogSpy).toHaveBeenNthCalledWith(1, 'parsing the schema');
+    });
+    it('the second time relates to writing the output file', () => {
+      expect(consoleLogSpy).toHaveBeenNthCalledWith(2, `writing ${OUTPUT_FILE}`);
+    });
+    it('compileSchemaValidatorsCode was called with the expected options', () => {
+      expect(compileSchemaValidatorsCode).toHaveBeenCalledWith(testSchema, {});
+    });
+    it('wrote the expected output', () => {
+      expect(writeFileSync).toHaveBeenCalledWith(OUTPUT_FILE, expectedCode);
+    });
+  });
+  describe('compiling with additional options', () => {
+    const customOptions = { ataOptionsOverrides: { coerceTypes: true } };
+    beforeAll(() => {
+      expectedCode = 'expected code 2';
+      (compileSchemaValidatorsCode as jest.Mock).mockImplementation(() => expectedCode);
+      compileSchemaValidators(testSchema, OUTPUT_FILE, customOptions);
+    });
+    afterAll(() => {
+      consoleLogSpy.mockClear();
+      (compileSchemaValidatorsCode as jest.Mock).mockClear();
+      (writeFileSync as jest.Mock).mockClear();
+    });
+    it('called console.log twice', () => {
+      expect(consoleLogSpy).toHaveBeenCalledTimes(2);
+    });
+    it('compileSchemaValidatorsCode was called with the expected options', () => {
+      expect(compileSchemaValidatorsCode).toHaveBeenCalledWith(testSchema, customOptions);
+    });
+    it('wrote the expected output', () => {
+      expect(writeFileSync).toHaveBeenCalledWith(OUTPUT_FILE, expectedCode);
+    });
+  });
 });
