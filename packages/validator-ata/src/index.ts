@@ -1,6 +1,7 @@
 import customizeValidator from './customizeValidator';
+import createPrecompiledValidator from './createPrecompiledValidator';
 
-export { customizeValidator };
+export { customizeValidator, createPrecompiledValidator };
 export { default as ATAValidator } from './validator';
 export * from './types';
 
