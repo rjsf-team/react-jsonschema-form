@@ -1,30 +1,32 @@
-import { Component, RefObject, createRef, useEffect, useState, useCallback } from 'react';
-import { fireEvent, act, render, waitFor } from '@testing-library/react';
+import { Component, createRef, RefObject, useCallback, useEffect, useState } from 'react';
+import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Portal } from 'react-portal';
 import {
+  bracketNameGenerator,
+  buttonId,
+  dotNotationNameGenerator,
+  ErrorSchema,
+  Experimental_DefaultFormStateBehavior,
+  FieldProps,
+  FieldTemplateProps,
+  FormValidation,
   getTemplate,
   getUiOptions,
   optionalControlsId,
-  buttonId,
-  bracketNameGenerator,
-  dotNotationNameGenerator,
-  FieldProps,
-  FieldTemplateProps,
   RJSFSchema,
   UiSchema,
   ValidatorType,
   WidgetProps,
-  ErrorSchema,
-  FormValidation,
-  Experimental_DefaultFormStateBehavior,
 } from '@rjsf/utils';
 import validator, { customizeValidator } from '@rjsf/validator-ajv8';
 
 import Form, { FormProps, IChangeEvent } from '../src';
 import {
+  actWrappedDelayPromise,
   createComponent,
   createFormComponent,
+  delayPromise,
   describeRepeated,
   expectToHaveBeenCalledWithFormData,
   NoValFormProps,
@@ -152,7 +154,7 @@ describeRepeated('Form common', (createFormComponent) => {
       let addButton = node.querySelector<HTMLButtonElement>('.rjsf-object-property-expand button');
       expect(addButton).toBeInTheDocument();
       // click the add button
-      act(() => addButton!.click());
+      await user.click(addButton!);
 
       // Verify formData was casted to object
       expectToHaveBeenCalledWithFormData(
@@ -170,7 +172,7 @@ describeRepeated('Form common', (createFormComponent) => {
       addButton = node.querySelector<HTMLButtonElement>('.rjsf-array-item-add button');
       expect(addButton).toBeInTheDocument();
       // click the add button
-      act(() => addButton!.click());
+      await user.click(addButton!);
 
       // Verify formData was casted to array
       expectToHaveBeenCalledWithFormData(onChange, { unknownProperty: [undefined] }, 'root_unknownProperty');
@@ -430,25 +432,21 @@ describeRepeated('Form common', (createFormComponent) => {
       );
     });
 
-    it('should pass errors as the provided React component', () => {
+    it('should pass errors as the provided React component', async () => {
       // live validate does not run on initial render anymore
       expect(node.querySelectorAll('.error-detail li')).toHaveLength(0);
-      act(() => {
-        fireEvent.change(node.querySelector<HTMLInputElement>('input')!, {
-          target: { value: 'stillinvalid' },
-        });
-      });
+      const input = node.querySelector<HTMLInputElement>('input')!;
+      await user.clear(input);
+      await user.type(input, 'stillinvalid');
       expect(node.querySelectorAll('.error-detail li')).toHaveLength(1);
     });
 
-    it('should pass rawErrors as an array of strings', () => {
+    it('should pass rawErrors as an array of strings', async () => {
       // live validate does not run on initial render anymore
       expect(node.querySelectorAll('.raw-error')).toHaveLength(0);
-      act(() => {
-        fireEvent.change(node.querySelector<HTMLInputElement>('input')!, {
-          target: { value: 'stillinvalid' },
-        });
-      });
+      const input = node.querySelector<HTMLInputElement>('input')!;
+      await user.clear(input);
+      await user.type(input, 'stillinvalid');
       expect(node.querySelectorAll('.raw-error')).toHaveLength(1);
     });
 
@@ -493,12 +491,12 @@ describeRepeated('Form common', (createFormComponent) => {
     afterEach(() => {
       document.body.removeChild(domNode);
     });
-    it('should submit the form when clicked', () => {
+    it('should submit the form when clicked', async () => {
       const { node, onSubmit } = createFormComponent({ schema: {}, children: TWO_BUTTONS });
       const buttons = node.querySelectorAll<HTMLButtonElement>('button[type=submit]');
       expect(buttons).toHaveLength(2);
-      act(() => buttons[0].click());
-      act(() => buttons[1].click());
+      await user.click(buttons[0]);
+      await user.click(buttons[1]);
       expect(onSubmit).toHaveBeenCalledTimes(2);
     });
   });
@@ -693,7 +691,7 @@ describeRepeated('Form common', (createFormComponent) => {
       expect(node.querySelector<HTMLInputElement>('input[type=text]')!).toHaveValue('hello');
     });
 
-    it('should propagate referenced definition defaults for array items', () => {
+    it('should propagate referenced definition defaults for array items', async () => {
       const schema: RJSFSchema = {
         definitions: {
           testdef: { type: 'string', default: 'hello' },
@@ -706,12 +704,12 @@ describeRepeated('Form common', (createFormComponent) => {
 
       const { node } = createFormComponent({ schema });
 
-      fireEvent.click(node.querySelector('.rjsf-array-item-add button')!);
+      await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
       expect(node.querySelector<HTMLInputElement>('input[type=text]')!).toHaveValue('hello');
     });
 
-    it('should propagate referenced definition defaults in objects with additionalProperties', () => {
+    it('should propagate referenced definition defaults in objects with additionalProperties', async () => {
       const schema: RJSFSchema = {
         definitions: {
           testdef: { type: 'string' },
@@ -724,12 +722,12 @@ describeRepeated('Form common', (createFormComponent) => {
 
       const { node } = createFormComponent({ schema });
 
-      fireEvent.click(node.querySelector('.btn-add')!);
+      await user.click(node.querySelector('.btn-add')!);
 
       expect(node.querySelector<HTMLInputElement>('input[type=text]')!).toHaveValue('newKey');
     });
 
-    it('should propagate referenced definition defaults in objects with additionalProperties that have a type present', () => {
+    it('should propagate referenced definition defaults in objects with additionalProperties that have a type present', async () => {
       // Though `additionalProperties` has a `type` present here, it also has a `$ref` so that
       // referenced schema should override it.
       const schema: RJSFSchema = {
@@ -745,12 +743,12 @@ describeRepeated('Form common', (createFormComponent) => {
 
       const { node } = createFormComponent({ schema });
 
-      fireEvent.click(node.querySelector('.btn-add')!);
+      await user.click(node.querySelector('.btn-add')!);
 
       expect(node.querySelector<HTMLInputElement>('input[type=number]')).toHaveValue(0);
     });
 
-    it('should recursively handle referenced definitions', () => {
+    it('should recursively handle referenced definitions', async () => {
       const schema: RJSFSchema = {
         $ref: '#/definitions/node',
         definitions: {
@@ -773,7 +771,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
       expect(node.querySelector('#root_children_0_name')).not.toBeInTheDocument();
 
-      fireEvent.click(node.querySelector('.rjsf-array-item-add button')!);
+      await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
       expect(node.querySelector('#root_children_0_name')).toBeInTheDocument();
     });
@@ -888,12 +886,10 @@ describeRepeated('Form common', (createFormComponent) => {
       default: 'foo',
     };
 
-    it('should not set default when a text field is cleared', () => {
+    it('should not set default when a text field is cleared', async () => {
       const { node } = createFormComponent({ schema, formData: 'bar' });
 
-      fireEvent.change(node.querySelector<HTMLInputElement>('input')!, {
-        target: { value: '' },
-      });
+      await user.clear(node.querySelector<HTMLInputElement>('input')!);
 
       expect(node.querySelector<HTMLInputElement>('input')).toHaveValue('');
     });
@@ -929,7 +925,7 @@ describeRepeated('Form common', (createFormComponent) => {
     it('should propagate deeply nested defaults to submit handler', async () => {
       const { node, onSubmit } = createFormComponent({ schema });
 
-      fireEvent.click(node.querySelector('.rjsf-array-item-add button')!);
+      await user.click(node.querySelector('.rjsf-array-item-add button')!);
       await submitForm(node, user);
 
       expectToHaveBeenCalledWithFormData(onSubmit, { object: { array: [{ bool: true }] } }, true);
@@ -1142,7 +1138,7 @@ describeRepeated('Form common', (createFormComponent) => {
   });
 
   describe('Change handler', () => {
-    it('should call provided change handler on form state change with schema and uiSchema', () => {
+    it('should call provided change handler on form state change with schema and uiSchema', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -1165,9 +1161,7 @@ describeRepeated('Form common', (createFormComponent) => {
         formData,
       });
 
-      fireEvent.change(node.querySelector('[type=text]')!, {
-        target: { value: 'new' },
-      });
+      await user.type(node.querySelector('[type=text]')!, 'new');
 
       expectToHaveBeenCalledWithFormData(onChange, { foo: 'new' }, 'root_foo');
     });
@@ -1264,7 +1258,7 @@ describeRepeated('Form common', (createFormComponent) => {
       // There will be 3 ids, undefined for the setting of the defaults and then the two updated components
       expect(ids).toEqual([undefined, 'root_foo', 'root_baz']);
     });
-    it('should modify an allOf field when the defaults are set', () => {
+    it('should modify an allOf field when the defaults are set', async () => {
       const schema: RJSFSchema = {
         properties: {
           all_of_field: {
@@ -1299,11 +1293,8 @@ describeRepeated('Form common', (createFormComponent) => {
       const secondInputID = '#root_all_of_field_second';
       expect(node.querySelector(secondInputID)).toHaveAttribute('value', 'second!');
 
-      act(() => {
-        fireEvent.change(node.querySelector(secondInputID)!, {
-          target: { value: 'changed!' },
-        });
-      });
+      await user.clear(node.querySelector(secondInputID)!);
+      await user.type(node.querySelector(secondInputID)!, 'changed!');
 
       expectToHaveBeenCalledWithFormData(
         onChange,
@@ -1317,7 +1308,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
       expect(node.querySelector(secondInputID)).toHaveAttribute('value', 'changed!');
     });
-    it('should modify an oneOf field when the defaults are set', () => {
+    it('should modify an oneOf field when the defaults are set', async () => {
       const schema: RJSFSchema = {
         properties: {
           one_of_field: {
@@ -1352,11 +1343,8 @@ describeRepeated('Form common', (createFormComponent) => {
       const secondInputID = '#root_one_of_field_second';
       expect(node.querySelector(secondInputID)).toHaveAttribute('value', 'second!');
 
-      act(() => {
-        fireEvent.change(node.querySelector(secondInputID)!, {
-          target: { value: 'changed!' },
-        });
-      });
+      await user.clear(node.querySelector(secondInputID)!);
+      await user.type(node.querySelector(secondInputID)!, 'changed!');
 
       expectToHaveBeenCalledWithFormData(
         onChange,
@@ -1370,7 +1358,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
       expect(node.querySelector(secondInputID)).toHaveAttribute('value', 'changed!');
     });
-    it('should modify an anyOf field when the defaults are set', () => {
+    it('should modify an anyOf field when the defaults are set', async () => {
       const schema: RJSFSchema = {
         properties: {
           any_of_field: {
@@ -1405,11 +1393,8 @@ describeRepeated('Form common', (createFormComponent) => {
       const secondInputID = '#root_any_of_field_second';
       expect(node.querySelector(secondInputID)).toHaveAttribute('value', 'second!');
 
-      act(() => {
-        fireEvent.change(node.querySelector(secondInputID)!, {
-          target: { value: 'changed!' },
-        });
-      });
+      await user.clear(node.querySelector(secondInputID)!);
+      await user.type(node.querySelector(secondInputID)!, 'changed!');
 
       expectToHaveBeenCalledWithFormData(
         onChange,
@@ -1423,7 +1408,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
       expect(node.querySelector(secondInputID)).toHaveAttribute('value', 'changed!');
     });
-    it('should restore defaults when switching from null back to object option in oneOf', () => {
+    it('should restore defaults when switching from null back to object option in oneOf', async () => {
       // This test verifies that when switching from a null oneOf option back to an object option,
       // the defaults are correctly restored. Without the fix, the form would show empty/undefined values.
       const schema: RJSFSchema = {
@@ -1472,18 +1457,14 @@ describeRepeated('Form common', (createFormComponent) => {
       expect(contentInput!.value).toEqual('placeholder');
 
       // Switch to "No Configuration" (null option, index 2)
-      act(() => {
-        fireEvent.change(oneOfSelect!, { target: { value: '2' } });
-      });
+      await user.selectOptions(oneOfSelect!, '2');
 
       // Verify we're now on null option - content field should not exist
       expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')!.value).toEqual('2');
       expect(node.querySelector('#root_content')).not.toBeInTheDocument();
 
       // Switch back to "Advanced Configuration" (index 1)
-      act(() => {
-        fireEvent.change(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, { target: { value: '1' } });
-      });
+      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
 
       // The content field should be restored with defaults
       expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')!.value).toEqual('1');
@@ -1497,7 +1478,7 @@ describeRepeated('Form common', (createFormComponent) => {
       expect(lastFormData.types).toEqual('advanced');
       expect(lastFormData.content).toEqual('placeholder');
     });
-    it('should allow switching to null option in oneOf', () => {
+    it('should allow switching to null option in oneOf', async () => {
       // This test verifies that switching to a null option in oneOf works correctly.
       // Without the fix, the form would revert back to the previous option.
       // NOTE: This bug only manifests in controlled forms where parent updates formData prop.
@@ -1546,9 +1527,7 @@ describeRepeated('Form common', (createFormComponent) => {
       expect(node.querySelector('#root_content')).toBeInTheDocument();
 
       // Switch to "No Configuration" (null option, index 2)
-      act(() => {
-        fireEvent.change(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, { target: { value: '2' } });
-      });
+      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '2');
 
       // Simulate controlled form behavior by re-rendering with new formData
       rerender({
@@ -1567,7 +1546,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const lastFormData = onChangeCalls[onChangeCalls.length - 1].event.formData;
       expect(lastFormData == null).toBe(true);
     });
-    it('Should modify anyOf definition references when the defaults are set.', () => {
+    it('Should modify anyOf definition references when the defaults are set.', async () => {
       const schema: RJSFSchema = {
         definitions: {
           option1: {
@@ -1610,11 +1589,8 @@ describeRepeated('Form common', (createFormComponent) => {
       const secondInputID = '#root_any_of_field_second';
       expect(node.querySelector(secondInputID)).toHaveAttribute('value', 'second!');
 
-      act(() => {
-        fireEvent.change(node.querySelector(secondInputID)!, {
-          target: { value: 'changed!' },
-        });
-      });
+      await user.clear(node.querySelector(secondInputID)!);
+      await user.type(node.querySelector(secondInputID)!, 'changed!');
 
       expectToHaveBeenCalledWithFormData(
         onChange,
@@ -1628,7 +1604,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
       expect(node.querySelector(secondInputID)).toHaveAttribute('value', 'changed!');
     });
-    it('Should modify oneOf object with references when the defaults are set.', () => {
+    it('Should modify oneOf object with references when the defaults are set.', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         $defs: {
@@ -1663,11 +1639,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const protocolInputID = '#root_protocol';
       expect(node.querySelector(protocolInputID)).toHaveValue('0');
 
-      act(() => {
-        fireEvent.change(node.querySelector(protocolInputID)!, {
-          target: { value: '1' },
-        });
-      });
+      await user.selectOptions(node.querySelector(protocolInputID)!, '1');
 
       expectToHaveBeenCalledWithFormData(
         onChange,
@@ -1729,7 +1701,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const notApplicableInputID = '#root_a-1';
       const NoInputID = '#root_a-0';
 
-      it('Test with default constAsDefaults', () => {
+      it('Test with default constAsDefaults', async () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -1737,9 +1709,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
         expect(node.querySelector(notApplicableInputID)).toBeChecked();
 
-        act(() => {
-          fireEvent.click(node.querySelector(NoInputID)!);
-        });
+        await user.click(node.querySelector(NoInputID)!);
 
         expectToHaveBeenCalledWithFormData(onChange, { a: false }, 'root_a');
 
@@ -1747,7 +1717,7 @@ describeRepeated('Form common', (createFormComponent) => {
         expect(node.querySelector(notApplicableInputID)).not.toBeChecked();
         expect(node.querySelector('#root_b')).toBeInTheDocument();
       });
-      it('Test with constAsDefaults set to "never"', () => {
+      it('Test with constAsDefaults set to "never"', async () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
@@ -1758,9 +1728,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
         expect(node.querySelector(notApplicableInputID)).toBeChecked();
 
-        act(() => {
-          fireEvent.click(node.querySelector(NoInputID)!);
-        });
+        await user.click(node.querySelector(NoInputID)!);
 
         expectToHaveBeenCalledWithFormData(onChange, { a: false }, 'root_a');
 
@@ -1772,7 +1740,7 @@ describeRepeated('Form common', (createFormComponent) => {
   });
 
   describe('Blur handler', () => {
-    it('should call provided blur handler on form input blur event', () => {
+    it('should call provided blur handler on form input blur event', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -1788,16 +1756,15 @@ describeRepeated('Form common', (createFormComponent) => {
       const { node } = createFormComponent({ schema, formData, onBlur });
 
       const input = node.querySelector('[type=text]')!;
-      fireEvent.blur(input, {
-        target: { value: 'new' },
-      });
+      await user.type(input, 'new');
+      await user.tab();
 
       expect(onBlur).toHaveBeenLastCalledWith(input.id, 'new');
     });
   });
 
   describe('Focus handler', () => {
-    it('should call provided focus handler on form input focus event', () => {
+    it('should call provided focus handler on form input focus event', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -1807,15 +1774,13 @@ describeRepeated('Form common', (createFormComponent) => {
         },
       };
       const formData = {
-        foo: '',
+        foo: 'new',
       };
       const onFocus = jest.fn();
       const { node } = createFormComponent({ schema, formData, onFocus });
 
       const input = node.querySelector('[type=text]')!;
-      fireEvent.focus(input, {
-        target: { value: 'new' },
-      });
+      await user.click(input);
 
       expect(onFocus).toHaveBeenLastCalledWith(input.id, 'new');
     });
@@ -2212,19 +2177,17 @@ describeRepeated('Form common', (createFormComponent) => {
   });
 
   describe('Internal formData updates', () => {
-    it('root', () => {
+    it('root', async () => {
       const { node, onChange } = createFormComponent({
         ref: createRef(),
         schema: { type: 'string' },
       });
 
-      fireEvent.change(node.querySelector<HTMLInputElement>('input[type=text]')!, {
-        target: { value: 'yo' },
-      });
+      await user.type(node.querySelector<HTMLInputElement>('input[type=text]')!, 'yo');
 
       expectToHaveBeenCalledWithFormData(onChange, 'yo', 'root');
     });
-    it('object', () => {
+    it('object', async () => {
       const { node, onChange } = createFormComponent({
         ref: createRef(),
         schema: {
@@ -2237,13 +2200,11 @@ describeRepeated('Form common', (createFormComponent) => {
         },
       });
 
-      fireEvent.change(node.querySelector<HTMLInputElement>('input[type=text]')!, {
-        target: { value: 'yo' },
-      });
+      await user.type(node.querySelector<HTMLInputElement>('input[type=text]')!, 'yo');
 
       expectToHaveBeenCalledWithFormData(onChange, { foo: 'yo' }, 'root_foo');
     });
-    it('array of strings', () => {
+    it('array of strings', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         items: {
@@ -2252,14 +2213,12 @@ describeRepeated('Form common', (createFormComponent) => {
       };
       const { node, onChange } = createFormComponent({ ref: createRef(), schema });
 
-      fireEvent.click(node.querySelector('.rjsf-array-item-add button')!);
+      await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
-      fireEvent.change(node.querySelector<HTMLInputElement>('input[type=text]')!, {
-        target: { value: 'yo' },
-      });
+      await user.type(node.querySelector<HTMLInputElement>('input[type=text]')!, 'yo');
       expectToHaveBeenCalledWithFormData(onChange, ['yo'], 'root_0');
     });
-    it('array of objects', () => {
+    it('array of objects', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         items: {
@@ -2271,15 +2230,13 @@ describeRepeated('Form common', (createFormComponent) => {
       };
       const { node, onChange } = createFormComponent({ ref: createRef(), schema });
 
-      fireEvent.click(node.querySelector('.rjsf-array-item-add button')!);
+      await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
-      fireEvent.change(node.querySelector<HTMLInputElement>('input[type=text]')!, {
-        target: { value: 'yo' },
-      });
+      await user.type(node.querySelector<HTMLInputElement>('input[type=text]')!, 'yo');
 
       expectToHaveBeenCalledWithFormData(onChange, [{ name: 'yo' }], 'root_0_name');
     });
-    it('dependency with array of objects', () => {
+    it('dependency with array of objects', async () => {
       const schema: RJSFSchema = {
         definitions: {},
         type: 'object',
@@ -2316,13 +2273,11 @@ describeRepeated('Form common', (createFormComponent) => {
       const { node, onChange } = createFormComponent({ ref: createRef(), schema });
 
       const checkbox = node.querySelector('[type=checkbox]');
-      fireEvent.click(checkbox!);
+      await user.click(checkbox!);
 
-      fireEvent.click(node.querySelector('.rjsf-array-item-add button')!);
+      await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
-      fireEvent.change(node.querySelector<HTMLInputElement>('input[type=text]')!, {
-        target: { value: 'yo' },
-      });
+      await user.type(node.querySelector<HTMLInputElement>('input[type=text]')!, 'yo');
 
       expectToHaveBeenCalledWithFormData(
         onChange,
@@ -2343,21 +2298,17 @@ describeRepeated('Form common', (createFormComponent) => {
       };
 
       describe('Lazy validation', () => {
-        it('should not update the errorSchema when the formData changes', () => {
+        it('should not update the errorSchema when the formData changes', async () => {
           const { node, onChange } = createFormComponent({ schema });
 
-          fireEvent.change(node.querySelector<HTMLInputElement>('input[type=text]')!, {
-            target: { value: 'short' },
-          });
+          await user.type(node.querySelector<HTMLInputElement>('input[type=text]')!, 'short');
           expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ errorSchema: {} }), 'root');
         });
 
-        it('should not denote an error in the field', () => {
+        it('should not denote an error in the field', async () => {
           const { node } = createFormComponent({ schema });
 
-          fireEvent.change(node.querySelector<HTMLInputElement>('input[type=text]')!, {
-            target: { value: 'short' },
-          });
+          await user.type(node.querySelector<HTMLInputElement>('input[type=text]')!, 'short');
 
           expect(node.querySelectorAll('.rjsf-field-error')).toHaveLength(0);
         });
@@ -2381,17 +2332,15 @@ describeRepeated('Form common', (createFormComponent) => {
           await submitForm(node, user);
 
           // Fix the first field
-          fireEvent.change(node.querySelectorAll('input[type=text]')[0], {
-            target: { value: 'fixed error' },
-          });
+          await user.clear(node.querySelectorAll('input[type=text]')[0]);
+          await user.type(node.querySelectorAll('input[type=text]')[0], 'fixed error');
           await submitForm(node, user);
 
           expect(node.querySelectorAll('.rjsf-field-error')).toHaveLength(1);
 
           // Fix the second field
-          fireEvent.change(node.querySelectorAll('input[type=text]')[1], {
-            target: { value: 'fixed error too' },
-          });
+          await user.clear(node.querySelectorAll('input[type=text]')[1]);
+          await user.type(node.querySelectorAll('input[type=text]')[1], 'fixed error too');
           await submitForm(node, user);
 
           // No error remaining, shouldn't throw.
@@ -2402,15 +2351,13 @@ describeRepeated('Form common', (createFormComponent) => {
       });
 
       describe('Live validation', () => {
-        it('should update the errorSchema when the formData changes', () => {
+        it('should update the errorSchema when the formData changes', async () => {
           const { node, onChange } = createFormComponent({
             schema,
             liveValidate: true,
           });
 
-          fireEvent.change(node.querySelector<HTMLInputElement>('input[type=text]')!, {
-            target: { value: 'short' },
-          });
+          await user.type(node.querySelector<HTMLInputElement>('input[type=text]')!, 'short');
 
           expect(onChange).toHaveBeenLastCalledWith(
             expect.objectContaining({
@@ -2422,15 +2369,13 @@ describeRepeated('Form common', (createFormComponent) => {
           );
         });
 
-        it('should denote the new error in the field', () => {
+        it('should denote the new error in the field', async () => {
           const { node } = createFormComponent({
             schema,
             liveValidate: true,
           });
 
-          fireEvent.change(node.querySelector<HTMLInputElement>('input[type=text]')!, {
-            target: { value: 'short' },
-          });
+          await user.type(node.querySelector<HTMLInputElement>('input[type=text]')!, 'short');
 
           expect(node.querySelectorAll('.rjsf-field-error')).toHaveLength(1);
           expect(node.querySelector('.rjsf-field-string .error-detail')).toHaveTextContent(
@@ -2440,16 +2385,14 @@ describeRepeated('Form common', (createFormComponent) => {
       });
 
       describe('Disable validation onChange event', () => {
-        it('should not update errorSchema when the formData changes', () => {
+        it('should not update errorSchema when the formData changes', async () => {
           const { node, onChange } = createFormComponent({
             schema,
             noValidate: true,
             liveValidate: true,
           });
 
-          fireEvent.change(node.querySelector<HTMLInputElement>('input[type=text]')!, {
-            target: { value: 'short' },
-          });
+          await user.type(node.querySelector<HTMLInputElement>('input[type=text]')!, 'short');
 
           expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ errorSchema: {} }), 'root');
         });
@@ -2462,9 +2405,7 @@ describeRepeated('Form common', (createFormComponent) => {
             noValidate: true,
           });
 
-          fireEvent.change(node.querySelector<HTMLInputElement>('input[type=text]')!, {
-            target: { value: 'short' },
-          });
+          await user.type(node.querySelector<HTMLInputElement>('input[type=text]')!, 'short');
           await submitForm(node, user);
 
           expect(onSubmit).toHaveBeenLastCalledWith(
@@ -2490,14 +2431,13 @@ describeRepeated('Form common', (createFormComponent) => {
         });
 
         const input = node.querySelector<HTMLInputElement>('input[type=text]')!;
+        await user.type(input, 'short');
         const focusSpy = jest.fn();
         // Since programmatically triggering focus does not call onFocus, change the focus method to a spy
+        // Set up AFTER user.type so typing works (focus spy would prevent element from receiving focus)
         Object.defineProperty(input, 'focus', {
           configurable: true,
           value: focusSpy,
-        });
-        fireEvent.change(input, {
-          target: { value: 'short' },
         });
         await submitForm(node, user);
 
@@ -2520,21 +2460,16 @@ describeRepeated('Form common', (createFormComponent) => {
           schema,
           onError,
           focusOnFirstError,
-          uiSchema: {
-            'ui:disabled': true,
-          },
         });
 
         const input = node.querySelector<HTMLInputElement>('input[type=text]')!;
+        await user.type(input, 'short');
         const focusSpy = jest.fn();
         // Since programmatically triggering focus does not call onFocus, change the focus method to a spy
+        // Set up AFTER user.type so typing works (focus spy would prevent element from receiving focus)
         Object.defineProperty(input, 'focus', {
           configurable: true,
           value: focusSpy,
-        });
-
-        fireEvent.change(input, {
-          target: { value: 'short' },
         });
         await submitForm(node, user);
 
@@ -2567,15 +2502,13 @@ describeRepeated('Form common', (createFormComponent) => {
         });
 
         const input = node.querySelector<HTMLInputElement>('input[type=text]')!;
+        await user.type(input, 'valid string');
         const focusSpy = jest.fn();
         // Since programmatically triggering focus does not call onFocus, change the focus method to a spy
+        // Set up AFTER user.type so typing works (focus spy would prevent element from receiving focus)
         Object.defineProperty(input, 'focus', {
           configurable: true,
           value: focusSpy,
-        });
-
-        fireEvent.change(input, {
-          target: { value: 'valid string' },
         });
         await submitForm(node, user);
 
@@ -2593,9 +2526,7 @@ describeRepeated('Form common', (createFormComponent) => {
           schema,
         });
 
-        fireEvent.change(node.querySelector<HTMLInputElement>('input[type=text]')!, {
-          target: { value: 'short' },
-        });
+        await user.type(node.querySelector<HTMLInputElement>('input[type=text]')!, 'short');
         await submitForm(node, user);
 
         expect(onError).toHaveBeenLastCalledWith([
@@ -2612,9 +2543,8 @@ describeRepeated('Form common', (createFormComponent) => {
         expect(onError).toHaveBeenCalledTimes(1);
         onError.mockClear();
 
-        fireEvent.change(node.querySelector<HTMLInputElement>('input[type=text]')!, {
-          target: { value: 'long enough' },
-        });
+        await user.clear(node.querySelector<HTMLInputElement>('input[type=text]')!);
+        await user.type(node.querySelector<HTMLInputElement>('input[type=text]')!, 'long enough');
         await submitForm(node, user);
         expect(onError).not.toHaveBeenCalled();
         expect(onSubmit).toHaveBeenLastCalledWith(
@@ -2631,9 +2561,7 @@ describeRepeated('Form common', (createFormComponent) => {
           schema,
         });
 
-        fireEvent.change(node.querySelector<HTMLInputElement>('input[type=text]')!, {
-          target: { value: 'short' },
-        });
+        await user.type(node.querySelector<HTMLInputElement>('input[type=text]')!, 'short');
         await submitForm(node, user);
 
         const errorListHTML = '<li class="text-danger">must NOT have fewer than 8 characters</li>';
@@ -2642,9 +2570,8 @@ describeRepeated('Form common', (createFormComponent) => {
         expect(errors).toHaveLength(1);
         expect(errors[0].innerHTML).toEqual(errorListHTML);
 
-        fireEvent.change(node.querySelector<HTMLInputElement>('input[type=text]')!, {
-          target: { value: 'long enough' },
-        });
+        await user.clear(node.querySelector<HTMLInputElement>('input[type=text]')!);
+        await user.type(node.querySelector<HTMLInputElement>('input[type=text]')!, 'long enough');
         await submitForm(node, user);
         expect(node.querySelectorAll('.error-detail')).toHaveLength(0);
       });
@@ -2676,17 +2603,14 @@ describeRepeated('Form common', (createFormComponent) => {
         ]);
       });
 
-      it('should denote the error in the field', () => {
+      it('should denote the error in the field', async () => {
         const { node } = createFormComponent(formProps);
 
         // live validate does not run on initial render anymore
         expect(node.querySelectorAll('.rjsf-field-error')).toHaveLength(0);
 
-        act(() => {
-          fireEvent.change(node.querySelector<HTMLInputElement>('input')!, {
-            target: { value: 'shorts' },
-          });
-        });
+        await user.clear(node.querySelector<HTMLInputElement>('input')!);
+        await user.type(node.querySelector<HTMLInputElement>('input')!, 'shorts');
 
         expect(node.querySelectorAll('.rjsf-field-error')).toHaveLength(1);
         expect(node.querySelector('.rjsf-field-string .error-detail')).toHaveTextContent(
@@ -2731,17 +2655,14 @@ describeRepeated('Form common', (createFormComponent) => {
         ]);
       });
 
-      it('should denote the error in the field', () => {
+      it('should denote the error in the field', async () => {
         const { node } = createFormComponent(formProps);
 
         // live validate does not run on initial render anymore
         expect(node.querySelectorAll('.rjsf-field-error')).toHaveLength(0);
 
-        act(() => {
-          fireEvent.change(node.querySelector<HTMLInputElement>('input')!, {
-            target: { value: 'shorts' },
-          });
-        });
+        await user.clear(node.querySelector<HTMLInputElement>('input')!);
+        await user.type(node.querySelector<HTMLInputElement>('input')!, 'shorts');
         const liNodes = node.querySelectorAll('.rjsf-field-string .error-detail li');
         const errors = [].map.call(liNodes, (li: Element) => li.textContent);
 
@@ -2792,16 +2713,13 @@ describeRepeated('Form common', (createFormComponent) => {
         ]);
       });
 
-      it('should denote the error in the field', () => {
+      it('should denote the error in the field', async () => {
         const { node } = createFormComponent(formProps);
         // live validate does not run on initial render anymore
         expect(node.querySelectorAll('.rjsf-field-error')).toHaveLength(0);
 
-        act(() => {
-          fireEvent.change(node.querySelector<HTMLInputElement>('input')!, {
-            target: { value: 'shorts' },
-          });
-        });
+        await user.clear(node.querySelector<HTMLInputElement>('input')!);
+        await user.type(node.querySelector<HTMLInputElement>('input')!, 'shorts');
         const errorDetail = node.querySelector('.rjsf-field-object .rjsf-field-string .error-detail');
 
         expect(node.querySelectorAll('.rjsf-field-error')).toHaveLength(1);
@@ -2841,7 +2759,7 @@ describeRepeated('Form common', (createFormComponent) => {
         ]);
       });
 
-      it('should denote the error in the item field in error', () => {
+      it('should denote the error in the item field in error', async () => {
         const { node } = createFormComponent(formProps);
         const fieldNodes = node.querySelectorAll('.rjsf-field-string');
 
@@ -2849,11 +2767,8 @@ describeRepeated('Form common', (createFormComponent) => {
         expect(fieldNodes[1].classList.contains('rjsf-field-error')).toBe(false);
 
         // Change the End field to a larger value than Start field to remove customValidate raised errors.
-        act(() => {
-          fireEvent.change(fieldNodes[1].querySelector('input')!, {
-            target: { value: 'bad' },
-          });
-        });
+        await user.clear(fieldNodes[1].querySelector('input')!);
+        await user.type(fieldNodes[1].querySelector('input')!, 'bad');
 
         const liNodes = fieldNodes[1].querySelectorAll('.rjsf-field-string .error-detail li');
         const errors = [].map.call(liNodes, (li: Element) => li.textContent);
@@ -2916,7 +2831,7 @@ describeRepeated('Form common', (createFormComponent) => {
         ]);
       });
 
-      it('should denote the error in the nested item field in error', () => {
+      it('should denote the error in the nested item field in error', async () => {
         const { node } = createFormComponent({
           ...formProps,
           formData: {
@@ -2931,11 +2846,8 @@ describeRepeated('Form common', (createFormComponent) => {
         // live validate does not run on initial render anymore
         expect(errors).toEqual([]);
 
-        act(() => {
-          fireEvent.change(fields[1].querySelector('input')!, {
-            target: { value: 'bad' },
-          });
-        });
+        await user.clear(fields[1].querySelector('input')!);
+        await user.type(fields[1].querySelector('input')!, 'bad');
 
         liNodes = node.querySelectorAll('.rjsf-field-string .error-detail li');
         errors = [].map.call(liNodes, (li: Element) => li.textContent);
@@ -3007,7 +2919,7 @@ describeRepeated('Form common', (createFormComponent) => {
         expect(focusSpy).toHaveBeenCalledTimes(1);
       });
 
-      it('should denote the error in the nested item field in error', () => {
+      it('should denote the error in the nested item field in error', async () => {
         const { node } = createFormComponent(formProps);
 
         const fields = node.querySelectorAll('.rjsf-field-string');
@@ -3019,11 +2931,8 @@ describeRepeated('Form common', (createFormComponent) => {
         // live validate does not run on initial render anymore
         expect(errors).toEqual([null, null, null, null]);
 
-        act(() => {
-          fireEvent.change(fields[0].querySelector('input')!, {
-            target: { value: 'bad' },
-          });
-        });
+        await user.clear(fields[0].querySelector('input')!);
+        await user.type(fields[0].querySelector('input')!, 'bad');
         errors = [].map.call(fields, (field: Element) => {
           const li = field.querySelector('.error-detail li');
           return li && li.textContent;
@@ -3075,18 +2984,15 @@ describeRepeated('Form common', (createFormComponent) => {
         ]);
       });
 
-      it('should denote the error in the array nested item', () => {
+      it('should denote the error in the array nested item', async () => {
         const { node } = createFormComponent(formProps);
         const fieldNodes = node.querySelectorAll('.rjsf-field-string');
 
         // Initial render no longer does live validation
         expect(fieldNodes[1].classList.contains('rjsf-field-error')).toBe(false);
         // Change the End field to a larger value than Start field to remove customValidate raised errors.
-        act(() => {
-          fireEvent.change(fieldNodes[1].querySelector('input')!, {
-            target: { value: 'bad' },
-          });
-        });
+        await user.clear(fieldNodes[1].querySelector('input')!);
+        await user.type(fieldNodes[1].querySelector('input')!, 'bad');
 
         const liNodes = fieldNodes[1].querySelectorAll('.error-detail li');
         const errors = [].map.call(liNodes, (li: Element) => li.textContent);
@@ -3158,7 +3064,7 @@ describeRepeated('Form common', (createFormComponent) => {
         );
       });
 
-      it('should only show errors for properties in selected branch', () => {
+      it('should only show errors for properties in selected branch', async () => {
         const { node, onChange } = createFormComponent({
           ref: createRef(),
           schema,
@@ -3166,11 +3072,7 @@ describeRepeated('Form common', (createFormComponent) => {
           formData: { branch: 2 },
         });
 
-        act(() => {
-          fireEvent.change(node.querySelectorAll<HTMLInputElement>('input[type=number]')[0], {
-            target: { value: 0 }, // Enter a value into the first number input
-          });
-        });
+        await user.type(node.querySelectorAll<HTMLInputElement>('input[type=number]')[0], '0');
 
         expect(onChange).toHaveBeenLastCalledWith(
           expect.objectContaining({
@@ -3184,7 +3086,7 @@ describeRepeated('Form common', (createFormComponent) => {
         );
       });
 
-      it('should not show any errors when branch is empty', () => {
+      it('should not show any errors when branch is empty', async () => {
         const { node, onChange } = createFormComponent({
           ref: createRef(),
           schema,
@@ -3192,11 +3094,7 @@ describeRepeated('Form common', (createFormComponent) => {
           formData: { branch: 3 },
         });
 
-        act(() => {
-          fireEvent.change(node.querySelector('select')!, {
-            target: { value: 2 }, // The selector uses indexes rather than values so index 2 is branch value 3
-          });
-        });
+        await user.selectOptions(node.querySelector('select')!, '3'); // Select by label/text since selectOptions matches text before value attribute
 
         expect(onChange).toHaveBeenLastCalledWith(
           expect.objectContaining({
@@ -3208,7 +3106,7 @@ describeRepeated('Form common', (createFormComponent) => {
     });
 
     describe('customValidate errors, live validation', () => {
-      it('customValidate should raise an error when End is larger than Start field.', () => {
+      it('customValidate should raise an error when End is larger than Start field.', async () => {
         const schema: RJSFSchema = {
           required: ['Start', 'End'],
           properties: {
@@ -3241,22 +3139,16 @@ describeRepeated('Form common', (createFormComponent) => {
         expect(node.querySelectorAll('#root_Start__error')).toHaveLength(0);
 
         // Change the End field to a larger value than Start field to remove customValidate raised errors.
-        const endInput = node.querySelector('#root_End');
-        act(() => {
-          fireEvent.change(endInput!, {
-            target: { value: 1 },
-          });
-        });
+        const endInput = node.querySelector<HTMLInputElement>('#root_End')!;
+        await user.clear(endInput);
+        await user.type(endInput, '1');
         expect(node.querySelectorAll('#root_Start__error')).toHaveLength(1);
         let errorMessageContent = node.querySelector('#root_Start__error .text-danger');
         expect(errorMessageContent).toHaveTextContent('Validate error: Test should be LE than End');
 
         // Change the End field to a larger value than Start field to remove customValidate raised errors.
-        act(() => {
-          fireEvent.change(endInput!, {
-            target: { value: 3 },
-          });
-        });
+        await user.clear(endInput);
+        await user.type(endInput, '3');
 
         expect(node.querySelectorAll('#root_Start__error')).toHaveLength(0);
         expect(onChange).toHaveBeenLastCalledWith(
@@ -3267,11 +3159,8 @@ describeRepeated('Form common', (createFormComponent) => {
         );
 
         // Change the End field to a lesser value than Start field to raise customValidate errors.
-        act(() => {
-          fireEvent.change(endInput!, {
-            target: { value: 0 },
-          });
-        });
+        await user.clear(endInput);
+        await user.type(endInput, '0');
 
         expect(node.querySelectorAll('#root_Start__error')).toHaveLength(1);
         errorMessageContent = node.querySelector('#root_Start__error .text-danger');
@@ -3300,7 +3189,7 @@ describeRepeated('Form common', (createFormComponent) => {
       },
     };
 
-    it('should replace state when props remove formData keys', () => {
+    it('should replace state when props remove formData keys', async () => {
       const formData = { foo: 'foo', bar: 'bar' };
       const { node, onChange, rerender } = createFormComponent({
         ref: createRef(),
@@ -3319,14 +3208,13 @@ describeRepeated('Form common', (createFormComponent) => {
         formData: { bar: 'bar' },
       });
 
-      fireEvent.change(node.querySelector('#root_bar')!, {
-        target: { value: 'baz' },
-      });
+      await user.clear(node.querySelector('#root_bar')!);
+      await user.type(node.querySelector('#root_bar')!, 'baz');
 
       expectToHaveBeenCalledWithFormData(onChange, { bar: 'baz' }, 'root_bar');
     });
 
-    it('should replace state when props change formData keys', () => {
+    it('should replace state when props change formData keys', async () => {
       const formData = { foo: 'foo', bar: 'bar' };
       const { node, onChange, rerender } = createFormComponent({
         ref: createRef(),
@@ -3346,9 +3234,8 @@ describeRepeated('Form common', (createFormComponent) => {
         formData: { foo: 'foo', baz: 'bar' },
       });
 
-      fireEvent.change(node.querySelector('#root_baz')!, {
-        target: { value: 'baz' },
-      });
+      await user.clear(node.querySelector('#root_baz')!);
+      await user.type(node.querySelector('#root_baz')!, 'baz');
 
       expectToHaveBeenCalledWithFormData(onChange, { foo: 'foo', baz: 'baz' }, 'root_baz');
     });
@@ -3581,8 +3468,6 @@ describeRepeated('Form common', (createFormComponent) => {
           title: '',
         },
       ]);
-      // We use setTimeout with a delay of 0ms to allow all asynchronous operations to complete in the React component.
-      // Despite this being a workaround, it turned out to be the only effective method to handle this test case.
     });
   });
 
@@ -3659,7 +3544,7 @@ describeRepeated('Form common', (createFormComponent) => {
   });
 
   describe('Nested forms', () => {
-    it('should call provided submit handler with form state', () => {
+    it('should call provided submit handler with form state', async () => {
       const innerOnSubmit = jest.fn();
       const outerOnSubmit = jest.fn();
       let innerRef: RefObject<HTMLDivElement> | undefined;
@@ -3707,9 +3592,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const arrayForm = innerRef!.current!.querySelector('form')!;
       const arraySubmit = arrayForm.querySelector<HTMLButtonElement>('.array-form-submit')!;
 
-      act(() => {
-        arraySubmit.click();
-      });
+      await user.click(arraySubmit);
 
       expect(innerOnSubmit).toHaveBeenCalledTimes(1);
       expect(outerOnSubmit).not.toHaveBeenCalled();
@@ -3754,7 +3637,7 @@ describeRepeated('Form common', (createFormComponent) => {
       await submitForm(node, user);
       expect(onError).not.toHaveBeenCalled();
     });
-    it('should show dependency defaults for uncontrolled components', () => {
+    it('should show dependency defaults for uncontrolled components', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -3770,9 +3653,7 @@ describeRepeated('Form common', (createFormComponent) => {
       };
       const { node } = createFormComponent({ schema });
 
-      fireEvent.change(node.querySelector('#root_firstName')!, {
-        target: { value: 'Chuck' },
-      });
+      await user.type(node.querySelector('#root_firstName')!, 'Chuck');
       expect(node.querySelector('#root_lastName')).toHaveValue('Norris');
     });
   });
@@ -3784,16 +3665,14 @@ describe('Live validation onBlur', () => {
     minLength: 8,
   };
 
-  it('does not occur during onChange, no errors produced', () => {
+  it('does not occur during onChange, no errors produced', async () => {
     const onBlur = jest.fn();
     const { node, onChange } = createFormComponent({
       schema,
       onBlur,
       liveValidate: 'onBlur',
     });
-    fireEvent.change(node.querySelector<HTMLInputElement>('input[type=text]')!, {
-      target: { value: 'short' },
-    });
+    await user.type(node.querySelector<HTMLInputElement>('input[type=text]')!, 'short');
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
         formData: 'short',
@@ -3805,7 +3684,7 @@ describe('Live validation onBlur', () => {
     expect(onBlur).not.toHaveBeenCalled();
   });
 
-  it('occurs during onBlur, onChange not called during blur due to no state update', () => {
+  it('occurs during onBlur, onChange not called during blur due to no state update', async () => {
     const onBlur = jest.fn();
     const { node, onChange } = createFormComponent({
       schema,
@@ -3813,10 +3692,8 @@ describe('Live validation onBlur', () => {
       liveValidate: 'onBlur',
     });
     const element = node.querySelector<HTMLInputElement>('input[type=text]')!;
-    fireEvent.change(element, {
-      target: { value: 'longenough' },
-    });
-    expect(onChange).toHaveBeenCalledTimes(1);
+    await user.type(element, 'longenough');
+    const changeCallCount = onChange.mock.calls.length;
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
         formData: 'longenough',
@@ -3825,13 +3702,13 @@ describe('Live validation onBlur', () => {
       'root',
     );
 
-    fireEvent.blur(element);
+    await user.tab();
 
     expect(onBlur).toHaveBeenLastCalledWith('root', 'longenough');
-    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenCalledTimes(changeCallCount);
   });
 
-  it('occurs during onBlur, onChange called during blur with errors due to a state update', () => {
+  it('occurs during onBlur, onChange called during blur with errors due to a state update', async () => {
     const onBlur = jest.fn();
     const { node, onChange } = createFormComponent({
       schema,
@@ -3839,9 +3716,8 @@ describe('Live validation onBlur', () => {
       liveValidate: 'onBlur',
     });
     const element = node.querySelector<HTMLInputElement>('input[type=text]')!;
-    fireEvent.change(element, {
-      target: { value: 'short' },
-    });
+    await user.type(element, 'short');
+    const changeCallCount = onChange.mock.calls.length;
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
         formData: 'short',
@@ -3849,9 +3725,8 @@ describe('Live validation onBlur', () => {
       }),
       'root',
     );
-    expect(onChange).toHaveBeenCalledTimes(1);
 
-    fireEvent.blur(element);
+    await user.tab();
 
     expect(onBlur).toHaveBeenLastCalledWith('root', 'short');
     expect(onChange).toHaveBeenLastCalledWith(
@@ -3863,7 +3738,7 @@ describe('Live validation onBlur', () => {
       }),
       'root',
     );
-    expect(onChange).toHaveBeenCalledTimes(2);
+    expect(onChange).toHaveBeenCalledTimes(changeCallCount + 1);
   });
 });
 
@@ -3878,7 +3753,7 @@ describe('omitExtraData and live omit onBlur', () => {
   const formData = { foo: 'foo', bar: 'bar' };
   const formData1 = { foo: 'foo', bar: 'bar', baz: 'baz' };
 
-  it('does not occur during onChange, no extra data removed', () => {
+  it('does not occur during onChange, no extra data removed', async () => {
     const onBlur = jest.fn();
     const { node, onChange } = createFormComponent({
       schema,
@@ -3888,9 +3763,7 @@ describe('omitExtraData and live omit onBlur', () => {
       liveOmit: 'onBlur',
     });
 
-    fireEvent.change(node.querySelector('#root_foo')!, {
-      target: { value: '' },
-    });
+    await user.clear(node.querySelector('#root_foo')!);
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
         formData: { ...formData1, foo: undefined },
@@ -3901,7 +3774,7 @@ describe('omitExtraData and live omit onBlur', () => {
     expect(onBlur).not.toHaveBeenCalled();
   });
 
-  it('occurs during onBlur, onChange not called during blur due to no state update', () => {
+  it('occurs during onBlur, onChange not called during blur due to no state update', async () => {
     const onBlur = jest.fn();
     const { node, onChange } = createFormComponent({
       schema,
@@ -3910,22 +3783,17 @@ describe('omitExtraData and live omit onBlur', () => {
       omitExtraData: true,
       liveOmit: 'onBlur',
     });
-    const element = node.querySelector<HTMLInputElement>('input[type=text]')!;
-    fireEvent.change(node.querySelector('#root_foo')!, {
-      target: { value: '' },
-    });
-    fireEvent.change(node.querySelector('#root_foo')!, {
-      target: { value: 'foo' },
-    });
-    expect(onChange).toHaveBeenCalledTimes(2);
+    await user.clear(node.querySelector('#root_foo')!);
+    await user.type(node.querySelector('#root_foo')!, 'foo');
+    const changeCallCount = onChange.mock.calls.length;
 
-    fireEvent.blur(element);
+    await user.tab();
 
     expect(onBlur).toHaveBeenLastCalledWith('root_foo', 'foo');
-    expect(onChange).toHaveBeenCalledTimes(2);
+    expect(onChange).toHaveBeenCalledTimes(changeCallCount);
   });
 
-  it('occurs during onBlur, onChange called during blur due to extra data removal in state', () => {
+  it('occurs during onBlur, onChange called during blur due to extra data removal in state', async () => {
     const onBlur = jest.fn();
     const { node, onChange } = createFormComponent({
       schema,
@@ -3934,19 +3802,16 @@ describe('omitExtraData and live omit onBlur', () => {
       omitExtraData: true,
       liveOmit: 'onBlur',
     });
-    const element = node.querySelector<HTMLInputElement>('input[type=text]')!;
-    fireEvent.change(node.querySelector('#root_foo')!, {
-      target: { value: '' },
-    });
+    await user.clear(node.querySelector('#root_foo')!);
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
         formData: { ...formData1, foo: undefined },
       }),
       'root_foo',
     );
-    expect(onChange).toHaveBeenCalledTimes(1);
+    const changeCallCount = onChange.mock.calls.length;
 
-    fireEvent.blur(element);
+    await user.tab();
 
     expect(onBlur).toHaveBeenLastCalledWith('root_foo', '');
     expect(onChange).toHaveBeenLastCalledWith(
@@ -3955,12 +3820,12 @@ describe('omitExtraData and live omit onBlur', () => {
       }),
       'root_foo',
     );
-    expect(onChange).toHaveBeenCalledTimes(2);
+    expect(onChange).toHaveBeenCalledTimes(changeCallCount + 1);
   });
 });
 
 describe('Form omitExtraData and liveOmit', () => {
-  it('should call omitExtraData when the omitExtraData prop is true and liveOmit is true', () => {
+  it('should call omitExtraData when the omitExtraData prop is true and liveOmit is true', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -3986,14 +3851,13 @@ describe('Form omitExtraData and liveOmit', () => {
 
     const theSpy = jest.spyOn(ref.current!, 'omitExtraData').mockReturnValue({ foo: '' });
 
-    fireEvent.change(node.querySelector('[type=text]')!, {
-      target: { value: 'new' },
-    });
+    await user.clear(node.querySelector('[type=text]')!);
+    await user.type(node.querySelector('[type=text]')!, 'new');
 
-    expect(theSpy).toHaveBeenCalledTimes(1);
+    expect(theSpy).toHaveBeenCalled();
   });
 
-  it('should not call omitExtraData when the omitExtraData prop is true and liveOmit is unspecified', () => {
+  it('should not call omitExtraData when the omitExtraData prop is true and liveOmit is unspecified', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -4016,14 +3880,13 @@ describe('Form omitExtraData and liveOmit', () => {
 
     const theSpy = jest.spyOn(ref.current!, 'omitExtraData').mockReturnValue({ foo: '' });
 
-    fireEvent.change(node.querySelector('[type=text]')!, {
-      target: { value: 'new' },
-    });
+    await user.clear(node.querySelector('[type=text]')!);
+    await user.type(node.querySelector('[type=text]')!, 'new');
 
     expect(theSpy).not.toHaveBeenCalled();
   });
 
-  it('should not omit data on change with omitExtraData=false and liveOmit=false', () => {
+  it('should not omit data on change with omitExtraData=false and liveOmit=false', async () => {
     const omitExtraData = false;
     const liveOmit = false;
     const schema: RJSFSchema = {
@@ -4042,9 +3905,8 @@ describe('Form omitExtraData and liveOmit', () => {
       liveOmit,
     });
 
-    fireEvent.change(node.querySelector('#root_foo')!, {
-      target: { value: 'foobar' },
-    });
+    await user.clear(node.querySelector('#root_foo')!);
+    await user.type(node.querySelector('#root_foo')!, 'foobar');
 
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
@@ -4054,7 +3916,7 @@ describe('Form omitExtraData and liveOmit', () => {
     );
   });
 
-  it('should not omit data on change with omitExtraData=true and liveOmit=false', () => {
+  it('should not omit data on change with omitExtraData=true and liveOmit=false', async () => {
     const omitExtraData = true;
     const liveOmit = false;
     const schema: RJSFSchema = {
@@ -4072,14 +3934,13 @@ describe('Form omitExtraData and liveOmit', () => {
       liveOmit,
     });
 
-    fireEvent.change(node.querySelector('#root_foo')!, {
-      target: { value: 'foobar' },
-    });
+    await user.clear(node.querySelector('#root_foo')!);
+    await user.type(node.querySelector('#root_foo')!, 'foobar');
 
     expectToHaveBeenCalledWithFormData(onChange, { foo: 'foobar', baz: 'baz' }, 'root_foo');
   });
 
-  it('should not omit data on change with omitExtraData=false and liveOmit=true', () => {
+  it('should not omit data on change with omitExtraData=false and liveOmit=true', async () => {
     const omitExtraData = false;
     const liveOmit = true;
     const schema: RJSFSchema = {
@@ -4097,14 +3958,13 @@ describe('Form omitExtraData and liveOmit', () => {
       liveOmit,
     });
 
-    fireEvent.change(node.querySelector('#root_foo')!, {
-      target: { value: 'foobar' },
-    });
+    await user.clear(node.querySelector('#root_foo')!);
+    await user.type(node.querySelector('#root_foo')!, 'foobar');
 
     expectToHaveBeenCalledWithFormData(onChange, { foo: 'foobar', baz: 'baz' }, 'root_foo');
   });
 
-  it('should omit data on change with omitExtraData=true and liveOmit=true', () => {
+  it('should omit data on change with omitExtraData=true and liveOmit=true', async () => {
     const omitExtraData = true;
     const liveOmit = true;
     const schema: RJSFSchema = {
@@ -4122,14 +3982,13 @@ describe('Form omitExtraData and liveOmit', () => {
       liveOmit,
     });
 
-    fireEvent.change(node.querySelector('#root_foo')!, {
-      target: { value: 'foobar' },
-    });
+    await user.clear(node.querySelector('#root_foo')!);
+    await user.type(node.querySelector('#root_foo')!, 'foobar');
 
     expectToHaveBeenCalledWithFormData(onChange, { foo: 'foobar' }, 'root_foo');
   });
 
-  it('should not omit additionalProperties on change with omitExtraData=true and liveOmit=true', () => {
+  it('should not omit additionalProperties on change with omitExtraData=true and liveOmit=true', async () => {
     const omitExtraData = true;
     const liveOmit = true;
     const schema: RJSFSchema = {
@@ -4151,14 +4010,13 @@ describe('Form omitExtraData and liveOmit', () => {
       liveOmit,
     });
 
-    fireEvent.change(node.querySelector('#root_foo')!, {
-      target: { value: 'foobar' },
-    });
+    await user.clear(node.querySelector('#root_foo')!);
+    await user.type(node.querySelector('#root_foo')!, 'foobar');
 
     expectToHaveBeenCalledWithFormData(onChange, { foo: 'foobar', add: { prop: 123 } }, 'root_foo');
   });
 
-  it('should rename formData key if key input is renamed in a nested object with omitExtraData=true and liveOmit=true', () => {
+  it('should rename formData key if key input is renamed in a nested object with omitExtraData=true and liveOmit=true', async () => {
     const { node, onChange } = createFormComponent({
       schema: {
         type: 'object',
@@ -4173,15 +4031,15 @@ describe('Form omitExtraData and liveOmit', () => {
       liveOmit: true,
     });
 
-    const textNode = node.querySelector('#root_nested_key1-key');
-    fireEvent.blur(textNode!, {
-      target: { value: 'key1new' },
-    });
+    const textNode = node.querySelector<HTMLInputElement>('#root_nested_key1-key')!;
+    await user.clear(textNode);
+    await user.type(textNode, 'key1new');
+    await user.tab();
 
     expectToHaveBeenCalledWithFormData(onChange, { nested: { key1new: 'value' } }, 'root_nested');
   });
 
-  it('should allow oneOf data entry with omitExtraData=true and liveOmit=true', () => {
+  it('should allow oneOf data entry with omitExtraData=true and liveOmit=true', async () => {
     const { node, onChange } = createFormComponent({
       schema: {
         type: 'object',
@@ -4209,15 +4067,13 @@ describe('Form omitExtraData and liveOmit', () => {
       liveOmit: true,
     });
 
-    const textNode = node.querySelector('#root_lorem');
-    fireEvent.change(textNode!, {
-      target: { value: '12' },
-    });
+    const textNode = node.querySelector('#root_lorem')!;
+    await user.type(textNode, '12');
 
     expectToHaveBeenCalledWithFormData(onChange, { lorem: '12' }, 'root_lorem');
   });
 
-  it('should allow anyOf data entry with omitExtraData=true and liveOmit=true', () => {
+  it('should allow anyOf data entry with omitExtraData=true and liveOmit=true', async () => {
     const { node, onChange } = createFormComponent({
       schema: {
         type: 'object',
@@ -4245,15 +4101,13 @@ describe('Form omitExtraData and liveOmit', () => {
       liveOmit: true,
     });
 
-    const textNode = node.querySelector('#root_ipsum');
-    fireEvent.change(textNode!, {
-      target: { value: '12' },
-    });
+    const textNode = node.querySelector('#root_ipsum')!;
+    await user.type(textNode, '12');
 
     expectToHaveBeenCalledWithFormData(onChange, { ipsum: '12' }, 'root_ipsum');
   });
 
-  it('should not omit conditionally displayed fields with nested if/then when omitExtraData=true and liveOmit=true', () => {
+  it('should not omit conditionally displayed fields with nested if/then when omitExtraData=true and liveOmit=true', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -4287,9 +4141,9 @@ describe('Form omitExtraData and liveOmit', () => {
       liveOmit: true,
     });
 
-    fireEvent.change(node.querySelector('#root_nested_otherProperty')!, {
-      target: { value: 'new value' },
-    });
+    const otherPropInput = node.querySelector<HTMLInputElement>('#root_nested_otherProperty')!;
+    await user.clear(otherPropInput);
+    await user.type(otherPropInput, 'new value');
 
     // The otherProperty should NOT be omitted because it's a valid conditional field
     expectToHaveBeenCalledWithFormData(
@@ -4339,12 +4193,10 @@ describe('Form omitExtraData and liveOmit', () => {
       ...props,
       extraErrors,
     });
-
-    setTimeout(() => {
-      expect(node.querySelectorAll('.error-detail li')).toHaveLength(2);
-    }, 0);
-    // We use setTimeout with a delay of 0ms to allow all asynchronous operations to complete in the React component.
+    // We use delayPromist of 0ms to allow all asynchronous operations to complete in the React component.
     // Despite this being a workaround, it turned out to be the only effective method to handle this test case.
+    await delayPromise(0);
+    expect(node.querySelectorAll('.error-detail li')).toHaveLength(2);
   });
 });
 
@@ -4488,7 +4340,7 @@ describe('omitExtraData prunes empty optional objects', () => {
     expectToHaveBeenCalledWithFormData(onSubmit, { name: 'Alice', address: { street: '123 Main St' } }, true);
   });
 
-  it('prunes an empty optional object on change when omitExtraData and liveOmit are true', () => {
+  it('prunes an empty optional object on change when omitExtraData and liveOmit are true', async () => {
     const { node, onChange } = createFormComponent({
       schema,
       formData: { name: 'Alice', address: { street: 'value' } },
@@ -4496,14 +4348,12 @@ describe('omitExtraData prunes empty optional objects', () => {
       liveOmit: true,
     });
 
-    fireEvent.change(node.querySelector('#root_address_street')!, {
-      target: { value: '' },
-    });
+    await user.clear(node.querySelector('#root_address_street')!);
 
     expectToHaveBeenCalledWithFormData(onChange, { name: 'Alice' }, 'root_address_street');
   });
 
-  it('prunes an empty optional object on blur when omitExtraData is true and liveOmit is onBlur', () => {
+  it('prunes an empty optional object on blur when omitExtraData is true and liveOmit is onBlur', async () => {
     const { node, onChange } = createFormComponent({
       schema,
       formData: { name: 'Alice', address: { street: 'value' } },
@@ -4513,8 +4363,8 @@ describe('omitExtraData prunes empty optional objects', () => {
 
     const streetInput = node.querySelector<HTMLInputElement>('#root_address_street')!;
 
-    fireEvent.change(streetInput, { target: { value: '' } });
-    fireEvent.blur(streetInput);
+    await user.clear(streetInput);
+    await user.tab();
 
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({ formData: { name: 'Alice' } }),
@@ -4715,7 +4565,7 @@ describe('Async errors', () => {
       const [extraErrors, setExtraErrors] = useState<ErrorSchema>({});
 
       const onSubmit = useCallback(async () => {
-        await new Promise((r) => setTimeout(r, 50));
+        await delayPromise(50);
         setExtraErrors({
           values: {
             0: { __errors: ['ERROR MESSAGE'] },
@@ -4742,19 +4592,14 @@ describe('Async errors', () => {
 
     // Add an array item and fill it with a valid number
     const addBtn = form.querySelector('.btn-add');
-    await act(async () => {
-      fireEvent.click(addBtn!);
-    });
-    const input = form.querySelector('input[type="number"]');
-    await act(async () => {
-      fireEvent.change(input!, { target: { value: '42' } });
-    });
+    await user.click(addBtn!);
+    const input = form.querySelector<HTMLInputElement>('input[type="number"]')!;
+    await user.clear(input);
+    await user.type(input, '42');
 
     // Submit the form, then wait for async extraErrors to be set
     await submitForm(form, user);
-    await act(async () => {
-      await new Promise((r) => setTimeout(r, 100));
-    });
+    await actWrappedDelayPromise();
 
     // The extra errors should be displayed on the FIRST submit
     expect(formRef.current!.state.errors.length).toBeGreaterThan(0);
@@ -4814,10 +4659,10 @@ describe('Calling onChange right after updating a Form with props formData', () 
     }
   }
 
-  it("doesn't cause a race condition", () => {
+  it("doesn't cause a race condition", async () => {
     const { node } = createComponent(Container, { ...props });
 
-    fireEvent.click(node.querySelector('.rjsf-array-item-add button')!);
+    await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
     expect(node.querySelector('#root_0')).toBeInTheDocument();
     expect(node.querySelector('#root_1')).toHaveAttribute('value', 'test');
@@ -4825,7 +4670,7 @@ describe('Calling onChange right after updating a Form with props formData', () 
 });
 
 describe('Calling reset from ref object', () => {
-  it('Reset API test', () => {
+  it('Reset API test', async () => {
     const schema: RJSFSchema = {
       title: 'Test form',
       type: 'string',
@@ -4838,7 +4683,7 @@ describe('Calling reset from ref object', () => {
     const { node } = createFormComponent(props);
     expect(formRef.current!.reset).toBeDefined();
     expect(node.querySelector<HTMLInputElement>('input')).toBeInTheDocument();
-    fireEvent.change(node.querySelector<HTMLInputElement>('input')!, { target: { value: 'Some Value' } });
+    await user.type(node.querySelector<HTMLInputElement>('input')!, 'Some Value');
     act(() => {
       formRef.current!.reset();
     });
@@ -4858,7 +4703,7 @@ describe('Calling reset from ref object', () => {
     const { node } = createFormComponent(props);
     expect(formRef.current!.reset).toBeDefined();
     expect(node.querySelector<HTMLInputElement>('input')).toBeInTheDocument();
-    fireEvent.change(node.querySelector<HTMLInputElement>('input')!, { target: { value: 'Some Value' } });
+    await user.type(node.querySelector<HTMLInputElement>('input')!, 'Some Value');
     expect(formRef.current!.state.errors).toHaveLength(0);
     await submitForm(node, user);
     expect(formRef.current!.state.errors).toHaveLength(1);
@@ -4871,7 +4716,7 @@ describe('Calling reset from ref object', () => {
     expect(formRef.current!.state.errors).toHaveLength(0);
   });
 
-  it('Reset button test with default value', () => {
+  it('Reset button test with default value', async () => {
     const schemaWithDefault: RJSFSchema = {
       title: 'Test form',
       type: 'string',
@@ -4891,14 +4736,15 @@ describe('Calling reset from ref object', () => {
       formRef.current!.reset();
     });
     expect(input).toHaveAttribute('value', 'Some-Value');
-    fireEvent.change(input!, { target: { value: 'Changed value' } });
+    await user.clear(input!);
+    await user.type(input!, 'Changed value');
     act(() => {
       formRef.current!.reset();
     });
     expect(input).toHaveAttribute('value', 'Some-Value');
   });
 
-  it('Reset button test with complex schema', () => {
+  it('Reset button test with complex schema', async () => {
     const schema = widgetsSchema as RJSFSchema;
     const formRef = createRef<Form>();
     const props: NoValFormProps = {
@@ -4918,8 +4764,9 @@ describe('Calling reset from ref object', () => {
     });
     expect(checkbox).toBeChecked();
     expect(input).toHaveAttribute('value', '');
-    fireEvent.click(checkbox!);
-    fireEvent.change(input!, { target: { value: 'Changed value' } });
+    await user.click(checkbox!);
+    await user.clear(input!);
+    await user.type(input!, 'Changed value');
     expect(checkbox).not.toBeChecked();
     expect(input).toHaveAttribute('value', 'Changed value');
     act(() => {
@@ -4929,7 +4776,7 @@ describe('Calling reset from ref object', () => {
     expect(checkbox).toBeChecked();
   });
 
-  it('Reset button test with initialFormData', () => {
+  it('Reset button test with initialFormData', async () => {
     const schemaWithDefault: RJSFSchema = {
       title: 'Test form',
       type: 'string',
@@ -4945,7 +4792,8 @@ describe('Calling reset from ref object', () => {
     expect(formRef.current!.reset).toBeDefined();
     expect(input).toBeInTheDocument();
     expect(input).toHaveAttribute('value', props.initialFormData);
-    fireEvent.change(input!, { target: { value: 'Changed value' } });
+    await user.clear(input!);
+    await user.type(input!, 'Changed value');
     expect(input).toHaveAttribute('value', 'Changed value');
     act(() => {
       formRef.current!.reset();
@@ -5003,7 +4851,7 @@ describe('validateForm()', () => {
     expect(theSpy).toHaveBeenCalledWith({ foo: 'bar' });
   });
 
-  it('Should update state when data updated from invalid to valid', () => {
+  it('Should update state when data updated from invalid to valid', async () => {
     const ref = createRef<Form>();
     const props: NoValFormProps = {
       schema: {
@@ -5028,11 +4876,9 @@ describe('validateForm()', () => {
     expect(errors).toHaveLength(1);
     expect(errors[0]).toHaveTextContent("must have required property 'input'");
 
-    // populate the input and fireEvent a re-render from the parent.
-    const textNode = node.querySelector('#root_input');
-    fireEvent.change(textNode!, {
-      target: { value: 'populated value' },
-    });
+    // populate the input and trigger a re-render from the parent.
+    const textNode = node.querySelector<HTMLInputElement>('#root_input')!;
+    await user.type(textNode, 'populated value');
     rerender({ ...props, formData: { input: 'populated value' } });
     // // error should still be present.
     errors = node.querySelectorAll('.error-detail');
@@ -5069,13 +4915,11 @@ describe('validateForm()', () => {
     };
     const { onError } = createFormComponent(props);
 
-    let result: boolean | undefined;
     act(() => {
-      result = formRef.current!.validateForm();
+      // Should return true (non-blocking)
+      expect(formRef.current!.validateForm()).toBe(true);
     });
 
-    // Should return true (non-blocking)
-    expect(result).toBe(true);
     // extraErrors should remain visible in state
     expect(formRef.current!.state.errors).toHaveLength(1);
     expect(formRef.current!.state.errors[0].message).toBe('async error for foo');
@@ -5106,13 +4950,11 @@ describe('validateForm()', () => {
     };
     const { onError } = createFormComponent(props);
 
-    let result: boolean | undefined;
     act(() => {
-      result = formRef.current!.validateForm();
+      // Should return false (non-blocking)
+      expect(formRef.current!.validateForm()).toBe(false);
     });
 
-    // Should return false (blocking)
-    expect(result).toBe(false);
     // Merged errors should be in state
     expect(formRef.current!.state.errors).toHaveLength(1);
     expect(formRef.current!.state.errors[0].message).toBe('blocking async error');
@@ -5145,13 +4987,11 @@ describe('validateForm()', () => {
     };
     createFormComponent(props);
 
-    let result: boolean | undefined;
     act(() => {
-      result = formRef.current!.validateForm();
+      // Schema error blocks submission → false
+      expect(formRef.current!.validateForm()).toBe(false);
     });
 
-    // Schema error blocks submission → false
-    expect(result).toBe(false);
     // Both schema error and extra error should be in state
     const errorMessages = formRef.current!.state.errors.map((e) => e.message);
     expect(errorMessages).toContain("must have required property 'foo'");
@@ -5502,7 +5342,7 @@ describe('optionalDataControls', () => {
     expect(removeObjectControlNode).toEqual(null);
     expect(testInput).not.toEqual(null);
   });
-  it('only render object optional data controls when only object is turned on', () => {
+  it('only render object optional data controls when only object is turned on', async () => {
     const props: NoValFormProps = {
       schema,
       uiSchema: objectOnUiSchema,
@@ -5524,7 +5364,7 @@ describe('optionalDataControls', () => {
     expect(testInput).toEqual(null);
 
     // now click on the add optional data button
-    act(() => addObjectControlNode!.click());
+    await user.click(addObjectControlNode!);
     // now check to see if the UI adjusted
     addObjectControlNode = node.querySelector<HTMLButtonElement>(`#${objectControlAddId}`);
     removeObjectControlNode = node.querySelector<HTMLButtonElement>(`#${objectControlRemoveId}`);
@@ -5534,7 +5374,7 @@ describe('optionalDataControls', () => {
     expect(testInput).not.toEqual(null);
 
     // now click on the remove optional data button
-    act(() => removeObjectControlNode!.click());
+    await user.click(removeObjectControlNode!);
     // now check to see if the UI adjusted
     addObjectControlNode = node.querySelector<HTMLButtonElement>(`#${objectControlAddId}`);
     removeObjectControlNode = node.querySelector<HTMLButtonElement>(`#${objectControlRemoveId}`);
@@ -5543,7 +5383,7 @@ describe('optionalDataControls', () => {
     expect(removeObjectControlNode).toEqual(null);
     expect(testInput).toEqual(null);
   });
-  it('only render array optional data controls when only array is turned on', () => {
+  it('only render array optional data controls when only array is turned on', async () => {
     const props: NoValFormProps = {
       schema,
       uiSchema: arrayOnUiSchema,
@@ -5565,7 +5405,7 @@ describe('optionalDataControls', () => {
     expect(testInput).not.toEqual(null);
 
     // now click on the add optional data button
-    act(() => addArrayControlNode!.click());
+    await user.click(addArrayControlNode!);
     // now check to see if the UI adjusted
     addArrayControlNode = node.querySelector<HTMLButtonElement>(`#${arrayControlAddId}`);
     removeArrayControlNode = node.querySelector<HTMLButtonElement>(`#${arrayControlRemoveId}`);
@@ -5575,7 +5415,7 @@ describe('optionalDataControls', () => {
     expect(addArrayBtn).not.toEqual(null);
 
     // now click on the remove optional data button
-    act(() => removeArrayControlNode!.click());
+    await user.click(removeArrayControlNode!);
     // now check to see if the UI adjusted
     addArrayControlNode = node.querySelector<HTMLButtonElement>(`#${arrayControlAddId}`);
     removeArrayControlNode = node.querySelector<HTMLButtonElement>(`#${arrayControlRemoveId}`);
@@ -5584,7 +5424,7 @@ describe('optionalDataControls', () => {
     expect(removeArrayControlNode).toEqual(null);
     expect(addArrayBtn).toEqual(null);
   });
-  it('render both kinds of optional data controls when only both are turned on', () => {
+  it('render both kinds of optional data controls when only both are turned on', async () => {
     const props: NoValFormProps = {
       schema,
       uiSchema: bothOnUiSchema,
@@ -5606,8 +5446,8 @@ describe('optionalDataControls', () => {
     expect(testInput).toEqual(null);
 
     // now click on the add optional data button
-    act(() => addArrayControlNode!.click());
-    act(() => addObjectControlNode!.click());
+    await user.click(addArrayControlNode!);
+    await user.click(addObjectControlNode!);
     // now check to see if the UI adjusted
     addArrayControlNode = node.querySelector<HTMLButtonElement>(`#${arrayControlAddId}`);
     removeArrayControlNode = node.querySelector<HTMLButtonElement>(`#${arrayControlRemoveId}`);
@@ -5623,8 +5463,8 @@ describe('optionalDataControls', () => {
     expect(testInput).not.toEqual(null);
 
     // now click on the remove optional data button
-    act(() => removeArrayControlNode!.click());
-    act(() => removeObjectControlNode!.click());
+    await user.click(removeArrayControlNode!);
+    await user.click(removeObjectControlNode!);
     // now check to see if the UI adjusted
     addArrayControlNode = node.querySelector<HTMLButtonElement>(`#${arrayControlAddId}`);
     removeArrayControlNode = node.querySelector<HTMLButtonElement>(`#${arrayControlRemoveId}`);
@@ -5924,42 +5764,34 @@ describe('initialFormData feature to prevent form reset', () => {
       />
     );
   };
-  it('show that Form resets without initial data when it is controlled', () => {
+  it('show that Form resets without initial data when it is controlled', async () => {
     const { container } = render(<FormWrapper formData={data} />);
-    let input = container.querySelector('input');
+    let input = container.querySelector<HTMLInputElement>('input')!;
     expect(input).toHaveAttribute('value', data.name);
 
-    fireEvent.change(input!, {
-      target: { value: 'new value' },
-    });
-    input = container.querySelector('input');
+    await user.clear(input);
+    await user.type(input, 'new value');
+    input = container.querySelector('input')!;
     expect(input).toHaveAttribute('value', 'new value');
 
-    const submit = container.querySelector('button');
-    act(() => {
-      fireEvent.click(submit!);
-    });
+    await submitForm(container.querySelector('form')!, user);
 
-    input = container.querySelector('input');
+    input = container.querySelector('input')!;
     expect(input).toHaveAttribute('value', data.name);
   });
-  it('show that Form does not reset with initialFormData when it is uncontrolled', () => {
+  it('show that Form does not reset with initialFormData when it is uncontrolled', async () => {
     const { container } = render(<FormWrapper initialFormData={data} />);
-    let input = container.querySelector('input');
+    let input = container.querySelector<HTMLInputElement>('input')!;
     expect(input).toHaveAttribute('value', data.name);
 
-    fireEvent.change(input!, {
-      target: { value: 'new value' },
-    });
-    input = container.querySelector('input');
+    await user.clear(input);
+    await user.type(input, 'new value');
+    input = container.querySelector('input')!;
     expect(input).toHaveAttribute('value', 'new value');
 
-    const submit = container.querySelector('button');
-    act(() => {
-      fireEvent.click(submit!);
-    });
+    await submitForm(container.querySelector('form')!, user);
 
-    input = container.querySelector('input');
+    input = container.querySelector('input')!;
     expect(input).toHaveAttribute('value', 'new value');
   });
 });
@@ -5982,11 +5814,10 @@ describe('extraErrors set after submit (#4965)', () => {
     function Wrapper() {
       const [extraErrors, setExtraErrors] = useState<ErrorSchema>({} as ErrorSchema);
 
-      const onSubmit = useCallback(() => {
+      const onSubmit = useCallback(async () => {
         setExtraErrors({} as ErrorSchema);
-        setTimeout(() => {
-          setExtraErrors(sampleErrors);
-        }, 50);
+        await delayPromise(50);
+        setExtraErrors(sampleErrors);
       }, []);
 
       return <Form schema={schema} validator={validator} onSubmit={onSubmit} extraErrors={extraErrors} />;
@@ -5997,9 +5828,7 @@ describe('extraErrors set after submit (#4965)', () => {
 
     await submitForm(form, user);
 
-    await act(async () => {
-      await new Promise((r) => setTimeout(r, 100));
-    });
+    await actWrappedDelayPromise();
 
     expect(container.querySelectorAll('.error-detail li')).toHaveLength(1);
   });
@@ -6025,7 +5854,7 @@ describe('extraErrors set after submit (#4965)', () => {
 
       const onSubmit = useCallback(async () => {
         setExtraErrors({} as ErrorSchema);
-        await new Promise((r) => setTimeout(r, 100));
+        await delayPromise();
         setExtraErrors(sampleErrors);
       }, []);
 
@@ -6040,9 +5869,7 @@ describe('extraErrors set after submit (#4965)', () => {
     // the submit handler runs. fireEvent.submit bypasses that side-effect chain.
     await submitForm(form, user, true);
 
-    await act(async () => {
-      await new Promise((r) => setTimeout(r, 200));
-    });
+    await actWrappedDelayPromise(200);
 
     const errorItems = container.querySelectorAll('.error-detail li');
     expect(errorItems.length).toBeGreaterThan(0);
@@ -6067,7 +5894,7 @@ describe('extraErrors set after submit (#4965)', () => {
 
       const onSubmit = useCallback(async () => {
         setExtraErrors({} as ErrorSchema);
-        await new Promise((r) => setTimeout(r, 100));
+        await delayPromise();
         setExtraErrors(sampleErrors);
       }, []);
 
@@ -6079,9 +5906,7 @@ describe('extraErrors set after submit (#4965)', () => {
 
     await submitForm(form, user);
 
-    await act(async () => {
-      await new Promise((r) => setTimeout(r, 200));
-    });
+    await actWrappedDelayPromise(200);
 
     // Check the form state directly
     const state = formRef.current!.state;
@@ -6126,9 +5951,7 @@ describe('extraErrors not duplicated when sibling array field mutated (#5041)', 
 
     // Add an item to the sibling array field
     const addBtn = form.querySelector('.btn-add');
-    await act(async () => {
-      fireEvent.click(addBtn!);
-    });
+    await user.click(addBtn!);
 
     // The name field's extraErrors should still contain exactly one error
     const state = formRef.current!.state;
