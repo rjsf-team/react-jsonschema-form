@@ -24,6 +24,6 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "esModuleInterop": true,
-    "allowJs": true
+    "allowJs": true,
   }
 }

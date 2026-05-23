@@ -3,9 +3,9 @@
   "include": ["./"],
   "compilerOptions": {
     "rootDir": "./",
-    "baseUrl": "../",
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "types": ["jest", "node"]
   },
   "references": [
     {

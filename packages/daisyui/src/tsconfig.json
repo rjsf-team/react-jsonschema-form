@@ -6,9 +6,7 @@
   "compilerOptions": {
     "rootDir": "./",
     "outDir": "../lib",
-    "baseUrl": "../",
     "jsx": "react-jsx",
-    "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true
   },

@@ -6,7 +6,6 @@
   "compilerOptions": {
     "rootDir": "./",
     "outDir": "../lib",
-    "baseUrl": "../",
     "jsx": "react-jsx",
     // Skip because of antd inner ts errors,
     "skipLibCheck": true

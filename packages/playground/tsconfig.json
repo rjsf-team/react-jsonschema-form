@@ -7,7 +7,6 @@
   ],
   "compilerOptions": {
     "rootDir": "./",
-    "baseUrl": "./",
     "target": "ESNext",
     "useDefineForClassFields": true,
     "lib": [

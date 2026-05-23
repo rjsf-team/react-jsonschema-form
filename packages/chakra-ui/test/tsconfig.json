@@ -3,7 +3,6 @@
   "include": ["./"],
   "compilerOptions": {
     "rootDir": "./",
-    "baseUrl": "../",
     "noEmit": true,
     "jsx": "react-jsx",
     "skipLibCheck": true

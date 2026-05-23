@@ -5,7 +5,6 @@
   ],
   "compilerOptions": {
     "rootDir": "./",
-    "baseUrl": "../",
     "noEmit": true,
     "jsx": "react-jsx"
   },
