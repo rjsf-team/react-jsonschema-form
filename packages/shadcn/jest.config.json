@@ -1,11 +1,29 @@
 {
   "testEnvironment": "jsdom",
-  "setupFilesAfterEnv": ["../../testing/testSetup.ts", "<rootDir>/test/setup-jest-env.ts"],
   "transform": {
-    "^.+\\.(ts|tsx|js|jsx)$": ["babel-jest", { "configFile": "./babel.config.json" }]
+    "^.+\\.[jt]sx?$": [
+      "@swc/jest",
+      {
+        "jsc": {
+          "transform": {
+            "react": {
+              "runtime": "automatic"
+            }
+          },
+          "target": "es2020"
+        }
+      }
+    ]
   },
-  "transformIgnorePatterns": ["/node_modules/(?!(@x0k/json-schema-merge|deep-freeze-es6))"],
+  "setupFilesAfterEnv": [
+    "../../testing/testSetup.ts",
+    "<rootDir>/test/setup-jest-env.ts"
+  ],
+  "transformIgnorePatterns": [
+    "/node_modules/(?!(@x0k/json-schema-merge|deep-freeze-es6))"
+  ],
   "moduleNameMapper": {
     "^@/(.*)$": "<rootDir>/src/$1"
-  }
+  },
+  "coverageProvider": "v8"
 }

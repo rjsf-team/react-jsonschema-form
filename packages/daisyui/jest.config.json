@@ -1,13 +1,36 @@
 {
-  "setupFilesAfterEnv": ["../../testing/testSetup.ts"],
+  "setupFilesAfterEnv": [
+    "../../testing/testSetup.ts"
+  ],
   "testEnvironment": "jsdom",
-  "modulePathIgnorePatterns": ["<rootDir>/dist/", "<rootDir>/lib/"],
   "transform": {
-    "^.+\\.(t|j)sx?$": "babel-jest"
+    "^.+\\.[jt]sx?$": [
+      "@swc/jest",
+      {
+        "jsc": {
+          "transform": {
+            "react": {
+              "runtime": "automatic"
+            }
+          },
+          "target": "es2020"
+        }
+      }
+    ]
   },
-  "coveragePathIgnorePatterns": ["/node_modules/", "/test/"],
-  "transformIgnorePatterns": ["/node_modules/(?!(@x0k|@fortawesome|yup|react-day-picker|dayjs|deep-freeze-es6|markdown-to-jsx)/)"],
+  "modulePathIgnorePatterns": [
+    "<rootDir>/dist/",
+    "<rootDir>/lib/"
+  ],
+  "coveragePathIgnorePatterns": [
+    "/node_modules/",
+    "/test/"
+  ],
+  "transformIgnorePatterns": [
+    "/node_modules/(?!(@x0k|@fortawesome|yup|react-day-picker|dayjs|deep-freeze-es6|markdown-to-jsx)/)"
+  ],
   "moduleNameMapper": {
     "\\.(css|less|scss|sass)$": "<rootDir>/test/fileMock.js"
-  }
+  },
+  "coverageProvider": "v8"
 }

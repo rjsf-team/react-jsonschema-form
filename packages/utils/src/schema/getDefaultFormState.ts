@@ -218,7 +218,7 @@ interface ComputeDefaultsProps<T = any, S extends StrictRJSFSchema = RJSFSchema>
  *
  * @param validator - an implementation of the `ValidatorType` interface that will be used when necessary
  * @param rawSchema - The schema for which the default state is desired
- * @param {ComputeDefaultsProps} computeDefaultsProps - Optional props for this function
+ * @param computeDefaultsProps - Optional props for this function
  * @returns - The resulting `formData` with all the defaults provided
  */
 export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -465,7 +465,7 @@ export function ensureFormDataMatchingSchema<
  *
  * @param validator - an implementation of the `ValidatorType` interface that will be used when necessary
  * @param rawSchema - The schema for which the default state is desired
- * @param {ComputeDefaultsProps} computeDefaultsProps - Optional props for this function
+ * @param computeDefaultsProps - Optional props for this function
  * @param defaults - Optional props for this function
  * @returns - The default value based on the schema type if they are defined for object or array schemas.
  */
@@ -594,7 +594,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
  *
  * @param validator - an implementation of the `ValidatorType` interface that will be used when necessary
  * @param rawSchema - The schema for which the default state is desired
- * @param {ComputeDefaultsProps} computeDefaultsProps - Optional props for this function
+ * @param computeDefaultsProps - Optional props for this function
  * @param defaults - Optional props for this function
  * @returns - The default value based on the schema type if they are defined for object or array schemas.
  */
@@ -673,19 +673,13 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
     }
   }
 
-  // Check if the schema has a const property defined AND we are supporting const as defaults, then we should always
-  // return the computedDefault since it's coming from the const.
-  const hasConst =
-    isObject(schema) && CONST_KEY in schema && experimental_defaultFormStateBehavior?.constAsDefaults !== 'never';
-  if (hasConst === false) {
-    if (neverPopulate) {
-      return defaults ?? emptyDefault;
-    }
-    if (ignoreMinItemsFlagSet && !required) {
-      // If no form data exists or defaults are set leave the field empty/non-existent, otherwise
-      // return form data/defaults
-      return defaults ? defaults : undefined;
-    }
+  if (neverPopulate) {
+    return defaults ?? emptyDefault;
+  }
+  if (ignoreMinItemsFlagSet && !required) {
+    // If no form data exists or defaults are set leave the field empty/non-existent, otherwise
+    // return form data/defaults
+    return defaults ? defaults : undefined;
   }
 
   let arrayDefault: T[] | undefined;
@@ -726,7 +720,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
  *
  * @param validator - an implementation of the `ValidatorType` interface that will be used when necessary
  * @param rawSchema - The schema for which the default state is desired
- * @param {ComputeDefaultsProps} computeDefaultsProps - Optional props for this function
+ * @param computeDefaultsProps - Optional props for this function
  * @param defaults - Optional props for this function
  * @returns - The default value based on the schema type if they are defined for object or array schemas.
  */

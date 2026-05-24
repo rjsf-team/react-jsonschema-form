@@ -1,9 +1,36 @@
 {
-  "snapshotSerializers": ["@emotion/jest/serializer"],
+  "snapshotSerializers": [
+    "@emotion/jest/serializer"
+  ],
   "testEnvironment": "jsdom",
-  "testEnvironmentOptions": {
-    "browsers": ["chrome", "firefox", "safari"]
+  "transform": {
+    "^.+\\.[jt]sx?$": [
+      "@swc/jest",
+      {
+        "jsc": {
+          "transform": {
+            "react": {
+              "runtime": "automatic"
+            }
+          },
+          "target": "es2020"
+        }
+      }
+    ]
   },
-  "setupFilesAfterEnv": ["./test/setup-jest-env.js", "../../testing/testSetup.ts"],
-  "transformIgnorePatterns": ["/node_modules/(?!(@x0k/json-schema-merge|deep-freeze-es6))"]
+  "testEnvironmentOptions": {
+    "browsers": [
+      "chrome",
+      "firefox",
+      "safari"
+    ]
+  },
+  "setupFilesAfterEnv": [
+    "./test/setup-jest-env.js",
+    "../../testing/testSetup.ts"
+  ],
+  "transformIgnorePatterns": [
+    "/node_modules/(?!(@x0k/json-schema-merge|deep-freeze-es6))"
+  ],
+  "coverageProvider": "v8"
 }

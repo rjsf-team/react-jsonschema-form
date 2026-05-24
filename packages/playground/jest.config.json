@@ -1,6 +1,26 @@
 {
   "verbose": true,
   "testEnvironment": "jsdom",
-  "testMatch": ["**/test/**/*.test.[jt]s?(x)"],
-  "transformIgnorePatterns": ["/node_modules/(?!deep-freeze-es6)"]
+  "transform": {
+    "^.+\\.[jt]sx?$": [
+      "@swc/jest",
+      {
+        "jsc": {
+          "transform": {
+            "react": {
+              "runtime": "automatic"
+            }
+          },
+          "target": "es2020"
+        }
+      }
+    ]
+  },
+  "testMatch": [
+    "**/test/**/*.test.[jt]s?(x)"
+  ],
+  "transformIgnorePatterns": [
+    "/node_modules/(?!deep-freeze-es6)"
+  ],
+  "coverageProvider": "v8"
 }
