@@ -48,6 +48,11 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
   }
   const formats: Record<string, (value: string) => boolean> = {};
   for (const [name, re] of Object.entries(regexFormats)) {
+    // `new Function` rather than a fat-arrow on purpose: ata serializes these format
+    // checkers into the standalone bundle via Function#toString. A fat-arrow would
+    // close over `re` and emit `re.test(value)`, leaving `re` undefined in the
+    // generated module. Building it from a string inlines the regex literal into the
+    // body, so the bundled output stays self-contained.
     // eslint-disable-next-line no-new-func
     formats[name] = new Function('value', `return ${re.toString()}.test(value)`) as (value: string) => boolean;
   }
