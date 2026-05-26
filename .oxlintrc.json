@@ -21,8 +21,7 @@
     "**/coverage/**",
     "**/*.d.ts",
     "**/docs/build/**",
-    "**/validator-ajv8/test/harness/*.cjs",
-    "**/validator-ata/test/harness/*.cjs"
+    "**/harness/*.cjs"
   ],
   "rules": {
     "constructor-super": "error",
@@ -176,6 +175,9 @@
       "files": ["**/test/**/*.ts", "**/test/**/*.tsx", "**/test/**/*.js"],
       "env": {
         "jest": true
+      },
+      "rules": {
+        "typescript/no-misused-promises": "off"
       }
     },
     {

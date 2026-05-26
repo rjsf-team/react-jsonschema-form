@@ -1,6 +1,7 @@
 {
   "extends": "../../../tsconfig.base.json",
   "include": ["./", "./**/*.json"],
+  "exclude": ["./harness/*.cjs"],
   "compilerOptions": {
     "rootDir": "./",
     "noEmit": true,

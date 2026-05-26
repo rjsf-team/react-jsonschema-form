@@ -5,7 +5,6 @@
     "rootDir": "./",
     "noEmit": true,
     "resolveJsonModule": true,
-    "baseUrl": "../",
     "jsx": "react-jsx"
   },
   "references": [

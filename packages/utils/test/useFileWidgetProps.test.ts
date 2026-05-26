@@ -79,7 +79,7 @@ describe('useFileWidgetProps()', () => {
     expect(handleChange).toBeInstanceOf(Function);
     expect(handleRemove).toBeInstanceOf(Function);
     // Now call handleChange to add a file
-    handleChange(toFileList([FILE_1]));
+    await handleChange(toFileList([FILE_1]));
     await waitFor(() => {
       // Expect the onChange handler was called with the converted file
       expect(onChange).toHaveBeenCalledWith(FILE_1_STR);
@@ -92,7 +92,7 @@ describe('useFileWidgetProps()', () => {
     expect(handleChange).toBeInstanceOf(Function);
     expect(handleRemove).toBeInstanceOf(Function);
     // Now call handleChange to add a file
-    handleChange(toFileList([FILE_3]));
+    await handleChange(toFileList([FILE_3]));
     await waitFor(() => {
       // Expect the onChange handler was called with the converted file
       expect(onChange).toHaveBeenCalledWith(FILE_3_STR);
@@ -118,7 +118,7 @@ describe('useFileWidgetProps()', () => {
     expect(handleChange).toBeInstanceOf(Function);
     expect(handleRemove).toBeInstanceOf(Function);
     // Now call handleChange to add a file
-    handleChange(toFileList([FILE_1, FILE_3]));
+    await handleChange(toFileList([FILE_1, FILE_3]));
     await waitFor(() => {
       // Expect the onChange handler was called with the converted file
       expect(onChange).toHaveBeenCalledWith([FILE_1_STR, FILE_3_STR]);
@@ -131,7 +131,7 @@ describe('useFileWidgetProps()', () => {
     expect(handleChange).toBeInstanceOf(Function);
     expect(handleRemove).toBeInstanceOf(Function);
     // Now call handleChange to add a file
-    handleChange(toFileList([FILE_1, FILE_3]));
+    await handleChange(toFileList([FILE_1, FILE_3]));
     await waitFor(() => {
       // Expect the onChange handler was called with the converted file
       expect(onChange).toHaveBeenCalledWith([FILE_1_STR, FILE_3_STR]);
@@ -144,7 +144,7 @@ describe('useFileWidgetProps()', () => {
     expect(handleChange).toBeInstanceOf(Function);
     expect(handleRemove).toBeInstanceOf(Function);
     // Now call handleChange to add a file
-    handleChange(toFileList([FILE_3]));
+    await handleChange(toFileList([FILE_3]));
     await waitFor(() => {
       // Expect the onChange handler was called with the converted file
       expect(onChange).toHaveBeenCalledWith([FILE_2_STR, FILE_3_STR]);
@@ -170,7 +170,7 @@ describe('useFileWidgetProps()', () => {
     expect(handleChange).toBeInstanceOf(Function);
     expect(handleRemove).toBeInstanceOf(Function);
     // Now call handleChange to add a file
-    handleChange(toFileList([FILE_3]));
+    await handleChange(toFileList([FILE_3]));
     await waitFor(() => {
       // Expect the onChange handler was called with the converted file
       expect(onChange).toHaveBeenCalledWith(FILE_3_STR);
@@ -184,7 +184,7 @@ describe('useFileWidgetProps()', () => {
     expect(handleChange).toBeInstanceOf(Function);
     expect(handleRemove).toBeInstanceOf(Function);
     // Now call handleChange to add a file
-    handleChange(toFileList([FILE_3]));
+    await handleChange(toFileList([FILE_3]));
     await waitFor(() => {
       // Expect the onChange handler was called with the converted file
       expect(onChange).toHaveBeenCalledWith(null);
