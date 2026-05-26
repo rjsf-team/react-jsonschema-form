@@ -7,7 +7,6 @@
   ],
   "compilerOptions": {
     "rootDir": "./",
-    "baseUrl": "./",
     "target": "ESNext",
     "useDefineForClassFields": true,
     "lib": [
@@ -70,6 +69,9 @@
     },
     {
       "path": "../validator-ajv8"
+    },
+    {
+      "path": "../validator-ata"
     }
   ]
 }

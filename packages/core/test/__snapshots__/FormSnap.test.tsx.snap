@@ -2413,9 +2413,7 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
             class="field-description"
             id="root_my-field__description"
           >
-            <span>
-              some other description
-            </span>
+            some other description
           </div>
           <input
             aria-describedby="root_my-field__error root_my-field__description root_my-field__help"

@@ -13728,9 +13728,7 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
                       class="emotion-5"
                       id="root_my-field__description"
                     >
-                      <span>
-                        some other description
-                      </span>
+                      some other description
                     </sup>
                   </legend>
                   <div

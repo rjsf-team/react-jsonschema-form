@@ -72,7 +72,7 @@
   "dependencies": {
     "lodash": "^4.18.1",
     "lodash-es": "^4.18.1",
-    "markdown-to-jsx": "^8.0.0",
+    "markdown-to-jsx": "^9.8.1",
     "prop-types": "^15.8.1"
   },
   "devDependencies": {
@@ -83,10 +83,10 @@
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
     "@types/react-portal": "^4.0.7",
-    "ajv": "^8.18.0",
+    "ajv": "^8.20.0",
     "atob": "^2.1.2",
     "eslint": "^8.57.1",
-    "jsdom": "^27.0.1",
+    "jsdom": "^29.1.1",
     "react-portal": "^4.3.0"
   },
   "directories": {

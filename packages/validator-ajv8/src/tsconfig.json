@@ -4,8 +4,8 @@
   "compilerOptions": {
     "rootDir": "./",
     "outDir": "../lib",
-    "baseUrl": "../",
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "types": ["node"]
   },
   "references": [
     {

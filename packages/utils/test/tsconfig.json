@@ -3,12 +3,12 @@
   "include": ["./"],
   "compilerOptions": {
     "rootDir": "./",
-    "baseUrl": "../",
     // todo: noEmit: true
     // maybe better to move this to some separate package
     // this is needed for packages/validator-ajv8/test/utilsTests
     "outDir": "../lib-test",
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "types": ["jest", "node"]
   },
   "references": [
     {

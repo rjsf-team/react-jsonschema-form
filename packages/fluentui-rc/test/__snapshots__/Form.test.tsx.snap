@@ -3770,9 +3770,7 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
                     class="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
                     id="root_my-field__description"
                   >
-                    <span>
-                      some other description
-                    </span>
+                    some other description
                   </span>
                 </p>
               </div>

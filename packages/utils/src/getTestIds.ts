@@ -20,8 +20,9 @@ import { TestIdShape } from './types';
  */
 export default function getTestIds(): TestIdShape {
   // For some reason, even though process.env contains the value of `test` for NODE_ENV, accessing it directly returns
-  // 'development'. Using `get()` does, in fact, return test so sticking with it
-  if (typeof process === 'undefined' || get(process, 'env.NODE_ENV') !== 'test') {
+  // 'development'. Using `get()` does, in fact, return test so sticking with it.
+  // Use globalThis to access process without requiring @types/node (TS6 compatibility).
+  if (get(globalThis, 'process.env.NODE_ENV') !== 'test') {
     return {};
   }
 

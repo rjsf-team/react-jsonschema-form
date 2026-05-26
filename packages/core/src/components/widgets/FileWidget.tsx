@@ -11,7 +11,7 @@ import {
   useFileWidgetProps,
   WidgetProps,
 } from '@rjsf/utils';
-import Markdown from 'markdown-to-jsx';
+import { Markdown } from 'markdown-to-jsx';
 
 function FileInfoPreview<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   fileInfo,

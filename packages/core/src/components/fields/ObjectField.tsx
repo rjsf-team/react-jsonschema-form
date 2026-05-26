@@ -23,7 +23,7 @@ import {
   StrictRJSFSchema,
   TranslatableString,
 } from '@rjsf/utils';
-import Markdown from 'markdown-to-jsx';
+import { Markdown } from 'markdown-to-jsx';
 import get from 'lodash/get';
 import has from 'lodash/has';
 import isObject from 'lodash/isObject';

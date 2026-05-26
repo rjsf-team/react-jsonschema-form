@@ -5,8 +5,8 @@
     "rootDir": "./",
     "noEmit": true,
     "resolveJsonModule": true,
-    "baseUrl": "../",
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "types": ["jest", "node"]
   },
   "references": [
     {

@@ -8,7 +8,7 @@ import {
   getTestIds,
   getUiOptions,
 } from '@rjsf/utils';
-import Markdown from 'markdown-to-jsx';
+import { Markdown } from 'markdown-to-jsx/react';
 
 const TEST_IDS = getTestIds();
 

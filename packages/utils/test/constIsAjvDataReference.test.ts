@@ -1,4 +1,4 @@
-import { RJSFSchema } from 'src';
+import { RJSFSchema } from '../src';
 import constIsAjvDataReference from '../src/constIsAjvDataReference';
 
 describe('constIsAjvDataReference()', () => {

@@ -2,6 +2,32 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import * as path from 'path';
 
+// ata-validator ≥0.17 added SAFE_REGEX_EMBED — a top-level IIFE that calls
+// fs.readFileSync(__dirname, ...) at module initialisation time.  That code is
+// only needed by Validator.bundleStandalone (server-side AOT compilation) which
+// is never invoked in the browser playground.  Patch it out before Rolldown
+// bundles the file so the browser doesn't hit "ReferenceError: __dirname is
+// not defined".
+//
+// The plugin must appear in TWO places in Vite 8 (Rolldown-Vite):
+//   • plugins[]                         — covers production builds
+//   • optimizeDeps.rolldownOptions.plugins[] — covers dev dep pre-bundling
+function ataValidatorBrowserCompat() {
+  return {
+    name: 'ata-validator-browser-compat',
+    transform(code: string, id: string) {
+      if (!id.endsWith('/ata-validator/index.js')) {
+        return null;
+      }
+      const patched = code.replace(
+        /const SAFE_REGEX_EMBED = \(\(\) => \{[\s\S]*?\}\)\(\);/,
+        'const SAFE_REGEX_EMBED = /* browser-compat: bundleStandalone is not used in the browser */ "";',
+      );
+      return patched !== code ? { code: patched, map: null } : null;
+    },
+  };
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
   // base needs to be changed for links to work in GitHub pages
@@ -10,7 +36,12 @@ export default defineConfig({
     port: 8080,
     open: process.env.NODE_ENV !== 'production',
   }, // maintain the old webpack behavior in dev
-  plugins: [react()],
+  plugins: [ataValidatorBrowserCompat(), react()],
+  optimizeDeps: {
+    rolldownOptions: {
+      plugins: [ataValidatorBrowserCompat()],
+    },
+  },
   resolve: {
     preserveSymlinks: true, // Fixes https://github.com/rjsf-team/react-jsonschema-form/issues/3228
     alias: {
@@ -28,6 +59,7 @@ export default defineConfig({
       // We want to pick up the browser version of the utils
       '@rjsf/utils': path.resolve(__dirname, '../utils/src'),
       '@rjsf/validator-ajv8': path.resolve(__dirname, '../validator-ajv8/src'),
+      '@rjsf/validator-ata': path.resolve(__dirname, '../validator-ata/src'),
       '@rjsf/daisyui': path.resolve(__dirname, '../daisyui/src'),
     },
   },

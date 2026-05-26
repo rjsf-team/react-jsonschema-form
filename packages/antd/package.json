@@ -76,15 +76,15 @@
     "rc-picker": "^4.11.3"
   },
   "devDependencies": {
-    "@ant-design/icons": "^6.1.1",
+    "@ant-design/icons": "^6.2.3",
     "@rjsf/core": "6.5.3",
     "@rjsf/snapshot-tests": "6.5.3",
     "@rjsf/utils": "6.5.3",
     "@rjsf/validator-ajv8": "6.5.3",
     "@rollup/plugin-replace": "^6.0.3",
-    "antd": "^6.3.6",
+    "antd": "^6.4.3",
     "atob": "^2.1.2",
-    "dayjs": "^1.11.20",
+    "dayjs": "^1.11.21",
     "eslint": "^8.57.1"
   },
   "repository": {

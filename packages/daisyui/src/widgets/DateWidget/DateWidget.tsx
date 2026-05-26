@@ -108,8 +108,8 @@ function DatePickerPopup({ selectedDate, month, onMonthChange, onSelect }: DateP
         onMonthChange={onMonthChange}
         onSelect={onSelect}
         captionLayout='dropdown'
-        fromYear={1900}
-        toYear={new Date().getFullYear() + 10}
+        startMonth={new Date(1900, 0)}
+        endMonth={new Date(new Date().getFullYear() + 10, 11)}
         showOutsideDays
         classNames={dayPickerStyles.classNames}
         modifiers={customDayModifiers}
