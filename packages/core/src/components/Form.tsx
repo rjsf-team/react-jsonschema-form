@@ -893,7 +893,7 @@ export default class Form<
     this._isProcessingUserChange = true;
     const { newValue, path, id } = this.pendingChanges[0];
     const { newErrorSchema } = this.pendingChanges[0];
-    const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, onChange } = this.props;
+    const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, onChange, disabled, readonly } = this.props;
     const { formData: oldFormData, schemaUtils, schema, fieldPathId, schemaValidationErrorSchema, errors } = this.state;
     let { customErrors } = this.state;
     // Use the un-merged AJV-only schema as the base for re-merging extraErrors. Mirrors the
@@ -962,8 +962,8 @@ export default class Form<
         !isRootPath &&
         !isObject(newValue) &&
         !Array.isArray(newValue) &&
-        !this.props.disabled &&
-        !this.props.readonly &&
+        !disabled &&
+        !readonly &&
         _get(schema, 'readOnly') !== true &&
         !deepEquals(previousRetrievedSchema, retrievedSchema)
       ) {
@@ -1051,6 +1051,8 @@ export default class Form<
         customErrors,
       };
     }
+    // Keep the resolved dependency branch in state after sanitizing, so the next change uses the same schema as
+    // the cleaned formData.
     state = {
       ...state,
       retrievedSchema,

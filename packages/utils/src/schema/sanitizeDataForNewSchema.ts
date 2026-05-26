@@ -1,8 +1,8 @@
 import get from 'lodash/get';
 import has from 'lodash/has';
 
+import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY, REF_KEY } from '../constants';
 import deepEquals from '../deepEquals';
-import { PROPERTIES_KEY, REF_KEY } from '../constants';
 import {
   Experimental_CustomMergeAllOf,
   FormContextType,
@@ -27,8 +27,8 @@ function enumValuesForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S)
 
   const values = options
     .map((option) => {
-      if ('const' in option) {
-        return option.const;
+      if (CONST_KEY in option) {
+        return option[CONST_KEY];
       }
       return Array.isArray(option.enum) && option.enum.length === 1 ? option.enum[0] : NO_VALUE;
     })
@@ -43,7 +43,7 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
     return NO_VALUE;
   }
 
-  const defaultValue = get(schema, 'default', NO_VALUE);
+  const defaultValue = get(schema, DEFAULT_KEY, NO_VALUE);
   if (defaultValue !== NO_VALUE && enumValues.some((value) => deepEquals(value, defaultValue))) {
     return defaultValue;
   }
@@ -179,8 +179,8 @@ export default function sanitizeDataForNewSchema<
           // Ok, the non-object types match, let's make sure that a default or a const of a different value is replaced
           // with the new default or const. This allows the case where two schemas differ that only by the default/const
           // value to be properly selected
-          const newOptionDefault = get(newKeyedSchema, 'default', NO_VALUE);
-          const oldOptionDefault = get(oldKeyedSchema, 'default', NO_VALUE);
+          const newOptionDefault = get(newKeyedSchema, DEFAULT_KEY, NO_VALUE);
+          const oldOptionDefault = get(oldKeyedSchema, DEFAULT_KEY, NO_VALUE);
           if (newOptionDefault !== NO_VALUE && newOptionDefault !== formValue) {
             if (oldOptionDefault === formValue) {
               // If the old default matches the formValue, we'll update the new value to match the new default
@@ -191,8 +191,8 @@ export default function sanitizeDataForNewSchema<
             }
           }
 
-          const newOptionConst = get(newKeyedSchema, 'const', NO_VALUE);
-          const oldOptionConst = get(oldKeyedSchema, 'const', NO_VALUE);
+          const newOptionConst = get(newKeyedSchema, CONST_KEY, NO_VALUE);
+          const oldOptionConst = get(oldKeyedSchema, CONST_KEY, NO_VALUE);
           if (newOptionConst !== NO_VALUE && newOptionConst !== formValue) {
             // Since this is a const, if the old value matches, replace the value with the new const otherwise clear it
             removeOldSchemaData[key] = oldOptionConst === formValue ? newOptionConst : undefined;

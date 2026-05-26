@@ -3106,6 +3106,7 @@ describeRepeated('Form common', (createFormComponent) => {
       });
 
       it('should sanitize stale enum data when dependencies change available options', () => {
+        const formRef = createRef<Form<any, RJSFSchema, any>>();
         const dependentEnumSchema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -3148,6 +3149,7 @@ describeRepeated('Form common', (createFormComponent) => {
           },
         };
         const { node, onChange } = createFormComponent({
+          ref: formRef,
           schema: dependentEnumSchema,
           formData: { animal: 'Fish', food: 'worms', water: 'lake' },
         });
@@ -3159,6 +3161,13 @@ describeRepeated('Form common', (createFormComponent) => {
         });
 
         expectToHaveBeenCalledWithFormData(onChange, { animal: 'Cat', food: 'meat', water: undefined }, 'root_animal');
+        const retrievedSchema = formRef.current!.state.retrievedSchema as RJSFSchema;
+        expect(retrievedSchema.properties).toEqual(
+          expect.objectContaining({
+            food: expect.objectContaining({ enum: ['meat'] }),
+          }),
+        );
+        expect(retrievedSchema.properties).not.toHaveProperty('water');
       });
     });
 
