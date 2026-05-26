@@ -58,7 +58,8 @@
     "node": ">=20"
   },
   "scripts": {
-    "build:ts": "rimraf ./lib && tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+    "compileReplacer": "tsc -p tsconfig.replacer.json && move-file lodashReplacer.js lodashReplacer.cjs",
+    "build:ts": "npm run compileReplacer && rimraf ./lib && tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs && esbuild ./src/compileSchemaValidators.ts --bundle --outfile=dist/compileSchemaValidators.cjs --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/validator-ata.esm.js --sourcemap --packages=external --format=esm && esbuild ./src/compileSchemaValidators.ts --bundle --outfile=dist/compileSchemaValidators.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/validator-ata.esm.js --format=umd --file=dist/validator-ata.umd.js --name=@rjsf/validator-ata",
@@ -75,7 +76,7 @@
     ]
   },
   "dependencies": {
-    "ata-validator": "^0.17.4",
+    "ata-validator": "^0.17.5",
     "lodash": "^4.18.1",
     "lodash-es": "^4.18.1"
   },

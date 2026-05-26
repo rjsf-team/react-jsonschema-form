@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2017",
+    "rootDir": "../../tsc-alias-replacer",
+    "outDir": "./",
+    "skipLibCheck": true,
+  },
+  "files": [
+    "../../tsc-alias-replacer/lodashReplacer.ts",
+  ],
+  "exclude": [
+    "./src",
+    "./test"
+  ]
+}
