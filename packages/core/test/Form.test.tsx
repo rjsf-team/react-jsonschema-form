@@ -926,18 +926,18 @@ describeRepeated('Form common', (createFormComponent) => {
       },
     };
 
-    it('should propagate deeply nested defaults to submit handler', () => {
+    it('should propagate deeply nested defaults to submit handler', async () => {
       const { node, onSubmit } = createFormComponent({ schema });
 
       fireEvent.click(node.querySelector('.rjsf-array-item-add button')!);
-      fireEvent.submit(node);
+      await submitForm(node, user);
 
       expectToHaveBeenCalledWithFormData(onSubmit, { object: { array: [{ bool: true }] } }, true);
     });
   });
 
   describe('Defaults additionalProperties propagation', () => {
-    it('should submit string string map defaults', () => {
+    it('should submit string string map defaults', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         additionalProperties: {
@@ -949,12 +949,12 @@ describeRepeated('Form common', (createFormComponent) => {
       };
 
       const { node, onSubmit } = createFormComponent({ schema });
-      fireEvent.submit(node);
+      await submitForm(node, user);
 
       expectToHaveBeenCalledWithFormData(onSubmit, { foo: 'bar' }, true);
     });
 
-    it('should submit a combination of properties and additional properties defaults', () => {
+    it('should submit a combination of properties and additional properties defaults', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -972,12 +972,12 @@ describeRepeated('Form common', (createFormComponent) => {
       };
 
       const { node, onSubmit } = createFormComponent({ schema });
-      fireEvent.submit(node);
+      await submitForm(node, user);
 
       expectToHaveBeenCalledWithFormData(onSubmit, { x: 'x default value', y: 'y default value' }, true);
     });
 
-    it('should submit a properties and additional properties defaults when properties default is nested', () => {
+    it('should submit a properties and additional properties defaults when properties default is nested', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -995,7 +995,7 @@ describeRepeated('Form common', (createFormComponent) => {
       };
 
       const { node, onSubmit } = createFormComponent({ schema });
-      fireEvent.submit(node);
+      await submitForm(node, user);
 
       expectToHaveBeenCalledWithFormData(onSubmit, { x: 'x default value', y: 'y default value' }, true);
     });
@@ -1028,9 +1028,7 @@ describeRepeated('Form common', (createFormComponent) => {
       };
 
       const { node, onSubmit } = createFormComponent({ schema });
-      await act(() => {
-        fireEvent.submit(node);
-      });
+      await submitForm(node, user);
 
       expectToHaveBeenCalledWithFormData(onSubmit, { x: { y: { z: 'x.y.z default value' } } }, true);
     });
@@ -1054,14 +1052,12 @@ describeRepeated('Form common', (createFormComponent) => {
       };
 
       const { node, onSubmit } = createFormComponent({ schema });
-      await act(() => {
-        fireEvent.submit(node);
-      });
+      await submitForm(node, user);
 
       expectToHaveBeenCalledWithFormData(onSubmit, { x: { y: 'x.y default value' } }, true);
     });
 
-    it('should submit defaults when additionalProperties is a boolean value', () => {
+    it('should submit defaults when additionalProperties is a boolean value', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         additionalProperties: true,
@@ -1071,12 +1067,12 @@ describeRepeated('Form common', (createFormComponent) => {
       };
 
       const { node, onSubmit } = createFormComponent({ schema });
-      fireEvent.submit(node);
+      await submitForm(node, user);
 
       expectToHaveBeenCalledWithFormData(onSubmit, { foo: 'bar' }, true);
     });
 
-    it('should NOT submit default values when additionalProperties is false', () => {
+    it('should NOT submit default values when additionalProperties is false', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -1092,7 +1088,7 @@ describeRepeated('Form common', (createFormComponent) => {
       };
 
       const { node, onSubmit } = createFormComponent({ schema });
-      fireEvent.submit(node);
+      await submitForm(node, user);
 
       expectToHaveBeenCalledWithFormData(onSubmit, { foo: "I'm the only one" }, true);
     });
@@ -1109,16 +1105,13 @@ describeRepeated('Form common', (createFormComponent) => {
       const formData = {
         foo: 'bar',
       };
-      const event = { type: 'submit' };
       const { node, onSubmit } = createFormComponent({
         ref: createRef(),
         schema,
         formData,
       });
 
-      await act(() => {
-        fireEvent.submit(node, event);
-      });
+      await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, formData, true);
     });
 
@@ -1141,9 +1134,7 @@ describeRepeated('Form common', (createFormComponent) => {
         formData,
       });
 
-      await act(() => {
-        fireEvent.submit(node);
-      });
+      await submitForm(node, user);
 
       expect(onSubmit).not.toHaveBeenCalled();
       expect(onError).toHaveBeenCalled();
@@ -1831,7 +1822,7 @@ describeRepeated('Form common', (createFormComponent) => {
   });
 
   describe('Error handler', () => {
-    it('should call provided error handler on validation errors', () => {
+    it('should call provided error handler on validation errors', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -1846,7 +1837,7 @@ describeRepeated('Form common', (createFormComponent) => {
       };
       const { node, onError } = createFormComponent({ schema, formData });
 
-      fireEvent.submit(node);
+      await submitForm(node, user);
 
       expect(onError).toHaveBeenCalledTimes(1);
     });
@@ -1884,10 +1875,13 @@ describeRepeated('Form common', (createFormComponent) => {
       },
       required: ['shipping_address'],
     };
-    it('Errors when shipping address is not filled out, billing address is not needed', () => {
+    it('Errors when shipping address is not filled out, billing address is not needed', async () => {
       const { node, onChange, onError } = createFormComponent({ schema });
       expectToHaveBeenCalledWithFormData(onChange, { shipping_address: {} });
-      submitForm(node);
+      // forceFireEvent=true: clicking the submit button focuses it, blurring the
+      // currently focused field and firing onChange which may mutate formData before
+      // the submit handler runs. fireEvent.submit bypasses that side-effect chain.
+      await submitForm(node, user, true);
       expect(onError).toHaveBeenLastCalledWith([
         {
           message: "must have required property 'street_address'",
@@ -1918,7 +1912,7 @@ describeRepeated('Form common', (createFormComponent) => {
         },
       ]);
     });
-    it('Submits when shipping address is filled out, billing address is not needed', () => {
+    it('Submits when shipping address is filled out, billing address is not needed', async () => {
       const { node, onSubmit } = createFormComponent({
         schema,
         formData: {
@@ -1929,7 +1923,10 @@ describeRepeated('Form common', (createFormComponent) => {
           },
         },
       });
-      submitForm(node);
+      // forceFireEvent=true: clicking the submit button focuses it, blurring the
+      // currently focused field and firing onChange which may mutate formData before
+      // the submit handler runs. fireEvent.submit bypasses that side-effect chain.
+      await submitForm(node, user, true);
       expectToHaveBeenCalledWithFormData(
         onSubmit,
         {
@@ -1956,7 +1953,7 @@ describeRepeated('Form common', (createFormComponent) => {
         },
       },
     };
-    it('Errors when minItems is set, field is required, and minimum number of items are not present with IgnoreMinItemsUnlessRequired flag set', () => {
+    it('Errors when minItems is set, field is required, and minimum number of items are not present with IgnoreMinItemsUnlessRequired flag set', async () => {
       const { node, onError } = createFormComponent({
         schema: { ...schema, required: ['albums'] },
         formData: {
@@ -1964,7 +1961,7 @@ describeRepeated('Form common', (createFormComponent) => {
         },
         experimental_defaultFormStateBehavior: { arrayMinItems: { populate: 'requiredOnly' } },
       });
-      submitForm(node);
+      await submitForm(node, user);
       expect(onError).toHaveBeenLastCalledWith([
         {
           message: 'must NOT have fewer than 3 items',
@@ -1977,13 +1974,13 @@ describeRepeated('Form common', (createFormComponent) => {
         },
       ]);
     });
-    it('Submits when minItems is set, field is not required, and no items are present with IgnoreMinItemsUnlessRequired flag set', () => {
+    it('Submits when minItems is set, field is not required, and no items are present with IgnoreMinItemsUnlessRequired flag set', async () => {
       const { node, onSubmit } = createFormComponent({
         schema,
         formData: {},
         experimental_defaultFormStateBehavior: { arrayMinItems: { populate: 'requiredOnly' } },
       });
-      submitForm(node);
+      await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, {}, true);
     });
   });
@@ -2145,7 +2142,7 @@ describeRepeated('Form common', (createFormComponent) => {
           onSubmit,
           formData: 'yo',
         });
-        await act(() => submitForm(node));
+        await submitForm(node, user);
         expectToHaveBeenCalledWithFormData(onSubmit, 'yo', true);
       });
 
@@ -2158,7 +2155,7 @@ describeRepeated('Form common', (createFormComponent) => {
           formData: 'yo',
           schema: { type: 'number' },
         });
-        await act(() => submitForm(node));
+        await submitForm(node, user);
         expect(onError).toHaveBeenLastCalledWith([
           {
             message: 'must be number',
@@ -2187,7 +2184,7 @@ describeRepeated('Form common', (createFormComponent) => {
           formData: { foo: 'yo' },
         });
 
-        await act(() => submitForm(node));
+        await submitForm(node, user);
         expectToHaveBeenCalledWithFormData(onSubmit, { foo: 'yo' }, true);
       });
     });
@@ -2208,7 +2205,7 @@ describeRepeated('Form common', (createFormComponent) => {
           formData: ['yo'],
         });
 
-        await act(() => submitForm(node));
+        await submitForm(node, user);
         expectToHaveBeenCalledWithFormData(onSubmit, ['yo'], true);
       });
     });
@@ -2365,7 +2362,7 @@ describeRepeated('Form common', (createFormComponent) => {
           expect(node.querySelectorAll('.rjsf-field-error')).toHaveLength(0);
         });
 
-        it("should clean contextualized errors up when they're fixed", () => {
+        it("should clean contextualized errors up when they're fixed", async () => {
           const altSchema: RJSFSchema = {
             type: 'object',
             properties: {
@@ -2381,13 +2378,13 @@ describeRepeated('Form common', (createFormComponent) => {
             },
           });
 
-          fireEvent.submit(node);
+          await submitForm(node, user);
 
           // Fix the first field
           fireEvent.change(node.querySelectorAll('input[type=text]')[0], {
             target: { value: 'fixed error' },
           });
-          fireEvent.submit(node);
+          await submitForm(node, user);
 
           expect(node.querySelectorAll('.rjsf-field-error')).toHaveLength(1);
 
@@ -2395,10 +2392,10 @@ describeRepeated('Form common', (createFormComponent) => {
           fireEvent.change(node.querySelectorAll('input[type=text]')[1], {
             target: { value: 'fixed error too' },
           });
-          fireEvent.submit(node);
+          await submitForm(node, user);
 
           // No error remaining, shouldn't throw.
-          fireEvent.submit(node);
+          await submitForm(node, user);
 
           expect(node.querySelectorAll('.rjsf-field-error')).toHaveLength(0);
         });
@@ -2459,7 +2456,7 @@ describeRepeated('Form common', (createFormComponent) => {
       });
 
       describe('Disable validation onSubmit event', () => {
-        it('should not update errorSchema when the formData changes', () => {
+        it('should not update errorSchema when the formData changes', async () => {
           const { node, onSubmit } = createFormComponent({
             schema,
             noValidate: true,
@@ -2468,7 +2465,7 @@ describeRepeated('Form common', (createFormComponent) => {
           fireEvent.change(node.querySelector<HTMLInputElement>('input[type=text]')!, {
             target: { value: 'short' },
           });
-          fireEvent.submit(node);
+          await submitForm(node, user);
 
           expect(onSubmit).toHaveBeenLastCalledWith(
             expect.objectContaining({ errorSchema: {} }),
@@ -2484,7 +2481,7 @@ describeRepeated('Form common', (createFormComponent) => {
         minLength: 8,
       };
 
-      it('should call the onError handler and focus on the error', () => {
+      it('should call the onError handler and focus on the error', async () => {
         const onError = jest.fn();
         const { node } = createFormComponent({
           schema,
@@ -2502,7 +2499,7 @@ describeRepeated('Form common', (createFormComponent) => {
         fireEvent.change(input, {
           target: { value: 'short' },
         });
-        fireEvent.submit(node);
+        await submitForm(node, user);
 
         expect(onError).toHaveBeenLastCalledWith(expect.any(Array));
         const callArg = jest.mocked(onError).mock.calls[0][0];
@@ -2511,7 +2508,7 @@ describeRepeated('Form common', (createFormComponent) => {
         expect(focusSpy).toHaveBeenCalledTimes(1);
       });
 
-      it('should call the onError handler and call the provided focusOnFirstError callback function', () => {
+      it('should call the onError handler and call the provided focusOnFirstError callback function', async () => {
         const onError = jest.fn();
 
         const focusCallback = () => {
@@ -2539,7 +2536,7 @@ describeRepeated('Form common', (createFormComponent) => {
         fireEvent.change(input, {
           target: { value: 'short' },
         });
-        fireEvent.submit(node);
+        await submitForm(node, user);
 
         expect(onError).toHaveBeenLastCalledWith(expect.any(Array));
         const callArg = jest.mocked(onError).mock.calls[0][0];
@@ -2550,7 +2547,7 @@ describeRepeated('Form common', (createFormComponent) => {
         expect(focusOnFirstError).toHaveBeenCalledTimes(1);
       });
 
-      it('should call the onError handler and call the provided focusOnFirstError callback function', () => {
+      it('should call the onError handler and call the provided focusOnFirstError callback function', async () => {
         const onError = jest.fn();
 
         const focusCallback = () => {
@@ -2580,7 +2577,7 @@ describeRepeated('Form common', (createFormComponent) => {
         fireEvent.change(input, {
           target: { value: 'valid string' },
         });
-        fireEvent.submit(node);
+        await submitForm(node, user);
 
         expect(onError).toHaveBeenLastCalledWith(expect.any(Array));
         const callArg = jest.mocked(onError).mock.calls[0][0];
@@ -2591,7 +2588,7 @@ describeRepeated('Form common', (createFormComponent) => {
         expect(focusOnFirstError).toHaveBeenCalledTimes(1);
       });
 
-      it('should reset errors and errorSchema state to initial state after correction and resubmission', () => {
+      it('should reset errors and errorSchema state to initial state after correction and resubmission', async () => {
         const { node, onError, onSubmit } = createFormComponent({
           schema,
         });
@@ -2599,7 +2596,7 @@ describeRepeated('Form common', (createFormComponent) => {
         fireEvent.change(node.querySelector<HTMLInputElement>('input[type=text]')!, {
           target: { value: 'short' },
         });
-        fireEvent.submit(node);
+        await submitForm(node, user);
 
         expect(onError).toHaveBeenLastCalledWith([
           {
@@ -2618,7 +2615,7 @@ describeRepeated('Form common', (createFormComponent) => {
         fireEvent.change(node.querySelector<HTMLInputElement>('input[type=text]')!, {
           target: { value: 'long enough' },
         });
-        fireEvent.submit(node);
+        await submitForm(node, user);
         expect(onError).not.toHaveBeenCalled();
         expect(onSubmit).toHaveBeenLastCalledWith(
           expect.objectContaining({
@@ -2629,7 +2626,7 @@ describeRepeated('Form common', (createFormComponent) => {
         );
       });
 
-      it('should reset errors from UI after correction and resubmission', () => {
+      it('should reset errors from UI after correction and resubmission', async () => {
         const { node } = createFormComponent({
           schema,
         });
@@ -2637,7 +2634,7 @@ describeRepeated('Form common', (createFormComponent) => {
         fireEvent.change(node.querySelector<HTMLInputElement>('input[type=text]')!, {
           target: { value: 'short' },
         });
-        fireEvent.submit(node);
+        await submitForm(node, user);
 
         const errorListHTML = '<li class="text-danger">must NOT have fewer than 8 characters</li>';
         const errors = node.querySelectorAll('.error-detail');
@@ -2648,7 +2645,7 @@ describeRepeated('Form common', (createFormComponent) => {
         fireEvent.change(node.querySelector<HTMLInputElement>('input[type=text]')!, {
           target: { value: 'long enough' },
         });
-        fireEvent.submit(node);
+        await submitForm(node, user);
         expect(node.querySelectorAll('.error-detail')).toHaveLength(0);
       });
     });
@@ -2663,9 +2660,9 @@ describeRepeated('Form common', (createFormComponent) => {
         formData: 'short',
       };
 
-      it('should reflect the contextualized error in state', () => {
+      it('should reflect the contextualized error in state', async () => {
         const { node, onError } = createFormComponent(formProps);
-        submitForm(node);
+        await submitForm(node, user);
         expect(onError).toHaveBeenLastCalledWith([
           {
             message: 'must NOT have fewer than 8 characters',
@@ -2709,9 +2706,9 @@ describeRepeated('Form common', (createFormComponent) => {
         formData: 'short',
       };
 
-      it('should reflect the contextualized error in state', () => {
+      it('should reflect the contextualized error in state', async () => {
         const { node, onError } = createFormComponent(formProps);
-        submitForm(node);
+        await submitForm(node, user);
         expect(onError).toHaveBeenLastCalledWith([
           {
             message: 'must NOT have fewer than 8 characters',
@@ -2778,10 +2775,10 @@ describeRepeated('Form common', (createFormComponent) => {
         },
       };
 
-      it('should reflect the contextualized error in state', () => {
+      it('should reflect the contextualized error in state', async () => {
         const { node, onError } = createFormComponent(formProps);
 
-        submitForm(node);
+        await submitForm(node, user);
         expect(onError).toHaveBeenLastCalledWith([
           {
             message: 'must NOT have fewer than 8 characters',
@@ -2827,10 +2824,10 @@ describeRepeated('Form common', (createFormComponent) => {
         formData: ['good', 'ba', 'good'],
       };
 
-      it('should contextualize the error for array indices', () => {
+      it('should contextualize the error for array indices', async () => {
         const { node, onError } = createFormComponent(formProps);
 
-        submitForm(node);
+        await submitForm(node, user);
         expect(onError).toHaveBeenLastCalledWith([
           {
             message: 'must NOT have fewer than 4 characters',
@@ -2889,14 +2886,14 @@ describeRepeated('Form common', (createFormComponent) => {
 
       const formProps: Omit<FormProps, 'validator'> = { schema, liveValidate: true };
 
-      it('should contextualize the error for nested array indices', () => {
+      it('should contextualize the error for nested array indices', async () => {
         const { node, onError } = createFormComponent({
           ...formProps,
           formData: {
             level1: ['good', 'bad', 'good', 'bad'],
           },
         });
-        submitForm(node);
+        await submitForm(node, user);
         expect(onError).toHaveBeenLastCalledWith([
           {
             message: 'must NOT have fewer than 4 characters',
@@ -2972,7 +2969,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
       const formProps: Omit<FormProps, 'validator'> = { schema, formData, liveValidate: true };
 
-      it('should contextualize the error for nested array indices, focusing on first error', () => {
+      it('should contextualize the error for nested array indices, focusing on first error', async () => {
         const { node, onError } = createFormComponent({
           ...formProps,
           focusOnFirstError: true,
@@ -2986,7 +2983,7 @@ describeRepeated('Form common', (createFormComponent) => {
           value: focusSpy,
         });
 
-        submitForm(node);
+        await submitForm(node, user);
         expect(onError).toHaveBeenLastCalledWith([
           {
             message: 'must NOT have fewer than 4 characters',
@@ -3061,10 +3058,10 @@ describeRepeated('Form common', (createFormComponent) => {
         formData: [{ foo: 'good' }, { foo: 'ba' }, { foo: 'good' }],
       };
 
-      it('should contextualize the error for array nested items', () => {
+      it('should contextualize the error for array nested items', async () => {
         const { node, onError } = createFormComponent(formProps);
 
-        submitForm(node);
+        await submitForm(node, user);
         expect(onError).toHaveBeenLastCalledWith([
           {
             message: 'must NOT have fewer than 4 characters',
@@ -3527,7 +3524,7 @@ describeRepeated('Form common', (createFormComponent) => {
   });
 
   describe('Custom format updates, live validation', () => {
-    it('Should update custom formats when customFormats is changed', () => {
+    it('Should update custom formats when customFormats is changed', async () => {
       const formProps: Omit<FormProps, 'validator'> = {
         ref: createRef(),
         liveValidate: true,
@@ -3561,7 +3558,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
       const { node, onError, rerender } = createFormComponent(formProps);
 
-      submitForm(node);
+      await submitForm(node, user);
       expect(onError).not.toHaveBeenCalled();
 
       rerender(
@@ -3572,7 +3569,7 @@ describeRepeated('Form common', (createFormComponent) => {
         customValidator,
       );
 
-      submitForm(node);
+      await submitForm(node, user);
       expect(onError).toHaveBeenLastCalledWith([
         {
           message: 'must match format "area-code"',
@@ -3590,7 +3587,7 @@ describeRepeated('Form common', (createFormComponent) => {
   });
 
   describe('Meta schema updates', () => {
-    it('Should update allowed meta schemas when additionalMetaSchemas is changed', () => {
+    it('Should update allowed meta schemas when additionalMetaSchemas is changed', async () => {
       const formProps: Omit<FormProps, 'validator'> = {
         ref: createRef(),
         schema: {
@@ -3604,7 +3601,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
       const { node, onError, rerender } = createFormComponent(formProps);
 
-      submitForm(node);
+      await submitForm(node, user);
       expect(onError).toHaveBeenLastCalledWith([
         {
           stack: 'no schema with key or ref "http://json-schema.org/draft-06/schema#"',
@@ -3623,7 +3620,7 @@ describeRepeated('Form common', (createFormComponent) => {
         customValidator,
       );
 
-      submitForm(node);
+      await submitForm(node, user);
       expect(onError).toHaveBeenLastCalledWith([
         {
           message: 'must NOT have fewer than 8 characters',
@@ -3720,7 +3717,7 @@ describeRepeated('Form common', (createFormComponent) => {
   });
 
   describe('Dependencies', () => {
-    it('should not give a validation error by duplicating enum values in dependencies', () => {
+    it('should not give a validation error by duplicating enum values in dependencies', async () => {
       const schema: RJSFSchema = {
         title: 'A registration form',
         description: 'A simple form example.',
@@ -3754,7 +3751,7 @@ describeRepeated('Form common', (createFormComponent) => {
         type1: 'FOO',
       };
       const { node, onError } = createFormComponent({ schema, formData });
-      fireEvent.submit(node);
+      await submitForm(node, user);
       expect(onError).not.toHaveBeenCalled();
     });
     it('should show dependency defaults for uncontrolled components', () => {
@@ -4307,7 +4304,7 @@ describe('Form omitExtraData and liveOmit', () => {
     );
   });
 
-  it('should keep schema errors when extraErrors set after submit and liveValidate is false', () => {
+  it('should keep schema errors when extraErrors set after submit and liveValidate is false', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -4331,11 +4328,11 @@ describe('Form omitExtraData and liveOmit', () => {
       onSubmit,
       liveValidate: false,
     };
-    const event = { type: 'submit' };
     const { rerender, node } = createFormComponent(props);
-    act(() => {
-      fireEvent.submit(node, event);
-    });
+    // forceFireEvent=true: clicking the submit button focuses it, blurring the
+    // currently focused field and firing onChange which may mutate formData before
+    // the submit handler runs. fireEvent.submit bypasses that side-effect chain.
+    await submitForm(node, user, true);
     expect(node.querySelectorAll('.error-detail li')).toHaveLength(1);
 
     rerender({
@@ -4352,7 +4349,7 @@ describe('Form omitExtraData and liveOmit', () => {
 });
 
 describe('omitExtraData on submit', () => {
-  it('should call omitExtraData when the omitExtraData prop is true', () => {
+  it('should call omitExtraData when the omitExtraData prop is true', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -4375,12 +4372,12 @@ describe('omitExtraData on submit', () => {
 
     const theSpy = jest.spyOn(ref.current!, 'omitExtraData').mockReturnValue({ foo: '' });
 
-    fireEvent.submit(node);
+    await submitForm(node, user);
 
     expect(theSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('Should call validateFormWithFormData with the current formData if omitExtraData is false', () => {
+  it('Should call validateFormWithFormData with the current formData if omitExtraData is false', async () => {
     const omitExtraData = false;
     const schema: RJSFSchema = {
       type: 'object',
@@ -4398,11 +4395,11 @@ describe('omitExtraData on submit', () => {
     };
     const { node } = createFormComponent(props);
     const theSpy = jest.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
-    fireEvent.submit(node);
+    await submitForm(node, user);
     expect(theSpy).toHaveBeenCalledWith(formData);
   });
 
-  it('Should call validateFormWithFormData with a new formData with only used fields if omitExtraData is true', () => {
+  it('Should call validateFormWithFormData with a new formData with only used fields if omitExtraData is true', async () => {
     const omitExtraData = true;
     const schema: RJSFSchema = {
       type: 'object',
@@ -4420,7 +4417,7 @@ describe('omitExtraData on submit', () => {
     };
     const { node } = createFormComponent(props);
     const theSpy = jest.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
-    fireEvent.submit(node);
+    await submitForm(node, user);
     expect(theSpy).toHaveBeenCalledWith({ foo: 'bar' });
   });
 });
@@ -4441,21 +4438,19 @@ describe('omitExtraData prunes empty optional objects', () => {
     required: ['name'],
   };
 
-  it('prunes an empty optional object on submit when omitExtraData is true', () => {
+  it('prunes an empty optional object on submit when omitExtraData is true', async () => {
     const { node, onSubmit } = createFormComponent({
       schema,
       formData: { name: 'Alice', address: {} },
       omitExtraData: true,
     });
 
-    act(() => {
-      fireEvent.submit(node);
-    });
+    await submitForm(node, user);
 
     expectToHaveBeenCalledWithFormData(onSubmit, { name: 'Alice' }, true);
   });
 
-  it('does not prune a required object even when all its fields are empty', () => {
+  it('does not prune a required object even when all its fields are empty', async () => {
     const requiredAddressSchema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -4476,23 +4471,19 @@ describe('omitExtraData prunes empty optional objects', () => {
       omitExtraData: true,
     });
 
-    act(() => {
-      fireEvent.submit(node);
-    });
+    await submitForm(node, user);
 
     expectToHaveBeenCalledWithFormData(onSubmit, { name: 'Alice', address: {} }, true);
   });
 
-  it('keeps an optional object when it has a non-empty field', () => {
+  it('keeps an optional object when it has a non-empty field', async () => {
     const { node, onSubmit } = createFormComponent({
       schema,
       formData: { name: 'Alice', address: { street: '123 Main St' } },
       omitExtraData: true,
     });
 
-    act(() => {
-      fireEvent.submit(node);
-    });
+    await submitForm(node, user);
 
     expectToHaveBeenCalledWithFormData(onSubmit, { name: 'Alice', address: { street: '123 Main St' } }, true);
   });
@@ -4563,7 +4554,7 @@ describe('Async errors', () => {
     expect(node.querySelectorAll('.error-detail li')).toHaveLength(2);
   });
 
-  it('should not block form submission', () => {
+  it('should not block form submission', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -4578,7 +4569,7 @@ describe('Async errors', () => {
     } as unknown as ErrorSchema;
 
     const { node, onSubmit } = createFormComponent({ schema, extraErrors });
-    fireEvent.submit(node);
+    await submitForm(node, user);
     expect(onSubmit).toHaveBeenCalledTimes(1);
   });
 
@@ -4651,7 +4642,7 @@ describe('Async errors', () => {
     expect(formRef.current!.state.errors).toEqual([]);
   });
 
-  it('should reset when schema changes', () => {
+  it('should reset when schema changes', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -4666,9 +4657,10 @@ describe('Async errors', () => {
       schema,
     });
 
-    act(() => {
-      fireEvent.submit(node);
-    });
+    // forceFireEvent=true: clicking the submit button focuses it, blurring the
+    // currently focused field and firing onChange which may mutate formData before
+    // the submit handler runs. fireEvent.submit bypasses that side-effect chain.
+    await submitForm(node, user, true);
 
     expect(formRef.current!.state.errorSchema).toEqual({ foo: { __errors: ["must have required property 'foo'"] } });
     expect(formRef.current!.state.errors).toEqual([
@@ -4759,9 +4751,7 @@ describe('Async errors', () => {
     });
 
     // Submit the form, then wait for async extraErrors to be set
-    await act(async () => {
-      fireEvent.submit(form);
-    });
+    await submitForm(form, user);
     await act(async () => {
       await new Promise((r) => setTimeout(r, 100));
     });
@@ -4855,7 +4845,7 @@ describe('Calling reset from ref object', () => {
     expect(node.querySelector<HTMLInputElement>('input')).toHaveAttribute('value', '');
   });
 
-  it('Clear errors', () => {
+  it('Clear errors', async () => {
     const schema: RJSFSchema = {
       title: 'Test form',
       type: 'number',
@@ -4870,9 +4860,7 @@ describe('Calling reset from ref object', () => {
     expect(node.querySelector<HTMLInputElement>('input')).toBeInTheDocument();
     fireEvent.change(node.querySelector<HTMLInputElement>('input')!, { target: { value: 'Some Value' } });
     expect(formRef.current!.state.errors).toHaveLength(0);
-    act(() => {
-      fireEvent.submit(node);
-    });
+    await submitForm(node, user);
     expect(formRef.current!.state.errors).toHaveLength(1);
     expect(node.querySelector('.errors')).toBeInTheDocument();
     act(() => {
@@ -6007,9 +5995,7 @@ describe('extraErrors set after submit (#4965)', () => {
     const { container } = render(<Wrapper />);
     const form = container.querySelector('form')!;
 
-    await act(async () => {
-      fireEvent.submit(form);
-    });
+    await submitForm(form, user);
 
     await act(async () => {
       await new Promise((r) => setTimeout(r, 100));
@@ -6049,9 +6035,10 @@ describe('extraErrors set after submit (#4965)', () => {
     const { container } = render(<Wrapper />);
     const form = container.querySelector('form')!;
 
-    await act(async () => {
-      fireEvent.submit(form);
-    });
+    // forceFireEvent=true: clicking the submit button focuses it, blurring the
+    // currently focused field and firing onChange which may mutate formData before
+    // the submit handler runs. fireEvent.submit bypasses that side-effect chain.
+    await submitForm(form, user, true);
 
     await act(async () => {
       await new Promise((r) => setTimeout(r, 200));
@@ -6090,9 +6077,7 @@ describe('extraErrors set after submit (#4965)', () => {
     const { container } = render(<Wrapper />);
     const form = container.querySelector('form')!;
 
-    await act(async () => {
-      fireEvent.submit(form);
-    });
+    await submitForm(form, user);
 
     await act(async () => {
       await new Promise((r) => setTimeout(r, 200));
@@ -6188,7 +6173,7 @@ describe('patternProperties with fixed properties (#4518)', () => {
       formData: { annotations: {} },
     });
 
-    submitForm(node);
+    await submitForm(node, user);
     expect(onError).not.toHaveBeenCalled();
     expect(onSubmit).toHaveBeenCalled();
     onSubmit.mockClear();
@@ -6199,7 +6184,7 @@ describe('patternProperties with fixed properties (#4518)', () => {
     await user.type(input!, 'hello');
     await user.clear(input!);
 
-    submitForm(node);
+    await submitForm(node, user);
     expect(onError).not.toHaveBeenCalled();
     expect(onSubmit).toHaveBeenCalled();
     const { formData } = onSubmit.mock.calls[onSubmit.mock.calls.length - 1][0];

@@ -404,7 +404,7 @@ describe('ArrayField', () => {
       expect(item).toHaveAttribute('data-has-parent-uischema', 'true');
     });
 
-    it('should pass rawErrors down to custom array field templates', () => {
+    it('should pass rawErrors down to custom array field templates', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         title: 'my list',
@@ -423,7 +423,7 @@ describe('ArrayField', () => {
       });
 
       // trigger the errors by submitting the form
-      submitForm(node);
+      await submitForm(node, user);
 
       const matches = node.querySelectorAll('#custom');
       expect(matches).toHaveLength(1);
@@ -830,7 +830,7 @@ describe('ArrayField', () => {
       });
 
       try {
-        submitForm(node);
+        await submitForm(node, user);
       } catch {
         // Silencing error thrown as failure is expected here
       }
@@ -937,7 +937,10 @@ describe('ArrayField', () => {
         'root_1',
       );
 
-      submitForm(node);
+      // forceFireEvent=true: clicking the submit button focuses it, blurring the
+      // currently focused field and firing onChange which may mutate formData before
+      // the submit handler runs. fireEvent.submit bypasses that side-effect chain.
+      await submitForm(node, user, true);
       expect(onError).toHaveBeenLastCalledWith(
         expect.arrayContaining([
           {
@@ -1100,7 +1103,7 @@ describe('ArrayField', () => {
       expect(inputs[3]).toHaveValue('Unknown');
     });
 
-    it('should not add minItems extra formData entries when schema item is a multiselect', () => {
+    it('should not add minItems extra formData entries when schema item is a multiselect', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -1128,7 +1131,7 @@ describe('ArrayField', () => {
         liveValidate: true,
         noValidate: true,
       });
-      submitForm(form.node);
+      await submitForm(form.node, user);
 
       expectToHaveBeenCalledWithFormData(form.onSubmit, { multipleChoicesList: [] }, true);
 
@@ -1139,7 +1142,7 @@ describe('ArrayField', () => {
         liveValidate: true,
         noValidate: false,
       });
-      submitForm(form.node);
+      await submitForm(form.node, user);
 
       expect(form.onError).toHaveBeenLastCalledWith(
         expect.arrayContaining([
@@ -1276,7 +1279,7 @@ describe('ArrayField', () => {
         expect(node.querySelector('select')).toHaveAttribute('id', 'root');
       });
 
-      it('should pass rawErrors down to custom widgets', () => {
+      it('should pass rawErrors down to custom widgets', async () => {
         const { node } = createFormComponent({
           schema,
           widgets: {
@@ -1286,7 +1289,7 @@ describe('ArrayField', () => {
           liveValidate: true,
         });
         // trigger the errors by submitting the form since initial render no longer shows them
-        submitForm(node);
+        await submitForm(node, user);
 
         const matches = node.querySelectorAll('#custom');
         expect(matches).toHaveLength(1);
@@ -1443,7 +1446,7 @@ describe('ArrayField', () => {
         expect(node.querySelectorAll('.checkbox-inline')).toHaveLength(3);
       });
 
-      it('should pass rawErrors down to custom widgets', () => {
+      it('should pass rawErrors down to custom widgets', async () => {
         const schema: RJSFSchema = {
           type: 'array',
           title: 'My field',
@@ -1466,7 +1469,7 @@ describe('ArrayField', () => {
         });
 
         // trigger the errors by submitting the form since initial render no longer shows them
-        submitForm(node);
+        await submitForm(node, user);
 
         const matches = node.querySelectorAll('#custom');
         expect(matches).toHaveLength(1);
@@ -1606,7 +1609,7 @@ describe('ArrayField', () => {
       expect(node.querySelector('input[type=file]')).toHaveAttribute('accept', '.pdf');
     });
 
-    it('should pass rawErrors down to custom widgets', () => {
+    it('should pass rawErrors down to custom widgets', async () => {
       const schema: RJSFSchema = {
         type: 'array',
         title: 'My field',
@@ -1627,7 +1630,7 @@ describe('ArrayField', () => {
       });
 
       // trigger the errors by submitting the form since initial render no longer shows them
-      submitForm(node);
+      await submitForm(node, user);
 
       const matches = node.querySelectorAll('#custom');
       expect(matches).toHaveLength(1);
@@ -1668,7 +1671,7 @@ describe('ArrayField', () => {
       expect(node.querySelectorAll('fieldset fieldset')).toHaveLength(1);
     });
 
-    it('should pass rawErrors down to every level of custom widgets', () => {
+    it('should pass rawErrors down to every level of custom widgets', async () => {
       const CustomItem = (props: FieldProps) => <div id='custom-item'>{props.children}</div>;
       const CustomTemplate = (props: ArrayFieldTemplateProps) => {
         return (
@@ -1701,7 +1704,7 @@ describe('ArrayField', () => {
       });
 
       // trigger the errors by submitting the form since initial render no longer shows them
-      submitForm(node);
+      await submitForm(node, user);
 
       const matches = node.querySelectorAll('#custom-error');
       expect(matches).toHaveLength(2);
@@ -1919,7 +1922,7 @@ describe('ArrayField', () => {
       expect(node.querySelectorAll('textarea')).toHaveLength(2);
     });
 
-    it('[fixed] should silently handle additional formData not covered by fixed array', () => {
+    it('[fixed] should silently handle additional formData not covered by fixed array', async () => {
       const { node, onSubmit } = createFormComponent({
         schema: {
           type: 'array',
@@ -1935,7 +1938,7 @@ describe('ArrayField', () => {
         formData: ['foo', 'bar', 'baz'],
       });
       expect(node.querySelectorAll('input')).toHaveLength(2);
-      submitForm(node);
+      await submitForm(node, user);
 
       expectToHaveBeenCalledWithFormData(onSubmit, ['foo', 'bar', 'baz'], true);
     });
@@ -2683,7 +2686,7 @@ describe('ArrayField', () => {
       return errors;
     }
 
-    it('should render nested error decorated input widgets with the expected ids', () => {
+    it('should render nested error decorated input widgets with the expected ids', async () => {
       const { node } = createFormComponent({
         schema: complexSchema,
         formData: {
@@ -2692,13 +2695,13 @@ describe('ArrayField', () => {
         customValidate,
       });
 
-      submitForm(node);
+      await submitForm(node, user);
 
       const inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
       expect(inputs[0]).toHaveAttribute('id', 'root_foo_0_bar');
       expect(inputs[1]).toHaveAttribute('id', 'root_foo_1_bar');
     });
-    it('must NOT render nested error decorated input widgets', () => {
+    it('must NOT render nested error decorated input widgets', async () => {
       const { node } = createFormComponent({
         schema: complexSchema,
         uiSchema: {
@@ -2710,7 +2713,7 @@ describe('ArrayField', () => {
         customValidate,
         showErrorList: false,
       });
-      submitForm(node);
+      await submitForm(node, user);
 
       const inputsNoError = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
       expect(inputsNoError).toHaveLength(0);
@@ -2831,7 +2834,10 @@ describe('ArrayField', () => {
         templates,
       });
 
-      submitForm(node);
+      // forceFireEvent=true: seeds errorSchema in form state via fireEvent.submit to avoid
+      // user.click(button) focusing the button, blurring a field, and firing onChange which
+      // would mutate formData before the submit runs.
+      await submitForm(node, user, true);
 
       const button = node.querySelector('[title="move-up"]');
 
@@ -2860,7 +2866,10 @@ describe('ArrayField', () => {
         templates,
       });
 
-      submitForm(node);
+      // forceFireEvent=true: seeds errorSchema in form state via fireEvent.submit to avoid
+      // user.click(button) focusing the button, blurring a field, and firing onChange which
+      // would mutate formData before the submit runs.
+      await submitForm(node, user, true);
 
       const button = node.querySelectorAll('[title="remove"]')[1];
 
@@ -2889,7 +2898,10 @@ describe('ArrayField', () => {
         templates,
       });
 
-      submitForm(node);
+      // forceFireEvent=true: seeds errorSchema in form state via fireEvent.submit to avoid
+      // user.click(button) focusing the button, blurring a field, and firing onChange which
+      // would mutate formData before the submit runs.
+      await submitForm(node, user, true);
 
       const button = node.querySelector('[title="remove"]');
 
@@ -2912,7 +2924,10 @@ describe('ArrayField', () => {
         templates,
       });
 
-      submitForm(node);
+      // forceFireEvent=true: seeds errorSchema in form state via fireEvent.submit to avoid
+      // user.click(button) focusing the button, blurring a field, and firing onChange which
+      // would mutate formData before the submit runs.
+      await submitForm(node, user, true);
 
       const button = node.querySelector('[title="insert"]');
 
@@ -2941,7 +2956,10 @@ describe('ArrayField', () => {
         templates,
       });
 
-      submitForm(node);
+      // forceFireEvent=true: seeds errorSchema in form state via fireEvent.submit to avoid
+      // user.click(button) focusing the button, blurring a field, and firing onChange which
+      // would mutate formData before the submit runs.
+      await submitForm(node, user, true);
 
       const button = node.querySelector('[title="insert"]');
 
@@ -2971,7 +2989,10 @@ describe('ArrayField', () => {
         templates,
       });
 
-      submitForm(node);
+      // forceFireEvent=true: seeds errorSchema in form state via fireEvent.submit to avoid
+      // user.click(button) focusing the button, blurring a field, and firing onChange which
+      // would mutate formData before the submit runs.
+      await submitForm(node, user, true);
 
       const button = node.querySelector('[title="copy"]');
 
@@ -3001,7 +3022,10 @@ describe('ArrayField', () => {
         templates,
       });
 
-      submitForm(node);
+      // forceFireEvent=true: seeds errorSchema in form state via fireEvent.submit to avoid
+      // user.click(button) focusing the button, blurring a field, and firing onChange which
+      // would mutate formData before the submit runs.
+      await submitForm(node, user, true);
 
       const button = node.querySelector('[title="copy"]');
 
@@ -3023,15 +3047,17 @@ describe('ArrayField', () => {
       );
     });
 
-    it('Check that when formData changes, the form should re-validate', () => {
+    it('Check that when formData changes, the form should re-validate', async () => {
       const { node, rerender } = createFormComponent({
         schema,
         formData: [{}],
         liveValidate: true,
       });
 
-      // trigger the errors by submitting the form since initial render no longer shows them
-      submitForm(node);
+      // trigger the errors by submitting the form since initial render no longer shows them.
+      // forceFireEvent=true: clicking the submit button focuses it, blurring any focused
+      // field and firing onChange, which can mutate formData before the submit runs.
+      await submitForm(node, user, true);
 
       const errorMessages = node.querySelectorAll('#root_0_text__error');
       expect(errorMessages).toHaveLength(1);
@@ -3627,7 +3653,7 @@ describe('ArrayField', () => {
 
       const ageInput = node.querySelector<HTMLInputElement>('#root_arrayList_0_age')!;
       await user.clear(ageInput);
-      submitForm(node);
+      await submitForm(node, user);
 
       expectToHaveBeenCalledWithFormData(onSubmit, { arrayList: [{ name: 'John' }] }, true);
     });

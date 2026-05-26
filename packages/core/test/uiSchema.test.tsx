@@ -1057,7 +1057,7 @@ describe('uiSchema', () => {
         expect(node.querySelector('[type=hidden]')).toHaveValue('a');
       });
 
-      it('should map widget value to a typed event property', () => {
+      it('should map widget value to a typed event property', async () => {
         const { node, onSubmit } = createFormComponent({
           schema,
           uiSchema,
@@ -1066,7 +1066,7 @@ describe('uiSchema', () => {
           },
         });
 
-        submitForm(node);
+        await submitForm(node, user);
 
         expectToHaveBeenCalledWithFormData(onSubmit, { foo: 'a' }, true);
       });
@@ -1379,7 +1379,7 @@ describe('uiSchema', () => {
         expect(node.querySelector('[type=hidden]')).toHaveValue('42');
       });
 
-      it('should map widget value to a typed event property', () => {
+      it('should map widget value to a typed event property', async () => {
         const { node, onSubmit } = createFormComponent({
           schema,
           uiSchema,
@@ -1388,7 +1388,7 @@ describe('uiSchema', () => {
           },
         });
 
-        submitForm(node);
+        await submitForm(node, user);
 
         expectToHaveBeenCalledWithFormData(onSubmit, { foo: 42 }, true);
       });
@@ -1569,7 +1569,7 @@ describe('uiSchema', () => {
         expect(node.querySelector('[type=hidden]')).toHaveValue('42');
       });
 
-      it('should map widget value to a typed event property', () => {
+      it('should map widget value to a typed event property', async () => {
         const { node, onSubmit } = createFormComponent({
           schema,
           uiSchema,
@@ -1578,7 +1578,7 @@ describe('uiSchema', () => {
           },
         });
 
-        submitForm(node);
+        await submitForm(node, user);
 
         expectToHaveBeenCalledWithFormData(onSubmit, { foo: 42 }, true);
       });
@@ -1737,7 +1737,7 @@ describe('uiSchema', () => {
         expect(node.querySelector('[type=hidden]')).toHaveValue('true');
       });
 
-      it('should map widget value to a typed event property', () => {
+      it('should map widget value to a typed event property', async () => {
         const { node, onSubmit } = createFormComponent({
           schema,
           uiSchema,
@@ -1746,7 +1746,7 @@ describe('uiSchema', () => {
           },
         });
 
-        submitForm(node);
+        await submitForm(node, user);
 
         expectToHaveBeenCalledWithFormData(onSubmit, { foo: true }, true);
       });

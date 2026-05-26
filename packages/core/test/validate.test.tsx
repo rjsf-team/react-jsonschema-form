@@ -22,7 +22,7 @@ describe('Validation', () => {
 
         let onError: jest.Mock;
         let node: Element;
-        beforeEach(() => {
+        beforeEach(async () => {
           const compInfo = createFormComponent({
             schema,
             formData: {
@@ -31,7 +31,10 @@ describe('Validation', () => {
           });
           onError = compInfo.onError;
           node = compInfo.node;
-          submitForm(node);
+          // forceFireEvent=true: clicking the submit button focuses it, blurring the
+          // currently focused field and firing onChange which may mutate formData before
+          // the submit handler runs. fireEvent.submit bypasses that side-effect chain.
+          await submitForm(node, user, true);
         });
 
         it('should trigger onError call', () => {
@@ -69,7 +72,7 @@ describe('Validation', () => {
         let onError: jest.Mock;
         let node: Element;
 
-        beforeEach(() => {
+        beforeEach(async () => {
           const compInfo = createFormComponent({
             schema,
             formData: {
@@ -79,7 +82,7 @@ describe('Validation', () => {
           node = compInfo.node;
           onError = compInfo.onError;
 
-          submitForm(node);
+          await submitForm(node, user);
         });
 
         it('should render errors', () => {
@@ -104,7 +107,7 @@ describe('Validation', () => {
     });
 
     describe('Custom Form validation', () => {
-      it('should validate a simple string value', () => {
+      it('should validate a simple string value', async () => {
         const schema: RJSFSchema = { type: 'string' };
         const formData = 'a';
 
@@ -121,7 +124,7 @@ describe('Validation', () => {
           formData,
         });
 
-        submitForm(node);
+        await submitForm(node, user);
         expect(onError).toHaveBeenLastCalledWith([{ property: '.', message: 'Invalid', stack: '. Invalid' }]);
       });
 
@@ -157,7 +160,7 @@ describe('Validation', () => {
         );
       });
 
-      it('should submit form on valid data', () => {
+      it('should submit form on valid data', async () => {
         const schema: RJSFSchema = { type: 'string' };
         const formData = 'hello';
         const onSubmit = jest.fn();
@@ -176,12 +179,12 @@ describe('Validation', () => {
           onSubmit,
         });
 
-        submitForm(node);
+        await submitForm(node, user);
 
         expect(onSubmit).toHaveBeenCalled();
       });
 
-      it('should prevent form submission on invalid data', () => {
+      it('should prevent form submission on invalid data', async () => {
         const schema: RJSFSchema = { type: 'string' };
         const formData = 'a';
         const onSubmit = jest.fn();
@@ -202,13 +205,13 @@ describe('Validation', () => {
           onError,
         });
 
-        submitForm(node);
+        await submitForm(node, user);
 
         expect(onSubmit).not.toHaveBeenCalled();
         expect(onError).toHaveBeenCalled();
       });
 
-      it('should validate a simple object', () => {
+      it('should validate a simple object', async () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -232,7 +235,7 @@ describe('Validation', () => {
           customValidate,
           formData,
         });
-        submitForm(node);
+        await submitForm(node, user);
         expect(onError).toHaveBeenLastCalledWith([
           {
             message: 'must NOT have fewer than 3 characters',
@@ -251,7 +254,7 @@ describe('Validation', () => {
         ]);
       });
 
-      it('should validate an array of object', () => {
+      it('should validate an array of object', async () => {
         const schema: RJSFSchema = {
           type: 'array',
           items: {
@@ -284,7 +287,7 @@ describe('Validation', () => {
           formData,
         });
 
-        submitForm(node);
+        await submitForm(node, user);
         expect(onError).toHaveBeenLastCalledWith([
           {
             property: '.0.pass2',
@@ -294,7 +297,7 @@ describe('Validation', () => {
         ]);
       });
 
-      it('should validate a simple array', () => {
+      it('should validate a simple array', async () => {
         const schema: RJSFSchema = {
           type: 'array',
           items: {
@@ -316,7 +319,7 @@ describe('Validation', () => {
           customValidate,
           formData,
         });
-        submitForm(node);
+        await submitForm(node, user);
         expect(onError).toHaveBeenLastCalledWith([
           {
             property: '.',
@@ -340,7 +343,7 @@ describe('Validation', () => {
 
         let onError: jest.Mock;
         let node: Element;
-        beforeEach(() => {
+        beforeEach(async () => {
           const compInfo = createFormComponent({
             schema,
             formData: {
@@ -351,7 +354,10 @@ describe('Validation', () => {
           node = compInfo.node;
           onError = compInfo.onError;
 
-          submitForm(node);
+          // forceFireEvent=true: clicking the submit button focuses it, blurring the
+          // currently focused field and firing onChange which may mutate formData before
+          // the submit handler runs. fireEvent.submit bypasses that side-effect chain.
+          await submitForm(node, user, true);
         });
 
         it('should not render error list if showErrorList prop true', () => {
@@ -404,7 +410,7 @@ describe('Validation', () => {
         </div>
       );
 
-      it('should use CustomErrorList', () => {
+      it('should use CustomErrorList', async () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
@@ -415,7 +421,7 @@ describe('Validation', () => {
         });
 
         // trigger the errors by submitting the form since initial render no longer shows them
-        submitForm(node);
+        await submitForm(node, user);
         expect(node.querySelectorAll('.CustomErrorList')).toHaveLength(1);
         expect(node.querySelector('.CustomErrorList')).toHaveTextContent('1 custom');
         expect(node.querySelectorAll('.ErrorSchema')).toHaveLength(1);
@@ -451,7 +457,7 @@ describe('Validation', () => {
         },
       };
 
-      beforeEach(() => {
+      beforeEach(async () => {
         const validator = customizeV8Validator({
           additionalMetaSchemas: [require('ajv/lib/refs/json-schema-draft-06.json')],
         });
@@ -465,7 +471,7 @@ describe('Validation', () => {
         );
         node = withMetaSchema.node;
         onError = withMetaSchema.onError;
-        submitForm(node);
+        await submitForm(node, user);
       });
       it('should be used to validate schema', async () => {
         expect(node.querySelectorAll('.errors li')).toHaveLength(1);

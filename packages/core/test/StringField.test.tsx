@@ -181,12 +181,12 @@ describe('StringField', () => {
       expect(node.querySelector('.rjsf-field input')).toHaveAttribute('list', datalistId);
     });
 
-    it('should default submit value to undefined', () => {
+    it('should default submit value to undefined', async () => {
       const { node, onSubmit } = createFormComponent({
         schema: { type: 'string' },
         noValidate: true,
       });
-      submitForm(node);
+      await submitForm(node, user);
 
       expectToHaveBeenCalledWithFormData(onSubmit, undefined, true);
     });
@@ -313,7 +313,7 @@ describe('StringField', () => {
       expect(node.querySelector('input')).toHaveAttribute('autocomplete', 'family-name');
     });
 
-    it('Check that when formData changes, the form should re-validate', () => {
+    it('Check that when formData changes, the form should re-validate', async () => {
       const { node, rerender } = createFormComponent({
         schema: { type: 'string' },
         formData: null,
@@ -321,7 +321,7 @@ describe('StringField', () => {
       });
 
       // trigger the errors by submitting the form since initial render no longer shows them
-      submitForm(node);
+      await submitForm(node, user);
 
       const errorMessages = node.querySelectorAll('#root__error');
       expect(errorMessages).toHaveLength(1);
@@ -482,7 +482,7 @@ describe('StringField', () => {
       expect(node.querySelectorAll('.rjsf-field option')[0]).toHaveTextContent('Test');
     });
 
-    it('should assign a default value', () => {
+    it('should assign a default value', async () => {
       const { node, onSubmit } = createFormComponent({
         schema: {
           type: 'string',
@@ -491,7 +491,7 @@ describe('StringField', () => {
         },
       });
 
-      submitForm(node);
+      await submitForm(node, user);
 
       expectToHaveBeenCalledWithFormData(onSubmit, 'bar', true);
     });
@@ -553,7 +553,7 @@ describe('StringField', () => {
       expect(getSelectedOptionValue($select)).toEqual('');
     });
 
-    it('should fill field with data', () => {
+    it('should fill field with data', async () => {
       const { node, onSubmit } = createFormComponent({
         schema: {
           type: 'string',
@@ -561,7 +561,7 @@ describe('StringField', () => {
         },
         formData: 'bar',
       });
-      submitForm(node);
+      await submitForm(node, user);
 
       expectToHaveBeenCalledWithFormData(onSubmit, 'bar', true);
     });
@@ -709,7 +709,7 @@ describe('StringField', () => {
       expect(node.querySelectorAll('.rjsf-field [type=datetime-local]')).toHaveLength(1);
     });
 
-    it('should assign a default value', () => {
+    it('should assign a default value', async () => {
       const datetime = new Date().toJSON();
       const { node, onSubmit } = createFormComponent({
         schema: {
@@ -718,7 +718,7 @@ describe('StringField', () => {
           default: datetime,
         },
       });
-      submitForm(node);
+      await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, datetime, true);
     });
 
@@ -741,7 +741,7 @@ describe('StringField', () => {
       expect(dateNode).toHaveValue(newDatetime);
     });
 
-    it('should fill field with data', () => {
+    it('should fill field with data', async () => {
       const datetime = new Date().toJSON();
       const { node, onSubmit } = createFormComponent({
         schema: {
@@ -750,7 +750,7 @@ describe('StringField', () => {
         },
         formData: datetime,
       });
-      submitForm(node);
+      await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, datetime, true);
     });
 
@@ -809,7 +809,7 @@ describe('StringField', () => {
       expect(node.querySelectorAll('.rjsf-field [type=date]')).toHaveLength(1);
     });
 
-    it('should assign a default value', () => {
+    it('should assign a default value', async () => {
       const datetime = new Date().toJSON();
       const { node, onSubmit } = createFormComponent({
         schema: {
@@ -820,7 +820,7 @@ describe('StringField', () => {
         uiSchema,
         noValidate: true,
       });
-      submitForm(node);
+      await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, datetime, true);
     });
 
@@ -842,7 +842,7 @@ describe('StringField', () => {
       expect(input).toHaveValue(newDatetime.slice(0, 10));
     });
 
-    it('should fill field with data', () => {
+    it('should fill field with data', async () => {
       const datetime = new Date().toJSON();
       const { node, onSubmit } = createFormComponent({
         schema: {
@@ -852,7 +852,7 @@ describe('StringField', () => {
         formData: datetime,
         noValidate: true,
       });
-      submitForm(node);
+      await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, datetime, true);
     });
 
@@ -928,7 +928,7 @@ describe('StringField', () => {
       expect(node.querySelectorAll('.rjsf-field [type=time]')).toHaveLength(1);
     });
 
-    it('should assign a default value', () => {
+    it('should assign a default value', async () => {
       const time = '01:10:00';
       const { node, onSubmit } = createFormComponent({
         schema: {
@@ -937,7 +937,7 @@ describe('StringField', () => {
           default: time,
         },
       });
-      submitForm(node);
+      await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, time, true);
     });
 
@@ -957,7 +957,7 @@ describe('StringField', () => {
       expect(input).toHaveValue(`${newTime}:00`);
     });
 
-    it('should fill field with data', () => {
+    it('should fill field with data', async () => {
       const time = '13:10:00';
       const { node, onSubmit } = createFormComponent({
         schema: {
@@ -966,7 +966,7 @@ describe('StringField', () => {
         },
         formData: time,
       });
-      submitForm(node);
+      await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, time, true);
     });
 
@@ -1038,7 +1038,7 @@ describe('StringField', () => {
       expect(node.querySelector('.rjsf-field label')).toHaveTextContent('foo');
     });
 
-    it('should assign a default value', () => {
+    it('should assign a default value', async () => {
       const current = new Date();
       current.setMilliseconds(0);
       const datetime = current.toJSON();
@@ -1050,7 +1050,7 @@ describe('StringField', () => {
         },
         uiSchema,
       });
-      submitForm(node);
+      await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, datetime, true);
     });
 
@@ -1083,7 +1083,7 @@ describe('StringField', () => {
       expectToHaveBeenCalledWithFormData(onChange, '2012-10-02T01:02:03.000Z', 'root');
     });
 
-    it('should fill field with data', () => {
+    it('should fill field with data', async () => {
       const datetime = new Date().toJSON();
       const { node, onSubmit } = createFormComponent({
         schema: {
@@ -1092,7 +1092,7 @@ describe('StringField', () => {
         },
         formData: datetime,
       });
-      submitForm(node);
+      await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, datetime, true);
     });
 
@@ -1395,7 +1395,7 @@ describe('StringField', () => {
       expect(node.querySelector('.rjsf-field label')).toHaveTextContent('foo');
     });
 
-    it('should assign a default value', () => {
+    it('should assign a default value', async () => {
       const datetime = '2012-12-12';
       const { node, onSubmit } = createFormComponent({
         schema: {
@@ -1405,7 +1405,7 @@ describe('StringField', () => {
         },
         uiSchema,
       });
-      submitForm(node);
+      await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, datetime, true);
     });
 
@@ -1456,7 +1456,7 @@ describe('StringField', () => {
       expect(onChange).not.toHaveBeenCalled();
     });
 
-    it('should fill field with data', () => {
+    it('should fill field with data', async () => {
       const datetime = '2012-12-12';
       const { node, onSubmit } = createFormComponent({
         schema: {
@@ -1466,7 +1466,7 @@ describe('StringField', () => {
         uiSchema,
         formData: datetime,
       });
-      submitForm(node);
+      await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, datetime, true);
     });
 
@@ -1712,7 +1712,7 @@ describe('StringField', () => {
       expect(node.querySelector('.field-description')).toHaveTextContent('baz');
     });
 
-    it('should assign a default value', () => {
+    it('should assign a default value', async () => {
       const email = 'foo@bar.baz';
       const { node, onSubmit } = createFormComponent({
         schema: {
@@ -1722,7 +1722,7 @@ describe('StringField', () => {
         },
       });
 
-      submitForm(node);
+      await submitForm(node, user);
 
       expectToHaveBeenCalledWithFormData(onSubmit, email, true);
     });
@@ -1741,7 +1741,7 @@ describe('StringField', () => {
       expect(node.querySelector('[type=email]')).toHaveValue(newDatetime);
     });
 
-    it('should fill field with data', () => {
+    it('should fill field with data', async () => {
       const email = 'foo@bar.baz';
       const { node, onSubmit } = createFormComponent({
         schema: {
@@ -1751,7 +1751,7 @@ describe('StringField', () => {
         formData: email,
       });
 
-      submitForm(node);
+      await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, email, true);
     });
 
@@ -1847,7 +1847,7 @@ describe('StringField', () => {
       expect(node.querySelector('.field-description')).toHaveTextContent('baz');
     });
 
-    it('should assign a default value', () => {
+    it('should assign a default value', async () => {
       const url = 'http://foo.bar/baz';
       const { node, onSubmit } = createFormComponent({
         schema: {
@@ -1857,7 +1857,7 @@ describe('StringField', () => {
         },
       });
 
-      submitForm(node);
+      await submitForm(node, user);
 
       expectToHaveBeenCalledWithFormData(onSubmit, url, true);
     });
@@ -1876,7 +1876,7 @@ describe('StringField', () => {
       expect(node.querySelector('[type=url]')).toHaveValue(newDatetime);
     });
 
-    it('should fill field with data', () => {
+    it('should fill field with data', async () => {
       const url = 'http://foo.bar/baz';
       const { node, onSubmit } = createFormComponent({
         schema: {
@@ -1886,7 +1886,7 @@ describe('StringField', () => {
         formData: url,
       });
 
-      submitForm(node);
+      await submitForm(node, user);
 
       expectToHaveBeenCalledWithFormData(onSubmit, url, true);
     });
@@ -1963,7 +1963,7 @@ describe('StringField', () => {
       expect(node.querySelectorAll('.rjsf-field [type=color]')).toHaveLength(1);
     });
 
-    it('should assign a default value', () => {
+    it('should assign a default value', async () => {
       const { node, onSubmit } = createFormComponent({
         schema: {
           type: 'string',
@@ -1972,7 +1972,7 @@ describe('StringField', () => {
         },
         uiSchema,
       });
-      submitForm(node);
+      await submitForm(node, user);
 
       expectToHaveBeenCalledWithFormData(onSubmit, color, true);
     });
@@ -1999,7 +1999,7 @@ describe('StringField', () => {
       expect(node.querySelector('[type=color]')).toHaveValue(newColor);
     });
 
-    it('should fill field with data', () => {
+    it('should fill field with data', async () => {
       const { node, onSubmit } = createFormComponent({
         schema: {
           type: 'string',
@@ -2007,7 +2007,7 @@ describe('StringField', () => {
         },
         formData: color,
       });
-      submitForm(node);
+      await submitForm(node, user);
 
       expectToHaveBeenCalledWithFormData(onSubmit, color, true);
     });
@@ -2053,7 +2053,7 @@ describe('StringField', () => {
       expect(node.querySelectorAll('.rjsf-field [type=file]')).toHaveLength(1);
     });
 
-    it('should assign a default value', () => {
+    it('should assign a default value', async () => {
       const { node, onSubmit } = createFormComponent({
         schema: {
           type: 'string',
@@ -2061,7 +2061,7 @@ describe('StringField', () => {
           default: initialValue,
         },
       });
-      submitForm(node);
+      await submitForm(node, user);
 
       expectToHaveBeenCalledWithFormData(onSubmit, initialValue, true);
     });

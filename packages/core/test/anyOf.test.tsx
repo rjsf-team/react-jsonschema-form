@@ -1,9 +1,12 @@
 import { createRef } from 'react';
 import { fireEvent, act } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { FormValidation, RJSFSchema, WidgetProps } from '@rjsf/utils';
 
-import { createFormComponent, getSelectedOptionValue } from './testUtils';
+import { createFormComponent, getSelectedOptionValue, submitForm } from './testUtils';
 import SelectWidget from '../src/components/widgets/SelectWidget';
+
+const user = userEvent.setup();
 
 describe('anyOf', () => {
   it('should not render a select element if the anyOf keyword is not present', () => {
@@ -1635,7 +1638,7 @@ describe('anyOf', () => {
       return errors;
     }
 
-    it('should show error on options with different types', () => {
+    it('should show error on options with different types', async () => {
       const { node } = createFormComponent({
         schema,
         customValidate,
@@ -1646,9 +1649,7 @@ describe('anyOf', () => {
           target: { value: 12345 },
         });
       });
-      act(() => {
-        fireEvent.submit(node);
-      });
+      await submitForm(node, user);
 
       let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=number]');
       expect(inputs[0]).toHaveAttribute('id', 'root_userId');
@@ -1666,15 +1667,13 @@ describe('anyOf', () => {
           target: { value: 'Lorem ipsum dolor sit amet' },
         });
       });
-      act(() => {
-        fireEvent.submit(node);
-      });
+      await submitForm(node, user);
 
       inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
       expect(inputs[0]).toHaveAttribute('id', 'root_userId');
     });
 
-    it('should NOT show error on options with different types when hideError: true', () => {
+    it('should NOT show error on options with different types when hideError: true', async () => {
       const { node } = createFormComponent({
         schema,
         uiSchema: {
@@ -1689,9 +1688,7 @@ describe('anyOf', () => {
         });
       });
 
-      act(() => {
-        fireEvent.submit(node);
-      });
+      await submitForm(node, user);
 
       let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=number]');
       expect(inputs).toHaveLength(0);
@@ -1709,9 +1706,7 @@ describe('anyOf', () => {
           target: { value: 'Lorem ipsum dolor sit amet' },
         });
       });
-      act(() => {
-        fireEvent.submit(node);
-      });
+      await submitForm(node, user);
 
       inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
       expect(inputs).toHaveLength(0);

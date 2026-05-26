@@ -116,14 +116,14 @@ describe('NumberField', () => {
         expect(node.querySelector('.field-description')).toHaveTextContent('bar');
       });
 
-      it('formData should default to undefined', () => {
+      it('formData should default to undefined', async () => {
         const { node, onSubmit } = createFormComponent({
           schema: { type: 'number' },
           uiSchema,
           noValidate: true,
         });
 
-        submitForm(node);
+        await submitForm(node, user);
         expectToHaveBeenCalledWithFormData(onSubmit, undefined, true);
       });
 
@@ -484,7 +484,7 @@ describe('NumberField', () => {
       expectToHaveBeenCalledWithFormData(onChange, 2, 'root');
     });
 
-    it('should fill field with data', () => {
+    it('should fill field with data', async () => {
       const { node, onSubmit } = createFormComponent({
         schema: {
           type: 'number',
@@ -492,7 +492,7 @@ describe('NumberField', () => {
         },
         formData: 2,
       });
-      submitForm(node);
+      await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, 2, true);
     });
 
