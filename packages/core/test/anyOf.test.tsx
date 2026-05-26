@@ -1,5 +1,4 @@
 import { createRef } from 'react';
-import { fireEvent, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { FormValidation, RJSFSchema, WidgetProps } from '@rjsf/utils';
 
@@ -149,7 +148,7 @@ describe('anyOf', () => {
     expect(node.querySelector('select')).toHaveValue('1');
   });
 
-  it('should assign a default value and set defaults on option change', () => {
+  it('should assign a default value and set defaults on option change', async () => {
     const { node, onChange } = createFormComponent({
       schema: {
         anyOf: [
@@ -176,11 +175,7 @@ describe('anyOf', () => {
 
     const $select = node.querySelector('select');
 
-    act(() => {
-      fireEvent.change($select!, {
-        target: { value: $select?.options[1].value },
-      });
-    });
+    await user.selectOptions($select!, $select!.options[1].value);
 
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
@@ -190,7 +185,7 @@ describe('anyOf', () => {
     );
   });
 
-  it('should assign a default value and set defaults on option change for scalar types schemas', () => {
+  it('should assign a default value and set defaults on option change for scalar types schemas', async () => {
     const { node, onChange } = createFormComponent({
       schema: {
         type: 'object',
@@ -212,11 +207,7 @@ describe('anyOf', () => {
 
     const $select = node.querySelector('select');
 
-    act(() => {
-      fireEvent.change($select!, {
-        target: { value: $select?.options[1].value },
-      });
-    });
+    await user.selectOptions($select!, $select!.options[1].value);
 
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
@@ -226,7 +217,7 @@ describe('anyOf', () => {
     );
   });
 
-  it('should assign a default value and set defaults on option change when using references', () => {
+  it('should assign a default value and set defaults on option change when using references', async () => {
     const { node, onChange } = createFormComponent({
       schema: {
         anyOf: [
@@ -258,11 +249,7 @@ describe('anyOf', () => {
 
     const $select = node.querySelector('select');
 
-    act(() => {
-      fireEvent.change($select!, {
-        target: { value: $select?.options[1].value },
-      });
-    });
+    await user.selectOptions($select!, $select!.options[1].value);
 
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
@@ -272,7 +259,7 @@ describe('anyOf', () => {
     );
   });
 
-  it("should assign a default value and set defaults on option change with 'type': 'object' missing", () => {
+  it("should assign a default value and set defaults on option change with 'type': 'object' missing", async () => {
     const { node, onChange } = createFormComponent({
       schema: {
         type: 'object',
@@ -299,11 +286,7 @@ describe('anyOf', () => {
 
     const $select = node.querySelector('select');
 
-    act(() => {
-      fireEvent.change($select!, {
-        target: { value: $select?.options[1].value },
-      });
-    });
+    await user.selectOptions($select!, $select!.options[1].value);
 
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
@@ -343,7 +326,7 @@ describe('anyOf', () => {
     expect(node.querySelector('#CustomSelect')).toBeInTheDocument();
   });
 
-  it('should change the rendered form when the select value is changed', () => {
+  it('should change the rendered form when the select value is changed', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       anyOf: [
@@ -369,17 +352,13 @@ describe('anyOf', () => {
 
     const $select = node.querySelector('select');
 
-    act(() => {
-      fireEvent.change($select!, {
-        target: { value: $select?.options[1].value },
-      });
-    });
+    await user.selectOptions($select!, $select!.options[1].value);
 
     expect(node.querySelectorAll('#root_foo')).toHaveLength(0);
     expect(node.querySelectorAll('#root_bar')).toHaveLength(1);
   });
 
-  it('should handle change events', () => {
+  it('should handle change events', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       anyOf: [
@@ -400,11 +379,9 @@ describe('anyOf', () => {
       schema,
     });
 
-    act(() => {
-      fireEvent.change(node.querySelector('input#root_foo')!, {
-        target: { value: 'Lorem ipsum dolor sit amet' },
-      });
-    });
+    const input = node.querySelector('input#root_foo')!;
+    await user.clear(input);
+    await user.type(input, 'Lorem ipsum dolor sit amet');
 
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
@@ -414,7 +391,7 @@ describe('anyOf', () => {
     );
   });
 
-  it('should clear previous data when changing options', () => {
+  it('should clear previous data when changing options', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -438,11 +415,9 @@ describe('anyOf', () => {
       schema,
     });
 
-    act(() => {
-      fireEvent.change(node.querySelector('input#root_buzz')!, {
-        target: { value: 'Lorem ipsum dolor sit amet' },
-      });
-    });
+    const buzzInput = node.querySelector('input#root_buzz')!;
+    await user.clear(buzzInput);
+    await user.type(buzzInput, 'Lorem ipsum dolor sit amet');
 
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
@@ -453,11 +428,9 @@ describe('anyOf', () => {
       'root_buzz',
     );
 
-    act(() => {
-      fireEvent.change(node.querySelector('input#root_foo')!, {
-        target: { value: 'Consectetur adipiscing elit' },
-      });
-    });
+    const fooInput = node.querySelector('input#root_foo')!;
+    await user.clear(fooInput);
+    await user.type(fooInput, 'Consectetur adipiscing elit');
 
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
@@ -471,11 +444,7 @@ describe('anyOf', () => {
 
     const $select = node.querySelector('select');
 
-    act(() => {
-      fireEvent.change($select!, {
-        target: { value: $select?.options[1].value },
-      });
-    });
+    await user.selectOptions($select!, $select!.options[1].value);
 
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
@@ -488,7 +457,7 @@ describe('anyOf', () => {
     );
   });
 
-  it('should support options with different types', () => {
+  it('should support options with different types', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -509,11 +478,9 @@ describe('anyOf', () => {
       schema,
     });
 
-    act(() => {
-      fireEvent.change(node.querySelector('input#root_userId')!, {
-        target: { value: 12345 },
-      });
-    });
+    const userIdInput = node.querySelector('input#root_userId')!;
+    await user.clear(userIdInput);
+    await user.type(userIdInput, '12345');
 
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
@@ -524,11 +491,7 @@ describe('anyOf', () => {
 
     const $select = node.querySelector('select');
 
-    act(() => {
-      fireEvent.change($select!, {
-        target: { value: $select?.options[1].value },
-      });
-    });
+    await user.selectOptions($select!, $select!.options[1].value);
 
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
@@ -537,11 +500,9 @@ describe('anyOf', () => {
       'root_userId__anyof_select',
     );
 
-    act(() => {
-      fireEvent.change(node.querySelector('input#root_userId')!, {
-        target: { value: 'Lorem ipsum dolor sit amet' },
-      });
-    });
+    const userIdInput2 = node.querySelector('input#root_userId')!;
+    await user.clear(userIdInput2);
+    await user.type(userIdInput2, 'Lorem ipsum dolor sit amet');
 
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({
@@ -582,7 +543,7 @@ describe('anyOf', () => {
     expect(node.querySelectorAll('#custom-anyof-field')).toHaveLength(1);
   });
 
-  it('should support custom widget', () => {
+  it('should support custom widget', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -625,11 +586,7 @@ describe('anyOf', () => {
     const select = node.querySelector('select');
     expect(select).toHaveValue(select?.options[1].value);
 
-    act(() => {
-      fireEvent.change(select!, {
-        target: { value: select?.options[0].value },
-      });
-    });
+    await user.selectOptions(select!, select!.options[0].value);
 
     expect(select).toHaveValue(select?.options[0].value);
 
@@ -697,7 +654,7 @@ describe('anyOf', () => {
     expect(node.querySelector('select')).toHaveValue('1');
   });
 
-  it('should not change the selected option when entering values', () => {
+  it('should not change the selected option when entering values', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       anyOf: [
@@ -731,24 +688,18 @@ describe('anyOf', () => {
 
     expect($select).toHaveValue('0');
 
-    act(() => {
-      fireEvent.change($select!, {
-        target: { value: $select?.options[1].value },
-      });
-    });
+    await user.selectOptions($select!, $select!.options[1].value);
 
     expect($select).toHaveValue('1');
 
-    act(() => {
-      fireEvent.change(node.querySelector('input#root_idCode')!, {
-        target: { value: 'Lorem ipsum dolor sit amet' },
-      });
-    });
+    const idCodeInput = node.querySelector('input#root_idCode')!;
+    await user.clear(idCodeInput);
+    await user.type(idCodeInput, 'Lorem ipsum dolor sit amet');
 
     expect($select).toHaveValue('1');
   });
 
-  it('should not change the selected option when entering values and the subschema uses `anyOf`', () => {
+  it('should not change the selected option when entering values and the subschema uses `anyOf`', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       anyOf: [
@@ -798,24 +749,18 @@ describe('anyOf', () => {
 
     expect($select).toHaveValue('0');
 
-    act(() => {
-      fireEvent.change($select!, {
-        target: { value: $select?.options[1].value },
-      });
-    });
+    await user.selectOptions($select!, $select!.options[1].value);
 
     expect($select).toHaveValue('1');
 
-    act(() => {
-      fireEvent.change(node.querySelector('input#root_idCode')!, {
-        target: { value: 'Lorem ipsum dolor sit amet' },
-      });
-    });
+    const idCodeInput = node.querySelector('input#root_idCode')!;
+    await user.clear(idCodeInput);
+    await user.type(idCodeInput, 'Lorem ipsum dolor sit amet');
 
     expect($select).toHaveValue('1');
   });
 
-  it('should not change the selected option when entering values and the subschema uses `allOf`', () => {
+  it('should not change the selected option when entering values and the subschema uses `allOf`', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       anyOf: [
@@ -865,19 +810,13 @@ describe('anyOf', () => {
 
     expect($select).toHaveValue('0');
 
-    act(() => {
-      fireEvent.change($select!, {
-        target: { value: $select?.options[1].value },
-      });
-    });
+    await user.selectOptions($select!, $select!.options[1].value);
 
     expect($select).toHaveValue('1');
 
-    act(() => {
-      fireEvent.change(node.querySelector('input#root_idCode')!, {
-        target: { value: 'Lorem ipsum dolor sit amet' },
-      });
-    });
+    const idCodeInput = node.querySelector('input#root_idCode')!;
+    await user.clear(idCodeInput);
+    await user.type(idCodeInput, 'Lorem ipsum dolor sit amet');
 
     expect($select).toHaveValue('1');
   });
@@ -1030,7 +969,7 @@ describe('anyOf', () => {
     expect(options[1].firstChild?.nodeValue).toEqual('Person');
   });
 
-  it('should select anyOf in additionalProperties with anyOf', () => {
+  it('should select anyOf in additionalProperties with anyOf', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -1080,11 +1019,7 @@ describe('anyOf', () => {
 
     expect($select).toHaveValue('1');
 
-    act(() => {
-      fireEvent.change($select!, {
-        target: { value: $select?.options[0].value },
-      });
-    });
+    await user.selectOptions($select!, $select!.options[0].value);
 
     expect($select).toHaveValue('0');
 
@@ -1099,7 +1034,7 @@ describe('anyOf', () => {
   });
 
   describe('Arrays', () => {
-    it('should correctly render form inputs for anyOf inside array items', () => {
+    it('should correctly render form inputs for anyOf inside array items', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -1134,16 +1069,14 @@ describe('anyOf', () => {
 
       expect(node.querySelector('.rjsf-array-item-add button')).not.toBeNull();
 
-      act(() => {
-        fireEvent.click(node.querySelector('.rjsf-array-item-add button')!);
-      });
+      await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
       expect(node.querySelectorAll('select')).toHaveLength(1);
 
       expect(node.querySelectorAll('input#root_items_0_foo')).toHaveLength(1);
     });
 
-    it('should not change the selected option when switching order of items for anyOf inside array items', () => {
+    it('should not change the selected option when switching order of items for anyOf inside array items', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -1190,16 +1123,14 @@ describe('anyOf', () => {
 
       const moveUpBtns = node.querySelectorAll('.rjsf-array-item-move-up');
 
-      act(() => {
-        fireEvent.click(moveUpBtns[1]);
-      });
+      await user.click(moveUpBtns[1]);
 
       selects = node.querySelectorAll('select');
       expect(selects[0]).toHaveValue('1');
       expect(selects[1]).toHaveValue('0');
     });
 
-    it('should correctly update inputs for anyOf inside array items after being moved down', () => {
+    it('should correctly update inputs for anyOf inside array items after being moved down', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -1236,18 +1167,15 @@ describe('anyOf', () => {
       });
 
       const moveDownBtns = node.querySelectorAll('.rjsf-array-item-move-down');
-      act(() => {
-        fireEvent.click(moveDownBtns[0]);
-      });
+      await user.click(moveDownBtns[0]);
 
       const strInputs = node.querySelectorAll('fieldset .rjsf-field-string input[type=text]');
 
-      act(() => {
-        fireEvent.change(strInputs[1], { target: { value: 'bar' } });
-      });
+      await user.clear(strInputs[1]);
+      await user.type(strInputs[1], 'bar');
       expect(strInputs[1]).toHaveValue('bar');
     });
-    it('should correctly render mixed types for anyOf inside array items', () => {
+    it('should correctly render mixed types for anyOf inside array items', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -1281,17 +1209,11 @@ describe('anyOf', () => {
 
       expect(node.querySelector('.rjsf-array-item-add button')).not.toBeNull();
 
-      act(() => {
-        fireEvent.click(node.querySelector('.rjsf-array-item-add button')!);
-      });
+      await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
       const $select = node.querySelector('select');
       expect($select).not.toBeNull();
-      act(() => {
-        fireEvent.change($select!, {
-          target: { value: $select?.options[1].value },
-        });
-      });
+      await user.selectOptions($select!, $select!.options[1].value);
 
       expect(node.querySelectorAll('input#root_items_0_foo')).toHaveLength(1);
       expect(node.querySelectorAll('input#root_items_0_bar')).toHaveLength(1);
@@ -1644,11 +1566,9 @@ describe('anyOf', () => {
         customValidate,
       });
 
-      act(() => {
-        fireEvent.change(node.querySelector('input#root_userId')!, {
-          target: { value: 12345 },
-        });
-      });
+      const userIdInput = node.querySelector('input#root_userId')!;
+      await user.clear(userIdInput);
+      await user.type(userIdInput, '12345');
       await submitForm(node, user);
 
       let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=number]');
@@ -1656,17 +1576,11 @@ describe('anyOf', () => {
 
       const $select = node.querySelector('select');
 
-      act(() => {
-        fireEvent.change($select!, {
-          target: { value: $select?.options[1].value },
-        });
-      });
+      await user.selectOptions($select!, $select!.options[1].value);
 
-      act(() => {
-        fireEvent.change(node.querySelector('input#root_userId')!, {
-          target: { value: 'Lorem ipsum dolor sit amet' },
-        });
-      });
+      const userIdInput2 = node.querySelector('input#root_userId')!;
+      await user.clear(userIdInput2);
+      await user.type(userIdInput2, 'Lorem ipsum dolor sit amet');
       await submitForm(node, user);
 
       inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
@@ -1682,11 +1596,9 @@ describe('anyOf', () => {
         customValidate,
       });
 
-      act(() => {
-        fireEvent.change(node.querySelector('input#root_userId')!, {
-          target: { value: 12345 },
-        });
-      });
+      const userIdInput = node.querySelector('input#root_userId')!;
+      await user.clear(userIdInput);
+      await user.type(userIdInput, '12345');
 
       await submitForm(node, user);
 
@@ -1695,17 +1607,11 @@ describe('anyOf', () => {
 
       const $select = node.querySelector('select');
 
-      act(() => {
-        fireEvent.change($select!, {
-          target: { value: $select?.options[1].value },
-        });
-      });
+      await user.selectOptions($select!, $select!.options[1].value);
 
-      act(() => {
-        fireEvent.change(node.querySelector('input#root_userId')!, {
-          target: { value: 'Lorem ipsum dolor sit amet' },
-        });
-      });
+      const userIdInput2 = node.querySelector('input#root_userId')!;
+      await user.clear(userIdInput2);
+      await user.type(userIdInput2, 'Lorem ipsum dolor sit amet');
       await submitForm(node, user);
 
       inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
@@ -1872,9 +1778,7 @@ describe('anyOf', () => {
       // Switch to typeB
       const dropdown = node.querySelector('select[id="root_items_0__anyof_select"]');
       if (dropdown) {
-        act(() => {
-          fireEvent.change(dropdown, { target: { value: '1' } });
-        });
+        await user.selectOptions(dropdown, '1');
 
         // After switching, the boolean value should be preserved, not converted to {}
         expect(onChange).toHaveBeenLastCalledWith(
@@ -1884,7 +1788,7 @@ describe('anyOf', () => {
       }
     });
 
-    it('should handle undefined boolean fields correctly when switching anyOf options', () => {
+    it('should handle undefined boolean fields correctly when switching anyOf options', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -1926,9 +1830,7 @@ describe('anyOf', () => {
       // Switch to typeB
       const dropdown = node.querySelector('select[id="root_items_0__anyof_select"]');
       if (dropdown) {
-        act(() => {
-          fireEvent.change(dropdown, { target: { value: '1' } });
-        });
+        await user.selectOptions(dropdown, '1');
 
         expect(onChange).toHaveBeenLastCalledWith(
           expect.objectContaining({ formData: { items: [{ type: 'typeB', showField: undefined }] } }),
@@ -1937,7 +1839,7 @@ describe('anyOf', () => {
       }
     });
 
-    it('should handle boolean field values correctly in direct anyOf schemas', () => {
+    it('should handle boolean field values correctly in direct anyOf schemas', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         anyOf: [
@@ -1969,9 +1871,7 @@ describe('anyOf', () => {
       // Switch to optionB
       const dropdown = node.querySelector('select[id="root__anyof_select"]');
       if (dropdown) {
-        act(() => {
-          fireEvent.change(dropdown, { target: { value: '1' } });
-        });
+        await user.selectOptions(dropdown, '1');
 
         expect(onChange).toHaveBeenLastCalledWith(
           expect.objectContaining({ formData: { type: 'optionB', enabled: false } }),

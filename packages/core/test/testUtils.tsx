@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { act, render, fireEvent } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { GenericObjectType, ValidatorType } from '@rjsf/utils';
@@ -93,4 +93,12 @@ export function expectToHaveBeenCalledWithFormData(mock: any, formData: any, sec
   } else {
     expect(mock).toHaveBeenLastCalledWith(expect.objectContaining({ formData }));
   }
+}
+
+export async function delayPromise(delay = 100) {
+  return await new Promise((r) => setTimeout(r, delay));
+}
+
+export function actWrappedDelayPromise(delay = 100) {
+  return act(async () => delayPromise(delay));
 }
