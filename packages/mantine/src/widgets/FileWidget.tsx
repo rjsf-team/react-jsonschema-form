@@ -42,7 +42,8 @@ export default function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSch
   const handleOnChange = useCallback(
     (files: any) => {
       if (typeof files === 'object') {
-        handleChange(files);
+        // handleChange is async; DOM event handlers are void-returning, so we intentionally don't await
+        void handleChange(files);
       }
     },
     [handleChange],

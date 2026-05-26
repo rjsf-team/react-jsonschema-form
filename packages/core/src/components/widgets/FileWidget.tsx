@@ -95,7 +95,8 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
 
   const handleOnChangeEvent = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      handleChange(event.target.files);
+      // handleChange is async; DOM event handlers are void-returning, so we intentionally don't await
+      void handleChange(event.target.files);
     }
   };
 
