@@ -67,9 +67,7 @@ export async function submitForm(node: Element, user: UserEvent, forceFireEvent 
     await user.click(submitButton);
   } else {
     // fallback if there isn't a submit button
-    act(() => {
-      fireEvent.submit(node);
-    });
+    fireEvent.submit(node);
   }
 }
 
