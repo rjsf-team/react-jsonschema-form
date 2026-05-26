@@ -3105,7 +3105,7 @@ describeRepeated('Form common', (createFormComponent) => {
         );
       });
 
-      it('should sanitize stale enum data when dependencies change available options', () => {
+      it('should sanitize stale enum data and persist the retrieved dependency schema', () => {
         const formRef = createRef<Form<any, RJSFSchema, any>>();
         const dependentEnumSchema: RJSFSchema = {
           type: 'object',
@@ -3168,6 +3168,11 @@ describeRepeated('Form common', (createFormComponent) => {
           }),
         );
         expect(retrievedSchema.properties).not.toHaveProperty('water');
+
+        fireEvent.change(node.querySelector('#root_food')!, {
+          target: { value: 0 },
+        });
+        expect((formRef.current!.state.retrievedSchema as RJSFSchema).properties).not.toHaveProperty('water');
       });
     });
 

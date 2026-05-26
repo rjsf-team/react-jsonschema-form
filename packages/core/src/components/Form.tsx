@@ -1051,8 +1051,8 @@ export default class Form<
         customErrors,
       };
     }
-    // Keep the resolved dependency branch in state after sanitizing, so the next change uses the same schema as
-    // the cleaned formData.
+    // Keep the resolved dependency branch in state after sanitizing, so the next dependent-field change compares
+    // against the same schema branch as the cleaned formData.
     state = {
       ...state,
       retrievedSchema,
