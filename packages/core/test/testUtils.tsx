@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react';
-import { render, fireEvent, act } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { GenericObjectType, ValidatorType } from '@rjsf/utils';
