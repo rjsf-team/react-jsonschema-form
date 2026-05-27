@@ -33,8 +33,8 @@ import SelectWidget from '../src/components/widgets/SelectWidget';
 import { SIMPLE_ONEOF, SIMPLE_ONEOF_OPTIONS } from './testData/layoutData';
 import getTestRegistry from '../src/getTestRegistry';
 
-vi.mock('@rjsf/utils', async () => ({
-  ...(await vi.importActual<typeof import('@rjsf/utils')>('@rjsf/utils')),
+vi.mock('@rjsf/utils', async (importOriginal) => ({
+  ...(await importOriginal()),
   getWidget: vi.fn().mockImplementation((_schema, widget, widgets) => {
     const widgetToUse = widget === 'select' ? 'SelectWidget' : 'RadioWidget';
     // The real implementation wraps the resulting widget in another component, so we'll just do the simple thing
