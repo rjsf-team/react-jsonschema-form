@@ -3105,7 +3105,7 @@ describeRepeated('Form common', (createFormComponent) => {
         );
       });
 
-      it('should sanitize stale enum data and persist the retrieved dependency schema', () => {
+      it('should sanitize stale enum data and persist the retrieved dependency schema', async () => {
         const formRef = createRef<Form<any, RJSFSchema, any>>();
         const dependentEnumSchema: RJSFSchema = {
           type: 'object',
@@ -3154,11 +3154,7 @@ describeRepeated('Form common', (createFormComponent) => {
           formData: { animal: 'Fish', food: 'worms', water: 'lake' },
         });
 
-        act(() => {
-          fireEvent.change(node.querySelector('#root_animal')!, {
-            target: { value: 0 },
-          });
-        });
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_animal')!, '0');
 
         expectToHaveBeenCalledWithFormData(onChange, { animal: 'Cat', food: 'meat', water: undefined }, 'root_animal');
         const retrievedSchema = formRef.current!.state.retrievedSchema as RJSFSchema;
@@ -3169,9 +3165,7 @@ describeRepeated('Form common', (createFormComponent) => {
         );
         expect(retrievedSchema.properties).not.toHaveProperty('water');
 
-        fireEvent.change(node.querySelector('#root_food')!, {
-          target: { value: 0 },
-        });
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_food')!, '0');
         expect((formRef.current!.state.retrievedSchema as RJSFSchema).properties).not.toHaveProperty('water');
       });
     });
