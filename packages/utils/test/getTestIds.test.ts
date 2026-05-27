@@ -4,8 +4,8 @@ import { TestIdShape, getTestIds } from '../src';
 
 const TEST_UUID_BASE = 'test-uuid-';
 
-vi.mock('lodash/uniqueId', async () => {
-  const { default: realUniqueId } = await vi.importActual<{ default: () => string }>('lodash/uniqueId');
+vi.mock('lodash/uniqueId', async (importOriginal) => {
+  const { default: realUniqueId } = await importOriginal<{ default: () => string }>();
   return { default: vi.fn(() => 'test-uuid-' + realUniqueId()) };
 });
 

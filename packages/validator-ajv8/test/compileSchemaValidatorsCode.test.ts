@@ -6,10 +6,10 @@ import createAjvInstance from '../src/createAjvInstance';
 import superSchema from './harness/superSchema.json';
 import { CUSTOM_OPTIONS } from './harness/testData';
 
-vi.mock('../src/createAjvInstance', async () => {
-  const { default: realCreateAjvInstance } = await vi.importActual<{
+vi.mock('../src/createAjvInstance', async (importOriginal) => {
+  const { default: realCreateAjvInstance } = await importOriginal<{
     default: (typeof import('../src/createAjvInstance'))['default'];
-  }>('../src/createAjvInstance');
+  }>();
   return { default: vi.fn((...args: any[]) => realCreateAjvInstance(...args)) };
 });
 

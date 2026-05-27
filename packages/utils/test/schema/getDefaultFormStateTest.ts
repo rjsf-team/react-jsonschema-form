@@ -2262,6 +2262,91 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(getArrayDefaults(testValidator, schema)).toBeUndefined();
         });
       });
+
+      describe('an array with const', () => {
+        const schema: RJSFSchema = { type: 'array', const: ['foo', 'bar'] };
+
+        describe('constAsDefaults is not never (default)', () => {
+          const expected = ['foo', 'bar'];
+
+          test('getDefaultFormState', () => {
+            expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual(expected);
+          });
+
+          test('computeDefaults', () => {
+            expect(computeDefaults(testValidator, schema, { rootSchema: schema })).toEqual(expected);
+          });
+
+          test('getDefaultBasedOnSchemaType', () => {
+            // computeDefaults resolves the const value into `defaults` before calling getDefaultBasedOnSchemaType
+            expect(getDefaultBasedOnSchemaType(testValidator, schema, { rootSchema: schema }, expected)).toEqual(
+              expected,
+            );
+          });
+
+          test('getArrayDefaults', () => {
+            // computeDefaults resolves the const value into `defaults` before calling getArrayDefaults
+            expect(getArrayDefaults(testValidator, schema, { rootSchema: schema }, expected)).toEqual(expected);
+          });
+        });
+
+        describe('constAsDefaults is never', () => {
+          const experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
+            constAsDefaults: 'never',
+          };
+
+          test('getDefaultFormState', () => {
+            expect(
+              getDefaultFormState(
+                testValidator,
+                schema,
+                undefined,
+                schema,
+                undefined,
+                experimental_defaultFormStateBehavior,
+              ),
+            ).toEqual([]);
+          });
+
+          test('computeDefaults, requiredAsRoot = true', () => {
+            expect(
+              computeDefaults(testValidator, schema, {
+                rootSchema: schema,
+                experimental_defaultFormStateBehavior,
+                requiredAsRoot: true,
+              }),
+            ).toEqual([]);
+          });
+
+          test('computeDefaults, requiredAsRoot = false', () => {
+            expect(
+              computeDefaults(testValidator, schema, {
+                rootSchema: schema,
+                experimental_defaultFormStateBehavior,
+              }),
+            ).toBeUndefined();
+          });
+
+          test('getArrayDefaults, requiredAsRoot = true', () => {
+            expect(
+              getArrayDefaults(testValidator, schema, {
+                rootSchema: schema,
+                experimental_defaultFormStateBehavior,
+                requiredAsRoot: true,
+              }),
+            ).toEqual([]);
+          });
+
+          test('getArrayDefaults, requiredAsRoot = false', () => {
+            expect(
+              getArrayDefaults(testValidator, schema, {
+                rootSchema: schema,
+                experimental_defaultFormStateBehavior,
+              }),
+            ).toBeUndefined();
+          });
+        });
+      });
     });
 
     it('getInnerSchemaForArrayItem() item of type boolean returns empty schema', () => {

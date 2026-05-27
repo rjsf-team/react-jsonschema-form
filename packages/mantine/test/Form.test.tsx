@@ -2,8 +2,8 @@ import { formTests } from '@rjsf/snapshot-tests';
 
 import WrappedForm from './WrappedForm';
 
-vi.mock('@mantine/hooks', async () => ({
-  ...(await vi.importActual<typeof import('@mantine/hooks')>('@mantine/hooks')),
+vi.mock('@mantine/hooks', async (importOriginal) => ({
+  ...(await importOriginal()),
   useMove: vi.fn,
 }));
 

@@ -4,8 +4,8 @@ import { LOOKUP_MAP_NAME, RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { FormProps } from '@rjsf/core';
 
-vi.mock('@rjsf/utils', async () => ({
-  ...(await vi.importActual<typeof import('@rjsf/utils')>('@rjsf/utils')),
+vi.mock('@rjsf/utils', async (importOriginal) => ({
+  ...(await importOriginal()),
   // Disable the getTestIds within the snapshot tests by returning an empty object
   getTestIds: vi.fn(() => ({})),
 }));
