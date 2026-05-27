@@ -3,16 +3,16 @@ import { render, waitFor } from '@testing-library/react';
 import { __createDaisyUIFrameProvider } from '../src/DaisyUIFrameProvider';
 
 let localStorageMock: { [key: string]: string } = {};
-const mockSetItem = jest.fn((key, value) => {
+const mockSetItem = vi.fn((key, value) => {
   localStorageMock[key] = value;
 });
-const mockGetItem = jest.fn((key) => localStorageMock[key] || null);
-const mockRemove = jest.fn();
+const mockGetItem = vi.fn((key) => localStorageMock[key] || null);
+const mockRemove = vi.fn();
 const mockDocument = {
   head: {
-    appendChild: jest.fn(),
+    appendChild: vi.fn(),
   },
-  createElement: jest.fn((tagName) => {
+  createElement: vi.fn((tagName) => {
     return {
       tagName,
       textContent: '',
@@ -26,7 +26,7 @@ const mockDocument = {
 
 describe('DaisyUIFrameProvider', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     localStorageMock = {};
 
     // Setup localStorage mock

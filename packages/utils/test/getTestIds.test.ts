@@ -1,13 +1,15 @@
+import uniqueIdFn from 'lodash/uniqueId';
+
 import { TestIdShape, getTestIds } from '../src';
 
 const TEST_UUID_BASE = 'test-uuid-';
-jest.mock('lodash/uniqueId');
-const uniqueIdMock = require('lodash/uniqueId');
-const uniqueId = jest.requireActual('lodash/uniqueId');
 
-uniqueIdMock.mockImplementation(() => TEST_UUID_BASE + uniqueId());
+vi.mock('lodash/uniqueId', async (importOriginal) => {
+  const { default: realUniqueId } = await importOriginal<{ default: () => string }>();
+  return { default: vi.fn(() => 'test-uuid-' + realUniqueId()) };
+});
 
-console.log(uniqueIdMock, uniqueId);
+const uniqueIdMock = vi.mocked(uniqueIdFn);
 
 describe('getTestIds', () => {
   describe('process.env.NODE_ENV === "test"', () => {

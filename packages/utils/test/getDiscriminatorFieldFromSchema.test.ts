@@ -1,3 +1,6 @@
+import type { MockInstance } from 'vitest';
+import noop from 'lodash/noop';
+
 import { getDiscriminatorFieldFromSchema, RJSFSchema } from '../src';
 
 const PROPERTY_NAME = 'testProp';
@@ -12,10 +15,10 @@ describe('getDiscriminatorFieldFromSchema()', () => {
     expect(getDiscriminatorFieldFromSchema(GOOD_DISCRIMINATOR)).toEqual(PROPERTY_NAME);
   });
   describe('bad discriminator', () => {
-    let consoleWarn: jest.SpyInstance;
+    let consoleWarn: MockInstance;
     beforeAll(() => {
       // Spy and mock to be silent
-      consoleWarn = jest.spyOn(console, 'warn').mockImplementation();
+      consoleWarn = vi.spyOn(console, 'warn').mockImplementation(noop);
     });
     afterAll(() => {
       consoleWarn.mockRestore();

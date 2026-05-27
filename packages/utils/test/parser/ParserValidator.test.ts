@@ -1,3 +1,6 @@
+import type { MockInstance } from 'vitest';
+import noop from 'lodash/noop';
+
 import { hashForSchema, ID_KEY, RJSFSchema } from '../../src';
 import ParserValidator from '../../src/parser/ParserValidator';
 import { RECURSIVE_REF } from '../testUtils/testData';
@@ -20,10 +23,10 @@ const DUPLICATE_HASH = hashForSchema(DUPLICATE_SCHEMA);
 
 describe('ParserValidator', () => {
   let validator: ParserValidator;
-  let consoleErrorSpy: jest.SpyInstance;
+  let consoleErrorSpy: MockInstance;
   beforeAll(() => {
     validator = new ParserValidator(RECURSIVE_REF);
-    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(noop);
   });
   afterAll(() => {
     consoleErrorSpy.mockRestore();

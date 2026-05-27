@@ -1,3 +1,6 @@
+import type { MockInstance } from 'vitest';
+import noop from 'lodash/noop';
+
 import { RJSFSchema, allowAdditionalItems } from '../src';
 
 const schema1: RJSFSchema = {
@@ -11,10 +14,10 @@ const schema2: RJSFSchema = {
 };
 
 describe('allowAdditionalItems()', () => {
-  let consoleWarnSpy: jest.SpyInstance;
+  let consoleWarnSpy: MockInstance;
   beforeAll(() => {
     // spy on console.warn() and make it do nothing to avoid making noise in the test
-    consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+    consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
   });
   afterAll(() => {
     consoleWarnSpy.mockRestore();

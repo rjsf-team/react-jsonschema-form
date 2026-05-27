@@ -52,10 +52,9 @@
     "cs-format": "oxfmt \"{src,test}/**/*.{ts,tsx}\"",
     "lint": "oxlint src test",
     "precommit": "lint-staged",
-    "test": "jest",
-    "test:update": "jest --u",
-    "test:watch": "jest --watch",
-    "test:debug": "node --inspect-brk ../../node_modules/.bin/jest"
+    "test": "vitest run",
+    "test:update": "vitest run --update-snapshots",
+    "test:watch": "vitest"
   },
   "lint-staged": {
     "{src,test}/**/*.{ts,tsx}": [

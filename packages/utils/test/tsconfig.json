@@ -8,7 +8,7 @@
     // this is needed for packages/validator-ajv8/test/utilsTests
     "outDir": "../lib-test",
     "jsx": "react-jsx",
-    "types": ["jest", "node"]
+    "types": ["vitest/globals", "node"]
   },
   "references": [
     {

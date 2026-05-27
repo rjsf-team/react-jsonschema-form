@@ -19,9 +19,9 @@ export function renderNode(Component: ComponentType<any>, props: GenericObjectTy
 }
 
 export function createComponent(Component: ComponentType<FormProps>, theProps: FormProps) {
-  const onChange = jest.fn();
-  const onError = jest.fn();
-  const onSubmit = jest.fn();
+  const onChange = vi.fn();
+  const onError = vi.fn();
+  const onSubmit = vi.fn();
   const { container, rerender } = render(
     <Component onSubmit={onSubmit} onError={onError} onChange={onChange} {...theProps} />,
   );

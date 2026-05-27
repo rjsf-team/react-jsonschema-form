@@ -53,8 +53,8 @@
     "cs-format": "oxfmt \"{src,test}/**/*.{ts,tsx}\"",
     "lint": "oxlint src test",
     "precommit": "lint-staged",
-    "test": "jest",
-    "test:debug": "node --inspect-brk ../../node_modules/.bin/jest"
+    "test": "vitest run",
+    "test:debug": "node --inspect-brk ../../node_modules/.bin/vitest --pool=forks"
   },
   "lint-staged": {
     "{src,test}/**/*.{ts,tsx}": [

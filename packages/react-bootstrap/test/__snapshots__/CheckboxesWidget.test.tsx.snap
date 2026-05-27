@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`CheckboxesWidget inline 1`] = `
+exports[`CheckboxesWidget > inline 1`] = `
 <DocumentFragment>
   <div>
     <div
@@ -27,7 +27,7 @@ exports[`CheckboxesWidget inline 1`] = `
 </DocumentFragment>
 `;
 
-exports[`CheckboxesWidget simple 1`] = `
+exports[`CheckboxesWidget > simple 1`] = `
 <DocumentFragment>
   <div>
     <div

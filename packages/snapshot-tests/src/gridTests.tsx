@@ -4,10 +4,10 @@ import { LOOKUP_MAP_NAME, RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { FormProps } from '@rjsf/core';
 
-jest.mock('@rjsf/utils', () => ({
-  ...jest.requireActual('@rjsf/utils'),
+vi.mock('@rjsf/utils', async (importOriginal) => ({
+  ...(await importOriginal()),
   // Disable the getTestIds within the snapshot tests by returning an empty object
-  getTestIds: jest.fn(() => ({})),
+  getTestIds: vi.fn(() => ({})),
 }));
 
 export type GridRenderCustomOptions = {

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`nameGenerator bracketNameGenerator nested object 1`] = `
+exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
 <DocumentFragment>
   <form
     class="ui form rjsf"
@@ -167,7 +167,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`] = `
+exports[`nameGenerator > bracketNameGenerator > object with additionalProperties 1`] = `
 <DocumentFragment>
   <form
     class="ui form rjsf"
@@ -325,7 +325,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
 </DocumentFragment>
 `;
 
-exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
+exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
 <DocumentFragment>
   <form
     class="ui form rjsf"
@@ -646,7 +646,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator bracketNameGenerator simple object 1`] = `
+exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
 <DocumentFragment>
   <form
     class="ui form rjsf"
@@ -757,7 +757,7 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
+exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
 <DocumentFragment>
   <form
     class="ui form rjsf"
@@ -895,7 +895,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
+exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] = `
 <DocumentFragment>
   <form
     class="ui form rjsf"
@@ -1183,7 +1183,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
+exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
 <DocumentFragment>
   <form
     class="ui form rjsf"
@@ -1294,7 +1294,7 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields additionalProperties 1`] = `
+exports[`object fields > additionalProperties 1`] = `
 <DocumentFragment>
   <form
     class="ui form rjsf"
@@ -1423,7 +1423,7 @@ exports[`object fields additionalProperties 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields additionalProperties, array type 1`] = `
+exports[`object fields > additionalProperties, array type 1`] = `
 <DocumentFragment>
   <form
     class="ui form rjsf"
@@ -1560,7 +1560,7 @@ exports[`object fields additionalProperties, array type 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields additionalProperties, description 1`] = `
+exports[`object fields > additionalProperties, description 1`] = `
 <DocumentFragment>
   <form
     class="ui form rjsf"
@@ -1695,7 +1695,7 @@ exports[`object fields additionalProperties, description 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields additionalProperties, label off 1`] = `
+exports[`object fields > additionalProperties, label off 1`] = `
 <DocumentFragment>
   <form
     class="ui form rjsf"
@@ -1824,7 +1824,7 @@ exports[`object fields additionalProperties, label off 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields additionalProperties, object type 1`] = `
+exports[`object fields > additionalProperties, object type 1`] = `
 <DocumentFragment>
   <form
     class="ui form rjsf"
@@ -1967,7 +1967,7 @@ exports[`object fields additionalProperties, object type 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields object 1`] = `
+exports[`object fields > object 1`] = `
 <DocumentFragment>
   <form
     class="ui form rjsf"
@@ -2049,7 +2049,7 @@ exports[`object fields object 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields show add button and fields if additionalProperties is true and not an object 1`] = `
+exports[`object fields > show add button and fields if additionalProperties is true and not an object 1`] = `
 <DocumentFragment>
   <form
     class="ui form rjsf"
@@ -2178,7 +2178,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
 </DocumentFragment>
 `;
 
-exports[`object fields with title and description additionalProperties 1`] = `
+exports[`object fields > with title and description > additionalProperties 1`] = `
 <DocumentFragment>
   <form
     class="ui form rjsf"
@@ -2319,642 +2319,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields with title and description from both additionalProperties 1`] = `
-<DocumentFragment>
-  <form
-    class="ui form rjsf"
-  >
-    <div
-      class="rjsf-field rjsf-field-object"
-    >
-      <div
-        class="grouped equal width fields"
-      >
-        <h5
-          class="ui dividing header"
-          id="root__title"
-        >
-          My Field
-        </h5>
-        <p
-          class="sui-description"
-          id="root__description"
-        >
-          a fancier description
-        </p>
-        <div
-          class="rjsf-field rjsf-field-string"
-        >
-          <div
-            class="ui grid"
-          >
-            <div
-              class="row"
-            >
-              <div
-                class="seven wide column form-additional"
-              >
-                <div
-                  class="grouped equal width fields"
-                >
-                  <div
-                    class="field form-group"
-                  >
-                    <label
-                      for="root_foo"
-                    >
-                      foo Key
-                    </label>
-                    <div
-                      class="ui fluid input"
-                      for="root_foo"
-                    >
-                      <input
-                        id="root_foo"
-                        name="root_foo"
-                        type="text"
-                        value="foo"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="middle aligned seven wide column form-additional"
-              >
-                <div
-                  class="grouped equal width fields"
-                >
-                  <div
-                    class="field"
-                  >
-                    <label
-                      for="root_foo"
-                    >
-                      foo
-                    </label>
-                    <div
-                      class="ui fluid input"
-                    >
-                      <input
-                        aria-describedby="root_foo__error root_foo__description root_foo__help"
-                        id="root_foo"
-                        name="root_foo"
-                        placeholder=""
-                        type="text"
-                        value="foo"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="middle aligned column"
-                style="margin-top: 24px;"
-              >
-                <button
-                  class="ui mini icon button rjsf-object-property-remove"
-                  id="root_foo__remove"
-                  title="Remove"
-                >
-                  <i
-                    aria-hidden="true"
-                    class="trash icon"
-                  />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="middle aligned sixteen wide column"
-        >
-          <div
-            class="row"
-          >
-            <div
-              style="margin-top: 1rem; position: relative; text-align: right;"
-            >
-              <button
-                class="ui tiny icon button rjsf-object-property-expand"
-                id="root__add"
-                title="Add Item"
-              >
-                <i
-                  aria-hidden="true"
-                  class="plus icon"
-                />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <button
-      class="ui primary button"
-      type="submit"
-    >
-      Submit
-    </button>
-  </form>
-</DocumentFragment>
-`;
-
-exports[`object fields with title and description from both object 1`] = `
-<DocumentFragment>
-  <form
-    class="ui form rjsf"
-  >
-    <div
-      class="rjsf-field rjsf-field-object"
-    >
-      <div
-        class="grouped equal width fields"
-      >
-        <h5
-          class="ui dividing header"
-          id="root__title"
-        >
-          My Field
-        </h5>
-        <p
-          class="sui-description"
-          id="root__description"
-        >
-          a fancier description
-        </p>
-        <div
-          class="rjsf-field rjsf-field-string"
-        >
-          <div
-            class="grouped equal width fields"
-          >
-            <div
-              class="field"
-            >
-              <label
-                for="root_a"
-              >
-                My Item A
-              </label>
-              <div
-                class="ui fluid input"
-              >
-                <input
-                  aria-describedby="root_a__error root_a__description root_a__help"
-                  id="root_a"
-                  name="root_a"
-                  placeholder=""
-                  type="text"
-                  value=""
-                />
-              </div>
-            </div>
-            <p
-              class="sui-description"
-              id="root_a__description"
-            >
-              a fancier item A description
-            </p>
-          </div>
-        </div>
-        <div
-          class="rjsf-field rjsf-field-number"
-        >
-          <div
-            class="grouped equal width fields"
-          >
-            <div
-              class="field"
-            >
-              <label
-                for="root_b"
-              >
-                My Item B
-              </label>
-              <div
-                class="ui fluid input"
-              >
-                <input
-                  aria-describedby="root_b__error root_b__description root_b__help"
-                  id="root_b"
-                  name="root_b"
-                  placeholder=""
-                  step="any"
-                  type="number"
-                  value=""
-                />
-              </div>
-            </div>
-            <p
-              class="sui-description"
-              id="root_b__description"
-            >
-              a fancier item B description
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <button
-      class="ui primary button"
-      type="submit"
-    >
-      Submit
-    </button>
-  </form>
-</DocumentFragment>
-`;
-
-exports[`object fields with title and description from uiSchema additionalProperties 1`] = `
-<DocumentFragment>
-  <form
-    class="ui form rjsf"
-  >
-    <div
-      class="rjsf-field rjsf-field-object"
-    >
-      <div
-        class="grouped equal width fields"
-      >
-        <h5
-          class="ui dividing header"
-          id="root__title"
-        >
-          My Field
-        </h5>
-        <p
-          class="sui-description"
-          id="root__description"
-        >
-          a fancier description
-        </p>
-        <div
-          class="rjsf-field rjsf-field-string"
-        >
-          <div
-            class="ui grid"
-          >
-            <div
-              class="row"
-            >
-              <div
-                class="seven wide column form-additional"
-              >
-                <div
-                  class="grouped equal width fields"
-                >
-                  <div
-                    class="field form-group"
-                  >
-                    <label
-                      for="root_foo"
-                    >
-                      foo Key
-                    </label>
-                    <div
-                      class="ui fluid input"
-                      for="root_foo"
-                    >
-                      <input
-                        id="root_foo"
-                        name="root_foo"
-                        type="text"
-                        value="foo"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="middle aligned seven wide column form-additional"
-              >
-                <div
-                  class="grouped equal width fields"
-                >
-                  <div
-                    class="field"
-                  >
-                    <label
-                      for="root_foo"
-                    >
-                      foo
-                    </label>
-                    <div
-                      class="ui fluid input"
-                    >
-                      <input
-                        aria-describedby="root_foo__error root_foo__description root_foo__help"
-                        id="root_foo"
-                        name="root_foo"
-                        placeholder=""
-                        type="text"
-                        value="foo"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="middle aligned column"
-                style="margin-top: 24px;"
-              >
-                <button
-                  class="ui mini icon button rjsf-object-property-remove"
-                  id="root_foo__remove"
-                  title="Remove"
-                >
-                  <i
-                    aria-hidden="true"
-                    class="trash icon"
-                  />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="middle aligned sixteen wide column"
-        >
-          <div
-            class="row"
-          >
-            <div
-              style="margin-top: 1rem; position: relative; text-align: right;"
-            >
-              <button
-                class="ui tiny icon button rjsf-object-property-expand"
-                id="root__add"
-                title="Add Item"
-              >
-                <i
-                  aria-hidden="true"
-                  class="plus icon"
-                />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <button
-      class="ui primary button"
-      type="submit"
-    >
-      Submit
-    </button>
-  </form>
-</DocumentFragment>
-`;
-
-exports[`object fields with title and description from uiSchema object 1`] = `
-<DocumentFragment>
-  <form
-    class="ui form rjsf"
-  >
-    <div
-      class="rjsf-field rjsf-field-object"
-    >
-      <div
-        class="grouped equal width fields"
-      >
-        <h5
-          class="ui dividing header"
-          id="root__title"
-        >
-          My Field
-        </h5>
-        <p
-          class="sui-description"
-          id="root__description"
-        >
-          a fancier description
-        </p>
-        <div
-          class="rjsf-field rjsf-field-string"
-        >
-          <div
-            class="grouped equal width fields"
-          >
-            <div
-              class="field"
-            >
-              <label
-                for="root_a"
-              >
-                My Item A
-              </label>
-              <div
-                class="ui fluid input"
-              >
-                <input
-                  aria-describedby="root_a__error root_a__description root_a__help"
-                  id="root_a"
-                  name="root_a"
-                  placeholder=""
-                  type="text"
-                  value=""
-                />
-              </div>
-            </div>
-            <p
-              class="sui-description"
-              id="root_a__description"
-            >
-              a fancier item A description
-            </p>
-          </div>
-        </div>
-        <div
-          class="rjsf-field rjsf-field-number"
-        >
-          <div
-            class="grouped equal width fields"
-          >
-            <div
-              class="field"
-            >
-              <label
-                for="root_b"
-              >
-                My Item B
-              </label>
-              <div
-                class="ui fluid input"
-              >
-                <input
-                  aria-describedby="root_b__error root_b__description root_b__help"
-                  id="root_b"
-                  name="root_b"
-                  placeholder=""
-                  step="any"
-                  type="number"
-                  value=""
-                />
-              </div>
-            </div>
-            <p
-              class="sui-description"
-              id="root_b__description"
-            >
-              a fancier item B description
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <button
-      class="ui primary button"
-      type="submit"
-    >
-      Submit
-    </button>
-  </form>
-</DocumentFragment>
-`;
-
-exports[`object fields with title and description from uiSchema show add button and fields if additionalProperties is true and not an object 1`] = `
-<DocumentFragment>
-  <form
-    class="ui form rjsf"
-  >
-    <div
-      class="rjsf-field rjsf-field-object"
-    >
-      <div
-        class="grouped equal width fields"
-      >
-        <h5
-          class="ui dividing header"
-          id="root__title"
-        >
-          My Field
-        </h5>
-        <p
-          class="sui-description"
-          id="root__description"
-        >
-          a fancier description
-        </p>
-        <div
-          class="rjsf-field rjsf-field-string"
-        >
-          <div
-            class="ui grid"
-          >
-            <div
-              class="row"
-            >
-              <div
-                class="seven wide column form-additional"
-              >
-                <div
-                  class="grouped equal width fields"
-                >
-                  <div
-                    class="field form-group"
-                  >
-                    <label
-                      for="root_additionalProperty"
-                    >
-                      additionalProperty Key
-                    </label>
-                    <div
-                      class="ui fluid input"
-                      for="root_additionalProperty"
-                    >
-                      <input
-                        id="root_additionalProperty"
-                        name="root_additionalProperty"
-                        type="text"
-                        value="additionalProperty"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="middle aligned seven wide column form-additional"
-              >
-                <div
-                  class="grouped equal width fields"
-                >
-                  <div
-                    class="field"
-                  >
-                    <label
-                      for="root_additionalProperty"
-                    >
-                      additionalProperty
-                    </label>
-                    <div
-                      class="ui fluid input"
-                    >
-                      <input
-                        aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
-                        id="root_additionalProperty"
-                        name="root_additionalProperty"
-                        placeholder=""
-                        type="text"
-                        value="should appear"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="middle aligned column"
-                style="margin-top: 24px;"
-              >
-                <button
-                  class="ui mini icon button rjsf-object-property-remove"
-                  id="root_additionalProperty__remove"
-                  title="Remove"
-                >
-                  <i
-                    aria-hidden="true"
-                    class="trash icon"
-                  />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="middle aligned sixteen wide column"
-        >
-          <div
-            class="row"
-          >
-            <div
-              style="margin-top: 1rem; position: relative; text-align: right;"
-            >
-              <button
-                class="ui tiny icon button rjsf-object-property-expand"
-                id="root__add"
-                title="Add Item"
-              >
-                <i
-                  aria-hidden="true"
-                  class="plus icon"
-                />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <button
-      class="ui primary button"
-      type="submit"
-    >
-      Submit
-    </button>
-  </form>
-</DocumentFragment>
-`;
-
-exports[`object fields with title and description object 1`] = `
+exports[`object fields > with title and description > object 1`] = `
 <DocumentFragment>
   <form
     class="ui form rjsf"
@@ -3060,7 +2425,7 @@ exports[`object fields with title and description object 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields with title and description show add button and fields if additionalProperties is true and not an object 1`] = `
+exports[`object fields > with title and description > show add button and fields if additionalProperties is true and not an object 1`] = `
 <DocumentFragment>
   <form
     class="ui form rjsf"
@@ -3201,7 +2566,642 @@ exports[`object fields with title and description show add button and fields if 
 </DocumentFragment>
 `;
 
-exports[`object fields with title and description with global label off additionalProperties 1`] = `
+exports[`object fields > with title and description from both > additionalProperties 1`] = `
+<DocumentFragment>
+  <form
+    class="ui form rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="grouped equal width fields"
+      >
+        <h5
+          class="ui dividing header"
+          id="root__title"
+        >
+          My Field
+        </h5>
+        <p
+          class="sui-description"
+          id="root__description"
+        >
+          a fancier description
+        </p>
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <div
+            class="ui grid"
+          >
+            <div
+              class="row"
+            >
+              <div
+                class="seven wide column form-additional"
+              >
+                <div
+                  class="grouped equal width fields"
+                >
+                  <div
+                    class="field form-group"
+                  >
+                    <label
+                      for="root_foo"
+                    >
+                      foo Key
+                    </label>
+                    <div
+                      class="ui fluid input"
+                      for="root_foo"
+                    >
+                      <input
+                        id="root_foo"
+                        name="root_foo"
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="middle aligned seven wide column form-additional"
+              >
+                <div
+                  class="grouped equal width fields"
+                >
+                  <div
+                    class="field"
+                  >
+                    <label
+                      for="root_foo"
+                    >
+                      foo
+                    </label>
+                    <div
+                      class="ui fluid input"
+                    >
+                      <input
+                        aria-describedby="root_foo__error root_foo__description root_foo__help"
+                        id="root_foo"
+                        name="root_foo"
+                        placeholder=""
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="middle aligned column"
+                style="margin-top: 24px;"
+              >
+                <button
+                  class="ui mini icon button rjsf-object-property-remove"
+                  id="root_foo__remove"
+                  title="Remove"
+                >
+                  <i
+                    aria-hidden="true"
+                    class="trash icon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="middle aligned sixteen wide column"
+        >
+          <div
+            class="row"
+          >
+            <div
+              style="margin-top: 1rem; position: relative; text-align: right;"
+            >
+              <button
+                class="ui tiny icon button rjsf-object-property-expand"
+                id="root__add"
+                title="Add Item"
+              >
+                <i
+                  aria-hidden="true"
+                  class="plus icon"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ui primary button"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > with title and description from both > object 1`] = `
+<DocumentFragment>
+  <form
+    class="ui form rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="grouped equal width fields"
+      >
+        <h5
+          class="ui dividing header"
+          id="root__title"
+        >
+          My Field
+        </h5>
+        <p
+          class="sui-description"
+          id="root__description"
+        >
+          a fancier description
+        </p>
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <div
+            class="grouped equal width fields"
+          >
+            <div
+              class="field"
+            >
+              <label
+                for="root_a"
+              >
+                My Item A
+              </label>
+              <div
+                class="ui fluid input"
+              >
+                <input
+                  aria-describedby="root_a__error root_a__description root_a__help"
+                  id="root_a"
+                  name="root_a"
+                  placeholder=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+            <p
+              class="sui-description"
+              id="root_a__description"
+            >
+              a fancier item A description
+            </p>
+          </div>
+        </div>
+        <div
+          class="rjsf-field rjsf-field-number"
+        >
+          <div
+            class="grouped equal width fields"
+          >
+            <div
+              class="field"
+            >
+              <label
+                for="root_b"
+              >
+                My Item B
+              </label>
+              <div
+                class="ui fluid input"
+              >
+                <input
+                  aria-describedby="root_b__error root_b__description root_b__help"
+                  id="root_b"
+                  name="root_b"
+                  placeholder=""
+                  step="any"
+                  type="number"
+                  value=""
+                />
+              </div>
+            </div>
+            <p
+              class="sui-description"
+              id="root_b__description"
+            >
+              a fancier item B description
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ui primary button"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > with title and description from uiSchema > additionalProperties 1`] = `
+<DocumentFragment>
+  <form
+    class="ui form rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="grouped equal width fields"
+      >
+        <h5
+          class="ui dividing header"
+          id="root__title"
+        >
+          My Field
+        </h5>
+        <p
+          class="sui-description"
+          id="root__description"
+        >
+          a fancier description
+        </p>
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <div
+            class="ui grid"
+          >
+            <div
+              class="row"
+            >
+              <div
+                class="seven wide column form-additional"
+              >
+                <div
+                  class="grouped equal width fields"
+                >
+                  <div
+                    class="field form-group"
+                  >
+                    <label
+                      for="root_foo"
+                    >
+                      foo Key
+                    </label>
+                    <div
+                      class="ui fluid input"
+                      for="root_foo"
+                    >
+                      <input
+                        id="root_foo"
+                        name="root_foo"
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="middle aligned seven wide column form-additional"
+              >
+                <div
+                  class="grouped equal width fields"
+                >
+                  <div
+                    class="field"
+                  >
+                    <label
+                      for="root_foo"
+                    >
+                      foo
+                    </label>
+                    <div
+                      class="ui fluid input"
+                    >
+                      <input
+                        aria-describedby="root_foo__error root_foo__description root_foo__help"
+                        id="root_foo"
+                        name="root_foo"
+                        placeholder=""
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="middle aligned column"
+                style="margin-top: 24px;"
+              >
+                <button
+                  class="ui mini icon button rjsf-object-property-remove"
+                  id="root_foo__remove"
+                  title="Remove"
+                >
+                  <i
+                    aria-hidden="true"
+                    class="trash icon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="middle aligned sixteen wide column"
+        >
+          <div
+            class="row"
+          >
+            <div
+              style="margin-top: 1rem; position: relative; text-align: right;"
+            >
+              <button
+                class="ui tiny icon button rjsf-object-property-expand"
+                id="root__add"
+                title="Add Item"
+              >
+                <i
+                  aria-hidden="true"
+                  class="plus icon"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ui primary button"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > with title and description from uiSchema > object 1`] = `
+<DocumentFragment>
+  <form
+    class="ui form rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="grouped equal width fields"
+      >
+        <h5
+          class="ui dividing header"
+          id="root__title"
+        >
+          My Field
+        </h5>
+        <p
+          class="sui-description"
+          id="root__description"
+        >
+          a fancier description
+        </p>
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <div
+            class="grouped equal width fields"
+          >
+            <div
+              class="field"
+            >
+              <label
+                for="root_a"
+              >
+                My Item A
+              </label>
+              <div
+                class="ui fluid input"
+              >
+                <input
+                  aria-describedby="root_a__error root_a__description root_a__help"
+                  id="root_a"
+                  name="root_a"
+                  placeholder=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+            <p
+              class="sui-description"
+              id="root_a__description"
+            >
+              a fancier item A description
+            </p>
+          </div>
+        </div>
+        <div
+          class="rjsf-field rjsf-field-number"
+        >
+          <div
+            class="grouped equal width fields"
+          >
+            <div
+              class="field"
+            >
+              <label
+                for="root_b"
+              >
+                My Item B
+              </label>
+              <div
+                class="ui fluid input"
+              >
+                <input
+                  aria-describedby="root_b__error root_b__description root_b__help"
+                  id="root_b"
+                  name="root_b"
+                  placeholder=""
+                  step="any"
+                  type="number"
+                  value=""
+                />
+              </div>
+            </div>
+            <p
+              class="sui-description"
+              id="root_b__description"
+            >
+              a fancier item B description
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ui primary button"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > with title and description from uiSchema > show add button and fields if additionalProperties is true and not an object 1`] = `
+<DocumentFragment>
+  <form
+    class="ui form rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="grouped equal width fields"
+      >
+        <h5
+          class="ui dividing header"
+          id="root__title"
+        >
+          My Field
+        </h5>
+        <p
+          class="sui-description"
+          id="root__description"
+        >
+          a fancier description
+        </p>
+        <div
+          class="rjsf-field rjsf-field-string"
+        >
+          <div
+            class="ui grid"
+          >
+            <div
+              class="row"
+            >
+              <div
+                class="seven wide column form-additional"
+              >
+                <div
+                  class="grouped equal width fields"
+                >
+                  <div
+                    class="field form-group"
+                  >
+                    <label
+                      for="root_additionalProperty"
+                    >
+                      additionalProperty Key
+                    </label>
+                    <div
+                      class="ui fluid input"
+                      for="root_additionalProperty"
+                    >
+                      <input
+                        id="root_additionalProperty"
+                        name="root_additionalProperty"
+                        type="text"
+                        value="additionalProperty"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="middle aligned seven wide column form-additional"
+              >
+                <div
+                  class="grouped equal width fields"
+                >
+                  <div
+                    class="field"
+                  >
+                    <label
+                      for="root_additionalProperty"
+                    >
+                      additionalProperty
+                    </label>
+                    <div
+                      class="ui fluid input"
+                    >
+                      <input
+                        aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                        id="root_additionalProperty"
+                        name="root_additionalProperty"
+                        placeholder=""
+                        type="text"
+                        value="should appear"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="middle aligned column"
+                style="margin-top: 24px;"
+              >
+                <button
+                  class="ui mini icon button rjsf-object-property-remove"
+                  id="root_additionalProperty__remove"
+                  title="Remove"
+                >
+                  <i
+                    aria-hidden="true"
+                    class="trash icon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="middle aligned sixteen wide column"
+        >
+          <div
+            class="row"
+          >
+            <div
+              style="margin-top: 1rem; position: relative; text-align: right;"
+            >
+              <button
+                class="ui tiny icon button rjsf-object-property-expand"
+                id="root__add"
+                title="Add Item"
+              >
+                <i
+                  aria-hidden="true"
+                  class="plus icon"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ui primary button"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > with title and description with global label off > additionalProperties 1`] = `
 <DocumentFragment>
   <form
     class="ui form rjsf"
@@ -3319,7 +3319,7 @@ exports[`object fields with title and description with global label off addition
 </DocumentFragment>
 `;
 
-exports[`object fields with title and description with global label off object 1`] = `
+exports[`object fields > with title and description with global label off > object 1`] = `
 <DocumentFragment>
   <form
     class="ui form rjsf"
@@ -3391,7 +3391,7 @@ exports[`object fields with title and description with global label off object 1
 </DocumentFragment>
 `;
 
-exports[`object fields with title and description with global label off show add button and fields if additionalProperties is true and not an object 1`] = `
+exports[`object fields > with title and description with global label off > show add button and fields if additionalProperties is true and not an object 1`] = `
 <DocumentFragment>
   <form
     class="ui form rjsf"

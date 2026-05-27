@@ -1028,7 +1028,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           ],
         };
         const merged: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' }, bar: { type: 'number' } } };
-        const customMerge = jest.fn().mockReturnValue(merged);
+        const customMerge = vi.fn().mockReturnValue(merged);
         const formData = { foo: 'hi', bar: 1, extra: 'drop' };
         const result = omitExtraData(testValidator, schema, schema, formData, customMerge as any);
         expect(customMerge).toHaveBeenCalled();

@@ -33,10 +33,10 @@ describe('dataURItoBlob()', () => {
 
   it('should throw the body is not valid Base64', () => {
     expect(() => dataURItoBlob('data:text/plain;base64,Hello%20World')).toThrow(
-      new Error('File is invalid: The string to be decoded contains invalid characters.'),
+      new Error('File is invalid: Invalid character'),
     );
     expect(() => dataURItoBlob('data:text/plain;base64,こんにちわ')).toThrow(
-      new Error('File is invalid: The string to be decoded contains invalid characters.'),
+      new Error('File is invalid: Invalid character'),
     );
   });
 

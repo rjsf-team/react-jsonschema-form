@@ -1,3 +1,5 @@
+import type { MockInstance } from 'vitest';
+
 import { createSchemaUtils, englishStringTranslator, isRootSchema, Registry, RJSFSchema, TemplatesType } from '../src';
 import getTestValidator from './testUtils/getTestValidator';
 import { GLOBAL_FORM_OPTIONS } from './testUtils/testData';
@@ -62,11 +64,11 @@ describe('isRootSchema', () => {
     expect(isRootSchema(registry, { title: 'will not match' })).toBe(false);
   });
   describe('root schema with root $ref', () => {
-    let retrieveSchemaSpy: jest.SpyInstance;
+    let retrieveSchemaSpy: MockInstance;
     let registry: Registry;
     beforeAll(() => {
       registry = getRegistry(TEST_ROOT_REF_SCHEMA);
-      retrieveSchemaSpy = jest.spyOn(registry.schemaUtils, 'retrieveSchema');
+      retrieveSchemaSpy = vi.spyOn(registry.schemaUtils, 'retrieveSchema');
     });
     it('returns true when passed the same schema but with a $ref property', () => {
       expect(isRootSchema(registry, TEST_SCHEMA_TO_COMPARE)).toBe(true);

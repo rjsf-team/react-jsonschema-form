@@ -4,10 +4,7 @@
         "rootDir": "..",
         "outDir": "../dist",
         "noImplicitAny": false,
-        "types": [
-            "jest",
-            "node"
-        ],
+        "types": ["vitest/globals", "node"],
         "esModuleInterop": true,
         "jsx": "react-jsx",
         "resolveJsonModule": true,

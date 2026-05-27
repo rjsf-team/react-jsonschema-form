@@ -2,7 +2,7 @@ import AJV8Validator from '../src/validator';
 import defaultValidator, { customizeValidator, Localizer } from '../src';
 import { CUSTOM_OPTIONS } from './harness/testData';
 
-jest.mock('../src/validator');
+vi.mock('../src/validator');
 
 type TestType = {
   foo: string;
@@ -19,7 +19,7 @@ describe('customizeValidator()', () => {
   describe('passing options to customizeValidator', () => {
     let custom: any;
     beforeAll(() => {
-      (AJV8Validator as unknown as jest.Mock).mockClear();
+      vi.mocked(AJV8Validator).mockClear();
       custom = customizeValidator<TestType>(CUSTOM_OPTIONS);
     });
     it('custom validator was created', () => {
@@ -33,8 +33,8 @@ describe('customizeValidator()', () => {
     let custom: any;
     let localizer: Localizer;
     beforeAll(() => {
-      localizer = jest.fn();
-      (AJV8Validator as unknown as jest.Mock).mockClear();
+      localizer = vi.fn();
+      vi.mocked(AJV8Validator).mockClear();
       custom = customizeValidator<TestType>(undefined, localizer);
     });
     it('custom validator was created', () => {

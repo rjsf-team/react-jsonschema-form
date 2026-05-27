@@ -32,7 +32,7 @@ describe('ToggleWidget', () => {
   });
 
   test('calls onChange when toggled', () => {
-    const onChange = jest.fn();
+    const onChange = vi.fn();
     const { getByRole } = render(
       <ToggleWidget
         {...makeWidgetMockProps({

@@ -1,3 +1,4 @@
+import type { MockInstance } from 'vitest';
 import { ChangeEvent, FocusEvent, ReactElement } from 'react';
 import {
   DEFAULT_ID_PREFIX,
@@ -839,15 +840,15 @@ describe('LayoutGridField', () => {
       registry,
       schema,
       uiSchema,
-      onBlur: jest.fn(),
-      onChange: jest.fn(),
-      onFocus: jest.fn(),
+      onBlur: vi.fn(),
+      onChange: vi.fn(),
+      onFocus: vi.fn(),
     };
   }
 
   let registry: Registry;
-  let retrieveSchemaSpy: jest.SpyInstance;
-  let findSelectedOptionInXxxOf: jest.SpyInstance;
+  let retrieveSchemaSpy: MockInstance;
+  let findSelectedOptionInXxxOf: MockInstance;
   beforeAll(() => {
     registry = getTestRegistry({}, REGISTRY_FIELDS, {}, {}, REGISTRY_FORM_CONTEXT);
   });
@@ -960,8 +961,8 @@ describe('LayoutGridField', () => {
   });
   describe('getSchemaDetailsForField(), blank schema', () => {
     beforeAll(() => {
-      retrieveSchemaSpy = jest.spyOn(registry.schemaUtils, 'retrieveSchema');
-      findSelectedOptionInXxxOf = jest.spyOn(registry.schemaUtils, 'findSelectedOptionInXxxOf');
+      retrieveSchemaSpy = vi.spyOn(registry.schemaUtils, 'retrieveSchema');
+      findSelectedOptionInXxxOf = vi.spyOn(registry.schemaUtils, 'findSelectedOptionInXxxOf');
     });
     afterEach(() => {
       findSelectedOptionInXxxOf.mockClear();
@@ -981,8 +982,8 @@ describe('LayoutGridField', () => {
   });
   describe('getSchemaDetailsForField(), sampleSchema', () => {
     beforeAll(() => {
-      retrieveSchemaSpy = jest.spyOn(sampleSchemaRegistry.schemaUtils, 'retrieveSchema');
-      findSelectedOptionInXxxOf = jest.spyOn(sampleSchemaRegistry.schemaUtils, 'findSelectedOptionInXxxOf');
+      retrieveSchemaSpy = vi.spyOn(sampleSchemaRegistry.schemaUtils, 'retrieveSchema');
+      findSelectedOptionInXxxOf = vi.spyOn(sampleSchemaRegistry.schemaUtils, 'findSelectedOptionInXxxOf');
     });
     afterEach(() => {
       findSelectedOptionInXxxOf.mockClear();
@@ -1031,8 +1032,8 @@ describe('LayoutGridField', () => {
   });
   describe('getSchemaDetailsForField(), simpleOneOfSchema', () => {
     beforeAll(() => {
-      retrieveSchemaSpy = jest.spyOn(simpleOneOfRegistry.schemaUtils, 'retrieveSchema');
-      findSelectedOptionInXxxOf = jest.spyOn(simpleOneOfRegistry.schemaUtils, 'findSelectedOptionInXxxOf');
+      retrieveSchemaSpy = vi.spyOn(simpleOneOfRegistry.schemaUtils, 'retrieveSchema');
+      findSelectedOptionInXxxOf = vi.spyOn(simpleOneOfRegistry.schemaUtils, 'findSelectedOptionInXxxOf');
     });
     afterEach(() => {
       findSelectedOptionInXxxOf.mockClear();
@@ -1058,8 +1059,8 @@ describe('LayoutGridField', () => {
   });
   describe('getSchemaDetailsForField(), gridFormSchema', () => {
     beforeAll(() => {
-      retrieveSchemaSpy = jest.spyOn(gridFormSchemaRegistry.schemaUtils, 'retrieveSchema');
-      findSelectedOptionInXxxOf = jest.spyOn(gridFormSchemaRegistry.schemaUtils, 'findSelectedOptionInXxxOf');
+      retrieveSchemaSpy = vi.spyOn(gridFormSchemaRegistry.schemaUtils, 'retrieveSchema');
+      findSelectedOptionInXxxOf = vi.spyOn(gridFormSchemaRegistry.schemaUtils, 'findSelectedOptionInXxxOf');
     });
     afterEach(() => {
       findSelectedOptionInXxxOf.mockClear();
@@ -1114,8 +1115,8 @@ describe('LayoutGridField', () => {
   });
   describe('getSchemaDetailsForField(), readonlySchema', () => {
     beforeAll(() => {
-      retrieveSchemaSpy = jest.spyOn(readonlySchemaRegistry.schemaUtils, 'retrieveSchema');
-      findSelectedOptionInXxxOf = jest.spyOn(readonlySchemaRegistry.schemaUtils, 'findSelectedOptionInXxxOf');
+      retrieveSchemaSpy = vi.spyOn(readonlySchemaRegistry.schemaUtils, 'retrieveSchema');
+      findSelectedOptionInXxxOf = vi.spyOn(readonlySchemaRegistry.schemaUtils, 'findSelectedOptionInXxxOf');
     });
     afterEach(() => {
       findSelectedOptionInXxxOf.mockClear();
@@ -1179,8 +1180,8 @@ describe('LayoutGridField', () => {
   });
   describe('getSchemaDetailsForField(), arraySchema', () => {
     beforeAll(() => {
-      retrieveSchemaSpy = jest.spyOn(arraySchemaRegistry.schemaUtils, 'retrieveSchema');
-      findSelectedOptionInXxxOf = jest.spyOn(arraySchemaRegistry.schemaUtils, 'findSelectedOptionInXxxOf');
+      retrieveSchemaSpy = vi.spyOn(arraySchemaRegistry.schemaUtils, 'retrieveSchema');
+      findSelectedOptionInXxxOf = vi.spyOn(arraySchemaRegistry.schemaUtils, 'findSelectedOptionInXxxOf');
     });
     afterEach(() => {
       findSelectedOptionInXxxOf.mockClear();

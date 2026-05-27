@@ -232,7 +232,7 @@ describe('processRawValidationErrors()', () => {
   });
 
   it('runs the transformErrors hook and returns transformed output', () => {
-    const transform = jest.fn((errs) => errs.map((e: any) => ({ ...e, message: 'transformed' })));
+    const transform = vi.fn((errs) => errs.map((e: any) => ({ ...e, message: 'transformed' })));
     const out = processRawValidationErrors(
       stubValidator,
       { errors: [ataError()] },
@@ -246,7 +246,7 @@ describe('processRawValidationErrors()', () => {
   });
 
   it('runs the customValidate hook and merges the user errorSchema', () => {
-    const customValidate = jest.fn((_data, errorHandler) => {
+    const customValidate = vi.fn((_data, errorHandler) => {
       errorHandler.x.addError('user error');
       return errorHandler;
     });

@@ -68,7 +68,7 @@
     "cs-format": "oxfmt \"{src,test}/**/*.{ts,tsx}\"",
     "lint": "oxlint src test",
     "precommit": "lint-staged",
-    "test": "jest"
+    "test": "vitest run"
   },
   "lint-staged": {
     "{src,test}/**/*.{ts,tsx}": [

@@ -5,7 +5,8 @@
     "rootDir": "./",
     "noEmit": true,
     "jsx": "react-jsx",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["vitest/globals", "node"]
   },
   "references": [
     {

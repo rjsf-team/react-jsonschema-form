@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`nameGenerator bracketNameGenerator nested object 1`] = `
+exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -246,7 +246,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`] = `
+exports[`nameGenerator > bracketNameGenerator > object with additionalProperties 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -468,7 +468,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
 </DocumentFragment>
 `;
 
-exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
+exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -1005,7 +1005,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator bracketNameGenerator simple object 1`] = `
+exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -1144,7 +1144,7 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
+exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -1354,7 +1354,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
+exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -1816,7 +1816,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
+exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -1955,7 +1955,7 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields additionalProperties 1`] = `
+exports[`object fields > additionalProperties 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -2141,7 +2141,7 @@ exports[`object fields additionalProperties 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields additionalProperties, array type 1`] = `
+exports[`object fields > additionalProperties, array type 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -2384,7 +2384,7 @@ exports[`object fields additionalProperties, array type 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields additionalProperties, description 1`] = `
+exports[`object fields > additionalProperties, description 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -2591,7 +2591,7 @@ exports[`object fields additionalProperties, description 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields additionalProperties, label off 1`] = `
+exports[`object fields > additionalProperties, label off 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -2777,7 +2777,7 @@ exports[`object fields additionalProperties, label off 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields additionalProperties, object type 1`] = `
+exports[`object fields > additionalProperties, object type 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -3005,7 +3005,7 @@ exports[`object fields additionalProperties, object type 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields object 1`] = `
+exports[`object fields > object 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -3108,7 +3108,7 @@ exports[`object fields object 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields show add button and fields if additionalProperties is true and not an object 1`] = `
+exports[`object fields > show add button and fields if additionalProperties is true and not an object 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -3294,7 +3294,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
 </DocumentFragment>
 `;
 
-exports[`object fields with title and description additionalProperties 1`] = `
+exports[`object fields > with title and description > additionalProperties 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -3504,939 +3504,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields with title and description from both additionalProperties 1`] = `
-<DocumentFragment>
-  <form
-    class="rjsf"
-  >
-    <div
-      class="rjsf-field rjsf-field-object"
-    >
-      <div
-        class="flex flex-col gap-2"
-      >
-        <div
-          class="my-1 flex flex-col gap-0.5"
-          id="root__title"
-        >
-          <h5>
-            My Field
-          </h5>
-          <div
-            class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
-            data-orientation="horizontal"
-            data-slot="separator"
-            dir="horizontal"
-            role="none"
-            style="height: 1px;"
-          />
-        </div>
-        <div>
-          <div
-            class="text-sm text-muted-foreground"
-            id="root__description"
-          >
-            a fancier description
-          </div>
-        </div>
-        <div
-          class="flex flex-col gap-2"
-        >
-          <div
-            class=" flex"
-          >
-            <div
-              class="w-full"
-            >
-              <div
-                class="grid grid-cols-12 col-span-12 items-center gap-2 rjsf-field rjsf-field-string"
-              >
-                <div
-                  class="grid gap-2 col-span-5"
-                >
-                  <div
-                    class="flex flex-col gap-2"
-                  >
-                    <label
-                      class="text-sm font-medium text-muted-foreground leading-none"
-                      for="root_foo-key"
-                    >
-                      foo Key
-                    </label>
-                    <div
-                      class="pl-0.5"
-                    >
-                      <input
-                        class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
-                        data-slot="input"
-                        id="root_foo-key"
-                        name="root_foo-key"
-                        type="text"
-                        value="foo"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="grid gap-2 col-span-6 pr-0.5"
-                >
-                  <div
-                    class="flex flex-col gap-2"
-                  >
-                    <label
-                      class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      for="root_foo"
-                    >
-                      foo
-                    </label>
-                    <div
-                      class="p-0.5"
-                    >
-                      <input
-                        aria-describedby="root_foo__error root_foo__description root_foo__help"
-                        class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
-                        data-slot="input"
-                        id="root_foo"
-                        name="root_foo"
-                        placeholder=""
-                        type="text"
-                        value="foo"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="grid gap-2 col-span-1"
-                  style="margin-top: 22px;"
-                >
-                  <button
-                    class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
-                    data-slot="button"
-                    id="root_foo__remove"
-                    title="Remove"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
-                      fill="none"
-                      height="24"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M10 11v6"
-                      />
-                      <path
-                        d="M14 11v6"
-                      />
-                      <path
-                        d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"
-                      />
-                      <path
-                        d="M3 6h18"
-                      />
-                      <path
-                        d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-              <div
-                class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px mt-2"
-                data-orientation="horizontal"
-                data-slot="separator"
-                dir="horizontal"
-                role="none"
-              />
-            </div>
-          </div>
-          <div
-            class="mt-2 flex justify-end"
-          >
-            <div
-              class="p-0 m-0"
-            >
-              <button
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 w-fit gap-2 rjsf-object-property-expand"
-                data-slot="button"
-                id="root__add"
-                type="button"
-              >
-                <svg
-                  aria-hidden="true"
-                  class="lucide lucide-circle-plus"
-                  fill="none"
-                  height="16"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  width="16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                  />
-                  <path
-                    d="M8 12h8"
-                  />
-                  <path
-                    d="M12 8v8"
-                  />
-                </svg>
-                 Add Item
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div>
-      <button
-        class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
-        data-slot="button"
-        type="submit"
-      >
-        Submit
-      </button>
-    </div>
-  </form>
-</DocumentFragment>
-`;
-
-exports[`object fields with title and description from both object 1`] = `
-<DocumentFragment>
-  <form
-    class="rjsf"
-  >
-    <div
-      class="rjsf-field rjsf-field-object"
-    >
-      <div
-        class="flex flex-col gap-2"
-      >
-        <div
-          class="my-1 flex flex-col gap-0.5"
-          id="root__title"
-        >
-          <h5>
-            My Field
-          </h5>
-          <div
-            class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
-            data-orientation="horizontal"
-            data-slot="separator"
-            dir="horizontal"
-            role="none"
-            style="height: 1px;"
-          />
-        </div>
-        <div>
-          <div
-            class="text-sm text-muted-foreground"
-            id="root__description"
-          >
-            a fancier description
-          </div>
-        </div>
-        <div
-          class="flex flex-col gap-2"
-        >
-          <div
-            class=" flex"
-          >
-            <div
-              class="w-full"
-            >
-              <div
-                class="rjsf-field rjsf-field-string"
-              >
-                <div
-                  class="flex flex-col gap-2"
-                >
-                  <label
-                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    for="root_a"
-                  >
-                    My Item A
-                  </label>
-                  <div
-                    class="p-0.5"
-                  >
-                    <input
-                      aria-describedby="root_a__error root_a__description root_a__help"
-                      class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
-                      data-slot="input"
-                      id="root_a"
-                      name="root_a"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                  <span
-                    class="text-xs font-medium text-muted-foreground"
-                  >
-                    <div>
-                      <div
-                        class="text-sm text-muted-foreground"
-                        id="root_a__description"
-                      >
-                        a fancier item A description
-                      </div>
-                    </div>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class=" flex"
-          >
-            <div
-              class="w-full"
-            >
-              <div
-                class="rjsf-field rjsf-field-number"
-              >
-                <div
-                  class="flex flex-col gap-2"
-                >
-                  <label
-                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    for="root_b"
-                  >
-                    My Item B
-                  </label>
-                  <div
-                    class="p-0.5"
-                  >
-                    <input
-                      aria-describedby="root_b__error root_b__description root_b__help"
-                      class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
-                      data-slot="input"
-                      id="root_b"
-                      name="root_b"
-                      placeholder=""
-                      step="any"
-                      type="number"
-                      value=""
-                    />
-                  </div>
-                  <span
-                    class="text-xs font-medium text-muted-foreground"
-                  >
-                    <div>
-                      <div
-                        class="text-sm text-muted-foreground"
-                        id="root_b__description"
-                      >
-                        a fancier item B description
-                      </div>
-                    </div>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div>
-      <button
-        class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
-        data-slot="button"
-        type="submit"
-      >
-        Submit
-      </button>
-    </div>
-  </form>
-</DocumentFragment>
-`;
-
-exports[`object fields with title and description from uiSchema additionalProperties 1`] = `
-<DocumentFragment>
-  <form
-    class="rjsf"
-  >
-    <div
-      class="rjsf-field rjsf-field-object"
-    >
-      <div
-        class="flex flex-col gap-2"
-      >
-        <div
-          class="my-1 flex flex-col gap-0.5"
-          id="root__title"
-        >
-          <h5>
-            My Field
-          </h5>
-          <div
-            class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
-            data-orientation="horizontal"
-            data-slot="separator"
-            dir="horizontal"
-            role="none"
-            style="height: 1px;"
-          />
-        </div>
-        <div>
-          <div
-            class="text-sm text-muted-foreground"
-            id="root__description"
-          >
-            a fancier description
-          </div>
-        </div>
-        <div
-          class="flex flex-col gap-2"
-        >
-          <div
-            class=" flex"
-          >
-            <div
-              class="w-full"
-            >
-              <div
-                class="grid grid-cols-12 col-span-12 items-center gap-2 rjsf-field rjsf-field-string"
-              >
-                <div
-                  class="grid gap-2 col-span-5"
-                >
-                  <div
-                    class="flex flex-col gap-2"
-                  >
-                    <label
-                      class="text-sm font-medium text-muted-foreground leading-none"
-                      for="root_foo-key"
-                    >
-                      foo Key
-                    </label>
-                    <div
-                      class="pl-0.5"
-                    >
-                      <input
-                        class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
-                        data-slot="input"
-                        id="root_foo-key"
-                        name="root_foo-key"
-                        type="text"
-                        value="foo"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="grid gap-2 col-span-6 pr-0.5"
-                >
-                  <div
-                    class="flex flex-col gap-2"
-                  >
-                    <label
-                      class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      for="root_foo"
-                    >
-                      foo
-                    </label>
-                    <div
-                      class="p-0.5"
-                    >
-                      <input
-                        aria-describedby="root_foo__error root_foo__description root_foo__help"
-                        class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
-                        data-slot="input"
-                        id="root_foo"
-                        name="root_foo"
-                        placeholder=""
-                        type="text"
-                        value="foo"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="grid gap-2 col-span-1"
-                  style="margin-top: 22px;"
-                >
-                  <button
-                    class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
-                    data-slot="button"
-                    id="root_foo__remove"
-                    title="Remove"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
-                      fill="none"
-                      height="24"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M10 11v6"
-                      />
-                      <path
-                        d="M14 11v6"
-                      />
-                      <path
-                        d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"
-                      />
-                      <path
-                        d="M3 6h18"
-                      />
-                      <path
-                        d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-              <div
-                class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px mt-2"
-                data-orientation="horizontal"
-                data-slot="separator"
-                dir="horizontal"
-                role="none"
-              />
-            </div>
-          </div>
-          <div
-            class="mt-2 flex justify-end"
-          >
-            <div
-              class="p-0 m-0"
-            >
-              <button
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 w-fit gap-2 rjsf-object-property-expand"
-                data-slot="button"
-                id="root__add"
-                type="button"
-              >
-                <svg
-                  aria-hidden="true"
-                  class="lucide lucide-circle-plus"
-                  fill="none"
-                  height="16"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  width="16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                  />
-                  <path
-                    d="M8 12h8"
-                  />
-                  <path
-                    d="M12 8v8"
-                  />
-                </svg>
-                 Add Item
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div>
-      <button
-        class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
-        data-slot="button"
-        type="submit"
-      >
-        Submit
-      </button>
-    </div>
-  </form>
-</DocumentFragment>
-`;
-
-exports[`object fields with title and description from uiSchema object 1`] = `
-<DocumentFragment>
-  <form
-    class="rjsf"
-  >
-    <div
-      class="rjsf-field rjsf-field-object"
-    >
-      <div
-        class="flex flex-col gap-2"
-      >
-        <div
-          class="my-1 flex flex-col gap-0.5"
-          id="root__title"
-        >
-          <h5>
-            My Field
-          </h5>
-          <div
-            class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
-            data-orientation="horizontal"
-            data-slot="separator"
-            dir="horizontal"
-            role="none"
-            style="height: 1px;"
-          />
-        </div>
-        <div>
-          <div
-            class="text-sm text-muted-foreground"
-            id="root__description"
-          >
-            a fancier description
-          </div>
-        </div>
-        <div
-          class="flex flex-col gap-2"
-        >
-          <div
-            class=" flex"
-          >
-            <div
-              class="w-full"
-            >
-              <div
-                class="rjsf-field rjsf-field-string"
-              >
-                <div
-                  class="flex flex-col gap-2"
-                >
-                  <label
-                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    for="root_a"
-                  >
-                    My Item A
-                  </label>
-                  <div
-                    class="p-0.5"
-                  >
-                    <input
-                      aria-describedby="root_a__error root_a__description root_a__help"
-                      class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
-                      data-slot="input"
-                      id="root_a"
-                      name="root_a"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                  <span
-                    class="text-xs font-medium text-muted-foreground"
-                  >
-                    <div>
-                      <div
-                        class="text-sm text-muted-foreground"
-                        id="root_a__description"
-                      >
-                        a fancier item A description
-                      </div>
-                    </div>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class=" flex"
-          >
-            <div
-              class="w-full"
-            >
-              <div
-                class="rjsf-field rjsf-field-number"
-              >
-                <div
-                  class="flex flex-col gap-2"
-                >
-                  <label
-                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    for="root_b"
-                  >
-                    My Item B
-                  </label>
-                  <div
-                    class="p-0.5"
-                  >
-                    <input
-                      aria-describedby="root_b__error root_b__description root_b__help"
-                      class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
-                      data-slot="input"
-                      id="root_b"
-                      name="root_b"
-                      placeholder=""
-                      step="any"
-                      type="number"
-                      value=""
-                    />
-                  </div>
-                  <span
-                    class="text-xs font-medium text-muted-foreground"
-                  >
-                    <div>
-                      <div
-                        class="text-sm text-muted-foreground"
-                        id="root_b__description"
-                      >
-                        a fancier item B description
-                      </div>
-                    </div>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div>
-      <button
-        class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
-        data-slot="button"
-        type="submit"
-      >
-        Submit
-      </button>
-    </div>
-  </form>
-</DocumentFragment>
-`;
-
-exports[`object fields with title and description from uiSchema show add button and fields if additionalProperties is true and not an object 1`] = `
-<DocumentFragment>
-  <form
-    class="rjsf"
-  >
-    <div
-      class="rjsf-field rjsf-field-object"
-    >
-      <div
-        class="flex flex-col gap-2"
-      >
-        <div
-          class="my-1 flex flex-col gap-0.5"
-          id="root__title"
-        >
-          <h5>
-            My Field
-          </h5>
-          <div
-            class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
-            data-orientation="horizontal"
-            data-slot="separator"
-            dir="horizontal"
-            role="none"
-            style="height: 1px;"
-          />
-        </div>
-        <div>
-          <div
-            class="text-sm text-muted-foreground"
-            id="root__description"
-          >
-            a fancier description
-          </div>
-        </div>
-        <div
-          class="flex flex-col gap-2"
-        >
-          <div
-            class=" flex"
-          >
-            <div
-              class="w-full"
-            >
-              <div
-                class="grid grid-cols-12 col-span-12 items-center gap-2 rjsf-field rjsf-field-string"
-              >
-                <div
-                  class="grid gap-2 col-span-5"
-                >
-                  <div
-                    class="flex flex-col gap-2"
-                  >
-                    <label
-                      class="text-sm font-medium text-muted-foreground leading-none"
-                      for="root_additionalProperty-key"
-                    >
-                      additionalProperty Key
-                    </label>
-                    <div
-                      class="pl-0.5"
-                    >
-                      <input
-                        class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
-                        data-slot="input"
-                        id="root_additionalProperty-key"
-                        name="root_additionalProperty-key"
-                        type="text"
-                        value="additionalProperty"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="grid gap-2 col-span-6 pr-0.5"
-                >
-                  <div
-                    class="flex flex-col gap-2"
-                  >
-                    <label
-                      class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      for="root_additionalProperty"
-                    >
-                      additionalProperty
-                    </label>
-                    <div
-                      class="p-0.5"
-                    >
-                      <input
-                        aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
-                        class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
-                        data-slot="input"
-                        id="root_additionalProperty"
-                        name="root_additionalProperty"
-                        placeholder=""
-                        type="text"
-                        value="should appear"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="grid gap-2 col-span-1"
-                  style="margin-top: 22px;"
-                >
-                  <button
-                    class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
-                    data-slot="button"
-                    id="root_additionalProperty__remove"
-                    title="Remove"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
-                      fill="none"
-                      height="24"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M10 11v6"
-                      />
-                      <path
-                        d="M14 11v6"
-                      />
-                      <path
-                        d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"
-                      />
-                      <path
-                        d="M3 6h18"
-                      />
-                      <path
-                        d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-              <div
-                class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px mt-2"
-                data-orientation="horizontal"
-                data-slot="separator"
-                dir="horizontal"
-                role="none"
-              />
-            </div>
-          </div>
-          <div
-            class="mt-2 flex justify-end"
-          >
-            <div
-              class="p-0 m-0"
-            >
-              <button
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 w-fit gap-2 rjsf-object-property-expand"
-                data-slot="button"
-                id="root__add"
-                type="button"
-              >
-                <svg
-                  aria-hidden="true"
-                  class="lucide lucide-circle-plus"
-                  fill="none"
-                  height="16"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  width="16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                  />
-                  <path
-                    d="M8 12h8"
-                  />
-                  <path
-                    d="M12 8v8"
-                  />
-                </svg>
-                 Add Item
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div>
-      <button
-        class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
-        data-slot="button"
-        type="submit"
-      >
-        Submit
-      </button>
-    </div>
-  </form>
-</DocumentFragment>
-`;
-
-exports[`object fields with title and description object 1`] = `
+exports[`object fields > with title and description > object 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -4587,7 +3655,7 @@ exports[`object fields with title and description object 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields with title and description show add button and fields if additionalProperties is true and not an object 1`] = `
+exports[`object fields > with title and description > show add button and fields if additionalProperties is true and not an object 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -4797,7 +3865,939 @@ exports[`object fields with title and description show add button and fields if 
 </DocumentFragment>
 `;
 
-exports[`object fields with title and description with global label off additionalProperties 1`] = `
+exports[`object fields > with title and description from both > additionalProperties 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="flex flex-col gap-2"
+      >
+        <div
+          class="my-1 flex flex-col gap-0.5"
+          id="root__title"
+        >
+          <h5>
+            My Field
+          </h5>
+          <div
+            class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
+            data-orientation="horizontal"
+            data-slot="separator"
+            dir="horizontal"
+            role="none"
+            style="height: 1px;"
+          />
+        </div>
+        <div>
+          <div
+            class="text-sm text-muted-foreground"
+            id="root__description"
+          >
+            a fancier description
+          </div>
+        </div>
+        <div
+          class="flex flex-col gap-2"
+        >
+          <div
+            class=" flex"
+          >
+            <div
+              class="w-full"
+            >
+              <div
+                class="grid grid-cols-12 col-span-12 items-center gap-2 rjsf-field rjsf-field-string"
+              >
+                <div
+                  class="grid gap-2 col-span-5"
+                >
+                  <div
+                    class="flex flex-col gap-2"
+                  >
+                    <label
+                      class="text-sm font-medium text-muted-foreground leading-none"
+                      for="root_foo-key"
+                    >
+                      foo Key
+                    </label>
+                    <div
+                      class="pl-0.5"
+                    >
+                      <input
+                        class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
+                        data-slot="input"
+                        id="root_foo-key"
+                        name="root_foo-key"
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="grid gap-2 col-span-6 pr-0.5"
+                >
+                  <div
+                    class="flex flex-col gap-2"
+                  >
+                    <label
+                      class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      for="root_foo"
+                    >
+                      foo
+                    </label>
+                    <div
+                      class="p-0.5"
+                    >
+                      <input
+                        aria-describedby="root_foo__error root_foo__description root_foo__help"
+                        class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                        data-slot="input"
+                        id="root_foo"
+                        name="root_foo"
+                        placeholder=""
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="grid gap-2 col-span-1"
+                  style="margin-top: 22px;"
+                >
+                  <button
+                    class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
+                    data-slot="button"
+                    id="root_foo__remove"
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10 11v6"
+                      />
+                      <path
+                        d="M14 11v6"
+                      />
+                      <path
+                        d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"
+                      />
+                      <path
+                        d="M3 6h18"
+                      />
+                      <path
+                        d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div
+                class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px mt-2"
+                data-orientation="horizontal"
+                data-slot="separator"
+                dir="horizontal"
+                role="none"
+              />
+            </div>
+          </div>
+          <div
+            class="mt-2 flex justify-end"
+          >
+            <div
+              class="p-0 m-0"
+            >
+              <button
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 w-fit gap-2 rjsf-object-property-expand"
+                data-slot="button"
+                id="root__add"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-circle-plus"
+                  fill="none"
+                  height="16"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                  />
+                  <path
+                    d="M8 12h8"
+                  />
+                  <path
+                    d="M12 8v8"
+                  />
+                </svg>
+                 Add Item
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
+        data-slot="button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > with title and description from both > object 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="flex flex-col gap-2"
+      >
+        <div
+          class="my-1 flex flex-col gap-0.5"
+          id="root__title"
+        >
+          <h5>
+            My Field
+          </h5>
+          <div
+            class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
+            data-orientation="horizontal"
+            data-slot="separator"
+            dir="horizontal"
+            role="none"
+            style="height: 1px;"
+          />
+        </div>
+        <div>
+          <div
+            class="text-sm text-muted-foreground"
+            id="root__description"
+          >
+            a fancier description
+          </div>
+        </div>
+        <div
+          class="flex flex-col gap-2"
+        >
+          <div
+            class=" flex"
+          >
+            <div
+              class="w-full"
+            >
+              <div
+                class="rjsf-field rjsf-field-string"
+              >
+                <div
+                  class="flex flex-col gap-2"
+                >
+                  <label
+                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    for="root_a"
+                  >
+                    My Item A
+                  </label>
+                  <div
+                    class="p-0.5"
+                  >
+                    <input
+                      aria-describedby="root_a__error root_a__description root_a__help"
+                      class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                      data-slot="input"
+                      id="root_a"
+                      name="root_a"
+                      placeholder=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                  <span
+                    class="text-xs font-medium text-muted-foreground"
+                  >
+                    <div>
+                      <div
+                        class="text-sm text-muted-foreground"
+                        id="root_a__description"
+                      >
+                        a fancier item A description
+                      </div>
+                    </div>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class=" flex"
+          >
+            <div
+              class="w-full"
+            >
+              <div
+                class="rjsf-field rjsf-field-number"
+              >
+                <div
+                  class="flex flex-col gap-2"
+                >
+                  <label
+                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    for="root_b"
+                  >
+                    My Item B
+                  </label>
+                  <div
+                    class="p-0.5"
+                  >
+                    <input
+                      aria-describedby="root_b__error root_b__description root_b__help"
+                      class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                      data-slot="input"
+                      id="root_b"
+                      name="root_b"
+                      placeholder=""
+                      step="any"
+                      type="number"
+                      value=""
+                    />
+                  </div>
+                  <span
+                    class="text-xs font-medium text-muted-foreground"
+                  >
+                    <div>
+                      <div
+                        class="text-sm text-muted-foreground"
+                        id="root_b__description"
+                      >
+                        a fancier item B description
+                      </div>
+                    </div>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
+        data-slot="button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > with title and description from uiSchema > additionalProperties 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="flex flex-col gap-2"
+      >
+        <div
+          class="my-1 flex flex-col gap-0.5"
+          id="root__title"
+        >
+          <h5>
+            My Field
+          </h5>
+          <div
+            class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
+            data-orientation="horizontal"
+            data-slot="separator"
+            dir="horizontal"
+            role="none"
+            style="height: 1px;"
+          />
+        </div>
+        <div>
+          <div
+            class="text-sm text-muted-foreground"
+            id="root__description"
+          >
+            a fancier description
+          </div>
+        </div>
+        <div
+          class="flex flex-col gap-2"
+        >
+          <div
+            class=" flex"
+          >
+            <div
+              class="w-full"
+            >
+              <div
+                class="grid grid-cols-12 col-span-12 items-center gap-2 rjsf-field rjsf-field-string"
+              >
+                <div
+                  class="grid gap-2 col-span-5"
+                >
+                  <div
+                    class="flex flex-col gap-2"
+                  >
+                    <label
+                      class="text-sm font-medium text-muted-foreground leading-none"
+                      for="root_foo-key"
+                    >
+                      foo Key
+                    </label>
+                    <div
+                      class="pl-0.5"
+                    >
+                      <input
+                        class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
+                        data-slot="input"
+                        id="root_foo-key"
+                        name="root_foo-key"
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="grid gap-2 col-span-6 pr-0.5"
+                >
+                  <div
+                    class="flex flex-col gap-2"
+                  >
+                    <label
+                      class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      for="root_foo"
+                    >
+                      foo
+                    </label>
+                    <div
+                      class="p-0.5"
+                    >
+                      <input
+                        aria-describedby="root_foo__error root_foo__description root_foo__help"
+                        class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                        data-slot="input"
+                        id="root_foo"
+                        name="root_foo"
+                        placeholder=""
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="grid gap-2 col-span-1"
+                  style="margin-top: 22px;"
+                >
+                  <button
+                    class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
+                    data-slot="button"
+                    id="root_foo__remove"
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10 11v6"
+                      />
+                      <path
+                        d="M14 11v6"
+                      />
+                      <path
+                        d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"
+                      />
+                      <path
+                        d="M3 6h18"
+                      />
+                      <path
+                        d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div
+                class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px mt-2"
+                data-orientation="horizontal"
+                data-slot="separator"
+                dir="horizontal"
+                role="none"
+              />
+            </div>
+          </div>
+          <div
+            class="mt-2 flex justify-end"
+          >
+            <div
+              class="p-0 m-0"
+            >
+              <button
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 w-fit gap-2 rjsf-object-property-expand"
+                data-slot="button"
+                id="root__add"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-circle-plus"
+                  fill="none"
+                  height="16"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                  />
+                  <path
+                    d="M8 12h8"
+                  />
+                  <path
+                    d="M12 8v8"
+                  />
+                </svg>
+                 Add Item
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
+        data-slot="button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > with title and description from uiSchema > object 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="flex flex-col gap-2"
+      >
+        <div
+          class="my-1 flex flex-col gap-0.5"
+          id="root__title"
+        >
+          <h5>
+            My Field
+          </h5>
+          <div
+            class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
+            data-orientation="horizontal"
+            data-slot="separator"
+            dir="horizontal"
+            role="none"
+            style="height: 1px;"
+          />
+        </div>
+        <div>
+          <div
+            class="text-sm text-muted-foreground"
+            id="root__description"
+          >
+            a fancier description
+          </div>
+        </div>
+        <div
+          class="flex flex-col gap-2"
+        >
+          <div
+            class=" flex"
+          >
+            <div
+              class="w-full"
+            >
+              <div
+                class="rjsf-field rjsf-field-string"
+              >
+                <div
+                  class="flex flex-col gap-2"
+                >
+                  <label
+                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    for="root_a"
+                  >
+                    My Item A
+                  </label>
+                  <div
+                    class="p-0.5"
+                  >
+                    <input
+                      aria-describedby="root_a__error root_a__description root_a__help"
+                      class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                      data-slot="input"
+                      id="root_a"
+                      name="root_a"
+                      placeholder=""
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                  <span
+                    class="text-xs font-medium text-muted-foreground"
+                  >
+                    <div>
+                      <div
+                        class="text-sm text-muted-foreground"
+                        id="root_a__description"
+                      >
+                        a fancier item A description
+                      </div>
+                    </div>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class=" flex"
+          >
+            <div
+              class="w-full"
+            >
+              <div
+                class="rjsf-field rjsf-field-number"
+              >
+                <div
+                  class="flex flex-col gap-2"
+                >
+                  <label
+                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    for="root_b"
+                  >
+                    My Item B
+                  </label>
+                  <div
+                    class="p-0.5"
+                  >
+                    <input
+                      aria-describedby="root_b__error root_b__description root_b__help"
+                      class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                      data-slot="input"
+                      id="root_b"
+                      name="root_b"
+                      placeholder=""
+                      step="any"
+                      type="number"
+                      value=""
+                    />
+                  </div>
+                  <span
+                    class="text-xs font-medium text-muted-foreground"
+                  >
+                    <div>
+                      <div
+                        class="text-sm text-muted-foreground"
+                        id="root_b__description"
+                      >
+                        a fancier item B description
+                      </div>
+                    </div>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
+        data-slot="button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > with title and description from uiSchema > show add button and fields if additionalProperties is true and not an object 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="flex flex-col gap-2"
+      >
+        <div
+          class="my-1 flex flex-col gap-0.5"
+          id="root__title"
+        >
+          <h5>
+            My Field
+          </h5>
+          <div
+            class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
+            data-orientation="horizontal"
+            data-slot="separator"
+            dir="horizontal"
+            role="none"
+            style="height: 1px;"
+          />
+        </div>
+        <div>
+          <div
+            class="text-sm text-muted-foreground"
+            id="root__description"
+          >
+            a fancier description
+          </div>
+        </div>
+        <div
+          class="flex flex-col gap-2"
+        >
+          <div
+            class=" flex"
+          >
+            <div
+              class="w-full"
+            >
+              <div
+                class="grid grid-cols-12 col-span-12 items-center gap-2 rjsf-field rjsf-field-string"
+              >
+                <div
+                  class="grid gap-2 col-span-5"
+                >
+                  <div
+                    class="flex flex-col gap-2"
+                  >
+                    <label
+                      class="text-sm font-medium text-muted-foreground leading-none"
+                      for="root_additionalProperty-key"
+                    >
+                      additionalProperty Key
+                    </label>
+                    <div
+                      class="pl-0.5"
+                    >
+                      <input
+                        class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
+                        data-slot="input"
+                        id="root_additionalProperty-key"
+                        name="root_additionalProperty-key"
+                        type="text"
+                        value="additionalProperty"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="grid gap-2 col-span-6 pr-0.5"
+                >
+                  <div
+                    class="flex flex-col gap-2"
+                  >
+                    <label
+                      class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      for="root_additionalProperty"
+                    >
+                      additionalProperty
+                    </label>
+                    <div
+                      class="p-0.5"
+                    >
+                      <input
+                        aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                        class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                        data-slot="input"
+                        id="root_additionalProperty"
+                        name="root_additionalProperty"
+                        placeholder=""
+                        type="text"
+                        value="should appear"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="grid gap-2 col-span-1"
+                  style="margin-top: 22px;"
+                >
+                  <button
+                    class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
+                    data-slot="button"
+                    id="root_additionalProperty__remove"
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10 11v6"
+                      />
+                      <path
+                        d="M14 11v6"
+                      />
+                      <path
+                        d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"
+                      />
+                      <path
+                        d="M3 6h18"
+                      />
+                      <path
+                        d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div
+                class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px mt-2"
+                data-orientation="horizontal"
+                data-slot="separator"
+                dir="horizontal"
+                role="none"
+              />
+            </div>
+          </div>
+          <div
+            class="mt-2 flex justify-end"
+          >
+            <div
+              class="p-0 m-0"
+            >
+              <button
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 w-fit gap-2 rjsf-object-property-expand"
+                data-slot="button"
+                id="root__add"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-circle-plus"
+                  fill="none"
+                  height="16"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                  />
+                  <path
+                    d="M8 12h8"
+                  />
+                  <path
+                    d="M12 8v8"
+                  />
+                </svg>
+                 Add Item
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
+        data-slot="button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > with title and description with global label off > additionalProperties 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -4971,7 +4971,7 @@ exports[`object fields with title and description with global label off addition
 </DocumentFragment>
 `;
 
-exports[`object fields with title and description with global label off object 1`] = `
+exports[`object fields > with title and description with global label off > object 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -5062,7 +5062,7 @@ exports[`object fields with title and description with global label off object 1
 </DocumentFragment>
 `;
 
-exports[`object fields with title and description with global label off show add button and fields if additionalProperties is true and not an object 1`] = `
+exports[`object fields > with title and description with global label off > show add button and fields if additionalProperties is true and not an object 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"

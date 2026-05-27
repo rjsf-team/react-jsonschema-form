@@ -1,3 +1,4 @@
+import noop from 'lodash/noop';
 import { ErrorSchemaBuilder, ID_KEY, ROOT_SCHEMA_PREFIX, RJSFSchema } from '@rjsf/utils';
 
 // Static import of the package surface so its top-level evaluation
@@ -105,14 +106,14 @@ describe('ATAValidator', () => {
       expect(formatError).toBeDefined();
       expect(errorSchema).toBeDefined();
       // ErrorSchemaBuilder gives us a stable shape to compare against.
-      const expected = new ErrorSchemaBuilder().addErrors(formatError!.message, 'email').ErrorSchema;
+      const expected = new ErrorSchemaBuilder().addErrors(formatError!.message!, 'email').ErrorSchema;
       expect(errorSchema.email).toEqual(expected.email);
     });
 
     it('runs the user-supplied transformErrors hook', () => {
       const v = customizeValidator();
       const schema: RJSFSchema = { type: 'string', minLength: 5 };
-      const transform = jest.fn((errs) => errs.map((e: any) => ({ ...e, message: 'transformed' })));
+      const transform = vi.fn((errs) => errs.map((e: any) => ({ ...e, message: 'transformed' })));
       const { errors } = v.validateFormData('abc', schema, undefined, transform);
       expect(transform).toHaveBeenCalled();
       expect(errors[0].message).toBe('transformed');
@@ -121,7 +122,7 @@ describe('ATAValidator', () => {
     it('runs the user-supplied customValidate function', () => {
       const v = customizeValidator();
       const schema: RJSFSchema = { type: 'object', properties: { x: { type: 'string' } } };
-      const customValidate = jest.fn((_data, errorHandler) => {
+      const customValidate = vi.fn((_data, errorHandler) => {
         errorHandler.x.addError('custom error');
         return errorHandler;
       });
@@ -153,7 +154,7 @@ describe('ATAValidator', () => {
 
   describe('extenderFn option', () => {
     it('is invoked with the constructed validator', () => {
-      const extenderFn = jest.fn((validator) => validator);
+      const extenderFn = vi.fn((validator) => validator);
       const v = customizeValidator({ extenderFn });
       v.isValid({ type: 'string' } as RJSFSchema, 'a', { type: 'string' } as RJSFSchema);
       expect(extenderFn).toHaveBeenCalled();
@@ -162,7 +163,7 @@ describe('ATAValidator', () => {
 
   describe('localizer option', () => {
     it('runs against ata error objects when invalid', () => {
-      const localizer = jest.fn();
+      const localizer = vi.fn();
       const v = customizeValidator({}, localizer);
       const schema: RJSFSchema = { type: 'object', required: ['x'] };
       v.rawValidation(schema, {});
@@ -188,7 +189,7 @@ describe('ATAValidator', () => {
       // `null` as a schema body throws at ata's compile step. The catch in
       // isValid swallows it and returns false rather than propagating to RJSF.
       const broken = null as unknown as RJSFSchema;
-      const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+      const warn = vi.spyOn(console, 'warn').mockImplementation(noop);
       expect(v.isValid(broken, {}, broken)).toBe(false);
       expect(warn).toHaveBeenCalled();
       warn.mockRestore();
@@ -206,7 +207,7 @@ describe('ATAValidator', () => {
     });
 
     it('passes the constructed Validator through extenderFn', () => {
-      const extenderFn = jest.fn((validator) => validator);
+      const extenderFn = vi.fn((validator) => validator);
       const v = customizeValidator({ extenderFn });
       v.isValid({ type: 'string' } as RJSFSchema, 'a', { type: 'string' } as RJSFSchema);
       expect(extenderFn).toHaveBeenCalled();
@@ -285,7 +286,7 @@ describe('cloneForValidation', () => {
     // jsdom strips structuredClone, so we provide it for this test to cover
     // the modern-runtime branch alongside the JSON-roundtrip fallback.
     const original = globalThis.structuredClone;
-    const spy = jest.fn((v: unknown) => JSON.parse(JSON.stringify(v)));
+    const spy = vi.fn((v: unknown) => JSON.parse(JSON.stringify(v)));
     Object.defineProperty(globalThis, 'structuredClone', {
       value: spy,
       configurable: true,
@@ -300,6 +301,24 @@ describe('cloneForValidation', () => {
       if (original === undefined) {
         delete (globalThis as { structuredClone?: unknown }).structuredClone;
       } else {
+        Object.defineProperty(globalThis, 'structuredClone', {
+          value: original,
+          configurable: true,
+          writable: true,
+        });
+      }
+    }
+  });
+
+  it('falls back to cloneDeep when structuredClone is unavailable', () => {
+    const original = globalThis.structuredClone;
+    delete (globalThis as { structuredClone?: unknown }).structuredClone;
+    try {
+      const v = customizeValidator();
+      const schema: RJSFSchema = { type: 'object', properties: { x: { type: 'string' } } };
+      expect(v.isValid(schema, { x: 'a' }, schema)).toBe(true);
+    } finally {
+      if (original !== undefined) {
         Object.defineProperty(globalThis, 'structuredClone', {
           value: original,
           configurable: true,

@@ -8,7 +8,7 @@ import * as superSchemaFns from './harness/superSchema.cjs';
 import superSchema from './harness/superSchema.json';
 import createPrecompiledValidator from '../src/createPrecompiledValidator';
 
-jest.mock('../src/precompiledValidator');
+vi.mock('../src/precompiledValidator');
 
 type TestType = {
   foo: string;
@@ -17,7 +17,7 @@ type TestType = {
 
 const validateFns = superSchemaFns as unknown as ValidatorFunctions;
 const rootSchema = superSchema as unknown as RJSFSchema;
-const mockedValidator = jest.mocked(AJV8PrecompiledValidator);
+const mockedValidator = vi.mocked(AJV8PrecompiledValidator);
 
 describe('createPrecompiledValidator()', () => {
   describe('passing validatorFns and rootSchema to createPrecompiledValidator', () => {
@@ -37,7 +37,7 @@ describe('createPrecompiledValidator()', () => {
     let custom: any;
     let localizer: Localizer;
     beforeAll(() => {
-      localizer = jest.fn();
+      localizer = vi.fn();
       mockedValidator.mockClear();
       custom = createPrecompiledValidator<TestType>(validateFns, rootSchema, localizer);
     });

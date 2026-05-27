@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ToggleWidget renders correctly 1`] = `
+exports[`ToggleWidget > renders correctly 1`] = `
 <DocumentFragment>
   <div
     class="form-control"
@@ -23,7 +23,7 @@ exports[`ToggleWidget renders correctly 1`] = `
 </DocumentFragment>
 `;
 
-exports[`ToggleWidget renders disabled state correctly 1`] = `
+exports[`ToggleWidget > renders disabled state correctly 1`] = `
 <DocumentFragment>
   <div
     class="form-control"
@@ -47,7 +47,7 @@ exports[`ToggleWidget renders disabled state correctly 1`] = `
 </DocumentFragment>
 `;
 
-exports[`ToggleWidget renders with custom label 1`] = `
+exports[`ToggleWidget > renders with custom label 1`] = `
 <DocumentFragment>
   <div
     class="form-control"

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`getWidget() should not fail on correct component 1`] = `
+exports[`getWidget() > should not fail on correct component 1`] = `
 <DocumentFragment>
   <div
     color="yellow"
@@ -10,7 +10,7 @@ exports[`getWidget() should not fail on correct component 1`] = `
 </DocumentFragment>
 `;
 
-exports[`getWidget() should not fail on forwarded ref component 1`] = `
+exports[`getWidget() > should not fail on forwarded ref component 1`] = `
 <DocumentFragment>
   <span
     id="test-id"
@@ -20,7 +20,7 @@ exports[`getWidget() should not fail on forwarded ref component 1`] = `
 </DocumentFragment>
 `;
 
-exports[`getWidget() should not fail on memo component 1`] = `
+exports[`getWidget() > should not fail on memo component 1`] = `
 <DocumentFragment>
   <div>
     test
@@ -28,7 +28,7 @@ exports[`getWidget() should not fail on memo component 1`] = `
 </DocumentFragment>
 `;
 
-exports[`getWidget() should return \`SelectWidget\` for boolean type 1`] = `
+exports[`getWidget() > should return \`SelectWidget\` for boolean type 1`] = `
 <DocumentFragment>
   <div
     color="green"
@@ -38,7 +38,7 @@ exports[`getWidget() should return \`SelectWidget\` for boolean type 1`] = `
 </DocumentFragment>
 `;
 
-exports[`getWidget() should return widget if in registered widgets 1`] = `
+exports[`getWidget() > should return widget if in registered widgets 1`] = `
 <DocumentFragment>
   <div>
     test

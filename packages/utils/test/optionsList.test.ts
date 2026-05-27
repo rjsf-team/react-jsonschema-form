@@ -1,13 +1,15 @@
+import type { MockInstance } from 'vitest';
 import get from 'lodash/get';
+import noop from 'lodash/noop';
 
 import { CONST_KEY, optionsList, PROPERTIES_KEY, RJSFSchema, UiSchema } from '../src';
 
 describe('optionsList()', () => {
-  let consoleWarnSpy: jest.SpyInstance;
+  let consoleWarnSpy: MockInstance;
   let oldProcessEnv: string | undefined;
   beforeAll(() => {
     oldProcessEnv = process.env.NODE_ENV;
-    consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+    consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
   });
   afterAll(() => {
     consoleWarnSpy.mockRestore();

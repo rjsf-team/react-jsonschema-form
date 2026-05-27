@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`array fields array 1`] = `
+exports[`array fields > array 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -104,7 +104,7 @@ exports[`array fields array 1`] = `
 </DocumentFragment>
 `;
 
-exports[`array fields array icons 1`] = `
+exports[`array fields > array icons 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -583,7 +583,7 @@ exports[`array fields array icons 1`] = `
 </DocumentFragment>
 `;
 
-exports[`array fields checkboxes 1`] = `
+exports[`array fields > checkboxes 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -684,7 +684,7 @@ exports[`array fields checkboxes 1`] = `
 </DocumentFragment>
 `;
 
-exports[`array fields empty errors array 1`] = `
+exports[`array fields > empty errors array 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -791,7 +791,7 @@ exports[`array fields empty errors array 1`] = `
 </DocumentFragment>
 `;
 
-exports[`array fields fixed array 1`] = `
+exports[`array fields > fixed array 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -1011,7 +1011,7 @@ exports[`array fields fixed array 1`] = `
 </DocumentFragment>
 `;
 
-exports[`array fields has errors 1`] = `
+exports[`array fields > has errors 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -1224,7 +1224,7 @@ exports[`array fields has errors 1`] = `
 </DocumentFragment>
 `;
 
-exports[`array fields no errors 1`] = `
+exports[`array fields > no errors 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -1331,7 +1331,7 @@ exports[`array fields no errors 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
+exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -2080,7 +2080,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
+exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -2497,7 +2497,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator bracketNameGenerator checkboxes with nameGenerator 1`] = `
+exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -2598,7 +2598,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes with nameGenerator 1`] = 
 </DocumentFragment>
 `;
 
-exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
+exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -2873,7 +2873,7 @@ exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
+exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -4006,7 +4006,7 @@ exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
+exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -4755,7 +4755,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
+exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -5172,7 +5172,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
 </DocumentFragment>
 `;
 
-exports[`with title and description array 1`] = `
+exports[`with title and description > array 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -5306,7 +5306,7 @@ exports[`with title and description array 1`] = `
 </DocumentFragment>
 `;
 
-exports[`with title and description array icons 1`] = `
+exports[`with title and description > array icons 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -5863,7 +5863,7 @@ exports[`with title and description array icons 1`] = `
 </DocumentFragment>
 `;
 
-exports[`with title and description checkboxes 1`] = `
+exports[`with title and description > checkboxes 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -5988,7 +5988,7 @@ exports[`with title and description checkboxes 1`] = `
 </DocumentFragment>
 `;
 
-exports[`with title and description fixed array 1`] = `
+exports[`with title and description > fixed array 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -6286,7 +6286,7 @@ exports[`with title and description fixed array 1`] = `
 </DocumentFragment>
 `;
 
-exports[`with title and description from both array 1`] = `
+exports[`with title and description from both > array 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -6420,7 +6420,7 @@ exports[`with title and description from both array 1`] = `
 </DocumentFragment>
 `;
 
-exports[`with title and description from both array icons 1`] = `
+exports[`with title and description from both > array icons 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -6977,7 +6977,7 @@ exports[`with title and description from both array icons 1`] = `
 </DocumentFragment>
 `;
 
-exports[`with title and description from both checkboxes 1`] = `
+exports[`with title and description from both > checkboxes 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -7102,7 +7102,7 @@ exports[`with title and description from both checkboxes 1`] = `
 </DocumentFragment>
 `;
 
-exports[`with title and description from both fixed array 1`] = `
+exports[`with title and description from both > fixed array 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -7400,7 +7400,7 @@ exports[`with title and description from both fixed array 1`] = `
 </DocumentFragment>
 `;
 
-exports[`with title and description from uiSchema array 1`] = `
+exports[`with title and description from uiSchema > array 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -7534,7 +7534,7 @@ exports[`with title and description from uiSchema array 1`] = `
 </DocumentFragment>
 `;
 
-exports[`with title and description from uiSchema array icons 1`] = `
+exports[`with title and description from uiSchema > array icons 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -8091,7 +8091,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
 </DocumentFragment>
 `;
 
-exports[`with title and description from uiSchema checkboxes 1`] = `
+exports[`with title and description from uiSchema > checkboxes 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -8216,7 +8216,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
 </DocumentFragment>
 `;
 
-exports[`with title and description from uiSchema fixed array 1`] = `
+exports[`with title and description from uiSchema > fixed array 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -8514,7 +8514,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
 </DocumentFragment>
 `;
 
-exports[`with title and description with global label off array 1`] = `
+exports[`with title and description with global label off > array 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -8635,7 +8635,7 @@ exports[`with title and description with global label off array 1`] = `
 </DocumentFragment>
 `;
 
-exports[`with title and description with global label off array icons 1`] = `
+exports[`with title and description with global label off > array icons 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -9157,7 +9157,7 @@ exports[`with title and description with global label off array icons 1`] = `
 </DocumentFragment>
 `;
 
-exports[`with title and description with global label off checkboxes 1`] = `
+exports[`with title and description with global label off > checkboxes 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -9271,7 +9271,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
 </DocumentFragment>
 `;
 
-exports[`with title and description with global label off fixed array 1`] = `
+exports[`with title and description with global label off > fixed array 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"

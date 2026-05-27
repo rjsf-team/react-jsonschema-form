@@ -1,9 +1,0 @@
-{
-  "snapshotSerializers": ["@emotion/jest/serializer"],
-  "testEnvironment": "jsdom",
-  "testEnvironmentOptions": {
-    "browsers": ["chrome", "firefox", "safari"]
-  },
-  "setupFilesAfterEnv": ["./test/setup-jest-env.js", "../../testing/testSetup.ts"],
-  "transformIgnorePatterns": ["/node_modules/(?!(@x0k/json-schema-merge|deep-freeze-es6))"]
-}

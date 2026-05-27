@@ -4,7 +4,7 @@ import uniqueId from 'lodash/uniqueId';
 import { TestIdShape } from './types';
 
 /** Returns an object of test IDs that can only be used in test mode. If the function is called in a test environment
- * (`NODE_ENV === 'test'`, this is set by jest) then a Proxy object will be returned. If a key within the returned
+ * (`NODE_ENV === 'test'`, this is set by vitest) then a Proxy object will be returned. If a key within the returned
  * object is accessed, if the value already exists the object will return that value, otherwise it will create that key
  * with a generated `uuid` value and return the generated ID. If it is called outside of a test environment, the
  * function will return an empty object, therefore returning `undefined` for any property within the object and

@@ -11,10 +11,12 @@ describe('FieldTemplate', () => {
       }
       return null;
     }
-    createFormComponent({
-      schema: { type: 'string' },
-      uiSchema: { 'ui:disabled': true },
-      templates: { FieldTemplate },
+    it('renders without throwing when exactly one child is provided', () => {
+      createFormComponent({
+        schema: { type: 'string' },
+        uiSchema: { 'ui:disabled': true },
+        templates: { FieldTemplate },
+      });
     });
   });
 

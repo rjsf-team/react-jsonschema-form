@@ -13,6 +13,7 @@ import {
   WidgetProps,
   FormValidation,
 } from '@rjsf/utils';
+import noop from 'lodash/noop';
 import userEvent from '@testing-library/user-event';
 
 import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils';
@@ -204,7 +205,7 @@ describe('ArrayField', () => {
     );
   };
   beforeAll(() => {
-    jest.spyOn(window, 'FileReader').mockImplementation(() => mockFileReader);
+    vi.spyOn(window, 'FileReader').mockImplementation(() => mockFileReader);
   });
 
   describe('Unsupported array schema', () => {
@@ -1239,7 +1240,7 @@ describe('ArrayField', () => {
       });
 
       it('should handle a blur event', async () => {
-        const onBlur = jest.fn();
+        const onBlur = vi.fn();
         const { node } = createFormComponent({ schema, onBlur });
 
         const select = node.querySelector<HTMLSelectElement>('.rjsf-field select')!;
@@ -1251,7 +1252,7 @@ describe('ArrayField', () => {
       });
 
       it('should handle a focus event', async () => {
-        const onFocus = jest.fn();
+        const onFocus = vi.fn();
         const { node } = createFormComponent({ schema, onFocus, formData: ['foo', 'bar'] });
 
         const select = node.querySelector<HTMLSelectElement>('.rjsf-field select')!;
@@ -3267,7 +3268,7 @@ describe('ArrayField', () => {
         },
       };
 
-      const dynamicUiSchemaFunction = jest.fn((itemData) => {
+      const dynamicUiSchemaFunction = vi.fn((itemData) => {
         return {
           name: {
             'ui:widget': itemData.role === 'admin' ? 'textarea' : 'text',
@@ -3370,7 +3371,7 @@ describe('ArrayField', () => {
         },
       };
 
-      const consoleErrorStub = jest.spyOn(console, 'error');
+      const consoleErrorStub = vi.spyOn(console, 'error').mockImplementation(noop);
 
       const uiSchema: UiSchema = {
         items: (_: any, index) => {
@@ -3416,7 +3417,7 @@ describe('ArrayField', () => {
         items: [{ type: 'string' }, { type: 'string' }],
       };
 
-      const consoleErrorStub = jest.spyOn(console, 'error');
+      const consoleErrorStub = vi.spyOn(console, 'error').mockImplementation(noop);
 
       const uiSchema: UiSchema = {
         items: (_: any, index) => {
@@ -3506,7 +3507,7 @@ describe('ArrayField', () => {
         },
       };
 
-      const dynamicUiSchemaFunction = jest.fn(() => ({
+      const dynamicUiSchemaFunction = vi.fn(() => ({
         name: {
           'ui:widget': 'textarea',
         },

@@ -167,14 +167,13 @@
         "browser": true,
         "node": true,
         "commonjs": true,
-        "es2020": true,
-        "jest": true
+        "es2020": true
       }
     },
     {
       "files": ["**/test/**/*.ts", "**/test/**/*.tsx", "**/test/**/*.js"],
       "env": {
-        "jest": true
+        "vitest": true
       },
       "rules": {
         "typescript/no-misused-promises": "off"

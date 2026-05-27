@@ -1,15 +1,17 @@
+import type { MockInstance } from 'vitest';
+import noop from 'lodash/noop';
 import { writeFileSync } from 'fs';
 import { RJSFSchema } from '@rjsf/utils';
 
 import compileSchemaValidators, { compileSchemaValidatorsCode } from '../src/compileSchemaValidators';
 
-jest.mock('fs', () => ({
-  ...jest.requireActual('fs'),
-  writeFileSync: jest.fn(),
-}));
+vi.mock('fs', () => {
+  const writeFileSync = vi.fn();
+  return { writeFileSync, default: { writeFileSync } };
+});
 
-jest.mock('../src/compileSchemaValidatorsCode', () => ({
-  compileSchemaValidatorsCode: jest.fn(),
+vi.mock('../src/compileSchemaValidatorsCode', () => ({
+  compileSchemaValidatorsCode: vi.fn(),
 }));
 
 const OUTPUT_FILE = 'test.js';
@@ -17,10 +19,10 @@ const OUTPUT_FILE = 'test.js';
 const testSchema = { $id: 'test-schema' } as RJSFSchema;
 
 describe('compileSchemaValidators()', () => {
-  let consoleLogSpy: jest.SpyInstance;
+  let consoleLogSpy: MockInstance;
   let expectedCode: string;
   beforeAll(() => {
-    consoleLogSpy = jest.spyOn(console, 'log').mockImplementation();
+    consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(noop);
   });
   afterAll(() => {
     consoleLogSpy.mockRestore();
@@ -28,13 +30,13 @@ describe('compileSchemaValidators()', () => {
   describe('compiling without additional options', () => {
     beforeAll(() => {
       expectedCode = 'test output 1';
-      (compileSchemaValidatorsCode as jest.Mock).mockImplementation(() => expectedCode);
+      vi.mocked(compileSchemaValidatorsCode).mockImplementation(() => expectedCode);
       compileSchemaValidators(testSchema, OUTPUT_FILE);
     });
     afterAll(() => {
       consoleLogSpy.mockClear();
-      (compileSchemaValidatorsCode as jest.Mock).mockClear();
-      (writeFileSync as jest.Mock).mockClear();
+      vi.mocked(compileSchemaValidatorsCode).mockClear();
+      vi.mocked(writeFileSync).mockClear();
     });
     it('called console.log twice', () => {
       expect(consoleLogSpy).toHaveBeenCalledTimes(2);
@@ -56,13 +58,13 @@ describe('compileSchemaValidators()', () => {
     const customOptions = { ataOptionsOverrides: { coerceTypes: true } };
     beforeAll(() => {
       expectedCode = 'expected code 2';
-      (compileSchemaValidatorsCode as jest.Mock).mockImplementation(() => expectedCode);
+      vi.mocked(compileSchemaValidatorsCode).mockImplementation(() => expectedCode);
       compileSchemaValidators(testSchema, OUTPUT_FILE, customOptions);
     });
     afterAll(() => {
       consoleLogSpy.mockClear();
-      (compileSchemaValidatorsCode as jest.Mock).mockClear();
-      (writeFileSync as jest.Mock).mockClear();
+      vi.mocked(compileSchemaValidatorsCode).mockClear();
+      vi.mocked(writeFileSync).mockClear();
     });
     it('called console.log twice', () => {
       expect(consoleLogSpy).toHaveBeenCalledTimes(2);

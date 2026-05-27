@@ -1,4 +1,5 @@
 import { createRef } from 'react';
+import noop from 'lodash/noop';
 import userEvent from '@testing-library/user-event';
 import { FieldProps, FormValidation, GenericObjectType, RJSFSchema, WidgetProps } from '@rjsf/utils';
 
@@ -1341,7 +1342,7 @@ describe('oneOf', () => {
     });
 
     it('should warn when the oneOf in the uiSchema is not an array, and pass the base uiSchema down', () => {
-      const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
       const schema: RJSFSchema = {
         type: 'object',
         oneOf: [
@@ -1739,7 +1740,7 @@ describe('oneOf', () => {
       expect(select).toHaveValue('2');
     });
     it('warns when discriminator.propertyName is not a string', () => {
-      const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
       const badSchema = { ...schema, discriminator: { propertyName: 5 } };
       const { node } = createFormComponent({
         schema: badSchema,

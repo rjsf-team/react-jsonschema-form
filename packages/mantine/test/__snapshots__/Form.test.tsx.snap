@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
+exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -641,7 +641,7 @@ exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
+exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -1120,7 +1120,7 @@ exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
+exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -1350,7 +1350,7 @@ exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator bracketNameGenerator nested object 1`] = `
+exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -1628,7 +1628,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator bracketNameGenerator radio field 1`] = `
+exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -1809,7 +1809,7 @@ exports[`nameGenerator bracketNameGenerator radio field 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
+exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -2026,7 +2026,7 @@ exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator bracketNameGenerator simple fields 1`] = `
+exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -2271,7 +2271,7 @@ exports[`nameGenerator bracketNameGenerator simple fields 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator bracketNameGenerator textarea field 1`] = `
+exports[`nameGenerator > bracketNameGenerator > textarea field 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -2368,7 +2368,7 @@ exports[`nameGenerator bracketNameGenerator textarea field 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
+exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -3009,7 +3009,7 @@ exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
+exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -3488,7 +3488,7 @@ exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
+exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -3766,7 +3766,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
+exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -3983,7 +3983,7 @@ exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator dotNotationNameGenerator simple fields 1`] = `
+exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -4228,7 +4228,7 @@ exports[`nameGenerator dotNotationNameGenerator simple fields 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields checkbox field 1`] = `
+exports[`single fields > checkbox field 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -4311,7 +4311,7 @@ exports[`single fields checkbox field 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields checkbox field with description in schema and FieldTemplate 1`] = `
+exports[`single fields > checkbox field with description in schema and FieldTemplate 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -4408,7 +4408,7 @@ exports[`single fields checkbox field with description in schema and FieldTempla
 </DocumentFragment>
 `;
 
-exports[`single fields checkbox field with label 1`] = `
+exports[`single fields > checkbox field with label 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -4498,7 +4498,7 @@ exports[`single fields checkbox field with label 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields checkbox field with label and description 1`] = `
+exports[`single fields > checkbox field with label and description 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -4595,7 +4595,7 @@ exports[`single fields checkbox field with label and description 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields checkbox field with label and rich text description 1`] = `
+exports[`single fields > checkbox field with label and rich text description 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -4700,7 +4700,7 @@ exports[`single fields checkbox field with label and rich text description 1`] =
 </DocumentFragment>
 `;
 
-exports[`single fields checkboxes field 1`] = `
+exports[`single fields > checkboxes field 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -4952,7 +4952,7 @@ exports[`single fields checkboxes field 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields checkboxes widget with custom options and labels 1`] = `
+exports[`single fields > checkboxes widget with custom options and labels 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -5167,7 +5167,7 @@ exports[`single fields checkboxes widget with custom options and labels 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields checkboxes widget with required field 1`] = `
+exports[`single fields > checkboxes widget with required field 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -5372,7 +5372,7 @@ exports[`single fields checkboxes widget with required field 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields field with description 1`] = `
+exports[`single fields > field with description 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -5479,7 +5479,7 @@ exports[`single fields field with description 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields field with description in uiSchema 1`] = `
+exports[`single fields > field with description in uiSchema 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -5586,7 +5586,7 @@ exports[`single fields field with description in uiSchema 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields field with markdown description 1`] = `
+exports[`single fields > field with markdown description 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -5693,7 +5693,7 @@ exports[`single fields field with markdown description 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields field with markdown description in uiSchema 1`] = `
+exports[`single fields > field with markdown description in uiSchema 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -5800,7 +5800,7 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields format color 1`] = `
+exports[`single fields > format color 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -5889,7 +5889,7 @@ exports[`single fields format color 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields format date 1`] = `
+exports[`single fields > format date 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -5958,7 +5958,7 @@ exports[`single fields format date 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields format datetime 1`] = `
+exports[`single fields > format datetime 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -6027,7 +6027,7 @@ exports[`single fields format datetime 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields format time 1`] = `
+exports[`single fields > format time 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -6092,7 +6092,7 @@ exports[`single fields format time 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields help and error display 1`] = `
+exports[`single fields > help and error display 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -6283,7 +6283,7 @@ exports[`single fields help and error display 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields hidden field 1`] = `
+exports[`single fields > hidden field 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -6342,7 +6342,7 @@ exports[`single fields hidden field 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields hidden label 1`] = `
+exports[`single fields > hidden label 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -6406,7 +6406,7 @@ exports[`single fields hidden label 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields null field 1`] = `
+exports[`single fields > null field 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -6448,7 +6448,7 @@ exports[`single fields null field 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields number field 0 1`] = `
+exports[`single fields > number field 0 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -6566,7 +6566,7 @@ exports[`single fields number field 0 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields number field 1`] = `
+exports[`single fields > number field 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -6684,7 +6684,7 @@ exports[`single fields number field 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields optional data controls does not show optional controls when not turned on in uiSchema and no formData 1`] = `
+exports[`single fields > optional data controls > does not show optional controls when not turned on in uiSchema and no formData 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -7888,7 +7888,7 @@ exports[`single fields optional data controls does not show optional controls wh
 </DocumentFragment>
 `;
 
-exports[`single fields optional data controls does not show optional controls when not turned on in uiSchema, readonly and no formData 1`] = `
+exports[`single fields > optional data controls > does not show optional controls when not turned on in uiSchema, readonly and no formData 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -9126,7 +9126,7 @@ exports[`single fields optional data controls does not show optional controls wh
 </DocumentFragment>
 `;
 
-exports[`single fields optional data controls shows "add" and "remove" optional controls when turned on in uiSchema and formData 1`] = `
+exports[`single fields > optional data controls > shows "add" and "remove" optional controls when turned on in uiSchema and formData 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -10352,7 +10352,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
 </DocumentFragment>
 `;
 
-exports[`single fields optional data controls shows "add" and "remove" optional controls when turned on in uiSchema, readonly and formData 1`] = `
+exports[`single fields > optional data controls > shows "add" and "remove" optional controls when turned on in uiSchema, readonly and formData 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -11210,7 +11210,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
 </DocumentFragment>
 `;
 
-exports[`single fields optional data controls shows "add" optional controls when turned on in uiSchema and no formData 1`] = `
+exports[`single fields > optional data controls > shows "add" optional controls when turned on in uiSchema and no formData 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -11837,7 +11837,7 @@ exports[`single fields optional data controls shows "add" optional controls when
 </DocumentFragment>
 `;
 
-exports[`single fields optional data controls shows "add" optional controls when turned on in uiSchema, disabled and no formData 1`] = `
+exports[`single fields > optional data controls > shows "add" optional controls when turned on in uiSchema, disabled and no formData 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -12219,7 +12219,7 @@ exports[`single fields optional data controls shows "add" optional controls when
 </DocumentFragment>
 `;
 
-exports[`single fields password field 1`] = `
+exports[`single fields > password field 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -12318,7 +12318,7 @@ exports[`single fields password field 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields radio field 1`] = `
+exports[`single fields > radio field 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -12468,7 +12468,7 @@ exports[`single fields radio field 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields radio widget with description in schema and FieldTemplate 1`] = `
+exports[`single fields > radio widget with description in schema and FieldTemplate 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -12624,7 +12624,7 @@ exports[`single fields radio widget with description in schema and FieldTemplate
 </DocumentFragment>
 `;
 
-exports[`single fields schema examples 1`] = `
+exports[`single fields > schema examples 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -12708,7 +12708,7 @@ exports[`single fields schema examples 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields schema examples with mixed types (string examples and number default) 1`] = `
+exports[`single fields > schema examples with mixed types (string examples and number default) 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -12840,7 +12840,7 @@ exports[`single fields schema examples with mixed types (string examples and num
 </DocumentFragment>
 `;
 
-exports[`single fields select field 1`] = `
+exports[`single fields > select field 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -13010,7 +13010,7 @@ exports[`single fields select field 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields select field multiple choice 1`] = `
+exports[`single fields > select field multiple choice 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -13219,7 +13219,7 @@ exports[`single fields select field multiple choice 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields select field multiple choice enumDisabled 1`] = `
+exports[`single fields > select field multiple choice enumDisabled 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -13429,7 +13429,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields select field multiple choice enumDisabled using checkboxes 1`] = `
+exports[`single fields > select field multiple choice enumDisabled using checkboxes 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -13678,7 +13678,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
 </DocumentFragment>
 `;
 
-exports[`single fields select field multiple choice formData 1`] = `
+exports[`single fields > select field multiple choice formData 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -13987,7 +13987,7 @@ exports[`single fields select field multiple choice formData 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields select field multiple choice with labels 1`] = `
+exports[`single fields > select field multiple choice with labels 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -14184,7 +14184,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields select field single choice enumDisabled 1`] = `
+exports[`single fields > select field single choice enumDisabled 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -14355,7 +14355,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields select field single choice enumDisabled using radio widget 1`] = `
+exports[`single fields > select field single choice enumDisabled using radio widget 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -14508,7 +14508,7 @@ exports[`single fields select field single choice enumDisabled using radio widge
 </DocumentFragment>
 `;
 
-exports[`single fields select field single choice form disabled using radio widget 1`] = `
+exports[`single fields > select field single choice form disabled using radio widget 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -14660,7 +14660,7 @@ exports[`single fields select field single choice form disabled using radio widg
 </DocumentFragment>
 `;
 
-exports[`single fields select field single choice formData 1`] = `
+exports[`single fields > select field single choice formData 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -14846,7 +14846,7 @@ exports[`single fields select field single choice formData 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields select field single choice uiSchema disabled using radio widget 1`] = `
+exports[`single fields > select field single choice uiSchema disabled using radio widget 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -14996,7 +14996,7 @@ exports[`single fields select field single choice uiSchema disabled using radio 
 </DocumentFragment>
 `;
 
-exports[`single fields select widget with description in schema and FieldTemplate 1`] = `
+exports[`single fields > select widget with description in schema and FieldTemplate 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -15175,7 +15175,7 @@ exports[`single fields select widget with description in schema and FieldTemplat
 </DocumentFragment>
 `;
 
-exports[`single fields slider field 1`] = `
+exports[`single fields > slider field 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -15255,7 +15255,7 @@ exports[`single fields slider field 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields string field field with markdown help and description 1`] = `
+exports[`single fields > string field > field with markdown help and description 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -15356,7 +15356,7 @@ exports[`single fields string field field with markdown help and description 1`]
 </DocumentFragment>
 `;
 
-exports[`single fields string field field with markdown help text 1`] = `
+exports[`single fields > string field > field with markdown help text 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -15457,7 +15457,7 @@ exports[`single fields string field field with markdown help text 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields string field field with markdown help text without enabling markdown 1`] = `
+exports[`single fields > string field > field with markdown help text without enabling markdown 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -15547,7 +15547,7 @@ exports[`single fields string field field with markdown help text without enabli
 </DocumentFragment>
 `;
 
-exports[`single fields string field format data-url 1`] = `
+exports[`single fields > string field > format data-url 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -15616,7 +15616,7 @@ exports[`single fields string field format data-url 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields string field format email 1`] = `
+exports[`single fields > string field > format email 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -15680,7 +15680,7 @@ exports[`single fields string field format email 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields string field format uri 1`] = `
+exports[`single fields > string field > format uri 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -15744,7 +15744,7 @@ exports[`single fields string field format uri 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields string field regular 1`] = `
+exports[`single fields > string field > regular 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -15808,7 +15808,7 @@ exports[`single fields string field regular 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields string field required field with markdown help 1`] = `
+exports[`single fields > string field > required field with markdown help 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -15905,7 +15905,7 @@ exports[`single fields string field required field with markdown help 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields string field string field with allowClearTextInputs and readonly 1`] = `
+exports[`single fields > string field > string field with allowClearTextInputs and readonly 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -15973,7 +15973,7 @@ exports[`single fields string field string field with allowClearTextInputs and r
 </DocumentFragment>
 `;
 
-exports[`single fields string field string field with allowClearTextInputs and value 1`] = `
+exports[`single fields > string field > string field with allowClearTextInputs and value 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -16075,7 +16075,7 @@ exports[`single fields string field string field with allowClearTextInputs and v
 </DocumentFragment>
 `;
 
-exports[`single fields string field string field with placeholder 1`] = `
+exports[`single fields > string field > string field with placeholder 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -16139,7 +16139,7 @@ exports[`single fields string field string field with placeholder 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields textarea field 1`] = `
+exports[`single fields > textarea field 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -16202,7 +16202,7 @@ exports[`single fields textarea field 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields title field 1`] = `
+exports[`single fields > title field 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -16308,7 +16308,7 @@ exports[`single fields title field 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields unsupported field 1`] = `
+exports[`single fields > unsupported field 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -16371,7 +16371,7 @@ exports[`single fields unsupported field 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields up/down field 1`] = `
+exports[`single fields > up/down field 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -16489,7 +16489,7 @@ exports[`single fields up/down field 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields using custom tagName 1`] = `
+exports[`single fields > using custom tagName 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"

@@ -1,6 +1,0 @@
-{
-  "verbose": true,
-  "setupFilesAfterEnv": ["../../testing/testSetup.ts"],
-  "testEnvironment": "jsdom",
-  "transformIgnorePatterns": ["/node_modules/(?!(@x0k/json-schema-merge|deep-freeze-es6))"]
-}

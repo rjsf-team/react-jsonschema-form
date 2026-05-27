@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`schemaParser() parse schema with allof not able to merge 1`] = `
+exports[`schemaParser() > parse schema with allof not able to merge 1`] = `
 {
   "-44c06f09": {
     "$id": "-44c06f09",
@@ -95,7 +95,7 @@ exports[`schemaParser() parse schema with allof not able to merge 1`] = `
 }
 `;
 
-exports[`schemaParser() parse schema with array condition 1`] = `
+exports[`schemaParser() > parse schema with array condition 1`] = `
 {
   "-33d8d73c": {
     "$id": "-33d8d73c",
@@ -150,7 +150,7 @@ exports[`schemaParser() parse schema with array condition 1`] = `
 }
 `;
 
-exports[`schemaParser() parses property dependencies properly 1`] = `
+exports[`schemaParser() > parses property dependencies properly 1`] = `
 {
   "-4e612676": {
     "$id": "-4e612676",
@@ -175,7 +175,7 @@ exports[`schemaParser() parses property dependencies properly 1`] = `
 }
 `;
 
-exports[`schemaParser() parses recursive refs in allOf properly 1`] = `
+exports[`schemaParser() > parses recursive refs in allOf properly 1`] = `
 {
   "2b3d97f8": {
     "$id": "2b3d97f8",
@@ -224,7 +224,7 @@ exports[`schemaParser() parses recursive refs in allOf properly 1`] = `
 }
 `;
 
-exports[`schemaParser() parses recursive refs properly 1`] = `
+exports[`schemaParser() > parses recursive refs properly 1`] = `
 {
   "7cf4cd8a": {
     "$id": "7cf4cd8a",
@@ -248,7 +248,7 @@ exports[`schemaParser() parses recursive refs properly 1`] = `
 }
 `;
 
-exports[`schemaParser() parses schema and required dependencies properly 1`] = `
+exports[`schemaParser() > parses schema and required dependencies properly 1`] = `
 {
   "-738b34fc": {
     "$id": "-738b34fc",
@@ -280,7 +280,7 @@ exports[`schemaParser() parses schema and required dependencies properly 1`] = `
 }
 `;
 
-exports[`schemaParser() parses schema dependencies properly 1`] = `
+exports[`schemaParser() > parses schema dependencies properly 1`] = `
 {
   "75f1f611": {
     "$id": "75f1f611",
@@ -303,7 +303,7 @@ exports[`schemaParser() parses schema dependencies properly 1`] = `
 }
 `;
 
-exports[`schemaParser() parses schema dependencies with one of and refs properly 1`] = `
+exports[`schemaParser() > parses schema dependencies with one of and refs properly 1`] = `
 {
   "-29b1244f": {
     "$id": "-29b1244f",
@@ -381,7 +381,7 @@ exports[`schemaParser() parses schema dependencies with one of and refs properly
 }
 `;
 
-exports[`schemaParser() parses schema with a single condition 1`] = `
+exports[`schemaParser() > parses schema with a single condition 1`] = `
 {
   "-33d8d73c": {
     "$id": "-33d8d73c",
@@ -428,7 +428,7 @@ exports[`schemaParser() parses schema with a single condition 1`] = `
 }
 `;
 
-exports[`schemaParser() parses schema with multiple conditions 1`] = `
+exports[`schemaParser() > parses schema with multiple conditions 1`] = `
 {
   "-269ce7ef": {
     "$id": "-269ce7ef",
@@ -617,7 +617,7 @@ exports[`schemaParser() parses schema with multiple conditions 1`] = `
 }
 `;
 
-exports[`schemaParser() parses schema with nested conditions 1`] = `
+exports[`schemaParser() > parses schema with nested conditions 1`] = `
 {
   "-f42a226": {
     "$id": "-f42a226",
@@ -739,7 +739,7 @@ exports[`schemaParser() parses schema with nested conditions 1`] = `
 }
 `;
 
-exports[`schemaParser() parses schema with oneof and nested dependencies 1`] = `
+exports[`schemaParser() > parses schema with oneof and nested dependencies 1`] = `
 {
   "-37c29d49": {
     "$id": "-37c29d49",
@@ -855,7 +855,7 @@ exports[`schemaParser() parses schema with oneof and nested dependencies 1`] = `
 }
 `;
 
-exports[`schemaParser() parses superSchema properly 1`] = `
+exports[`schemaParser() > parses superSchema properly 1`] = `
 {
   "-124b5dfb": {
     "$id": "-124b5dfb",
