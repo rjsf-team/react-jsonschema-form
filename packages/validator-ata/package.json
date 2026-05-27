@@ -76,7 +76,7 @@
     ]
   },
   "dependencies": {
-    "ata-validator": "^0.17.5",
+    "ata-validator": "^0.18.2",
     "lodash": "^4.18.1",
     "lodash-es": "^4.18.1"
   },
