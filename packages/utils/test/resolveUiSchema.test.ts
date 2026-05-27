@@ -1,4 +1,5 @@
 import noop from 'lodash/noop';
+
 import { Registry, RJSFSchema, resolveUiSchema, TemplatesType, UiSchema, UiSchemaDefinitions } from '../src';
 
 beforeEach(() => {

@@ -1,5 +1,6 @@
 import type { MockInstance } from 'vitest';
 import noop from 'lodash/noop';
+
 import { getDiscriminatorFieldFromSchema, RJSFSchema } from '../src';
 
 const PROPERTY_NAME = 'testProp';

@@ -1,5 +1,6 @@
 import type { MockInstance } from 'vitest';
 import noop from 'lodash/noop';
+
 import { hashForSchema, ID_KEY, RJSFSchema } from '../../src';
 import ParserValidator from '../../src/parser/ParserValidator';
 import { RECURSIVE_REF } from '../testUtils/testData';

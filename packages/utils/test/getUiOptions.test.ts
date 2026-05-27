@@ -1,5 +1,6 @@
 import type { MockInstance } from 'vitest';
 import noop from 'lodash/noop';
+
 import { GlobalUISchemaOptions, UIOptionsType, UiSchema, getUiOptions } from '../src';
 
 const uiSchema: UiSchema = {

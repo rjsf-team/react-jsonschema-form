@@ -1,5 +1,6 @@
 import type { MockInstance } from 'vitest';
 import noop from 'lodash/noop';
+
 import { toPathSchema, RJSFSchema, createSchemaUtils } from '../../src';
 import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData';
 import { TestValidatorType } from './types';

@@ -1,4 +1,5 @@
 import type { MockInstance } from 'vitest';
+
 import { createSchemaUtils, englishStringTranslator, isRootSchema, Registry, RJSFSchema, TemplatesType } from '../src';
 import getTestValidator from './testUtils/getTestValidator';
 import { GLOBAL_FORM_OPTIONS } from './testUtils/testData';

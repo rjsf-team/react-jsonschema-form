@@ -1,4 +1,5 @@
 import type { MockInstance } from 'vitest';
+
 import { utcToLocal } from '../src';
 
 const UTC_DATE = '2016-04-05T00:00:00.000Z';
