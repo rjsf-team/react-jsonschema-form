@@ -1,15 +1,15 @@
-import type { MockInstance } from 'vitest';
-import noop from 'lodash/noop';
 import { CSSProperties } from 'react';
-import { render, fireEvent, act, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { GenericObjectType, RJSFSchema, UiSchema, Widget, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
+import { render, fireEvent, act, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import noop from 'lodash/noop';
+import type { MockInstance } from 'vitest';
 
-import SelectWidget from '../src/components/widgets/SelectWidget';
-import RadioWidget from '../src/components/widgets/RadioWidget';
-import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils';
 import Form from '../src';
+import RadioWidget from '../src/components/widgets/RadioWidget';
+import SelectWidget from '../src/components/widgets/SelectWidget';
+import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils';
 
 const user = userEvent.setup();
 

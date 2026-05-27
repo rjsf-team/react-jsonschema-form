@@ -1,3 +1,4 @@
+import FormHelperText, { FormHelperTextProps } from '@mui/material/FormHelperText';
 import { RichHelp } from '@rjsf/core';
 import {
   helpId,
@@ -8,7 +9,7 @@ import {
   getUiOptions,
   GenericObjectType,
 } from '@rjsf/utils';
-import FormHelperText, { FormHelperTextProps } from '@mui/material/FormHelperText';
+
 import { computeSxProps, getMuiProps } from '../util';
 
 /** Properties available for the `rjsfSlotProps` target of the FieldHelpTemplate. */

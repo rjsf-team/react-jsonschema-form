@@ -1,3 +1,5 @@
+import { OptionOnSelectData } from '@fluentui/react-combobox';
+import { Dropdown, Field, Option } from '@fluentui/react-components';
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
@@ -10,8 +12,6 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { Dropdown, Field, Option } from '@fluentui/react-components';
-import { OptionOnSelectData } from '@fluentui/react-combobox';
 
 function getValue(data: OptionOnSelectData, multiple: boolean) {
   if (multiple) {

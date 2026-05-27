@@ -1,5 +1,4 @@
 import { ComponentType } from 'react';
-
 import { FormProps, withTheme } from '@rjsf/core';
 import { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 

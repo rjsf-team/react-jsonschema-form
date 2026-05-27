@@ -1,7 +1,8 @@
 'use client';
 
-import { Check, ChevronDown } from 'lucide-react';
 import { FocusEvent, FocusEventHandler, ReactElement, useEffect, useRef, useState } from 'react';
+import { Check, ChevronDown } from 'lucide-react';
+
 import { cn } from '../../lib/utils';
 import { Command, CommandGroup, CommandItem, CommandList } from './command';
 

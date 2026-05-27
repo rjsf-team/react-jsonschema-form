@@ -1,5 +1,5 @@
-import schemaParser from './schemaParser';
 import { SchemaMap } from './ParserValidator';
+import schemaParser from './schemaParser';
 
 export type { SchemaMap };
 

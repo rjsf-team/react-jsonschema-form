@@ -1,5 +1,5 @@
-import { FluentProvider, RendererProvider, createDOMRenderer, teamsLightTheme } from '@fluentui/react-components';
 import { ReactNode, useMemo } from 'react';
+import { FluentProvider, RendererProvider, createDOMRenderer, teamsLightTheme } from '@fluentui/react-components';
 
 const FluentWrapper = (props: { children: ReactNode; targetDocument?: HTMLDocument }) => {
   const { children, targetDocument } = props;

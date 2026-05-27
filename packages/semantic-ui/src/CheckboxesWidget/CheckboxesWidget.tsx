@@ -1,5 +1,4 @@
 import { ChangeEvent } from 'react';
-import { Form } from 'semantic-ui-react';
 import {
   ariaDescribedByIds,
   enumOptionsDeselectValue,
@@ -13,6 +12,8 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
+import { Form } from 'semantic-ui-react';
+
 import { getSemanticProps } from '../util';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.

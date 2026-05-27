@@ -1,9 +1,9 @@
-import IconButton, { IconButtonProps as MuiIconButtonProps } from '@mui/material/IconButton';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ClearIcon from '@mui/icons-material/Clear';
 import CopyIcon from '@mui/icons-material/ContentCopy';
 import RemoveIcon from '@mui/icons-material/Remove';
-import ClearIcon from '@mui/icons-material/Clear';
+import IconButton, { IconButtonProps as MuiIconButtonProps } from '@mui/material/IconButton';
 import {
   FormContextType,
   IconButtonProps,
@@ -12,6 +12,7 @@ import {
   TranslatableString,
   getUiOptions,
 } from '@rjsf/utils';
+
 import { getMuiProps } from '../util';
 
 export default function MuiIconButton<

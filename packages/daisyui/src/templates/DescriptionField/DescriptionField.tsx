@@ -1,5 +1,5 @@
-import { DescriptionFieldProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 import { RichDescription } from '@rjsf/core';
+import { DescriptionFieldProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 
 /** The `DescriptionField` component renders descriptive text for a form field
  * with DaisyUI styling. It displays the description in a subtle text color

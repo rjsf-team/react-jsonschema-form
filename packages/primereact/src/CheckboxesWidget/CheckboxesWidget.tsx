@@ -1,4 +1,3 @@
-import { Checkbox, CheckboxChangeEvent } from 'primereact/checkbox';
 import {
   ariaDescribedByIds,
   enumOptionsDeselectValue,
@@ -12,6 +11,7 @@ import {
   descriptionId,
   getTemplate,
 } from '@rjsf/utils';
+import { Checkbox, CheckboxChangeEvent } from 'primereact/checkbox';
 
 import { Label } from '../util';
 

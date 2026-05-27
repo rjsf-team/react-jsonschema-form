@@ -1,5 +1,5 @@
-import { readFileSync } from 'fs';
 import { RJSFSchema, schemaParser } from '@rjsf/utils';
+import { readFileSync } from 'fs';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators';
 import createAjvInstance from '../src/createAjvInstance';

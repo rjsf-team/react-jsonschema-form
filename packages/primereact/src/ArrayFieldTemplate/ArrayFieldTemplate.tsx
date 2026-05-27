@@ -9,6 +9,7 @@ import {
   buttonId,
 } from '@rjsf/utils';
 import { Fieldset } from 'primereact/fieldset';
+
 import AddButton from '../AddButton';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.

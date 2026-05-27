@@ -2,7 +2,7 @@ import get from 'lodash/get';
 import has from 'lodash/has';
 import isEmpty from 'lodash/isEmpty';
 
-import retrieveSchema from './retrieveSchema';
+import { REF_KEY } from '../constants';
 import {
   Experimental_CustomMergeAllOf,
   FormContextType,
@@ -11,7 +11,7 @@ import {
   StrictRJSFSchema,
   ValidatorType,
 } from '../types';
-import { REF_KEY } from '../constants';
+import retrieveSchema from './retrieveSchema';
 
 /** Internal helper function that acts like lodash's `get` but additionally retrieves `$ref`s as needed to get the path
  * for schemas containing potentially nested `$ref`s.

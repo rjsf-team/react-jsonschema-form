@@ -1,5 +1,5 @@
-import type { MockInstance } from 'vitest';
 import noop from 'lodash/noop';
+import type { MockInstance } from 'vitest';
 
 import { hashForSchema, ID_KEY, RJSFSchema } from '../../src';
 import ParserValidator from '../../src/parser/ParserValidator';

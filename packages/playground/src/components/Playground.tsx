@@ -6,16 +6,16 @@ import { ErrorSchema, RJSFSchema, RJSFValidationError, UiSchema, ValidatorType }
 import { isFunction } from 'lodash';
 
 import { samples } from '../samples';
+import { Sample, UiSchemaForTheme } from '../samples/Sample';
+import base64 from '../utils/base64';
 import DemoFrame from './DemoFrame';
+import Editors from './Editors';
 import ErrorBoundary from './ErrorBoundary';
 import GeoPosition from './GeoPosition';
 import OptionsDrawer, { LiveSettings } from './OptionsDrawer';
 import SampleSelector from './SampleSelector';
-import { ThemesType } from './ThemeSelector';
-import Editors from './Editors';
 import SpecialInput from './SpecialInput';
-import { Sample, UiSchemaForTheme } from '../samples/Sample';
-import base64 from '../utils/base64';
+import { ThemesType } from './ThemeSelector';
 
 export interface PlaygroundProps {
   themes: { [themeName: string]: ThemesType };

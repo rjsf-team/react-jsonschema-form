@@ -1,5 +1,6 @@
-import { Sample } from './Sample';
 import { ErrorSchemaBuilder } from '@rjsf/utils';
+
+import { Sample } from './Sample';
 
 const errorSchemaBuilder = new ErrorSchemaBuilder();
 errorSchemaBuilder.addErrors('some error that got added as a prop', 'firstName');

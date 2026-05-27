@@ -1,5 +1,5 @@
-import { FormContextType, rangeSpec, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { ChangeEvent, FocusEvent } from 'react';
+import { FormContextType, rangeSpec, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import FormRange from 'react-bootstrap/FormRange';
 
 export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(

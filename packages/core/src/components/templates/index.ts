@@ -1,8 +1,8 @@
 import { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } from '@rjsf/utils';
 
 import ArrayFieldDescriptionTemplate from './ArrayFieldDescriptionTemplate';
-import ArrayFieldItemTemplate from './ArrayFieldItemTemplate';
 import ArrayFieldItemButtonsTemplate from './ArrayFieldItemButtonsTemplate';
+import ArrayFieldItemTemplate from './ArrayFieldItemTemplate';
 import ArrayFieldTemplate from './ArrayFieldTemplate';
 import ArrayFieldTitleTemplate from './ArrayFieldTitleTemplate';
 import BaseInputTemplate from './BaseInputTemplate';
@@ -10,9 +10,9 @@ import ButtonTemplates from './ButtonTemplates';
 import DescriptionField from './DescriptionField';
 import ErrorList from './ErrorList';
 import FallbackFieldTemplate from './FallbackFieldTemplate';
-import FieldTemplate from './FieldTemplate';
 import FieldErrorTemplate from './FieldErrorTemplate';
 import FieldHelpTemplate from './FieldHelpTemplate';
+import FieldTemplate from './FieldTemplate';
 import GridTemplate from './GridTemplate';
 import MultiSchemaFieldTemplate from './MultiSchemaFieldTemplate';
 import ObjectFieldTemplate from './ObjectFieldTemplate';

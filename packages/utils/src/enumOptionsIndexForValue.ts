@@ -1,5 +1,5 @@
-import { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types';
 import enumOptionsIsSelected from './enumOptionsIsSelected';
+import { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types';
 
 /** Returns the index(es) of the options in `allEnumOptions` whose value(s) match the ones in `value`. All the
  * `enumOptions` are filtered based on whether they are a "selected" `value` and the index of each selected one is then

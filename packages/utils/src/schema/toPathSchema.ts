@@ -15,6 +15,7 @@ import {
   REF_KEY,
   RJSF_ADDITIONAL_PROPERTIES_FLAG,
 } from '../constants';
+import deepEquals from '../deepEquals';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
 import {
   Experimental_CustomMergeAllOf,
@@ -27,7 +28,6 @@ import {
 } from '../types';
 import getClosestMatchingOption from './getClosestMatchingOption';
 import retrieveSchema from './retrieveSchema';
-import deepEquals from '../deepEquals';
 
 /** An internal helper that generates an `PathSchema` object for the `schema`, recursively with protection against
  * infinite recursion

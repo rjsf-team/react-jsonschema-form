@@ -1,4 +1,5 @@
 import Typography, { TypographyProps } from '@mui/material/Typography';
+import { RichDescription } from '@rjsf/core';
 import {
   DescriptionFieldProps,
   FormContextType,
@@ -7,7 +8,7 @@ import {
   StrictRJSFSchema,
   getUiOptions,
 } from '@rjsf/utils';
-import { RichDescription } from '@rjsf/core';
+
 import { computeSxProps, getMuiProps } from '../util';
 
 /** Properties available for the `rjsfSlotProps` target of the DescriptionField. */

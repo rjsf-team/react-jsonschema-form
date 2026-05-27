@@ -1,10 +1,10 @@
 import { RJSFSchema } from '@rjsf/utils';
 
-import ATAPrecompiledValidator from '../src/precompiledValidator';
 import { Localizer, ValidatorFunctions } from '../src';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators';
-import superSchemaObj from './harness/superSchema.json';
 import createPrecompiledValidator from '../src/createPrecompiledValidator';
+import ATAPrecompiledValidator from '../src/precompiledValidator';
+import superSchemaObj from './harness/superSchema.json';
 
 vi.mock('../src/precompiledValidator');
 

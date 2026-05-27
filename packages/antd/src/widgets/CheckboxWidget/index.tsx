@@ -1,5 +1,4 @@
 import { FocusEvent } from 'react';
-import { Checkbox, CheckboxProps } from 'antd';
 import {
   ariaDescribedByIds,
   labelValue,
@@ -9,6 +8,7 @@ import {
   WidgetProps,
   GenericObjectType,
 } from '@rjsf/utils';
+import { Checkbox, CheckboxProps } from 'antd';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.

@@ -1,5 +1,4 @@
 import { FocusEvent } from 'react';
-import { Checkbox } from 'antd';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
@@ -13,6 +12,7 @@ import {
   StrictRJSFSchema,
   GenericObjectType,
 } from '@rjsf/utils';
+import { Checkbox } from 'antd';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
  *  It is typically used to represent an array of enums.

@@ -1,4 +1,3 @@
-import { Col, Row, Form, Input } from 'antd';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   UI_OPTIONS_KEY,
@@ -9,6 +8,7 @@ import {
   WrapIfAdditionalTemplateProps,
   buttonId,
 } from '@rjsf/utils';
+import { Col, Row, Form, Input } from 'antd';
 
 const VERTICAL_LABEL_COL = { span: 24 };
 const VERTICAL_WRAPPER_COL = { span: 24 };

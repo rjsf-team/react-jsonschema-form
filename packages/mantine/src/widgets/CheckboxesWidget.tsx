@@ -1,4 +1,5 @@
 import { FocusEvent, useCallback } from 'react';
+import { Checkbox, Flex, Input } from '@mantine/core';
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
@@ -12,7 +13,6 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { Checkbox, Flex, Input } from '@mantine/core';
 
 import { cleanupOptions } from '../utils';
 

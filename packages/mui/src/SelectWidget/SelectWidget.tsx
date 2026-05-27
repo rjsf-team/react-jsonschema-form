@@ -1,8 +1,8 @@
 import { ChangeEvent, FocusEvent } from 'react';
-import MenuItem from '@mui/material/MenuItem';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { InputLabelProps as MuiInputLabelProps } from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
 import { SelectProps as MuiSelectProps } from '@mui/material/Select';
+import TextField, { TextFieldProps } from '@mui/material/TextField';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
@@ -16,6 +16,7 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
+
 import { getMuiProps } from '../util';
 
 /** Properties available for the `rjsfSlotProps` target of the SelectWidget. */

@@ -1,7 +1,7 @@
-import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faArrowDown, faArrowUp, faCopy, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { faArrowDown, faArrowUp, faCopy, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
 
 import DaisyUIButton from './DaisyUIButton';
 

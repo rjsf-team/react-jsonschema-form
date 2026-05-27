@@ -1,5 +1,5 @@
-import { Col, Row } from 'antd';
 import { GridTemplateProps } from '@rjsf/utils';
+import { Col, Row } from 'antd';
 
 /** Renders a `GridTemplate` for antd, which is expecting the column sizing information coming in via the
  * extra props provided by the caller, which are spread directly on the `Row`/`Col`.

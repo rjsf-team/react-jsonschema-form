@@ -2,10 +2,10 @@ import { FormContextType, RegistryWidgetsType, RJSFSchema, StrictRJSFSchema } fr
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 
-import { AltDateTimeWidget, AltDateWidget, DateWidget, DateTimeWidget, TimeWidget } from './DateTime';
 import CheckboxesWidget from './CheckboxesWidget';
 import CheckboxWidget from './CheckboxWidget';
 import ColorWidget from './ColorWidget';
+import { AltDateTimeWidget, AltDateWidget, DateWidget, DateTimeWidget, TimeWidget } from './DateTime';
 import FileWidget from './FileWidget';
 import PasswordWidget from './PasswordWidget';
 import RadioWidget from './RadioWidget';

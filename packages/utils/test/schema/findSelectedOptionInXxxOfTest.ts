@@ -1,5 +1,4 @@
 import { ANY_OF_KEY, createSchemaUtils, ONE_OF_KEY, RJSFSchema } from '../../src';
-import { TestValidatorType } from './types';
 import {
   ANSWER_1,
   ANSWER_2,
@@ -9,6 +8,7 @@ import {
   testOneOfDiscriminatorSchema,
   testOneOfSchema,
 } from '../testUtils/testData';
+import { TestValidatorType } from './types';
 
 export default function findSelectedOptionInXxxOfTest(testValidator: TestValidatorType) {
   const schemaUtils = createSchemaUtils(testValidator, {} as RJSFSchema);

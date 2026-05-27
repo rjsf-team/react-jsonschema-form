@@ -1,11 +1,11 @@
+import flattenDeep from 'lodash/flattenDeep';
 import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
+import merge from 'lodash/merge';
 import set from 'lodash/set';
 import times from 'lodash/times';
 import transform from 'lodash/transform';
-import merge from 'lodash/merge';
-import flattenDeep from 'lodash/flattenDeep';
 import uniq from 'lodash/uniq';
-import isEmpty from 'lodash/isEmpty';
 
 import {
   ADDITIONAL_PROPERTIES_KEY,
@@ -22,6 +22,7 @@ import {
   REF_KEY,
   RJSF_REF_KEY,
 } from '../constants';
+import deepEquals from '../deepEquals';
 import findSchemaDefinition, { splitKeyElementFromObject } from '../findSchemaDefinition';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
 import guessType from '../guessType';
@@ -37,7 +38,6 @@ import {
 } from '../types';
 import getFirstMatchingOption from './getFirstMatchingOption';
 import shallowAllOfMerge from './shallowAllOfMerge';
-import deepEquals from '../deepEquals';
 
 /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and dependencies
  * resolved and merged into the `schema` given a `validator`, `rootSchema` and `rawFormData` that is used to do the

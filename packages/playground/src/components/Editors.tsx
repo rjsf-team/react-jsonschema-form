@@ -1,18 +1,18 @@
 import { Dispatch, SetStateAction, useCallback, useState } from 'react';
-import { styled } from '@mui/material/styles';
-import Accordion from '@mui/material/Accordion';
-import MuiAccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MonacoEditor from '@monaco-editor/react';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import MuiAccordionSummary from '@mui/material/AccordionSummary';
+import Grid from '@mui/material/Grid';
+import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import { ErrorSchema, RJSFSchema, UiSchema } from '@rjsf/utils';
 import isEqualWith from 'lodash/isEqualWith';
 import { Panel, Group, Separator } from 'react-resizable-panels';
 
-import ThemeSelector, { ThemesType } from './ThemeSelector';
 import SubthemeSelector, { SubthemeType } from './SubthemeSelector';
+import ThemeSelector, { ThemesType } from './ThemeSelector';
 
 const monacoEditorOptions = {
   minimap: {

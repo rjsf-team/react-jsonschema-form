@@ -1,5 +1,5 @@
 import { FocusEvent } from 'react';
-
+import { NumberInputValueChangeDetails } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   labelValue,
@@ -8,7 +8,6 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { NumberInputValueChangeDetails } from '@chakra-ui/react';
 
 import { Field } from '../components/ui/field';
 import { NumberInputRoot } from '../components/ui/number-input';

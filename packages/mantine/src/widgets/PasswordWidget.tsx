@@ -1,4 +1,5 @@
 import { ChangeEvent, FocusEvent, useCallback } from 'react';
+import { PasswordInput } from '@mantine/core';
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -7,7 +8,6 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { PasswordInput } from '@mantine/core';
 
 import { cleanupOptions } from '../utils';
 

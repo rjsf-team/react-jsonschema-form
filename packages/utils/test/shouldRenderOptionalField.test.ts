@@ -1,3 +1,4 @@
+import { GlobalUISchemaOptions } from '../lib';
 import {
   createSchemaUtils,
   englishStringTranslator,
@@ -8,7 +9,6 @@ import {
 } from '../src';
 import { getSchemaTypesForXxxOf } from '../src/shouldRenderOptionalField';
 import getTestValidator from './testUtils/getTestValidator';
-import { GlobalUISchemaOptions } from '../lib';
 import { GLOBAL_FORM_OPTIONS } from './testUtils/testData';
 
 const TEST_ROOT_SCHEMA: RJSFSchema = {

@@ -1,5 +1,3 @@
-import type { Mock } from 'vitest';
-import noop from 'lodash/noop';
 import {
   ErrorSchema,
   ErrorSchemaBuilder,
@@ -11,10 +9,12 @@ import {
   JUNK_OPTION_ID,
   retrieveSchema,
 } from '@rjsf/utils';
+import noop from 'lodash/noop';
+import type { Mock } from 'vitest';
 
-import ATAPrecompiledValidator from '../src/precompiledValidator';
 import { Localizer, ValidatorFunctions } from '../src';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators';
+import ATAPrecompiledValidator from '../src/precompiledValidator';
 import superSchemaObj from './harness/superSchema.json';
 
 const rootSchema = superSchemaObj as unknown as RJSFSchema;

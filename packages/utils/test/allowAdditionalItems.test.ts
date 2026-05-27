@@ -1,5 +1,5 @@
-import type { MockInstance } from 'vitest';
 import noop from 'lodash/noop';
+import type { MockInstance } from 'vitest';
 
 import { RJSFSchema, allowAdditionalItems } from '../src';
 

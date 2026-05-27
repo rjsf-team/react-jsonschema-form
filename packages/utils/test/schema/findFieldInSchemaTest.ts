@@ -1,8 +1,8 @@
 import get from 'lodash/get';
 
 import { createSchemaUtils, PROPERTIES_KEY, RJSFSchema } from '../../src';
-import { TestValidatorType } from './types';
 import { ANSWER_1, CHOICES, testAnyOfSchema, testOneOfSchema } from '../testUtils/testData';
+import { TestValidatorType } from './types';
 
 const simpleSchema: RJSFSchema = {
   type: 'object',

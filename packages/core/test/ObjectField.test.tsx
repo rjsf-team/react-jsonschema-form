@@ -13,8 +13,8 @@ import { act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import Form from '../src';
-import SchemaField from '../src/components/fields/SchemaField';
 import ObjectField from '../src/components/fields/ObjectField';
+import SchemaField from '../src/components/fields/SchemaField';
 import { TextWidgetTest } from './StringField.test';
 import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils';
 

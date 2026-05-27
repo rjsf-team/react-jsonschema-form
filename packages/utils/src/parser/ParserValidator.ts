@@ -1,6 +1,7 @@
 import get from 'lodash/get';
 
 import { ID_KEY } from '../constants';
+import deepEquals from '../deepEquals';
 import hashForSchema from '../hashForSchema';
 import {
   CustomValidator,
@@ -14,7 +15,6 @@ import {
   ValidationData,
   ValidatorType,
 } from '../types';
-import deepEquals from '../deepEquals';
 
 /** The type of the map of schema hash to schema
  */

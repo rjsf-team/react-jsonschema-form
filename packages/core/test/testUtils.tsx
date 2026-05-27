@@ -1,9 +1,9 @@
 import type { ComponentType } from 'react';
-import { act, render, fireEvent } from '@testing-library/react';
-import type { UserEvent } from '@testing-library/user-event';
-import '@testing-library/jest-dom';
 import { GenericObjectType, ValidatorType } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
+import '@testing-library/jest-dom';
+import { act, render, fireEvent } from '@testing-library/react';
+import type { UserEvent } from '@testing-library/user-event';
 
 import Form, { FormProps } from '../src';
 

@@ -1,3 +1,5 @@
+import cloneDeep from 'lodash/cloneDeep';
+
 import {
   createSchemaUtils,
   englishStringTranslator,
@@ -8,7 +10,6 @@ import {
   UIOptionsType,
 } from '../src';
 import getTestValidator from './testUtils/getTestValidator';
-import cloneDeep from 'lodash/cloneDeep';
 import { GLOBAL_FORM_OPTIONS } from './testUtils/testData';
 
 const FakeTemplate = () => null;

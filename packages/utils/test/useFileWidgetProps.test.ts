@@ -1,5 +1,5 @@
-import type { Mock, MockInstance } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
+import type { Mock, MockInstance } from 'vitest';
 
 import { useFileWidgetProps, FileInfoType } from '../src';
 

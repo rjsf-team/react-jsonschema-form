@@ -1,8 +1,9 @@
-import { render } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import Form from '../src';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import '@testing-library/jest-dom';
 import validator from '@rjsf/validator-ajv8';
+import { render } from '@testing-library/react';
+
+import Form from '../src';
 
 describe('MUI Theme-Specific Props', () => {
   it('should apply mui props to BaseInputTemplate (TextField)', () => {

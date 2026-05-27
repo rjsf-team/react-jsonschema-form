@@ -13,13 +13,13 @@ import {
   WidgetProps,
   FormValidation,
 } from '@rjsf/utils';
-import noop from 'lodash/noop';
 import userEvent from '@testing-library/user-event';
+import noop from 'lodash/noop';
 
-import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils';
-import SchemaField from '../src/components/fields/SchemaField';
 import ArrayField from '../src/components/fields/ArrayField';
+import SchemaField from '../src/components/fields/SchemaField';
 import { TextWidgetTest } from './StringField.test';
+import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils';
 
 const user = userEvent.setup();
 

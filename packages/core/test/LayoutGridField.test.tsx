@@ -1,4 +1,3 @@
-import type { MockInstance } from 'vitest';
 import { ChangeEvent, FocusEvent, ReactElement } from 'react';
 import {
   DEFAULT_ID_PREFIX,
@@ -28,6 +27,8 @@ import validator from '@rjsf/validator-ajv8';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { get, has, isEmpty, omit, pick } from 'lodash';
+import type { MockInstance } from 'vitest';
+
 import LayoutGridField, {
   computeArraySchemasIfPresent,
   computeFieldUiSchema,
@@ -41,8 +42,8 @@ import LayoutGridField, {
   LayoutGridFieldProps,
   Operators,
 } from '../src/components/fields/LayoutGridField';
-import { SAMPLE_SCHEMA, sampleUISchema, SIMPLE_ONEOF, SIMPLE_ONEOF_OPTIONS } from './testData/layoutData';
 import getTestRegistry from '../src/getTestRegistry';
+import { SAMPLE_SCHEMA, sampleUISchema, SIMPLE_ONEOF, SIMPLE_ONEOF_OPTIONS } from './testData/layoutData';
 
 const ColumnWidth3 = 'col-xs-3';
 const ColumnWidth4 = 'col-xs-4';

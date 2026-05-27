@@ -1,6 +1,3 @@
-import { fireEvent, act } from '@testing-library/react';
-import noop from 'lodash/noop';
-import userEvent from '@testing-library/user-event';
 import {
   parseDateString,
   toDateString,
@@ -13,10 +10,12 @@ import {
   UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
+import { fireEvent, act } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import noop from 'lodash/noop';
 
 import StringField from '../src/components/fields/StringField';
 import TextWidget from '../src/components/widgets/TextWidget';
-
 import {
   createFormComponent,
   getSelectedOptionValue,

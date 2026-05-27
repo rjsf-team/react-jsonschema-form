@@ -1,10 +1,10 @@
-import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
-import Button, { ButtonProps } from 'react-bootstrap/Button';
+import { AiOutlineArrowDown } from '@react-icons/all-files/ai/AiOutlineArrowDown';
+import { AiOutlineArrowUp } from '@react-icons/all-files/ai/AiOutlineArrowUp';
 import { IoIosCopy } from '@react-icons/all-files/io/IoIosCopy';
 import { IoIosRemove } from '@react-icons/all-files/io/IoIosRemove';
-import { AiOutlineArrowUp } from '@react-icons/all-files/ai/AiOutlineArrowUp';
-import { AiOutlineArrowDown } from '@react-icons/all-files/ai/AiOutlineArrowDown';
 import { IoMdClose } from '@react-icons/all-files/io/IoMdClose';
+import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
+import Button, { ButtonProps } from 'react-bootstrap/Button';
 
 export type BootstrapIconButtonProps<
   T = any,

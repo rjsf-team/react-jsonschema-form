@@ -4,5 +4,22 @@
   "jsxSingleQuote": true,
   "printWidth": 120,
   "sortPackageJson": false,
-  "ignorePatterns": []
+  "ignorePatterns": [],
+  "sortImports": {
+    "newlinesBetween": false,
+    "customGroups": [
+      {
+        "groupName": "react",
+        "elementNamePattern": ["react"]
+      }
+    ],
+    "groups": [
+      "react",
+      ["builtin", "external", "type-builtin", "type-external"],
+      { "newlinesBetween": true },
+      ["internal", "subpath", "parent", "sibling", "index", "type-internal", "type-parent", "type-sibling", "type-index"],
+      "style",
+      "unknown"
+    ]
+  }
 }

@@ -1,5 +1,4 @@
 import { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType, Experimental_CustomMergeAllOf } from '../types';
-
 import isSelect from './isSelect';
 
 /** Checks to see if the `schema` combination represents a multi-select

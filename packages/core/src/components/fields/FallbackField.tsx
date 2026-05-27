@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react';
 import {
   FallbackFieldProps,
   FieldPathId,
@@ -11,7 +12,6 @@ import {
   TranslatableString,
   useDeepCompareMemo,
 } from '@rjsf/utils';
-import { useMemo, useState } from 'react';
 import { JSONSchema7TypeName } from 'json-schema';
 
 /**

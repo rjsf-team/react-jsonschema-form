@@ -1,5 +1,5 @@
-import standaloneCode from 'ajv/dist/standalone';
 import { RJSFSchema, StrictRJSFSchema, schemaParser } from '@rjsf/utils';
+import standaloneCode from 'ajv/dist/standalone';
 
 import createAjvInstance from './createAjvInstance';
 import { CustomValidatorOptionsType } from './types';

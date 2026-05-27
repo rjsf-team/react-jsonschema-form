@@ -1,12 +1,12 @@
 import { FormContextType, RegistryWidgetsType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
-import AltDateWidget from './AltDateWidget';
 import AltDateTimeWidget from './AltDateTimeWidget';
-import CheckboxWidget from './CheckboxWidget';
+import AltDateWidget from './AltDateWidget';
 import CheckboxesWidget from './CheckboxesWidget';
+import CheckboxWidget from './CheckboxWidget';
 import ColorWidget from './ColorWidget';
-import DateWidget from './DateWidget';
 import DateTimeWidget from './DateTimeWidget';
+import DateWidget from './DateWidget';
 import EmailWidget from './EmailWidget';
 import FileWidget from './FileWidget';
 import HiddenWidget from './HiddenWidget';
@@ -18,8 +18,8 @@ import SelectWidget from './SelectWidget';
 import TextareaWidget from './TextareaWidget';
 import TextWidget from './TextWidget';
 import TimeWidget from './TimeWidget';
-import URLWidget from './URLWidget';
 import UpDownWidget from './UpDownWidget';
+import URLWidget from './URLWidget';
 
 function widgets<
   T = any,

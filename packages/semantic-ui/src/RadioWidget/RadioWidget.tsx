@@ -12,6 +12,7 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 import { CheckboxProps, Form, Radio } from 'semantic-ui-react';
+
 import { getSemanticProps } from '../util';
 
 /** The `RadioWidget` is a widget for rendering a radio group.

@@ -1,8 +1,8 @@
 'use client';
 
+import { ComponentProps } from 'react';
 import { Indicator, Root } from '@radix-ui/react-checkbox';
 import { CheckIcon } from '@radix-ui/react-icons';
-import { ComponentProps } from 'react';
 
 import { cn } from '../../lib/utils';
 

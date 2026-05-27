@@ -11,9 +11,9 @@
 import { RJSFSchema } from '@rjsf/utils';
 import additionalMetaSchema from 'ajv/lib/refs/json-schema-draft-06.json';
 
+import { CustomValidatorOptionsType } from '../../src';
 import compileSchemaValidators from '../../src/compileSchemaValidators';
 import superSchemaObj from './superSchema.json';
-import { CustomValidatorOptionsType } from '../../src';
 
 const superSchema = superSchemaObj as unknown as RJSFSchema;
 

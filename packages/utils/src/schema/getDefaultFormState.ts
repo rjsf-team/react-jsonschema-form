@@ -1,6 +1,6 @@
+import { JSONSchema7Object } from 'json-schema';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import { JSONSchema7Object } from 'json-schema';
 
 import {
   ALL_OF_KEY,
@@ -13,15 +13,18 @@ import {
   PROPERTIES_KEY,
   REF_KEY,
 } from '../constants';
+import constIsAjvDataReference from '../constIsAjvDataReference';
+import deepEquals from '../deepEquals';
 import findSchemaDefinition from '../findSchemaDefinition';
-import getClosestMatchingOption from './getClosestMatchingOption';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
 import getSchemaType from '../getSchemaType';
-import isObject from '../isObject';
+import isConstant from '../isConstant';
 import isFixedItems from '../isFixedItems';
+import isObject from '../isObject';
 import mergeDefaultsWithFormData from '../mergeDefaultsWithFormData';
 import mergeObjects from '../mergeObjects';
 import mergeSchemas from '../mergeSchemas';
+import optionsList from '../optionsList';
 import {
   Experimental_CustomMergeAllOf,
   Experimental_DefaultFormStateBehavior,
@@ -31,13 +34,10 @@ import {
   StrictRJSFSchema,
   ValidatorType,
 } from '../types';
+import getClosestMatchingOption from './getClosestMatchingOption';
 import isMultiSelect from './isMultiSelect';
 import isSelect from './isSelect';
 import retrieveSchema, { resolveDependencies } from './retrieveSchema';
-import isConstant from '../isConstant';
-import constIsAjvDataReference from '../constIsAjvDataReference';
-import optionsList from '../optionsList';
-import deepEquals from '../deepEquals';
 
 const PRIMITIVE_TYPES = ['string', 'number', 'integer', 'boolean', 'null'];
 

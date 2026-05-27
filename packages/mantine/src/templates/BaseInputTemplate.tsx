@@ -1,4 +1,6 @@
 import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
+import { TextInput, NumberInput } from '@mantine/core';
+import { SchemaExamples } from '@rjsf/core';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -9,8 +11,6 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { TextInput, NumberInput } from '@mantine/core';
-import { SchemaExamples } from '@rjsf/core';
 
 import { cleanupOptions } from '../utils';
 

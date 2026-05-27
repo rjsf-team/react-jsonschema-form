@@ -23,11 +23,11 @@ import {
   StrictRJSFSchema,
   TranslatableString,
 } from '@rjsf/utils';
-import { Markdown } from 'markdown-to-jsx';
 import get from 'lodash/get';
 import has from 'lodash/has';
 import isObject from 'lodash/isObject';
 import set from 'lodash/set';
+import { Markdown } from 'markdown-to-jsx';
 
 import { ADDITIONAL_PROPERTY_KEY_REMOVE } from '../constants';
 

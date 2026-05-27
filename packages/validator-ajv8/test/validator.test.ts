@@ -1,7 +1,3 @@
-import type { Mock } from 'vitest';
-import noop from 'lodash/noop';
-import Ajv2019 from 'ajv/dist/2019';
-import Ajv2020 from 'ajv/dist/2020';
 import {
   ErrorSchema,
   ErrorSchemaBuilder,
@@ -12,9 +8,13 @@ import {
   ValidatorType,
 } from '@rjsf/utils';
 import localize from 'ajv-i18n';
+import Ajv2019 from 'ajv/dist/2019';
+import Ajv2020 from 'ajv/dist/2020';
+import noop from 'lodash/noop';
+import type { Mock } from 'vitest';
 
-import AJV8Validator from '../src/validator';
 import { Localizer } from '../src';
+import AJV8Validator from '../src/validator';
 
 const illFormedKey = "bar`'()=+*&^%$#@!";
 const metaSchemaDraft6 = require('ajv/lib/refs/json-schema-draft-06.json');

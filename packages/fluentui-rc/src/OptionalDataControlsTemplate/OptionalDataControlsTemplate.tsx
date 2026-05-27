@@ -1,5 +1,5 @@
-import { FormContextType, OptionalDataControlsTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { AddSquareMultipleRegular, SubtractSquareMultipleRegular } from '@fluentui/react-icons';
+import { FormContextType, OptionalDataControlsTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 import FluentIconButton from '../IconButton';
 

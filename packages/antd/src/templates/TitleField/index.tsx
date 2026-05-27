@@ -1,7 +1,7 @@
-import classNames from 'classnames';
+import { useContext } from 'react';
 import { FormContextType, TitleFieldProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { Col, Divider, Row, ConfigProvider } from 'antd';
-import { useContext } from 'react';
+import classNames from 'classnames';
 
 /** The `TitleField` is the template to use to render the title of a field
  *

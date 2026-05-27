@@ -1,3 +1,4 @@
+import { ChangeEvent, FocusEvent } from 'react';
 import { Label, Textarea, makeStyles } from '@fluentui/react-components';
 import {
   FormContextType,
@@ -7,7 +8,6 @@ import {
   ariaDescribedByIds,
   labelValue,
 } from '@rjsf/utils';
-import { ChangeEvent, FocusEvent } from 'react';
 
 const useStyles = makeStyles({
   label: {

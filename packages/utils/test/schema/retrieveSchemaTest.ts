@@ -1,6 +1,6 @@
-import type { MockInstance } from 'vitest';
 import get from 'lodash/get';
 import noop from 'lodash/noop';
+import type { MockInstance } from 'vitest';
 
 import { ADDITIONAL_PROPERTY_FLAG, createSchemaUtils, PROPERTIES_KEY, retrieveSchema, RJSFSchema } from '../../src';
 import {

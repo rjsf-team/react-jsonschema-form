@@ -2,9 +2,9 @@ import get from 'lodash/get';
 
 import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY } from '../constants';
 import deepEquals from '../deepEquals';
+import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
 import { Experimental_CustomMergeAllOf, FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
 import retrieveSchema from './retrieveSchema';
-import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
 
 /** Finds the option inside the `schema['any/oneOf']` list which has the `properties[selectorField].default` or
  * `properties[selectorField].const` that matches the `formData[selectorField]` value. For the purposes of this

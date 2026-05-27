@@ -1,4 +1,5 @@
 import { FocusEvent } from 'react';
+import { Label, Radio, RadioGroup, RadioGroupOnChangeData } from '@fluentui/react-components';
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
@@ -12,7 +13,6 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { Label, Radio, RadioGroup, RadioGroupOnChangeData } from '@fluentui/react-components';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.

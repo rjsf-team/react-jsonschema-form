@@ -1,5 +1,5 @@
-import { Grid } from 'semantic-ui-react';
 import { GridTemplateProps } from '@rjsf/utils';
+import { Grid } from 'semantic-ui-react';
 
 /** Renders a `GridTemplate` for semantic-ui, which is expecting the column sizing information coming in via the
  * extra props provided by the caller, which are spread directly on the `Flex`.

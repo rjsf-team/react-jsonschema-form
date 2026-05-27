@@ -1,10 +1,11 @@
 'use client';
 
+import { ComponentProps, ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react';
 import { Command as CommandPrimitive } from 'cmdk';
 import { Search } from 'lucide-react';
-import { ComponentProps, ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './dialog';
+
 import { cn } from '../../lib/utils';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './dialog';
 
 /**
  * The root Command component that provides command menu functionality

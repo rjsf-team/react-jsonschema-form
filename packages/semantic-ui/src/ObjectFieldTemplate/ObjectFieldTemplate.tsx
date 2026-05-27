@@ -1,4 +1,3 @@
-import { Grid } from 'semantic-ui-react';
 import {
   FormContextType,
   ObjectFieldTemplateProps,
@@ -11,6 +10,7 @@ import {
   titleId,
   buttonId,
 } from '@rjsf/utils';
+import { Grid } from 'semantic-ui-react';
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all

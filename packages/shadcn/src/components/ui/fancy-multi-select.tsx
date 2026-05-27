@@ -1,8 +1,5 @@
 'use client';
 
-import { Command as CommandPrimitive } from 'cmdk';
-import isEqual from 'lodash/isEqual';
-import { X } from 'lucide-react';
 import {
   FocusEvent,
   FocusEventHandler,
@@ -13,6 +10,9 @@ import {
   useRef,
   useState,
 } from 'react';
+import { Command as CommandPrimitive } from 'cmdk';
+import isEqual from 'lodash/isEqual';
+import { X } from 'lucide-react';
 
 import { cn } from '../../lib/utils';
 import { Badge } from './badge';

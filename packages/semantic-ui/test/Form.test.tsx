@@ -1,6 +1,6 @@
+import { formTests } from '@rjsf/snapshot-tests';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { formTests } from '@rjsf/snapshot-tests';
 import { render } from '@testing-library/react';
 
 import Form from '../src';

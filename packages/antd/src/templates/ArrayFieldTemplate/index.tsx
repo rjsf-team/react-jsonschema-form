@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import {
   getTemplate,
   getUiOptions,
@@ -8,9 +9,8 @@ import {
   StrictRJSFSchema,
   buttonId,
 } from '@rjsf/utils';
-import classNames from 'classnames';
 import { Col, Row, ConfigProvider } from 'antd';
-import { useContext } from 'react';
+import classNames from 'classnames';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *

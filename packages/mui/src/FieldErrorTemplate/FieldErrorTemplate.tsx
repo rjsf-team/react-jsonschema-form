@@ -1,6 +1,6 @@
-import ListItem, { ListItemProps } from '@mui/material/ListItem';
 import FormHelperText, { FormHelperTextProps } from '@mui/material/FormHelperText';
 import List, { ListProps } from '@mui/material/List';
+import ListItem, { ListItemProps } from '@mui/material/ListItem';
 import {
   errorId,
   FieldErrorProps,
@@ -10,6 +10,7 @@ import {
   StrictRJSFSchema,
   getUiOptions,
 } from '@rjsf/utils';
+
 import { getMuiProps } from '../util';
 
 /** Properties available for the `rjsfSlotProps` target of the FieldErrorTemplate. */

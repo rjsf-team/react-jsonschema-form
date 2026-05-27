@@ -11,6 +11,7 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 import { Form, CheckboxProps } from 'semantic-ui-react';
+
 import { getSemanticProps } from '../util';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.

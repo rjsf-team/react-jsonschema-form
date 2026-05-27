@@ -6,13 +6,13 @@ import isString from 'lodash/isString';
 import reduce from 'lodash/reduce';
 import times from 'lodash/times';
 
-import getFirstMatchingOption from './getFirstMatchingOption';
-import retrieveSchema, { resolveAllReferences } from './retrieveSchema';
 import { ONE_OF_KEY, REF_KEY, JUNK_OPTION_ID, ANY_OF_KEY } from '../constants';
-import guessType from '../guessType';
-import { Experimental_CustomMergeAllOf, FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
 import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDiscriminator';
+import guessType from '../guessType';
+import { Experimental_CustomMergeAllOf, FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
+import getFirstMatchingOption from './getFirstMatchingOption';
+import retrieveSchema, { resolveAllReferences } from './retrieveSchema';
 
 /** A junk option used to determine when the getFirstMatchingOption call really matches an option rather than returning
  * the first item

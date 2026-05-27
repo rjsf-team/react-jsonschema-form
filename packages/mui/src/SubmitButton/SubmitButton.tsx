@@ -9,6 +9,7 @@ import {
   SubmitButtonProps,
   getUiOptions,
 } from '@rjsf/utils';
+
 import { computeSxProps, getMuiProps } from '../util';
 
 /** Properties available for the `rjsfSlotProps` target of the SubmitButton. */

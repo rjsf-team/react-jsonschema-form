@@ -1,4 +1,5 @@
 import { FocusEvent, useCallback, useMemo } from 'react';
+import { Select, MultiSelect } from '@mantine/core';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
@@ -11,7 +12,6 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { Select, MultiSelect } from '@mantine/core';
 
 import { cleanupOptions } from '../utils';
 

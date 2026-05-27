@@ -1,5 +1,5 @@
-import { FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema, helpId } from '@rjsf/utils';
 import { RichHelp } from '@rjsf/core';
+import { FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema, helpId } from '@rjsf/utils';
 import Form from 'react-bootstrap/Form';
 
 /** The `FieldHelpTemplate` component renders any help desired for a field

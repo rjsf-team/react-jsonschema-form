@@ -16,6 +16,7 @@ import {
 } from '@rjsf/utils';
 import map from 'lodash/map';
 import { Form, DropdownProps, DropdownItemProps } from 'semantic-ui-react';
+
 import { getSemanticProps } from '../util';
 
 /**

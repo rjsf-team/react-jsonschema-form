@@ -1,5 +1,5 @@
 import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
-import { Input, InputNumber } from 'antd';
+import { SchemaExamples } from '@rjsf/core';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -10,7 +10,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { SchemaExamples } from '@rjsf/core';
+import { Input, InputNumber } from 'antd';
 
 const INPUT_STYLE = {
   width: '100%',

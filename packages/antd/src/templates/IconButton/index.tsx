@@ -1,4 +1,4 @@
-import { Button, ButtonProps } from 'antd';
+import { MouseEventHandler } from 'react';
 import {
   ArrowDownOutlined,
   ArrowUpOutlined,
@@ -15,7 +15,7 @@ import {
   StrictRJSFSchema,
   TranslatableString,
 } from '@rjsf/utils';
-import { MouseEventHandler } from 'react';
+import { Button, ButtonProps } from 'antd';
 
 export type AntdIconButtonProps<
   T = any,

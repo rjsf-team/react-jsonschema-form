@@ -18,6 +18,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
+
 import { getMuiProps } from '../util';
 
 /** Properties available for the `rjsfSlotProps` target of the CheckboxesWidget. */

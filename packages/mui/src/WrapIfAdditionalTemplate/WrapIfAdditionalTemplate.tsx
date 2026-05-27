@@ -12,6 +12,7 @@ import {
   WrapIfAdditionalTemplateProps,
   getUiOptions,
 } from '@rjsf/utils';
+
 import { computeSxProps, getMuiProps } from '../util';
 /** Properties available for the `rjsfSlotProps` target of the WrapIfAdditionalTemplate. */
 export interface WrapIfAdditionalTemplateMuiProps extends GenericObjectType {

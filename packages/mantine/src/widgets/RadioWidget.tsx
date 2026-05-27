@@ -1,4 +1,5 @@
 import { FocusEvent, useCallback } from 'react';
+import { Radio, Flex } from '@mantine/core';
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
@@ -11,7 +12,6 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { Radio, Flex } from '@mantine/core';
 
 import { cleanupOptions } from '../utils';
 

@@ -11,6 +11,7 @@ import {
   WidgetProps,
   rangeSpec,
 } from '@rjsf/utils';
+
 import { getMuiProps } from '../util';
 
 /** Properties available for the `rjsfSlotProps` target of the RangeWidget. */

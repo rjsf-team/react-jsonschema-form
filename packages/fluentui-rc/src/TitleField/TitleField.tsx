@@ -1,5 +1,5 @@
-import { Flex } from '@fluentui/react-migration-v0-v9';
 import { Text, Divider, makeStyles } from '@fluentui/react-components';
+import { Flex } from '@fluentui/react-migration-v0-v9';
 import { FormContextType, TitleFieldProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 const useStyles = makeStyles({

@@ -1,5 +1,6 @@
-import { getChangedFields } from '../src';
 import cloneDeep from 'lodash/cloneDeep';
+
+import { getChangedFields } from '../src';
 
 const complexObject = {
   a: 1,
