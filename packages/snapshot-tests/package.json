@@ -4,17 +4,18 @@
   "description": "A set of snapshot tests to be used for testing RJSF theme.",
   "scripts": {
     "build": "tsc -b .",
-    "cs-check": "prettier -l \"src/**/*.[jt]s?(x)\"",
-    "cs-format": "prettier \"src/**/*.[jt]s?(x)\" --write",
-    "lint": "eslint src",
+    "cs-check": "oxfmt --check \"src/**/*.{ts,tsx,js,jsx}\"",
+    "cs-format": "oxfmt \"src/**/*.{ts,tsx,js,jsx}\"",
+    "lint": "oxlint src",
     "precommit": "lint-staged",
     "publish-to-npm": "npm run build && npm publish",
     "test": "echo 'OK'",
     "test-coverage": "echo 'OK'"
   },
   "lint-staged": {
-    "src/**/*.[jt]s?(x)": [
-      "eslint --fix"
+    "src/**/*.{ts,tsx,js,jsx}": [
+      "oxlint --fix",
+      "oxfmt"
     ]
   },
   "main": "lib/index.js",

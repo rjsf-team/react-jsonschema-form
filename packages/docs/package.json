@@ -14,15 +14,12 @@
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc",
     "precommit": "lint-staged",
-    "cs-check": "prettier -l \"{src, docs}/**/*.(ts?(x)|md|css)\"",
-    "cs-format": "prettier \"{src, docs}/**/*.(ts?(x)|md|css)\" --write"
+    "cs-check": "oxfmt --check \"src/**/*.{ts,tsx}\"",
+    "cs-format": "oxfmt \"src/**/*.{ts,tsx}\""
   },
   "lint-staged": {
-    "src/**/*.(ts?(x)|css)": [
-      "prettier --write"
-    ],
-    "docs/**/*.md": [
-      "prettier --write"
+    "src/**/*.{ts,tsx}": [
+      "oxfmt"
     ]
   },
   "dependencies": {

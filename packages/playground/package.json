@@ -5,10 +5,10 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
-    "cs-check": "prettier -l \"src/**/*.ts?(x)\"",
-    "cs-format": "prettier \"src/**/*.ts?(x)\" --write",
+    "cs-check": "oxfmt --check \"src/**/*.{ts,tsx}\"",
+    "cs-format": "oxfmt \"src/**/*.{ts,tsx}\"",
     "build": "rimraf build && cross-env NODE_ENV=production vite build",
-    "lint": "eslint src",
+    "lint": "oxlint src",
     "precommit": "lint-staged",
     "publish-to-gh-pages": "npm run build && gh-pages --dist build/",
     "publish-to-npm": "npm run build && npm publish",
@@ -17,8 +17,9 @@
     "test": "jest"
   },
   "lint-staged": {
-    "src/**/*.ts?(x)": [
-      "eslint --fix"
+    "src/**/*.{ts,tsx}": [
+      "oxlint --fix",
+      "oxfmt"
     ]
   },
   "files": [
@@ -86,7 +87,6 @@
     "@mui/icons-material": "^9.0.1",
     "@types/react-frame-component": "^4.1.6",
     "@vitejs/plugin-react": "^6.0.2",
-    "eslint": "^8.57.1",
     "gh-pages": "^6.3.0",
     "html": "^1.0.0",
     "html-webpack-plugin": "^5.6.7",

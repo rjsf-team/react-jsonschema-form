@@ -64,15 +64,16 @@
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/validator-ata.esm.js --sourcemap --packages=external --format=esm && esbuild ./src/compileSchemaValidators.ts --bundle --outfile=dist/compileSchemaValidators.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/validator-ata.esm.js --format=umd --file=dist/validator-ata.umd.js --name=@rjsf/validator-ata",
     "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
-    "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
-    "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
-    "lint": "eslint src test",
+    "cs-check": "oxfmt --check \"{src,test}/**/*.{ts,tsx}\"",
+    "cs-format": "oxfmt \"{src,test}/**/*.{ts,tsx}\"",
+    "lint": "oxlint src test",
     "precommit": "lint-staged",
     "test": "jest"
   },
   "lint-staged": {
-    "{src,test}/**/*.ts?(x)": [
-      "eslint --fix"
+    "{src,test}/**/*.{ts,tsx}": [
+      "oxlint --fix",
+      "oxfmt"
     ]
   },
   "dependencies": {
@@ -85,8 +86,7 @@
   },
   "devDependencies": {
     "@rjsf/utils": "6.5.3",
-    "@types/json-schema": "^7.0.15",
-    "eslint": "^8.57.1"
+    "@types/json-schema": "^7.0.15"
   },
   "publishConfig": {
     "access": "public"
