@@ -39,12 +39,12 @@ describe('DaisyUIFrameProvider', () => {
     });
   });
 
-  test('renders children with default theme when no theme is provided', () => {
+  test('renders children with default theme when no theme is provided', async () => {
     const DaisyUIFrame = __createDaisyUIFrameProvider({
       children: <div>Test Content</div>,
     });
 
-    const { container, unmount } = render(<DaisyUIFrame />);
+    const { container, unmount } = render(<DaisyUIFrame document={mockDocument as unknown as Document} />);
 
     expect(container.querySelector('.daisy-ui-theme')).not.toBeNull();
     expect(container.querySelector('[data-theme="cupcake"]')).not.toBeNull();
@@ -52,9 +52,7 @@ describe('DaisyUIFrameProvider', () => {
     expect(mockGetItem).toHaveBeenCalledWith('daisyui-theme');
     expect(mockRemove).not.toHaveBeenCalled();
     unmount();
-    // TODO: mockRemove is not being called on unmount; this assertion was previously
-    // unenforced (floating promise), so the underlying cleanup bug needs investigation.
-    void waitFor(() => {
+    await waitFor(() => {
       expect(mockRemove).toHaveBeenCalledTimes(4);
     });
   });
