@@ -1,3 +1,5 @@
+import type { Mock } from 'vitest';
+import noop from 'lodash/noop';
 import Ajv2019 from 'ajv/dist/2019';
 import Ajv2020 from 'ajv/dist/2020';
 import {
@@ -93,7 +95,7 @@ describe('AJV8Validator', () => {
           name: 'John Doe',
         };
 
-        const addSchemaSpy = jest.spyOn(validator.ajv, 'addSchema');
+        const addSchemaSpy = vi.spyOn(validator.ajv, 'addSchema');
 
         // Call isValid twice with the same schema
         validator.isValid(schema, formData, rootSchema);
@@ -124,7 +126,7 @@ describe('AJV8Validator', () => {
 
         const ajvInstance = validator.ajv;
         const originalGetSchema = ajvInstance.getSchema.bind(ajvInstance);
-        const getSchemaSpy = jest.spyOn(ajvInstance, 'getSchema');
+        const getSchemaSpy = vi.spyOn(ajvInstance, 'getSchema');
         getSchemaSpy.mockClear();
         getSchemaSpy.mockImplementation((schemaId) => {
           if (schemaId === schema.$id) {
@@ -134,7 +136,7 @@ describe('AJV8Validator', () => {
           return originalGetSchema(schemaId);
         });
 
-        const compileSpy = jest.spyOn(ajvInstance, 'compile');
+        const compileSpy = vi.spyOn(ajvInstance, 'compile');
         compileSpy.mockClear();
 
         // Call isValid twice with the same schema
@@ -151,8 +153,8 @@ describe('AJV8Validator', () => {
           properties: { foo: { type: 'string' } },
         };
 
-        const addSchemaSpy = jest.spyOn(localValidator.ajv, 'addSchema');
-        const removeSchemaSpy = jest.spyOn(localValidator.ajv, 'removeSchema');
+        const addSchemaSpy = vi.spyOn(localValidator.ajv, 'addSchema');
+        const removeSchemaSpy = vi.spyOn(localValidator.ajv, 'removeSchema');
 
         localValidator.handleSchemaUpdate(rootSchema);
         localValidator.handleSchemaUpdate(rootSchema);
@@ -177,8 +179,8 @@ describe('AJV8Validator', () => {
           properties: { foo: { type: 'number' } },
         };
 
-        const addSchemaSpy = jest.spyOn(localValidator.ajv, 'addSchema');
-        const removeSchemaSpy = jest.spyOn(localValidator.ajv, 'removeSchema');
+        const addSchemaSpy = vi.spyOn(localValidator.ajv, 'addSchema');
+        const removeSchemaSpy = vi.spyOn(localValidator.ajv, 'removeSchema');
 
         localValidator.handleSchemaUpdate(rootSchemaA);
         localValidator.handleSchemaUpdate(rootSchemaAClone);
@@ -373,7 +375,7 @@ describe('AJV8Validator', () => {
             },
           };
 
-          const compileSpy = jest.spyOn(validator.ajv, 'compile');
+          const compileSpy = vi.spyOn(validator.ajv, 'compile');
           compileSpy.mockClear();
 
           // Call validateFormData twice with the same schema
@@ -386,7 +388,7 @@ describe('AJV8Validator', () => {
       describe('TransformErrors', () => {
         let errors: RJSFValidationError[];
         let newErrorMessage: string;
-        let transformErrors: jest.Mock;
+        let transformErrors: Mock;
         let uiSchema: UiSchema;
         beforeAll(() => {
           const schema: RJSFSchema = {
@@ -400,7 +402,7 @@ describe('AJV8Validator', () => {
             foo: { 'ui:label': false },
           };
           newErrorMessage = 'Better error message';
-          transformErrors = jest.fn((errors: RJSFValidationError[]) => {
+          transformErrors = vi.fn((errors: RJSFValidationError[]) => {
             return [Object.assign({}, errors[0], { message: newErrorMessage })];
           });
           const result = validator.validateFormData(
@@ -424,14 +426,14 @@ describe('AJV8Validator', () => {
       describe('Custom validate function', () => {
         let errors: RJSFValidationError[];
         let errorSchema: ErrorSchema;
-        let validate: jest.Mock;
+        let validate: Mock;
         let uiSchema: UiSchema;
         beforeAll(() => {
           uiSchema = {
             foo: { 'ui:label': false },
           };
 
-          validate = jest.fn((formData: any, errors: FormValidation<any>) => {
+          validate = vi.fn((formData: any, errors: FormValidation<any>) => {
             if (formData.pass1 !== formData.pass2) {
               errors.pass2!.addError('passwords don`t match.');
             }
@@ -490,11 +492,11 @@ describe('AJV8Validator', () => {
           });
         });
         describe('formData does not pass ajv validation', () => {
-          let validate: jest.Mock;
+          let validate: Mock;
           let errorSchema: ErrorSchema;
 
           beforeAll(() => {
-            validate = jest.fn(
+            validate = vi.fn(
               (_formData: any, errors: any, _uiSchema?: any, errorSchema?: ErrorSchema<{ pass1: string }>) => {
                 if (errorSchema?.pass1?.__errors?.length ?? 0 > 0) {
                   errors.pass1!.addError('custom error from customValidate');
@@ -657,7 +659,7 @@ describe('AJV8Validator', () => {
           name: 'John Doe',
         };
 
-        const addSchemaSpy = jest.spyOn(validator.ajv, 'addSchema');
+        const addSchemaSpy = vi.spyOn(validator.ajv, 'addSchema');
         addSchemaSpy.mockClear();
 
         // Call isValid twice with the same schema
@@ -851,7 +853,7 @@ describe('AJV8Validator', () => {
             },
           };
 
-          const compileSpy = jest.spyOn(validator.ajv, 'compile');
+          const compileSpy = vi.spyOn(validator.ajv, 'compile');
           compileSpy.mockClear();
 
           // Call validateFormData twice with the same schema
@@ -864,7 +866,7 @@ describe('AJV8Validator', () => {
       describe('TransformErrors', () => {
         let errors: RJSFValidationError[];
         let newErrorMessage: string;
-        let transformErrors: jest.Mock;
+        let transformErrors: Mock;
         let uiSchema: UiSchema;
         beforeAll(() => {
           const schema: RJSFSchema = {
@@ -878,7 +880,7 @@ describe('AJV8Validator', () => {
             foo: { 'ui:label': false },
           };
           newErrorMessage = 'Better error message';
-          transformErrors = jest.fn((errors: RJSFValidationError[]) => {
+          transformErrors = vi.fn((errors: RJSFValidationError[]) => {
             return [Object.assign({}, errors[0], { message: newErrorMessage })];
           });
           const result = validator.validateFormData(
@@ -902,14 +904,14 @@ describe('AJV8Validator', () => {
       describe('Custom validate function', () => {
         let errors: RJSFValidationError[];
         let errorSchema: ErrorSchema;
-        let validate: jest.Mock;
+        let validate: Mock;
         let uiSchema: UiSchema;
         beforeAll(() => {
           uiSchema = {
             foo: { 'ui:label': false },
           };
 
-          validate = jest.fn((formData: any, errors: FormValidation<any>) => {
+          validate = vi.fn((formData: any, errors: FormValidation<any>) => {
             if (formData.pass1 !== formData.pass2) {
               errors.pass2!.addError('passwords don`t match.');
             }
@@ -968,11 +970,11 @@ describe('AJV8Validator', () => {
           });
         });
         describe('formData does not pass ajv validation', () => {
-          let validate: jest.Mock;
+          let validate: Mock;
           let errorSchema: ErrorSchema;
 
           beforeAll(() => {
-            validate = jest.fn(
+            validate = vi.fn(
               (_formData: any, errors: any, _uiSchema?: any, errorSchema?: ErrorSchema<{ pass1: string }>) => {
                 if (errorSchema?.pass1?.__errors?.length ?? 0 > 0) {
                   errors.pass1!.addError('custom error from customValidate');
@@ -1135,7 +1137,7 @@ describe('AJV8Validator', () => {
           name: 'John Doe',
         };
 
-        const addSchemaSpy = jest.spyOn(validator.ajv, 'addSchema');
+        const addSchemaSpy = vi.spyOn(validator.ajv, 'addSchema');
         addSchemaSpy.mockClear();
 
         // Call isValid twice with the same schema
@@ -1829,7 +1831,7 @@ describe('AJV8Validator', () => {
             },
           };
 
-          const compileSpy = jest.spyOn(validator.ajv, 'compile');
+          const compileSpy = vi.spyOn(validator.ajv, 'compile');
           compileSpy.mockClear();
 
           // Call validateFormData twice with the same schema
@@ -1842,7 +1844,7 @@ describe('AJV8Validator', () => {
       describe('TransformErrors', () => {
         let errors: RJSFValidationError[];
         let newErrorMessage: string;
-        let transformErrors: jest.Mock;
+        let transformErrors: Mock;
         let uiSchema: UiSchema;
         beforeAll(() => {
           const schema: RJSFSchema = {
@@ -1856,7 +1858,7 @@ describe('AJV8Validator', () => {
             foo: { 'ui:label': false },
           };
           newErrorMessage = 'Better error message';
-          transformErrors = jest.fn((errors: RJSFValidationError[]) => {
+          transformErrors = vi.fn((errors: RJSFValidationError[]) => {
             return [Object.assign({}, errors[0], { message: newErrorMessage })];
           });
           const result = validator.validateFormData(
@@ -1880,14 +1882,14 @@ describe('AJV8Validator', () => {
       describe('Custom validate function', () => {
         let errors: RJSFValidationError[];
         let errorSchema: ErrorSchema;
-        let validate: jest.Mock;
+        let validate: Mock;
         let uiSchema: UiSchema;
         beforeAll(() => {
           uiSchema = {
             foo: { 'ui:label': false },
           };
 
-          validate = jest.fn((formData: any, errors: FormValidation<any>) => {
+          validate = vi.fn((formData: any, errors: FormValidation<any>) => {
             if (formData.pass1 !== formData.pass2) {
               errors.pass2!.addError('passwords don`t match.');
             }
@@ -1946,11 +1948,11 @@ describe('AJV8Validator', () => {
           });
         });
         describe('formData does not pass ajv validation', () => {
-          let validate: jest.Mock;
+          let validate: Mock;
           let errorSchema: ErrorSchema;
 
           beforeAll(() => {
-            validate = jest.fn(
+            validate = vi.fn(
               (_formData: any, errors: any, _uiSchema?: any, errorSchema?: ErrorSchema<{ pass1: string }>) => {
                 if (errorSchema?.pass1?.__errors?.length ?? 0 > 0) {
                   errors.pass1!.addError('custom error from customValidate');
@@ -2050,7 +2052,7 @@ describe('AJV8Validator', () => {
     let schema: RJSFSchema;
     let localizer: Localizer;
     beforeAll(() => {
-      localizer = jest.fn().mockImplementation();
+      localizer = vi.fn().mockImplementation(noop);
       validator = new AJV8Validator({}, localizer);
       schema = {
         $ref: '#/definitions/Dataset',
@@ -2081,7 +2083,7 @@ describe('AJV8Validator', () => {
     describe('validating using single custom meta schema', () => {
       let errors: RJSFValidationError[];
       beforeAll(() => {
-        (localizer as jest.Mock).mockClear();
+        vi.mocked(localizer).mockClear();
         validator = new AJV8Validator(
           {
             additionalMetaSchemas: [metaSchemaDraft6],
@@ -2198,7 +2200,7 @@ describe('AJV8Validator', () => {
     });
     describe('validating required fields with localizer', () => {
       beforeAll(() => {
-        localizer = jest.fn().mockImplementation();
+        localizer = vi.fn().mockImplementation(noop);
         validator = new AJV8Validator({}, localizer);
         schema = {
           type: 'object',
@@ -2232,7 +2234,7 @@ describe('AJV8Validator', () => {
     let schema: RJSFSchema;
     let localizer: Localizer;
     beforeAll(() => {
-      localizer = jest.fn().mockImplementation();
+      localizer = vi.fn().mockImplementation(noop);
       validator = new AJV8Validator({ AjvClass: Ajv2019 }, localizer);
       schema = {
         $ref: '#/definitions/Dataset',
@@ -2263,7 +2265,7 @@ describe('AJV8Validator', () => {
     describe('validating using single custom meta schema', () => {
       let errors: RJSFValidationError[];
       beforeAll(() => {
-        (localizer as jest.Mock).mockClear();
+        vi.mocked(localizer).mockClear();
         validator = new AJV8Validator(
           {
             additionalMetaSchemas: [metaSchemaDraft6],
@@ -2620,7 +2622,7 @@ describe('AJV8Validator', () => {
     let schema: RJSFSchema;
     let localizer: Localizer;
     beforeAll(() => {
-      localizer = jest.fn().mockImplementation();
+      localizer = vi.fn().mockImplementation(noop);
       validator = new AJV8Validator({ AjvClass: Ajv2020 }, localizer);
       schema = {
         $ref: '#/definitions/Dataset',
@@ -2651,7 +2653,7 @@ describe('AJV8Validator', () => {
     describe('validating using single custom meta schema', () => {
       let errors: RJSFValidationError[];
       beforeAll(() => {
-        (localizer as jest.Mock).mockClear();
+        vi.mocked(localizer).mockClear();
         validator = new AJV8Validator(
           {
             additionalMetaSchemas: [metaSchemaDraft6],

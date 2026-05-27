@@ -1,9 +1,9 @@
 // Mock the ArrayFieldItemButtonsTemplate component
-jest.mock('../src/templates/ArrayFieldItemButtonsTemplate/ArrayFieldItemButtonsTemplate', () => {
-  return function MockArrayFieldItemButtonsTemplate(props) {
+vi.mock('../src/templates/ArrayFieldItemButtonsTemplate/ArrayFieldItemButtonsTemplate', () => ({
+  default: function MockArrayFieldItemButtonsTemplate() {
     return <div data-testid='mock-buttons'>Mock Buttons</div>;
-  };
-});
+  },
+}));
 
 describe('ArrayFieldItemTemplate', () => {
   // We test ArrayFieldItemTemplate completely with the Form integration tests

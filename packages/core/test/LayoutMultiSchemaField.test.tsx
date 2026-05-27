@@ -1,3 +1,5 @@
+import type { MockInstance } from 'vitest';
+import noop from 'lodash/noop';
 import {
   ANY_OF_KEY,
   DEFAULT_KEY,
@@ -31,9 +33,9 @@ import SelectWidget from '../src/components/widgets/SelectWidget';
 import { SIMPLE_ONEOF, SIMPLE_ONEOF_OPTIONS } from './testData/layoutData';
 import getTestRegistry from '../src/getTestRegistry';
 
-jest.mock('@rjsf/utils', () => ({
-  ...jest.requireActual('@rjsf/utils'),
-  getWidget: jest.fn().mockImplementation((_schema, widget, widgets) => {
+vi.mock('@rjsf/utils', async () => ({
+  ...(await vi.importActual<typeof import('@rjsf/utils')>('@rjsf/utils')),
+  getWidget: vi.fn().mockImplementation((_schema, widget, widgets) => {
     const widgetToUse = widget === 'select' ? 'SelectWidget' : 'RadioWidget';
     // The real implementation wraps the resulting widget in another component, so we'll just do the simple thing
     return widgets[widgetToUse];
@@ -214,15 +216,15 @@ describe('LayoutMultiSchemaField', () => {
       uiSchema,
       errorSchema,
       hideError,
-      onBlur: jest.fn(),
-      onChange: jest.fn(),
-      onFocus: jest.fn(),
+      onBlur: vi.fn(),
+      onChange: vi.fn(),
+      onFocus: vi.fn(),
     };
   }
-  let consoleErrorSpy: jest.SpyInstance;
+  let consoleErrorSpy: MockInstance;
   beforeAll(() => {
     // silence the error reporting
-    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(noop);
   });
   afterEach(() => {
     consoleErrorSpy.mockClear();
@@ -248,12 +250,9 @@ describe('LayoutMultiSchemaField', () => {
     };
     const props = getProps({ schema, options: schema[ONE_OF_KEY] });
     expect(() => render(<LayoutMultiSchemaField {...props} />)).toThrow(expectedError);
-    expect(consoleErrorSpy).toHaveBeenNthCalledWith(
-      1,
-      expect.objectContaining({
-        message: expect.stringContaining(expectedError),
-        type: 'unhandled exception',
-      }),
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect.stringContaining(expectedError),
+      expect.objectContaining({ message: expectedError }),
     );
   });
   test('default render with SIMPLE_ONEOF schema', async () => {

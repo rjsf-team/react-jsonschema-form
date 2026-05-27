@@ -69,7 +69,7 @@
     "lint": "oxlint src test",
     "precommit": "lint-staged",
     "compileSchemas": "tsx test/harness/compileTestSchema.ts",
-    "test": "npm run compileSchemas && jest"
+    "test": "npm run compileSchemas && vitest run"
   },
   "lint-staged": {
     "{src,test}/**/*.{ts,tsx}": [

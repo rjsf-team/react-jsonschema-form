@@ -1,8 +1,8 @@
 import { RJSFSchema, Widget, hasWidget } from '../src';
 
 // Mock the getWidget() function for the purposes of this test
-jest.mock('../src/getWidget', () =>
-  jest
+vi.mock('../src/getWidget', () => ({
+  default: vi
     .fn()
     .mockImplementationOnce(() => {
       throw new Error('No widget');
@@ -14,7 +14,7 @@ jest.mock('../src/getWidget', () =>
       throw new TypeError();
     })
     .mockImplementation(() => true),
-);
+}));
 
 const schema: RJSFSchema = {
   type: 'string',

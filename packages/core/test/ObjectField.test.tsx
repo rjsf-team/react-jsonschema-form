@@ -159,7 +159,7 @@ describe('ObjectField', () => {
     });
 
     it('should handle object fields with blur events', async () => {
-      const onBlur = jest.fn();
+      const onBlur = vi.fn();
       const { node } = createFormComponent({ schema, onBlur });
 
       const input = node.querySelector('input[type=text]')!;
@@ -172,7 +172,7 @@ describe('ObjectField', () => {
     });
 
     it('should handle object fields with focus events', async () => {
-      const onFocus = jest.fn();
+      const onFocus = vi.fn();
       const { node } = createFormComponent({ schema, onFocus, formData: { foo: 'changed', bar: true } });
 
       const input = node.querySelector('input[type=text]')!;

@@ -48,9 +48,9 @@
     "cs-format": "oxfmt \"{src,test}/**/*.{ts,tsx}\"",
     "lint": "oxlint src test",
     "precommit": "lint-staged",
-    "test": "jest",
-    "test:update": "jest --u",
-    "test:watch": "jest --watch",
+    "test": "vitest run",
+    "test:update": "vitest run --update-snapshots",
+    "test:watch": "vitest",
     "type-check": "tsc --noEmit"
   },
   "lint-staged": {

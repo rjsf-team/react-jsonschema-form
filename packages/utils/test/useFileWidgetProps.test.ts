@@ -1,3 +1,4 @@
+import type { Mock, MockInstance } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { useFileWidgetProps, FileInfoType } from '../src';
@@ -51,20 +52,20 @@ function toFileList(list: File[]) {
 }
 
 describe('useFileWidgetProps()', () => {
-  let onChange: jest.Mock;
-  let windowFileReaderSpy: jest.SpyInstance;
+  let onChange: Mock;
+  let windowFileReaderSpy: MockInstance;
   let FN_RESULT: any;
   beforeAll(() => {
-    onChange = jest.fn();
+    onChange = vi.fn();
     FN_RESULT = { target: { result: 'data:text/plain;base64,' } };
-    windowFileReaderSpy = jest.spyOn(window, 'FileReader').mockImplementation(
+    windowFileReaderSpy = vi.spyOn(window, 'FileReader').mockImplementation(
       () =>
         ({
           // eslint-disable-next-line no-unused-vars
           set onload(fn: (event: any) => void) {
             fn(FN_RESULT);
           },
-          readAsDataUrl: jest.fn(),
+          readAsDataUrl: vi.fn(),
         }) as unknown as FileReader,
     );
   });

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`RatingWidget renders in disabled state 1`] = `
+exports[`RatingWidget > renders in disabled state 1`] = `
 <DocumentFragment>
   <div
     class="form-control w-full"
@@ -59,7 +59,7 @@ exports[`RatingWidget renders in disabled state 1`] = `
 </DocumentFragment>
 `;
 
-exports[`RatingWidget renders in readonly state 1`] = `
+exports[`RatingWidget > renders in readonly state 1`] = `
 <DocumentFragment>
   <div
     class="form-control w-full"
@@ -118,7 +118,7 @@ exports[`RatingWidget renders in readonly state 1`] = `
 </DocumentFragment>
 `;
 
-exports[`RatingWidget renders with default props (value=0) 1`] = `
+exports[`RatingWidget > renders with default props (value=0) 1`] = `
 <DocumentFragment>
   <div
     class="form-control w-full"
@@ -172,7 +172,7 @@ exports[`RatingWidget renders with default props (value=0) 1`] = `
 </DocumentFragment>
 `;
 
-exports[`RatingWidget renders with maximum stars from schema 1`] = `
+exports[`RatingWidget > renders with maximum stars from schema 1`] = `
 <DocumentFragment>
   <div
     class="form-control w-full"
@@ -225,7 +225,7 @@ exports[`RatingWidget renders with maximum stars from schema 1`] = `
 </DocumentFragment>
 `;
 
-exports[`RatingWidget renders with value=3 1`] = `
+exports[`RatingWidget > renders with value=3 1`] = `
 <DocumentFragment>
   <div
     class="form-control w-full"

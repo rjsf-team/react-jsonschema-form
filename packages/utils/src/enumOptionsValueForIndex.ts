@@ -20,8 +20,8 @@ export default function enumOptionsValueForIndex<S extends StrictRJSFSchema = RJ
     return (
       valueIndex
         .map((index) => enumOptionsValueForIndex(index, allEnumOptions))
-        // Since the recursive call returns `emptyValue` when we get a bad option, only filter those out
-        .filter((val) => val !== emptyValue)
+        // The recursive call returns undefined for a bad option, filter those out
+        .filter((val) => val !== undefined)
     );
   }
   // So Number(null) and Number('') both return 0, so use emptyValue for those two values

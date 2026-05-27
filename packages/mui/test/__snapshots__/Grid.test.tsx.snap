@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Complex grid renders person and address and employment in a complex grid, job_type = company 1`] = `
+exports[`Complex grid > renders person and address and employment in a complex grid, job_type = company 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: -webkit-inline-box;
@@ -2428,7 +2428,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
 </DocumentFragment>
 `;
 
-exports[`Complex grid renders person and address and employment in a complex grid, job_type = education 1`] = `
+exports[`Complex grid > renders person and address and employment in a complex grid, job_type = education 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: -webkit-inline-box;
@@ -4906,7 +4906,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
 </DocumentFragment>
 `;
 
-exports[`Complex grid renders person and address and employment in a complex grid, job_type = other 1`] = `
+exports[`Complex grid > renders person and address and employment in a complex grid, job_type = other 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: -webkit-inline-box;
@@ -7303,7 +7303,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
 </DocumentFragment>
 `;
 
-exports[`Complex grid renders person and address and employment in a complex grid, no form data 1`] = `
+exports[`Complex grid > renders person and address and employment in a complex grid, no form data 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: -webkit-inline-box;
@@ -9731,7 +9731,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
 </DocumentFragment>
 `;
 
-exports[`Three even column grid renders person and address in three columns, no employment 1`] = `
+exports[`Three even column grid > renders person and address in three columns, no employment 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: -webkit-inline-box;
@@ -11415,7 +11415,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
 </DocumentFragment>
 `;
 
-exports[`Two even column grid renders person and address in two columns, no employment 1`] = `
+exports[`Two even column grid > renders person and address in two columns, no employment 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: -webkit-inline-box;

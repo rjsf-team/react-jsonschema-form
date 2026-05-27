@@ -76,7 +76,7 @@ function cleanNode(node: TestNode, visited: WeakSet<TestNode> = new WeakSet()): 
   return node;
 }
 
-module.exports = {
+export default {
   print: (val: TestNode, serialize: SerializeFn): string => {
     const cleaned = cleanNode(val);
     return serialize(cleaned);
@@ -89,5 +89,3 @@ module.exports = {
     !val[CLEANED_FLAG] &&
     Object.keys(val.props).some(hasAttributesToClean),
 };
-
-export {};

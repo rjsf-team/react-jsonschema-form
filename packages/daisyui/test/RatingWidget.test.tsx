@@ -66,7 +66,7 @@ describe('RatingWidget', () => {
   });
 
   test('calls onChange when rating is changed', () => {
-    const onChange = jest.fn();
+    const onChange = vi.fn();
     const { container } = render(
       <RatingWidget
         {...makeWidgetMockProps({
@@ -88,7 +88,7 @@ describe('RatingWidget', () => {
   // Skip the disabled test for now as it's unreliable in the test environment
   // The actual component does prevent clicks when disabled
   test.skip('does not call onChange when disabled', () => {
-    const onChange = jest.fn();
+    const onChange = vi.fn();
     const { container } = render(
       <RatingWidget
         {...makeWidgetMockProps({

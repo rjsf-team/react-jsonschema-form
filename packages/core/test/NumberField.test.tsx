@@ -153,7 +153,7 @@ describe('NumberField', () => {
       });
 
       it('should handle a blur event', async () => {
-        const onBlur = jest.fn();
+        const onBlur = vi.fn();
         const { node } = createFormComponent({
           schema: {
             type: 'number',
@@ -170,7 +170,7 @@ describe('NumberField', () => {
       });
 
       it('should handle a focus event', async () => {
-        const onFocus = jest.fn();
+        const onFocus = vi.fn();
         const { node } = createFormComponent({
           schema: {
             type: 'number',

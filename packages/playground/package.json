@@ -14,7 +14,7 @@
     "publish-to-npm": "npm run build && npm publish",
     "start": "vite --force",
     "preview": "vite preview",
-    "test": "jest"
+    "test": "vitest run"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [

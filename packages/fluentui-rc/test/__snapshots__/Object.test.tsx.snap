@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`nameGenerator bracketNameGenerator nested object 1`] = `
+exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -225,7 +225,7 @@ exports[`nameGenerator bracketNameGenerator nested object 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`] = `
+exports[`nameGenerator > bracketNameGenerator > object with additionalProperties 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -412,7 +412,7 @@ exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`]
 </DocumentFragment>
 `;
 
-exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
+exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -872,7 +872,7 @@ exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator bracketNameGenerator simple object 1`] = `
+exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -1000,7 +1000,7 @@ exports[`nameGenerator bracketNameGenerator simple object 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
+exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -1193,7 +1193,7 @@ exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
+exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -1603,7 +1603,7 @@ exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
 </DocumentFragment>
 `;
 
-exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
+exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -1731,7 +1731,7 @@ exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields additionalProperties 1`] = `
+exports[`object fields > additionalProperties 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -1886,7 +1886,7 @@ exports[`object fields additionalProperties 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields additionalProperties, array type 1`] = `
+exports[`object fields > additionalProperties, array type 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -2071,7 +2071,7 @@ exports[`object fields additionalProperties, array type 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields additionalProperties, description 1`] = `
+exports[`object fields > additionalProperties, description 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -2237,7 +2237,7 @@ exports[`object fields additionalProperties, description 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields additionalProperties, label off 1`] = `
+exports[`object fields > additionalProperties, label off 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -2392,7 +2392,7 @@ exports[`object fields additionalProperties, label off 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields additionalProperties, object type 1`] = `
+exports[`object fields > additionalProperties, object type 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -2580,7 +2580,7 @@ exports[`object fields additionalProperties, object type 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields object 1`] = `
+exports[`object fields > object 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -2676,7 +2676,7 @@ exports[`object fields object 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields show add button and fields if additionalProperties is true and not an object 1`] = `
+exports[`object fields > show add button and fields if additionalProperties is true and not an object 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -2831,7 +2831,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
 </DocumentFragment>
 `;
 
-exports[`object fields with title and description additionalProperties 1`] = `
+exports[`object fields > with title and description > additionalProperties 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -3008,818 +3008,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields with title and description from both additionalProperties 1`] = `
-<DocumentFragment>
-  <form
-    class="rjsf"
-  >
-    <div
-      class="rjsf-field rjsf-field-object"
-    >
-      <div
-        class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
-      >
-        <div
-          class="___12hmf4e_0000000 f2zxqi febqm8h"
-          id="root__title"
-        >
-          <h5
-            class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
-            style="margin-block: 0;"
-          >
-            My Field
-          </h5>
-          <div
-            aria-orientation="horizontal"
-            class="fui-Divider ___14drqcq_z8b5q40 f122n59 f1ewtqcl f22iagw f1063pyq fqerorx f10pi13n fk6fouc fy9rknc figsok6 fwrc4pm f17mccla fyl8oag f16vkdww fhsnbul f1gw3sf2 f1ly5f7u f1s3tz6t f1wl9k8s f13zj6fq fkfq4zb f1vccso1 f1geml7w f1r7kh1m fjml6kk f16j7guv fx01ahm fl8d8yv fj1a37q fly5x3f f163fonl f51yk4v f13rof3u f8rth92 f6czdpx f1iyka9k fzynn9s fekrn8e f1kyqvp9 fesgyo"
-            role="separator"
-          />
-        </div>
-        <span
-          class="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
-          id="root__description"
-        >
-          a fancier description
-        </span>
-        <div
-          class="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
-        >
-          <div
-            class="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
-            style="margin-bottom: 10px;"
-          >
-            <div
-              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
-            >
-              <div
-                class="___16j0ghm_0000000 f1upxcto"
-              >
-                <div
-                  class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
-                >
-                  <label
-                    class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-r1m__control"
-                    id="field-r1m__label"
-                  >
-                    foo Key
-                  </label>
-                  <span
-                    class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
-                  >
-                    <input
-                      aria-labelledby="field-r1m__label"
-                      class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
-                      id="root_foo-key"
-                      name="root_foo-key"
-                      type="text"
-                      value="foo"
-                    />
-                  </span>
-                </div>
-              </div>
-              <div
-                class="___16j0ghm_0000000 f1upxcto"
-              >
-                <div
-                  class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
-                >
-                  <label
-                    class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
-                    for="root_foo"
-                  >
-                    foo
-                  </label>
-                  <span
-                    class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
-                  >
-                    <input
-                      aria-describedby="root_foo__error root_foo__description root_foo__help"
-                      class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
-                      id="root_foo"
-                      name="root_foo"
-                      placeholder=""
-                      type="text"
-                      value="foo"
-                    />
-                  </span>
-                </div>
-              </div>
-              <div
-                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
-              >
-                <button
-                  class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
-                  color="secondary"
-                  icontype="default"
-                  id="root_foo__remove"
-                  style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
-                  title="Remove"
-                  type="button"
-                >
-                  <span
-                    class="fui-Button__icon rywnvv2"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
-                      fill="currentColor"
-                      height="1em"
-                      viewBox="0 0 20 20"
-                      width="1em"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </span>
-                </button>
-              </div>
-            </div>
-          </div>
-          <div
-            class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
-          >
-            <button
-              class="fui-Button r1f29ykk rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
-              id="root__add"
-              title="Add Item"
-              type="button"
-            >
-              <span
-                class="fui-Button__icon rywnvv2"
-              >
-                <svg
-                  aria-hidden="true"
-                  class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
-                  fill="currentColor"
-                  height="1em"
-                  viewBox="0 0 20 20"
-                  width="1em"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
-                    fill="currentColor"
-                  />
-                </svg>
-              </span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="___fko12g0_0000000 f1wswflg"
-    >
-      <button
-        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
-        type="submit"
-      >
-        Submit
-      </button>
-    </div>
-  </form>
-</DocumentFragment>
-`;
-
-exports[`object fields with title and description from both object 1`] = `
-<DocumentFragment>
-  <form
-    class="rjsf"
-  >
-    <div
-      class="rjsf-field rjsf-field-object"
-    >
-      <div
-        class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
-      >
-        <div
-          class="___12hmf4e_0000000 f2zxqi febqm8h"
-          id="root__title"
-        >
-          <h5
-            class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
-            style="margin-block: 0;"
-          >
-            My Field
-          </h5>
-          <div
-            aria-orientation="horizontal"
-            class="fui-Divider ___14drqcq_z8b5q40 f122n59 f1ewtqcl f22iagw f1063pyq fqerorx f10pi13n fk6fouc fy9rknc figsok6 fwrc4pm f17mccla fyl8oag f16vkdww fhsnbul f1gw3sf2 f1ly5f7u f1s3tz6t f1wl9k8s f13zj6fq fkfq4zb f1vccso1 f1geml7w f1r7kh1m fjml6kk f16j7guv fx01ahm fl8d8yv fj1a37q fly5x3f f163fonl f51yk4v f13rof3u f8rth92 f6czdpx f1iyka9k fzynn9s fekrn8e f1kyqvp9 fesgyo"
-            role="separator"
-          />
-        </div>
-        <span
-          class="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
-          id="root__description"
-        >
-          a fancier description
-        </span>
-        <div
-          class="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
-        >
-          <div
-            class="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
-            style="margin-bottom: 10px;"
-          >
-            <div
-              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
-            >
-              <div
-                class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
-              >
-                <label
-                  class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
-                  for="root_a"
-                >
-                  My Item A
-                </label>
-                <span
-                  class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
-                >
-                  <input
-                    aria-describedby="root_a__error root_a__description root_a__help"
-                    class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
-                    id="root_a"
-                    name="root_a"
-                    placeholder=""
-                    type="text"
-                    value=""
-                  />
-                </span>
-                <p
-                  class="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
-                  style="margin-top: 0px; margin-bottom: 0px;"
-                >
-                  <span
-                    class="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
-                    id="root_a__description"
-                  >
-                    a fancier item A description
-                  </span>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div
-            class="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
-            style="margin-bottom: 10px;"
-          >
-            <div
-              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-number"
-            >
-              <div
-                class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
-              >
-                <label
-                  class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
-                  for="root_b"
-                >
-                  My Item B
-                </label>
-                <span
-                  class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
-                >
-                  <input
-                    aria-describedby="root_b__error root_b__description root_b__help"
-                    class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
-                    id="root_b"
-                    name="root_b"
-                    placeholder=""
-                    step="any"
-                    type="number"
-                    value=""
-                  />
-                </span>
-                <p
-                  class="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
-                  style="margin-top: 0px; margin-bottom: 0px;"
-                >
-                  <span
-                    class="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
-                    id="root_b__description"
-                  >
-                    a fancier item B description
-                  </span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="___fko12g0_0000000 f1wswflg"
-    >
-      <button
-        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
-        type="submit"
-      >
-        Submit
-      </button>
-    </div>
-  </form>
-</DocumentFragment>
-`;
-
-exports[`object fields with title and description from uiSchema additionalProperties 1`] = `
-<DocumentFragment>
-  <form
-    class="rjsf"
-  >
-    <div
-      class="rjsf-field rjsf-field-object"
-    >
-      <div
-        class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
-      >
-        <div
-          class="___12hmf4e_0000000 f2zxqi febqm8h"
-          id="root__title"
-        >
-          <h5
-            class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
-            style="margin-block: 0;"
-          >
-            My Field
-          </h5>
-          <div
-            aria-orientation="horizontal"
-            class="fui-Divider ___14drqcq_z8b5q40 f122n59 f1ewtqcl f22iagw f1063pyq fqerorx f10pi13n fk6fouc fy9rknc figsok6 fwrc4pm f17mccla fyl8oag f16vkdww fhsnbul f1gw3sf2 f1ly5f7u f1s3tz6t f1wl9k8s f13zj6fq fkfq4zb f1vccso1 f1geml7w f1r7kh1m fjml6kk f16j7guv fx01ahm fl8d8yv fj1a37q fly5x3f f163fonl f51yk4v f13rof3u f8rth92 f6czdpx f1iyka9k fzynn9s fekrn8e f1kyqvp9 fesgyo"
-            role="separator"
-          />
-        </div>
-        <span
-          class="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
-          id="root__description"
-        >
-          a fancier description
-        </span>
-        <div
-          class="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
-        >
-          <div
-            class="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
-            style="margin-bottom: 10px;"
-          >
-            <div
-              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
-            >
-              <div
-                class="___16j0ghm_0000000 f1upxcto"
-              >
-                <div
-                  class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
-                >
-                  <label
-                    class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-r1a__control"
-                    id="field-r1a__label"
-                  >
-                    foo Key
-                  </label>
-                  <span
-                    class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
-                  >
-                    <input
-                      aria-labelledby="field-r1a__label"
-                      class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
-                      id="root_foo-key"
-                      name="root_foo-key"
-                      type="text"
-                      value="foo"
-                    />
-                  </span>
-                </div>
-              </div>
-              <div
-                class="___16j0ghm_0000000 f1upxcto"
-              >
-                <div
-                  class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
-                >
-                  <label
-                    class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
-                    for="root_foo"
-                  >
-                    foo
-                  </label>
-                  <span
-                    class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
-                  >
-                    <input
-                      aria-describedby="root_foo__error root_foo__description root_foo__help"
-                      class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
-                      id="root_foo"
-                      name="root_foo"
-                      placeholder=""
-                      type="text"
-                      value="foo"
-                    />
-                  </span>
-                </div>
-              </div>
-              <div
-                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
-              >
-                <button
-                  class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
-                  color="secondary"
-                  icontype="default"
-                  id="root_foo__remove"
-                  style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
-                  title="Remove"
-                  type="button"
-                >
-                  <span
-                    class="fui-Button__icon rywnvv2"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
-                      fill="currentColor"
-                      height="1em"
-                      viewBox="0 0 20 20"
-                      width="1em"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </span>
-                </button>
-              </div>
-            </div>
-          </div>
-          <div
-            class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
-          >
-            <button
-              class="fui-Button r1f29ykk rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
-              id="root__add"
-              title="Add Item"
-              type="button"
-            >
-              <span
-                class="fui-Button__icon rywnvv2"
-              >
-                <svg
-                  aria-hidden="true"
-                  class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
-                  fill="currentColor"
-                  height="1em"
-                  viewBox="0 0 20 20"
-                  width="1em"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
-                    fill="currentColor"
-                  />
-                </svg>
-              </span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="___fko12g0_0000000 f1wswflg"
-    >
-      <button
-        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
-        type="submit"
-      >
-        Submit
-      </button>
-    </div>
-  </form>
-</DocumentFragment>
-`;
-
-exports[`object fields with title and description from uiSchema object 1`] = `
-<DocumentFragment>
-  <form
-    class="rjsf"
-  >
-    <div
-      class="rjsf-field rjsf-field-object"
-    >
-      <div
-        class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
-      >
-        <div
-          class="___12hmf4e_0000000 f2zxqi febqm8h"
-          id="root__title"
-        >
-          <h5
-            class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
-            style="margin-block: 0;"
-          >
-            My Field
-          </h5>
-          <div
-            aria-orientation="horizontal"
-            class="fui-Divider ___14drqcq_z8b5q40 f122n59 f1ewtqcl f22iagw f1063pyq fqerorx f10pi13n fk6fouc fy9rknc figsok6 fwrc4pm f17mccla fyl8oag f16vkdww fhsnbul f1gw3sf2 f1ly5f7u f1s3tz6t f1wl9k8s f13zj6fq fkfq4zb f1vccso1 f1geml7w f1r7kh1m fjml6kk f16j7guv fx01ahm fl8d8yv fj1a37q fly5x3f f163fonl f51yk4v f13rof3u f8rth92 f6czdpx f1iyka9k fzynn9s fekrn8e f1kyqvp9 fesgyo"
-            role="separator"
-          />
-        </div>
-        <span
-          class="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
-          id="root__description"
-        >
-          a fancier description
-        </span>
-        <div
-          class="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
-        >
-          <div
-            class="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
-            style="margin-bottom: 10px;"
-          >
-            <div
-              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
-            >
-              <div
-                class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
-              >
-                <label
-                  class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
-                  for="root_a"
-                >
-                  My Item A
-                </label>
-                <span
-                  class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
-                >
-                  <input
-                    aria-describedby="root_a__error root_a__description root_a__help"
-                    class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
-                    id="root_a"
-                    name="root_a"
-                    placeholder=""
-                    type="text"
-                    value=""
-                  />
-                </span>
-                <p
-                  class="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
-                  style="margin-top: 0px; margin-bottom: 0px;"
-                >
-                  <span
-                    class="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
-                    id="root_a__description"
-                  >
-                    a fancier item A description
-                  </span>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div
-            class="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
-            style="margin-bottom: 10px;"
-          >
-            <div
-              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-number"
-            >
-              <div
-                class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
-              >
-                <label
-                  class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
-                  for="root_b"
-                >
-                  My Item B
-                </label>
-                <span
-                  class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
-                >
-                  <input
-                    aria-describedby="root_b__error root_b__description root_b__help"
-                    class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
-                    id="root_b"
-                    name="root_b"
-                    placeholder=""
-                    step="any"
-                    type="number"
-                    value=""
-                  />
-                </span>
-                <p
-                  class="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
-                  style="margin-top: 0px; margin-bottom: 0px;"
-                >
-                  <span
-                    class="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
-                    id="root_b__description"
-                  >
-                    a fancier item B description
-                  </span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="___fko12g0_0000000 f1wswflg"
-    >
-      <button
-        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
-        type="submit"
-      >
-        Submit
-      </button>
-    </div>
-  </form>
-</DocumentFragment>
-`;
-
-exports[`object fields with title and description from uiSchema show add button and fields if additionalProperties is true and not an object 1`] = `
-<DocumentFragment>
-  <form
-    class="rjsf"
-  >
-    <div
-      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-object"
-    >
-      <div
-        class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
-      >
-        <div
-          class="___12hmf4e_0000000 f2zxqi febqm8h"
-          id="root__title"
-        >
-          <h5
-            class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
-            style="margin-block: 0;"
-          >
-            My Field
-          </h5>
-          <div
-            aria-orientation="horizontal"
-            class="fui-Divider ___14drqcq_z8b5q40 f122n59 f1ewtqcl f22iagw f1063pyq fqerorx f10pi13n fk6fouc fy9rknc figsok6 fwrc4pm f17mccla fyl8oag f16vkdww fhsnbul f1gw3sf2 f1ly5f7u f1s3tz6t f1wl9k8s f13zj6fq fkfq4zb f1vccso1 f1geml7w f1r7kh1m fjml6kk f16j7guv fx01ahm fl8d8yv fj1a37q fly5x3f f163fonl f51yk4v f13rof3u f8rth92 f6czdpx f1iyka9k fzynn9s fekrn8e f1kyqvp9 fesgyo"
-            role="separator"
-          />
-        </div>
-        <span
-          class="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
-          id="root__description"
-        >
-          a fancier description
-        </span>
-        <div
-          class="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
-        >
-          <div
-            class="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
-            style="margin-bottom: 10px;"
-          >
-            <div
-              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
-            >
-              <div
-                class="___16j0ghm_0000000 f1upxcto"
-              >
-                <div
-                  class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
-                >
-                  <label
-                    class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-r1e__control"
-                    id="field-r1e__label"
-                  >
-                    additionalProperty Key
-                  </label>
-                  <span
-                    class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
-                  >
-                    <input
-                      aria-labelledby="field-r1e__label"
-                      class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
-                      id="root_additionalProperty-key"
-                      name="root_additionalProperty-key"
-                      type="text"
-                      value="additionalProperty"
-                    />
-                  </span>
-                </div>
-              </div>
-              <div
-                class="___16j0ghm_0000000 f1upxcto"
-              >
-                <div
-                  class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
-                >
-                  <label
-                    class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
-                    for="root_additionalProperty"
-                  >
-                    additionalProperty
-                  </label>
-                  <span
-                    class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
-                  >
-                    <input
-                      aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
-                      class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
-                      id="root_additionalProperty"
-                      name="root_additionalProperty"
-                      placeholder=""
-                      type="text"
-                      value="should appear"
-                    />
-                  </span>
-                </div>
-              </div>
-              <div
-                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
-              >
-                <button
-                  class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
-                  color="secondary"
-                  icontype="default"
-                  id="root_additionalProperty__remove"
-                  style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
-                  title="Remove"
-                  type="button"
-                >
-                  <span
-                    class="fui-Button__icon rywnvv2"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
-                      fill="currentColor"
-                      height="1em"
-                      viewBox="0 0 20 20"
-                      width="1em"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </span>
-                </button>
-              </div>
-            </div>
-          </div>
-          <div
-            class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
-          >
-            <button
-              class="fui-Button r1f29ykk rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
-              id="root__add"
-              title="Add Item"
-              type="button"
-            >
-              <span
-                class="fui-Button__icon rywnvv2"
-              >
-                <svg
-                  aria-hidden="true"
-                  class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
-                  fill="currentColor"
-                  height="1em"
-                  viewBox="0 0 20 20"
-                  width="1em"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
-                    fill="currentColor"
-                  />
-                </svg>
-              </span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="___fko12g0_0000000 f1wswflg"
-    >
-      <button
-        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
-        type="submit"
-      >
-        Submit
-      </button>
-    </div>
-  </form>
-</DocumentFragment>
-`;
-
-exports[`object fields with title and description object 1`] = `
+exports[`object fields > with title and description > object 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -3959,7 +3148,7 @@ exports[`object fields with title and description object 1`] = `
 </DocumentFragment>
 `;
 
-exports[`object fields with title and description show add button and fields if additionalProperties is true and not an object 1`] = `
+exports[`object fields > with title and description > show add button and fields if additionalProperties is true and not an object 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -4136,7 +3325,818 @@ exports[`object fields with title and description show add button and fields if 
 </DocumentFragment>
 `;
 
-exports[`object fields with title and description with global label off additionalProperties 1`] = `
+exports[`object fields > with title and description from both > additionalProperties 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+      >
+        <div
+          class="___12hmf4e_0000000 f2zxqi febqm8h"
+          id="root__title"
+        >
+          <h5
+            class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+            style="margin-block: 0;"
+          >
+            My Field
+          </h5>
+          <div
+            aria-orientation="horizontal"
+            class="fui-Divider ___14drqcq_z8b5q40 f122n59 f1ewtqcl f22iagw f1063pyq fqerorx f10pi13n fk6fouc fy9rknc figsok6 fwrc4pm f17mccla fyl8oag f16vkdww fhsnbul f1gw3sf2 f1ly5f7u f1s3tz6t f1wl9k8s f13zj6fq fkfq4zb f1vccso1 f1geml7w f1r7kh1m fjml6kk f16j7guv fx01ahm fl8d8yv fj1a37q fly5x3f f163fonl f51yk4v f13rof3u f8rth92 f6czdpx f1iyka9k fzynn9s fekrn8e f1kyqvp9 fesgyo"
+            role="separator"
+          />
+        </div>
+        <span
+          class="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
+          id="root__description"
+        >
+          a fancier description
+        </span>
+        <div
+          class="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
+        >
+          <div
+            class="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
+            >
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
+                <div
+                  class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+                >
+                  <label
+                    class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
+                    for="field-r1m__control"
+                    id="field-r1m__label"
+                  >
+                    foo Key
+                  </label>
+                  <span
+                    class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  >
+                    <input
+                      aria-labelledby="field-r1m__label"
+                      class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
+                      id="root_foo-key"
+                      name="root_foo-key"
+                      type="text"
+                      value="foo"
+                    />
+                  </span>
+                </div>
+              </div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
+                <div
+                  class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+                >
+                  <label
+                    class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                    for="root_foo"
+                  >
+                    foo
+                  </label>
+                  <span
+                    class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  >
+                    <input
+                      aria-describedby="root_foo__error root_foo__description root_foo__help"
+                      class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
+                      id="root_foo"
+                      name="root_foo"
+                      placeholder=""
+                      type="text"
+                      value="foo"
+                    />
+                  </span>
+                </div>
+              </div>
+              <div
+                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
+              >
+                <button
+                  class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                  color="secondary"
+                  icontype="default"
+                  id="root_foo__remove"
+                  style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
+                  title="Remove"
+                  type="button"
+                >
+                  <span
+                    class="fui-Button__icon rywnvv2"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      fill="currentColor"
+                      height="1em"
+                      viewBox="0 0 20 20"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
+          >
+            <button
+              class="fui-Button r1f29ykk rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+              id="root__add"
+              title="Add Item"
+              type="button"
+            >
+              <span
+                class="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="___fko12g0_0000000 f1wswflg"
+    >
+      <button
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > with title and description from both > object 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+      >
+        <div
+          class="___12hmf4e_0000000 f2zxqi febqm8h"
+          id="root__title"
+        >
+          <h5
+            class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+            style="margin-block: 0;"
+          >
+            My Field
+          </h5>
+          <div
+            aria-orientation="horizontal"
+            class="fui-Divider ___14drqcq_z8b5q40 f122n59 f1ewtqcl f22iagw f1063pyq fqerorx f10pi13n fk6fouc fy9rknc figsok6 fwrc4pm f17mccla fyl8oag f16vkdww fhsnbul f1gw3sf2 f1ly5f7u f1s3tz6t f1wl9k8s f13zj6fq fkfq4zb f1vccso1 f1geml7w f1r7kh1m fjml6kk f16j7guv fx01ahm fl8d8yv fj1a37q fly5x3f f163fonl f51yk4v f13rof3u f8rth92 f6czdpx f1iyka9k fzynn9s fekrn8e f1kyqvp9 fesgyo"
+            role="separator"
+          />
+        </div>
+        <span
+          class="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
+          id="root__description"
+        >
+          a fancier description
+        </span>
+        <div
+          class="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
+        >
+          <div
+            class="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
+            >
+              <div
+                class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+              >
+                <label
+                  class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                  for="root_a"
+                >
+                  My Item A
+                </label>
+                <span
+                  class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                >
+                  <input
+                    aria-describedby="root_a__error root_a__description root_a__help"
+                    class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
+                    id="root_a"
+                    name="root_a"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
+                </span>
+                <p
+                  class="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
+                  style="margin-top: 0px; margin-bottom: 0px;"
+                >
+                  <span
+                    class="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
+                    id="root_a__description"
+                  >
+                    a fancier item A description
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-number"
+            >
+              <div
+                class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+              >
+                <label
+                  class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                  for="root_b"
+                >
+                  My Item B
+                </label>
+                <span
+                  class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                >
+                  <input
+                    aria-describedby="root_b__error root_b__description root_b__help"
+                    class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
+                    id="root_b"
+                    name="root_b"
+                    placeholder=""
+                    step="any"
+                    type="number"
+                    value=""
+                  />
+                </span>
+                <p
+                  class="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
+                  style="margin-top: 0px; margin-bottom: 0px;"
+                >
+                  <span
+                    class="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
+                    id="root_b__description"
+                  >
+                    a fancier item B description
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="___fko12g0_0000000 f1wswflg"
+    >
+      <button
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > with title and description from uiSchema > additionalProperties 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+      >
+        <div
+          class="___12hmf4e_0000000 f2zxqi febqm8h"
+          id="root__title"
+        >
+          <h5
+            class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+            style="margin-block: 0;"
+          >
+            My Field
+          </h5>
+          <div
+            aria-orientation="horizontal"
+            class="fui-Divider ___14drqcq_z8b5q40 f122n59 f1ewtqcl f22iagw f1063pyq fqerorx f10pi13n fk6fouc fy9rknc figsok6 fwrc4pm f17mccla fyl8oag f16vkdww fhsnbul f1gw3sf2 f1ly5f7u f1s3tz6t f1wl9k8s f13zj6fq fkfq4zb f1vccso1 f1geml7w f1r7kh1m fjml6kk f16j7guv fx01ahm fl8d8yv fj1a37q fly5x3f f163fonl f51yk4v f13rof3u f8rth92 f6czdpx f1iyka9k fzynn9s fekrn8e f1kyqvp9 fesgyo"
+            role="separator"
+          />
+        </div>
+        <span
+          class="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
+          id="root__description"
+        >
+          a fancier description
+        </span>
+        <div
+          class="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
+        >
+          <div
+            class="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
+            >
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
+                <div
+                  class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+                >
+                  <label
+                    class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
+                    for="field-r1a__control"
+                    id="field-r1a__label"
+                  >
+                    foo Key
+                  </label>
+                  <span
+                    class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  >
+                    <input
+                      aria-labelledby="field-r1a__label"
+                      class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
+                      id="root_foo-key"
+                      name="root_foo-key"
+                      type="text"
+                      value="foo"
+                    />
+                  </span>
+                </div>
+              </div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
+                <div
+                  class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+                >
+                  <label
+                    class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                    for="root_foo"
+                  >
+                    foo
+                  </label>
+                  <span
+                    class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  >
+                    <input
+                      aria-describedby="root_foo__error root_foo__description root_foo__help"
+                      class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
+                      id="root_foo"
+                      name="root_foo"
+                      placeholder=""
+                      type="text"
+                      value="foo"
+                    />
+                  </span>
+                </div>
+              </div>
+              <div
+                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
+              >
+                <button
+                  class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                  color="secondary"
+                  icontype="default"
+                  id="root_foo__remove"
+                  style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
+                  title="Remove"
+                  type="button"
+                >
+                  <span
+                    class="fui-Button__icon rywnvv2"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      fill="currentColor"
+                      height="1em"
+                      viewBox="0 0 20 20"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
+          >
+            <button
+              class="fui-Button r1f29ykk rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+              id="root__add"
+              title="Add Item"
+              type="button"
+            >
+              <span
+                class="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="___fko12g0_0000000 f1wswflg"
+    >
+      <button
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > with title and description from uiSchema > object 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+      >
+        <div
+          class="___12hmf4e_0000000 f2zxqi febqm8h"
+          id="root__title"
+        >
+          <h5
+            class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+            style="margin-block: 0;"
+          >
+            My Field
+          </h5>
+          <div
+            aria-orientation="horizontal"
+            class="fui-Divider ___14drqcq_z8b5q40 f122n59 f1ewtqcl f22iagw f1063pyq fqerorx f10pi13n fk6fouc fy9rknc figsok6 fwrc4pm f17mccla fyl8oag f16vkdww fhsnbul f1gw3sf2 f1ly5f7u f1s3tz6t f1wl9k8s f13zj6fq fkfq4zb f1vccso1 f1geml7w f1r7kh1m fjml6kk f16j7guv fx01ahm fl8d8yv fj1a37q fly5x3f f163fonl f51yk4v f13rof3u f8rth92 f6czdpx f1iyka9k fzynn9s fekrn8e f1kyqvp9 fesgyo"
+            role="separator"
+          />
+        </div>
+        <span
+          class="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
+          id="root__description"
+        >
+          a fancier description
+        </span>
+        <div
+          class="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
+        >
+          <div
+            class="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
+            >
+              <div
+                class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+              >
+                <label
+                  class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                  for="root_a"
+                >
+                  My Item A
+                </label>
+                <span
+                  class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                >
+                  <input
+                    aria-describedby="root_a__error root_a__description root_a__help"
+                    class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
+                    id="root_a"
+                    name="root_a"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
+                </span>
+                <p
+                  class="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
+                  style="margin-top: 0px; margin-bottom: 0px;"
+                >
+                  <span
+                    class="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
+                    id="root_a__description"
+                  >
+                    a fancier item A description
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-number"
+            >
+              <div
+                class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+              >
+                <label
+                  class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                  for="root_b"
+                >
+                  My Item B
+                </label>
+                <span
+                  class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                >
+                  <input
+                    aria-describedby="root_b__error root_b__description root_b__help"
+                    class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
+                    id="root_b"
+                    name="root_b"
+                    placeholder=""
+                    step="any"
+                    type="number"
+                    value=""
+                  />
+                </span>
+                <p
+                  class="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
+                  style="margin-top: 0px; margin-bottom: 0px;"
+                >
+                  <span
+                    class="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
+                    id="root_b__description"
+                  >
+                    a fancier item B description
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="___fko12g0_0000000 f1wswflg"
+    >
+      <button
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > with title and description from uiSchema > show add button and fields if additionalProperties is true and not an object 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-object"
+    >
+      <div
+        class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+      >
+        <div
+          class="___12hmf4e_0000000 f2zxqi febqm8h"
+          id="root__title"
+        >
+          <h5
+            class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+            style="margin-block: 0;"
+          >
+            My Field
+          </h5>
+          <div
+            aria-orientation="horizontal"
+            class="fui-Divider ___14drqcq_z8b5q40 f122n59 f1ewtqcl f22iagw f1063pyq fqerorx f10pi13n fk6fouc fy9rknc figsok6 fwrc4pm f17mccla fyl8oag f16vkdww fhsnbul f1gw3sf2 f1ly5f7u f1s3tz6t f1wl9k8s f13zj6fq fkfq4zb f1vccso1 f1geml7w f1r7kh1m fjml6kk f16j7guv fx01ahm fl8d8yv fj1a37q fly5x3f f163fonl f51yk4v f13rof3u f8rth92 f6czdpx f1iyka9k fzynn9s fekrn8e f1kyqvp9 fesgyo"
+            role="separator"
+          />
+        </div>
+        <span
+          class="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
+          id="root__description"
+        >
+          a fancier description
+        </span>
+        <div
+          class="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
+        >
+          <div
+            class="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
+            >
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
+                <div
+                  class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+                >
+                  <label
+                    class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
+                    for="field-r1e__control"
+                    id="field-r1e__label"
+                  >
+                    additionalProperty Key
+                  </label>
+                  <span
+                    class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  >
+                    <input
+                      aria-labelledby="field-r1e__label"
+                      class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
+                      id="root_additionalProperty-key"
+                      name="root_additionalProperty-key"
+                      type="text"
+                      value="additionalProperty"
+                    />
+                  </span>
+                </div>
+              </div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
+                <div
+                  class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+                >
+                  <label
+                    class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                    for="root_additionalProperty"
+                  >
+                    additionalProperty
+                  </label>
+                  <span
+                    class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  >
+                    <input
+                      aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                      class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
+                      id="root_additionalProperty"
+                      name="root_additionalProperty"
+                      placeholder=""
+                      type="text"
+                      value="should appear"
+                    />
+                  </span>
+                </div>
+              </div>
+              <div
+                class="___1r36s8v_0000000 fpydfdc f9c4gz4"
+              >
+                <button
+                  class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                  color="secondary"
+                  icontype="default"
+                  id="root_additionalProperty__remove"
+                  style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
+                  title="Remove"
+                  type="button"
+                >
+                  <span
+                    class="fui-Button__icon rywnvv2"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      fill="currentColor"
+                      height="1em"
+                      viewBox="0 0 20 20"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
+          >
+            <button
+              class="fui-Button r1f29ykk rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+              id="root__add"
+              title="Add Item"
+              type="button"
+            >
+              <span
+                class="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="___fko12g0_0000000 f1wswflg"
+    >
+      <button
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`object fields > with title and description with global label off > additionalProperties 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -4277,7 +4277,7 @@ exports[`object fields with title and description with global label off addition
 </DocumentFragment>
 `;
 
-exports[`object fields with title and description with global label off object 1`] = `
+exports[`object fields > with title and description with global label off > object 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -4361,7 +4361,7 @@ exports[`object fields with title and description with global label off object 1
 </DocumentFragment>
 `;
 
-exports[`object fields with title and description with global label off show add button and fields if additionalProperties is true and not an object 1`] = `
+exports[`object fields > with title and description with global label off > show add button and fields if additionalProperties is true and not an object 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"

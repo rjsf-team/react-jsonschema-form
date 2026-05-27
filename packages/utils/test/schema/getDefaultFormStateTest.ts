@@ -1,3 +1,5 @@
+import type { MockInstance } from 'vitest';
+import noop from 'lodash/noop';
 import { createSchemaUtils, Experimental_DefaultFormStateBehavior, getDefaultFormState, RJSFSchema } from '../../src';
 import {
   AdditionalItemsHandling,
@@ -15,9 +17,9 @@ import { resolveDependencies } from '../../src/schema/retrieveSchema';
 
 export default function getDefaultFormStateTest(testValidator: TestValidatorType) {
   describe('getDefaultFormState()', () => {
-    let consoleWarnSpy: jest.SpyInstance;
+    let consoleWarnSpy: MockInstance;
     beforeAll(() => {
-      consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(); // mock this to avoid actually warning in the tests
+      consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop); // mock this to avoid actually warning in the tests
     });
     afterAll(() => {
       consoleWarnSpy.mockRestore();

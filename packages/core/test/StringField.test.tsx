@@ -1,4 +1,5 @@
 import { fireEvent, act } from '@testing-library/react';
+import noop from 'lodash/noop';
 import userEvent from '@testing-library/user-event';
 import {
   parseDateString,
@@ -66,7 +67,7 @@ const user = userEvent.setup();
 describe('StringField', () => {
   const CustomWidget = () => <div id='custom' />;
   beforeAll(() => {
-    jest.spyOn(window, 'FileReader').mockImplementation(() => mockFileReader);
+    vi.spyOn(window, 'FileReader').mockImplementation(() => mockFileReader);
   });
 
   describe('TextWidget', () => {
@@ -204,7 +205,7 @@ describe('StringField', () => {
     });
 
     it('should handle a blur event', async () => {
-      const onBlur = jest.fn();
+      const onBlur = vi.fn();
       const { node } = createFormComponent({
         schema: {
           type: 'string',
@@ -219,7 +220,7 @@ describe('StringField', () => {
     });
 
     it('should handle a focus event', async () => {
-      const onFocus = jest.fn();
+      const onFocus = vi.fn();
       const { node } = createFormComponent({
         schema: {
           type: 'string',
@@ -1188,7 +1189,7 @@ describe('StringField', () => {
 
         await user.click(node.querySelector('a.btn-now')!);
 
-        const formValue = onChange.mock.lastCall[0].formData;
+        const formValue = onChange.mock.lastCall![0].formData;
         // Test that the two DATETIMEs are within 5 seconds of each other.
         const now = new Date().getTime();
         const timeDiff = now - new Date(formValue).getTime();
@@ -1549,7 +1550,7 @@ describe('StringField', () => {
     });
 
     it('should throw on invalid date', () => {
-      const mockError = jest.spyOn(console, 'error').mockImplementation();
+      const mockError = vi.spyOn(console, 'error').mockImplementation(noop);
       expect(() =>
         createFormComponent({
           schema: {
@@ -2190,7 +2191,7 @@ describe('StringField', () => {
     });
 
     it('should render the file widget with download link', () => {
-      const formData = 'data:text/plain;name=file1.txt;base64,x=';
+      const formData = 'data:text/plain;name=file1.txt;base64,YQ==';
       const { node } = createFormComponent({
         schema: {
           type: 'string',
@@ -2209,7 +2210,7 @@ describe('StringField', () => {
     });
 
     it('should delete the file when delete button is pressed (single)', async () => {
-      const formData = 'data:text/plain;name=file1.txt;base64,x=';
+      const formData = 'data:text/plain;name=file1.txt;base64,YQ==';
       const { node, onChange } = createFormComponent({
         schema: {
           type: 'string',
@@ -2228,9 +2229,9 @@ describe('StringField', () => {
     });
     it('should delete the file when delete button is pressed (multi)', async () => {
       const formData = [
-        'data:text/plain;name=file1.txt;base64,x=',
-        'data:text/plain;name=file2.txt;base64,x=',
-        'data:text/plain;name=file3.txt;base64,x=',
+        'data:text/plain;name=file1.txt;base64,YQ==',
+        'data:text/plain;name=file2.txt;base64,YQ==',
+        'data:text/plain;name=file3.txt;base64,YQ==',
       ];
       const { node, onChange } = createFormComponent({
         schema: {
@@ -2256,7 +2257,7 @@ describe('StringField', () => {
       expect(node.querySelectorAll('li')).toHaveLength(2);
       expectToHaveBeenCalledWithFormData(
         onChange,
-        ['data:text/plain;name=file1.txt;base64,x=', 'data:text/plain;name=file3.txt;base64,x='],
+        ['data:text/plain;name=file1.txt;base64,YQ==', 'data:text/plain;name=file3.txt;base64,YQ=='],
         'root',
       );
     });

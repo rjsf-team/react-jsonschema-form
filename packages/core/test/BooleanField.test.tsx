@@ -254,7 +254,7 @@ describe('BooleanField', () => {
       focusOnFirstError: true,
       uiSchema: { bool: { 'ui:widget': 'radio' } },
     });
-    const focusSpys = [jest.fn(), jest.fn()];
+    const focusSpys = [vi.fn(), vi.fn()];
     const inputs = node.querySelectorAll('input[id^=root_bool]');
     expect(inputs).toHaveLength(2);
     let errorInputs = node.querySelectorAll('.form-group.rjsf-field-error input[id^=root_bool]');
@@ -289,7 +289,7 @@ describe('BooleanField', () => {
       focusOnFirstError: true,
       uiSchema: { bool: { 'ui:widget': 'radio', 'ui:hideError': true } },
     });
-    const focusSpys = [jest.fn(), jest.fn()];
+    const focusSpys = [vi.fn(), vi.fn()];
     const inputs = node.querySelectorAll('input[id^=root_bool]');
     expect(inputs).toHaveLength(2);
     let errorInputs = node.querySelectorAll('.form-group.rjsf-field-error input[id^=root_bool]');
@@ -486,7 +486,7 @@ describe('BooleanField', () => {
   });
 
   it('should handle a focus event for radio widgets', async () => {
-    const onFocus = jest.fn();
+    const onFocus = vi.fn();
     const { node } = createFormComponent({
       schema: {
         type: 'boolean',
@@ -504,7 +504,7 @@ describe('BooleanField', () => {
   });
 
   it('should handle a blur event for radio widgets', async () => {
-    const onBlur = jest.fn();
+    const onBlur = vi.fn();
     const { node } = createFormComponent({
       schema: {
         type: 'boolean',
@@ -534,7 +534,7 @@ describe('BooleanField', () => {
   });
 
   it('should handle a focus event with checkbox', async () => {
-    const onFocus = jest.fn();
+    const onFocus = vi.fn();
     const { node } = createFormComponent({
       schema: {
         type: 'boolean',
@@ -552,7 +552,7 @@ describe('BooleanField', () => {
   });
 
   it('should handle a blur event with select', async () => {
-    const onBlur = jest.fn();
+    const onBlur = vi.fn();
     const { node } = createFormComponent({
       schema: {
         type: 'boolean',
@@ -594,7 +594,7 @@ describe('BooleanField', () => {
   });
 
   it('should handle a focus event with checkbox', async () => {
-    const onFocus = jest.fn();
+    const onFocus = vi.fn();
     const { node } = createFormComponent({
       schema: {
         type: 'boolean',
@@ -612,7 +612,7 @@ describe('BooleanField', () => {
   });
 
   it('should handle a blur event with checkbox', async () => {
-    const onBlur = jest.fn();
+    const onBlur = vi.fn();
     const { node } = createFormComponent({
       schema: {
         type: 'boolean',

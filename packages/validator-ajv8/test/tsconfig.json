@@ -7,7 +7,7 @@
     "noEmit": true,
     "resolveJsonModule": true,
     "jsx": "react-jsx",
-    "types": ["jest", "node"]
+    "types": ["vitest/globals", "node"]
   },
   "references": [
     {

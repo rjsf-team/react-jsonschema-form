@@ -1,10 +1,11 @@
+import noop from 'lodash/noop';
 import { Registry, RJSFSchema, resolveUiSchema, TemplatesType, UiSchema, UiSchemaDefinitions } from '../src';
 
 beforeEach(() => {
-  jest.spyOn(console, 'warn').mockImplementation();
+  vi.spyOn(console, 'warn').mockImplementation(noop);
 });
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
 });
 
 const baseRegistry: Registry = {

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`TextareaWidget simple with errors 1`] = `
+exports[`TextareaWidget > simple with errors 1`] = `
 <DocumentFragment>
   <div
     class="input-group"
@@ -21,7 +21,7 @@ exports[`TextareaWidget simple with errors 1`] = `
 </DocumentFragment>
 `;
 
-exports[`TextareaWidget simple without errors 1`] = `
+exports[`TextareaWidget > simple without errors 1`] = `
 <DocumentFragment>
   <div
     class="input-group"
@@ -42,7 +42,7 @@ exports[`TextareaWidget simple without errors 1`] = `
 </DocumentFragment>
 `;
 
-exports[`TextareaWidget simple without required 1`] = `
+exports[`TextareaWidget > simple without required 1`] = `
 <DocumentFragment>
   <div
     class="input-group"

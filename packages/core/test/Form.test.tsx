@@ -1,5 +1,6 @@
-import { Component, createRef, RefObject, useCallback, useEffect, useState } from 'react';
+import { Component, RefObject, createRef, useEffect, useState, useCallback } from 'react';
 import { act, render, waitFor } from '@testing-library/react';
+import type { Mock } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { Portal } from 'react-portal';
 import {
@@ -1176,7 +1177,7 @@ describeRepeated('Form common', (createFormComponent) => {
         },
       };
 
-      const secondOnChange = jest.fn();
+      const secondOnChange = vi.fn();
 
       const { onChange, rerender } = createFormComponent({ ref: createRef(), schema, formData: { foo: 'bar1' } });
 
@@ -1752,7 +1753,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const formData = {
         foo: '',
       };
-      const onBlur = jest.fn();
+      const onBlur = vi.fn();
       const { node } = createFormComponent({ schema, formData, onBlur });
 
       const input = node.querySelector('[type=text]')!;
@@ -1776,7 +1777,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const formData = {
         foo: 'new',
       };
-      const onFocus = jest.fn();
+      const onFocus = vi.fn();
       const { node } = createFormComponent({ schema, formData, onFocus });
 
       const input = node.querySelector('[type=text]')!;
@@ -1952,7 +1953,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
   describe('Schema and external formData updates', () => {
     let rerender: RerenderType;
-    let onChangeProp: jest.Mock;
+    let onChangeProp: Mock;
     let formProps: NoValFormProps;
 
     beforeEach(() => {
@@ -2423,7 +2424,7 @@ describeRepeated('Form common', (createFormComponent) => {
       };
 
       it('should call the onError handler and focus on the error', async () => {
-        const onError = jest.fn();
+        const onError = vi.fn();
         const { node } = createFormComponent({
           schema,
           onError,
@@ -2432,7 +2433,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
         const input = node.querySelector<HTMLInputElement>('input[type=text]')!;
         await user.type(input, 'short');
-        const focusSpy = jest.fn();
+        const focusSpy = vi.fn();
         // Since programmatically triggering focus does not call onFocus, change the focus method to a spy
         // Set up AFTER user.type so typing works (focus spy would prevent element from receiving focus)
         Object.defineProperty(input, 'focus', {
@@ -2442,20 +2443,20 @@ describeRepeated('Form common', (createFormComponent) => {
         await submitForm(node, user);
 
         expect(onError).toHaveBeenLastCalledWith(expect.any(Array));
-        const callArg = jest.mocked(onError).mock.calls[0][0];
+        const callArg = vi.mocked(onError).mock.calls[0][0];
         expect(callArg.length).toBe(1);
         expect(callArg[0].message).toBe('must NOT have fewer than 8 characters');
         expect(focusSpy).toHaveBeenCalledTimes(1);
       });
 
       it('should call the onError handler and call the provided focusOnFirstError callback function', async () => {
-        const onError = jest.fn();
+        const onError = vi.fn();
 
         const focusCallback = () => {
           console.log('focusCallback called');
         };
 
-        const focusOnFirstError = jest.fn(focusCallback);
+        const focusOnFirstError = vi.fn(focusCallback);
         const { node } = createFormComponent({
           schema,
           onError,
@@ -2464,7 +2465,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
         const input = node.querySelector<HTMLInputElement>('input[type=text]')!;
         await user.type(input, 'short');
-        const focusSpy = jest.fn();
+        const focusSpy = vi.fn();
         // Since programmatically triggering focus does not call onFocus, change the focus method to a spy
         // Set up AFTER user.type so typing works (focus spy would prevent element from receiving focus)
         Object.defineProperty(input, 'focus', {
@@ -2474,7 +2475,7 @@ describeRepeated('Form common', (createFormComponent) => {
         await submitForm(node, user);
 
         expect(onError).toHaveBeenLastCalledWith(expect.any(Array));
-        const callArg = jest.mocked(onError).mock.calls[0][0];
+        const callArg = vi.mocked(onError).mock.calls[0][0];
         expect(callArg.length).toBe(1);
         expect(callArg[0].message).toBe('must NOT have fewer than 8 characters');
 
@@ -2483,7 +2484,7 @@ describeRepeated('Form common', (createFormComponent) => {
       });
 
       it('should call the onError handler and call the provided focusOnFirstError callback function', async () => {
-        const onError = jest.fn();
+        const onError = vi.fn();
 
         const focusCallback = () => {
           console.log('focusCallback called');
@@ -2492,7 +2493,7 @@ describeRepeated('Form common', (createFormComponent) => {
           __errors: ['foo'],
         } as ErrorSchema;
 
-        const focusOnFirstError = jest.fn(focusCallback);
+        const focusOnFirstError = vi.fn(focusCallback);
         const { node } = createFormComponent({
           schema,
           onError,
@@ -2503,7 +2504,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
         const input = node.querySelector<HTMLInputElement>('input[type=text]')!;
         await user.type(input, 'valid string');
-        const focusSpy = jest.fn();
+        const focusSpy = vi.fn();
         // Since programmatically triggering focus does not call onFocus, change the focus method to a spy
         // Set up AFTER user.type so typing works (focus spy would prevent element from receiving focus)
         Object.defineProperty(input, 'focus', {
@@ -2513,7 +2514,7 @@ describeRepeated('Form common', (createFormComponent) => {
         await submitForm(node, user);
 
         expect(onError).toHaveBeenLastCalledWith(expect.any(Array));
-        const callArg = jest.mocked(onError).mock.calls[0][0];
+        const callArg = vi.mocked(onError).mock.calls[0][0];
         expect(callArg.length).toBe(1);
         expect(callArg[0].message).toBe('foo');
 
@@ -2887,7 +2888,7 @@ describeRepeated('Form common', (createFormComponent) => {
           focusOnFirstError: true,
         });
 
-        const focusSpy = jest.fn();
+        const focusSpy = vi.fn();
         const input = node.querySelector<HTMLInputElement>('input[id=root_outer_0_1]')!;
         // Since programmatically triggering focus does not call onFocus, change the focus method to a spy
         Object.defineProperty(input, 'focus', {
@@ -3545,8 +3546,8 @@ describeRepeated('Form common', (createFormComponent) => {
 
   describe('Nested forms', () => {
     it('should call provided submit handler with form state', async () => {
-      const innerOnSubmit = jest.fn();
-      const outerOnSubmit = jest.fn();
+      const innerOnSubmit = vi.fn();
+      const outerOnSubmit = vi.fn();
       let innerRef: RefObject<HTMLDivElement> | undefined;
 
       class ArrayTemplateWithForm extends Component<FormProps> {
@@ -3666,7 +3667,7 @@ describe('Live validation onBlur', () => {
   };
 
   it('does not occur during onChange, no errors produced', async () => {
-    const onBlur = jest.fn();
+    const onBlur = vi.fn();
     const { node, onChange } = createFormComponent({
       schema,
       onBlur,
@@ -3685,7 +3686,7 @@ describe('Live validation onBlur', () => {
   });
 
   it('occurs during onBlur, onChange not called during blur due to no state update', async () => {
-    const onBlur = jest.fn();
+    const onBlur = vi.fn();
     const { node, onChange } = createFormComponent({
       schema,
       onBlur,
@@ -3709,7 +3710,7 @@ describe('Live validation onBlur', () => {
   });
 
   it('occurs during onBlur, onChange called during blur with errors due to a state update', async () => {
-    const onBlur = jest.fn();
+    const onBlur = vi.fn();
     const { node, onChange } = createFormComponent({
       schema,
       onBlur,
@@ -3754,7 +3755,7 @@ describe('omitExtraData and live omit onBlur', () => {
   const formData1 = { foo: 'foo', bar: 'bar', baz: 'baz' };
 
   it('does not occur during onChange, no extra data removed', async () => {
-    const onBlur = jest.fn();
+    const onBlur = vi.fn();
     const { node, onChange } = createFormComponent({
       schema,
       formData: formData1,
@@ -3775,7 +3776,7 @@ describe('omitExtraData and live omit onBlur', () => {
   });
 
   it('occurs during onBlur, onChange not called during blur due to no state update', async () => {
-    const onBlur = jest.fn();
+    const onBlur = vi.fn();
     const { node, onChange } = createFormComponent({
       schema,
       formData, // Use form data with nothing to omit to test case
@@ -3794,7 +3795,7 @@ describe('omitExtraData and live omit onBlur', () => {
   });
 
   it('occurs during onBlur, onChange called during blur due to extra data removal in state', async () => {
-    const onBlur = jest.fn();
+    const onBlur = vi.fn();
     const { node, onChange } = createFormComponent({
       schema,
       formData: formData1,
@@ -3849,7 +3850,7 @@ describe('Form omitExtraData and liveOmit', () => {
       liveOmit,
     });
 
-    const theSpy = jest.spyOn(ref.current!, 'omitExtraData').mockReturnValue({ foo: '' });
+    const theSpy = vi.spyOn(ref.current!, 'omitExtraData').mockReturnValue({ foo: '' });
 
     await user.clear(node.querySelector('[type=text]')!);
     await user.type(node.querySelector('[type=text]')!, 'new');
@@ -3878,7 +3879,7 @@ describe('Form omitExtraData and liveOmit', () => {
       omitExtraData,
     });
 
-    const theSpy = jest.spyOn(ref.current!, 'omitExtraData').mockReturnValue({ foo: '' });
+    const theSpy = vi.spyOn(ref.current!, 'omitExtraData').mockReturnValue({ foo: '' });
 
     await user.clear(node.querySelector('[type=text]')!);
     await user.type(node.querySelector('[type=text]')!, 'new');
@@ -4173,7 +4174,7 @@ describe('Form omitExtraData and liveOmit', () => {
       },
     } as unknown as ErrorSchema;
 
-    const onSubmit = jest.fn();
+    const onSubmit = vi.fn();
 
     const formRef = createRef<Form>();
     const props: NoValFormProps = {
@@ -4222,7 +4223,7 @@ describe('omitExtraData on submit', () => {
       omitExtraData,
     });
 
-    const theSpy = jest.spyOn(ref.current!, 'omitExtraData').mockReturnValue({ foo: '' });
+    const theSpy = vi.spyOn(ref.current!, 'omitExtraData').mockReturnValue({ foo: '' });
 
     await submitForm(node, user);
 
@@ -4246,7 +4247,7 @@ describe('omitExtraData on submit', () => {
       omitExtraData: omitExtraData,
     };
     const { node } = createFormComponent(props);
-    const theSpy = jest.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
+    const theSpy = vi.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
     await submitForm(node, user);
     expect(theSpy).toHaveBeenCalledWith(formData);
   });
@@ -4268,7 +4269,7 @@ describe('omitExtraData on submit', () => {
       omitExtraData: omitExtraData,
     };
     const { node } = createFormComponent(props);
-    const theSpy = jest.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
+    const theSpy = vi.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
     await submitForm(node, user);
     expect(theSpy).toHaveBeenCalledWith({ foo: 'bar' });
   });
@@ -4820,7 +4821,7 @@ describe('validateForm()', () => {
       omitExtraData: omitExtraData,
     };
     createFormComponent(props);
-    const theSpy = jest.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
+    const theSpy = vi.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
     act(() => {
       formRef.current!.validateForm();
     });
@@ -4844,7 +4845,7 @@ describe('validateForm()', () => {
       omitExtraData: omitExtraData,
     };
     createFormComponent(props);
-    const theSpy = jest.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
+    const theSpy = vi.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
     act(() => {
       formRef.current!.validateForm();
     });

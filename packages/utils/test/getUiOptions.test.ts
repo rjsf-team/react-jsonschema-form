@@ -1,3 +1,5 @@
+import type { MockInstance } from 'vitest';
+import noop from 'lodash/noop';
 import { GlobalUISchemaOptions, UIOptionsType, UiSchema, getUiOptions } from '../src';
 
 const uiSchema: UiSchema = {
@@ -46,10 +48,10 @@ const results: { [key: string]: UIOptionsType } = {
 };
 
 describe('getUiOptions()', () => {
-  let consoleErrorSpy: jest.SpyInstance;
+  let consoleErrorSpy: MockInstance;
   beforeAll(() => {
     // spy on console.error() and make it do nothing to avoid making noise in the test
-    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(noop);
   });
   afterAll(() => {
     consoleErrorSpy.mockRestore();

@@ -83,9 +83,9 @@ const PROPS: WidgetProps = {
   schema: { type: 'string', format: 'date-time' },
   registry: REGISTRY,
   options: { yearsRange: [2000, 2030] },
-  onChange: jest.fn(),
-  onBlur: jest.fn(),
-  onFocus: jest.fn(),
+  onChange: vi.fn(),
+  onBlur: vi.fn(),
+  onFocus: vi.fn(),
   value: undefined,
 };
 const TIME_PROPS = {
@@ -95,12 +95,12 @@ const TIME_PROPS = {
 
 describe('useAltDateWidgetProps()', () => {
   beforeEach(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(MOCKED_DATE);
+    vi.useFakeTimers();
+    vi.setSystemTime(MOCKED_DATE);
   });
   afterEach(() => {
-    jest.useRealTimers();
-    jest.mocked(PROPS.onChange).mockClear();
+    vi.useRealTimers();
+    vi.mocked(PROPS.onChange).mockClear();
   });
   test('time is false, value undefined', () => {
     const { result } = renderHook(() => useAltDateWidgetProps(PROPS));
@@ -113,7 +113,7 @@ describe('useAltDateWidgetProps()', () => {
     expect(handleSetNow).toBeInstanceOf(Function);
     // Simulate clicking the setNow button
     const simulatedEvent = {
-      preventDefault: jest.fn(),
+      preventDefault: vi.fn(),
     } as unknown as MouseEvent;
     handleSetNow(simulatedEvent);
     // onChange was called with the date for NOW
@@ -132,7 +132,7 @@ describe('useAltDateWidgetProps()', () => {
     expect(handleSetNow).toBeInstanceOf(Function);
     // Simulate clicking the setNow button
     const simulatedEvent = {
-      preventDefault: jest.fn(),
+      preventDefault: vi.fn(),
     } as unknown as MouseEvent;
     handleClear(simulatedEvent);
     // onChange was called with the date cleared
@@ -190,7 +190,7 @@ describe('useAltDateWidgetProps()', () => {
     expect(handleSetNow).toBeInstanceOf(Function);
     // Simulate clicking the setNow button
     const simulatedEvent = {
-      preventDefault: jest.fn(),
+      preventDefault: vi.fn(),
     } as unknown as MouseEvent;
     handleSetNow(simulatedEvent);
     // onChange was called with the date for NOW
@@ -209,7 +209,7 @@ describe('useAltDateWidgetProps()', () => {
     expect(handleSetNow).toBeInstanceOf(Function);
     // Simulate clicking the setNow button
     const simulatedEvent = {
-      preventDefault: jest.fn(),
+      preventDefault: vi.fn(),
     } as unknown as MouseEvent;
     handleClear(simulatedEvent);
     // onChange was called with the date cleared
@@ -320,7 +320,7 @@ describe('useAltDateWidgetProps()', () => {
     expect(handleSetNow).toBeInstanceOf(Function);
     // Simulate clicking the setNow button
     const simulatedEvent = {
-      preventDefault: jest.fn(),
+      preventDefault: vi.fn(),
     } as unknown as MouseEvent;
     handleClear(simulatedEvent);
     expect(simulatedEvent.preventDefault).toHaveBeenCalledTimes(1);
@@ -341,7 +341,7 @@ describe('useAltDateWidgetProps()', () => {
     expect(handleSetNow).toBeInstanceOf(Function);
     // Simulate clicking the setNow button
     const simulatedEvent = {
-      preventDefault: jest.fn(),
+      preventDefault: vi.fn(),
     } as unknown as MouseEvent;
     handleClear(simulatedEvent);
     expect(simulatedEvent.preventDefault).toHaveBeenCalledTimes(1);

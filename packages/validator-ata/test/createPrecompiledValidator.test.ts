@@ -6,7 +6,7 @@ import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators';
 import superSchemaObj from './harness/superSchema.json';
 import createPrecompiledValidator from '../src/createPrecompiledValidator';
 
-jest.mock('../src/precompiledValidator');
+vi.mock('../src/precompiledValidator');
 
 type TestType = {
   foo: string;
@@ -22,7 +22,7 @@ function loadModule(code: string) {
 
 const rootSchema = superSchemaObj as unknown as RJSFSchema;
 const validateFns = loadModule(compileSchemaValidatorsCode(rootSchema)) as ValidatorFunctions;
-const mockedValidator = jest.mocked(ATAPrecompiledValidator);
+const mockedValidator = vi.mocked(ATAPrecompiledValidator);
 
 describe('createPrecompiledValidator()', () => {
   describe('passing validatorFns and rootSchema to createPrecompiledValidator', () => {
@@ -42,7 +42,7 @@ describe('createPrecompiledValidator()', () => {
     let custom: any;
     let localizer: Localizer;
     beforeAll(() => {
-      localizer = jest.fn();
+      localizer = vi.fn();
       mockedValidator.mockClear();
       custom = createPrecompiledValidator<TestType>(validateFns, rootSchema, localizer);
     });

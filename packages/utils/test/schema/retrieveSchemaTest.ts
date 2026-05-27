@@ -1,4 +1,6 @@
+import type { MockInstance } from 'vitest';
 import get from 'lodash/get';
+import noop from 'lodash/noop';
 
 import { ADDITIONAL_PROPERTY_FLAG, createSchemaUtils, PROPERTIES_KEY, retrieveSchema, RJSFSchema } from '../../src';
 import {
@@ -28,9 +30,9 @@ import { TestValidatorType } from './types';
 
 export default function retrieveSchemaTest(testValidator: TestValidatorType) {
   describe('retrieveSchema()', () => {
-    let consoleWarnSpy: jest.SpyInstance;
+    let consoleWarnSpy: MockInstance;
     beforeAll(() => {
-      consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(); // mock this to avoid actually warning in the tests
+      consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop); // mock this to avoid actually warning in the tests
     });
     afterAll(() => {
       consoleWarnSpy.mockRestore();
@@ -969,7 +971,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         };
         const rootSchema: RJSFSchema = { definitions: {} };
         const formData = {};
-        const customMergeAllOf = jest.fn().mockReturnValue({
+        const customMergeAllOf = vi.fn().mockReturnValue({
           type: 'object',
           properties: { string: { type: 'string' }, number: { type: 'number' } },
         });
@@ -2061,7 +2063,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             },
           },
         };
-        const customMergeAllOf = jest.fn().mockReturnValue({
+        const customMergeAllOf = vi.fn().mockReturnValue({
           type: 'object',
           properties: {
             base: { type: 'string' },
@@ -2109,7 +2111,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         };
         const rootSchema: RJSFSchema = { definitions: {} };
         const formData = { a: 'test' };
-        const customMergeAllOf = jest.fn().mockReturnValue({
+        const customMergeAllOf = vi.fn().mockReturnValue({
           type: 'object',
           properties: {
             string: { type: 'string' },
@@ -2170,7 +2172,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
         };
         const formData = { trigger: 'value' };
-        const customMergeAllOf = jest.fn().mockImplementation((schema) => {
+        const customMergeAllOf = vi.fn().mockImplementation((schema) => {
           // Custom merge logic that combines all properties
           const allProperties: any = {};
           if (schema.properties) {
@@ -2227,7 +2229,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             },
           },
         };
-        const customMergeAllOf = jest.fn().mockReturnValue({
+        const customMergeAllOf = vi.fn().mockReturnValue({
           type: 'object',
           properties: {
             final: { type: 'number' },
@@ -2301,7 +2303,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           ],
         };
         const rootSchema: RJSFSchema = { definitions: {} };
-        const customMergeAllOf = jest.fn().mockImplementation(() => {
+        const customMergeAllOf = vi.fn().mockImplementation(() => {
           throw new Error('Custom merge failed');
         });
         const result = retrieveSchema(testValidator, schema, rootSchema, {}, customMergeAllOf);
@@ -2347,7 +2349,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
         };
         const formData = { dep1: 'value' };
-        const customMergeAllOf = jest.fn().mockImplementation((schema) => {
+        const customMergeAllOf = vi.fn().mockImplementation((schema) => {
           const allProperties: any = {};
           if (schema.properties) {
             Object.assign(allProperties, schema.properties);

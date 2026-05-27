@@ -1,3 +1,5 @@
+import type { Mock } from 'vitest';
+import noop from 'lodash/noop';
 import {
   ErrorSchema,
   ErrorSchemaBuilder,
@@ -244,14 +246,14 @@ describe('ATAPrecompiledValidator', () => {
       describe('TransformErrors', () => {
         let errors: RJSFValidationError[];
         let newErrorMessage: string;
-        let transformErrors: jest.Mock;
+        let transformErrors: Mock;
         let uiSchema: UiSchema;
         beforeAll(() => {
           uiSchema = {
             name: { 'ui:label': false },
           };
           newErrorMessage = 'Better error message';
-          transformErrors = jest.fn((errors: RJSFValidationError[]) => {
+          transformErrors = vi.fn((errors: RJSFValidationError[]) => {
             return [Object.assign({}, errors[0], { message: newErrorMessage })];
           });
           const result = validator.validateFormData({ name: 42 }, rootSchema, undefined, transformErrors, uiSchema);
@@ -269,14 +271,14 @@ describe('ATAPrecompiledValidator', () => {
       describe('Custom validate function', () => {
         let errors: RJSFValidationError[];
         let errorSchema: ErrorSchema;
-        let validate: jest.Mock;
+        let validate: Mock;
         let uiSchema: UiSchema;
         beforeAll(() => {
           uiSchema = {
             name: { 'ui:label': false },
           };
 
-          validate = jest.fn((formData: any, errors: FormValidation<any>) => {
+          validate = vi.fn((formData: any, errors: FormValidation<any>) => {
             if (formData.passwords.pass1 !== formData.passwords.pass2) {
               errors.passwords!.pass2!.addError('passwords don`t match.');
             }
@@ -366,13 +368,13 @@ describe('ATAPrecompiledValidator', () => {
     let validator: ATAPrecompiledValidator;
     let localizer: Localizer;
     beforeAll(() => {
-      localizer = jest.fn().mockImplementation();
+      localizer = vi.fn().mockImplementation(noop);
       validator = new ATAPrecompiledValidator(validateOptionsFns, rootSchema, localizer);
     });
     describe('validating using single custom meta schema', () => {
       let errors: RJSFValidationError[];
       beforeAll(() => {
-        (localizer as jest.Mock).mockClear();
+        vi.mocked(localizer).mockClear();
         const result = validator.validateFormData({ foo: 42 }, rootSchema);
         errors = result.errors;
       });

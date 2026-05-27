@@ -6,9 +6,12 @@ import createAjvInstance from '../src/createAjvInstance';
 import superSchema from './harness/superSchema.json';
 import { CUSTOM_OPTIONS } from './harness/testData';
 
-jest.mock('../src/createAjvInstance', () =>
-  jest.fn().mockImplementation((...args) => jest.requireActual('../src/createAjvInstance').default(...args)),
-);
+vi.mock('../src/createAjvInstance', async () => {
+  const { default: realCreateAjvInstance } = await vi.importActual<{
+    default: (typeof import('../src/createAjvInstance'))['default'];
+  }>('../src/createAjvInstance');
+  return { default: vi.fn((...args: any[]) => realCreateAjvInstance(...args)) };
+});
 
 describe('compileSchemaValidatorsCode()', () => {
   let expectedCode: string;

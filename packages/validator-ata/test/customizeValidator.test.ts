@@ -22,7 +22,7 @@ describe('customizeValidator()', () => {
   });
 
   it('forwards a localizer through the constructor', () => {
-    const localizer: Localizer = jest.fn();
+    const localizer: Localizer = vi.fn();
     const v = customizeValidator({}, localizer);
     expect(v.localizer).toBe(localizer);
   });

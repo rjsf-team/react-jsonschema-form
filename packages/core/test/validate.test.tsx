@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { ErrorListProps, FormValidation, GenericObjectType, RJSFSchema } from '@rjsf/utils';
 import { customizeValidator as customizeV8Validator } from '@rjsf/validator-ajv8';
 import userEvent from '@testing-library/user-event';
@@ -20,7 +21,7 @@ describe('Validation', () => {
           },
         };
 
-        let onError: jest.Mock;
+        let onError: Mock;
         let node: Element;
         beforeEach(async () => {
           const compInfo = createFormComponent({
@@ -69,7 +70,7 @@ describe('Validation', () => {
           },
         };
 
-        let onError: jest.Mock;
+        let onError: Mock;
         let node: Element;
 
         beforeEach(async () => {
@@ -163,7 +164,7 @@ describe('Validation', () => {
       it('should submit form on valid data', async () => {
         const schema: RJSFSchema = { type: 'string' };
         const formData = 'hello';
-        const onSubmit = jest.fn();
+        const onSubmit = vi.fn();
 
         function customValidate(formData: FormProps['formData'], errors: FormValidation) {
           if (formData !== 'hello') {
@@ -187,8 +188,8 @@ describe('Validation', () => {
       it('should prevent form submission on invalid data', async () => {
         const schema: RJSFSchema = { type: 'string' };
         const formData = 'a';
-        const onSubmit = jest.fn();
-        const onError = jest.fn();
+        const onSubmit = vi.fn();
+        const onError = vi.fn();
 
         function customValidate(formData: FormProps['formData'], errors: FormValidation) {
           if (formData !== 'hello') {
@@ -341,7 +342,7 @@ describe('Validation', () => {
           },
         };
 
-        let onError: jest.Mock;
+        let onError: Mock;
         let node: Element;
         beforeEach(async () => {
           const compInfo = createFormComponent({
@@ -434,7 +435,7 @@ describe('Validation', () => {
       });
     });
     describe('Custom meta schema', () => {
-      let onError: jest.Mock;
+      let onError: Mock;
       let node: Element;
       const formData = {
         datasetId: 'no err',

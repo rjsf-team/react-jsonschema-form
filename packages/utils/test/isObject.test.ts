@@ -35,17 +35,19 @@ describe('isObject()', () => {
         get() {
           throw new Error('File should not have been accessed');
         },
+        configurable: true,
       });
       Object.defineProperty(global, 'Date', {
         get() {
           throw new Error('Date should not have been accessed');
         },
+        configurable: true,
       });
     });
 
     afterEach(() => {
-      Object.defineProperty(global, 'File', NativeFile);
-      Object.defineProperty(global, 'Date', NativeDate);
+      Object.defineProperty(global, 'File', { value: NativeFile, writable: true, configurable: true });
+      Object.defineProperty(global, 'Date', { value: NativeDate, writable: true, configurable: true });
     });
 
     it('returns false when a non-object is provided', () => {

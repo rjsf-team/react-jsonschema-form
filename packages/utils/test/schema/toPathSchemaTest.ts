@@ -1,14 +1,16 @@
+import type { MockInstance } from 'vitest';
+import noop from 'lodash/noop';
 import { toPathSchema, RJSFSchema, createSchemaUtils } from '../../src';
 import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData';
 import { TestValidatorType } from './types';
 
 export default function toPathSchemaTest(testValidator: TestValidatorType) {
   describe('toPathSchema()', () => {
-    let consoleWarnSpy: jest.SpyInstance;
+    let consoleWarnSpy: MockInstance;
 
     beforeAll(() => {
       // spy on console.warn() and make it do nothing to avoid making noise in the test
-      consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+      consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
     });
 
     afterAll(() => {

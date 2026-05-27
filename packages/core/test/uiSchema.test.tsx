@@ -1,3 +1,5 @@
+import type { MockInstance } from 'vitest';
+import noop from 'lodash/noop';
 import { CSSProperties } from 'react';
 import { render, fireEvent, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -12,11 +14,11 @@ import Form from '../src';
 const user = userEvent.setup();
 
 describe('uiSchema', () => {
-  let consoleWarnSpy: jest.SpyInstance;
-  let consoleErrorSpy: jest.SpyInstance;
+  let consoleWarnSpy: MockInstance;
+  let consoleErrorSpy: MockInstance;
   beforeAll(() => {
-    consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
-    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+    consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(noop);
   });
   afterAll(() => {
     consoleWarnSpy.mockRestore();

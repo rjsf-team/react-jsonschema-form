@@ -6,11 +6,11 @@ import createAjvInstance, { AJV_CONFIG, COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGE
 import { CUSTOM_OPTIONS } from './harness/testData';
 import { CustomValidatorOptionsType } from '../src';
 
-jest.mock('ajv');
-jest.mock('ajv/dist/2019');
-jest.mock('ajv-formats');
+vi.mock('ajv');
+vi.mock('ajv/dist/2019');
+vi.mock('ajv-formats');
 
-const extender: CustomValidatorOptionsType['extenderFn'] = jest.fn((ajv: Ajv) => ajv);
+const extender: CustomValidatorOptionsType['extenderFn'] = vi.fn((ajv: Ajv) => ajv);
 
 describe('createAjvInstance()', () => {
   describe('no additional meta schemas, custom formats, ajv options overrides or ajv format options', () => {
@@ -19,8 +19,8 @@ describe('createAjvInstance()', () => {
       ajv = createAjvInstance();
     });
     afterAll(() => {
-      (Ajv as unknown as jest.Mock).mockClear();
-      (addFormats as unknown as jest.Mock).mockClear();
+      vi.mocked(Ajv).mockClear();
+      vi.mocked(addFormats).mockClear();
     });
     it('expect a new Ajv to be constructed with the AJV_CONFIG', () => {
       expect(Ajv).toHaveBeenCalledWith(AJV_CONFIG);
@@ -47,8 +47,8 @@ describe('createAjvInstance()', () => {
       ajv = createAjvInstance(undefined, undefined, undefined, undefined, Ajv2019);
     });
     afterAll(() => {
-      (Ajv as unknown as jest.Mock).mockClear();
-      (addFormats as unknown as jest.Mock).mockClear();
+      vi.mocked(Ajv).mockClear();
+      vi.mocked(addFormats).mockClear();
     });
     it('expect a new Ajv2019 to be constructed with the AJV_CONFIG', () => {
       expect(Ajv2019).toHaveBeenCalledWith(AJV_CONFIG);
@@ -83,8 +83,8 @@ describe('createAjvInstance()', () => {
       );
     });
     afterAll(() => {
-      (Ajv as unknown as jest.Mock).mockClear();
-      (addFormats as unknown as jest.Mock).mockClear();
+      vi.mocked(Ajv).mockClear();
+      vi.mocked(addFormats).mockClear();
     });
     it('expect a new Ajv to be constructed with the AJV_CONFIG', () => {
       expect(Ajv).toHaveBeenCalledWith({
@@ -119,8 +119,8 @@ describe('createAjvInstance()', () => {
       ajv = createAjvInstance(undefined, undefined, undefined, false, undefined, extender);
     });
     afterAll(() => {
-      (Ajv as unknown as jest.Mock).mockClear();
-      (addFormats as unknown as jest.Mock).mockClear();
+      vi.mocked(Ajv).mockClear();
+      vi.mocked(addFormats).mockClear();
     });
     it('expect a new Ajv to be constructed with the AJV_CONFIG', () => {
       expect(Ajv).toHaveBeenCalledWith(AJV_CONFIG);

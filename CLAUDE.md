@@ -118,6 +118,6 @@ Fields select which widget to render based on schema `type` and `ui:widget`. Tem
 
 ## Testing
 
-- Jest + `@swc/jest` (fast transpilation), jsdom, Testing Library
+- Vitest 3, jsdom, Testing Library
 - Snapshot tests in `@rjsf/snapshot-tests` are shared across theme packages — run `test:update` there when changing core rendering
 - Node >=20 required

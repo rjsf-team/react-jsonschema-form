@@ -4,10 +4,10 @@ import { FormProps } from '@rjsf/core';
 import { RJSFSchema, ErrorSchema, UiSchema, bracketNameGenerator, dotNotationNameGenerator } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
-jest.mock('@rjsf/utils', () => ({
-  ...jest.requireActual('@rjsf/utils'),
+vi.mock('@rjsf/utils', async () => ({
+  ...(await vi.importActual<typeof import('@rjsf/utils')>('@rjsf/utils')),
   // Disable the getTestIds within the snapshot tests by returning an empty object
-  getTestIds: jest.fn(() => ({})),
+  getTestIds: vi.fn(() => ({})),
 }));
 
 const titleAndDesc = {

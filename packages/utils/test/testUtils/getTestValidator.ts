@@ -1,3 +1,4 @@
+import noop from 'lodash/noop';
 import { RJSFValidationError, ValidationData } from '../../src';
 import { TestValidatorParams, TestValidatorType } from '../schema/types';
 
@@ -26,20 +27,20 @@ export default function getTestValidator<T = any>({
     _isValid: isValid,
     _errorList: errorList,
     validator: {
-      validateFormData: jest.fn().mockImplementation(() => {
+      validateFormData: vi.fn().mockImplementation(() => {
         if (Array.isArray(testValidator._data) && testValidator._data.length > 0) {
           return testValidator._data.shift();
         }
         return { errors: [], errorSchema: {} };
       }),
-      isValid: jest.fn().mockImplementation(() => {
+      isValid: vi.fn().mockImplementation(() => {
         // console.warn('isValid',  JSON.stringify(args));
         if (Array.isArray(testValidator._isValid) && testValidator._isValid.length > 0) {
           return testValidator._isValid.shift();
         }
         return true;
       }),
-      rawValidation: jest.fn().mockImplementation(() => {}),
+      rawValidation: vi.fn().mockImplementation(noop),
       setReturnValues({ isValid, data, errorList }: TestValidatorParams) {
         if (isValid !== undefined) {
           testValidator._isValid = isValid;

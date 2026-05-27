@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`NativeSelectWidget select field multiple choice 1`] = `
+exports[`NativeSelectWidget > select field multiple choice 1`] = `
 <DocumentFragment>
   @layer recipes {
   .emotion-0 {
@@ -353,7 +353,7 @@ exports[`NativeSelectWidget select field multiple choice 1`] = `
 </DocumentFragment>
 `;
 
-exports[`NativeSelectWidget select field multiple choice with labels 1`] = `
+exports[`NativeSelectWidget > select field multiple choice with labels 1`] = `
 <DocumentFragment>
   @layer recipes {
   .emotion-0 {
@@ -701,7 +701,7 @@ exports[`NativeSelectWidget select field multiple choice with labels 1`] = `
 </DocumentFragment>
 `;
 
-exports[`NativeSelectWidget select field with enum 1`] = `
+exports[`NativeSelectWidget > select field with enum 1`] = `
 <DocumentFragment>
   @layer recipes {
   .emotion-0 {
