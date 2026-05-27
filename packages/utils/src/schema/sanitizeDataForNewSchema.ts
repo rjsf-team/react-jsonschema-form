@@ -1,6 +1,7 @@
 import get from 'lodash/get';
 import has from 'lodash/has';
 
+import { PROPERTIES_KEY, REF_KEY } from '../constants';
 import {
   Experimental_CustomMergeAllOf,
   FormContextType,
@@ -9,7 +10,6 @@ import {
   StrictRJSFSchema,
   ValidatorType,
 } from '../types';
-import { PROPERTIES_KEY, REF_KEY } from '../constants';
 import retrieveSchema from './retrieveSchema';
 
 const NO_VALUE = Symbol('no Value');

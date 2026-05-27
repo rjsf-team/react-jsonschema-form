@@ -1,5 +1,5 @@
-import reduce from 'lodash/reduce';
 import deepFreeze from 'deep-freeze-es6';
+import reduce from 'lodash/reduce';
 
 import {
   ANY_OF_KEY,

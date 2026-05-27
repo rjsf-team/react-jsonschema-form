@@ -3,12 +3,12 @@ import { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } from '@r
 import ArrayFieldItemTemplate from './ArrayFieldItemTemplate';
 import ArrayFieldTemplate from './ArrayFieldTemplate';
 import BaseInputTemplate from './BaseInputTemplate';
-import DescriptionField from './FieldDescriptionTemplate';
 import ErrorList from './ErrorList';
-import { AddButton, CopyButton, MoveDownButton, MoveUpButton, RemoveButton, ClearButton } from './IconButton';
+import DescriptionField from './FieldDescriptionTemplate';
 import FieldErrorTemplate from './FieldErrorTemplate';
 import FieldTemplate from './FieldTemplate';
 import GridTemplate from './GridTemplate';
+import { AddButton, CopyButton, MoveDownButton, MoveUpButton, RemoveButton, ClearButton } from './IconButton';
 import MultiSchemaFieldTemplate from './MultiSchemaFieldTemplate';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
 import OptionalDataControlsTemplate from './OptionalDataControlsTemplate';

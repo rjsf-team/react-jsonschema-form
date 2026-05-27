@@ -1,6 +1,6 @@
-import validator from '@rjsf/validator-ajv8';
-import { RJSFSchema } from '@rjsf/utils';
 import { formTests } from '@rjsf/snapshot-tests';
+import { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 
 import '../__mocks__/matchMedia.mock';

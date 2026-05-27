@@ -13,8 +13,8 @@ import {
   getUiOptions,
 } from '@rjsf/utils';
 
-import { Field } from '../components/ui/field';
 import { Checkbox } from '../components/ui/checkbox';
+import { Field } from '../components/ui/field';
 import { getChakra } from '../utils';
 
 export default function CheckboxWidget<

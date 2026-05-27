@@ -11,6 +11,7 @@ import {
   StrictRJSFSchema,
   GenericObjectType,
 } from '@rjsf/utils';
+
 import { computeSxProps, getMuiProps } from '../util';
 
 /** Properties available for the `rjsfSlotProps` target of the ArrayFieldItemTemplate. */

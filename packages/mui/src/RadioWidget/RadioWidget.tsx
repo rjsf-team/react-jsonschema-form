@@ -17,6 +17,7 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
+
 import { getMuiProps } from '../util';
 
 /** Properties available for the `rjsfSlotProps` target of the RadioWidget. */

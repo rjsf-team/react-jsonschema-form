@@ -1,4 +1,3 @@
-import { Form } from 'antd';
 import {
   FieldTemplateProps,
   FormContextType,
@@ -8,6 +7,7 @@ import {
   getUiOptions,
   GenericObjectType,
 } from '@rjsf/utils';
+import { Form } from 'antd';
 
 const VERTICAL_LABEL_COL = { span: 24 };
 const VERTICAL_WRAPPER_COL = { span: 24 };

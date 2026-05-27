@@ -1,4 +1,5 @@
 import { ReactElement, ChangeEvent, FocusEvent, useCallback } from 'react';
+import { Checkbox } from '@mantine/core';
 import {
   descriptionId,
   getTemplate,
@@ -9,7 +10,6 @@ import {
   labelValue,
   ariaDescribedByIds,
 } from '@rjsf/utils';
-import { Checkbox } from '@mantine/core';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.

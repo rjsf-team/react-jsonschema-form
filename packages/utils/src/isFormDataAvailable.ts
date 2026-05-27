@@ -1,5 +1,5 @@
-import isNil from 'lodash/isNil';
 import isEmpty from 'lodash/isEmpty';
+import isNil from 'lodash/isNil';
 import isObject from 'lodash/isObject';
 
 /** Determines whether the given `formData` represents valid form data, such as a primitive type, an array, or a

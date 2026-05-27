@@ -1,5 +1,6 @@
 import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
 import { Input, InputProps, Label, makeStyles } from '@fluentui/react-components';
+import { SchemaExamples } from '@rjsf/core';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -10,7 +11,6 @@ import {
   StrictRJSFSchema,
   labelValue,
 } from '@rjsf/utils';
-import { SchemaExamples } from '@rjsf/core';
 
 const useStyles = makeStyles({
   input: {

@@ -1,3 +1,5 @@
+import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
+import { SchemaExamples } from '@rjsf/core';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -7,8 +9,6 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
-import { SchemaExamples } from '@rjsf/core';
 
 import { Input } from '../components/ui/input';
 import { cn } from '../lib/utils';

@@ -1,5 +1,5 @@
-import { FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema, helpId } from '@rjsf/utils';
 import { RichHelp } from '@rjsf/core';
+import { FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema, helpId } from '@rjsf/utils';
 import { Message } from 'semantic-ui-react';
 
 /** The `FieldHelpTemplate` component renders any help desired for a field

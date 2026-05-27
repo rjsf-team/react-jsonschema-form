@@ -1,4 +1,5 @@
 import { ReactElement, ChangeEvent, FocusEvent, useCallback } from 'react';
+import { Textarea } from '@mantine/core';
 import {
   StrictRJSFSchema,
   RJSFSchema,
@@ -7,7 +8,6 @@ import {
   labelValue,
   ariaDescribedByIds,
 } from '@rjsf/utils';
-import { Textarea } from '@mantine/core';
 
 import { cleanupOptions } from '../utils';
 

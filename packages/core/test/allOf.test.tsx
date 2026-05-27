@@ -1,7 +1,7 @@
 import { RJSFSchema, FieldProps, GenericObjectType } from '@rjsf/utils';
 
-import { createFormComponent } from './testUtils';
 import SchemaField from '../src/components/fields/SchemaField';
+import { createFormComponent } from './testUtils';
 
 describe('allOf', () => {
   it('should render a regular input element with a single type, when multiple types specified', () => {

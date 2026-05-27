@@ -1,4 +1,5 @@
 import { FocusEvent, useCallback } from 'react';
+import { ColorInput } from '@mantine/core';
 import {
   FormContextType,
   RJSFSchema,
@@ -7,7 +8,6 @@ import {
   labelValue,
   ariaDescribedByIds,
 } from '@rjsf/utils';
-import { ColorInput } from '@mantine/core';
 
 import { cleanupOptions } from '../utils';
 

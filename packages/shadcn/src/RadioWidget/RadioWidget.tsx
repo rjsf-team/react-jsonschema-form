@@ -1,3 +1,4 @@
+import { FocusEvent } from 'react';
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
@@ -10,7 +11,6 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { FocusEvent } from 'react';
 
 import { Label } from '../components/ui/label';
 import { RadioGroup, RadioGroupItem } from '../components/ui/radio-group';

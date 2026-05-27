@@ -1,5 +1,5 @@
-import removeOptionalEmptyObjects from '../src/removeOptionalEmptyObjects';
 import { RJSFSchema } from '../src';
+import removeOptionalEmptyObjects from '../src/removeOptionalEmptyObjects';
 import getTestValidator from './testUtils/getTestValidator';
 
 const testValidator = getTestValidator({});

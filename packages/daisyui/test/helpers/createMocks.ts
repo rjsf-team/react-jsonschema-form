@@ -1,5 +1,5 @@
-import { RJSFSchema, WidgetProps } from '@rjsf/utils';
 import { getTestRegistry } from '@rjsf/core';
+import { RJSFSchema, WidgetProps } from '@rjsf/utils';
 
 import Templates from '../../src/templates/Templates';
 import generateWidgets from '../../src/widgets/Widgets';

@@ -1,6 +1,6 @@
-import { Message } from 'primereact/message';
-import { TimesCircleIcon } from 'primereact/icons/timescircle';
 import { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
+import { TimesCircleIcon } from 'primereact/icons/timescircle';
+import { Message } from 'primereact/message';
 
 /** The `ErrorList` component is the template that renders all the errors associated with the fields in the `Form`
  *

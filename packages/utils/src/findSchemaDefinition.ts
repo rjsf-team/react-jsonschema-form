@@ -1,4 +1,8 @@
+import UriResolver from 'fast-uri';
 import jsonpointer from 'jsonpointer';
+import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
+import isObject from 'lodash/isObject';
 import omit from 'lodash/omit';
 
 import {
@@ -10,10 +14,6 @@ import {
   SCHEMA_KEY,
 } from './constants';
 import { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types';
-import isObject from 'lodash/isObject';
-import isEmpty from 'lodash/isEmpty';
-import UriResolver from 'fast-uri';
-import get from 'lodash/get';
 
 /** Looks for the `$id` pointed by `ref` in the schema definitions embedded in
  * a JSON Schema bundle

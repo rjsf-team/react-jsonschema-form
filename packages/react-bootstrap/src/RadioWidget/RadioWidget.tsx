@@ -1,5 +1,4 @@
 import { ChangeEvent, FocusEvent } from 'react';
-import Form from 'react-bootstrap/Form';
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
@@ -12,6 +11,7 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
+import Form from 'react-bootstrap/Form';
 
 export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,

@@ -1,3 +1,4 @@
+import { FocusEvent } from 'react';
 import { CheckboxGroup, FieldsetRoot, Stack, Text, FieldsetLegend } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
@@ -12,7 +13,6 @@ import {
   WidgetProps,
   labelValue,
 } from '@rjsf/utils';
-import { FocusEvent } from 'react';
 
 import { Checkbox } from '../components/ui/checkbox';
 import { getChakra } from '../utils';

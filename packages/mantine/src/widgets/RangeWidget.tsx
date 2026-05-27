@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { Slider, Input } from '@mantine/core';
 import {
   ariaDescribedByIds,
   rangeSpec,
@@ -8,7 +9,6 @@ import {
   WidgetProps,
   titleId,
 } from '@rjsf/utils';
-import { Slider, Input } from '@mantine/core';
 
 import { cleanupOptions } from '../utils';
 

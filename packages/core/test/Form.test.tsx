@@ -1,8 +1,4 @@
 import { Component, RefObject, createRef, useEffect, useState, useCallback } from 'react';
-import { act, render, waitFor } from '@testing-library/react';
-import type { Mock } from 'vitest';
-import userEvent from '@testing-library/user-event';
-import { Portal } from 'react-portal';
 import {
   bracketNameGenerator,
   buttonId,
@@ -21,6 +17,10 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 import validator, { customizeValidator } from '@rjsf/validator-ajv8';
+import { act, render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Portal } from 'react-portal';
+import type { Mock } from 'vitest';
 
 import Form, { FormProps, IChangeEvent } from '../src';
 import {

@@ -1,3 +1,4 @@
+import { FocusEvent } from 'react';
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
@@ -11,7 +12,6 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { FocusEvent } from 'react';
 
 import { Checkbox } from '../components/ui/checkbox';
 import { Label } from '../components/ui/label';

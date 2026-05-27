@@ -1,7 +1,7 @@
-import { CacheProvider } from '@emotion/react';
-import createCache from '@emotion/cache';
-import weakMemoize from '@emotion/weak-memoize';
 import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
+import createCache from '@emotion/cache';
+import { CacheProvider } from '@emotion/react';
+import weakMemoize from '@emotion/weak-memoize';
 
 /**
  * __createChakraFrameProvider is used to ensure that <Global> emotion components

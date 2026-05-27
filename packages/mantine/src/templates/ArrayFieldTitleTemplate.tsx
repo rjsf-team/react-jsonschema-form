@@ -1,3 +1,4 @@
+import { Grid, Title } from '@mantine/core';
 import {
   getUiOptions,
   titleId,
@@ -6,7 +7,6 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { Grid, Title } from '@mantine/core';
 
 /** The `ArrayFieldTitleTemplate` component renders a `TitleFieldTemplate` with an `id` derived from
  * the `fieldPathId`.

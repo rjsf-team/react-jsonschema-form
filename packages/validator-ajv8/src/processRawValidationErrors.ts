@@ -1,5 +1,3 @@
-import { ErrorObject } from 'ajv';
-import get from 'lodash/get';
 import {
   ANY_OF_KEY,
   createErrorHandler,
@@ -19,6 +17,8 @@ import {
   validationDataMerge,
   ValidatorType,
 } from '@rjsf/utils';
+import { ErrorObject } from 'ajv';
+import get from 'lodash/get';
 
 import { SuppressDuplicateFilteringType } from './types';
 

@@ -8,6 +8,7 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 import { Form } from 'semantic-ui-react';
+
 import { getSemanticProps } from '../util';
 
 /** The `TextareaWidget` is a widget for rendering input fields as textarea.

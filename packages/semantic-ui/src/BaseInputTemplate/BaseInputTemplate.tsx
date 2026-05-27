@@ -1,6 +1,5 @@
 import { ChangeEvent, MouseEvent, useCallback } from 'react';
-import { Form } from 'semantic-ui-react';
-import { getSemanticProps } from '../util';
+import { SchemaExamples } from '@rjsf/core';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -11,7 +10,9 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { SchemaExamples } from '@rjsf/core';
+import { Form } from 'semantic-ui-react';
+
+import { getSemanticProps } from '../util';
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.

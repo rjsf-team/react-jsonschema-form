@@ -1,4 +1,3 @@
-import { Col, Row, Space } from 'antd';
 import {
   ArrayFieldItemTemplateProps,
   FormContextType,
@@ -7,6 +6,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
+import { Col, Row, Space } from 'antd';
 
 const BTN_GRP_STYLE = {
   width: '100%',

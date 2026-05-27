@@ -1,7 +1,3 @@
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
-
 import {
   buttonId,
   canExpand,
@@ -14,6 +10,9 @@ import {
   StrictRJSFSchema,
   titleId,
 } from '@rjsf/utils';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
 
 export default function ObjectFieldTemplate<
   T = any,

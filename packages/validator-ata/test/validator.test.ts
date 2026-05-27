@@ -1,5 +1,5 @@
-import noop from 'lodash/noop';
 import { ErrorSchemaBuilder, ID_KEY, ROOT_SCHEMA_PREFIX, RJSFSchema } from '@rjsf/utils';
+import noop from 'lodash/noop';
 
 // Static import of the package surface so its top-level evaluation
 // (`export default customizeValidator()`) is included in coverage.

@@ -1,5 +1,4 @@
 import { ChangeEvent, FocusEvent } from 'react';
-import FormSelect from 'react-bootstrap/FormSelect';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
@@ -11,6 +10,7 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
+import FormSelect from 'react-bootstrap/FormSelect';
 
 export default function SelectWidget<
   T = any,

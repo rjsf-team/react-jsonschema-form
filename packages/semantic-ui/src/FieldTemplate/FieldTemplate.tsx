@@ -7,6 +7,7 @@ import {
   getUiOptions,
 } from '@rjsf/utils';
 import { Form } from 'semantic-ui-react';
+
 import { getSemanticProps, MaybeWrap } from '../util';
 
 /** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field

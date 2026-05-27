@@ -1,4 +1,5 @@
 import { ChangeEvent, FocusEvent } from 'react';
+import { Checkbox } from '@fluentui/react-components';
 import {
   ariaDescribedByIds,
   descriptionId,
@@ -9,7 +10,6 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { Checkbox } from '@fluentui/react-components';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.

@@ -1,5 +1,5 @@
 import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
-import Form from 'react-bootstrap/Form';
+import { SchemaExamples } from '@rjsf/core';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -9,7 +9,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { SchemaExamples } from '@rjsf/core';
+import Form from 'react-bootstrap/Form';
 
 export default function BaseInputTemplate<
   T = any,

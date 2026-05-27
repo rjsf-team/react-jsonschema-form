@@ -1,5 +1,6 @@
 import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
 import { Input } from '@chakra-ui/react';
+import { SchemaExamples } from '@rjsf/core';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -10,7 +11,6 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { SchemaExamples } from '@rjsf/core';
 
 import { Field } from '../components/ui/field';
 import { getChakra } from '../utils';

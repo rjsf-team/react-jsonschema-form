@@ -1,8 +1,8 @@
 import { FormContextType, RegistryWidgetsType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 import AutoCompleteWidget from '../AutoCompleteWidget/AutoCompleteWidget';
-import CheckboxWidget from '../CheckboxWidget/CheckboxWidget';
 import CheckboxesWidget from '../CheckboxesWidget/CheckboxesWidget';
+import CheckboxWidget from '../CheckboxWidget/CheckboxWidget';
 import ColorWidget from '../ColorWidget/ColorWidget';
 import PasswordWidget from '../PasswordWidget/PasswordWidget';
 import RadioWidget from '../RadioWidget/RadioWidget';

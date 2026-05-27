@@ -1,5 +1,6 @@
-import { Sample } from './Sample';
 import { ErrorTransformer } from '@rjsf/utils';
+
+import { Sample } from './Sample';
 
 function customValidate({ pass1, pass2 }: { pass1: string; pass2: string }, errors: any) {
   if (pass1 !== pass2) {

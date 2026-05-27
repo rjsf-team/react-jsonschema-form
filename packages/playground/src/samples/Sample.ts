@@ -1,5 +1,5 @@
-import { UiSchema } from '@rjsf/utils';
 import { FormProps } from '@rjsf/core';
+import { UiSchema } from '@rjsf/utils';
 
 import { LiveSettings } from '../components/OptionsDrawer';
 

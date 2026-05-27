@@ -1,5 +1,3 @@
-import type { MockInstance } from 'vitest';
-import noop from 'lodash/noop';
 import {
   ANY_OF_KEY,
   DEFAULT_KEY,
@@ -23,6 +21,8 @@ import {
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { get } from 'lodash';
+import noop from 'lodash/noop';
+import type { MockInstance } from 'vitest';
 
 import LayoutMultiSchemaField, {
   computeEnumOptions,
@@ -30,8 +30,8 @@ import LayoutMultiSchemaField, {
 } from '../src/components/fields/LayoutMultiSchemaField';
 import RadioWidget from '../src/components/widgets/RadioWidget';
 import SelectWidget from '../src/components/widgets/SelectWidget';
-import { SIMPLE_ONEOF, SIMPLE_ONEOF_OPTIONS } from './testData/layoutData';
 import getTestRegistry from '../src/getTestRegistry';
+import { SIMPLE_ONEOF, SIMPLE_ONEOF_OPTIONS } from './testData/layoutData';
 
 vi.mock('@rjsf/utils', async (importOriginal) => ({
   ...(await importOriginal()),

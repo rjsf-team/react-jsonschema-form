@@ -1,5 +1,4 @@
 import { ChangeEvent, FocusEvent } from 'react';
-import Form from 'react-bootstrap/Form';
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
@@ -13,6 +12,7 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
+import Form from 'react-bootstrap/Form';
 
 export default function CheckboxesWidget<
   T = any,

@@ -1,10 +1,10 @@
 import Ajv from 'ajv';
-import Ajv2019 from 'ajv/dist/2019';
 import addFormats from 'ajv-formats';
+import Ajv2019 from 'ajv/dist/2019';
 
+import { CustomValidatorOptionsType } from '../src';
 import createAjvInstance, { AJV_CONFIG, COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from '../src/createAjvInstance';
 import { CUSTOM_OPTIONS } from './harness/testData';
-import { CustomValidatorOptionsType } from '../src';
 
 vi.mock('ajv');
 vi.mock('ajv/dist/2019');

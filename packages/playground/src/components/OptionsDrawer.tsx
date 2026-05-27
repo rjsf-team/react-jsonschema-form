@@ -13,8 +13,8 @@ import localValidator from '@rjsf/validator-ajv8';
 
 import base64 from '../utils/base64';
 import CopyLink from './CopyLink';
-import ValidatorSelector from './ValidatorSelector';
 import RawValidatorTest from './RawValidatorTest';
+import ValidatorSelector from './ValidatorSelector';
 
 export const DRAWER_WIDTH = '28rem';
 

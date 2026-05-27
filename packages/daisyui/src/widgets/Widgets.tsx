@@ -2,8 +2,8 @@ import { FormContextType, RegistryWidgetsType, RJSFSchema, StrictRJSFSchema } fr
 
 import AltDateTimeWidget from './AltDateTimeWidget/AltDateTimeWidget';
 import AltDateWidget from './AltDateWidget/AltDateWidget';
-import CheckboxWidget from './CheckboxWidget/CheckboxWidget';
 import CheckboxesWidget from './CheckboxesWidget/CheckboxesWidget';
+import CheckboxWidget from './CheckboxWidget/CheckboxWidget';
 import DateTimeWidget from './DateTimeWidget/DateTimeWidget';
 import DateWidget from './DateWidget/DateWidget';
 import RadioWidget from './RadioWidget/RadioWidget';

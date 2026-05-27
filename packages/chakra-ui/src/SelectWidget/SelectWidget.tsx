@@ -1,5 +1,5 @@
 import { FocusEvent, useMemo, useRef } from 'react';
-
+import { createListCollection, SelectValueChangeDetails, Select as ChakraSelect } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   EnumOptionsType,
@@ -14,7 +14,6 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 import { OptionsOrGroups } from 'chakra-react-select';
-import { createListCollection, SelectValueChangeDetails, Select as ChakraSelect } from '@chakra-ui/react';
 
 import { Field } from '../components/ui/field';
 import { SelectRoot, SelectTrigger, SelectValueText } from '../components/ui/select';

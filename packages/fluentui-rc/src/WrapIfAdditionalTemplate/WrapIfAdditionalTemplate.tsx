@@ -1,4 +1,6 @@
 import { CSSProperties } from 'react';
+import { Field, Input, makeStyles } from '@fluentui/react-components';
+import { Flex } from '@fluentui/react-migration-v0-v9';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   buttonId,
@@ -8,8 +10,6 @@ import {
   TranslatableString,
   WrapIfAdditionalTemplateProps,
 } from '@rjsf/utils';
-import { Field, Input, makeStyles } from '@fluentui/react-components';
-import { Flex } from '@fluentui/react-migration-v0-v9';
 
 const useStyles = makeStyles({
   input: {

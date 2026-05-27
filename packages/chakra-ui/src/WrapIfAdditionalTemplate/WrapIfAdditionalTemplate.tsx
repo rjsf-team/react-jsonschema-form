@@ -1,3 +1,4 @@
+import { Grid, GridItem, Input } from '@chakra-ui/react';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   buttonId,
@@ -7,7 +8,6 @@ import {
   TranslatableString,
   WrapIfAdditionalTemplateProps,
 } from '@rjsf/utils';
-import { Grid, GridItem, Input } from '@chakra-ui/react';
 
 import { Field } from '../components/ui/field';
 

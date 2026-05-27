@@ -1,6 +1,6 @@
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import { GridTemplateProps } from '@rjsf/utils';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 
 /** Renders a `GridTemplate` for react-bootstrap, which is expecting the column sizing information coming in via the
  * extra props provided by the caller, which are spread directly on the `Row`/`Col`.

@@ -1,4 +1,5 @@
 import get from 'lodash/get';
+
 import { PROPERTIES_KEY } from './constants';
 import { RJSFSchema, StrictRJSFSchema } from './types';
 

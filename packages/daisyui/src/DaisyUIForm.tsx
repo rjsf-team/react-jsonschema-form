@@ -1,4 +1,5 @@
 import { withTheme } from '@rjsf/core';
+
 import Theme from './theme';
 
 /**

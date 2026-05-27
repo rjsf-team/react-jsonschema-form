@@ -1,7 +1,7 @@
+import AddIcon from '@mui/icons-material/Add';
 import { FormContextType, OptionalDataControlsTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 import IconButton, { RemoveButton } from '../IconButton';
-import AddIcon from '@mui/icons-material/Add';
 
 /** The OptionalDataControlsTemplate renders one of three different states. If
  * there is an `onAddClick()` function, it renders the "Add" button. If there is

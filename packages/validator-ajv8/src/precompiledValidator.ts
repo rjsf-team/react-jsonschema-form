@@ -1,5 +1,3 @@
-import { ErrorObject } from 'ajv';
-import get from 'lodash/get';
 import {
   CustomValidator,
   deepEquals,
@@ -15,9 +13,11 @@ import {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
+import { ErrorObject } from 'ajv';
+import get from 'lodash/get';
 
-import { CompiledValidateFunction, Localizer, SuppressDuplicateFilteringType, ValidatorFunctions } from './types';
 import processRawValidationErrors, { RawValidationErrorsType } from './processRawValidationErrors';
+import { CompiledValidateFunction, Localizer, SuppressDuplicateFilteringType, ValidatorFunctions } from './types';
 
 /** `ValidatorType` implementation that uses an AJV 8 precompiled validator as created by the
  * `compileSchemaValidators()` function provided by the `@rjsf/validator-ajv8` library.

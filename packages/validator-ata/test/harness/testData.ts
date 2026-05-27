@@ -1,4 +1,5 @@
 import type { Validator } from 'ata-validator';
+
 import { CustomValidatorOptionsType } from '../../src';
 
 /** Shared option fixture used across the validator-ata test suite. The

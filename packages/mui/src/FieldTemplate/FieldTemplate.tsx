@@ -9,6 +9,7 @@ import {
   getTemplate,
   getUiOptions,
 } from '@rjsf/utils';
+
 import { getMuiProps } from '../util';
 
 /** Properties available for the `rjsfSlotProps` target of the FieldTemplate. */

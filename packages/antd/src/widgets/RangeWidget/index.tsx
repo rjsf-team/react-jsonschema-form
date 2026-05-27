@@ -1,4 +1,3 @@
-import { Slider } from 'antd';
 import {
   ariaDescribedByIds,
   rangeSpec,
@@ -8,6 +7,7 @@ import {
   WidgetProps,
   GenericObjectType,
 } from '@rjsf/utils';
+import { Slider } from 'antd';
 
 /** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
  * in a div, with the value along side it.

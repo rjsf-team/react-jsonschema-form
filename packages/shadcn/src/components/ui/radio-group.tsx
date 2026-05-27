@@ -1,7 +1,7 @@
 'use client';
 
-import { Root, Indicator, Item } from '@radix-ui/react-radio-group';
 import { ComponentProps } from 'react';
+import { Root, Indicator, Item } from '@radix-ui/react-radio-group';
 import { CircleIcon } from 'lucide-react';
 
 import { cn } from '../../lib/utils';

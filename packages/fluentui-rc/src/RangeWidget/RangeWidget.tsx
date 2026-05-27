@@ -1,4 +1,5 @@
 import { FocusEvent } from 'react';
+import { Label, Slider, SliderOnChangeData } from '@fluentui/react-components';
 import {
   ariaDescribedByIds,
   labelValue,
@@ -8,7 +9,6 @@ import {
   WidgetProps,
   rangeSpec,
 } from '@rjsf/utils';
-import { Label, Slider, SliderOnChangeData } from '@fluentui/react-components';
 
 /** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
  * in a div, with the value along side it.

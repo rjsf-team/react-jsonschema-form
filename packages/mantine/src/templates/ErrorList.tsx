@@ -1,5 +1,5 @@
-import { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
 import { Alert, Title, List } from '@mantine/core';
+import { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
 
 import { ExclamationCircle } from './icons';
 

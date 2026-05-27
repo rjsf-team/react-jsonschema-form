@@ -1,4 +1,3 @@
-import Ajv, { ErrorObject, ValidateFunction } from 'ajv';
 import {
   CustomValidator,
   deepEquals,
@@ -14,10 +13,11 @@ import {
   withIdRefPrefix,
   hashForSchema,
 } from '@rjsf/utils';
+import Ajv, { ErrorObject, ValidateFunction } from 'ajv';
 
-import { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringType } from './types';
 import createAjvInstance from './createAjvInstance';
 import processRawValidationErrors, { RawValidationErrorsType } from './processRawValidationErrors';
+import { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringType } from './types';
 
 /** `ValidatorType` implementation that uses the AJV 8 validation mechanism.
  */

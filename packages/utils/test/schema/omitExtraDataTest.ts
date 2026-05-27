@@ -1,4 +1,3 @@
-import { TestValidatorType } from './types';
 import {
   createSchemaUtils,
   getFieldNames,
@@ -10,6 +9,7 @@ import {
   RJSF_ADDITIONAL_PROPERTIES_FLAG,
   RJSFSchema,
 } from '../../src';
+import { TestValidatorType } from './types';
 
 export default function omitExtraDataTest(testValidator: TestValidatorType) {
   describe('isValueEmpty()', () => {

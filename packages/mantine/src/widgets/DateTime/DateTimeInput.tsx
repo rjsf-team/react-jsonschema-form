@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { DateInput } from '@mantine/dates';
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -8,7 +9,6 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 import dayjs from 'dayjs';
-import { DateInput } from '@mantine/dates';
 
 const dateParser = (input: string, format: string) => {
   if (!input) {

@@ -1,5 +1,3 @@
-import type { ValidationError } from 'ata-validator';
-import get from 'lodash/get';
 import {
   ANY_OF_KEY,
   createErrorHandler,
@@ -19,6 +17,8 @@ import {
   validationDataMerge,
   ValidatorType,
 } from '@rjsf/utils';
+import type { ValidationError } from 'ata-validator';
+import get from 'lodash/get';
 
 import type { SuppressDuplicateFilteringType } from './types';
 

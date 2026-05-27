@@ -1,5 +1,5 @@
-import { Button, ButtonProps } from 'semantic-ui-react';
 import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
+import { Button, ButtonProps } from 'semantic-ui-react';
 
 export type SemanticIconButtonProps<
   T = any,

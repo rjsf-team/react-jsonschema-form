@@ -1,6 +1,6 @@
+import defaultValidator, { Localizer } from '../src';
 import customizeValidator from '../src/customizeValidator';
 import ATAValidator from '../src/validator';
-import defaultValidator, { Localizer } from '../src';
 import { CUSTOM_OPTIONS } from './harness/testData';
 
 describe('customizeValidator()', () => {

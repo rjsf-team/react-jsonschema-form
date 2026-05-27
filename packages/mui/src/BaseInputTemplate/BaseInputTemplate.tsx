@@ -1,8 +1,9 @@
 import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
 import { InputProps as MuiInputProps } from '@mui/material/Input';
+import InputAdornment from '@mui/material/InputAdornment';
 import { InputLabelProps as MuiInputLabelProps } from '@mui/material/InputLabel';
+import TextField, { TextFieldProps } from '@mui/material/TextField';
+import { SchemaExamples } from '@rjsf/core';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -14,7 +15,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { SchemaExamples } from '@rjsf/core';
+
 import { getMuiProps } from '../util';
 
 /** Properties available for the MUI `ui:options` of the BaseInputTemplate.

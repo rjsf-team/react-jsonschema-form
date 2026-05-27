@@ -1,4 +1,6 @@
 import { ChangeEvent, FocusEvent } from 'react';
+import { Label, Checkbox } from '@fluentui/react-components';
+import { Flex } from '@fluentui/react-migration-v0-v9';
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
@@ -13,8 +15,6 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { Label, Checkbox } from '@fluentui/react-components';
-import { Flex } from '@fluentui/react-migration-v0-v9';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
  *  It is typically used to represent an array of enums.

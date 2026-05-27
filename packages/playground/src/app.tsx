@@ -1,21 +1,21 @@
-import { Theme as MuiTheme } from '@rjsf/mui';
-import { Theme as FluentUIRCTheme } from '@rjsf/fluentui-rc';
-import { Theme as SuiTheme } from '@rjsf/semantic-ui';
 import { Theme as AntdTheme } from '@rjsf/antd';
-import { Theme as BootstrapTheme } from '@rjsf/react-bootstrap';
 import { Theme as ChakraUITheme } from '@rjsf/chakra-ui';
-import { Theme as MantineTheme } from '@rjsf/mantine';
-import { Theme as shadcnTheme } from '@rjsf/shadcn';
 import { Theme as DaisyUITheme } from '@rjsf/daisyui';
+import { Theme as FluentUIRCTheme } from '@rjsf/fluentui-rc';
+import { Theme as MantineTheme } from '@rjsf/mantine';
+import { Theme as MuiTheme } from '@rjsf/mui';
 import { Theme as PrimeReactTheme } from '@rjsf/primereact';
+import { Theme as BootstrapTheme } from '@rjsf/react-bootstrap';
+import { Theme as SuiTheme } from '@rjsf/semantic-ui';
+import { Theme as shadcnTheme } from '@rjsf/shadcn';
 import v8Validator, { customizeValidator } from '@rjsf/validator-ajv8';
 import ataValidator, { customizeValidator as customizeAtaValidator } from '@rjsf/validator-ata';
+import localize_es from 'ajv-i18n/localize/es';
 import Ajv2019 from 'ajv/dist/2019.js';
 import Ajv2020 from 'ajv/dist/2020.js';
-import localize_es from 'ajv-i18n/localize/es';
 
-import Layout from './layout';
 import Playground, { PlaygroundProps } from './components';
+import Layout from './layout';
 
 const esV8Validator = customizeValidator({}, localize_es);
 const AJV8_2019 = customizeValidator({ AjvClass: Ajv2019 });

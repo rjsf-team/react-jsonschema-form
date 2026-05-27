@@ -1,5 +1,5 @@
-import { EnumOptionsType, OptionValueFormat, StrictRJSFSchema, RJSFSchema } from './types';
 import enumOptionsValueForIndex from './enumOptionsValueForIndex';
+import { EnumOptionsType, OptionValueFormat, StrictRJSFSchema, RJSFSchema } from './types';
 
 /** Resolves a single DOM value string back to its typed enum value in `'realValue'` mode.
  *

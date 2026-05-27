@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { Select, SelectProps } from 'antd';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
@@ -12,8 +11,9 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import isString from 'lodash/isString';
+import { Select, SelectProps } from 'antd';
 import { DefaultOptionType } from 'antd/es/select';
+import isString from 'lodash/isString';
 
 const SELECT_STYLE = {
   width: '100%',

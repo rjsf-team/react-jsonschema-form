@@ -1,5 +1,4 @@
 import { FocusEvent } from 'react';
-import { Dropdown } from 'primereact/dropdown';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
@@ -11,6 +10,7 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
+import { Dropdown } from 'primereact/dropdown';
 import { MultiSelect } from 'primereact/multiselect';
 
 /** The `SelectWidget` is a widget for rendering dropdowns.

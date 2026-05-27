@@ -1,5 +1,5 @@
-import type { ValidationError } from 'ata-validator';
 import { ErrorSchema, RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
+import type { ValidationError } from 'ata-validator';
 
 import customizeValidator from '../src/customizeValidator';
 import processRawValidationErrors, {

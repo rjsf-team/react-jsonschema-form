@@ -1,8 +1,9 @@
+import difference from 'lodash/difference';
+import get from 'lodash/get';
+import isPlainObject from 'lodash/isPlainObject';
 import keys from 'lodash/keys';
 import pickBy from 'lodash/pickBy';
-import isPlainObject from 'lodash/isPlainObject';
-import get from 'lodash/get';
-import difference from 'lodash/difference';
+
 import deepEquals from './deepEquals';
 
 /**

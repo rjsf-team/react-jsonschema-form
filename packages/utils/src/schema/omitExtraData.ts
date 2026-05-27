@@ -1,7 +1,7 @@
-import pick from 'lodash/pick';
+import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import isNil from 'lodash/isNil';
-import get from 'lodash/get';
+import pick from 'lodash/pick';
 
 import { NAME_KEY, RJSF_ADDITIONAL_PROPERTIES_FLAG } from '../constants';
 import findSchemaDefinition from '../findSchemaDefinition';

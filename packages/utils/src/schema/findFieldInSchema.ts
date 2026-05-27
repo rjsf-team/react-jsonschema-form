@@ -1,8 +1,6 @@
 import get from 'lodash/get';
 import has from 'lodash/has';
 
-import findSelectedOptionInXxxOf from './findSelectedOptionInXxxOf';
-import getFromSchema from './getFromSchema';
 import { ANY_OF_KEY, ONE_OF_KEY, PROPERTIES_KEY, REQUIRED_KEY } from '../constants';
 import {
   Experimental_CustomMergeAllOf,
@@ -13,6 +11,8 @@ import {
   StrictRJSFSchema,
   ValidatorType,
 } from '../types';
+import findSelectedOptionInXxxOf from './findSelectedOptionInXxxOf';
+import getFromSchema from './getFromSchema';
 
 /** Unique schema that represents no schema was found, exported for testing purposes */
 export const NOT_FOUND_SCHEMA = { title: '!@#$_UNKNOWN_$#@!' };

@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -7,8 +6,8 @@ import {
   WidgetProps,
   GenericObjectType,
 } from '@rjsf/utils';
-
 import { DatePicker } from 'antd';
+import dayjs from 'dayjs';
 
 const DATE_PICKER_STYLE = {
   width: '100%',

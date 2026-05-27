@@ -1,5 +1,5 @@
-import type { MockInstance } from 'vitest';
 import noop from 'lodash/noop';
+import type { MockInstance } from 'vitest';
 
 import { createSchemaUtils, Experimental_DefaultFormStateBehavior, getDefaultFormState, RJSFSchema } from '../../src';
 import {
@@ -12,9 +12,9 @@ import {
   getObjectDefaults,
   ensureFormDataMatchingSchema,
 } from '../../src/schema/getDefaultFormState';
+import { resolveDependencies } from '../../src/schema/retrieveSchema';
 import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData';
 import { TestValidatorType } from './types';
-import { resolveDependencies } from '../../src/schema/retrieveSchema';
 
 export default function getDefaultFormStateTest(testValidator: TestValidatorType) {
   describe('getDefaultFormState()', () => {

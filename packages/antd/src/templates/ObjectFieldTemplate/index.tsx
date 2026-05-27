@@ -1,7 +1,4 @@
-import classNames from 'classnames';
-import isObject from 'lodash/isObject';
-import isNumber from 'lodash/isNumber';
-import isString from 'lodash/isString';
+import { useContext } from 'react';
 import {
   FormContextType,
   GenericObjectType,
@@ -17,7 +14,10 @@ import {
   buttonId,
 } from '@rjsf/utils';
 import { Col, Row, ConfigProvider } from 'antd';
-import { useContext } from 'react';
+import classNames from 'classnames';
+import isNumber from 'lodash/isNumber';
+import isObject from 'lodash/isObject';
+import isString from 'lodash/isString';
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all

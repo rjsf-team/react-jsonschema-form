@@ -1,11 +1,11 @@
 import { createRef } from 'react';
-import noop from 'lodash/noop';
-import userEvent from '@testing-library/user-event';
 import { FieldProps, FormValidation, GenericObjectType, RJSFSchema, WidgetProps } from '@rjsf/utils';
+import userEvent from '@testing-library/user-event';
+import noop from 'lodash/noop';
 
-import { createFormComponent, getSelectedOptionValue, submitForm } from './testUtils';
 import SchemaField from '../src/components/fields/SchemaField';
 import SelectWidget from '../src/components/widgets/SelectWidget';
+import { createFormComponent, getSelectedOptionValue, submitForm } from './testUtils';
 
 const user = userEvent.setup();
 

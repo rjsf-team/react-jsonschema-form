@@ -1,5 +1,4 @@
 import { ComponentType } from 'react';
-import { render } from '@testing-library/react';
 import { FormProps } from '@rjsf/core';
 import {
   RJSFSchema,
@@ -10,6 +9,7 @@ import {
   dotNotationNameGenerator,
 } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
+import { render } from '@testing-library/react';
 
 vi.mock('@rjsf/utils', async (importOriginal) => ({
   ...(await importOriginal()),

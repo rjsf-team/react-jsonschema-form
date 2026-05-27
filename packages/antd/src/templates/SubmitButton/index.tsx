@@ -1,5 +1,5 @@
-import { Button, ButtonProps } from 'antd';
 import { getSubmitButtonOptions, FormContextType, RJSFSchema, StrictRJSFSchema, SubmitButtonProps } from '@rjsf/utils';
+import { Button, ButtonProps } from 'antd';
 
 type ButtonType = NonNullable<ButtonProps['type']>;
 

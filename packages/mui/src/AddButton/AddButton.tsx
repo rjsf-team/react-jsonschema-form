@@ -8,6 +8,7 @@ import {
   StrictRJSFSchema,
   TranslatableString,
 } from '@rjsf/utils';
+
 import { getMuiProps } from '../util';
 
 /** The `AddButton` renders a button that represent the `Add` action on a form

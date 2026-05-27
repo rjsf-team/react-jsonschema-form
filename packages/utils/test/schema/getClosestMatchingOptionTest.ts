@@ -1,6 +1,5 @@
 import get from 'lodash/get';
 
-import { TestValidatorType } from './types';
 import { createSchemaUtils, getClosestMatchingOption, RJSFSchema, SchemaUtilsType } from '../../src';
 import { calculateIndexScore } from '../../src/schema/getClosestMatchingOption';
 import {
@@ -12,6 +11,7 @@ import {
   ONE_OF_SCHEMA_OPTIONS,
   OPTIONAL_ONE_OF_SCHEMA_ONEOF,
 } from '../testUtils/testData';
+import { TestValidatorType } from './types';
 
 const firstOption = oneOfSchema.definitions!.first_option_def as RJSFSchema;
 const secondOption = oneOfSchema.definitions!.second_option_def as RJSFSchema;

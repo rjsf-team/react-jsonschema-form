@@ -17,8 +17,8 @@ import {
   RJSFSchema,
 } from '@rjsf/utils';
 
-import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators';
 import { createPrecompiledValidator } from '../src';
+import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators';
 import { ValidatorFunctions } from '../src/types';
 
 /**

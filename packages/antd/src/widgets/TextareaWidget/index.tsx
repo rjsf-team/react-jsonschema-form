@@ -1,5 +1,4 @@
 import { ChangeEvent, FocusEvent } from 'react';
-import { Input } from 'antd';
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -8,6 +7,7 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
+import { Input } from 'antd';
 
 const INPUT_STYLE = {
   width: '100%',

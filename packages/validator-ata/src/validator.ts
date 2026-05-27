@@ -1,5 +1,3 @@
-import type { ValidationError, Validator } from 'ata-validator';
-import cloneDeep from 'lodash/cloneDeep';
 import {
   CustomValidator,
   deepEquals,
@@ -15,10 +13,12 @@ import {
   ValidatorType,
   withIdRefPrefix,
 } from '@rjsf/utils';
+import type { ValidationError, Validator } from 'ata-validator';
+import cloneDeep from 'lodash/cloneDeep';
 
 import createAtaInstance from './createAtaInstance';
-import type { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringType } from './types';
 import processRawValidationErrors, { type RawValidationErrorsType } from './processRawValidationErrors';
+import type { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringType } from './types';
 
 /** `ValidatorType` implementation backed by `ata-validator`.
  *

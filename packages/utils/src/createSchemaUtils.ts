@@ -1,18 +1,8 @@
+import get from 'lodash/get';
+
+import { ID_KEY, JSON_SCHEMA_DRAFT_2020_12, SCHEMA_KEY } from './constants';
 import deepEquals from './deepEquals';
-import {
-  Experimental_CustomMergeAllOf,
-  Experimental_DefaultFormStateBehavior,
-  FormContextType,
-  FoundFieldType,
-  GlobalUISchemaOptions,
-  PathSchema,
-  RJSFSchema,
-  SchemaFieldPath,
-  SchemaUtilsType,
-  StrictRJSFSchema,
-  UiSchema,
-  ValidatorType,
-} from './types';
+import { makeAllReferencesAbsolute } from './findSchemaDefinition';
 import {
   findFieldInSchema,
   findSelectedOptionInXxxOf,
@@ -29,9 +19,20 @@ import {
   sanitizeDataForNewSchema,
   toPathSchema,
 } from './schema';
-import { makeAllReferencesAbsolute } from './findSchemaDefinition';
-import { ID_KEY, JSON_SCHEMA_DRAFT_2020_12, SCHEMA_KEY } from './constants';
-import get from 'lodash/get';
+import {
+  Experimental_CustomMergeAllOf,
+  Experimental_DefaultFormStateBehavior,
+  FormContextType,
+  FoundFieldType,
+  GlobalUISchemaOptions,
+  PathSchema,
+  RJSFSchema,
+  SchemaFieldPath,
+  SchemaUtilsType,
+  StrictRJSFSchema,
+  UiSchema,
+  ValidatorType,
+} from './types';
 
 /** The `SchemaUtils` class provides a wrapper around the publicly exported APIs in the `utils/schema` directory such
  * that one does not have to explicitly pass the `validator`, `rootSchema`, `experimental_defaultFormStateBehavior` or
