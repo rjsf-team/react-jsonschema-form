@@ -26,6 +26,8 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `sanitizeDataForNewSchema()` to preserve valid enum values while replacing or clearing stale values across enum, `oneOf`, and `anyOf` schema changes ([#5067](https://github.com/rjsf-team/react-jsonschema-form/pull/5067))
 
+# 6.6.1
+
 ## Dev / docs / playground
 
 - Updated peer dependencies to 6.6.x
