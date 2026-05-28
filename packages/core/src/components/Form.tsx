@@ -967,6 +967,7 @@ export default class Form<
         _get(schema, 'readOnly') !== true &&
         !deepEquals(previousRetrievedSchema, retrievedSchema)
       ) {
+        // If this is a writable scalar field and the schema changed, sanitize the data to remove bad data
         const sanitizedFormData = schemaUtils.sanitizeDataForNewSchema(
           retrievedSchema,
           previousRetrievedSchema,
