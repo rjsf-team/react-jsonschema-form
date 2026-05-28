@@ -21,8 +21,6 @@ import {
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { get } from 'lodash';
-import noop from 'lodash/noop';
-import type { MockInstance } from 'vitest';
 
 import LayoutMultiSchemaField, {
   computeEnumOptions,
@@ -32,6 +30,7 @@ import RadioWidget from '../src/components/widgets/RadioWidget';
 import SelectWidget from '../src/components/widgets/SelectWidget';
 import getTestRegistry from '../src/getTestRegistry';
 import { SIMPLE_ONEOF, SIMPLE_ONEOF_OPTIONS } from './testData/layoutData';
+import { setupConsoleErrorSuppression } from './testUtils';
 
 vi.mock('@rjsf/utils', async (importOriginal) => ({
   ...(await importOriginal()),
@@ -221,17 +220,7 @@ describe('LayoutMultiSchemaField', () => {
       onFocus: vi.fn(),
     };
   }
-  let consoleErrorSpy: MockInstance;
-  beforeAll(() => {
-    // silence the error reporting
-    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(noop);
-  });
-  afterEach(() => {
-    consoleErrorSpy.mockClear();
-  });
-  afterAll(() => {
-    consoleErrorSpy.mockRestore();
-  });
+  setupConsoleErrorSuppression();
   test('throws when no selectorField is provided', () => {
     const expectedError = 'No selector field provided for the LayoutMultiSchemaField';
     const schema: RJSFSchema = {

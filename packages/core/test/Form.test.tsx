@@ -34,6 +34,7 @@ import {
   NoValFormProps,
   renderNode,
   RerenderType,
+  setupConsoleErrorSuppression,
   submitForm,
 } from './testUtils';
 import widgetsSchema from './widgets_schema.json';
@@ -46,17 +47,17 @@ const TWO_BUTTONS = (
 );
 const user = userEvent.setup();
 
+const renderErrorSuppression = setupConsoleErrorSuppression();
+
 describeRepeated('Form common', (createFormComponent) => {
   describe('Empty schema', () => {
     it('Should throw error when Form is missing validator', () => {
-      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(noop);
       expect(() =>
         createComponent(Form, { ref: createRef(), schema: {}, validator: undefined as unknown as ValidatorType }),
       ).toThrow('A validator is required for Form functionality to work');
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect(renderErrorSuppression.consoleSpy).toHaveBeenCalledWith(
         expect.stringContaining('The above error occurred in the <Form> component'),
       );
-      consoleErrorSpy.mockRestore();
     });
 
     it('should render a form tag', () => {
@@ -659,7 +660,6 @@ describeRepeated('Form common', (createFormComponent) => {
     });
 
     it('should raise for non-existent definitions referenced', () => {
-      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(noop);
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -668,10 +668,9 @@ describeRepeated('Form common', (createFormComponent) => {
       };
 
       expect(() => createFormComponent({ schema })).toThrow(/#\/definitions\/nonexistent/);
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect(renderErrorSuppression.consoleSpy).toHaveBeenCalledWith(
         expect.stringContaining('The above error occurred in the <Form> component'),
       );
-      consoleErrorSpy.mockRestore();
     });
 
     it('should propagate referenced definition defaults', () => {
@@ -3629,19 +3628,17 @@ describeRepeated('Form common', (createFormComponent) => {
     });
 
     it('should render the component using a ComponentType', () => {
-      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(noop);
       const Component = (props: any) => <div {...props} id='test' />;
       const { node } = createFormComponent({ schema: {}, tagName: Component });
       expect(node.id).toEqual('test');
       // React deduplicates this warning per component name — only fires on the first test iteration
-      if (consoleErrorSpy.mock.calls.length > 0) {
-        expect(consoleErrorSpy).toHaveBeenCalledWith(
+      if (renderErrorSuppression.consoleSpy.mock.calls.length > 0) {
+        expect(renderErrorSuppression.consoleSpy).toHaveBeenCalledWith(
           expect.stringContaining('Function components cannot be given refs'),
           expect.any(String),
           expect.any(String),
         );
       }
-      consoleErrorSpy.mockRestore();
     });
   });
 

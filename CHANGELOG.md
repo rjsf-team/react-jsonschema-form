@@ -20,11 +20,14 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 
-- Fixed schema-change handling so dependent enum updates sanitize invalid scalar field data without over-sanitizing root, object, array, readonly, or disabled field changes ([#5067](https://github.com/rjsf-team/react-jsonschema-form/pull/5067))
+- Fixed schema-change handling so dependent enum updates sanitize invalid scalar field data without over-sanitizing root, object, array, readonly, or disabled field changes, fixing [#3838](https://github.com/rjsf-team/react-jsonschema-form/issues/3838)
+- Updated `Form` tests to verify fix for [#1357](https://github.com/rjsf-team/react-jsonschema-form/issues/1357) and [#2492](https://github.com/rjsf-team/react-jsonschema-form/issues/2492)
+  - Also added `console` message suppression support to the tests to reduce noise
 
 ## @rjsf/utils
 
-- Updated `sanitizeDataForNewSchema()` to preserve valid enum values while replacing or clearing stale values across enum, `oneOf`, and `anyOf` schema changes ([#5067](https://github.com/rjsf-team/react-jsonschema-form/pull/5067))
+- Updated `sanitizeDataForNewSchema()` to preserve valid enum values while replacing or clearing stale values across enum, `oneOf`, and `anyOf` schema changes, fixing [#3838](https://github.com/rjsf-team/react-jsonschema-form/issues/3838)
+- Updated `sanitizeDataForNewSchema()` to filter out invalid enum values in arrays, fixing [#1357](https://github.com/rjsf-team/react-jsonschema-form/issues/1357) and [#2492](https://github.com/rjsf-team/react-jsonschema-form/issues/2492)
 
 ## Dev / docs / playground
 
