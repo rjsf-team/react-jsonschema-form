@@ -893,7 +893,7 @@ export default class Form<
     this._isProcessingUserChange = true;
     const { newValue, path, id } = this.pendingChanges[0];
     const { newErrorSchema } = this.pendingChanges[0];
-    const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, onChange } = this.props;
+    const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, onChange, disabled, readonly } = this.props;
     const { formData: oldFormData, schemaUtils, schema, fieldPathId, schemaValidationErrorSchema, errors } = this.state;
     let { customErrors } = this.state;
     // Use the un-merged AJV-only schema as the base for re-merging extraErrors. Mirrors the
@@ -918,6 +918,7 @@ export default class Form<
     const inputForDefaults = hasOnlyUndefinedValues && wasPreviouslyNull ? undefined : formData;
 
     if (isObject(formData) || Array.isArray(formData)) {
+      const previousRetrievedSchema = retrievedSchema;
       if (newValue === ADDITIONAL_PROPERTY_KEY_REMOVE) {
         // For additional properties, we were given the special remove this key value, so unset it
         _unset(formData, path);
@@ -955,6 +956,36 @@ export default class Form<
       const newState = this.getStateFromProps(this.props, inputForDefaults, undefined, undefined, undefined, true);
       formData = newState.formData;
       retrievedSchema = newState.retrievedSchema;
+
+      if (
+        previousRetrievedSchema &&
+        !isRootPath &&
+        !isObject(newValue) &&
+        !Array.isArray(newValue) &&
+        !disabled &&
+        !readonly &&
+        _get(schema, 'readOnly') !== true &&
+        !deepEquals(previousRetrievedSchema, retrievedSchema)
+      ) {
+        // If this is a writable scalar field and the schema changed, sanitize the data to remove bad data
+        const sanitizedFormData = schemaUtils.sanitizeDataForNewSchema(
+          retrievedSchema,
+          previousRetrievedSchema,
+          formData,
+        );
+        if (!deepEquals(sanitizedFormData, formData)) {
+          const sanitizedState = this.getStateFromProps(
+            this.props,
+            sanitizedFormData,
+            undefined,
+            undefined,
+            undefined,
+            true,
+          );
+          formData = sanitizedState.formData;
+          retrievedSchema = sanitizedState.retrievedSchema;
+        }
+      }
     }
 
     const mustValidate = !noValidate && (liveValidate === true || liveValidate === 'onChange');
@@ -1021,6 +1052,13 @@ export default class Form<
         customErrors,
       };
     }
+    // Keep the resolved dependency branch in state after sanitizing, so the next dependent-field change compares
+    // against the same schema branch as the cleaned formData.
+    state = {
+      ...state,
+      retrievedSchema,
+    };
+
     this.setState(state as FormState<T, S, F>, () => {
       if (onChange) {
         onChange(toIChangeEvent({ ...this.state, ...state }), id);

@@ -16,6 +16,16 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.6.2
+
+## @rjsf/core
+
+- Fixed schema-change handling so dependent enum updates sanitize invalid scalar field data without over-sanitizing root, object, array, readonly, or disabled field changes ([#5067](https://github.com/rjsf-team/react-jsonschema-form/pull/5067))
+
+## @rjsf/utils
+
+- Updated `sanitizeDataForNewSchema()` to preserve valid enum values while replacing or clearing stale values across enum, `oneOf`, and `anyOf` schema changes ([#5067](https://github.com/rjsf-team/react-jsonschema-form/pull/5067))
+
 # 6.6.1
 
 ## Dev / docs / playground

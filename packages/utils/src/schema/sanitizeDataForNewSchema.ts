@@ -1,7 +1,8 @@
 import get from 'lodash/get';
 import has from 'lodash/has';
 
-import { PROPERTIES_KEY, REF_KEY } from '../constants';
+import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY, REF_KEY } from '../constants';
+import deepEquals from '../deepEquals';
 import {
   Experimental_CustomMergeAllOf,
   FormContextType,
@@ -13,6 +14,42 @@ import {
 import retrieveSchema from './retrieveSchema';
 
 const NO_VALUE = Symbol('no Value');
+
+function enumValuesForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S): any[] | undefined {
+  if (Array.isArray(schema.enum)) {
+    return schema.enum;
+  }
+
+  const options = (schema.oneOf || schema.anyOf) as S[] | undefined;
+  if (!Array.isArray(options)) {
+    return undefined;
+  }
+
+  const values = options
+    .map((option) => {
+      if (CONST_KEY in option) {
+        return option[CONST_KEY];
+      }
+      return Array.isArray(option.enum) && option.enum.length === 1 ? option.enum[0] : NO_VALUE;
+    })
+    .filter((value) => value !== NO_VALUE);
+
+  return values.length > 0 ? values : undefined;
+}
+
+function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>(schema: S, formValue: any) {
+  const enumValues = enumValuesForSchema(schema);
+  if (!enumValues || enumValues.some((value) => deepEquals(value, formValue))) {
+    return NO_VALUE;
+  }
+
+  const defaultValue = get(schema, DEFAULT_KEY, NO_VALUE);
+  if (defaultValue !== NO_VALUE && enumValues.some((value) => deepEquals(value, defaultValue))) {
+    return defaultValue;
+  }
+
+  return enumValues.length === 1 ? enumValues[0] : undefined;
+}
 
 /** Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`. If the new
  * schema does not contain any properties, then `undefined` is returned to clear all the form data. Due to the nature
@@ -142,8 +179,8 @@ export default function sanitizeDataForNewSchema<
           // Ok, the non-object types match, let's make sure that a default or a const of a different value is replaced
           // with the new default or const. This allows the case where two schemas differ that only by the default/const
           // value to be properly selected
-          const newOptionDefault = get(newKeyedSchema, 'default', NO_VALUE);
-          const oldOptionDefault = get(oldKeyedSchema, 'default', NO_VALUE);
+          const newOptionDefault = get(newKeyedSchema, DEFAULT_KEY, NO_VALUE);
+          const oldOptionDefault = get(oldKeyedSchema, DEFAULT_KEY, NO_VALUE);
           if (newOptionDefault !== NO_VALUE && newOptionDefault !== formValue) {
             if (oldOptionDefault === formValue) {
               // If the old default matches the formValue, we'll update the new value to match the new default
@@ -154,11 +191,18 @@ export default function sanitizeDataForNewSchema<
             }
           }
 
-          const newOptionConst = get(newKeyedSchema, 'const', NO_VALUE);
-          const oldOptionConst = get(oldKeyedSchema, 'const', NO_VALUE);
+          const newOptionConst = get(newKeyedSchema, CONST_KEY, NO_VALUE);
+          const oldOptionConst = get(oldKeyedSchema, CONST_KEY, NO_VALUE);
           if (newOptionConst !== NO_VALUE && newOptionConst !== formValue) {
             // Since this is a const, if the old value matches, replace the value with the new const otherwise clear it
             removeOldSchemaData[key] = oldOptionConst === formValue ? newOptionConst : undefined;
+          }
+
+          if (has(data, key)) {
+            const enumReplacement = replacementForInvalidEnumValue(newKeyedSchema, formValue);
+            if (enumReplacement !== NO_VALUE) {
+              removeOldSchemaData[key] = enumReplacement;
+            }
           }
         }
       }

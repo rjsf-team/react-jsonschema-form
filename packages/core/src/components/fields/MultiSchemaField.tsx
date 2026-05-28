@@ -116,7 +116,10 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
    */
   onOptionChange = (option?: string) => {
     const { selectedOption, retrievedOptions } = this.state;
-    const { formData, onChange, registry, fieldPathId } = this.props;
+    const { disabled = false, formData, onChange, readonly = false, registry, fieldPathId } = this.props;
+    if (disabled || readonly) {
+      return;
+    }
     const { schemaUtils } = registry;
     const intOption = option !== undefined ? parseInt(option, 10) : -1;
     if (intOption === selectedOption) {

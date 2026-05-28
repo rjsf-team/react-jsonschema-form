@@ -3104,6 +3104,70 @@ describeRepeated('Form common', (createFormComponent) => {
           'root_branch',
         );
       });
+
+      it('should sanitize stale enum data and persist the retrieved dependency schema', async () => {
+        const formRef = createRef<Form<any, RJSFSchema, any>>();
+        const dependentEnumSchema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            animal: {
+              type: 'string',
+              enum: ['Cat', 'Fish'],
+            },
+          },
+          dependencies: {
+            animal: {
+              oneOf: [
+                {
+                  properties: {
+                    animal: {
+                      enum: ['Cat'],
+                    },
+                    food: {
+                      type: 'string',
+                      enum: ['meat'],
+                    },
+                  },
+                },
+                {
+                  properties: {
+                    animal: {
+                      enum: ['Fish'],
+                    },
+                    food: {
+                      type: 'string',
+                      enum: ['worms'],
+                    },
+                    water: {
+                      type: 'string',
+                      enum: ['lake'],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+        const { node, onChange } = createFormComponent({
+          ref: formRef,
+          schema: dependentEnumSchema,
+          formData: { animal: 'Fish', food: 'worms', water: 'lake' },
+        });
+
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_animal')!, '0');
+
+        expectToHaveBeenCalledWithFormData(onChange, { animal: 'Cat', food: 'meat', water: undefined }, 'root_animal');
+        const retrievedSchema = formRef.current!.state.retrievedSchema as RJSFSchema;
+        expect(retrievedSchema.properties).toEqual(
+          expect.objectContaining({
+            food: expect.objectContaining({ enum: ['meat'] }),
+          }),
+        );
+        expect(retrievedSchema.properties).not.toHaveProperty('water');
+
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_food')!, '0');
+        expect((formRef.current!.state.retrievedSchema as RJSFSchema).properties).not.toHaveProperty('water');
+      });
     });
 
     describe('customValidate errors, live validation', () => {

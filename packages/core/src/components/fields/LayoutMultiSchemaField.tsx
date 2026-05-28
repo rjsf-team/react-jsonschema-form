@@ -159,6 +159,9 @@ export default function LayoutMultiSchemaField<
    *      will use it as the index of the new option to select
    */
   const onOptionChange = (opt?: unknown) => {
+    if (disabled || readonly) {
+      return;
+    }
     const newOption = getSelectedOption<S>(enumOptions, selectorField, opt);
     const oldOption = getSelectedOption<S>(enumOptions, selectorField, selectedOption);
 
