@@ -205,7 +205,9 @@ describe('ArrayField', () => {
     );
   };
   beforeAll(() => {
-    vi.spyOn(window, 'FileReader').mockImplementation(() => mockFileReader);
+    vi.spyOn(window, 'FileReader').mockImplementation(function () {
+      return mockFileReader;
+    });
   });
 
   describe('Unsupported array schema', () => {

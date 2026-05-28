@@ -30,7 +30,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
-                    style="margin-block: 0;"
+                    style="margin-block: 0px;"
                   >
                     person
                   </h5>
@@ -91,7 +91,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                         >
                           <h5
                             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
-                            style="margin-block: 0;"
+                            style="margin-block: 0px;"
                           >
                             address
                           </h5>
@@ -557,7 +557,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
-                    style="margin-block: 0;"
+                    style="margin-block: 0px;"
                   >
                     tags
                   </h5>
@@ -1030,7 +1030,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
-                    style="margin-block: 0;"
+                    style="margin-block: 0px;"
                   >
                     person
                   </h5>
@@ -1091,7 +1091,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                         >
                           <h5
                             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
-                            style="margin-block: 0;"
+                            style="margin-block: 0px;"
                           >
                             address
                           </h5>
@@ -1288,7 +1288,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
-                    style="margin-block: 0;"
+                    style="margin-block: 0px;"
                   >
                     items
                   </h5>
@@ -1946,7 +1946,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                   >
                     <h5
                       class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
-                      style="margin-block: 0;"
+                      style="margin-block: 0px;"
                     >
                       foo
                     </h5>
@@ -2452,7 +2452,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                   >
                     <h5
                       class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
-                      style="margin-block: 0;"
+                      style="margin-block: 0px;"
                     >
                       foo
                     </h5>
@@ -2848,7 +2848,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
         >
           <h5
             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
-            style="margin-block: 0;"
+            style="margin-block: 0px;"
           >
             Test field
           </h5>
@@ -3025,7 +3025,7 @@ exports[`object fields > with title and description > object 1`] = `
         >
           <h5
             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
-            style="margin-block: 0;"
+            style="margin-block: 0px;"
           >
             Test field
           </h5>
@@ -3165,7 +3165,7 @@ exports[`object fields > with title and description > show add button and fields
         >
           <h5
             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
-            style="margin-block: 0;"
+            style="margin-block: 0px;"
           >
             Test field
           </h5>
@@ -3342,7 +3342,7 @@ exports[`object fields > with title and description from both > additionalProper
         >
           <h5
             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
-            style="margin-block: 0;"
+            style="margin-block: 0px;"
           >
             My Field
           </h5>
@@ -3519,7 +3519,7 @@ exports[`object fields > with title and description from both > object 1`] = `
         >
           <h5
             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
-            style="margin-block: 0;"
+            style="margin-block: 0px;"
           >
             My Field
           </h5>
@@ -3659,7 +3659,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
         >
           <h5
             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
-            style="margin-block: 0;"
+            style="margin-block: 0px;"
           >
             My Field
           </h5>
@@ -3836,7 +3836,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
         >
           <h5
             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
-            style="margin-block: 0;"
+            style="margin-block: 0px;"
           >
             My Field
           </h5>
@@ -3976,7 +3976,7 @@ exports[`object fields > with title and description from uiSchema > show add but
         >
           <h5
             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
-            style="margin-block: 0;"
+            style="margin-block: 0px;"
           >
             My Field
           </h5>

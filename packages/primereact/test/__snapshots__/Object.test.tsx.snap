@@ -459,7 +459,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
           >
             <h5
               id="root_tags__title"
-              style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+              style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
             >
               tags 
             </h5>
@@ -1050,7 +1050,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
           >
             <h5
               id="root_items__title"
-              style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+              style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
             >
               items 
             </h5>
@@ -1580,7 +1580,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
               </label>
               <h5
                 id="root_foo__title"
-                style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+                style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
               >
                 foo 
               </h5>

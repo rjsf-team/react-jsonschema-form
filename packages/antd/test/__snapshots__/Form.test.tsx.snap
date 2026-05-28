@@ -5169,10 +5169,11 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               class="ant-form-item-additional"
             >
               <div
-                class="ant-form-item-explain css-var-root ant-form-css-var ant-form-item-explain-connected css-dev-only-do-not-override-ypkju9"
+                class="ant-form-item-explain ant-form-show-help-appear ant-form-show-help-appear-start ant-form-show-help css-var-root ant-form-css-var ant-form-item-explain-connected css-dev-only-do-not-override-ypkju9"
               >
                 <div
-                  class=""
+                  class="ant-form-show-help-item-appear ant-form-show-help-item-appear-start ant-form-show-help-item"
+                  style="height: 0px; opacity: 0;"
                 >
                   <div
                     class="help-block"
@@ -6253,10 +6254,11 @@ exports[`single fields > help and error display 1`] = `
               class="ant-form-item-additional"
             >
               <div
-                class="ant-form-item-explain css-var-root ant-form-css-var ant-form-item-explain-connected css-dev-only-do-not-override-ypkju9"
+                class="ant-form-item-explain ant-form-show-help-appear ant-form-show-help-appear-start ant-form-show-help css-var-root ant-form-css-var ant-form-item-explain-connected css-dev-only-do-not-override-ypkju9"
               >
                 <div
-                  class="ant-form-item-explain-error"
+                  class="ant-form-show-help-item-appear ant-form-show-help-item-appear-start ant-form-show-help-item ant-form-item-explain-error"
+                  style="height: 0px; opacity: 0;"
                 >
                   <div
                     class="help-block"
@@ -14771,7 +14773,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
                         <span
                           aria-hidden="true"
                           class="ant-select-selection-item-remove"
-                          style="user-select: none;"
+                          style="user-select: none; -webkit-user-select: none;"
                           unselectable="on"
                         >
                           <span
@@ -14813,7 +14815,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
                         <span
                           aria-hidden="true"
                           class="ant-select-selection-item-remove"
-                          style="user-select: none;"
+                          style="user-select: none; -webkit-user-select: none;"
                           unselectable="on"
                         >
                           <span
@@ -15690,10 +15692,11 @@ exports[`single fields > string field > field with markdown help and description
               class="ant-form-item-additional"
             >
               <div
-                class="ant-form-item-explain css-var-root ant-form-css-var ant-form-item-explain-connected css-dev-only-do-not-override-ypkju9"
+                class="ant-form-item-explain ant-form-show-help-appear ant-form-show-help-appear-start ant-form-show-help css-var-root ant-form-css-var ant-form-item-explain-connected css-dev-only-do-not-override-ypkju9"
               >
                 <div
-                  class=""
+                  class="ant-form-show-help-item-appear ant-form-show-help-item-appear-start ant-form-show-help-item"
+                  style="height: 0px; opacity: 0;"
                 >
                   <div
                     class="help-block"
@@ -15797,10 +15800,11 @@ exports[`single fields > string field > field with markdown help text 1`] = `
               class="ant-form-item-additional"
             >
               <div
-                class="ant-form-item-explain css-var-root ant-form-css-var ant-form-item-explain-connected css-dev-only-do-not-override-ypkju9"
+                class="ant-form-item-explain ant-form-show-help-appear ant-form-show-help-appear-start ant-form-show-help css-var-root ant-form-css-var ant-form-item-explain-connected css-dev-only-do-not-override-ypkju9"
               >
                 <div
-                  class=""
+                  class="ant-form-show-help-item-appear ant-form-show-help-item-appear-start ant-form-show-help-item"
+                  style="height: 0px; opacity: 0;"
                 >
                   <div
                     class="help-block"
@@ -15904,10 +15908,11 @@ exports[`single fields > string field > field with markdown help text without en
               class="ant-form-item-additional"
             >
               <div
-                class="ant-form-item-explain css-var-root ant-form-css-var ant-form-item-explain-connected css-dev-only-do-not-override-ypkju9"
+                class="ant-form-item-explain ant-form-show-help-appear ant-form-show-help-appear-start ant-form-show-help css-var-root ant-form-css-var ant-form-item-explain-connected css-dev-only-do-not-override-ypkju9"
               >
                 <div
-                  class=""
+                  class="ant-form-show-help-item-appear ant-form-show-help-item-appear-start ant-form-show-help-item"
+                  style="height: 0px; opacity: 0;"
                 >
                   <div
                     class="help-block"
@@ -16234,10 +16239,11 @@ exports[`single fields > string field > required field with markdown help 1`] = 
               class="ant-form-item-additional"
             >
               <div
-                class="ant-form-item-explain css-var-root ant-form-css-var ant-form-item-explain-connected css-dev-only-do-not-override-ypkju9"
+                class="ant-form-item-explain ant-form-show-help-appear ant-form-show-help-appear-start ant-form-show-help css-var-root ant-form-css-var ant-form-item-explain-connected css-dev-only-do-not-override-ypkju9"
               >
                 <div
-                  class=""
+                  class="ant-form-show-help-item-appear ant-form-show-help-item-appear-start ant-form-show-help-item"
+                  style="height: 0px; opacity: 0;"
                 >
                   <div
                     class="help-block"

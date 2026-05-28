@@ -1184,10 +1184,11 @@ exports[`array fields > has errors 1`] = `
                                 class="ant-form-item-additional"
                               >
                                 <div
-                                  class="ant-form-item-explain css-var-root ant-form-css-var ant-form-item-explain-connected css-dev-only-do-not-override-ypkju9"
+                                  class="ant-form-item-explain ant-form-show-help-appear ant-form-show-help-appear-start ant-form-show-help css-var-root ant-form-css-var ant-form-item-explain-connected css-dev-only-do-not-override-ypkju9"
                                 >
                                   <div
-                                    class="ant-form-item-explain-error"
+                                    class="ant-form-show-help-item-appear ant-form-show-help-item-appear-start ant-form-show-help-item ant-form-item-explain-error"
+                                    style="height: 0px; opacity: 0;"
                                   >
                                     <div
                                       id="root_name__error"

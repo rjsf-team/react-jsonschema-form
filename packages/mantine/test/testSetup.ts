@@ -17,11 +17,11 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 // Mock the ResizeObserver because jsdom doesn't
-global.ResizeObserver = vi.fn(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}));
+global.ResizeObserver = class {
+  observe = vi.fn();
+  unobserve = vi.fn();
+  disconnect = vi.fn();
+};
 
 // Mock Math.random() (Provides stable IDs for snapshots) ---
 // Mantine components often use Math.random() internally for ID generation

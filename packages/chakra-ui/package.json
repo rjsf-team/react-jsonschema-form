@@ -49,7 +49,7 @@
     "lint": "oxlint src test",
     "precommit": "lint-staged",
     "test": "vitest run",
-    "test:update": "vitest run --update-snapshots",
+    "test:update": "vitest run --update",
     "test:watch": "vitest",
     "type-check": "tsc --noEmit"
   },
@@ -86,7 +86,6 @@
   },
   "license": "Apache-2.0",
   "devDependencies": {
-    "@chakra-ui/cli": "^3.35.0",
     "@chakra-ui/react": "^3.35.0",
     "@emotion/jest": "^11.14.2",
     "@emotion/react": "^11.14.0",

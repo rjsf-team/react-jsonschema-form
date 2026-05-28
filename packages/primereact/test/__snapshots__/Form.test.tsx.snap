@@ -19,7 +19,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
           >
             <h5
               id="root_tasks__title"
-              style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+              style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
             >
               tasks 
             </h5>
@@ -450,7 +450,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
           >
             <h5
               id="root_tags__title"
-              style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+              style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
             >
               tags 
             </h5>
@@ -1402,7 +1402,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
           >
             <h5
               id="root_tasks__title"
-              style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+              style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
             >
               tasks 
             </h5>
@@ -1833,7 +1833,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
           >
             <h5
               id="root_tags__title"
-              style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+              style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
             >
               tags 
             </h5>
@@ -4245,7 +4245,7 @@ exports[`single fields > optional data controls > does not show optional control
               >
                 <h5
                   id="root_nestedObjectOptional_deepArrayOptional__title"
-                  style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+                  style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
                 >
                   deepArrayOptional 
                 </h5>
@@ -4304,7 +4304,7 @@ exports[`single fields > optional data controls > does not show optional control
               >
                 <h5
                   id="root_nestedObjectOptional_deepArrayOptional2__title"
-                  style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+                  style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
                 >
                   deepArrayOptional2 
                 </h5>
@@ -4363,7 +4363,7 @@ exports[`single fields > optional data controls > does not show optional control
               >
                 <h5
                   id="root_nestedObjectOptional_deepArray__title"
-                  style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+                  style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
                 >
                   deepArray *
                 </h5>
@@ -4424,7 +4424,7 @@ exports[`single fields > optional data controls > does not show optional control
           >
             <h5
               id="root_nestedArrayOptional__title"
-              style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+              style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
             >
               nestedArrayOptional 
             </h5>
@@ -4537,7 +4537,7 @@ exports[`single fields > optional data controls > does not show optional control
           >
             <h5
               id="root_nestedArray__title"
-              style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+              style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
             >
               nestedArray *
             </h5>
@@ -4732,7 +4732,7 @@ exports[`single fields > optional data controls > does not show optional control
                     >
                       <h5
                         id="root_optionalArrayWithAnyofs__title"
-                        style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+                        style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
                       >
                         optionalArrayWithAnyofs 
                       </h5>
@@ -5012,7 +5012,7 @@ exports[`single fields > optional data controls > does not show optional control
               >
                 <h5
                   id="root_nestedObjectOptional_deepArrayOptional__title"
-                  style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+                  style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
                 >
                   deepArrayOptional 
                 </h5>
@@ -5072,7 +5072,7 @@ exports[`single fields > optional data controls > does not show optional control
               >
                 <h5
                   id="root_nestedObjectOptional_deepArrayOptional2__title"
-                  style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+                  style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
                 >
                   deepArrayOptional2 
                 </h5>
@@ -5132,7 +5132,7 @@ exports[`single fields > optional data controls > does not show optional control
               >
                 <h5
                   id="root_nestedObjectOptional_deepArray__title"
-                  style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+                  style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
                 >
                   deepArray *
                 </h5>
@@ -5194,7 +5194,7 @@ exports[`single fields > optional data controls > does not show optional control
           >
             <h5
               id="root_nestedArrayOptional__title"
-              style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+              style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
             >
               nestedArrayOptional 
             </h5>
@@ -5309,7 +5309,7 @@ exports[`single fields > optional data controls > does not show optional control
           >
             <h5
               id="root_nestedArray__title"
-              style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+              style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
             >
               nestedArray *
             </h5>
@@ -5507,7 +5507,7 @@ exports[`single fields > optional data controls > does not show optional control
                     >
                       <h5
                         id="root_optionalArrayWithAnyofs__title"
-                        style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+                        style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
                       >
                         optionalArrayWithAnyofs 
                       </h5>
@@ -5823,7 +5823,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               >
                 <h5
                   id="root_nestedObjectOptional_deepArrayOptional__title"
-                  style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+                  style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
                 >
                   deepArrayOptional 
                 </h5>
@@ -5888,7 +5888,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   >
                     <h5
                       id="root_nestedObjectOptional_deepArrayOptional2__title"
-                      style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+                      style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
                     >
                       deepArrayOptional2 
                     </h5>
@@ -5948,7 +5948,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               >
                 <h5
                   id="root_nestedObjectOptional_deepArray__title"
-                  style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+                  style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
                 >
                   deepArray *
                 </h5>
@@ -6015,7 +6015,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               >
                 <h5
                   id="root_nestedArrayOptional__title"
-                  style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+                  style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
                 >
                   nestedArrayOptional 
                 </h5>
@@ -6207,7 +6207,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
           >
             <h5
               id="root_nestedArray__title"
-              style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+              style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
             >
               nestedArray *
             </h5>
@@ -6390,7 +6390,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         >
                           <h5
                             id="root_optionalArrayWithAnyofs__title"
-                            style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+                            style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
                           >
                             optionalArrayWithAnyofs 
                           </h5>
@@ -6651,7 +6651,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               >
                 <h5
                   id="root_nestedObjectOptional_deepArrayOptional__title"
-                  style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+                  style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
                 >
                   deepArrayOptional 
                 </h5>
@@ -6711,7 +6711,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               >
                 <h5
                   id="root_nestedObjectOptional_deepArrayOptional2__title"
-                  style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+                  style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
                 >
                   deepArrayOptional2 
                 </h5>
@@ -6754,7 +6754,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               >
                 <h5
                   id="root_nestedObjectOptional_deepArray__title"
-                  style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+                  style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
                 >
                   deepArray *
                 </h5>
@@ -6816,7 +6816,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
           >
             <h5
               id="root_nestedArrayOptional__title"
-              style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+              style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
             >
               nestedArrayOptional 
             </h5>
@@ -6989,7 +6989,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
           >
             <h5
               id="root_nestedArray__title"
-              style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+              style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
             >
               nestedArray *
             </h5>
@@ -7141,7 +7141,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     >
                       <h5
                         id="root_optionalArrayWithAnyofs__title"
-                        style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+                        style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
                       >
                         optionalArrayWithAnyofs 
                       </h5>
@@ -7309,7 +7309,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               >
                 <h5
                   id="root_nestedArrayOptional__title"
-                  style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+                  style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
                 >
                   nestedArrayOptional 
                 </h5>
@@ -7423,7 +7423,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
           >
             <h5
               id="root_nestedArray__title"
-              style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+              style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
             >
               nestedArray *
             </h5>
@@ -7606,7 +7606,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         >
                           <h5
                             id="root_optionalArrayWithAnyofs__title"
-                            style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+                            style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
                           >
                             optionalArrayWithAnyofs 
                           </h5>
@@ -7759,7 +7759,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
           >
             <h5
               id="root_nestedArrayOptional__title"
-              style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+              style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
             >
               nestedArrayOptional 
             </h5>
@@ -7857,7 +7857,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
           >
             <h5
               id="root_nestedArray__title"
-              style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+              style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
             >
               nestedArray *
             </h5>
@@ -8009,7 +8009,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     >
                       <h5
                         id="root_optionalArrayWithAnyofs__title"
-                        style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+                        style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
                       >
                         optionalArrayWithAnyofs 
                       </h5>
@@ -8371,6 +8371,7 @@ exports[`single fields > schema examples 1`] = `
             name="root"
             placeholder=""
             role="combobox"
+            style="border: medium;"
             type="text"
             value=""
           />
@@ -8452,6 +8453,7 @@ exports[`single fields > schema examples with mixed types (string examples and n
             name="root"
             placeholder=""
             role="combobox"
+            style="border: medium;"
             type="number"
             value="5432"
           />

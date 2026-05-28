@@ -56,7 +56,7 @@
     "lint": "oxlint src test",
     "precommit": "lint-staged",
     "test": "vitest run",
-    "test:update": "vitest run --update-snapshots"
+    "test:update": "vitest run --update"
   },
   "lint-staged": {
     "{src,test}/**/*.{ts,tsx}": [
@@ -79,7 +79,6 @@
     "@rjsf/utils": "6.6.1",
     "@rjsf/validator-ajv8": "6.6.1",
     "@tailwindcss/cli": "^4.3.0",
-    "jsdom": "^29.1.1",
     "tailwindcss": "^4.3.0"
   },
   "dependencies": {

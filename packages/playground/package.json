@@ -75,11 +75,6 @@
     "semantic-ui-react": "^2.1.5"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
-    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
-    "@babel/plugin-transform-react-jsx": "^7.29.7",
-    "@babel/plugin-transform-runtime": "^7.29.7",
-    "@babel/register": "^7.29.7",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",

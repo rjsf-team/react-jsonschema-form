@@ -58,16 +58,15 @@ describe('useFileWidgetProps()', () => {
   beforeAll(() => {
     onChange = vi.fn();
     FN_RESULT = { target: { result: 'data:text/plain;base64,' } };
-    windowFileReaderSpy = vi.spyOn(window, 'FileReader').mockImplementation(
-      () =>
-        ({
-          // eslint-disable-next-line no-unused-vars
-          set onload(fn: (event: any) => void) {
-            fn(FN_RESULT);
-          },
-          readAsDataUrl: vi.fn(),
-        }) as unknown as FileReader,
-    );
+    windowFileReaderSpy = vi.spyOn(window, 'FileReader').mockImplementation(function () {
+      return {
+        // eslint-disable-next-line no-unused-vars
+        set onload(fn: (event: any) => void) {
+          fn(FN_RESULT);
+        },
+        readAsDataUrl: vi.fn(),
+      } as unknown as FileReader;
+    });
   });
   afterEach(() => {
     onChange.mockClear();

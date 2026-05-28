@@ -1923,7 +1923,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                   >
                     <div
                       class=""
-                      style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0; min-height: 0;"
+                      style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
                     >
                       <div
                         class="m_d57069b5 mantine-ScrollArea-root"
@@ -3880,7 +3880,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                   >
                     <div
                       class=""
-                      style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0; min-height: 0;"
+                      style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
                     >
                       <div
                         class="m_d57069b5 mantine-ScrollArea-root"
@@ -7453,7 +7453,7 @@ exports[`single fields > optional data controls > does not show optional control
                     >
                       <div
                         class=""
-                        style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0; min-height: 0;"
+                        style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
                       >
                         <div
                           class="m_d57069b5 mantine-ScrollArea-root"
@@ -7700,7 +7700,7 @@ exports[`single fields > optional data controls > does not show optional control
                     >
                       <div
                         class=""
-                        style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0; min-height: 0;"
+                        style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
                       >
                         <div
                           class="m_d57069b5 mantine-ScrollArea-root"
@@ -8683,7 +8683,7 @@ exports[`single fields > optional data controls > does not show optional control
                     >
                       <div
                         class=""
-                        style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0; min-height: 0;"
+                        style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
                       >
                         <div
                           class="m_d57069b5 mantine-ScrollArea-root"
@@ -8935,7 +8935,7 @@ exports[`single fields > optional data controls > does not show optional control
                     >
                       <div
                         class=""
-                        style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0; min-height: 0;"
+                        style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
                       >
                         <div
                           class="m_d57069b5 mantine-ScrollArea-root"
@@ -12923,7 +12923,7 @@ exports[`single fields > select field 1`] = `
           >
             <div
               class=""
-              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0; min-height: 0;"
+              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
             >
               <div
                 class="m_d57069b5 mantine-ScrollArea-root"
@@ -13108,7 +13108,7 @@ exports[`single fields > select field multiple choice 1`] = `
           >
             <div
               class=""
-              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0; min-height: 0;"
+              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
             >
               <div
                 class="m_d57069b5 mantine-ScrollArea-root"
@@ -13317,7 +13317,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
           >
             <div
               class=""
-              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0; min-height: 0;"
+              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
             >
               <div
                 class="m_d57069b5 mantine-ScrollArea-root"
@@ -13844,7 +13844,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
           >
             <div
               class=""
-              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0; min-height: 0;"
+              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
             >
               <div
                 class="m_d57069b5 mantine-ScrollArea-root"
@@ -14085,7 +14085,7 @@ exports[`single fields > select field multiple choice with labels 1`] = `
           >
             <div
               class=""
-              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0; min-height: 0;"
+              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
             >
               <div
                 class="m_d57069b5 mantine-ScrollArea-root"
@@ -14267,7 +14267,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
           >
             <div
               class=""
-              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0; min-height: 0;"
+              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
             >
               <div
                 class="m_d57069b5 mantine-ScrollArea-root"
@@ -14743,7 +14743,7 @@ exports[`single fields > select field single choice formData 1`] = `
           >
             <div
               class=""
-              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0; min-height: 0;"
+              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
             >
               <div
                 class="m_d57069b5 mantine-ScrollArea-root"
@@ -15088,7 +15088,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
           >
             <div
               class=""
-              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0; min-height: 0;"
+              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
             >
               <div
                 class="m_d57069b5 mantine-ScrollArea-root"

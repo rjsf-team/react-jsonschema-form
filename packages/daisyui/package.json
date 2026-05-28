@@ -53,7 +53,7 @@
     "lint": "oxlint src test",
     "precommit": "lint-staged",
     "test": "vitest run",
-    "test:update": "vitest run --update-snapshots",
+    "test:update": "vitest run --update",
     "test:watch": "vitest"
   },
   "lint-staged": {
