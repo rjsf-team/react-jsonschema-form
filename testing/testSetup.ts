@@ -1,9 +1,6 @@
 import '@testing-library/jest-dom';
-import { vi } from 'vitest';
+import { mockResizeObserver } from 'jsdom-testing-mocks';
 
-// required by antd v6
-global.ResizeObserver = class {
-  observe = vi.fn();
-  unobserve = vi.fn();
-  disconnect = vi.fn();
-};
+// Installs a ResizeObserver mock globally. jsdom doesn't implement ResizeObserver;
+// this stub prevents "ResizeObserver is not defined" errors across all packages.
+mockResizeObserver();
