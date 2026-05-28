@@ -410,7 +410,8 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       rawFormData !== undefined &&
       matchingFormData === undefined &&
       isConstant<S>(schema) &&
-      experimental_defaultFormStateBehavior?.constAsDefaults !== 'never'
+      experimental_defaultFormStateBehavior?.constAsDefaults !== 'never' &&
+      !constIsAjvDataReference(schema)
     ) {
       defaultsWithFormData = toConstant<S>(schema) as T;
     }
@@ -453,15 +454,18 @@ export function ensureFormDataMatchingSchema<
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): T | T[] | undefined {
   let validFormData: T | T[] | undefined = formData;
+  const isConstantSchema = isConstant<S>(schema);
+  const isAjvDataReference = constIsAjvDataReference(schema);
   const constTakesPrecedence =
-    CONST_KEY in schema && experimental_defaultFormStateBehavior?.constAsDefaults === 'always';
+    CONST_KEY in schema && experimental_defaultFormStateBehavior?.constAsDefaults === 'always' && !isAjvDataReference;
   const schemaType = getSchemaType<S>(schema);
-  if (isConstant<S>(schema) && schemaType !== 'object' && schemaType !== 'array') {
+  if (isConstantSchema && schemaType !== 'object' && schemaType !== 'array' && !isAjvDataReference) {
     const constant = toConstant<S>(schema) as T;
     return constTakesPrecedence || deepEquals(formData, constant) ? constant : undefined;
   }
 
-  const isSelectField = isSelect<T, S, F>(validator, schema, rootSchema, experimental_customMergeAllOf);
+  const isSelectField =
+    !isConstantSchema && isSelect<T, S, F>(validator, schema, rootSchema, experimental_customMergeAllOf);
   if (isSelectField) {
     const getOptionsList = optionsList<T, S, F>(schema);
     const isValid = getOptionsList?.some((option) => deepEquals(option.value, formData));

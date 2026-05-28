@@ -2574,6 +2574,17 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(ensureFormDataMatchingSchema(testValidator, schema, schema, 'a')).toEqual('a');
       });
 
+      it('Test schema with object const property and constAsDefaults always', () => {
+        schema = {
+          type: 'object',
+          const: { foo: 'bar' },
+        };
+
+        expect(
+          ensureFormDataMatchingSchema(testValidator, schema, schema, { foo: 'baz' }, { constAsDefaults: 'always' }),
+        ).toEqual({ foo: 'bar' });
+      });
+
       it('Test schema with non valid formData for a single-value enum property', () => {
         schema = {
           type: 'number',
