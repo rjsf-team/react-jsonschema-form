@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/semantic-ui",
-  "version": "6.5.3",
+  "version": "6.6.0",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -68,10 +68,10 @@
     "semantic-ui-react": "^2.1.3"
   },
   "devDependencies": {
-    "@rjsf/core": "6.5.3",
-    "@rjsf/snapshot-tests": "6.5.3",
-    "@rjsf/utils": "6.5.3",
-    "@rjsf/validator-ajv8": "6.5.3",
+    "@rjsf/core": "6.6.0",
+    "@rjsf/snapshot-tests": "6.6.0",
+    "@rjsf/utils": "6.6.0",
+    "@rjsf/validator-ajv8": "6.6.0",
     "atob": "^2.1.2",
     "semantic-ui-react": "^2.1.5"
   },
