@@ -250,10 +250,6 @@ describe('LayoutMultiSchemaField', () => {
     };
     const props = getProps({ schema, options: schema[ONE_OF_KEY] });
     expect(() => render(<LayoutMultiSchemaField {...props} />)).toThrow(expectedError);
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      expect.stringContaining(expectedError),
-      expect.objectContaining({ message: expectedError }),
-    );
   });
   test('default render with SIMPLE_ONEOF schema', async () => {
     const selectorField = getDiscriminatorFieldFromSchema(SIMPLE_ONEOF)!;

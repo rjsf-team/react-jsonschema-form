@@ -1243,7 +1243,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 aria-labelledby="checkbox:root_person_race-0:label"
                                 id="checkbox:root_person_race-0:input"
                                 name="root_person_race"
-                                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
                                 value="0"
                               />
@@ -1292,7 +1292,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 aria-labelledby="checkbox:root_person_race-1:label"
                                 id="checkbox:root_person_race-1:input"
                                 name="root_person_race"
-                                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
                                 value="1"
                               />
@@ -1341,7 +1341,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 aria-labelledby="checkbox:root_person_race-2:label"
                                 id="checkbox:root_person_race-2:input"
                                 name="root_person_race"
-                                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
                                 value="2"
                               />
@@ -1390,7 +1390,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 aria-labelledby="checkbox:root_person_race-3:label"
                                 id="checkbox:root_person_race-3:input"
                                 name="root_person_race"
-                                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
                                 value="3"
                               />
@@ -1439,7 +1439,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 aria-labelledby="checkbox:root_person_race-4:label"
                                 id="checkbox:root_person_race-4:input"
                                 name="root_person_race"
-                                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
                                 value="4"
                               />
@@ -1711,7 +1711,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       id=":r3m:"
                                       name="root_person_address_state"
                                       required=""
-                                      style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                      style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                       tabindex="-1"
                                     >
                                       <option
@@ -3897,7 +3897,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ownedby="radio-group::r3s:"
                                     id="radio-group::r3s::radio:input:0"
                                     name="root_employment"
-                                    style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
                                     value="0"
                                   />
@@ -3946,7 +3946,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ownedby="radio-group::r3s:"
                                     id="radio-group::r3s::radio:input:1"
                                     name="root_employment"
-                                    style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
                                     value="1"
                                   />
@@ -3990,7 +3990,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ownedby="radio-group::r3s:"
                                     id="radio-group::r3s::radio:input:2"
                                     name="root_employment"
-                                    style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
                                     value="2"
                                   />
@@ -4234,7 +4234,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 id=":r44:"
                                 name="root_employment_location_state"
                                 required=""
-                                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 tabindex="-1"
                               >
                                 <option
@@ -7559,7 +7559,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 aria-labelledby="checkbox:root_person_race-0:label"
                                 id="checkbox:root_person_race-0:input"
                                 name="root_person_race"
-                                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
                                 value="0"
                               />
@@ -7608,7 +7608,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 aria-labelledby="checkbox:root_person_race-1:label"
                                 id="checkbox:root_person_race-1:input"
                                 name="root_person_race"
-                                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
                                 value="1"
                               />
@@ -7657,7 +7657,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 aria-labelledby="checkbox:root_person_race-2:label"
                                 id="checkbox:root_person_race-2:input"
                                 name="root_person_race"
-                                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
                                 value="2"
                               />
@@ -7706,7 +7706,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 aria-labelledby="checkbox:root_person_race-3:label"
                                 id="checkbox:root_person_race-3:input"
                                 name="root_person_race"
-                                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
                                 value="3"
                               />
@@ -7755,7 +7755,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 aria-labelledby="checkbox:root_person_race-4:label"
                                 id="checkbox:root_person_race-4:input"
                                 name="root_person_race"
-                                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
                                 value="4"
                               />
@@ -8027,7 +8027,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       id=":r4v:"
                                       name="root_person_address_state"
                                       required=""
-                                      style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                      style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                       tabindex="-1"
                                     >
                                       <option
@@ -10212,7 +10212,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ownedby="radio-group::r55:"
                                     id="radio-group::r55::radio:input:0"
                                     name="root_employment"
-                                    style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
                                     value="0"
                                   />
@@ -10257,7 +10257,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ownedby="radio-group::r55:"
                                     id="radio-group::r55::radio:input:1"
                                     name="root_employment"
-                                    style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
                                     value="1"
                                   />
@@ -10306,7 +10306,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ownedby="radio-group::r55:"
                                     id="radio-group::r55::radio:input:2"
                                     name="root_employment"
-                                    style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
                                     value="2"
                                   />
@@ -10597,7 +10597,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 id=":r5f:"
                                 name="root_employment_location_state"
                                 required=""
-                                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 tabindex="-1"
                               >
                                 <option
@@ -13967,7 +13967,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 aria-labelledby="checkbox:root_person_race-0:label"
                                 id="checkbox:root_person_race-0:input"
                                 name="root_person_race"
-                                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
                                 value="0"
                               />
@@ -14016,7 +14016,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 aria-labelledby="checkbox:root_person_race-1:label"
                                 id="checkbox:root_person_race-1:input"
                                 name="root_person_race"
-                                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
                                 value="1"
                               />
@@ -14065,7 +14065,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 aria-labelledby="checkbox:root_person_race-2:label"
                                 id="checkbox:root_person_race-2:input"
                                 name="root_person_race"
-                                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
                                 value="2"
                               />
@@ -14114,7 +14114,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 aria-labelledby="checkbox:root_person_race-3:label"
                                 id="checkbox:root_person_race-3:input"
                                 name="root_person_race"
-                                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
                                 value="3"
                               />
@@ -14163,7 +14163,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 aria-labelledby="checkbox:root_person_race-4:label"
                                 id="checkbox:root_person_race-4:input"
                                 name="root_person_race"
-                                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
                                 value="4"
                               />
@@ -14435,7 +14435,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       id=":r6a:"
                                       name="root_person_address_state"
                                       required=""
-                                      style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                      style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                       tabindex="-1"
                                     >
                                       <option
@@ -16620,7 +16620,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ownedby="radio-group::r6g:"
                                     id="radio-group::r6g::radio:input:0"
                                     name="root_employment"
-                                    style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
                                     value="0"
                                   />
@@ -16664,7 +16664,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ownedby="radio-group::r6g:"
                                     id="radio-group::r6g::radio:input:1"
                                     name="root_employment"
-                                    style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
                                     value="1"
                                   />
@@ -16709,7 +16709,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ownedby="radio-group::r6g:"
                                     id="radio-group::r6g::radio:input:2"
                                     name="root_employment"
-                                    style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
                                     value="2"
                                   />
@@ -18071,7 +18071,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 aria-labelledby="checkbox:root_person_race-0:label"
                                 id="checkbox:root_person_race-0:input"
                                 name="root_person_race"
-                                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
                                 value="0"
                               />
@@ -18120,7 +18120,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 aria-labelledby="checkbox:root_person_race-1:label"
                                 id="checkbox:root_person_race-1:input"
                                 name="root_person_race"
-                                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
                                 value="1"
                               />
@@ -18169,7 +18169,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 aria-labelledby="checkbox:root_person_race-2:label"
                                 id="checkbox:root_person_race-2:input"
                                 name="root_person_race"
-                                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
                                 value="2"
                               />
@@ -18218,7 +18218,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 aria-labelledby="checkbox:root_person_race-3:label"
                                 id="checkbox:root_person_race-3:input"
                                 name="root_person_race"
-                                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
                                 value="3"
                               />
@@ -18267,7 +18267,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 aria-labelledby="checkbox:root_person_race-4:label"
                                 id="checkbox:root_person_race-4:input"
                                 name="root_person_race"
-                                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
                                 value="4"
                               />
@@ -18539,7 +18539,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       id=":r2d:"
                                       name="root_person_address_state"
                                       required=""
-                                      style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                      style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                       tabindex="-1"
                                     >
                                       <option
@@ -20725,7 +20725,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ownedby="radio-group::r2j:"
                                     id="radio-group::r2j::radio:input:0"
                                     name="root_employment"
-                                    style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
                                     value="0"
                                   />
@@ -20774,7 +20774,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ownedby="radio-group::r2j:"
                                     id="radio-group::r2j::radio:input:1"
                                     name="root_employment"
-                                    style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
                                     value="1"
                                   />
@@ -20818,7 +20818,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ownedby="radio-group::r2j:"
                                     id="radio-group::r2j::radio:input:2"
                                     name="root_employment"
-                                    style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
                                     value="2"
                                   />
@@ -21062,7 +21062,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 id=":r2r:"
                                 name="root_employment_location_state"
                                 required=""
-                                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 tabindex="-1"
                               >
                                 <option
@@ -24237,7 +24237,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                               aria-labelledby="checkbox:root_person_race-0:label"
                               id="checkbox:root_person_race-0:input"
                               name="root_person_race"
-                              style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                              style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="checkbox"
                               value="0"
                             />
@@ -24286,7 +24286,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                               aria-labelledby="checkbox:root_person_race-1:label"
                               id="checkbox:root_person_race-1:input"
                               name="root_person_race"
-                              style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                              style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="checkbox"
                               value="1"
                             />
@@ -24335,7 +24335,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                               aria-labelledby="checkbox:root_person_race-2:label"
                               id="checkbox:root_person_race-2:input"
                               name="root_person_race"
-                              style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                              style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="checkbox"
                               value="2"
                             />
@@ -24384,7 +24384,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                               aria-labelledby="checkbox:root_person_race-3:label"
                               id="checkbox:root_person_race-3:input"
                               name="root_person_race"
-                              style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                              style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="checkbox"
                               value="3"
                             />
@@ -24433,7 +24433,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                               aria-labelledby="checkbox:root_person_race-4:label"
                               id="checkbox:root_person_race-4:input"
                               name="root_person_race"
-                              style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                              style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="checkbox"
                               value="4"
                             />
@@ -24677,7 +24677,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                           id=":r1i:"
                           name="root_person_address_state"
                           required=""
-                          style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                          style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                           tabindex="-1"
                         >
                           <option
@@ -27850,7 +27850,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                               aria-labelledby="checkbox:root_person_race-0:label"
                               id="checkbox:root_person_race-0:input"
                               name="root_person_race"
-                              style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                              style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="checkbox"
                               value="0"
                             />
@@ -27899,7 +27899,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                               aria-labelledby="checkbox:root_person_race-1:label"
                               id="checkbox:root_person_race-1:input"
                               name="root_person_race"
-                              style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                              style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="checkbox"
                               value="1"
                             />
@@ -27948,7 +27948,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                               aria-labelledby="checkbox:root_person_race-2:label"
                               id="checkbox:root_person_race-2:input"
                               name="root_person_race"
-                              style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                              style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="checkbox"
                               value="2"
                             />
@@ -27997,7 +27997,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                               aria-labelledby="checkbox:root_person_race-3:label"
                               id="checkbox:root_person_race-3:input"
                               name="root_person_race"
-                              style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                              style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="checkbox"
                               value="3"
                             />
@@ -28046,7 +28046,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                               aria-labelledby="checkbox:root_person_race-4:label"
                               id="checkbox:root_person_race-4:input"
                               name="root_person_race"
-                              style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                              style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="checkbox"
                               value="4"
                             />
@@ -28290,7 +28290,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                           id=":ro:"
                           name="root_person_address_state"
                           required=""
-                          style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                          style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                           tabindex="-1"
                         >
                           <option

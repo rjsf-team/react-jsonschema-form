@@ -19,8 +19,7 @@ describe('createAjvInstance()', () => {
       ajv = createAjvInstance();
     });
     afterAll(() => {
-      vi.mocked(Ajv).mockClear();
-      vi.mocked(addFormats).mockClear();
+      vi.clearAllMocks();
     });
     it('expect a new Ajv to be constructed with the AJV_CONFIG', () => {
       expect(Ajv).toHaveBeenCalledWith(AJV_CONFIG);
@@ -47,8 +46,7 @@ describe('createAjvInstance()', () => {
       ajv = createAjvInstance(undefined, undefined, undefined, undefined, Ajv2019);
     });
     afterAll(() => {
-      vi.mocked(Ajv).mockClear();
-      vi.mocked(addFormats).mockClear();
+      vi.clearAllMocks();
     });
     it('expect a new Ajv2019 to be constructed with the AJV_CONFIG', () => {
       expect(Ajv2019).toHaveBeenCalledWith(AJV_CONFIG);
@@ -83,8 +81,7 @@ describe('createAjvInstance()', () => {
       );
     });
     afterAll(() => {
-      vi.mocked(Ajv).mockClear();
-      vi.mocked(addFormats).mockClear();
+      vi.clearAllMocks();
     });
     it('expect a new Ajv to be constructed with the AJV_CONFIG', () => {
       expect(Ajv).toHaveBeenCalledWith({
@@ -119,8 +116,7 @@ describe('createAjvInstance()', () => {
       ajv = createAjvInstance(undefined, undefined, undefined, false, undefined, extender);
     });
     afterAll(() => {
-      vi.mocked(Ajv).mockClear();
-      vi.mocked(addFormats).mockClear();
+      vi.clearAllMocks();
     });
     it('expect a new Ajv to be constructed with the AJV_CONFIG', () => {
       expect(Ajv).toHaveBeenCalledWith(AJV_CONFIG);

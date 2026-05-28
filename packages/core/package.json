@@ -16,7 +16,7 @@
     "publish-to-npm": "npm run build && npm publish",
     "test": "vitest run",
     "test:debug": "node --inspect-brk ../../node_modules/.bin/jest",
-    "test:update": "vitest run --update-snapshots",
+    "test:update": "vitest run --update",
     "test:watch": "vitest",
     "test-coverage": "vitest run --coverage"
   },
@@ -86,7 +86,6 @@
     "@types/react-portal": "^4.0.7",
     "ajv": "^8.20.0",
     "atob": "^2.1.2",
-    "jsdom": "^29.1.1",
     "react-portal": "^4.3.0"
   },
   "directories": {

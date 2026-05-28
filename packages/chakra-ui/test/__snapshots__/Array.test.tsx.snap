@@ -1477,7 +1477,7 @@ exports[`array fields > checkboxes 1`] = `
                 id=":r7:"
                 multiple=""
                 name="root"
-                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -5284,7 +5284,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                 id=":r3j:"
                 multiple=""
                 name="root"
-                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -5969,7 +5969,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                                 checked=""
                                 id=":r35:"
                                 name="root[2]"
-                                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
                                 value="on"
                               />
@@ -10707,7 +10707,7 @@ exports[`with title and description > checkboxes 1`] = `
                 id=":ru:"
                 multiple=""
                 name="root"
-                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -13183,7 +13183,7 @@ exports[`with title and description from both > checkboxes 1`] = `
                 id=":r1q:"
                 multiple=""
                 name="root"
-                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -15659,7 +15659,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                 id=":r1c:"
                 multiple=""
                 name="root"
-                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 tabindex="-1"
               >
                 <option
@@ -17860,7 +17860,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                 id=":r28:"
                 multiple=""
                 name="root"
-                style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 tabindex="-1"
               >
                 <option

@@ -14,7 +14,7 @@ export default defineConfig({
       enabled: true,
       reportsDirectory: 'coverage',
       include: ['src/**'],
-      exclude: ['node_modules/**', 'test/**'],
+      exclude: ['node_modules/**', 'test/**', '**/tsconfig.json'],
       thresholds: {
         branches: 100,
         functions: 100,

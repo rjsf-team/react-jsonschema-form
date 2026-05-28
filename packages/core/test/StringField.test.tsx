@@ -66,7 +66,9 @@ const user = userEvent.setup();
 describe('StringField', () => {
   const CustomWidget = () => <div id='custom' />;
   beforeAll(() => {
-    vi.spyOn(window, 'FileReader').mockImplementation(() => mockFileReader);
+    vi.spyOn(window, 'FileReader').mockImplementation(function () {
+      return mockFileReader;
+    });
   });
 
   describe('TextWidget', () => {

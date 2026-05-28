@@ -13,7 +13,7 @@ exports[`array fields > array 1`] = `
       >
         <h5
           id="root__title"
-          style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+          style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
         >
            
         </h5>
@@ -95,7 +95,7 @@ exports[`array fields > array icons 1`] = `
       >
         <h5
           id="root__title"
-          style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+          style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
         >
            
         </h5>
@@ -483,7 +483,7 @@ exports[`array fields > fixed array 1`] = `
       >
         <h5
           id="root__title"
-          style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+          style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
         >
            
         </h5>
@@ -786,7 +786,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
       >
         <h5
           id="root__title"
-          style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+          style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
         >
            
         </h5>
@@ -1117,7 +1117,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
       >
         <h5
           id="root__title"
-          style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+          style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
         >
            
         </h5>
@@ -1414,7 +1414,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
       >
         <h5
           id="root__title"
-          style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+          style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
         >
            
         </h5>
@@ -1581,7 +1581,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
       >
         <h5
           id="root__title"
-          style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+          style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
         >
            
         </h5>
@@ -1678,7 +1678,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                       >
                         <h5
                           id="root_0__title"
-                          style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+                          style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
                         >
                            *
                         </h5>
@@ -1979,7 +1979,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                       >
                         <h5
                           id="root_1__title"
-                          style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+                          style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
                         >
                            *
                         </h5>
@@ -2266,7 +2266,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
       >
         <h5
           id="root__title"
-          style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+          style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
         >
            
         </h5>
@@ -2597,7 +2597,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
       >
         <h5
           id="root__title"
-          style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+          style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
         >
            
         </h5>
@@ -2854,7 +2854,7 @@ exports[`with title and description > array 1`] = `
       >
         <h5
           id="root__title"
-          style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+          style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
         >
           Test field 
         </h5>
@@ -2941,7 +2941,7 @@ exports[`with title and description > array icons 1`] = `
       >
         <h5
           id="root__title"
-          style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+          style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
         >
           Test field 
         </h5>
@@ -3315,7 +3315,7 @@ exports[`with title and description > fixed array 1`] = `
       >
         <h5
           id="root__title"
-          style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+          style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
         >
           Test field 
         </h5>
@@ -3455,7 +3455,7 @@ exports[`with title and description from both > array 1`] = `
       >
         <h5
           id="root__title"
-          style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+          style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
         >
           My Field 
         </h5>
@@ -3542,7 +3542,7 @@ exports[`with title and description from both > array icons 1`] = `
       >
         <h5
           id="root__title"
-          style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+          style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
         >
           My Field 
         </h5>
@@ -3916,7 +3916,7 @@ exports[`with title and description from both > fixed array 1`] = `
       >
         <h5
           id="root__title"
-          style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+          style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
         >
           My Field 
         </h5>
@@ -4056,7 +4056,7 @@ exports[`with title and description from uiSchema > array 1`] = `
       >
         <h5
           id="root__title"
-          style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+          style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
         >
           My Field 
         </h5>
@@ -4143,7 +4143,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
       >
         <h5
           id="root__title"
-          style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+          style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
         >
           My Field 
         </h5>
@@ -4517,7 +4517,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
       >
         <h5
           id="root__title"
-          style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+          style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
         >
           My Field 
         </h5>
@@ -4657,7 +4657,7 @@ exports[`with title and description with global label off > array 1`] = `
       >
         <h5
           id="root__title"
-          style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+          style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
         >
           Test field 
         </h5>
@@ -4739,7 +4739,7 @@ exports[`with title and description with global label off > array icons 1`] = `
       >
         <h5
           id="root__title"
-          style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+          style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
         >
           Test field 
         </h5>
@@ -5072,7 +5072,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
       >
         <h5
           id="root__title"
-          style="margin: 0px 0px 0.2rem 0px; font-size: 1.5rem;"
+          style="font-size: 1.5rem; margin: 0px 0px 0.2rem;"
         >
           Test field 
         </h5>

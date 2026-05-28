@@ -28,6 +28,11 @@
     "nuke-build-env": "rimraf .nx && rimraf package-lock.json",
     "sanity-check": "npm run lint && npm run build && npm run test"
   },
+  "overrides": {
+    "sockjs": {
+      "uuid": "^14.0.0"
+    }
+  },
   "license": "Apache-2.0",
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "devDependencies": {
@@ -40,17 +45,17 @@
     "@types/react": "^18.3.29",
     "@types/react-dom": "^18.3.7",
     "@types/react-test-renderer": "^18.3.1",
-    "@vitest/coverage-v8": "^3.0.0",
+    "@vitest/coverage-v8": "^4.0.0",
     "ajv": "^8.20.0",
     "cross-env": "^10.1.0",
     "esbuild": "^0.28.0",
     "husky": "^9.1.7",
     "is-ci": "^4.1.0",
-    "jsdom": "^26.0.0",
+    "jsdom": "^29.1.1",
     "lint-staged": "^17.0.5",
     "move-file-cli": "^3.0.0",
     "nx": "^22.7.5",
-    "oxfmt": "^0.51.0",
+    "oxfmt": "^0.52.0",
     "oxlint": "^1.67.0",
     "oxlint-tsgolint": "^0.23.0",
     "react": "^18.3.1",
@@ -61,7 +66,7 @@
     "tslib": "^2.8.1",
     "tsx": "^4.22.3",
     "typescript": "^6.0.3",
-    "vitest": "^3.0.0"
+    "vitest": "^4.0.0"
   },
   "workspaces": [
     "packages/antd",

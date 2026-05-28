@@ -14,7 +14,7 @@
     "precommit": "lint-staged",
     "publish-to-npm": "npm run build && npm publish",
     "test": "vitest run",
-    "test:update": "vitest run --update-snapshots",
+    "test:update": "vitest run --update",
     "test:watch": "vitest",
     "test-coverage": "vitest run --coverage"
   },
