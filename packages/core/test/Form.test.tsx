@@ -19,6 +19,7 @@ import {
 import validator, { customizeValidator } from '@rjsf/validator-ajv8';
 import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { noop } from 'lodash';
 import { Portal } from 'react-portal';
 import type { Mock } from 'vitest';
 
@@ -48,9 +49,14 @@ const user = userEvent.setup();
 describeRepeated('Form common', (createFormComponent) => {
   describe('Empty schema', () => {
     it('Should throw error when Form is missing validator', () => {
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(noop);
       expect(() =>
         createComponent(Form, { ref: createRef(), schema: {}, validator: undefined as unknown as ValidatorType }),
       ).toThrow('A validator is required for Form functionality to work');
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        expect.stringContaining('The above error occurred in the <Form> component'),
+      );
+      consoleErrorSpy.mockRestore();
     });
 
     it('should render a form tag', () => {
@@ -653,6 +659,7 @@ describeRepeated('Form common', (createFormComponent) => {
     });
 
     it('should raise for non-existent definitions referenced', () => {
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(noop);
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -661,6 +668,10 @@ describeRepeated('Form common', (createFormComponent) => {
       };
 
       expect(() => createFormComponent({ schema })).toThrow(/#\/definitions\/nonexistent/);
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        expect.stringContaining('The above error occurred in the <Form> component'),
+      );
+      consoleErrorSpy.mockRestore();
     });
 
     it('should propagate referenced definition defaults', () => {
@@ -2450,6 +2461,7 @@ describeRepeated('Form common', (createFormComponent) => {
       });
 
       it('should call the onError handler and call the provided focusOnFirstError callback function', async () => {
+        const consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(noop);
         const onError = vi.fn();
 
         const focusCallback = () => {
@@ -2481,9 +2493,12 @@ describeRepeated('Form common', (createFormComponent) => {
 
         expect(focusSpy).not.toHaveBeenCalled();
         expect(focusOnFirstError).toHaveBeenCalledTimes(1);
+        expect(consoleLogSpy).toHaveBeenCalledWith('focusCallback called');
+        consoleLogSpy.mockRestore();
       });
 
       it('should call the onError handler and call the provided focusOnFirstError callback function', async () => {
+        const consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(noop);
         const onError = vi.fn();
 
         const focusCallback = () => {
@@ -2520,6 +2535,8 @@ describeRepeated('Form common', (createFormComponent) => {
 
         expect(focusSpy).not.toHaveBeenCalled();
         expect(focusOnFirstError).toHaveBeenCalledTimes(1);
+        expect(consoleLogSpy).toHaveBeenCalledWith('focusCallback called');
+        consoleLogSpy.mockRestore();
       });
 
       it('should reset errors and errorSchema state to initial state after correction and resubmission', async () => {
@@ -3088,6 +3105,7 @@ describeRepeated('Form common', (createFormComponent) => {
       });
 
       it('should not show any errors when branch is empty', async () => {
+        const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
         const { node, onChange } = createFormComponent({
           ref: createRef(),
           schema,
@@ -3103,6 +3121,10 @@ describeRepeated('Form common', (createFormComponent) => {
           }),
           'root_branch',
         );
+        expect(consoleWarnSpy).toHaveBeenCalledWith(
+          "ignoring oneOf in dependencies because there isn't exactly one subschema that is valid",
+        );
+        consoleWarnSpy.mockRestore();
       });
 
       it('should sanitize stale enum data and persist the retrieved dependency schema', async () => {
@@ -3477,6 +3499,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
   describe('Custom format updates, live validation', () => {
     it('Should update custom formats when customFormats is changed', async () => {
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
       const formProps: Omit<FormProps, 'validator'> = {
         ref: createRef(),
         liveValidate: true,
@@ -3533,6 +3556,10 @@ describeRepeated('Form common', (createFormComponent) => {
           title: '',
         },
       ]);
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('unknown format "area-code" ignored in schema at path "#/properties/areaCode"'),
+      );
+      consoleWarnSpy.mockRestore();
     });
   });
 
@@ -3602,9 +3629,19 @@ describeRepeated('Form common', (createFormComponent) => {
     });
 
     it('should render the component using a ComponentType', () => {
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(noop);
       const Component = (props: any) => <div {...props} id='test' />;
       const { node } = createFormComponent({ schema: {}, tagName: Component });
       expect(node.id).toEqual('test');
+      // React deduplicates this warning per component name — only fires on the first test iteration
+      if (consoleErrorSpy.mock.calls.length > 0) {
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
+          expect.stringContaining('Function components cannot be given refs'),
+          expect.any(String),
+          expect.any(String),
+        );
+      }
+      consoleErrorSpy.mockRestore();
     });
   });
 
@@ -6077,5 +6114,149 @@ describe('patternProperties with fixed properties (#4518)', () => {
     expect(onSubmit).toHaveBeenCalled();
     const { formData } = onSubmit.mock.calls[onSubmit.mock.calls.length - 1][0];
     expect(formData).toEqual({ annotations: {} });
+  });
+});
+
+describe('enum-based array values do not update when dependencies change (#1357 and #2492)', () => {
+  it('should remove enum values in array when dependency switches', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        opt: {
+          type: 'boolean',
+        },
+      },
+      dependencies: {
+        opt: {
+          oneOf: [
+            {
+              properties: {
+                opt: {
+                  const: true,
+                },
+                arr: {
+                  type: 'array',
+                  uniqueItems: true,
+                  items: {
+                    type: 'string',
+                    enum: ['a', 'b'],
+                  },
+                },
+              },
+            },
+            {
+              properties: {
+                opt: {
+                  const: false,
+                },
+                arr: {
+                  type: 'array',
+                  uniqueItems: true,
+                  items: {
+                    type: 'string',
+                    enum: ['c', 'd'],
+                  },
+                },
+              },
+            },
+          ],
+        },
+      },
+    };
+    const uiSchema: UiSchema = {
+      arr: {
+        'ui:widget': 'checkboxes',
+      },
+    };
+
+    const { node, onChange } = createFormComponent({
+      schema,
+      uiSchema,
+      formData: { opt: false },
+    });
+
+    const checkboxC = node.querySelector('#root_arr-0');
+    expect(checkboxC).not.toBeChecked();
+    await user.click(checkboxC!);
+    expect(checkboxC).toBeChecked();
+
+    expectToHaveBeenCalledWithFormData(onChange, { opt: false, arr: ['c'] }, 'root_arr');
+
+    const checkboxOpt = node.querySelector('#root_opt');
+    expect(checkboxOpt).not.toBeChecked();
+    await user.click(checkboxOpt!);
+    expect(checkboxOpt).toBeChecked();
+
+    expectToHaveBeenCalledWithFormData(onChange, { opt: true, arr: [] }, 'root_opt');
+  });
+  it('array item defaults based on enums are switched when dependencies switch and arrayMinItems.mergeExtraDefaults is true', async () => {
+    const schema: RJSFSchema = {
+      title: 'Dependencies & Default',
+      type: 'object',
+      properties: {
+        select_item: {
+          type: 'string',
+          enum: ['item1', 'item2'],
+        },
+      },
+      dependencies: {
+        select_item: {
+          oneOf: [
+            {
+              properties: {
+                select_item: {
+                  const: 'item1',
+                },
+                item_detail: {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                    enum: ['item_detail1', 'item_detail2'],
+                  },
+                  default: ['item_detail1', 'item_detail2'],
+                },
+              },
+            },
+            {
+              properties: {
+                select_item: {
+                  const: 'item2',
+                },
+                item_detail: {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                    enum: ['item_detail3', 'item_detail4'],
+                  },
+                  default: ['item_detail3', 'item_detail4'],
+                },
+              },
+            },
+          ],
+        },
+      },
+    };
+    const { node, onChange } = createFormComponent({
+      schema,
+      formData: { select_item: 'item1' },
+      experimental_defaultFormStateBehavior: { arrayMinItems: { mergeExtraDefaults: true } },
+    });
+
+    expectToHaveBeenCalledWithFormData(onChange, {
+      select_item: 'item1',
+      item_detail: ['item_detail1', 'item_detail2'],
+    });
+
+    const selectItem = node.querySelector('#root_select_item');
+    await user.selectOptions(selectItem!, 'item2');
+
+    expectToHaveBeenCalledWithFormData(
+      onChange,
+      {
+        select_item: 'item2',
+        item_detail: ['item_detail3', 'item_detail4'],
+      },
+      'root_select_item',
+    );
   });
 });

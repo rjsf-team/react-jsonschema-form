@@ -274,7 +274,6 @@ describe('Validation', () => {
 
         function customValidate(formData: FormProps['formData'], errors: FormValidation) {
           formData.forEach(({ pass1, pass2 }: GenericObjectType, i: number) => {
-            console.log(pass1, pass2, errors);
             if (pass1 !== pass2) {
               (errors as GenericObjectType)[i].pass2.addError("Passwords don't match");
             }
