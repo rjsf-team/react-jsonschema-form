@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/shadcn",
-  "version": "6.6.0",
+  "version": "6.6.1",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -65,8 +65,8 @@
     ]
   },
   "peerDependencies": {
-    "@rjsf/core": "^6.5.x",
-    "@rjsf/utils": "^6.5.x",
+    "@rjsf/core": "^6.6.x",
+    "@rjsf/utils": "^6.6.x",
     "react": ">=18"
   },
   "engineStrict": false,
@@ -74,10 +74,10 @@
     "node": ">=20"
   },
   "devDependencies": {
-    "@rjsf/core": "6.6.0",
-    "@rjsf/snapshot-tests": "6.6.0",
-    "@rjsf/utils": "6.6.0",
-    "@rjsf/validator-ajv8": "6.6.0",
+    "@rjsf/core": "6.6.1",
+    "@rjsf/snapshot-tests": "6.6.1",
+    "@rjsf/utils": "6.6.1",
+    "@rjsf/validator-ajv8": "6.6.1",
     "@tailwindcss/cli": "^4.3.0",
     "jsdom": "^29.1.1",
     "tailwindcss": "^4.3.0"
