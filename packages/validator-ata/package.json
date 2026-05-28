@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/validator-ata",
-  "version": "6.6.0",
+  "version": "6.6.1",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -82,10 +82,10 @@
     "lodash-es": "^4.18.1"
   },
   "peerDependencies": {
-    "@rjsf/utils": "^6.5.x"
+    "@rjsf/utils": "^6.6.x"
   },
   "devDependencies": {
-    "@rjsf/utils": "6.6.0",
+    "@rjsf/utils": "6.6.1",
     "@types/json-schema": "^7.0.15"
   },
   "publishConfig": {
