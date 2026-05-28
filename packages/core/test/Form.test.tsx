@@ -3601,6 +3601,67 @@ describeRepeated('Form common', (createFormComponent) => {
   });
 
   describe('Dependencies', () => {
+    it('should update dependent enum formData when conditional options no longer contain the current value', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          da: {
+            type: 'number',
+            default: 30,
+            oneOf: [
+              { title: 'DA 30', enum: [30], type: 'number' },
+              { title: 'DA 50', enum: [50], type: 'number' },
+            ],
+          },
+          t: {
+            type: 'number',
+            default: 1000,
+          },
+        },
+        required: ['da', 't'],
+        allOf: [
+          {
+            if: {
+              properties: {
+                da: { const: 30 },
+              },
+            },
+            then: {
+              properties: {
+                t: {
+                  oneOf: [
+                    { title: 'Traffic 1,000', enum: [1000], type: 'number' },
+                    { title: 'Traffic 5,000', enum: [5000], type: 'number' },
+                  ],
+                },
+              },
+            },
+          },
+          {
+            if: {
+              properties: {
+                da: { const: 50 },
+              },
+            },
+            then: {
+              properties: {
+                t: {
+                  oneOf: [{ title: 'Traffic 5,000', enum: [5000], type: 'number' }],
+                },
+              },
+            },
+          },
+        ],
+      };
+
+      const { node, onChange } = createFormComponent({ schema });
+      const daSelect = node.querySelector<HTMLSelectElement>('#root_da')!;
+
+      await user.selectOptions(daSelect, daSelect.options[1].value);
+
+      expectToHaveBeenCalledWithFormData(onChange, { da: 50, t: 5000 }, 'root_da');
+    });
+
     it('should not give a validation error by duplicating enum values in dependencies', async () => {
       const schema: RJSFSchema = {
         title: 'A registration form',

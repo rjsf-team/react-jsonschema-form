@@ -2574,6 +2574,25 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(ensureFormDataMatchingSchema(testValidator, schema, schema, 'a')).toEqual('a');
       });
 
+      it('Test schema with non valid formData for a single-value enum property', () => {
+        schema = {
+          type: 'number',
+          enum: [5000],
+        };
+
+        expect(ensureFormDataMatchingSchema(testValidator, schema, schema, 1000)).toBeUndefined();
+      });
+
+      it('Test schema with invalid default and non valid formData for a single-value enum property', () => {
+        schema = {
+          type: 'number',
+          enum: [5000],
+          default: 1000,
+        };
+
+        expect(getDefaultFormState(testValidator, schema, 1000, schema)).toEqual(5000);
+      });
+
       it('Test schema with valid formData with an enum and its default value', () => {
         schema = {
           type: 'string',

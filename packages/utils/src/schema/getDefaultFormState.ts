@@ -25,6 +25,7 @@ import mergeDefaultsWithFormData from '../mergeDefaultsWithFormData';
 import mergeObjects from '../mergeObjects';
 import mergeSchemas from '../mergeSchemas';
 import optionsList from '../optionsList';
+import toConstant from '../toConstant';
 import {
   Experimental_CustomMergeAllOf,
   Experimental_DefaultFormStateBehavior,
@@ -405,6 +406,14 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       experimental_defaultFormStateBehavior,
       experimental_customMergeAllOf,
     );
+    if (
+      rawFormData !== undefined &&
+      matchingFormData === undefined &&
+      isConstant<S>(schema) &&
+      experimental_defaultFormStateBehavior?.constAsDefaults !== 'never'
+    ) {
+      defaultsWithFormData = toConstant<S>(schema) as T;
+    }
     if (!isObject(rawFormData) || ALL_OF_KEY in schema) {
       // If the formData is not an object which means it's a primitive field, then we need to merge the defaults into the formData.
       // Or if the schema has allOf, we need to merge the defaults into the formData because we don't compute the defaults for allOf.
@@ -443,9 +452,16 @@ export function ensureFormDataMatchingSchema<
   experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior,
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): T | T[] | undefined {
-  const isSelectField =
-    !isConstant<S>(schema) && isSelect<T, S, F>(validator, schema, rootSchema, experimental_customMergeAllOf);
   let validFormData: T | T[] | undefined = formData;
+  const constTakesPrecedence =
+    CONST_KEY in schema && experimental_defaultFormStateBehavior?.constAsDefaults === 'always';
+  const schemaType = getSchemaType<S>(schema);
+  if (isConstant<S>(schema) && schemaType !== 'object' && schemaType !== 'array') {
+    const constant = toConstant<S>(schema) as T;
+    return constTakesPrecedence || deepEquals(formData, constant) ? constant : undefined;
+  }
+
+  const isSelectField = isSelect<T, S, F>(validator, schema, rootSchema, experimental_customMergeAllOf);
   if (isSelectField) {
     const getOptionsList = optionsList<T, S, F>(schema);
     const isValid = getOptionsList?.some((option) => deepEquals(option.value, formData));
@@ -453,7 +469,6 @@ export function ensureFormDataMatchingSchema<
   }
 
   // Override the formData with the const if the constAsDefaults is set to always
-  const constTakesPrecedence = schema[CONST_KEY] && experimental_defaultFormStateBehavior?.constAsDefaults === 'always';
   if (constTakesPrecedence) {
     validFormData = schema.const as T;
   }
