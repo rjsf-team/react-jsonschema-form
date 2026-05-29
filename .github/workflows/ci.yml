@@ -19,19 +19,20 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-          cache-dependency-path: 'package-lock.json'
-      - run: npm ci
-      - run: npm run lint
+          cache: 'pnpm'
+          cache-dependency-path: 'pnpm-lock.yaml'
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run lint
 
       - name: Build with Netlify badge
-        run: npm run build-serial
+        run: pnpm run build-serial
         env:
           VITE_SHOW_NETLIFY_BADGE: true
           NODE_OPTIONS: --max_old_space_size=4096
 
       - name: Build
-        run: npm run build-serial
+        run: pnpm run build-serial
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
@@ -45,7 +46,7 @@ jobs:
         with:
           name: docs
           path: packages/docs/build
-      - run: npm test
+      - run: pnpm test
 
   deploy_playground_and_docs:
     runs-on: ubuntu-latest

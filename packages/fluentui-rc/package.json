@@ -7,12 +7,12 @@
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/index.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/index.esm.js --format=umd --file=dist/core.umd.js --name=JSONSchemaForm",
-    "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
+    "build": "pnpm run build:ts && pnpm run build:cjs && pnpm run build:esm && pnpm run build:umd",
     "cs-check": "oxfmt --check \"{src,test,testSnap}/**/*.{ts,tsx,js,jsx}\"",
     "cs-format": "oxfmt \"{src,test,testSnap}/**/*.{ts,tsx,js,jsx}\"",
     "lint": "oxlint src test",
     "precommit": "lint-staged",
-    "publish-to-npm": "npm run build && npm publish",
+    "publish-to-npm": "pnpm run build && pnpm publish",
     "test": "vitest run",
     "test:update": "vitest run --update",
     "test:watch": "vitest",
@@ -76,10 +76,10 @@
     "@fluentui/react-components": "^9.74.0",
     "@fluentui/react-icons": "^2.0.328",
     "@fluentui/react-migration-v0-v9": "^9.6.29",
-    "@rjsf/core": "6.6.1",
-    "@rjsf/snapshot-tests": "6.6.1",
-    "@rjsf/utils": "6.6.1",
-    "@rjsf/validator-ajv8": "6.6.1"
+    "@rjsf/core": "workspace:^",
+    "@rjsf/snapshot-tests": "workspace:^",
+    "@rjsf/utils": "workspace:^",
+    "@rjsf/validator-ajv8": "workspace:^"
   },
   "directories": {
     "test": "test"

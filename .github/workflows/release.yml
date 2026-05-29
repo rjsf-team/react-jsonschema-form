@@ -18,14 +18,15 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24.x
-          cache: 'npm'
-          cache-dependency-path: 'package-lock.json'
-      - run: npm ci
-      - run: npm run build-serial
+          cache: 'pnpm'
+          cache-dependency-path: 'pnpm-lock.yaml'
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build-serial
         env:
           NODE_OPTIONS: --max_old_space_size=4096
-      - run: npm test
-      - run: npm run lint
+      - run: pnpm test
+      - run: pnpm run lint
       - name: Determine npm tag based on release version
         id: get_npm_tag
         run: |
@@ -38,7 +39,7 @@ jobs:
           
           echo "NPM_TAG=${NPM_TAG_VALUE}" >> $GITHUB_ENV
           echo "Determined NPM_TAG: ${NPM_TAG_VALUE}"
-      - run: npx nx release publish --tag=$NPM_TAG --provenance
+      - run: pnpm exec nx release publish --tag=$NPM_TAG --provenance
         env:
           # This ensures the npm CLI knows which registry to authenticate against using OIDC
           NPM_CONFIG_REGISTRY: "https://registry.npmjs.org/"

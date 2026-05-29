@@ -8,7 +8,7 @@
     "cs-format": "oxfmt \"src/**/*.{ts,tsx,js,jsx}\"",
     "lint": "oxlint src",
     "precommit": "lint-staged",
-    "publish-to-npm": "npm run build && npm publish",
+    "publish-to-npm": "pnpm run build && pnpm publish",
     "test": "echo 'OK'",
     "test-coverage": "echo 'OK'"
   },
@@ -36,9 +36,9 @@
     "react": ">=18"
   },
   "devDependencies": {
-    "@rjsf/core": "6.6.1",
-    "@rjsf/utils": "6.6.1",
-    "@rjsf/validator-ajv8": "6.6.1"
+    "@rjsf/core": "workspace:^",
+    "@rjsf/utils": "workspace:^",
+    "@rjsf/validator-ajv8": "workspace:^"
   },
   "repository": {
     "type": "git",
