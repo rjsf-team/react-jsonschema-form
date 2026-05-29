@@ -160,7 +160,7 @@ pnpm run update-version-tags
 ```
 
 Make sure you use [semver](https://semver.org/) for version numbering when selecting the version.
-The `pnpm exec nx release version --git-tag` command will update the `package*.josn` files and create a new version tag.
+The `pnpm exec nx release version --git-tag` command will update the `package*.json` files and create a new version tag.
 Committing and pushing the branch will allow you to create the PR on GitHub.
 The `pnpm run update-version-tags` will push the tags up to GitHub.
 

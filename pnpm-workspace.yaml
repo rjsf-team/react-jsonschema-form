@@ -11,8 +11,8 @@ onlyBuiltDependencies:
   - esbuild
   - nx
 allowBuilds:
-  '@parcel/watcher': set this to true or false
-  ata-validator: set this to true or false
-  core-js: set this to true or false
-  esbuild: set this to true or false
-  nx: set this to true or false
+  '@parcel/watcher': true
+  ata-validator: true
+  core-js: true
+  esbuild: true
+  nx: true
