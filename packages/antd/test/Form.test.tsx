@@ -3,7 +3,6 @@ import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 
-import '../__mocks__/matchMedia.mock';
 import Form from '../src';
 
 formTests(Form);
