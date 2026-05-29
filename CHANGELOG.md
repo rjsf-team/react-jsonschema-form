@@ -32,6 +32,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Upgraded `vitest` and `jsdom` to the latest to remove deprecated package warnings
+- Fix a documentation error related to precedence when setting default values ([#5089](https://github.com/rjsf-team/react-jsonschema-form/issues/5089))
 
 # 6.6.1
 
@@ -2362,7 +2363,7 @@ Move theme snapshot tests into separate package
 - However, if users of @rjsf/antd want to use v5 styling, they need to wrap your application with the `StyleProvider` from `@ant-design/cssinjs`. They need not have to install this package, its a transitive package coming from antd.
 
 ```tsx
-import { StyleProvider } from '@ant-design/cssinjs';
+import { StyleProvider } from "@ant-design/cssinjs";
 
 const Component = () => {
   return (
