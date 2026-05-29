@@ -83,12 +83,5 @@
     "packages/snapshot-tests",
     "packages/shadcn"
   ],
-  "packageManager": "pnpm@11.5.0",
-  "pnpm": {
-    "overrides": {
-      "sockjs": {
-        "uuid": "^14.0.0"
-      }
-    }
-  }
+  "packageManager": "pnpm@11.5.0"
 }

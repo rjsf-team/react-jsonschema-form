@@ -38,7 +38,7 @@ When building in environments with limited memory, such as Netlify, it's recomme
 All the JavaScript/Typescript code in this project conforms to the [prettier](https://github.com/prettier/prettier) coding style.
 Code is automatically prettified upon commit using precommit hooks, assuming you followed the `First time step` above.
 
-You can also run `pnpm cs-format` within any package directory you are changing.
+You can also run `pnpm run cs-format` within any package directory you are changing.
 
 ## Documentation
 
