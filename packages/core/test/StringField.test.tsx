@@ -12,16 +12,18 @@ import {
 } from '@rjsf/utils';
 import { fireEvent, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import noop from 'lodash/noop';
 
 import StringField from '../src/components/fields/StringField';
 import TextWidget from '../src/components/widgets/TextWidget';
 import {
   createFormComponent,
   getSelectedOptionValue,
+  setupConsoleErrorSuppression,
   submitForm,
   expectToHaveBeenCalledWithFormData,
 } from './testUtils';
+
+setupConsoleErrorSuppression();
 
 const mockFileReader = {
   // eslint-disable-next-line no-unused-vars
@@ -1551,7 +1553,6 @@ describe('StringField', () => {
     });
 
     it('should throw on invalid date', () => {
-      const mockError = vi.spyOn(console, 'error').mockImplementation(noop);
       expect(() =>
         createFormComponent({
           schema: {
@@ -1563,7 +1564,6 @@ describe('StringField', () => {
           formData: '2012-1212',
         }),
       ).toThrow('Unable to parse date 2012-1212');
-      mockError.mockRestore();
     });
 
     describe('AltDateWidget with format option', () => {

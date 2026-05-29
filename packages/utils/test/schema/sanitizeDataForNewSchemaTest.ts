@@ -530,6 +530,39 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       };
       expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['1', '2'])).toEqual(['1']);
     });
+    it('filters out items not in the new items enum', () => {
+      const oldSchema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'string', enum: ['c', 'd'] },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'string', enum: ['a', 'b'] },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['c', 'd'])).toEqual([]);
+    });
+    it('keeps items that remain valid in the new items enum', () => {
+      const oldSchema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'string', enum: ['a', 'b', 'c'] },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'string', enum: ['a', 'b'] },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['a', 'c'])).toEqual(['a']);
+    });
+    it('returns all items when the new items schema has no enum constraint', () => {
+      const oldSchema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'string', enum: ['a', 'b'] },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'string' },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['a', 'b'])).toEqual(['a', 'b']);
+    });
     it('returns whole array when the new schema does not have maxItems for simple type', () => {
       const rootSchema: RJSFSchema = {
         definitions: {
