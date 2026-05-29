@@ -2363,7 +2363,7 @@ Move theme snapshot tests into separate package
 - However, if users of @rjsf/antd want to use v5 styling, they need to wrap your application with the `StyleProvider` from `@ant-design/cssinjs`. They need not have to install this package, its a transitive package coming from antd.
 
 ```tsx
-import { StyleProvider } from "@ant-design/cssinjs";
+import { StyleProvider } from '@ant-design/cssinjs';
 
 const Component = () => {
   return (
