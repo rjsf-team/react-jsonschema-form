@@ -32,6 +32,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Upgraded `vitest` and `jsdom` to the latest to remove deprecated package warnings
+- Fix a documentation error related to precedence when setting default values ([#5089](https://github.com/rjsf-team/react-jsonschema-form/issues/5089))
 
 # 6.6.1
 
