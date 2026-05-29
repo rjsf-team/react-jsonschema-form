@@ -41,7 +41,7 @@
     "@emotion/react": "^11.14.0",
     "@mantine/core": "^8.3.18",
     "@mantine/dates": "^8.3.18",
-    "@mantine/hooks": "^8.3.18",
+    "@mantine/hooks": "^9.2.2",
     "@mui/material": "^9.0.1",
     "@rjsf/antd": "6.6.1",
     "@rjsf/chakra-ui": "6.6.1",
