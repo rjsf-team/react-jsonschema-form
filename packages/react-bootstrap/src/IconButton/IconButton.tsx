@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { AiOutlineArrowDown } from '@react-icons/all-files/ai/AiOutlineArrowDown';
 import { AiOutlineArrowUp } from '@react-icons/all-files/ai/AiOutlineArrowUp';
 import { IoIosCopy } from '@react-icons/all-files/io/IoIosCopy';
@@ -12,7 +13,7 @@ export type BootstrapIconButtonProps<
   F extends FormContextType = any,
 > = IconButtonProps<T, S, F> & ButtonProps;
 
-export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function IconButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: BootstrapIconButtonProps<T, S, F>,
 ) {
   const { icon, iconType, className, uiSchema, registry, ...otherProps } = props;
@@ -22,8 +23,10 @@ export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSch
     </Button>
   );
 }
+const IconButton = memo(IconButtonFn) as typeof IconButtonFn;
+export default IconButton;
 
-export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function CopyButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: BootstrapIconButtonProps<T, S, F>,
 ) {
   const {
@@ -31,8 +34,9 @@ export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   } = props;
   return <IconButton title={translateString(TranslatableString.CopyButton)} {...props} icon={<IoIosCopy />} />;
 }
+export const CopyButton = memo(CopyButtonFn) as typeof CopyButtonFn;
 
-export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function MoveDownButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: BootstrapIconButtonProps<T, S, F>,
 ) {
   const {
@@ -42,8 +46,9 @@ export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema,
     <IconButton title={translateString(TranslatableString.MoveDownButton)} {...props} icon={<AiOutlineArrowDown />} />
   );
 }
+export const MoveDownButton = memo(MoveDownButtonFn) as typeof MoveDownButtonFn;
 
-export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function MoveUpButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: BootstrapIconButtonProps<T, S, F>,
 ) {
   const {
@@ -51,8 +56,9 @@ export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   } = props;
   return <IconButton title={translateString(TranslatableString.MoveUpButton)} {...props} icon={<AiOutlineArrowUp />} />;
 }
+export const MoveUpButton = memo(MoveUpButtonFn) as typeof MoveUpButtonFn;
 
-export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function RemoveButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: BootstrapIconButtonProps<T, S, F>,
 ) {
   const {
@@ -67,8 +73,9 @@ export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
     />
   );
 }
+export const RemoveButton = memo(RemoveButtonFn) as typeof RemoveButtonFn;
 
-export function ClearButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function ClearButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: BootstrapIconButtonProps<T, S, F>,
 ) {
   const {
@@ -76,3 +83,4 @@ export function ClearButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   } = props;
   return <IconButton title={translateString(TranslatableString.ClearButton)} {...props} icon={<IoMdClose />} />;
 }
+export const ClearButton = memo(ClearButtonFn) as typeof ClearButtonFn;

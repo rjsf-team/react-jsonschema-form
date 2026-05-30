@@ -1,9 +1,10 @@
+import { memo } from 'react';
 import { FormContextType, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
 import { ArrowUpIcon, ArrowDownIcon, CopyIcon, DeleteIcon, X } from 'lucide-react';
 
 import ChakraIconButton, { ChakraIconButtonProps } from './ChakraIconButton';
 
-export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function CopyButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: ChakraIconButtonProps<T, S, F>,
 ) {
   const {
@@ -13,8 +14,9 @@ export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     <ChakraIconButton<T, S, F> title={translateString(TranslatableString.CopyButton)} {...props} icon={<CopyIcon />} />
   );
 }
+export const CopyButton = memo(CopyButtonFn) as typeof CopyButtonFn;
 
-export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function MoveDownButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: ChakraIconButtonProps<T, S, F>,
 ) {
   const {
@@ -28,8 +30,9 @@ export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema,
     />
   );
 }
+export const MoveDownButton = memo(MoveDownButtonFn) as typeof MoveDownButtonFn;
 
-export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function MoveUpButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: ChakraIconButtonProps<T, S, F>,
 ) {
   const {
@@ -43,8 +46,9 @@ export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
     />
   );
 }
+export const MoveUpButton = memo(MoveUpButtonFn) as typeof MoveUpButtonFn;
 
-export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function RemoveButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: ChakraIconButtonProps<T, S, F>,
 ) {
   const {
@@ -58,8 +62,9 @@ export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
     />
   );
 }
+export const RemoveButton = memo(RemoveButtonFn) as typeof RemoveButtonFn;
 
-export function ClearButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function ClearButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: ChakraIconButtonProps<T, S, F>,
 ) {
   const {
@@ -67,3 +72,4 @@ export function ClearButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   } = props;
   return <ChakraIconButton<T, S, F> title={translateString(TranslatableString.ClearButton)} {...props} icon={<X />} />;
 }
+export const ClearButton = memo(ClearButtonFn) as typeof ClearButtonFn;

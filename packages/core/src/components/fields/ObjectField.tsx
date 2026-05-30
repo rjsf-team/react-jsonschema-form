@@ -1,4 +1,4 @@
-import { FocusEvent, useCallback, useRef, useState } from 'react';
+import { FocusEvent, memo, useCallback, useMemo, useRef, useState } from 'react';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
@@ -86,7 +86,7 @@ interface ObjectFieldPropertyProps<
 
 /** The `ObjectFieldProperty` component is used to render the `SchemaField` for a child property of an object
  */
-function ObjectFieldProperty<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function ObjectFieldPropertyFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: ObjectFieldPropertyProps<T, S, F>,
 ) {
   const {
@@ -193,6 +193,8 @@ function ObjectFieldProperty<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   );
 }
 
+const ObjectFieldProperty = memo(ObjectFieldPropertyFn) as typeof ObjectFieldPropertyFn;
+
 /** The `ObjectField` component is used to render a field in the schema that is of type `object`. It tracks whether an
  * additional property key was modified and what it was modified to
  *
@@ -222,8 +224,10 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
   const { OptionalDataControlsField } = fields;
   const formDataRef = useRef(formData);
   formDataRef.current = formData;
-  const schema: S = schemaUtils.retrieveSchema(rawSchema, formData, true);
-  const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
+  // useDeepCompareMemo stabilizes the schema reference when formData changes but the resolved
+  // schema structure hasn't — keeping property schema refs stable so memo on ObjectFieldProperty works.
+  const schema: S = useDeepCompareMemo<S>(schemaUtils.retrieveSchema(rawSchema, formData, true));
+  const uiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema, globalUiOptions), [uiSchema, globalUiOptions]);
   const { properties: schemaProperties = {} } = schema;
   // All the children will use childFieldPathId if present in the props, falling back to the fieldPathId
   const childFieldPathId = props.childFieldPathId ?? fieldPathId;
