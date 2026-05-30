@@ -3,7 +3,7 @@ import { mergeDefaultsWithFormData } from '../src';
 describe('mergeDefaultsWithFormData()', () => {
   it('shouldn`t mutate the provided objects', () => {
     const obj1 = { a: 1 };
-    mergeDefaultsWithFormData<any>(obj1, { b: 2 });
+    mergeDefaultsWithFormData(obj1, { b: 2 });
     expect(obj1).toEqual({ a: 1 });
   });
 
@@ -99,7 +99,7 @@ describe('mergeDefaultsWithFormData()', () => {
       },
       c: 3,
     };
-    expect(mergeDefaultsWithFormData<any>(obj1, obj2)).toEqual(expected);
+    expect(mergeDefaultsWithFormData(obj1, obj2)).toEqual(expected);
   });
 
   it('should recursively merge deeply nested objects, including extra array data', () => {
@@ -134,7 +134,7 @@ describe('mergeDefaultsWithFormData()', () => {
       },
       c: 3,
     };
-    expect(mergeDefaultsWithFormData<any>(obj1, obj2, true)).toEqual(expected);
+    expect(mergeDefaultsWithFormData(obj1, obj2, true)).toEqual(expected);
   });
 
   it('should recursively merge File objects', () => {
@@ -271,7 +271,7 @@ describe('mergeDefaultsWithFormData()', () => {
         },
         c: 2,
       };
-      expect(mergeDefaultsWithFormData<any>(obj1, obj2, undefined, undefined, true)).toEqual(expected);
+      expect(mergeDefaultsWithFormData(obj1, obj2, undefined, undefined, true)).toEqual(expected);
     });
 
     it('should recursively merge deeply nested objects, including extra array data', () => {
@@ -308,7 +308,7 @@ describe('mergeDefaultsWithFormData()', () => {
         c: 2,
         d: 4,
       };
-      expect(mergeDefaultsWithFormData<any>(obj1, obj2, undefined, undefined, true)).toEqual(expected);
+      expect(mergeDefaultsWithFormData(obj1, obj2, undefined, undefined, true)).toEqual(expected);
     });
 
     it('should recursively merge File objects', () => {

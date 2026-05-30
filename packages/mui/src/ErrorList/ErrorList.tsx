@@ -1,20 +1,20 @@
 import ErrorIcon from '@mui/icons-material/Error';
-import Box, { BoxProps } from '@mui/material/Box';
-import List, { ListProps } from '@mui/material/List';
-import ListItem, { ListItemProps } from '@mui/material/ListItem';
-import ListItemIcon, { ListItemIconProps } from '@mui/material/ListItemIcon';
-import ListItemText, { ListItemTextProps } from '@mui/material/ListItemText';
-import Paper, { PaperProps } from '@mui/material/Paper';
-import Typography, { TypographyProps } from '@mui/material/Typography';
-import {
-  ErrorListProps,
-  FormContextType,
-  GenericObjectType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  TranslatableString,
-  getUiOptions,
-} from '@rjsf/utils';
+import type { BoxProps } from '@mui/material/Box';
+import Box from '@mui/material/Box';
+import type { ListProps } from '@mui/material/List';
+import List from '@mui/material/List';
+import type { ListItemProps } from '@mui/material/ListItem';
+import ListItem from '@mui/material/ListItem';
+import type { ListItemIconProps } from '@mui/material/ListItemIcon';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import type { ListItemTextProps } from '@mui/material/ListItemText';
+import ListItemText from '@mui/material/ListItemText';
+import type { PaperProps } from '@mui/material/Paper';
+import Paper from '@mui/material/Paper';
+import type { TypographyProps } from '@mui/material/Typography';
+import Typography from '@mui/material/Typography';
+import type { ErrorListProps, FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { TranslatableString, getUiOptions } from '@rjsf/utils';
 
 import { computeSxProps, getMuiProps } from '../util';
 
@@ -70,16 +70,14 @@ export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSche
           {translateString(TranslatableString.ErrorsLabel)}
         </Typography>
         <List dense={true} {...errorList}>
-          {errors.map((error, i: number) => {
-            return (
-              <ListItem key={i} {...errorListItem}>
-                <ListItemIcon {...errorListItemIcon}>
-                  <ErrorIcon color='error' />
-                </ListItemIcon>
-                <ListItemText primary={error.stack} {...errorListItemText} />
-              </ListItem>
-            );
-          })}
+          {errors.map((error, i: number) => (
+            <ListItem key={i} {...errorListItem}>
+              <ListItemIcon {...errorListItemIcon}>
+                <ErrorIcon color='error' />
+              </ListItemIcon>
+              <ListItemText primary={error.stack} {...errorListItemText} />
+            </ListItem>
+          ))}
         </List>
       </Box>
     </Paper>

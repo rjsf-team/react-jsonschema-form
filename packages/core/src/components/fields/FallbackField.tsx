@@ -1,18 +1,14 @@
 import { useMemo, useState } from 'react';
+import type { FallbackFieldProps, FieldPathId, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
-  FallbackFieldProps,
-  FieldPathId,
-  FormContextType,
   getTemplate,
   getUiOptions,
   hashObject,
-  RJSFSchema,
-  StrictRJSFSchema,
   toFieldPathId,
   TranslatableString,
   useDeepCompareMemo,
 } from '@rjsf/utils';
-import { JSONSchema7TypeName } from 'json-schema';
+import type { JSONSchema7TypeName } from 'json-schema';
 
 /**
  * Get the schema for the type selection component.

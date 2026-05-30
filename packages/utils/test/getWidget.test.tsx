@@ -1,7 +1,9 @@
-import { forwardRef, memo, ForwardedRef } from 'react';
+import type { ForwardedRef } from 'react';
+import { forwardRef, memo } from 'react';
 import { render } from '@testing-library/react';
 
-import { FieldPathId, Registry, RJSFSchema, WidgetProps, getWidget, Widget } from '../src';
+import type { FieldPathId, Registry, RJSFSchema, WidgetProps, Widget } from '../src';
+import { getWidget } from '../src';
 
 const subschema: RJSFSchema = {
   type: 'boolean',
@@ -30,17 +32,16 @@ const schema: RJSFSchema = {
 };
 const schemaStr = JSON.stringify(schema);
 
-const TestRefWidget: Widget = forwardRef<HTMLSpanElement, Partial<WidgetProps>>(function TestRefWidget(
-  props: Partial<WidgetProps>,
-  ref: ForwardedRef<HTMLSpanElement>,
-) {
-  const { options } = props;
-  return (
-    <span {...options} ref={ref}>
-      test
-    </span>
-  );
-});
+const TestRefWidget: Widget = forwardRef<HTMLSpanElement, Partial<WidgetProps>>(
+  (props: Partial<WidgetProps>, ref: ForwardedRef<HTMLSpanElement>) => {
+    const { options } = props;
+    return (
+      <span {...options} ref={ref}>
+        test
+      </span>
+    );
+  },
+);
 
 TestRefWidget.defaultProps = {
   options: { id: 'test-id' },

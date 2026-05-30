@@ -1,8 +1,12 @@
-import { FocusEvent } from 'react';
-import FormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel';
+import type { FocusEvent } from 'react';
+import type { FormControlLabelProps } from '@mui/material/FormControlLabel';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
-import Radio, { RadioProps } from '@mui/material/Radio';
-import RadioGroup, { RadioGroupProps } from '@mui/material/RadioGroup';
+import type { RadioProps } from '@mui/material/Radio';
+import Radio from '@mui/material/Radio';
+import type { RadioGroupProps } from '@mui/material/RadioGroup';
+import RadioGroup from '@mui/material/RadioGroup';
+import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
@@ -11,11 +15,6 @@ import {
   getOptionValueFormat,
   labelValue,
   optionId,
-  FormContextType,
-  GenericObjectType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
 } from '@rjsf/utils';
 
 import { getMuiProps } from '../util';
@@ -80,7 +79,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       >
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index) => {
-            const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
+            const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
             const radio = (
               <FormControlLabel
                 {...muiSlotProps?.formControlLabel}

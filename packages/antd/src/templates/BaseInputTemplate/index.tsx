@@ -1,15 +1,14 @@
-import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
+import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
+import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
-import {
-  ariaDescribedByIds,
+import type {
   BaseInputTemplateProps,
-  examplesId,
-  getInputProps,
   FormContextType,
   GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
+import { ariaDescribedByIds, examplesId, getInputProps } from '@rjsf/utils';
 import { Input, InputNumber } from 'antd';
 
 const INPUT_STYLE = {
@@ -53,9 +52,9 @@ export default function BaseInputTemplate<
 
   const handleNumberChange = (nextValue: number | null) => onChange(nextValue);
 
-  const handleTextChange = onChangeOverride
-    ? onChangeOverride
-    : ({ target }: ChangeEvent<HTMLInputElement>) => onChange(target.value === '' ? options.emptyValue : target.value);
+  const handleTextChange =
+    onChangeOverride ||
+    (({ target }: ChangeEvent<HTMLInputElement>) => onChange(target.value === '' ? options.emptyValue : target.value));
 
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
 

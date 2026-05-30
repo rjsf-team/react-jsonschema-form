@@ -1,15 +1,5 @@
-import {
-  parseDateString,
-  toDateString,
-  TranslatableString,
-  utcToLocal,
-  ErrorSchema,
-  FieldPathList,
-  FieldProps,
-  RJSFSchema,
-  UiSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { ErrorSchema, FieldPathList, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import { parseDateString, toDateString, TranslatableString, utcToLocal } from '@rjsf/utils';
 import { fireEvent, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -26,7 +16,7 @@ import {
 setupConsoleErrorSuppression();
 
 const mockFileReader = {
-  // eslint-disable-next-line no-unused-vars
+  // oxlint-disable-next-line no-unused-vars
   set onload(fn: (event: { target: { result: string } }) => void) {
     fn({ target: { result: 'data:text/plain;base64,x=' } });
   },
@@ -68,9 +58,7 @@ const user = userEvent.setup();
 describe('StringField', () => {
   const CustomWidget = () => <div id='custom' />;
   beforeAll(() => {
-    vi.spyOn(window, 'FileReader').mockImplementation(function () {
-      return mockFileReader;
-    });
+    vi.spyOn(window, 'FileReader').mockImplementation(() => mockFileReader);
   });
 
   describe('TextWidget', () => {

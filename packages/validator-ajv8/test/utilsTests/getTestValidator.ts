@@ -1,7 +1,8 @@
-import { CustomValidator, ErrorTransformer, RJSFSchema, ValidationData } from '@rjsf/utils';
+import type { CustomValidator, ErrorTransformer, RJSFSchema, ValidationData } from '@rjsf/utils';
 
-import { TestValidatorType } from '../../../utils/test/schema';
-import { customizeValidator, CustomValidatorOptionsType } from '../../src';
+import type { TestValidatorType } from '../../../utils/test/schema';
+import type { CustomValidatorOptionsType } from '../../src';
+import { customizeValidator } from '../../src';
 
 /** In this environment, a test validator merely creates an internal `AJV8` validator with the custom `options` and
  * then forwards all calls into it. It is provided to mirror the test validator in the `utils` directory, except that
@@ -27,7 +28,9 @@ export default function getTestValidator<T = any>(options: CustomValidatorOption
       return validator.rawValidation(schema, formData);
     },
     // This is intentionally a no-op as we are using the real validator here
-    setReturnValues() {},
+    setReturnValues() {
+      /* empty */
+    },
     reset() {
       validator.reset?.();
     },

@@ -1,4 +1,4 @@
-import { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema } from '@rjsf/utils';
 
 import { createPrecompiledValidator } from '../src';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators';
@@ -6,7 +6,7 @@ import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators';
 // Evaluate generated CJS module source into an exports object.
 function loadModule(code: string) {
   const module = { exports: {} as Record<string, any> };
-  // eslint-disable-next-line no-new-func
+  // oxlint-disable-next-line no-new-func, no-implied-eval
   new Function('module', 'exports', code)(module, module.exports);
   return module.exports;
 }

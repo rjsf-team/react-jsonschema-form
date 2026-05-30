@@ -1,4 +1,4 @@
-import { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types';
+import type { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types';
 
 /** Returns the value(s) from `allEnumOptions` at the index(es) provided by `valueIndex`. If `valueIndex` is not an
  * array AND the index is not valid for `allEnumOptions`, `emptyValue` is returned. If `valueIndex` is an array, AND it
@@ -12,7 +12,7 @@ import { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types';
  *        `emptyValue` or an empty list.
  */
 export default function enumOptionsValueForIndex<S extends StrictRJSFSchema = RJSFSchema>(
-  valueIndex: string | number | Array<string | number>,
+  valueIndex: string | number | (string | number)[],
   allEnumOptions: EnumOptionsType<S>[] = [],
   emptyValue?: EnumOptionsType<S>['value'],
 ): EnumOptionsType<S>['value'] | EnumOptionsType<S>['value'][] | undefined {

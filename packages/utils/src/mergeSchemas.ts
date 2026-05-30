@@ -3,7 +3,7 @@ import union from 'lodash/union';
 import { REQUIRED_KEY } from './constants';
 import getSchemaType from './getSchemaType';
 import isObject from './isObject';
-import { GenericObjectType } from './types';
+import type { GenericObjectType } from './types';
 
 /** Recursively merge deeply nested schemas. The difference between `mergeSchemas` and `mergeObjects` is that
  * `mergeSchemas` only concats arrays for values under the 'required' keyword, and when it does, it doesn't include
@@ -14,7 +14,7 @@ import { GenericObjectType } from './types';
  * @returns - The merged schema object
  */
 export default function mergeSchemas(obj1: GenericObjectType, obj2: GenericObjectType) {
-  const acc = Object.assign({}, obj1); // Prevent mutation of source object.
+  const acc = { ...obj1 }; // Prevent mutation of source object.
   return Object.keys(obj2).reduce((acc, key) => {
     const left = obj1 ? obj1[key] : {},
       right = obj2[key];

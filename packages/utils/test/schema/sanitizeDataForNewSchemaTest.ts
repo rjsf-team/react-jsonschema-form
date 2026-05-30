@@ -1,9 +1,10 @@
 import cloneDeep from 'lodash/cloneDeep';
 import set from 'lodash/set';
 
-import { createSchemaUtils, sanitizeDataForNewSchema, SchemaUtilsType, RJSFSchema } from '../../src';
+import type { SchemaUtilsType, RJSFSchema } from '../../src';
+import { createSchemaUtils, sanitizeDataForNewSchema } from '../../src';
 import { FIRST_ONE_OF, oneOfData, oneOfSchema, SECOND_ONE_OF } from '../testUtils/testData';
-import { TestValidatorType } from './types';
+import type { TestValidatorType } from './types';
 
 export default function sanitizeDataForNewSchemaTest(testValidator: TestValidatorType) {
   describe('sanitizeDataForNewSchema', () => {

@@ -1,5 +1,6 @@
 import { makeStyles, tokens } from '@fluentui/react-components';
-import { errorId, FieldErrorProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { FieldErrorProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { errorId } from '@rjsf/utils';
 
 const useStyles = makeStyles({
   list: { marginTop: 0, marginBottom: 0, paddingLeft: 0, listStyleType: 'none' },
@@ -30,15 +31,13 @@ export default function FieldErrorTemplate<
 
   return (
     <ul className={classes.list}>
-      {errors.map((error, i: number) => {
-        return (
-          <li key={i} className={classes.listItem}>
-            <small className={classes.errorLabel} id={id}>
-              {error}
-            </small>
-          </li>
-        );
-      })}
+      {errors.map((error, i: number) => (
+        <li key={i} className={classes.listItem}>
+          <small className={classes.errorLabel} id={id}>
+            {error}
+          </small>
+        </li>
+      ))}
     </ul>
   );
 }

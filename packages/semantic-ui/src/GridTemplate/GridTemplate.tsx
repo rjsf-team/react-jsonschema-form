@@ -1,4 +1,4 @@
-import { GridTemplateProps } from '@rjsf/utils';
+import type { GridTemplateProps } from '@rjsf/utils';
 import { Grid } from 'semantic-ui-react';
 
 /** Renders a `GridTemplate` for semantic-ui, which is expecting the column sizing information coming in via the

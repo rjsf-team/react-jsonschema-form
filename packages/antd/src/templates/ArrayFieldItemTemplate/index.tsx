@@ -1,11 +1,5 @@
-import {
-  ArrayFieldItemTemplateProps,
-  FormContextType,
-  getUiOptions,
-  getTemplate,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { ArrayFieldItemTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { getUiOptions, getTemplate } from '@rjsf/utils';
 import { Col, Row, Space } from 'antd';
 
 const BTN_GRP_STYLE = {

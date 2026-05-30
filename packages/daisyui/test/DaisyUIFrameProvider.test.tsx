@@ -2,7 +2,7 @@ import { render, waitFor } from '@testing-library/react';
 
 import { __createDaisyUIFrameProvider } from '../src/DaisyUIFrameProvider';
 
-let localStorageMock: { [key: string]: string } = {};
+let localStorageMock: Record<string, string> = {};
 const mockSetItem = vi.fn((key, value) => {
   localStorageMock[key] = value;
 });
@@ -12,16 +12,14 @@ const mockDocument = {
   head: {
     appendChild: vi.fn(),
   },
-  createElement: vi.fn((tagName) => {
-    return {
-      tagName,
-      textContent: '',
-      rel: '',
-      href: '',
-      src: '',
-      remove: mockRemove,
-    };
-  }),
+  createElement: vi.fn((tagName) => ({
+    tagName,
+    textContent: '',
+    rel: '',
+    href: '',
+    src: '',
+    remove: mockRemove,
+  })),
 };
 
 describe('DaisyUIFrameProvider', () => {

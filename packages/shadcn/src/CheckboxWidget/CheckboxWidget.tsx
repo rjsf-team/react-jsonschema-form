@@ -1,14 +1,5 @@
-import {
-  ariaDescribedByIds,
-  descriptionId,
-  FormContextType,
-  getTemplate,
-  labelValue,
-  RJSFSchema,
-  schemaRequiresTrueValue,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, descriptionId, getTemplate, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
 
 import { Checkbox } from '../components/ui/checkbox';
 import { Label } from '../components/ui/label';

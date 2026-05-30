@@ -1,15 +1,13 @@
-import { FocusEvent } from 'react';
-import { CheckboxCheckedChangeDetails, Text } from '@chakra-ui/react';
+import type { FocusEvent } from 'react';
+import type { CheckboxCheckedChangeDetails } from '@chakra-ui/react';
+import { Text } from '@chakra-ui/react';
+import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   descriptionId,
   getTemplate,
   labelValue,
-  WidgetProps,
   schemaRequiresTrueValue,
-  StrictRJSFSchema,
-  RJSFSchema,
-  FormContextType,
   getUiOptions,
 } from '@rjsf/utils';
 

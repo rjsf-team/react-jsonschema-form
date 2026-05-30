@@ -1,7 +1,8 @@
 import get from 'lodash/get';
 
-import { DEFINITIONS_KEY, PROPERTIES_KEY, RJSFSchema, createSchemaUtils } from '../../src';
-import { TestValidatorType } from './types';
+import type { RJSFSchema } from '../../src';
+import { DEFINITIONS_KEY, PROPERTIES_KEY, createSchemaUtils } from '../../src';
+import type { TestValidatorType } from './types';
 
 const rawSchema = {
   title: 'Test Schema',

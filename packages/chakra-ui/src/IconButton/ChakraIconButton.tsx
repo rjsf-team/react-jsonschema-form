@@ -1,6 +1,12 @@
 import { memo } from 'react';
-import { IconButton, IconButtonProps } from '@chakra-ui/react';
-import { FormContextType, IconButtonProps as RJSFIconButtonProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { IconButtonProps } from '@chakra-ui/react';
+import { IconButton } from '@chakra-ui/react';
+import type {
+  FormContextType,
+  IconButtonProps as RJSFIconButtonProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from '@rjsf/utils';
 
 export type ChakraIconButtonProps<
   T = any,
@@ -14,7 +20,7 @@ function ChakraIconButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   const { icon, iconType, uiSchema, registry, ...otherProps } = props;
 
   return (
-    <IconButton aria-label={props.title!} {...otherProps}>
+    <IconButton aria-label={props.title} {...otherProps}>
       {icon}
     </IconButton>
   );

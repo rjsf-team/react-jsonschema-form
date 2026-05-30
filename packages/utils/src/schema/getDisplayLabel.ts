@@ -4,7 +4,7 @@ import { ADDITIONAL_PROPERTY_FLAG, UI_FIELD_KEY, UI_WIDGET_KEY } from '../consta
 import getSchemaType from '../getSchemaType';
 import getUiOptions from '../getUiOptions';
 import isCustomWidget from '../isCustomWidget';
-import {
+import type {
   FormContextType,
   GlobalUISchemaOptions,
   RJSFSchema,

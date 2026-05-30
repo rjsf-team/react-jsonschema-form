@@ -1,13 +1,5 @@
-import {
-  ADDITIONAL_PROPERTY_FLAG,
-  UI_OPTIONS_KEY,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  TranslatableString,
-  WrapIfAdditionalTemplateProps,
-  buttonId,
-} from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
+import { ADDITIONAL_PROPERTY_FLAG, UI_OPTIONS_KEY, TranslatableString, buttonId } from '@rjsf/utils';
 import { Col, Row, Form, Input } from 'antd';
 
 const VERTICAL_LABEL_COL = { span: 24 };

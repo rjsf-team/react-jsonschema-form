@@ -1,4 +1,4 @@
-import { GridTemplateProps } from '@rjsf/utils';
+import type { GridTemplateProps } from '@rjsf/utils';
 
 /** Renders a `GridTemplate` for DaisyUI, which follows the same pattern as other RJSF themes.
  * This uses DaisyUI's grid system with flexbox for responsive layouts.

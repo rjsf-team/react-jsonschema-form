@@ -1,9 +1,9 @@
-import { ErrorListProps, FormValidation, GenericObjectType, RJSFSchema } from '@rjsf/utils';
+import type { ErrorListProps, FormValidation, GenericObjectType, RJSFSchema } from '@rjsf/utils';
 import { customizeValidator as customizeV8Validator } from '@rjsf/validator-ajv8';
 import userEvent from '@testing-library/user-event';
 import type { Mock } from 'vitest';
 
-import { FormProps } from '../src';
+import type { FormProps } from '../src';
 import { createFormComponent, submitForm } from './testUtils';
 
 const user = userEvent.setup();

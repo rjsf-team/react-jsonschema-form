@@ -1,8 +1,8 @@
-import { JSONSchema7Type } from 'json-schema';
+import type { JSONSchema7Type } from 'json-schema';
 import isString from 'lodash/isString';
 
 import { CONST_KEY, getSchemaType, isObject } from './';
-import { RJSFSchema, StrictRJSFSchema } from './types';
+import type { RJSFSchema, StrictRJSFSchema } from './types';
 
 /**
  * Checks if the schema const property value is an AJV $data reference

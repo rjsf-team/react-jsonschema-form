@@ -1,18 +1,15 @@
 import { useMemo, useState } from 'react';
+import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
-  FormContextType,
-  GenericObjectType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
 } from '@rjsf/utils';
-import { Select, SelectProps } from 'antd';
-import { DefaultOptionType } from 'antd/es/select';
+import type { SelectProps } from 'antd';
+import { Select } from 'antd';
+import type { DefaultOptionType } from 'antd/es/select';
 import isString from 'lodash/isString';
 
 const SELECT_STYLE = {
@@ -61,7 +58,7 @@ export default function SelectWidget<
   const filterOption: SelectProps['filterOption'] = (input, option) => {
     if (option && isString(option.label)) {
       // labels are strings in this context
-      return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+      return option.label.toLowerCase().includes(input.toLowerCase());
     }
     return false;
   };
@@ -81,7 +78,7 @@ export default function SelectWidget<
   const selectOptions: DefaultOptionType[] | undefined = useMemo(() => {
     if (Array.isArray(enumOptions)) {
       const options: DefaultOptionType[] = enumOptions.map(({ value: optionValue, label: optionLabel }, index) => ({
-        disabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(optionValue) !== -1,
+        disabled: Array.isArray(enumDisabled) && enumDisabled.includes(optionValue),
         key: String(index),
         value: enumOptionValueEncoder(optionValue, index, optionValueFormat),
         label: optionLabel,

@@ -1,8 +1,9 @@
-import { RJSFSchema, StrictRJSFSchema, schemaParser } from '@rjsf/utils';
+import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { schemaParser } from '@rjsf/utils';
 import { Validator } from 'ata-validator';
 
 import { COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from './createAtaInstance';
-import { CustomValidatorOptionsType } from './types';
+import type { CustomValidatorOptionsType } from './types';
 
 /** Compiles a schema into a precompiled validator module. ata's
  * `bundleStandalone` emits `module.exports = [fn, ...]`, one validator per
@@ -53,7 +54,7 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
     // close over `re` and emit `re.test(value)`, leaving `re` undefined in the
     // generated module. Building it from a string inlines the regex literal into the
     // body, so the bundled output stays self-contained.
-    // eslint-disable-next-line no-new-func
+    // oxlint-disable-next-line no-new-func, no-implied-eval
     formats[name] = new Function('value', `return ${re.toString()}.test(value)`) as (value: string) => boolean;
   }
 

@@ -1,5 +1,5 @@
 import { ChakraProvider, defaultSystem, EnvironmentProvider } from '@chakra-ui/react';
-import { FormProps } from '@rjsf/core';
+import type { FormProps } from '@rjsf/core';
 
 import Form from '../src';
 

@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import type { ReactElement } from 'react';
 
 /** Helper function that will return the value to use for a widget `label` based on `hideLabel`. The `fallback` is used
  * as the return value from the function when `hideLabel` is true. Due to the implementation of theme components, it

@@ -1,6 +1,7 @@
-import { ComponentType } from 'react';
-import { FormProps, ThemeProps, withTheme } from '@rjsf/core';
-import { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { ComponentType } from 'react';
+import type { FormProps, ThemeProps } from '@rjsf/core';
+import { withTheme } from '@rjsf/core';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 import Templates, { generateTemplates } from './templates';
 import Widgets, { generateWidgets } from './widgets';

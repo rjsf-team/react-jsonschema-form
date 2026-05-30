@@ -3,7 +3,13 @@ import get from 'lodash/get';
 import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY } from '../constants';
 import deepEquals from '../deepEquals';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
-import { Experimental_CustomMergeAllOf, FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
+import type {
+  Experimental_CustomMergeAllOf,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  ValidatorType,
+} from '../types';
 import retrieveSchema from './retrieveSchema';
 
 /** Finds the option inside the `schema['any/oneOf']` list which has the `properties[selectorField].default` or
@@ -36,17 +42,17 @@ export default function findSelectedOptionInXxxOf<
   if (Array.isArray(schema[xxx])) {
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
     const selectorField = discriminator || fallbackField;
-    const xxxOfs = schema[xxx]!.map((xxxOf) =>
+    const xxxOfs = schema[xxx].map((xxxOf) =>
       retrieveSchema<T, S, F>(validator, xxxOf as S, rootSchema, formData, experimental_customMergeAllOf),
     );
     const data = get(formData, selectorField);
     if (data !== undefined) {
-      return xxxOfs.find((xxx) => {
-        return deepEquals(
+      return xxxOfs.find((xxx) =>
+        deepEquals(
           get(xxx, [PROPERTIES_KEY, selectorField, DEFAULT_KEY], get(xxx, [PROPERTIES_KEY, selectorField, CONST_KEY])),
           data,
-        );
-      });
+        ),
+      );
     }
   }
   return undefined;

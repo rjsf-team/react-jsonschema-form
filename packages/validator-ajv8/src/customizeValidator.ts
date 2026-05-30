@@ -1,6 +1,6 @@
-import { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
-import { CustomValidatorOptionsType, Localizer } from './types';
+import type { CustomValidatorOptionsType, Localizer } from './types';
 import AJV8Validator from './validator';
 
 /** Creates and returns a customized implementation of the `ValidatorType` with the given customization `options` if

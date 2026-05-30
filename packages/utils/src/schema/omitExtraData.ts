@@ -8,7 +8,7 @@ import findSchemaDefinition from '../findSchemaDefinition';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
 import getSchemaType from '../getSchemaType';
 import isObject from '../isObject';
-import {
+import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
   GenericObjectType,
@@ -177,7 +177,7 @@ export default function omitExtraData<
    */
   function handleObject(schema: S, source: GenericObjectType, target: GenericObjectType): GenericObjectType {
     const { properties, additionalProperties, patternProperties, propertyNames } = schema;
-    const requiredSet = new Set((schema.required ?? []) as string[]);
+    const requiredSet = new Set(schema.required ?? []);
 
     /** Recursively omits extra data from `value` via `omit`, then conditionally writes the result to
      * `target[key]`. Optional object-valued properties are dropped when every key in the filtered
@@ -196,11 +196,11 @@ export default function omitExtraData<
       const v = omit(schemaDef, value, target[key]);
       if (!required && isObject(v)) {
         // Resolve $ref so we can inspect the effective required list for the inner schema.
-        let sd = isSchemaObj(schemaDef as S | boolean) ? (schemaDef as S) : ({} as S);
+        let sd = isSchemaObj(schemaDef) ? schemaDef : ({} as S);
         if (sd.$ref !== undefined) {
-          sd = findSchemaDefinition(sd.$ref, rootSchema) as S;
+          sd = findSchemaDefinition(sd.$ref, rootSchema);
         }
-        const innerRequired = new Set((sd.required ?? []) as string[]);
+        const innerRequired = new Set(sd.required ?? []);
         // Drop this optional object when every key in v is both optional in the inner schema
         // and has an empty value. Vacuously true for {} so empty objects are always dropped.
         const shouldDrop = Object.entries(v as GenericObjectType).every(
@@ -347,7 +347,7 @@ export default function omitExtraData<
     // Resolve $refs and relax additionalProperties:false → true in one pass for scoring only.
     // The unrelaxed resolved schema is re-derived for the winning option so that omit() still
     // respects additionalProperties:false during filtering.
-    const scoringOptions = relaxOptionsForScoring<S>(oneOf as Array<S | boolean>, true, rootSchema);
+    const scoringOptions = relaxOptionsForScoring<S>(oneOf as (S | boolean)[], true, rootSchema);
     const bestIndex = getClosestMatchingOption<T, S, F>(
       validator,
       rootSchema,
@@ -357,11 +357,11 @@ export default function omitExtraData<
       getDiscriminatorFieldFromSchema<S>(schema),
       experimental_customMergeAllOf,
     );
-    const winning = (oneOf as Array<S | boolean>)[bestIndex];
+    const winning = (oneOf as (S | boolean)[])[bestIndex];
     // For object options, re-resolve without relaxation so additionalProperties:false is respected.
     // For boolean options, scoringOptions already holds the converted schema (true→{}, false→{not:{}}).
     const resolved: S = isObject(winning)
-      ? resolveAllReferences<S>(winning as S, rootSchema, [])
+      ? resolveAllReferences<S>(winning, rootSchema, [])
       : scoringOptions[bestIndex];
     return omit(resolved, source, target);
   }
@@ -385,9 +385,9 @@ export default function omitExtraData<
     if (
       source === undefined ||
       (Array.isArray(source) && source.length === 0) ||
-      (isObject(source) && Object.keys(source as object).length === 0)
+      (isObject(source) && Object.keys(source).length === 0)
     ) {
-      for (const branch of anyOf as Array<S | boolean>) {
+      for (const branch of anyOf as (S | boolean)[]) {
         target = omit(branch, source, target);
       }
       return target;
@@ -438,7 +438,7 @@ export default function omitExtraData<
       return source;
     }
 
-    let schema = schemaDef as S;
+    let schema = schemaDef;
     const { $ref: ref, allOf } = schema;
 
     if (ref !== undefined) {

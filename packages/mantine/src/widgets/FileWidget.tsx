@@ -1,14 +1,7 @@
 import { useCallback } from 'react';
 import { FileInput, Pill } from '@mantine/core';
-import {
-  ariaDescribedByIds,
-  FormContextType,
-  labelValue,
-  RJSFSchema,
-  StrictRJSFSchema,
-  useFileWidgetProps,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, labelValue, useFileWidgetProps } from '@rjsf/utils';
 
 import { cleanupOptions } from '../utils';
 

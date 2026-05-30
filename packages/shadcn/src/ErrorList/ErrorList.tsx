@@ -1,4 +1,5 @@
-import { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
+import type { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { TranslatableString } from '@rjsf/utils';
 import { AlertCircle } from 'lucide-react';
 
 import { Alert, AlertDescription, AlertTitle } from '../components/ui/alert';
@@ -17,9 +18,9 @@ export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSche
       <AlertCircle className='h-4 w-4' />
       <AlertTitle>{translateString(TranslatableString.ErrorsLabel)}</AlertTitle>
       <AlertDescription className='flex flex-col gap-1'>
-        {errors.map((error, i: number) => {
-          return <span key={i}>&#x2022; {error.stack}</span>;
-        })}
+        {errors.map((error, i: number) => (
+          <span key={i}>&#x2022; {error.stack}</span>
+        ))}
       </AlertDescription>
     </Alert>
   );

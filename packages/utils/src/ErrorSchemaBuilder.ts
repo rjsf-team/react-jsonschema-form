@@ -4,7 +4,7 @@ import set from 'lodash/set';
 import setWith from 'lodash/setWith';
 
 import { ERRORS_KEY } from './constants';
-import { ErrorSchema, FieldPathList } from './types';
+import type { ErrorSchema, FieldPathList } from './types';
 
 /** Represents the type of the path which can be a string of dotted path values or a list of string or numbers where
  * numbers represent array indexes/

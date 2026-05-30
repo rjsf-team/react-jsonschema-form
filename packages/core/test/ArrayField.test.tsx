@@ -1,4 +1,4 @@
-import {
+import type {
   ArrayFieldTemplateProps,
   ArrayFieldItemButtonsTemplateProps,
   ArrayFieldItemTemplateProps,
@@ -179,7 +179,7 @@ const ArrayFieldTest = (props: FieldProps<any[]>) => {
 };
 
 const mockFileReader = {
-  // eslint-disable-next-line no-unused-vars
+  // oxlint-disable-next-line no-unused-vars
   set onload(fn: (event: { target: { result: string } }) => void) {
     fn({ target: { result: 'data:text/plain;base64,x=' } });
   },
@@ -189,25 +189,19 @@ const mockFileReader = {
 } as unknown as FileReader;
 
 describe('ArrayField', () => {
-  const CustomComponent = (props: WidgetProps) => {
-    return <div id='custom'>{props.rawErrors}</div>;
-  };
+  const CustomComponent = (props: WidgetProps) => <div id='custom'>{props.rawErrors}</div>;
 
-  const CustomSelectComponent = (props: WidgetProps) => {
-    return (
-      <select>
-        {props.value.map((item: any, index: number) => (
-          <option key={index} id='custom-select'>
-            {item}
-          </option>
-        ))}
-      </select>
-    );
-  };
+  const CustomSelectComponent = (props: WidgetProps) => (
+    <select>
+      {props.value.map((item: any, index: number) => (
+        <option key={index} id='custom-select'>
+          {item}
+        </option>
+      ))}
+    </select>
+  );
   beforeAll(() => {
-    vi.spyOn(window, 'FileReader').mockImplementation(function () {
-      return mockFileReader;
-    });
+    vi.spyOn(window, 'FileReader').mockImplementation(() => mockFileReader);
   });
 
   describe('Unsupported array schema', () => {
@@ -384,13 +378,11 @@ describe('ArrayField', () => {
     });
 
     it('should pass parentUiSchema to ArrayFieldItemTemplate', () => {
-      const ParentUiSchemaItemTemplate = (props: ArrayFieldItemTemplateProps) => {
-        return (
-          <div className='custom-item' data-has-parent-uischema={props.parentUiSchema ? 'true' : 'false'}>
-            {props.children}
-          </div>
-        );
-      };
+      const ParentUiSchemaItemTemplate = (props: ArrayFieldItemTemplateProps) => (
+        <div className='custom-item' data-has-parent-uischema={props.parentUiSchema ? 'true' : 'false'}>
+          {props.children}
+        </div>
+      );
 
       const { node } = createFormComponent({
         schema,
@@ -1676,14 +1668,12 @@ describe('ArrayField', () => {
 
     it('should pass rawErrors down to every level of custom widgets', async () => {
       const CustomItem = (props: FieldProps) => <div id='custom-item'>{props.children}</div>;
-      const CustomTemplate = (props: ArrayFieldTemplateProps) => {
-        return (
-          <div id='custom'>
-            {props.items}
-            <div id='custom-error'>{props.rawErrors && props.rawErrors.join(', ')}</div>
-          </div>
-        );
-      };
+      const CustomTemplate = (props: ArrayFieldTemplateProps) => (
+        <div id='custom'>
+          {props.items}
+          <div id='custom-error'>{props.rawErrors && props.rawErrors.join(', ')}</div>
+        </div>
+      );
 
       const schema: RJSFSchema = {
         type: 'array',
@@ -2106,9 +2096,9 @@ describe('ArrayField', () => {
     });
 
     it('should pass uiSchema to custom widget', () => {
-      const CustomWidget = ({ uiSchema }: WidgetProps) => {
-        return <div id='custom-ui-option-value'>{uiSchema?.custom_field_key['ui:options'].test}</div>;
-      };
+      const CustomWidget = ({ uiSchema }: WidgetProps) => (
+        <div id='custom-ui-option-value'>{uiSchema?.custom_field_key['ui:options'].test}</div>
+      );
 
       const { node } = createFormComponent({
         schema: {
@@ -3270,13 +3260,11 @@ describe('ArrayField', () => {
         },
       };
 
-      const dynamicUiSchemaFunction = vi.fn((itemData) => {
-        return {
-          name: {
-            'ui:widget': itemData.role === 'admin' ? 'textarea' : 'text',
-          },
-        };
-      });
+      const dynamicUiSchemaFunction = vi.fn((itemData) => ({
+        name: {
+          'ui:widget': itemData.role === 'admin' ? 'textarea' : 'text',
+        },
+      }));
 
       const uiSchema: UiSchema = {
         items: dynamicUiSchemaFunction,

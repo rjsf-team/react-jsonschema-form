@@ -1,5 +1,6 @@
 import { ListItem, ListRoot } from '@chakra-ui/react';
-import { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
+import type { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { TranslatableString } from '@rjsf/utils';
 
 import { Alert } from '../components/ui/alert';
 

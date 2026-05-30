@@ -1,10 +1,15 @@
-import Form, { FormProps, FormState, IChangeEvent } from './components/Form';
-import RichDescription, { RichDescriptionProps } from './components/RichDescription';
-import RichHelp, { RichHelpProps } from './components/RichHelp';
-import SchemaExamples, { SchemaExamplesProps } from './components/SchemaExamples';
+import type { FormProps, FormState, IChangeEvent } from './components/Form';
+import Form from './components/Form';
+import type { RichDescriptionProps } from './components/RichDescription';
+import RichDescription from './components/RichDescription';
+import type { RichHelpProps } from './components/RichHelp';
+import RichHelp from './components/RichHelp';
+import type { SchemaExamplesProps } from './components/SchemaExamples';
+import SchemaExamples from './components/SchemaExamples';
 import getDefaultRegistry from './getDefaultRegistry';
 import getTestRegistry from './getTestRegistry';
-import withTheme, { ThemeProps } from './withTheme';
+import type { ThemeProps } from './withTheme';
+import withTheme from './withTheme';
 
 export type {
   FormProps,

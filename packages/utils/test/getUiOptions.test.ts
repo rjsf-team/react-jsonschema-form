@@ -1,7 +1,8 @@
 import noop from 'lodash/noop';
 import type { MockInstance } from 'vitest';
 
-import { GlobalUISchemaOptions, UIOptionsType, UiSchema, getUiOptions } from '../src';
+import type { GlobalUISchemaOptions, UIOptionsType, UiSchema } from '../src';
+import { getUiOptions } from '../src';
 
 const uiSchema: UiSchema = {
   widgetText: {
@@ -36,7 +37,7 @@ const globalOptions: GlobalUISchemaOptions = {
   copyable: true,
 };
 
-const results: { [key: string]: UIOptionsType } = {
+const results: Record<string, UIOptionsType> = {
   widgetText: { widget: 'select' },
   widgetObject: {},
   arrayObject: { addable: true, copyable: true },

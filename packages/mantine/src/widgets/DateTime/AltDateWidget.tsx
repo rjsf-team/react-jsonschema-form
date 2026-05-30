@@ -1,16 +1,6 @@
 import { Flex, Box, Group, Button, Select, Input } from '@mantine/core';
-import {
-  ariaDescribedByIds,
-  dateRangeOptions,
-  titleId,
-  DateObject,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  TranslatableString,
-  useAltDateWidgetProps,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { DateObject, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, dateRangeOptions, titleId, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
 
 /** The `AltDateWidget` is an alternative widget for rendering date properties.
  * @param props - The `WidgetProps` for this component

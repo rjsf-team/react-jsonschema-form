@@ -13,7 +13,7 @@ import {
   REF_KEY,
   SCHEMA_KEY,
 } from './constants';
-import { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types';
+import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types';
 
 /** Looks for the `$id` pointed by `ref` in the schema definitions embedded in
  * a JSON Schema bundle
@@ -32,14 +32,14 @@ function findEmbeddedSchemaRecursive<S extends StrictRJSFSchema = RJSFSchema>(sc
         if (isObject(item)) {
           const result = findEmbeddedSchemaRecursive<S>(item as S, ref);
           if (result !== undefined) {
-            return result as S;
+            return result;
           }
         }
       }
     } else if (isObject(subSchema)) {
       const result = findEmbeddedSchemaRecursive<S>(subSchema as S, ref);
       if (result !== undefined) {
-        return result as S;
+        return result;
       }
     }
   }

@@ -1,9 +1,9 @@
-import { Sample } from './Sample';
+import type { Sample } from './Sample';
 
 function largeEnum(n: number) {
   const list = [];
   for (let i = 0; i < n; i++) {
-    list.push('option #' + i);
+    list.push(`option #${i}`);
   }
   return list;
 }

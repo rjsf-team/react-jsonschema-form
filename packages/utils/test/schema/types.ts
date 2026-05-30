@@ -1,4 +1,4 @@
-import { RJSFValidationError, ValidationData, ValidatorType } from '../../src';
+import type { RJSFValidationError, ValidationData, ValidatorType } from '../../src';
 
 export interface TestValidatorParams<T = any> {
   isValid?: boolean[];
@@ -7,6 +7,6 @@ export interface TestValidatorParams<T = any> {
 }
 
 export interface TestValidatorType<T = any> extends ValidatorType<T> {
-  // eslint-disable-next-line no-unused-vars
+  // oxlint-disable-next-line no-unused-vars
   setReturnValues(params?: TestValidatorParams<T>): void;
 }

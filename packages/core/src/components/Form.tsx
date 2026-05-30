@@ -1,20 +1,12 @@
-import { Component, ElementType, FormEvent, ReactNode, Ref, RefObject, createRef } from 'react';
-import {
-  createSchemaUtils,
+import type { ElementType, FormEvent, ReactNode, Ref, RefObject } from 'react';
+import { Component, createRef } from 'react';
+import type {
   CustomValidator,
-  deepEquals,
   ErrorSchema,
-  ErrorSchemaBuilder,
   ErrorTransformer,
   FieldPathId,
   FieldPathList,
   FormContextType,
-  getChangedFields,
-  getTemplate,
-  getUiOptions,
-  hashObject,
-  isObject,
-  mergeObjects,
   PathSchema,
   StrictRJSFSchema,
   Registry,
@@ -23,26 +15,37 @@ import {
   RJSFSchema,
   RJSFValidationError,
   SchemaUtilsType,
-  shouldRender,
-  SUBMIT_BTN_OPTIONS_KEY,
   TemplatesType,
-  toErrorList,
-  toFieldPathId,
   UiSchema,
-  UI_DEFINITIONS_KEY,
-  UI_GLOBAL_OPTIONS_KEY,
-  UI_OPTIONS_KEY,
   ValidationData,
-  validationDataMerge,
   ValidatorType,
   Experimental_DefaultFormStateBehavior,
   Experimental_CustomMergeAllOf,
+  GlobalFormOptions,
+  NameGeneratorFunction,
+} from '@rjsf/utils';
+import {
+  createSchemaUtils,
+  deepEquals,
+  ErrorSchemaBuilder,
+  getChangedFields,
+  getTemplate,
+  getUiOptions,
+  hashObject,
+  isObject,
+  mergeObjects,
+  shouldRender,
+  SUBMIT_BTN_OPTIONS_KEY,
+  toErrorList,
+  toFieldPathId,
+  UI_DEFINITIONS_KEY,
+  UI_GLOBAL_OPTIONS_KEY,
+  UI_OPTIONS_KEY,
+  validationDataMerge,
   DEFAULT_ID_SEPARATOR,
   DEFAULT_ID_PREFIX,
-  GlobalFormOptions,
   ERRORS_KEY,
   ID_KEY,
-  NameGeneratorFunction,
   getUsedFormData,
   getFieldNames,
   ANY_OF_KEY,
@@ -397,7 +400,7 @@ export default class Form<
     if (props.extraErrors !== state._prevExtraErrors) {
       const baseErrors: ValidationData<T> = {
         errors: state.schemaValidationErrors || [],
-        errorSchema: (state.schemaValidationErrorSchema || {}) as ErrorSchema<T>,
+        errorSchema: state.schemaValidationErrorSchema || {},
       };
       let { errors, errorSchema } = baseErrors;
       if (props.extraErrors) {
@@ -569,7 +572,7 @@ export default class Form<
       'experimental_customMergeAllOf' in props
         ? props.experimental_customMergeAllOf
         : this.props.experimental_customMergeAllOf;
-    let schemaUtils: SchemaUtilsType<T, S, F> = state.schemaUtils;
+    let { schemaUtils } = state;
     if (
       !schemaUtils ||
       schemaUtils.doesSchemaUtilsDiffer(
@@ -658,8 +661,8 @@ export default class Form<
 
     let errors: RJSFValidationError[];
     let errorSchema: ErrorSchema<T> | undefined;
-    let schemaValidationErrors: RJSFValidationError[] = state.schemaValidationErrors;
-    let schemaValidationErrorSchema: ErrorSchema<T> = state.schemaValidationErrorSchema;
+    let { schemaValidationErrors } = state;
+    let { schemaValidationErrorSchema } = state;
     // If we are skipping live validate, it means that the state has already been updated with live validation errors
     if (mustValidate && !skipLiveValidate) {
       const liveValidation = this.liveValidate(
@@ -684,13 +687,10 @@ export default class Form<
       errorSchema = currentErrors.errorSchema;
       // We only update the error schema for changed fields if mustValidate is false
       if (formDataChangedFields.length > 0 && !mustValidate) {
-        const newErrorSchema = formDataChangedFields.reduce(
-          (acc, key) => {
-            acc[key] = undefined;
-            return acc;
-          },
-          {} as Record<string, undefined>,
-        );
+        const newErrorSchema = formDataChangedFields.reduce<Record<string, undefined>>((acc, key) => {
+          acc[key] = undefined;
+          return acc;
+        }, {});
         errorSchema = schemaValidationErrorSchema = mergeObjects(
           currentErrors.errorSchema,
           newErrorSchema,
@@ -754,7 +754,7 @@ export default class Form<
     altSchemaUtils?: SchemaUtilsType<T, S, F>,
     retrievedSchema?: S,
   ): ValidationData<T> {
-    const schemaUtils = altSchemaUtils ? altSchemaUtils : this.state.schemaUtils;
+    const schemaUtils = altSchemaUtils || this.state.schemaUtils;
     const { customValidate, transformErrors, uiSchema } = this.props;
     // When a pre-resolved schema is provided (e.g., from live validation), use it directly.
     // Otherwise validate against the original schema so AJV sees the full constraint set.
@@ -797,8 +797,8 @@ export default class Form<
     extraErrors?: FormProps['extraErrors'],
     customErrors?: ErrorSchemaBuilder,
   ): ValidationData<T> {
-    let errorSchema: ErrorSchema<T> = schemaValidation.errorSchema;
-    let errors: RJSFValidationError[] = schemaValidation.errors;
+    let { errorSchema } = schemaValidation;
+    let { errors } = schemaValidation;
     if (extraErrors) {
       const merged = validationDataMerge(schemaValidation, extraErrors);
       errorSchema = merged.errorSchema;
@@ -837,8 +837,8 @@ export default class Form<
     mergeIntoOriginalErrorSchema = false,
   ) {
     const schemaValidation = this.validate(formData, rootSchema, schemaUtils, retrievedSchema);
-    const errors = schemaValidation.errors;
-    let errorSchema = schemaValidation.errorSchema;
+    const { errors } = schemaValidation;
+    let { errorSchema } = schemaValidation;
     // We merge 'originalErrorSchema' with 'schemaValidation.errorSchema.'; This done to display the raised field error.
     if (mergeIntoOriginalErrorSchema) {
       errorSchema = mergeObjects(
@@ -859,9 +859,7 @@ export default class Form<
    * @param fields - The fields to keep while filtering
    * @deprecated - To be removed as an exported `Form` function in a future release; there isn't a planned replacement
    */
-  getUsedFormData = (formData: T | undefined, fields: string[]): T | undefined => {
-    return getUsedFormData(formData, fields);
-  };
+  getUsedFormData = (formData: T | undefined, fields: string[]): T | undefined => getUsedFormData(formData, fields);
 
   /** Returns the list of field names from inspecting the `pathSchema` as well as using the `formData`
    *
@@ -869,9 +867,7 @@ export default class Form<
    * @param [formData] - The form data to use while checking for empty objects/arrays
    * @deprecated - To be removed as an exported `Form` function in a future release; there isn't a planned replacement
    */
-  getFieldNames = (pathSchema: PathSchema<T>, formData?: T): string[][] => {
-    return getFieldNames(pathSchema, formData);
-  };
+  getFieldNames = (pathSchema: PathSchema<T>, formData?: T): string[][] => getFieldNames(pathSchema, formData);
 
   /** Returns the `formData` after filtering to remove any extra data not in a form field
    *
@@ -938,7 +934,7 @@ export default class Form<
     // Use the un-merged AJV-only schema as the base for re-merging extraErrors. Mirrors the
     // pattern in getStateFromProps/getDerivedStateFromProps and avoids the duplication that
     // happened when state.errorSchema (already containing merged extraErrors) was passed in.
-    let mergeBaseErrorSchema: ErrorSchema<T> = schemaValidationErrorSchema as ErrorSchema<T>;
+    let mergeBaseErrorSchema: ErrorSchema<T> = schemaValidationErrorSchema;
     const rootPathId = fieldPathId.path[0] || '';
 
     const isRootPath = !path || path.length === 0 || (path.length === 1 && path[0] === rootPathId);
@@ -1023,10 +1019,10 @@ export default class Form<
         // Apply the user-supplied newErrorSchema onto a clone of the AJV-only base, so that
         // mergeErrors below sees the user's error at this path without mutating shared state.
         if (!isRootPath) {
-          mergeBaseErrorSchema = _cloneDeep(schemaValidationErrorSchema) as ErrorSchema<T>;
+          mergeBaseErrorSchema = _cloneDeep(schemaValidationErrorSchema);
           _set(mergeBaseErrorSchema, path, newErrorSchema);
         } else {
-          mergeBaseErrorSchema = newErrorSchema as ErrorSchema<T>;
+          mergeBaseErrorSchema = newErrorSchema;
         }
       } else {
         if (!customErrors) {
@@ -1316,6 +1312,7 @@ export default class Form<
     }
     if (field && field.length) {
       // If we got a list with length > 0
+      // oxlint-disable-next-line prefer-destructuring
       field = field[0];
     }
     if (field) {
@@ -1435,7 +1432,7 @@ export default class Form<
 
     return (
       <FormTag
-        className={className ? className : 'rjsf'}
+        className={className || 'rjsf'}
         id={id}
         name={name}
         method={method}
@@ -1465,7 +1462,7 @@ export default class Form<
           readonly={readonly}
         />
 
-        {children ? children : <SubmitButton uiSchema={submitUiSchema} registry={registry} />}
+        {children || <SubmitButton uiSchema={submitUiSchema} registry={registry} />}
         {showErrorList === 'bottom' && this.renderErrors(registry)}
       </FormTag>
     );

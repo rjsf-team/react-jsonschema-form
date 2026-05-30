@@ -1,8 +1,6 @@
-import { useCallback, Component, ComponentType } from 'react';
-import {
-  ADDITIONAL_PROPERTY_FLAG,
-  ANY_OF_KEY,
-  descriptionId,
+import type { ComponentType } from 'react';
+import { useCallback, Component } from 'react';
+import type {
   ErrorSchema,
   Field,
   FieldPathId,
@@ -10,28 +8,33 @@ import {
   FieldProps,
   FieldTemplateProps,
   FormContextType,
+  Registry,
+  RJSFSchema,
+  StrictRJSFSchema,
+  UIOptionsType,
+} from '@rjsf/utils';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  ANY_OF_KEY,
+  descriptionId,
   getSchemaType,
   getTemplate,
   getUiOptions,
   ID_KEY,
   isFormDataAvailable,
   ONE_OF_KEY,
-  Registry,
   resolveUiSchema,
-  RJSFSchema,
   shouldRender,
   shouldRenderOptionalField,
-  StrictRJSFSchema,
   toFieldPathId,
   TranslatableString,
   UI_OPTIONS_KEY,
-  UIOptionsType,
 } from '@rjsf/utils';
 import isObject from 'lodash/isObject';
 import omit from 'lodash/omit';
 
 /** The map of component type to FieldName */
-const COMPONENT_TYPES: { [key: string]: string } = {
+const COMPONENT_TYPES: Record<string, string> = {
   array: 'ArrayField',
   boolean: 'BooleanField',
   integer: 'NumberField',
@@ -55,7 +58,7 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   uiOptions: UIOptionsType<T, S, F>,
   registry: Registry<T, S, F>,
 ): ComponentType<FieldProps<T, S, F>> {
-  const field = uiOptions.field;
+  const { field } = uiOptions;
   const { fields } = registry;
   if (typeof field === 'function') {
     return field;
@@ -224,7 +227,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   }
 
   const description = uiOptions.description || props.schema.description || schema.description || '';
-  const help = uiOptions.help;
+  const { help } = uiOptions;
   const hidden = uiOptions.widget === 'hidden' || deprecatedHandling === 'hide';
 
   const classNames = ['rjsf-field', `rjsf-field-${getSchemaType(schema)}`];

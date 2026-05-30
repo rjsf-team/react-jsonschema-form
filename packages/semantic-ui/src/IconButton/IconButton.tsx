@@ -1,6 +1,8 @@
 import { memo } from 'react';
-import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
-import { Button, ButtonProps } from 'semantic-ui-react';
+import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { TranslatableString } from '@rjsf/utils';
+import type { ButtonProps } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 
 export type SemanticIconButtonProps<
   T = any,

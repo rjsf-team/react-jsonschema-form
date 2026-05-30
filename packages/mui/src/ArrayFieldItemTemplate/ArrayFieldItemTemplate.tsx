@@ -1,16 +1,18 @@
-import { CSSProperties } from 'react';
-import Box, { BoxProps } from '@mui/material/Box';
-import Grid, { GridProps } from '@mui/material/Grid';
-import Paper, { PaperProps } from '@mui/material/Paper';
-import {
+import type { CSSProperties } from 'react';
+import type { BoxProps } from '@mui/material/Box';
+import Box from '@mui/material/Box';
+import type { GridProps } from '@mui/material/Grid';
+import Grid from '@mui/material/Grid';
+import type { PaperProps } from '@mui/material/Paper';
+import Paper from '@mui/material/Paper';
+import type {
   ArrayFieldItemTemplateProps,
   FormContextType,
-  getUiOptions,
-  getTemplate,
   RJSFSchema,
   StrictRJSFSchema,
   GenericObjectType,
 } from '@rjsf/utils';
+import { getUiOptions, getTemplate } from '@rjsf/utils';
 
 import { computeSxProps, getMuiProps } from '../util';
 

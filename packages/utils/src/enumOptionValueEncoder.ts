@@ -1,6 +1,6 @@
 import isNil from 'lodash/isNil';
 
-import { OptionValueFormat } from './types';
+import type { OptionValueFormat } from './types';
 
 /** Encodes an enum option value into a string for a DOM value attribute.
  *

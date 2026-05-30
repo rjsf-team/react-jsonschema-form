@@ -1,11 +1,5 @@
-import {
-  ArrayFieldItemTemplateProps,
-  FormContextType,
-  getTemplate,
-  getUiOptions,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { ArrayFieldItemTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { getTemplate, getUiOptions } from '@rjsf/utils';
 
 /** The `ArrayFieldItemTemplate` component is the template used to render an item of an array.
  *
@@ -37,7 +31,7 @@ export default function ArrayFieldItemTemplate<
   const isLastItem = index === totalItems - 1;
   const borderRadius = isFirstItem ? 'rounded-t-lg' : isLastItem ? 'rounded-b-lg' : '';
   const marginBottom = isLastItem ? '' : 'mb-[-1px]';
-  const zIndex = index === undefined ? '' : 'z-' + (10 - Math.min(index, 9));
+  const zIndex = index === undefined ? '' : `z-${10 - Math.min(index, 9)}`;
 
   return (
     <fieldset

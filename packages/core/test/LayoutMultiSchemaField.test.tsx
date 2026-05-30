@@ -1,22 +1,24 @@
+import type {
+  EnumOptionsType,
+  FieldErrorProps,
+  FieldProps,
+  FieldTemplateProps,
+  RJSFSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import {
   ANY_OF_KEY,
   DEFAULT_KEY,
   DEFINITIONS_KEY,
-  EnumOptionsType,
   ERRORS_KEY,
   ErrorSchemaBuilder,
-  FieldErrorProps,
-  FieldProps,
-  FieldTemplateProps,
   getDiscriminatorFieldFromSchema,
   ID_KEY,
   ONE_OF_KEY,
   optionsList,
   PROPERTIES_KEY,
-  RJSFSchema,
   UI_OPTIONS_KEY,
   UI_WIDGET_KEY,
-  WidgetProps,
 } from '@rjsf/utils';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -185,7 +187,7 @@ describe('LayoutMultiSchemaField', () => {
       formData,
       fieldPathId = { [ID_KEY]: DEFAULT_ID, path: [DEFAULT_ID] },
       options = SIMPLE_ONEOF[ONE_OF_KEY],
-      schema = SIMPLE_ONEOF as RJSFSchema,
+      schema = SIMPLE_ONEOF,
       uiSchema = {},
       disabled = false,
       hideError = false,

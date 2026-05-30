@@ -1,4 +1,18 @@
-import { memo, MouseEvent, useCallback, useMemo, useRef, useState } from 'react';
+import type { MouseEvent };
+import { memo, useCallback, useMemo, useRef, useState } from 'react';
+import type {
+  ArrayFieldTemplateProps,
+  ErrorSchema,
+  FieldPathId,
+  FieldPathList,
+  FieldProps,
+  FormContextType,
+  Registry,
+  RJSFSchema,
+  StrictRJSFSchema,
+  UiSchema,
+  UIOptionsType,
+} from '@rjsf/utils';
 import {
   allowAdditionalItems,
   getTemplate,
@@ -14,18 +28,7 @@ import {
   useDeepCompareMemo,
   ITEMS_KEY,
   ID_KEY,
-  ArrayFieldTemplateProps,
-  ErrorSchema,
-  FieldPathId,
-  FieldPathList,
-  FieldProps,
-  FormContextType,
-  Registry,
-  RJSFSchema,
-  StrictRJSFSchema,
   TranslatableString,
-  UiSchema,
-  UIOptionsType,
 } from '@rjsf/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import isObject from 'lodash/isObject';
@@ -33,7 +36,10 @@ import set from 'lodash/set';
 import uniqueId from 'lodash/uniqueId';
 
 /** Type used to represent the keyed form data used in the state */
-type KeyedFormDataType<T> = { key: string; item: T };
+interface KeyedFormDataType<T> {
+  key: string;
+  item: T;
+}
 
 /** Used to generate a unique ID for an element in a row */
 function generateRowId() {
@@ -48,12 +54,10 @@ function generateRowId() {
 function generateKeyedFormData<T>(formData?: T[]): KeyedFormDataType<T>[] {
   return !Array.isArray(formData)
     ? []
-    : formData.map((item) => {
-        return {
-          key: generateRowId(),
-          item,
-        };
-      });
+    : formData.map((item) => ({
+        key: generateRowId(),
+        item,
+      }));
 }
 
 /** Converts `KeyedFormDataType` data into the inner `formData`
@@ -437,7 +441,7 @@ function ArrayFieldItemInner<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   const { description } = getUiOptions(itemUiSchema);
   const hasDescription = !!description || !!itemSchema.description;
   const { orderable = true, removable = true, copyable = false } = uiOptions;
-  const has: { [key: string]: boolean } = {
+  const has: Record<string, boolean> = {
     moveUp: orderable && canMoveUp,
     moveDown: orderable && canMoveDown,
     copy: copyable && canAdd,
@@ -816,12 +820,12 @@ interface KeyedFormDataState<T = any> {
 }
 
 /** Type used for the state of the `ArrayField` component */
-type ArrayFieldState<T> = {
+interface ArrayFieldState<T> {
   /** The hash of the last formData passed in */
   formDataHash: string;
   /** The keyed form data elements */
   keyedFormData: KeyedFormDataType<T>[];
-};
+}
 
 /** A custom hook that handles the updating of the keyedFormData from an external `formData` change as well as
  * internally by the `ArrayField`. If there was an external `formData` change, then the `keyedFormData` is recomputed

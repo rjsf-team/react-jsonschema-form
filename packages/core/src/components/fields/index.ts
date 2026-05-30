@@ -1,4 +1,4 @@
-import { Field, FormContextType, RegistryFieldsType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { Field, FormContextType, RegistryFieldsType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 import ArrayField from './ArrayField';
 import BooleanField from './BooleanField';

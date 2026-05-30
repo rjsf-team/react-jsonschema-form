@@ -1,8 +1,8 @@
-import { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import fs from 'fs';
 
 import { compileSchemaValidatorsCode } from './compileSchemaValidatorsCode';
-import { CustomValidatorOptionsType } from './types';
+import type { CustomValidatorOptionsType } from './types';
 
 export { compileSchemaValidatorsCode };
 

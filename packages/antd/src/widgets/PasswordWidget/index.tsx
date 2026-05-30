@@ -1,12 +1,6 @@
-import { ChangeEvent, FocusEvent } from 'react';
-import {
-  ariaDescribedByIds,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-  GenericObjectType,
-} from '@rjsf/utils';
+import type { ChangeEvent, FocusEvent } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, GenericObjectType } from '@rjsf/utils';
+import { ariaDescribedByIds } from '@rjsf/utils';
 import { Input } from 'antd';
 
 /** The `PasswordWidget` component uses the `BaseInputTemplate` changing the type to `password`.

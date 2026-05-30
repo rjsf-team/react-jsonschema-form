@@ -1,9 +1,11 @@
 import { ADDITIONAL_PROPERTY_FLAG, RJSF_ADDITIONAL_PROPERTIES_FLAG } from '@rjsf/utils';
-import Ajv, { Options } from 'ajv';
-import addFormats, { FormatsPluginOptions } from 'ajv-formats';
+import type { Options } from 'ajv';
+import Ajv from 'ajv';
+import type { FormatsPluginOptions } from 'ajv-formats';
+import addFormats from 'ajv-formats';
 import isObject from 'lodash/isObject';
 
-import { CustomValidatorOptionsType } from './types';
+import type { CustomValidatorOptionsType } from './types';
 
 export const AJV_CONFIG: Options = {
   allErrors: true,

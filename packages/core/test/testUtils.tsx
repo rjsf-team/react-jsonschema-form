@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react';
-import { GenericObjectType, ValidatorType } from '@rjsf/utils';
+import type { GenericObjectType, ValidatorType } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import '@testing-library/jest-dom';
 import { act, render, fireEvent } from '@testing-library/react';
@@ -7,11 +7,12 @@ import type { UserEvent } from '@testing-library/user-event';
 import noop from 'lodash/noop';
 import type { MockInstance } from 'vitest';
 
-import Form, { FormProps } from '../src';
+import type { FormProps } from '../src';
+import Form from '../src';
 
 export type NoValFormProps = Omit<FormProps, 'validator'>;
 
-// eslint-disable-next-line no-unused-vars
+// oxlint-disable-next-line no-unused-vars
 export type RerenderType = (newProps: NoValFormProps, v?: ValidatorType) => void;
 
 export function renderNode(Component: ComponentType<any>, props: GenericObjectType) {
@@ -45,7 +46,7 @@ export function createFormComponent(props: NoValFormProps, v: ValidatorType = va
   return createComponent(Form, { validator: v, ...props });
 }
 
-// eslint-disable-next-line no-unused-vars
+// oxlint-disable-next-line no-unused-vars
 type CreatorFn = (creatorFn: typeof createFormComponent) => void;
 
 /* Run a group of tests with different combinations of omitExtraData and liveOmit as form props.
@@ -77,7 +78,7 @@ export function getSelectedOptionValue(selectNode: HTMLSelectElement) {
   if (selectNode.type !== 'select-one') {
     throw new Error(`invalid node provided, expected select got ${selectNode.type}`);
   }
-  const value = selectNode.value;
+  const { value } = selectNode;
   const options = [...selectNode.options];
   const selectedOptions = options
     .filter((option) => (Array.isArray(value) ? value.includes(option.value) : value === option.value))
@@ -98,7 +99,7 @@ export function expectToHaveBeenCalledWithFormData(mock: any, formData: any, sec
 }
 
 export async function delayPromise(delay = 100) {
-  return await new Promise((r) => setTimeout(r, delay));
+  return new Promise((r) => setTimeout(r, delay));
 }
 
 export function actWrappedDelayPromise(delay = 100) {

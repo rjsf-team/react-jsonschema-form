@@ -1,6 +1,5 @@
 import { useState, useCallback } from 'react';
-import {
-  asNumber,
+import type {
   ErrorSchema,
   FieldPathList,
   FieldProps,
@@ -8,6 +7,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
+import { asNumber } from '@rjsf/utils';
 
 // Matches a string that ends in a . character, optionally followed by a sequence of
 // digits followed by any number of 0 characters up until the end of the line.
@@ -58,7 +58,7 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
 
       // Normalize decimals that don't start with a zero character in advance so
       // that the rest of the normalization logic is simpler
-      if (`${value}`.charAt(0) === '.') {
+      if (`${value}`.startsWith('.')) {
         value = `0${value}`;
       }
 

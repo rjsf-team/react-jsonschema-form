@@ -1,11 +1,11 @@
-import { ErrorSchemaBuilder, ID_KEY, ROOT_SCHEMA_PREFIX, RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema } from '@rjsf/utils';
+import { ErrorSchemaBuilder, ID_KEY, ROOT_SCHEMA_PREFIX } from '@rjsf/utils';
 import noop from 'lodash/noop';
 
 // Static import of the package surface so its top-level evaluation
 // (`export default customizeValidator()`) is included in coverage.
 import * as pkg from '../src';
 import customizeValidator from '../src/customizeValidator';
-import ATAValidator from '../src/validator';
 
 /** ATAValidator behavior tests. The shared `@rjsf/utils` schema test suite
  * (see `test/utilsTests/schema.test.ts`) exercises the full ValidatorType
@@ -58,13 +58,13 @@ describe('ATAValidator', () => {
       const { errors, validationError } = v.rawValidation(schema, { age: 5 });
       expect(validationError).toBeUndefined();
       expect(errors).toBeDefined();
-      const errorList = errors as Array<{
+      const errorList = errors as {
         keyword: string;
         instancePath: string;
         schemaPath: string;
         params: Record<string, unknown>;
         message: string;
-      }>;
+      }[];
       const minimumError = errorList.find((e) => e.keyword === 'minimum');
       expect(minimumError).toBeDefined();
       expect(minimumError!.instancePath).toBe('/age');
@@ -173,7 +173,7 @@ describe('ATAValidator', () => {
 
   describe('reset()', () => {
     it('clears the cached validator state', () => {
-      const v = customizeValidator() as ATAValidator;
+      const v = customizeValidator();
       const schema: RJSFSchema = { type: 'string' };
       v.isValid(schema, 'a', schema);
       v.reset();
@@ -236,7 +236,7 @@ describe('customFormats option (extra spec shapes)', () => {
 
 describe('handleSchemaUpdate', () => {
   it('reuses the existing rootSchema entry when $id matches the prefix', () => {
-    const v = customizeValidator() as ATAValidator;
+    const v = customizeValidator();
     // A rootSchema that already carries ROOT_SCHEMA_PREFIX as $id exercises
     // the equality branch that skips the spread-clone in handleSchemaUpdate.
     const rootSchema = { [ID_KEY]: ROOT_SCHEMA_PREFIX, type: 'string' } as unknown as RJSFSchema;
@@ -246,7 +246,7 @@ describe('handleSchemaUpdate', () => {
   });
 
   it('rebuilds the cached entry when a different rootSchema is provided', () => {
-    const v = customizeValidator() as ATAValidator;
+    const v = customizeValidator();
     // First call seeds the cache; second call passes a structurally-different
     // rootSchema (same id slot, different schema body), exercising the
     // deep-equality refresh branch.
@@ -259,7 +259,7 @@ describe('handleSchemaUpdate', () => {
   });
 
   it('reuses the cached entry when a structurally-identical rootSchema arrives', () => {
-    const v = customizeValidator() as ATAValidator;
+    const v = customizeValidator();
     // Same content, different reference. The reference-equality fast path at
     // the top of handleSchemaUpdate misses, but the deep-equality cache hit
     // below it should keep us from rebuilding.

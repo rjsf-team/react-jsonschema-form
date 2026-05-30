@@ -1,6 +1,6 @@
-import { ErrorTransformer } from '@rjsf/utils';
+import type { ErrorTransformer } from '@rjsf/utils';
 
-import { Sample } from './Sample';
+import type { Sample } from './Sample';
 
 function customValidate({ pass1, pass2 }: { pass1: string; pass2: string }, errors: any) {
   if (pass1 !== pass2) {
@@ -9,21 +9,16 @@ function customValidate({ pass1, pass2 }: { pass1: string; pass2: string }, erro
   return errors;
 }
 
-const transformErrors: ErrorTransformer = (errors) => {
-  return errors.map((error) => {
+const transformErrors: ErrorTransformer = (errors) =>
+  errors.map((error) => {
     if (error.name === 'minimum' && error.schemaPath === '#/properties/age/minimum') {
-      return Object.assign({}, error, {
-        message: 'You need to be 18 because of some legal thing',
-      });
+      return { ...error, message: 'You need to be 18 because of some legal thing' };
     }
     if (error.name === 'required') {
-      return Object.assign({}, error, {
-        message: `${error.title} is a required field`,
-      });
+      return { ...error, message: `${error.title} is a required field` };
     }
     return error;
   });
-};
 
 const validation: Sample = {
   schema: {

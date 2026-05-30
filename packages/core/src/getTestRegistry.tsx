@@ -1,10 +1,5 @@
-import {
-  DEFAULT_ID_PREFIX,
-  DEFAULT_ID_SEPARATOR,
-  createSchemaUtils,
-  englishStringTranslator,
-  Registry,
-} from '@rjsf/utils';
+import type { Registry } from '@rjsf/utils';
+import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR, createSchemaUtils, englishStringTranslator } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 import getDefaultRegistry from './getDefaultRegistry';

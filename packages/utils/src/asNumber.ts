@@ -14,12 +14,12 @@ export default function asNumber(value: string | null) {
   if (value === null) {
     return null;
   }
-  if (/\.$/.test(value)) {
+  if (value.endsWith('.')) {
     // '3.' can't really be considered a number even if it parses in js. The
     // user is most likely entering a float.
     return value;
   }
-  if (/\.0$/.test(value)) {
+  if (value.endsWith('.0')) {
     // we need to return this as a string here, to allow for input like 3.07
     return value;
   }

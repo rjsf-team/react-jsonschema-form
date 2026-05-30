@@ -1,4 +1,5 @@
-import { FallbackFieldTemplateProps, FormContextType, getTemplate, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { FallbackFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { getTemplate } from '@rjsf/utils';
 
 /**
  * The `FallbackFieldTemplate` is used to render a field when no field matches. The field renders a type selector and

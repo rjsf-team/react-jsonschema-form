@@ -1,16 +1,13 @@
-import { FocusEvent } from 'react';
+import type { FocusEvent } from 'react';
 import { CheckboxGroup, FieldsetRoot, Stack, Text, FieldsetLegend } from '@chakra-ui/react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
-  FormContextType,
   optionId,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
   labelValue,
 } from '@rjsf/utils';
 
@@ -71,7 +68,7 @@ export default function CheckboxesWidget<
         <Stack direction={row ? 'row' : 'column'}>
           {Array.isArray(enumOptions) &&
             enumOptions.map((option, index) => {
-              const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
+              const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
               return (
                 <Checkbox
                   key={index}

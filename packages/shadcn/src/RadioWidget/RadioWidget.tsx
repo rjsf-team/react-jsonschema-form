@@ -1,15 +1,12 @@
-import { FocusEvent } from 'react';
+import type { FocusEvent } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   enumOptionsIsSelected,
   getOptionValueFormat,
-  FormContextType,
   optionId,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
 } from '@rjsf/utils';
 
 import { Label } from '../components/ui/label';
@@ -62,7 +59,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       >
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index) => {
-            const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
+            const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
             const checked = enumOptionsIsSelected<S>(option.value, value);
             return (
               <div className='flex items-center gap-2' key={optionId(id, index)}>

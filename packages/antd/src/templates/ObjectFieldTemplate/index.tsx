@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import {
+import type {
   FormContextType,
   GenericObjectType,
   ObjectFieldTemplateProps,
@@ -7,12 +7,8 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   UiSchema,
-  canExpand,
-  getTemplate,
-  getUiOptions,
-  titleId,
-  buttonId,
 } from '@rjsf/utils';
+import { canExpand, getTemplate, getUiOptions, titleId, buttonId } from '@rjsf/utils';
 import { Col, Row, ConfigProvider } from 'antd';
 import classNames from 'classnames';
 import isNumber from 'lodash/isNumber';

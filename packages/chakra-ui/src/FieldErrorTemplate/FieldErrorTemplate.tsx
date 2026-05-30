@@ -1,5 +1,6 @@
 import { Fieldset } from '@chakra-ui/react';
-import { errorId, FieldErrorProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { FieldErrorProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { errorId } from '@rjsf/utils';
 
 /** The `FieldErrorTemplate` component renders the errors local to the particular field
  *
@@ -16,11 +17,9 @@ export default function FieldErrorTemplate<
   }
   const id = errorId(fieldPathId);
 
-  return errors.map((error, i: number) => {
-    return (
-      <Fieldset.ErrorText mt={0} key={i} id={id}>
-        {error}
-      </Fieldset.ErrorText>
-    );
-  });
+  return errors.map((error, i: number) => (
+    <Fieldset.ErrorText mt={0} key={i} id={id}>
+      {error}
+    </Fieldset.ErrorText>
+  ));
 }

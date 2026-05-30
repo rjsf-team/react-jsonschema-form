@@ -1,5 +1,6 @@
-import { ChangeEvent } from 'react';
-import { ariaDescribedByIds, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, rangeSpec } from '@rjsf/utils';
+import type { ChangeEvent } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, rangeSpec } from '@rjsf/utils';
 import { Input } from 'semantic-ui-react';
 
 import { getSemanticProps } from '../util';
@@ -36,7 +37,7 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     },
   });
 
-  // eslint-disable-next-line no-shadow
+  // oxlint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange && onChange(value === '' ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);

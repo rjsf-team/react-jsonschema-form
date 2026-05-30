@@ -1,4 +1,5 @@
-import { FocusEvent } from 'react';
+import type { FocusEvent } from 'react';
+import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
@@ -6,13 +7,9 @@ import {
   enumOptionValueEncoder,
   getOptionValueFormat,
   optionId,
-  FormContextType,
-  GenericObjectType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
 } from '@rjsf/utils';
-import { Radio, RadioChangeEvent } from 'antd';
+import type { RadioChangeEvent } from 'antd';
+import { Radio } from 'antd';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.
@@ -66,7 +63,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
             id={optionId(id, i)}
             name={htmlName || id}
             autoFocus={i === 0 ? autofocus : false}
-            disabled={disabled || (Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1)}
+            disabled={disabled || (Array.isArray(enumDisabled) && enumDisabled.includes(option.value))}
             key={i}
             value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
           >

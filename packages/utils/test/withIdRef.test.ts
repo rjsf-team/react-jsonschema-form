@@ -1,4 +1,5 @@
-import { withIdRefPrefix, RJSFSchema } from '../src';
+import type { RJSFSchema } from '../src';
+import { withIdRefPrefix } from '../src';
 
 describe('withIdRefPrefix()', () => {
   it('should recursively add id prefix to all refs', () => {

@@ -1,16 +1,14 @@
-import { ChangeEvent } from 'react';
-import {
+import type { ChangeEvent } from 'react';
+import type {
   FileInfoType,
   FormContextType,
-  getTemplate,
   Registry,
   RJSFSchema,
   StrictRJSFSchema,
-  TranslatableString,
   UIOptionsType,
-  useFileWidgetProps,
   WidgetProps,
 } from '@rjsf/utils';
+import { getTemplate, TranslatableString, useFileWidgetProps } from '@rjsf/utils';
 import { Markdown } from 'markdown-to-jsx';
 
 function FileInfoPreview<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({

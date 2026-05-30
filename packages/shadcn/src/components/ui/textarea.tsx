@@ -1,4 +1,4 @@
-import { TextareaHTMLAttributes, ComponentProps } from 'react';
+import type { TextareaHTMLAttributes, ComponentProps } from 'react';
 
 import { cn } from '../../lib/utils';
 

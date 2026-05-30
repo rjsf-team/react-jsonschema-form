@@ -31,7 +31,7 @@ import ordering from './ordering';
 import patternProperties from './patternProperties';
 import propertyDependencies from './propertyDependencies';
 import references from './references';
-import { Sample } from './Sample';
+import type { Sample } from './Sample';
 import schemaDependencies from './schemaDependencies';
 import simple from './simple';
 import single from './single';

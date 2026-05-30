@@ -1,17 +1,15 @@
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionsDeselectValue,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
   optionId,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
   descriptionId,
   getTemplate,
 } from '@rjsf/utils';
-import { Checkbox, CheckboxChangeEvent } from 'primereact/checkbox';
+import type { CheckboxChangeEvent } from 'primereact/checkbox';
+import { Checkbox } from 'primereact/checkbox';
 
 import { Label } from '../util';
 
@@ -81,7 +79,7 @@ export default function CheckboxesWidget<
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index) => {
           const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
-          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
+          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
           return (
             <div key={index} style={{ display: 'flex', flexDirection: 'row', gap: '0.5rem', alignItems: 'center' }}>
               <Checkbox

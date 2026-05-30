@@ -14,7 +14,8 @@ import localize_es from 'ajv-i18n/localize/es';
 import Ajv2019 from 'ajv/dist/2019.js';
 import Ajv2020 from 'ajv/dist/2020.js';
 
-import Playground, { PlaygroundProps } from './components';
+import type { PlaygroundProps } from './components';
+import Playground from './components';
 import Layout from './layout';
 
 const esV8Validator = customizeValidator({}, localize_es);

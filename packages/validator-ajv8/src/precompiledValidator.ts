@@ -1,23 +1,20 @@
-import {
+import type {
   CustomValidator,
-  deepEquals,
   ErrorTransformer,
   FormContextType,
-  hashForSchema,
-  ID_KEY,
-  JUNK_OPTION_ID,
-  retrieveSchema,
   RJSFSchema,
   StrictRJSFSchema,
   UiSchema,
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { ErrorObject } from 'ajv';
+import { deepEquals, hashForSchema, ID_KEY, JUNK_OPTION_ID, retrieveSchema } from '@rjsf/utils';
+import type { ErrorObject } from 'ajv';
 import get from 'lodash/get';
 
-import processRawValidationErrors, { RawValidationErrorsType } from './processRawValidationErrors';
-import { CompiledValidateFunction, Localizer, SuppressDuplicateFilteringType, ValidatorFunctions } from './types';
+import type { RawValidationErrorsType } from './processRawValidationErrors';
+import processRawValidationErrors from './processRawValidationErrors';
+import type { CompiledValidateFunction, Localizer, SuppressDuplicateFilteringType, ValidatorFunctions } from './types';
 
 /** `ValidatorType` implementation that uses an AJV 8 precompiled validator as created by the
  * `compileSchemaValidators()` function provided by the `@rjsf/validator-ajv8` library.

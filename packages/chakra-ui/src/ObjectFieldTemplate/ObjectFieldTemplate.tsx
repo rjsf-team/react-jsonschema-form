@@ -1,16 +1,6 @@
 import { Grid, GridItem } from '@chakra-ui/react';
-import {
-  buttonId,
-  canExpand,
-  descriptionId,
-  FormContextType,
-  getTemplate,
-  getUiOptions,
-  ObjectFieldTemplateProps,
-  RJSFSchema,
-  StrictRJSFSchema,
-  titleId,
-} from '@rjsf/utils';
+import type { FormContextType, ObjectFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { buttonId, canExpand, descriptionId, getTemplate, getUiOptions, titleId } from '@rjsf/utils';
 
 export default function ObjectFieldTemplate<
   T = any,

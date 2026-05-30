@@ -1,11 +1,5 @@
-import { FocusEvent, SyntheticEvent } from 'react';
-import {
-  ariaDescribedByIds,
-  enumOptionSelectedValue,
-  enumOptionValueDecoder,
-  enumOptionValueEncoder,
-  getOptionValueFormat,
-  labelValue,
+import type { FocusEvent, SyntheticEvent } from 'react';
+import type {
   EnumOptionsType,
   FormContextType,
   OptionValueFormat,
@@ -14,8 +8,17 @@ import {
   WidgetProps,
   UIOptionsType,
 } from '@rjsf/utils';
+import {
+  ariaDescribedByIds,
+  enumOptionSelectedValue,
+  enumOptionValueDecoder,
+  enumOptionValueEncoder,
+  getOptionValueFormat,
+  labelValue,
+} from '@rjsf/utils';
 import map from 'lodash/map';
-import { Form, DropdownProps, DropdownItemProps } from 'semantic-ui-react';
+import type { DropdownProps, DropdownItemProps } from 'semantic-ui-react';
+import { Form } from 'semantic-ui-react';
 
 import { getSemanticProps } from '../util';
 
@@ -36,7 +39,7 @@ function createDefaultValueOptionsForDropDown<S extends StrictRJSFSchema = RJSFS
 ) {
   const disabledOptions = enumDisabled || [];
   const options: DropdownItemProps[] = map(enumOptions, ({ label, value }, index) => ({
-    disabled: disabledOptions.indexOf(value) !== -1,
+    disabled: disabledOptions.includes(value),
     key: label,
     text: label,
     value: enumOptionValueEncoder(value, index, format),
@@ -101,7 +104,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   );
   const _onChange = (_: SyntheticEvent<HTMLElement>, { value }: DropdownProps) =>
     onChange(enumOptionValueDecoder<S>(value as string[], enumOptions, optionValueFormat, optEmptyVal));
-  // eslint-disable-next-line no-shadow
+  // oxlint-disable-next-line no-shadow
   const _onBlur = (_: FocusEvent<HTMLElement>, { target }: DropdownProps) =>
     onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, optEmptyVal));
   const _onFocus = (_: FocusEvent<HTMLElement>, { target }: DropdownProps) =>

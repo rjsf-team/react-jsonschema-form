@@ -1,4 +1,5 @@
-import { examplesId, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { examplesId } from '@rjsf/utils';
 
 export interface SchemaExamplesProps<S extends StrictRJSFSchema = RJSFSchema> {
   /** The id of the input element this datalist is for */
@@ -28,9 +29,9 @@ export default function SchemaExamples<S extends StrictRJSFSchema = RJSFSchema>(
             ? ([schemaDefault] as string[])
             : [],
         )
-        .map((example: any) => {
-          return <option key={String(example)} value={example} />;
-        })}
+        .map((example: any) => (
+          <option key={String(example)} value={example} />
+        ))}
     </datalist>
   );
 }

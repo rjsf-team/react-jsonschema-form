@@ -1,6 +1,6 @@
-import { ArrayFieldItemButtonsTemplateProps, ArrayFieldTemplateProps } from '@rjsf/utils';
+import type { ArrayFieldItemButtonsTemplateProps, ArrayFieldTemplateProps } from '@rjsf/utils';
 
-import { Sample } from './Sample';
+import type { Sample } from './Sample';
 
 function ArrayFieldTemplate(props: ArrayFieldTemplateProps) {
   const { className, items, canAdd, onAddClick } = props;

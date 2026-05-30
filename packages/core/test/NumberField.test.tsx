@@ -1,10 +1,10 @@
 import { createRef } from 'react';
-import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import { act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import isEmpty from 'lodash/isEmpty';
 
-import Form from '../src';
+import type Form from '../src';
 import {
   createFormComponent,
   expectToHaveBeenCalledWithFormData,

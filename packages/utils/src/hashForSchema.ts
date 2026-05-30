@@ -1,4 +1,4 @@
-import { RJSFSchema, StrictRJSFSchema } from './types';
+import type { RJSFSchema, StrictRJSFSchema } from './types';
 
 /** Hashes a string using the algorithm based on Java's hashing function.
  * JS has no built-in hashing function, so rolling our own

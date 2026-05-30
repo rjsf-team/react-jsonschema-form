@@ -1,9 +1,11 @@
 import { memo } from 'react';
-import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
+import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { TranslatableString } from '@rjsf/utils';
 import type { VariantProps } from 'class-variance-authority';
 import { ChevronDown, ChevronUp, Copy, Trash2, X } from 'lucide-react';
 
-import { Button, buttonVariants } from '../components/ui/button';
+import type { buttonVariants } from '../components/ui/button';
+import { Button } from '../components/ui/button';
 
 export type ShadIconButtonProps<
   T = any,

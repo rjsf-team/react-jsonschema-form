@@ -1,8 +1,10 @@
-import { ChangeEvent, FocusEvent } from 'react';
-import { InputLabelProps as MuiInputLabelProps } from '@mui/material/InputLabel';
+import type { ChangeEvent, FocusEvent } from 'react';
+import type { InputLabelProps as MuiInputLabelProps } from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import { SelectProps as MuiSelectProps } from '@mui/material/Select';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import type { SelectProps as MuiSelectProps } from '@mui/material/Select';
+import type { TextFieldProps } from '@mui/material/TextField';
+import TextField from '@mui/material/TextField';
+import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
@@ -10,11 +12,6 @@ import {
   enumOptionValueEncoder,
   getOptionValueFormat,
   labelValue,
-  FormContextType,
-  GenericObjectType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
 } from '@rjsf/utils';
 
 import { getMuiProps } from '../util';
@@ -116,7 +113,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       {showPlaceholderOption && <MenuItem value=''>{placeholder}</MenuItem>}
       {Array.isArray(enumOptions) &&
         enumOptions.map(({ value, label }, i: number) => {
-          const disabled: boolean = Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1;
+          const disabled: boolean = Array.isArray(enumDisabled) && enumDisabled.includes(value);
           return (
             <MenuItem key={i} value={enumOptionValueEncoder(value, i, optionValueFormat)} disabled={disabled}>
               {label}

@@ -1,14 +1,7 @@
-import { FocusEvent } from 'react';
-import { SliderValueChangeDetails } from '@chakra-ui/react';
-import {
-  ariaDescribedByIds,
-  FormContextType,
-  labelValue,
-  rangeSpec,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { FocusEvent } from 'react';
+import type { SliderValueChangeDetails } from '@chakra-ui/react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, labelValue, rangeSpec } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field';
 import { Slider } from '../components/ui/slider';

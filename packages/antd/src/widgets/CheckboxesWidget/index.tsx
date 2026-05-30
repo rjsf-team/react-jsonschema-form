@@ -1,4 +1,5 @@
-import { FocusEvent } from 'react';
+import type { FocusEvent } from 'react';
+import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema, GenericObjectType } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
@@ -6,11 +7,6 @@ import {
   enumOptionValueEncoder,
   getOptionValueFormat,
   optionId,
-  FormContextType,
-  WidgetProps,
-  RJSFSchema,
-  StrictRJSFSchema,
-  GenericObjectType,
 } from '@rjsf/utils';
 import { Checkbox } from 'antd';
 
@@ -78,7 +74,7 @@ export default function CheckboxesWidget<
                 id={optionId(id, i)}
                 name={htmlName || id}
                 autoFocus={i === 0 ? autofocus : false}
-                disabled={Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1}
+                disabled={Array.isArray(enumDisabled) && enumDisabled.includes(option.value)}
                 value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
               >
                 {option.label}

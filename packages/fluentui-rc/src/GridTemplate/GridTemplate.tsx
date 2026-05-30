@@ -1,5 +1,5 @@
 import { GridShim, grid } from '@fluentui/react-migration-v0-v9';
-import { GridTemplateProps } from '@rjsf/utils';
+import type { GridTemplateProps } from '@rjsf/utils';
 
 /** Renders a `GridTemplate` for fluentui-rc, which is expecting the column sizing information coming in via the
  * `style` by the caller, which are spread directly on the `GridShim` if `columns` or `rows` are provided. Otherwise,

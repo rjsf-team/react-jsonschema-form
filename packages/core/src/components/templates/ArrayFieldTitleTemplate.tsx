@@ -1,13 +1,5 @@
-import {
-  getTemplate,
-  getUiOptions,
-  titleId,
-  ArrayFieldTitleProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  TemplatesType,
-} from '@rjsf/utils';
+import type { ArrayFieldTitleProps, FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } from '@rjsf/utils';
+import { getTemplate, getUiOptions, titleId } from '@rjsf/utils';
 
 /** The `ArrayFieldTitleTemplate` component renders a `TitleFieldTemplate` with an `id` derived from
  * the `fieldPathId`.

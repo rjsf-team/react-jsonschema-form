@@ -1,13 +1,8 @@
-import { ReactElement, ChangeEvent, FocusEvent, useCallback } from 'react';
+import type { ReactElement, ChangeEvent, FocusEvent } from 'react';
+import { useCallback } from 'react';
 import { Textarea } from '@mantine/core';
-import {
-  StrictRJSFSchema,
-  RJSFSchema,
-  FormContextType,
-  WidgetProps,
-  labelValue,
-  ariaDescribedByIds,
-} from '@rjsf/utils';
+import type { StrictRJSFSchema, RJSFSchema, FormContextType, WidgetProps } from '@rjsf/utils';
+import { labelValue, ariaDescribedByIds } from '@rjsf/utils';
 
 import { cleanupOptions } from '../utils';
 

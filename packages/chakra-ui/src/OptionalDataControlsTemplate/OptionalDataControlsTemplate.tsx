@@ -1,4 +1,4 @@
-import { FormContextType, OptionalDataControlsTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { FormContextType, OptionalDataControlsTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { PlusIcon } from 'lucide-react';
 
 import ChakraIconButton, { RemoveButton } from '../IconButton';

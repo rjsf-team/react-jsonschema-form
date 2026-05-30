@@ -1,4 +1,5 @@
-import { ariaDescribedByIds, FormContextType, rangeSpec, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, rangeSpec } from '@rjsf/utils';
 import _pick from 'lodash/pick';
 
 import { Slider } from '../components/ui/slider';

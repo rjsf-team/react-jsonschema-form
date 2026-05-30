@@ -1,17 +1,9 @@
-import { ChangeEvent, FocusEvent, useMemo } from 'react';
+import type { ChangeEvent, FocusEvent } from 'react';
+import { useMemo } from 'react';
 import { createListCollection, NativeSelect } from '@chakra-ui/react';
-import {
-  ariaDescribedByIds,
-  EnumOptionsType,
-  enumOptionsIndexForValue,
-  enumOptionsValueForIndex,
-  labelValue,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
-import { OptionsOrGroups } from 'chakra-react-select';
+import type { EnumOptionsType, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, enumOptionsIndexForValue, enumOptionsValueForIndex, labelValue } from '@rjsf/utils';
+import type { OptionsOrGroups } from 'chakra-react-select';
 
 import { Field } from '../components/ui/field';
 import { getChakra } from '../utils';
@@ -52,9 +44,8 @@ export default function NativeSelectWidget<
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
 
-  const _onChange = ({ target }: ChangeEvent<HTMLSelectElement>) => {
-    return onChange(enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
-  };
+  const _onChange = ({ target }: ChangeEvent<HTMLSelectElement>) =>
+    onChange(enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
 
   const _onBlur = ({ target }: FocusEvent<HTMLSelectElement>) =>
     onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
@@ -76,7 +67,7 @@ export default function NativeSelectWidget<
         return {
           label,
           value: String(index),
-          disabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1,
+          disabled: Array.isArray(enumDisabled) && enumDisabled.includes(value),
         };
       });
     }

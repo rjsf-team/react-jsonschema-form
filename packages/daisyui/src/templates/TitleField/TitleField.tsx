@@ -1,4 +1,5 @@
-import { TitleFieldProps, StrictRJSFSchema, RJSFSchema, FormContextType, getUiOptions } from '@rjsf/utils';
+import type { TitleFieldProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
+import { getUiOptions } from '@rjsf/utils';
 
 /** The `TitleField` component renders the title for a form section or field
  * with DaisyUI styling. It displays:
