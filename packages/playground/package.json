@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^6.2.3",
+    "@ant-design/cssinjs": "^2.1.2",
     "@babel/runtime": "^7.29.7",
     "@chakra-ui/react": "^3.35.0",
     "@emotion/react": "^11.14.0",
@@ -69,6 +70,7 @@
     "lodash": "^4.18.1",
     "lucide-react": "^1.16.0",
     "monaco-editor": "^0.55.1",
+    "primereact": "^10.9.8",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.10",
     "react-dom": "^18.3.1",
