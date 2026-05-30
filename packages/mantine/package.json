@@ -81,6 +81,9 @@
     "@rjsf/validator-ajv8": "workspace:^",
     "uncontrollable": "^9.0.0"
   },
+  "dependencies": {
+    "dayjs": "^1.11.21"
+  },
   "publishConfig": {
     "access": "public"
   },
