@@ -16,6 +16,7 @@ jobs:
           fetch-depth: 0 # Ensures it gets the tags and history correctly
       - uses: pnpm/action-setup@v4
         with:
+          version: 10
           run_install: false
       - name: Use Node.js 24.x
         uses: actions/setup-node@v6

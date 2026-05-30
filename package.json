@@ -83,5 +83,5 @@
     "packages/snapshot-tests",
     "packages/shadcn"
   ],
-  "packageManager": "pnpm@11.5.0"
+  "packageManager": "pnpm@10.17.1"
 }
