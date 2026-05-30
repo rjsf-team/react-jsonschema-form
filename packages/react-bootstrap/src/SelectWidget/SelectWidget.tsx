@@ -79,8 +79,8 @@ export default function SelectWidget<
       aria-describedby={ariaDescribedByIds(id)}
     >
       {showPlaceholderOption && <option value=''>{placeholder}</option>}
-      {(enumOptions as any).map(({ value, label }: any, i: number) => {
-        const disabled: any = Array.isArray(enumDisabled) && (enumDisabled as any).indexOf(value) !== -1;
+      {enumOptions?.map(({ value, label }: any, i: number) => {
+        const disabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1;
         return (
           <option key={i} id={label} value={enumOptionValueEncoder(value, i, optionValueFormat)} disabled={disabled}>
             {label}
