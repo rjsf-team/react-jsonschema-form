@@ -661,8 +661,7 @@ export default class Form<
 
     let errors: RJSFValidationError[];
     let errorSchema: ErrorSchema<T> | undefined;
-    let { schemaValidationErrors } = state;
-    let { schemaValidationErrorSchema } = state;
+    let { schemaValidationErrors, schemaValidationErrorSchema } = state;
     // If we are skipping live validate, it means that the state has already been updated with live validation errors
     if (mustValidate && !skipLiveValidate) {
       const liveValidation = this.liveValidate(
@@ -797,8 +796,7 @@ export default class Form<
     extraErrors?: FormProps['extraErrors'],
     customErrors?: ErrorSchemaBuilder,
   ): ValidationData<T> {
-    let { errorSchema } = schemaValidation;
-    let { errors } = schemaValidation;
+    let { errorSchema, errors } = schemaValidation;
     if (extraErrors) {
       const merged = validationDataMerge(schemaValidation, extraErrors);
       errorSchema = merged.errorSchema;
