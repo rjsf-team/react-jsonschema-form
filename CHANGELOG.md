@@ -23,6 +23,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed schema-change handling so dependent enum updates sanitize invalid scalar field data without over-sanitizing root, object, array, readonly, or disabled field changes, fixing [#3838](https://github.com/rjsf-team/react-jsonschema-form/issues/3838)
 - Updated `Form` tests to verify fix for [#1357](https://github.com/rjsf-team/react-jsonschema-form/issues/1357) and [#2492](https://github.com/rjsf-team/react-jsonschema-form/issues/2492)
   - Also added `console` message suppression support to the tests to reduce noise
+- Improved performance of `IconButtons` in all themes, `ArrayField` components and `ObjectField` components using memoization, partially fixing [#3183](https://github.com/rjsf-team/react-jsonschema-form/issues/3183)
 
 ## @rjsf/utils
 
