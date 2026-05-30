@@ -448,6 +448,9 @@ importers:
 
   packages/playground:
     dependencies:
+      '@ant-design/cssinjs':
+        specifier: ^2.1.2
+        version: 2.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@ant-design/icons':
         specifier: ^6.2.3
         version: 6.2.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -550,6 +553,9 @@ importers:
       monaco-editor:
         specifier: ^0.55.1
         version: 0.55.1
+      primereact:
+        specifier: ^10.9.8
+        version: 10.9.8(@types/react@18.3.29)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: ^18.3.1
         version: 18.3.1
