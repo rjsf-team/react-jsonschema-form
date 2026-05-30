@@ -201,7 +201,10 @@ describe('ArrayField', () => {
     </select>
   );
   beforeAll(() => {
-    vi.spyOn(window, 'FileReader').mockImplementation(() => mockFileReader);
+    // eslint-disable-next-line prefer-arrow-callback -- arrow functions can't be constructors (new FileReader())
+    vi.spyOn(window, 'FileReader').mockImplementation(function () {
+      return mockFileReader;
+    });
   });
 
   describe('Unsupported array schema', () => {
