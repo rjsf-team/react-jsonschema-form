@@ -62,7 +62,8 @@ export default function mergeDefaultsWithFormData<T = any>(
     return mapped as unknown as T;
   }
   if (isObject(formData)) {
-    const acc: { [key in keyof T]: any } = { ...defaults }; // Prevent mutation of source object.
+    // eslint-disable-next-line prefer-object-spread -- spread loses T type, Object.assign preserves it
+    const acc: { [key in keyof T]: any } = Object.assign({}, defaults); // Prevent mutation of source object.
     return Object.keys(formData as GenericObjectType).reduce((acc, key) => {
       const keyValue = get(formData, key);
       const keyExistsInDefaults = isObject(defaults) && key in (defaults as GenericObjectType);
