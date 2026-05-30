@@ -5,7 +5,7 @@ import '@testing-library/jest-dom';
 import { act, render, fireEvent } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import noop from 'lodash/noop';
-import type { MockInstance } from 'vitest';
+import type { Mock, MockInstance } from 'vitest';
 
 import Form, { FormProps } from '../src';
 
@@ -16,9 +16,9 @@ export type RerenderType = (newProps: NoValFormProps, v?: ValidatorType) => void
 export type FormComponentResult = {
   container: HTMLElement;
   node: Element;
-  onChange: (...args: unknown[]) => unknown;
-  onError: (...args: unknown[]) => unknown;
-  onSubmit: (...args: unknown[]) => unknown;
+  onChange: Mock;
+  onError: Mock;
+  onSubmit: Mock;
   rerender: RerenderType;
 };
 export type ConsoleSuppressionResult = {

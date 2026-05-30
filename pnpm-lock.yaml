@@ -156,9 +156,18 @@ importers:
 
   packages/chakra-ui:
     dependencies:
+      '@emotion/cache':
+        specifier: ^11.14.0
+        version: 11.14.0
       '@emotion/is-prop-valid':
         specifier: ^1.4.0
         version: 1.4.0
+      '@emotion/memoize':
+        specifier: ^0.9.0
+        version: 0.9.0
+      '@emotion/weak-memoize':
+        specifier: ^0.4.0
+        version: 0.4.0
       lucide-react:
         specifier: ^1.16.0
         version: 1.17.0(react@18.3.1)
@@ -329,6 +338,9 @@ importers:
         specifier: '>=18'
         version: 18.3.1
     devDependencies:
+      '@fluentui/react-combobox':
+        specifier: ^9.16.12
+        version: 9.17.2(@types/react-dom@18.3.7(@types/react@18.3.29))(@types/react@18.3.29)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(scheduler@0.23.2)
       '@fluentui/react-components':
         specifier: ^9.74.0
         version: 9.74.1(@types/react-dom@18.3.7(@types/react@18.3.29))(@types/react@18.3.29)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(scheduler@0.23.2)
@@ -508,6 +520,15 @@ importers:
       deep-freeze-es6:
         specifier: ^5.0.0
         version: 5.0.0
+      fast-deep-equal:
+        specifier: ^3.1.3
+        version: 3.1.3
+      fast-uri:
+        specifier: ^3.0.1
+        version: 3.1.2
+      json-schema-traverse:
+        specifier: ^1.0.0
+        version: 1.0.0
       jss:
         specifier: ^10.10.0
         version: 10.10.0
@@ -538,6 +559,12 @@ importers:
       react-resizable-panels:
         specifier: ^4.11.2
         version: 4.11.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      require-from-string:
+        specifier: ^2.0.2
+        version: 2.0.2
+      scheduler:
+        specifier: ^0.23.2
+        version: 0.23.2
       semantic-ui-react:
         specifier: ^2.1.5
         version: 2.1.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
