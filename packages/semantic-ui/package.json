@@ -100,6 +100,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
+    "@fluentui/react-component-ref": "^0.63.1",
     "lodash": "^4.18.1",
     "semantic-ui-css": "^2.5.0"
   }
