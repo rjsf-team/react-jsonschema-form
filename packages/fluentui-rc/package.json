@@ -100,6 +100,9 @@
     "rjsf-fluentui-rc"
   ],
   "license": "Apache-2.0",
+  "dependencies": {
+    "@griffel/react": "^1.7.4"
+  },
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "publishConfig": {
     "access": "public"
