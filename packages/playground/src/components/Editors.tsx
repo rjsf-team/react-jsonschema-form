@@ -151,6 +151,9 @@ export default function Editors({
         !isEqualWith(
           newFormData,
           formData,
+          // Since this is coming from the editor which uses JSON.stringify to trim undefined values compare the values
+          // using JSON.stringify to see if the trimmed formData is the same as the untrimmed state
+          // Sometimes passing the trimmed value back into the Form causes the defaults to be improperly assigned
           (newValue, oldValue) => JSON.stringify(oldValue) === JSON.stringify(newValue),
         )
       ) {
