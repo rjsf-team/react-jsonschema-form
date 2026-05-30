@@ -58,7 +58,7 @@ const user = userEvent.setup();
 describe('StringField', () => {
   const CustomWidget = () => <div id='custom' />;
   beforeAll(() => {
-    // eslint-disable-next-line prefer-arrow-callback -- arrow functions can't be constructors (new FileReader())
+    // oxlint-disable-next-line prefer-arrow-callback -- arrow functions can't be constructors (new FileReader())
     vi.spyOn(window, 'FileReader').mockImplementation(function () {
       return mockFileReader;
     });
