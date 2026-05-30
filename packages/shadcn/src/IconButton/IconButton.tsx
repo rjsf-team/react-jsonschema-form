@@ -20,7 +20,7 @@ export type ShadIconButtonProps<
  *
  * @param props - The combined props from RJSF IconButtonProps and Shadcn ButtonProps, including icon and event handlers
  */
- function IconButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function IconButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: ShadIconButtonProps<T, S, F>,
 ) {
   const { icon, iconType, className, uiSchema, registry, ...otherProps } = props;

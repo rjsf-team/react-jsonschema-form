@@ -198,7 +198,7 @@ export default function omitExtraData<
         // Resolve $ref so we can inspect the effective required list for the inner schema.
         let sd = isSchemaObj(schemaDef) ? schemaDef : ({} as S);
         if (sd.$ref !== undefined) {
-          sd = findSchemaDefinition(sd.$ref, rootSchema);
+          sd = findSchemaDefinition<S>(sd.$ref, rootSchema);
         }
         const innerRequired = new Set(sd.required ?? []);
         // Drop this optional object when every key in v is both optional in the inner schema

@@ -1,4 +1,4 @@
-import type { MouseEvent };
+import type { MouseEvent } from 'react';
 import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import type {
   ArrayFieldTemplateProps,
@@ -1014,9 +1014,9 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         newErrorSchema = {};
         for (const idx in errorSchemaRef.current) {
           const i = parseInt(idx);
-          if (i == index) {
+          if (i === index) {
             set(newErrorSchema, [newIndex], errorSchemaRef.current[index]);
-          } else if (i == newIndex) {
+          } else if (i === newIndex) {
             set(newErrorSchema, [index], errorSchemaRef.current[newIndex]);
           } else {
             set(newErrorSchema, [idx], errorSchemaRef.current[i]);

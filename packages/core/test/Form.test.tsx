@@ -22,6 +22,7 @@ import {
 import validator, { customizeValidator } from '@rjsf/validator-ajv8';
 import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import draft06 from 'ajv/lib/refs/json-schema-draft-06.json';
 import { noop } from 'lodash';
 import { Portal } from 'react-portal';
 import type { Mock } from 'vitest';
@@ -3588,7 +3589,7 @@ describeRepeated('Form common', (createFormComponent) => {
       ]);
 
       const customValidator = customizeValidator({
-        additionalMetaSchemas: [require('ajv/lib/refs/json-schema-draft-06.json')],
+        additionalMetaSchemas: [draft06],
       });
 
       rerender(
