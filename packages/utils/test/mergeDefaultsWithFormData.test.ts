@@ -3,7 +3,7 @@ import { mergeDefaultsWithFormData } from '../src';
 describe('mergeDefaultsWithFormData()', () => {
   it('shouldn`t mutate the provided objects', () => {
     const obj1 = { a: 1 };
-    mergeDefaultsWithFormData(obj1, { b: 2 });
+    mergeDefaultsWithFormData<any>(obj1, { b: 2 }); // eslint-disable-line typescript/no-unnecessary-type-arguments
     expect(obj1).toEqual({ a: 1 });
   });
 
@@ -99,7 +99,8 @@ describe('mergeDefaultsWithFormData()', () => {
       },
       c: 3,
     };
-    expect(mergeDefaultsWithFormData(obj1, obj2)).toEqual(expected);
+    // eslint-disable-next-line typescript/no-unnecessary-type-arguments
+    expect(mergeDefaultsWithFormData<any>(obj1, obj2)).toEqual(expected);
   });
 
   it('should recursively merge deeply nested objects, including extra array data', () => {
@@ -134,7 +135,8 @@ describe('mergeDefaultsWithFormData()', () => {
       },
       c: 3,
     };
-    expect(mergeDefaultsWithFormData(obj1, obj2, true)).toEqual(expected);
+    // eslint-disable-next-line typescript/no-unnecessary-type-arguments
+    expect(mergeDefaultsWithFormData<any>(obj1, obj2, true)).toEqual(expected);
   });
 
   it('should recursively merge File objects', () => {
@@ -271,7 +273,8 @@ describe('mergeDefaultsWithFormData()', () => {
         },
         c: 2,
       };
-      expect(mergeDefaultsWithFormData(obj1, obj2, undefined, undefined, true)).toEqual(expected);
+      // eslint-disable-next-line typescript/no-unnecessary-type-arguments
+      expect(mergeDefaultsWithFormData<any>(obj1, obj2, undefined, undefined, true)).toEqual(expected);
     });
 
     it('should recursively merge deeply nested objects, including extra array data', () => {
@@ -308,7 +311,8 @@ describe('mergeDefaultsWithFormData()', () => {
         c: 2,
         d: 4,
       };
-      expect(mergeDefaultsWithFormData(obj1, obj2, undefined, undefined, true)).toEqual(expected);
+      // eslint-disable-next-line typescript/no-unnecessary-type-arguments
+      expect(mergeDefaultsWithFormData<any>(obj1, obj2, undefined, undefined, true)).toEqual(expected);
     });
 
     it('should recursively merge File objects', () => {
