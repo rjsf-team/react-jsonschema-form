@@ -224,9 +224,10 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
   const { OptionalDataControlsField } = fields;
   const formDataRef = useRef(formData);
   formDataRef.current = formData;
-  // useDeepCompareMemo stabilizes the schema reference when formData changes but the resolved
-  // schema structure hasn't — keeping property schema refs stable so memo on ObjectFieldProperty works.
-  const schema: S = useDeepCompareMemo<S>(schemaUtils.retrieveSchema(rawSchema, formData, true));
+  const schema: S = useMemo(
+    () => schemaUtils.retrieveSchema(rawSchema, formData, true),
+    [schemaUtils, rawSchema, formData],
+  );
   const uiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema, globalUiOptions), [uiSchema, globalUiOptions]);
   const { properties: schemaProperties = {} } = schema;
   // All the children will use childFieldPathId if present in the props, falling back to the fieldPathId
