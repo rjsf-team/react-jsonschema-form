@@ -14,12 +14,14 @@ export default function asNumber(value: string | null) {
   if (value === null) {
     return null;
   }
-  if (value.endsWith('.')) {
+  // eslint-disable-next-line typescript/prefer-string-starts-ends-with -- regex test() coerces undefined to "undefined" safely; endsWith() throws on undefined values passed at runtime
+  if (/\.$/.test(value)) {
     // '3.' can't really be considered a number even if it parses in js. The
     // user is most likely entering a float.
     return value;
   }
-  if (value.endsWith('.0')) {
+  // eslint-disable-next-line typescript/prefer-string-starts-ends-with -- same as above
+  if (/\.0$/.test(value)) {
     // we need to return this as a string here, to allow for input like 3.07
     return value;
   }
