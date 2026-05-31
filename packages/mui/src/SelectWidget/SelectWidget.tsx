@@ -69,8 +69,8 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const isEmpty =
     typeof value === 'undefined' || (isMultiple && value.length < 1) || (!isMultiple && value === emptyValue);
 
-  const _onChange = ({ target: { value } }: ChangeEvent<{ value: string }>) =>
-    onChange(enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, optEmptyVal));
+  const _onChange = ({ target: { value: newValue } }: ChangeEvent<{ value: string }>) =>
+    onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, optEmptyVal));
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
@@ -112,11 +112,11 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     >
       {showPlaceholderOption && <MenuItem value=''>{placeholder}</MenuItem>}
       {Array.isArray(enumOptions) &&
-        enumOptions.map(({ value, label }, i: number) => {
-          const disabled: boolean = Array.isArray(enumDisabled) && enumDisabled.includes(value);
+        enumOptions.map(({ value: enumValue, label: enumLabel }, i: number) => {
+          const isDisabled: boolean = Array.isArray(enumDisabled) && enumDisabled.includes(enumValue);
           return (
-            <MenuItem key={i} value={enumOptionValueEncoder(value, i, optionValueFormat)} disabled={disabled}>
-              {label}
+            <MenuItem key={i} value={enumOptionValueEncoder(enumValue, i, optionValueFormat)} disabled={isDisabled}>
+              {enumLabel}
             </MenuItem>
           );
         })}

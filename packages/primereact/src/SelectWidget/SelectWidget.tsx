@@ -70,10 +70,10 @@ function SingleSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
       name={htmlName || id}
       {...primeProps}
       value={enumOptionSelectedValue<S>(value, enumOptions, !!multiple, optionValueFormat, emptyValue)}
-      options={(enumOptions ?? []).map(({ value, label }, i: number) => ({
-        label,
-        value: enumOptionValueEncoder(value, i, optionValueFormat),
-        disabled: Array.isArray(enumDisabled) && enumDisabled.includes(value),
+      options={(enumOptions ?? []).map(({ value: enumValue, label: enumLabel }, i: number) => ({
+        label: enumLabel,
+        value: enumOptionValueEncoder(enumValue, i, optionValueFormat),
+        disabled: Array.isArray(enumDisabled) && enumDisabled.includes(enumValue),
       }))}
       onChange={_onChange}
       onBlur={_onBlur}
@@ -120,10 +120,10 @@ function MultiSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
       name={htmlName || id}
       {...primeProps}
       value={enumOptionSelectedValue<S>(value, enumOptions, multiple, optionValueFormat, emptyValue)}
-      options={(enumOptions ?? []).map(({ value, label }, i: number) => ({
-        label,
-        value: enumOptionValueEncoder(value, i, optionValueFormat),
-        disabled: Array.isArray(enumDisabled) && enumDisabled.includes(value),
+      options={(enumOptions ?? []).map(({ value: enumValue, label: enumLabel }, i: number) => ({
+        label: enumLabel,
+        value: enumOptionValueEncoder(enumValue, i, optionValueFormat),
+        disabled: Array.isArray(enumDisabled) && enumDisabled.includes(enumValue),
       }))}
       onChange={_onChange}
       onBlur={_onBlur}

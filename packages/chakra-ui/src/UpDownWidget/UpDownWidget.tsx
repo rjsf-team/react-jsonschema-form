@@ -12,7 +12,7 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
 ) {
   const { id, readonly, disabled, label, hideLabel, value, onChange, onBlur, onFocus, rawErrors, required } = props;
 
-  const _onChange = ({ value }: NumberInputValueChangeDetails) => onChange(value);
+  const _onChange = ({ value: newValue }: NumberInputValueChangeDetails) => onChange(newValue);
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement | any>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement | any>) => onFocus(id, target && target.value);
 

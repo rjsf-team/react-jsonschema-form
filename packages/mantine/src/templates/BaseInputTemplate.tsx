@@ -46,13 +46,13 @@ export default function BaseInputTemplate<
   const description = hideLabel ? undefined : options.description || schema.description;
   const themeProps = cleanupOptions(options);
 
-  const handleNumberChange = useCallback((value: number | string) => onChange(value), [onChange]);
+  const handleNumberChange = useCallback((newValue: number | string) => onChange(newValue), [onChange]);
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const handler = onChangeOverride || onChange;
-      const value = e.target.value === '' ? options.emptyValue : e.target.value;
-      handler(value);
+      const newValue = e.target.value === '' ? options.emptyValue : e.target.value;
+      handler(newValue);
     },
     [onChange, onChangeOverride, options],
   );

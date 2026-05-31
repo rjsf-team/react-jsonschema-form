@@ -287,15 +287,15 @@ export default function OptionsDrawer({
   sampleName,
 }: OptionsDrawerProps) {
   const onValidatorSelected = useCallback(
-    (validator: string) => {
-      setValidator(validator);
+    (newValidator: string) => {
+      setValidator(newValidator);
     },
     [setValidator],
   );
 
   const handleSetLiveSettings = useCallback(
-    ({ formData }: IChangeEvent) => {
-      setLiveSettings((previousLiveSettings) => ({ ...previousLiveSettings, ...formData }));
+    ({ formData: settingsData }: IChangeEvent) => {
+      setLiveSettings((previousLiveSettings) => ({ ...previousLiveSettings, ...settingsData }));
     },
     [setLiveSettings],
   );

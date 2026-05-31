@@ -58,20 +58,20 @@ export default function NativeSelectWidget<
     valueLabelMap: Record<string | number, string>;
     displayEnumOptions: OptionsOrGroups<any, any>;
   } => {
-    const valueLabelMap: Record<string | number, string> = {};
-    let displayEnumOptions: OptionsOrGroups<any, any> = [];
+    const computedValueLabelMap: Record<string | number, string> = {};
+    let computedOptions: OptionsOrGroups<any, any> = [];
     if (Array.isArray(enumOptions)) {
-      displayEnumOptions = enumOptions.map((option: EnumOptionsType<S>, index: number) => {
-        const { value, label } = option;
-        valueLabelMap[index] = label || String(value);
+      computedOptions = enumOptions.map((option: EnumOptionsType<S>, index: number) => {
+        const { value: enumValue, label: enumLabel } = option;
+        computedValueLabelMap[index] = enumLabel || String(enumValue);
         return {
-          label,
+          label: enumLabel,
           value: String(index),
-          disabled: Array.isArray(enumDisabled) && enumDisabled.includes(value),
+          disabled: Array.isArray(enumDisabled) && enumDisabled.includes(enumValue),
         };
       });
     }
-    return { valueLabelMap: valueLabelMap, displayEnumOptions: displayEnumOptions };
+    return { valueLabelMap: computedValueLabelMap, displayEnumOptions: computedOptions };
   }, [enumDisabled, enumOptions]);
 
   const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions, false);

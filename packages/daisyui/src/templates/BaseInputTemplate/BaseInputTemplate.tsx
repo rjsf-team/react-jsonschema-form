@@ -57,7 +57,8 @@ export default function BaseInputTemplate<
   const htmlInputProps = { step, min, max, accept, ...(schema.examples ? { list: examplesId(id) } : undefined) };
 
   const _onChange = useCallback(
-    ({ target: { value } }: ChangeEvent<HTMLInputElement>) => onChange(value === '' ? options.emptyValue : value),
+    ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
+      onChange(newValue === '' ? options.emptyValue : newValue),
     [onChange, options],
   );
 

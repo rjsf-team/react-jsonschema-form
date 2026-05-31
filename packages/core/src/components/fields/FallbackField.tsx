@@ -19,7 +19,7 @@ function getFallbackTypeSelectionSchema(title: string): RJSFSchema {
     type: 'string',
     enum: ['string', 'number', 'boolean', 'object', 'array'],
     default: 'string',
-    title: title,
+    title,
   };
 }
 
@@ -50,7 +50,7 @@ function castToNewType<T = any>(formData: T, newType: JSONSchema7TypeName): T {
       return String(formData) as T;
     case 'number': {
       const castedNumber = Number(formData);
-      return (isNaN(castedNumber) ? 0 : castedNumber) as T;
+      return (Number.isNaN(castedNumber) ? 0 : castedNumber) as T;
     }
     case 'boolean':
       return Boolean(formData) as T;

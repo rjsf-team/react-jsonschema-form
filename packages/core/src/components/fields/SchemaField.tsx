@@ -129,9 +129,9 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * `onChange` chain if it is not already being provided from a deeper level in the hierarchy
    */
   const handleFieldComponentChange = useCallback(
-    (formData: T | undefined, path: FieldPathList, newErrorSchema?: ErrorSchema<T>, id?: string) => {
+    (newFormData: T | undefined, path: FieldPathList, newErrorSchema?: ErrorSchema<T>, id?: string) => {
       const theId = id || fieldId;
-      return onChange(formData, path, newErrorSchema, theId);
+      return onChange(newFormData, path, newErrorSchema, theId);
     },
     [fieldId, onChange],
   );
@@ -165,13 +165,13 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   if ((ANY_OF_KEY in schema || ONE_OF_KEY in schema) && !isReplacingAnyOrOneOf && !schemaUtils.isSelect(schema)) {
     if (schema[ANY_OF_KEY]) {
       XxxOfField = _AnyOfField;
-      XxxOfOptions = schema[ANY_OF_KEY].map((_schema) =>
-        schemaUtils.retrieveSchema(isObject(_schema) ? (_schema as S) : ({} as S), formData),
+      XxxOfOptions = schema[ANY_OF_KEY].map((xxxOfSchema) =>
+        schemaUtils.retrieveSchema(isObject(xxxOfSchema) ? (xxxOfSchema as S) : ({} as S), formData),
       );
     } else if (schema[ONE_OF_KEY]) {
       XxxOfField = _OneOfField;
-      XxxOfOptions = schema[ONE_OF_KEY].map((_schema) =>
-        schemaUtils.retrieveSchema(isObject(_schema) ? (_schema as S) : ({} as S), formData),
+      XxxOfOptions = schema[ONE_OF_KEY].map((xxxOfSchema) =>
+        schemaUtils.retrieveSchema(isObject(xxxOfSchema) ? (xxxOfSchema as S) : ({} as S), formData),
       );
     }
     // When the anyOf/oneOf is an optional data control render AND it does not have form data, hide the label

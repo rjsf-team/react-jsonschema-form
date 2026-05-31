@@ -90,8 +90,8 @@ export default function BaseInputTemplate<
     accept,
     ...(schema.examples ? { list: examplesId(id) } : undefined),
   };
-  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
-    onChange(value === '' ? options.emptyValue : value);
+  const _onChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
+    onChange(newValue === '' ? options.emptyValue : newValue);
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
   const DisplayInputLabelProps = TYPES_THAT_SHRINK_LABEL.includes(type)

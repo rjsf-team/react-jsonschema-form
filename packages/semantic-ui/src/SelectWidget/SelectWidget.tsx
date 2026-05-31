@@ -102,9 +102,8 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     placeholder,
     optionValueFormat,
   );
-  const _onChange = (_: SyntheticEvent<HTMLElement>, { value }: DropdownProps) =>
-    onChange(enumOptionValueDecoder<S>(value as string[], enumOptions, optionValueFormat, optEmptyVal));
-  // oxlint-disable-next-line no-shadow
+  const _onChange = (_: SyntheticEvent<HTMLElement>, { value: enumValue }: DropdownProps) =>
+    onChange(enumOptionValueDecoder<S>(enumValue as string[], enumOptions, optionValueFormat, optEmptyVal));
   const _onBlur = (_: FocusEvent<HTMLElement>, { target }: DropdownProps) =>
     onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, optEmptyVal));
   const _onFocus = (_: FocusEvent<HTMLElement>, { target }: DropdownProps) =>

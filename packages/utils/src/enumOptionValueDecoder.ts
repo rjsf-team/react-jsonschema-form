@@ -27,7 +27,7 @@ function decodeSingle<S extends StrictRJSFSchema = RJSFSchema>(
   }
   // Fallback: value might be an index (for object/array enum values)
   const index = Number(value);
-  if (!isNaN(index) && index >= 0 && index < enumOptions.length) {
+  if (!Number.isNaN(index) && index >= 0 && index < enumOptions.length) {
     return enumOptions[index].value;
   }
   return emptyValue;

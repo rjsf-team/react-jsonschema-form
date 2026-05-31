@@ -52,23 +52,23 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
    * @param value - The current value for the change occurring
    */
   const handleChange = useCallback(
-    (value: FieldProps<T, S, F>['value'], path: FieldPathList, errorSchema?: ErrorSchema<T>, id?: string) => {
+    (newValue: FieldProps<T, S, F>['value'], path: FieldPathList, errorSchema?: ErrorSchema<T>, id?: string) => {
       // Cache the original value in component state
-      setLastValue(value);
+      setLastValue(newValue);
 
       // Normalize decimals that don't start with a zero character in advance so
       // that the rest of the normalization logic is simpler
-      if (`${value}`.startsWith('.')) {
-        value = `0${value}`;
+      if (`${newValue}`.startsWith('.')) {
+        newValue = `0${newValue}`;
       }
 
       // Check that the value is a string (this can happen if the widget used is a
       // <select>, due to an enum declaration etc) then, if the value ends in a
       // trailing decimal point or multiple zeroes, strip the trailing values
       const processed =
-        typeof value === 'string' && value.match(trailingCharMatcherWithPrefix)
-          ? asNumber(value.replace(trailingCharMatcher, ''))
-          : asNumber(value);
+        typeof newValue === 'string' && newValue.match(trailingCharMatcherWithPrefix)
+          ? asNumber(newValue.replace(trailingCharMatcher, ''))
+          : asNumber(newValue);
 
       onChange(processed as unknown as T, path, errorSchema, id);
     },

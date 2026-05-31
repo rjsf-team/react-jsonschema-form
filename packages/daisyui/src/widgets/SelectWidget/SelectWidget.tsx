@@ -60,7 +60,7 @@ export default function SelectWidget<
   const handleOptionClick = useCallback(
     (event: React.MouseEvent<HTMLLIElement>) => {
       const index = Number(event.currentTarget.dataset.value);
-      if (isNaN(index)) {
+      if (Number.isNaN(index)) {
         return;
       }
 
@@ -137,7 +137,7 @@ export default function SelectWidget<
           <span className='ml-2'>▼</span>
         </div>
         <ul className='dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg'>
-          {optionsList.map(({ value: optValue, label }, i) => {
+          {optionsList.map(({ value: optValue, label: enumLabel }, i) => {
             const encodedValue = enumOptionValueEncoder(optValue, i, optionValueFormat);
             return (
               <li
@@ -159,7 +159,7 @@ export default function SelectWidget<
                       readOnly
                     />
                   )}
-                  <span>{isEnumeratedObject ? label : getDisplayValue(label)}</span>
+                  <span>{isEnumeratedObject ? enumLabel : getDisplayValue(enumLabel)}</span>
                 </div>
               </li>
             );

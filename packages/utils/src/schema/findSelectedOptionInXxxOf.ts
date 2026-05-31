@@ -47,9 +47,13 @@ export default function findSelectedOptionInXxxOf<
     );
     const data = get(formData, selectorField);
     if (data !== undefined) {
-      return xxxOfs.find((xxx) =>
+      return xxxOfs.find((xxxOfOption) =>
         deepEquals(
-          get(xxx, [PROPERTIES_KEY, selectorField, DEFAULT_KEY], get(xxx, [PROPERTIES_KEY, selectorField, CONST_KEY])),
+          get(
+            xxxOfOption,
+            [PROPERTIES_KEY, selectorField, DEFAULT_KEY],
+            get(xxxOfOption, [PROPERTIES_KEY, selectorField, CONST_KEY]),
+          ),
           data,
         ),
       );
