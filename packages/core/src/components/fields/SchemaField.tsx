@@ -24,12 +24,14 @@ import {
   isFormDataAvailable,
   ONE_OF_KEY,
   resolveUiSchema,
+  RJSF_REF_CYCLE_KEY,
   shouldRender,
   shouldRenderOptionalField,
   toFieldPathId,
   TranslatableString,
   UI_OPTIONS_KEY,
 } from '@rjsf/utils';
+import get from 'lodash/get';
 import isObject from 'lodash/isObject';
 import omit from 'lodash/omit';
 
@@ -111,18 +113,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     wasPropertyKeyModified = false,
   } = props;
   const { schemaUtils, globalFormOptions, globalUiOptions, fields } = registry;
-  const { AnyOfField: _AnyOfField, OneOfField: _OneOfField } = fields;
-  const uiSchema = resolveUiSchema<T, S, F>(_schema, _uiSchema, registry);
-  const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
-  const FieldTemplate = getTemplate<'FieldTemplate', T, S, F>('FieldTemplate', registry, uiOptions);
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    uiOptions,
-  );
-  const FieldHelpTemplate = getTemplate<'FieldHelpTemplate', T, S, F>('FieldHelpTemplate', registry, uiOptions);
-  const FieldErrorTemplate = getTemplate<'FieldErrorTemplate', T, S, F>('FieldErrorTemplate', registry, uiOptions);
-  const schema = schemaUtils.retrieveSchema(_schema, formData);
+  const { AnyOfField: _AnyOfField, OneOfField: _OneOfField, CyclicSchemaField } = fields;
   const fieldId = fieldPathId[ID_KEY];
 
   /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the
@@ -135,6 +126,24 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     },
     [fieldId, onChange],
   );
+
+  // Stop $ref cycles: when resolveAllReferences detects a repeated property $ref it tags the schema with this flag.
+  // The check must come after all hook calls to satisfy React's rules of hooks.
+  if (get(_schema, RJSF_REF_CYCLE_KEY, false)) {
+    return <CyclicSchemaField {...props} />;
+  }
+
+  const uiSchema = resolveUiSchema<T, S, F>(_schema, _uiSchema, registry);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
+  const FieldTemplate = getTemplate<'FieldTemplate', T, S, F>('FieldTemplate', registry, uiOptions);
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
+    'DescriptionFieldTemplate',
+    registry,
+    uiOptions,
+  );
+  const FieldHelpTemplate = getTemplate<'FieldHelpTemplate', T, S, F>('FieldHelpTemplate', registry, uiOptions);
+  const FieldErrorTemplate = getTemplate<'FieldErrorTemplate', T, S, F>('FieldErrorTemplate', registry, uiOptions);
+  const schema = schemaUtils.retrieveSchema(_schema, formData);
 
   const FieldComponent = getFieldComponent<T, S, F>(schema, uiOptions, registry);
 

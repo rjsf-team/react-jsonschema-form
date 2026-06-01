@@ -1,3 +1,4 @@
+import { RJSF_REF_KEY } from './constants';
 import type { RJSFSchema, StrictRJSFSchema } from './types';
 
 /** Hashes a string using the algorithm based on Java's hashing function.
@@ -47,10 +48,20 @@ export function hashObject(object: unknown): string {
 
 /** Stringifies the schema and returns the hash of the resulting string. Sorts schema fields
  * in consistent order before stringify to prevent different hash ids for the same schema.
+ * Keys starting with `RJSF_REF_KEY` are excluded from the hash so that internal tracking
+ * metadata does not affect the computed value.
  *
  * @param schema - The schema for which the hash is desired
  * @returns - The string obtained from the hash of the stringified schema
  */
 export default function hashForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S) {
-  return hashObject(schema);
+  const allKeys = new Set<string>();
+  JSON.stringify(schema, (key, value) => {
+    allKeys.add(key);
+    return value;
+  });
+  const filteredKeys = Array.from(allKeys)
+    .filter((key) => !key.startsWith(RJSF_REF_KEY))
+    .sort();
+  return hashString(JSON.stringify(schema, filteredKeys));
 }

@@ -4545,6 +4545,195 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
 </DocumentFragment>
 `;
 
+exports[`single fields > Cyclic schema 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-ypkju9 ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-ypkju9 css-var-root"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ypkju9 css-var-root"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <fieldset
+                  id="root"
+                >
+                  <div
+                    class="ant-row css-dev-only-do-not-override-ypkju9 css-var-root"
+                    style="margin-inline: -12px;"
+                  >
+                    <div
+                      class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ypkju9 css-var-root"
+                      style="padding-inline: 12px;"
+                    >
+                      <label
+                        class=""
+                        for="root__title"
+                        title="A registration form"
+                      >
+                        A registration form
+                      </label>
+                      <div
+                        class="ant-divider css-dev-only-do-not-override-ypkju9 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
+                        role="separator"
+                        style="margin-block: 1px;"
+                      />
+                    </div>
+                    <div
+                      class="ant-col ant-col-24 css-dev-only-do-not-override-ypkju9 css-var-root"
+                      style="padding-inline: 12px;"
+                    >
+                      <div
+                        class="rjsf-field rjsf-field-object"
+                      >
+                        <div
+                          class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-ypkju9 ant-form-item-horizontal"
+                        >
+                          <div
+                            class="ant-row ant-form-item-row css-dev-only-do-not-override-ypkju9 css-var-root"
+                          >
+                            <div
+                              class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ypkju9 css-var-root"
+                            >
+                              <div
+                                class="ant-form-item-control-input"
+                              >
+                                <div
+                                  class="ant-form-item-control-input-content"
+                                >
+                                  <fieldset
+                                    id="root_child"
+                                  >
+                                    <div
+                                      class="ant-row css-dev-only-do-not-override-ypkju9 css-var-root"
+                                      style="margin-inline: -12px;"
+                                    >
+                                      <div
+                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ypkju9 css-var-root"
+                                        style="padding-inline: 12px;"
+                                      >
+                                        <label
+                                          class=""
+                                          for="root_child__title"
+                                          title="A registration form"
+                                        >
+                                          A registration form
+                                        </label>
+                                        <div
+                                          class="ant-divider css-dev-only-do-not-override-ypkju9 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
+                                          role="separator"
+                                          style="margin-block: 1px;"
+                                        />
+                                      </div>
+                                      <div
+                                        class="ant-col ant-col-24 css-dev-only-do-not-override-ypkju9 css-var-root"
+                                        style="padding-inline: 12px;"
+                                      >
+                                        <div
+                                          class="ant-alert ant-alert-warning ant-alert-outlined ant-alert-no-icon css-var-root css-dev-only-do-not-override-ypkju9"
+                                          data-show="true"
+                                          role="alert"
+                                        >
+                                          <div
+                                            class="ant-alert-section"
+                                          >
+                                            <div
+                                              class="ant-alert-title"
+                                            >
+                                              Circular reference ($ref cycle) detected for field "child". You may choose to expand to the next cycle break
+                                            </div>
+                                          </div>
+                                          <div
+                                            class="ant-alert-actions"
+                                          >
+                                            <div
+                                              class="ant-space css-dev-only-do-not-override-ypkju9 ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small css-var-root"
+                                            >
+                                              <div
+                                                class="ant-space-item"
+                                              >
+                                                <button
+                                                  class="ant-btn css-dev-only-do-not-override-ypkju9 css-var-root ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-sm"
+                                                  id="root_child_child-button"
+                                                  type="button"
+                                                >
+                                                  <span>
+                                                    Expand Cycle
+                                                  </span>
+                                                </button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </fieldset>
+                                </div>
+                              </div>
+                              <div
+                                class="ant-form-item-additional"
+                              >
+                                <div
+                                  class="ant-form-item-extra"
+                                >
+                                  <span
+                                    id="root_child__description"
+                                  >
+                                    A simple form example.
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+            <div
+              class="ant-form-item-additional"
+            >
+              <div
+                class="ant-form-item-extra"
+              >
+                <span
+                  id="root__description"
+                >
+                  A simple form example.
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-ypkju9 css-var-root ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > checkbox field 1`] = `
 <DocumentFragment>
   <form

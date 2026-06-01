@@ -4,6 +4,7 @@ import AddButton from '../AddButton';
 import ArrayFieldItemTemplate from '../ArrayFieldItemTemplate';
 import ArrayFieldTemplate from '../ArrayFieldTemplate';
 import BaseInputTemplate from '../BaseInputTemplate/BaseInputTemplate';
+import CyclicSchemaExpandTemplate from '../CyclicSchemaExpandTemplate';
 import DescriptionField from '../DescriptionField';
 import ErrorList from '../ErrorList';
 import FieldErrorTemplate from '../FieldErrorTemplate';
@@ -27,6 +28,7 @@ export function generateTemplates<
     ArrayFieldItemTemplate,
     ArrayFieldTemplate,
     BaseInputTemplate,
+    CyclicSchemaExpandTemplate,
     ButtonTemplates: {
       AddButton,
       CopyButton,

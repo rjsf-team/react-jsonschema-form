@@ -879,4 +879,31 @@ describe('SchemaField', () => {
       expect(disabled).toBe(true);
     });
   });
+
+  describe('cyclic $ref', () => {
+    const schema: RJSFSchema = {
+      title: 'A registration form',
+      description: 'A simple form example.',
+      type: 'object',
+      properties: {
+        child: {
+          $ref: '#',
+        },
+      },
+    };
+
+    it('clicking the expand button shows the next level of the cycle', async () => {
+      const { node } = createFormComponent({ schema });
+
+      // child is fully rendered (first $ref occurrence), but child.child hits the cycle
+      const expandButton = node.querySelector<HTMLButtonElement>('#root_child_child-button')!;
+      expect(expandButton).not.toBeNull();
+      expect(expandButton).toHaveTextContent('Expand Cycle');
+
+      await user.click(expandButton);
+
+      expect(node.querySelector('#root_child_child-button')).toBeNull();
+      expect(node.querySelector<HTMLButtonElement>('#root_child_child_child_child-button')).not.toBeNull();
+    });
+  });
 });
