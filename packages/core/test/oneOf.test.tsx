@@ -1906,4 +1906,43 @@ describe('oneOf', () => {
       }
     });
   });
+  it('$ref objects pointing to objects with oneOf lists do not change (#3833)', async () => {
+    const schema: RJSFSchema = {
+      title: 'oneOf Example',
+      type: 'object',
+      properties: {
+        status: {
+          $ref: '#/definitions/status',
+        },
+      },
+      definitions: {
+        status: {
+          title: 'Field Status',
+          type: 'object',
+          oneOf: [
+            {
+              title: 'Approved',
+              type: 'object',
+            },
+            {
+              title: 'Rejected',
+              type: 'object',
+              properties: {
+                reason: {
+                  title: 'Rejection Reason',
+                  type: 'string',
+                },
+              },
+            },
+          ],
+        },
+      },
+    };
+    const formData = { status: {} };
+    const { node } = createFormComponent({ schema, formData });
+    const select = node.querySelector('#root_status__oneof_select');
+    await user.selectOptions(select!, '1');
+
+    expect(select).toHaveValue('1');
+  });
 });
