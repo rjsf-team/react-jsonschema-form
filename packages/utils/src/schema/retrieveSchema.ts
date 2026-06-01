@@ -102,15 +102,23 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
 ): S[] {
   const { if: expression, then, else: otherwise, ...resolvedSchemaLessConditional } = schema;
 
+  const convertBooleanSchema = (branch: S | boolean | undefined): S | undefined => {
+    if (branch === undefined) {
+      return undefined;
+    }
+    return (typeof branch === 'boolean' ? (branch ? {} : { not: {} }) : branch) as S;
+  };
+
   const conditionValue = validator.isValid(expression as S, formData || ({} as T), rootSchema);
   let resolvedSchemas = [resolvedSchemaLessConditional as S];
   let schemas: S[] = [];
   if (expandAllBranches) {
     if (then && typeof then !== 'boolean') {
+      const thenSchema = then as unknown as S;
       schemas = schemas.concat(
         retrieveSchemaInternal<T, S, F>(
           validator,
-          then as S,
+          thenSchema,
           rootSchema,
           formData,
           expandAllBranches,
@@ -120,10 +128,11 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
       );
     }
     if (otherwise && typeof otherwise !== 'boolean') {
+      const otherwiseSchema = otherwise as unknown as S;
       schemas = schemas.concat(
         retrieveSchemaInternal<T, S, F>(
           validator,
-          otherwise as S,
+          otherwiseSchema,
           rootSchema,
           formData,
           expandAllBranches,
@@ -133,12 +142,12 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
       );
     }
   } else {
-    const conditionalSchema = conditionValue ? then : otherwise;
-    if (conditionalSchema && typeof conditionalSchema !== 'boolean') {
+    const conditionalSchema = convertBooleanSchema((conditionValue ? then : otherwise) as S | boolean | undefined);
+    if (conditionalSchema) {
       schemas = schemas.concat(
         retrieveSchemaInternal<T, S, F>(
           validator,
-          conditionalSchema as S,
+          conditionalSchema,
           rootSchema,
           formData,
           expandAllBranches,

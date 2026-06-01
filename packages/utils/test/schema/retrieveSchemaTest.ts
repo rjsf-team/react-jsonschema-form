@@ -1098,6 +1098,23 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
         });
       });
+      it('should preserve a matched boolean false branch as an impossible schema', () => {
+        testValidator.setReturnValues({
+          isValid: [true],
+        });
+        const schema: RJSFSchema = {
+          type: 'number',
+          if: {
+            const: 13,
+          },
+          then: false,
+        };
+
+        expect(retrieveSchema(testValidator, schema, schema, 13)).toEqual({
+          type: 'number',
+          not: {},
+        });
+      });
       it('should resolve multiple conditions', () => {
         // Mock errors so that resolveCondition works as expected
         testValidator.setReturnValues({
