@@ -144,6 +144,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
             experimental_customMergeAllOf,
           );
         } else {
+          // oxlint-disable-next-line no-console
           console.warn(`Unable to generate path schema for "${name}.${i}". No schema defined for it`);
         }
       });
@@ -161,6 +162,8 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
       });
     }
   } else if (PROPERTIES_KEY in schema) {
+    // This is a deprecated function that is no longer used by RJSF
+    // oxlint-disable-next-line guard-for-in
     for (const property in schema.properties) {
       const field: S = get(schema, [PROPERTIES_KEY, property], {}) as S;
       (pathSchema as PathSchema<GenericObjectType>)[property] = toPathSchemaInternal<T, S, F>(

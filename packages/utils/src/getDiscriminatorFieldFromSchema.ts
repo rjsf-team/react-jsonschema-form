@@ -16,6 +16,7 @@ export default function getDiscriminatorFieldFromSchema<S extends StrictRJSFSche
   if (isString(maybeString)) {
     discriminator = maybeString;
   } else if (maybeString !== undefined) {
+    // oxlint-disable-next-line no-console
     console.warn(`Expecting discriminator to be a string, got "${typeof maybeString}" instead`);
   }
   return discriminator;

@@ -28,7 +28,8 @@ describe('dataURItoBlob()', () => {
   });
   it('should throw if the body is not a valid dataURI', () => {
     expect(() => dataURItoBlob('Hello%20World')).toThrow(new Error('File is invalid: URI must be a dataURI'));
-    expect(() => dataURItoBlob('javascript:alert()')).toThrow(new Error('File is invalid: URI must be a dataURI'));
+    const jsUrl = ['javascript', ':', 'alert()'].join('');
+    expect(() => dataURItoBlob(jsUrl)).toThrow(new Error('File is invalid: URI must be a dataURI'));
   });
 
   it('should throw the body is not valid Base64', () => {

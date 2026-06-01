@@ -29,7 +29,8 @@ export default function OptionalDataControlsTemplate<
         icon={<AddIcon fontSize='small' />}
       />
     );
-  } else if (onRemoveClick) {
+  }
+  if (onRemoveClick) {
     return (
       <RemoveButton
         id={id}

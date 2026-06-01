@@ -11,15 +11,14 @@ export default function unwrapErrorHandler<T = any>(errorHandler: FormValidation
   return Object.keys(errorHandler).reduce<ErrorSchema<T>>((acc, key) => {
     if (key === 'addError') {
       return acc;
-    } else {
-      const childSchema = (errorHandler as GenericObjectType)[key];
-      if (isPlainObject(childSchema)) {
-        return {
-          ...acc,
-          [key]: unwrapErrorHandler(childSchema),
-        };
-      }
-      return { ...acc, [key]: childSchema };
     }
+    const childSchema = (errorHandler as GenericObjectType)[key];
+    if (isPlainObject(childSchema)) {
+      return {
+        ...acc,
+        [key]: unwrapErrorHandler(childSchema),
+      };
+    }
+    return { ...acc, [key]: childSchema };
   }, {});
 }

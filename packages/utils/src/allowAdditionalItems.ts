@@ -9,6 +9,7 @@ import type { RJSFSchema, StrictRJSFSchema } from './types';
  */
 export default function allowAdditionalItems<S extends StrictRJSFSchema = RJSFSchema>(schema: S) {
   if (schema.additionalItems === true) {
+    // oxlint-disable-next-line no-console
     console.warn('additionalItems=true is currently not supported');
   }
   return isObject(schema.additionalItems);

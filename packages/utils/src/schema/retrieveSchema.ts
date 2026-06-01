@@ -361,6 +361,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
     return schema;
   }
   let resolvedSchema: S = schema;
+  let currentBaseURI = baseURI;
   // resolve top level ref
   if (REF_KEY in resolvedSchema) {
     const { $ref, ...localSchema } = resolvedSchema;
@@ -370,10 +371,10 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
     }
     recurseList.push($ref!);
     // Retrieve the referenced schema definition.
-    const refSchema = findSchemaDefinition<S>($ref, rootSchema, baseURI);
+    const refSchema = findSchemaDefinition<S>($ref, rootSchema, currentBaseURI);
     resolvedSchema = { ...refSchema, ...localSchema, [RJSF_REF_KEY]: $ref };
     if (ID_KEY in resolvedSchema) {
-      baseURI = resolvedSchema[ID_KEY];
+      currentBaseURI = resolvedSchema[ID_KEY];
     }
   }
 
@@ -381,9 +382,9 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
     const childrenLists: string[][] = [];
     const updatedProps = transform(
       resolvedSchema[PROPERTIES_KEY]!,
-      (result, value, key: string) => {
+      (acc, value, key: string) => {
         const childList: string[] = [...recurseList];
-        result[key] = resolveAllReferences(value as S, rootSchema, childList, baseURI, resolveAnyOfOrOneOfRefs);
+        acc[key] = resolveAllReferences(value as S, rootSchema, childList, currentBaseURI, resolveAnyOfOrOneOfRefs);
         childrenLists.push(childList);
       },
       {} as RJSFSchema,
@@ -399,7 +400,13 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   ) {
     resolvedSchema = {
       ...resolvedSchema,
-      items: resolveAllReferences(resolvedSchema.items as S, rootSchema, recurseList, baseURI, resolveAnyOfOrOneOfRefs),
+      items: resolveAllReferences(
+        resolvedSchema.items as S,
+        rootSchema,
+        recurseList,
+        currentBaseURI,
+        resolveAnyOfOrOneOfRefs,
+      ),
     };
   }
 
@@ -417,7 +424,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
       resolvedSchema = {
         ...resolvedSchema,
         [key]: schemas.map((s: S) =>
-          resolveAllReferences(s, rootSchema, recurseList, baseURI, resolveAnyOfOrOneOfRefs),
+          resolveAllReferences(s, rootSchema, recurseList, currentBaseURI, resolveAnyOfOrOneOfRefs),
         ),
       };
     }
@@ -605,6 +612,7 @@ export function retrieveSchemaInternal<
           resolvedSchema.allOf = withContainsSchemas;
         }
       } catch (e) {
+        // oxlint-disable-next-line no-console
         console.warn('could not merge subschemas in allOf:\n', e);
         const { allOf, ...resolvedSchemaWithoutAllOf } = resolvedSchema;
         return resolvedSchemaWithoutAllOf as S;
@@ -612,18 +620,18 @@ export function retrieveSchemaInternal<
     }
     if (PROPERTIES_KEY in resolvedSchema && PATTERN_PROPERTIES_KEY in resolvedSchema) {
       resolvedSchema = Object.keys(resolvedSchema.properties!).reduce(
-        (accumSchema, key) => {
-          const matchingProperties = getMatchingPatternProperties(accumSchema, key);
+        (acc, key) => {
+          const matchingProperties = getMatchingPatternProperties(acc, key);
           if (!isEmpty(matchingProperties)) {
-            accumSchema.properties[key] = retrieveSchema<T, S, F>(
+            acc.properties[key] = retrieveSchema<T, S, F>(
               validator,
-              { allOf: [accumSchema.properties[key], ...Object.values(matchingProperties)] } as S,
+              { allOf: [acc.properties[key], ...Object.values(matchingProperties)] } as S,
               rootSchema,
               get(rawFormData, [key]) as T,
               experimental_customMergeAllOf,
             );
           }
-          return accumSchema;
+          return acc;
         },
         {
           ...resolvedSchema,
@@ -690,7 +698,7 @@ export function resolveAnyOrOneOfSchemas<
       getFirstMatchingOption<T, S, F>(validator, formData, relaxed, rootSchema, discriminator);
       return anyOrOneOf.map((item) => mergeSchemas(remaining, item) as S);
     }
-    schema = mergeSchemas(remaining, anyOrOneOf[option]) as S;
+    return [mergeSchemas(remaining, anyOrOneOf[option]) as S];
   }
   return [schema];
 }
@@ -894,10 +902,10 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
   );
   return dependentSchemas.flatMap((dependent) => {
     const { oneOf, ...dependentSchema } = dependent;
-    schema = mergeSchemas(schema, dependentSchema) as S;
+    const mergedSchema = mergeSchemas(schema, dependentSchema) as S;
     // Since it does not contain oneOf, we return the original schema.
     if (oneOf === undefined) {
-      return schema;
+      return mergedSchema;
     }
     // Resolve $refs inside oneOf.
     const resolvedOneOfs = oneOf.map((subschema) => {
@@ -910,7 +918,7 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
     return allPermutations.flatMap((resolvedOneOf) =>
       withExactlyOneSubschema<T, S, F>(
         validator,
-        schema,
+        mergedSchema,
         rootSchema,
         dependencyKey,
         resolvedOneOf,
@@ -972,6 +980,7 @@ export function withExactlyOneSubschema<
   });
 
   if (!expandAllBranches && validSubschemas.length !== 1) {
+    // oxlint-disable-next-line no-console
     console.warn("ignoring oneOf in dependencies because there isn't exactly one subschema that is valid");
     return [schema];
   }

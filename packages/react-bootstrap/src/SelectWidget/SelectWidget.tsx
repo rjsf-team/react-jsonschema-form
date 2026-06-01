@@ -41,9 +41,8 @@ export default function SelectWidget<
         .call(event.target.options)
         .filter((o: any) => o.selected)
         .map((o: any) => o.value);
-    } else {
-      return event.target.value;
     }
+    return event.target.value;
   }
   const selectValue = enumOptionSelectedValue<S>(value, enumOptions, !!multiple, optionValueFormat, emptyValue);
   const showPlaceholderOption = !multiple && schema.default === undefined;

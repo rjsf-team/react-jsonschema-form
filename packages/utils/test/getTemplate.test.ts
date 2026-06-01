@@ -101,9 +101,9 @@ describe('getTemplate', () => {
         getTemplate<typeof name>(
           name,
           registry,
-          Object.keys(uiOptions).reduce((uiOptions, key) => {
-            (uiOptions as Record<string, any>)[key] = key;
-            return uiOptions;
+          Object.keys(uiOptions).reduce((acc: Record<string, any>, key) => {
+            acc[key] = key;
+            return acc;
           }, {}),
         ),
       ).toBe(FakeTemplate);

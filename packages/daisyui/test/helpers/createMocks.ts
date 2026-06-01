@@ -11,7 +11,7 @@ export const mockSchema: RJSFSchema = {
   },
 };
 
-export const mockEventHandlers = (): void => void 0;
+export const mockEventHandlers = (): void => undefined;
 
 export function mockRegistry() {
   return getTestRegistry({ templates: Templates, rootSchema: mockSchema, widgets: generateWidgets() });

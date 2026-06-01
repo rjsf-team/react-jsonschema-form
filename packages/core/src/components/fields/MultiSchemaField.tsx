@@ -209,12 +209,14 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       if (Array.isArray(uiSchema[ONE_OF_KEY])) {
         optionsUiSchema = uiSchema[ONE_OF_KEY];
       } else {
+        // oxlint-disable-next-line no-console
         console.warn(`uiSchema.oneOf is not an array for "${title || name}"`);
       }
     } else if (ANY_OF_KEY in schema && uiSchema && ANY_OF_KEY in uiSchema) {
       if (Array.isArray(uiSchema[ANY_OF_KEY])) {
         optionsUiSchema = uiSchema[ANY_OF_KEY];
       } else {
+        // oxlint-disable-next-line no-console
         console.warn(`uiSchema.anyOf is not an array for "${title || name}"`);
       }
     }

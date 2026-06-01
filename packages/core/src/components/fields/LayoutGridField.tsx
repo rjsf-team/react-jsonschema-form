@@ -283,6 +283,7 @@ export function computeArraySchemasIfPresent<S extends StrictRJSFSchema = RJSFSc
   fieldPathId: FieldPathId;
 } {
   let rawSchema: S | undefined;
+  let resultPathId = fieldPathId;
   if (isNumericIndex(potentialIndex) && schema && schema?.type === 'array' && has(schema, ITEMS_KEY)) {
     const index = Number(potentialIndex);
     const items = schema[ITEMS_KEY];
@@ -295,12 +296,12 @@ export function computeArraySchemasIfPresent<S extends StrictRJSFSchema = RJSFSc
     } else {
       rawSchema = items as S;
     }
-    fieldPathId = {
+    resultPathId = {
       [ID_KEY]: fieldPathId[ID_KEY],
       path: [...fieldPathId.path.slice(0, fieldPathId.path.length - 1), index],
     };
   }
-  return { rawSchema, fieldPathId };
+  return { rawSchema, fieldPathId: resultPathId };
 }
 
 /** Given a `dottedPath` to a field in the `initialSchema`, iterate through each individual path in the schema until

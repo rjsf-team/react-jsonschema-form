@@ -68,7 +68,9 @@ export default class ParserValidator<
     if (!existing) {
       this.schemaMap[key] = identifiedSchema;
     } else if (!deepEquals(existing, identifiedSchema)) {
+      // oxlint-disable-next-line no-console
       console.error('existing schema:', JSON.stringify(existing, null, 2));
+      // oxlint-disable-next-line no-console
       console.error('new schema:', JSON.stringify(identifiedSchema, null, 2));
       throw new Error(
         `Two different schemas exist with the same key ${key}! What a bad coincidence. If possible, try adding an $id to one of the schemas`,

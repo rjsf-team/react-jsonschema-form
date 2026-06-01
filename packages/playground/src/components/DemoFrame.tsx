@@ -92,8 +92,11 @@ function AntdPopupPatcher({ frameDoc }: { frameDoc: Document }) {
         // during the close animation while antd resets its own inset before hiding the element.
         const lastInset = ourInsets.get(popup);
         if (lastInset !== undefined && popup.style.inset !== lastInset) {
+          // since we are actually wanting to update the popup's style disable this rule
+          // oxlint-disable no-param-reassign
           popup.style.position = 'absolute';
           popup.style.inset = lastInset;
+          // oxlint-enable no-param-reassign
         }
         return;
       }
@@ -104,9 +107,12 @@ function AntdPopupPatcher({ frameDoc }: { frameDoc: Document }) {
 
       const inset = `${rect.bottom + scrollTop + 4}px auto auto ${rect.left + scrollLeft}px`;
       ourInsets.set(popup, inset);
+      // since we are actually wanting to update the popup's style disable this rule
+      // oxlint-disable no-param-reassign
       popup.style.position = 'absolute';
       popup.style.inset = inset;
       popup.style.minWidth = `${rect.right - rect.left}px`;
+      // oxlint-enable no-param-reassign
     };
 
     const handleElement = (el: HTMLElement) => {

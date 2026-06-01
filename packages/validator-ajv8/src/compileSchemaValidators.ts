@@ -22,9 +22,11 @@ export default function compileSchemaValidators<S extends StrictRJSFSchema = RJS
   output: string,
   options: CustomValidatorOptionsType = {},
 ) {
+  // oxlint-disable-next-line no-console
   console.log('parsing the schema');
 
   const moduleCode = compileSchemaValidatorsCode(schema, options);
+  // oxlint-disable-next-line no-console
   console.log(`writing ${output}`);
   fs.writeFileSync(output, moduleCode);
 }

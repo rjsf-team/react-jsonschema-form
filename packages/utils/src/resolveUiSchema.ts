@@ -51,6 +51,7 @@ export default function resolveUiSchema<
       try {
         resolvedSchema = findSchemaDefinition<S>(ref, registry.rootSchema);
       } catch (e) {
+        // oxlint-disable-next-line no-console
         console.warn('could not resolve $ref in resolveUiSchema:\n', e);
         return result;
       }

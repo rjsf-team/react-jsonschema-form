@@ -20,9 +20,7 @@ const mockFileReader = {
   set onload(fn: (event: { target: { result: string } }) => void) {
     fn({ target: { result: 'data:text/plain;base64,x=' } });
   },
-  readAsDataURL() {
-    return;
-  },
+  readAsDataURL() {},
 } as unknown as FileReader;
 
 function StringFieldTest(props: FieldProps) {

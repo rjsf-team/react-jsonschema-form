@@ -36,7 +36,8 @@ export default function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSch
     (files: any) => {
       if (typeof files === 'object') {
         // handleChange is async; DOM event handlers are void-returning, so we intentionally don't await
-        void handleChange(files);
+        // oxlint-disable-next-line no-misused-promises, no-floating-promises
+        handleChange(files);
       }
     },
     [handleChange],

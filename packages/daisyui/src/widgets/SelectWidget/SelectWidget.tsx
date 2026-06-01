@@ -40,7 +40,7 @@ export default function SelectWidget<
 }: WidgetProps<T, S, F>) {
   const { enumOptions, emptyValue: optEmptyVal } = options;
   const optionValueFormat = getOptionValueFormat(options);
-  multiple = typeof multiple === 'undefined' ? false : !!multiple;
+  const isMultiple = typeof multiple === 'undefined' ? false : multiple;
 
   const getDisplayValue = (val: any) => {
     if (!val) {
@@ -64,7 +64,7 @@ export default function SelectWidget<
         return;
       }
 
-      if (multiple) {
+      if (isMultiple) {
         const currentValue = Array.isArray(value) ? value : [];
         const optionValue = isEnumeratedObject
           ? enumOptions[index].value
@@ -81,7 +81,7 @@ export default function SelectWidget<
         );
       }
     },
-    [value, multiple, isEnumeratedObject, enumOptions, optEmptyVal, optionValueFormat, onChange],
+    [value, isMultiple, isEnumeratedObject, enumOptions, optEmptyVal, optionValueFormat, onChange],
   );
 
   const _onBlur = useCallback(
@@ -108,7 +108,7 @@ export default function SelectWidget<
   // it always needs a string array regardless of `multiple`. Flatten the
   // helper's single/multiple return shape and strip the empty-single case.
   const selectedValues: string[] = [
-    enumOptionSelectedValue<S>(value, enumOptions, !!multiple, optionValueFormat, multiple ? [] : ''),
+    enumOptionSelectedValue<S>(value, enumOptions, isMultiple, optionValueFormat, isMultiple ? [] : ''),
   ]
     .flat()
     .filter((v) => v !== '');
@@ -151,7 +151,7 @@ export default function SelectWidget<
                 data-value={i}
               >
                 <div className='flex items-center gap-2'>
-                  {multiple && (
+                  {isMultiple && (
                     <input
                       type='checkbox'
                       className='checkbox checkbox-sm'

@@ -321,6 +321,7 @@ export default function OptionsDrawer({
       setShareURL(`${origin}${pathname}#${hash}`);
     } catch (error) {
       setShareURL(null);
+      // oxlint-disable-next-line no-console
       console.error(error);
     }
   }, [formData, liveSettings, schema, theme, uiSchema, validator, setShareURL, sampleName]);

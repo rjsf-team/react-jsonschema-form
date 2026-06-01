@@ -30,7 +30,8 @@ export default function OptionalDataControlsTemplate<
         appearance='secondary'
       />
     );
-  } else if (onRemoveClick) {
+  }
+  if (onRemoveClick) {
     return (
       <FluentIconButton
         id={id}

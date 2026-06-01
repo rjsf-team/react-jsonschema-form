@@ -117,15 +117,16 @@ export default class AJV8Validator<
         // `AJV8Validator#transformRJSFValidationErrors` replaces property names
         // with `title` or `ui:title`. See #4348, #4349, #4387, and #4402.
         (compiledValidator.errors ?? []).forEach((error) => {
+          const { params } = error;
           ['missingProperty', 'property'].forEach((key) => {
-            if (error.params?.[key]) {
-              error.params[key] = `'${error.params[key]}'`;
+            if (params?.[key]) {
+              params[key] = `'${params[key]}'`;
             }
           });
-          if (error.params?.deps) {
+          if (params?.deps) {
             // As `error.params.deps` is the comma+space separated list of missing dependencies, enclose each dependency separately.
             // For example, `A, B` is converted into `'A', 'B'`.
-            error.params.deps = error.params.deps
+            params.deps = params.deps
               .split(', ')
               .map((v: string) => `'${v}'`)
               .join(', ');
@@ -134,14 +135,15 @@ export default class AJV8Validator<
         this.localizer(compiledValidator.errors);
         // Revert to originals
         (compiledValidator.errors ?? []).forEach((error) => {
+          const { params } = error;
           ['missingProperty', 'property'].forEach((key) => {
-            if (error.params?.[key]) {
-              error.params[key] = error.params[key].slice(1, -1);
+            if (params?.[key]) {
+              params[key] = params[key].slice(1, -1);
             }
           });
-          if (error.params?.deps) {
+          if (params?.deps) {
             // Remove surrounding quotes from each missing dependency. For example, `'A', 'B'` is reverted to `A, B`.
-            error.params.deps = error.params.deps
+            params.deps = params.deps
               .split(', ')
               .map((v: string) => v.slice(1, -1))
               .join(', ');
@@ -244,6 +246,7 @@ export default class AJV8Validator<
       const result = compiledValidator(formData);
       return result;
     } catch (e) {
+      // oxlint-disable-next-line no-console
       console.warn('Error encountered compiling schema:', e);
       return false;
     }

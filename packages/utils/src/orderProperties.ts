@@ -16,9 +16,9 @@ export default function orderProperties(properties: string[], order?: string[]):
   }
 
   const arrayToHash = (arr: string[]) =>
-    arr.reduce((prev: GenericObjectType, curr) => {
-      prev[curr] = true;
-      return prev;
+    arr.reduce((acc: GenericObjectType, curr) => {
+      acc[curr] = true;
+      return acc;
     }, {});
   const errorPropList = (arr: string[]) =>
     arr.length > 1 ? `properties '${arr.join("', '")}'` : `property '${arr[0]}'`;
