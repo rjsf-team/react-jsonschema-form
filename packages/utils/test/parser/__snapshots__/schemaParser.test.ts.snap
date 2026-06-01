@@ -857,8 +857,8 @@ exports[`schemaParser() > parses schema with oneof and nested dependencies 1`] =
 
 exports[`schemaParser() > parses superSchema properly 1`] = `
 {
-  "-124b5dfb": {
-    "$id": "-124b5dfb",
+  "-130bae51": {
+    "$id": "-130bae51",
     "__rjsf_ref": "#/definitions/foo",
     "anyOf": [
       {
@@ -874,34 +874,8 @@ exports[`schemaParser() > parses superSchema properly 1`] = `
     },
     "type": "object",
   },
-  "-42ce06f5": {
-    "$id": "-42ce06f5",
-    "anyOf": [
-      {
-        "required": [
-          "firstName",
-        ],
-      },
-      {
-        "required": [
-          "lastName",
-        ],
-      },
-    ],
-    "properties": {
-      "firstName": {
-        "title": "First name",
-        "type": "string",
-      },
-      "lastName": {
-        "__rjsf_ref": "#/definitions/test",
-        "type": "string",
-      },
-    },
-    "title": "First method of identification",
-  },
-  "237b1633": {
-    "$id": "237b1633",
+  "-1e3c57ec": {
+    "$id": "-1e3c57ec",
     "__rjsf_ref": "#/definitions/choice2",
     "anyOf": [
       {
@@ -926,25 +900,8 @@ exports[`schemaParser() > parses superSchema properly 1`] = `
     },
     "type": "object",
   },
-  "282df598": {
-    "$id": "282df598",
-    "anyOf": [
-      {
-        "required": [
-          "idCode",
-        ],
-      },
-    ],
-    "properties": {
-      "idCode": {
-        "__rjsf_ref": "#/definitions/test",
-        "type": "string",
-      },
-    },
-    "title": "Second method of identification",
-  },
-  "30aa36de": {
-    "$id": "30aa36de",
+  "-42566fe2": {
+    "$id": "-42566fe2",
     "__rjsf_ref": "#/definitions/choice1",
     "anyOf": [
       {
@@ -968,6 +925,49 @@ exports[`schemaParser() > parses superSchema properly 1`] = `
       },
     },
     "type": "object",
+  },
+  "-7df52035": {
+    "$id": "-7df52035",
+    "anyOf": [
+      {
+        "required": [
+          "firstName",
+        ],
+      },
+      {
+        "required": [
+          "lastName",
+        ],
+      },
+    ],
+    "properties": {
+      "firstName": {
+        "title": "First name",
+        "type": "string",
+      },
+      "lastName": {
+        "__rjsf_ref": "#/definitions/test",
+        "type": "string",
+      },
+    },
+    "title": "First method of identification",
+  },
+  "587c7f18": {
+    "$id": "587c7f18",
+    "anyOf": [
+      {
+        "required": [
+          "idCode",
+        ],
+      },
+    ],
+    "properties": {
+      "idCode": {
+        "__rjsf_ref": "#/definitions/test",
+        "type": "string",
+      },
+    },
+    "title": "Second method of identification",
   },
   "super-schema": {
     "$id": "super-schema",

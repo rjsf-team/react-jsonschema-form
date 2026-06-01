@@ -3,7 +3,13 @@ import noop from 'lodash/noop';
 import type { MockInstance } from 'vitest';
 
 import type { RJSFSchema } from '../../src';
-import { ADDITIONAL_PROPERTY_FLAG, createSchemaUtils, PROPERTIES_KEY, retrieveSchema } from '../../src';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  createSchemaUtils,
+  PROPERTIES_KEY,
+  retrieveSchema,
+  RJSF_REF_CYCLE_KEY,
+} from '../../src';
 import {
   getAllPermutationsOfXxxOf,
   relaxOptionsForScoring,
@@ -268,10 +274,40 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     });
     it('recursive ref should resolve once', () => {
       const result = retrieveSchema(testValidator, RECURSIVE_REF, RECURSIVE_REF);
+      const enumDef = RECURSIVE_REF.definitions!['@enum'] as RJSFSchema;
       expect(result).toEqual({
         definitions: RECURSIVE_REF.definitions,
-        ...(RECURSIVE_REF.definitions!['@enum'] as RJSFSchema),
+        ...enumDef,
         __rjsf_ref: '#/definitions/@enum',
+        // children is a circular object-property $ref — retrieveSchema marks it to stop infinite renders
+        properties: {
+          ...enumDef.properties,
+          children: { $ref: '#/definitions/@enum', [RJSF_REF_CYCLE_KEY]: true },
+        },
+      });
+    });
+    it('recursive array-items ref resolves without cycle flag (items are data-driven, not infinite)', () => {
+      // A tree schema where children is an array of the same type.
+      // Array items are only rendered when data exists, so no __rjsf_ref_cycle flag should be added.
+      const treeSchema: RJSFSchema = {
+        definitions: {
+          node: {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+              children: { type: 'array', items: { $ref: '#/definitions/node' } },
+            },
+          },
+        },
+        $ref: '#/definitions/node',
+      };
+      const result = retrieveSchema(testValidator, treeSchema, treeSchema);
+      const nodeDef = treeSchema.definitions!.node as RJSFSchema;
+      // children.items stays as the original $ref (no __rjsf_ref_cycle) because it's an array context
+      expect(result).toEqual({
+        definitions: treeSchema.definitions,
+        ...nodeDef,
+        __rjsf_ref: '#/definitions/node',
       });
     });
     it('recursive allof ref should resolve once', () => {

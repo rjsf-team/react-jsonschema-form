@@ -281,6 +281,19 @@ export interface RJSFBaseProps<T = any, S extends StrictRJSFSchema = RJSFSchema,
   registry: Registry<T, S, F>;
 }
 
+export type CyclicSchemaExpandProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> = RJSFBaseProps<T, S, F> & {
+  /** The FieldPathId of the field in the hierarchy */
+  fieldPathId: FieldPathId;
+  /** The unique name of the field, usually derived from the name of the property in the JSONSchema */
+  name: string;
+  /** Callback used to mark a cyclic scheme element as expanded */
+  onExpand: (id: string) => void;
+};
+
 /** The properties that are passed to an `ErrorListTemplate` implementation */
 export type ErrorListProps<
   T = any,
@@ -359,6 +372,8 @@ export type TemplatesType<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   ArrayFieldTitleTemplate: ComponentType<ArrayFieldTitleProps<T, S, F>>;
   /** The template to use while rendering the standard html input */
   BaseInputTemplate: ComponentType<BaseInputTemplateProps<T, S, F>>;
+  /** The template to use while rendering the cyclic schema expand controls */
+  CyclicSchemaExpandTemplate: ComponentType<CyclicSchemaExpandProps<T, S, F>>;
   /** The template to use for rendering the description of a field */
   DescriptionFieldTemplate: ComponentType<DescriptionFieldProps<T, S, F>>;
   /** The template to use while rendering the errors for the whole form */

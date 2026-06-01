@@ -21,6 +21,7 @@ const registry: Registry = {
     ArrayFieldTemplate: FakeTemplate,
     ArrayFieldTitleTemplate: FakeTemplate,
     BaseInputTemplate: FakeTemplate,
+    CyclicSchemaExpandTemplate: FakeTemplate,
     ButtonTemplates: {
       AddButton: FakeTemplate,
       CopyButton: FakeTemplate,
@@ -56,6 +57,7 @@ const uiOptions: UIOptionsType = {
   ArrayFieldTemplate: CustomTemplate as unknown as UIOptionsType['ArrayFieldTemplate'],
   ArrayFieldTitleTemplate: CustomTemplate as unknown as UIOptionsType['ArrayFieldTitleTemplate'],
   BaseInputTemplate: CustomTemplate as unknown as UIOptionsType['BaseInputTemplate'],
+  CyclicSchemaExpandTemplate: CustomTemplate as unknown as UIOptionsType['CyclicSchemaExpandTemplate'],
   DescriptionFieldTemplate: CustomTemplate as unknown as UIOptionsType['DescriptionFieldTemplate'],
   ErrorListTemplate: CustomTemplate as unknown as UIOptionsType['ErrorListTemplate'],
   FallbackFieldTemplate: CustomTemplate as unknown as UIOptionsType['FallbackFieldTemplate'],

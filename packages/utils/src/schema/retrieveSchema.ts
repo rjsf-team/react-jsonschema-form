@@ -20,6 +20,7 @@ import {
   PATTERN_PROPERTIES_KEY,
   PROPERTIES_KEY,
   REF_KEY,
+  RJSF_REF_CYCLE_KEY,
   RJSF_REF_KEY,
 } from '../constants';
 import deepEquals from '../deepEquals';
@@ -348,6 +349,10 @@ export function resolveReference<T = any, S extends StrictRJSFSchema = RJSFSchem
  * @param recurseList - List of $refs already resolved to prevent recursion
  * @param [baseURI] - The base URI to be used for resolving relative references
  * @param [resolveAnyOfOrOneOfRefs] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
+ * @param [markCycleOnDetection=false] - When true and a recursive $ref is detected, the returned schema is tagged
+ *   with `__rjsf_ref_cycle: true` so that `SchemaField` can render a cycle indicator instead of recursing.
+ *   Should only be `true` when called from an **object-property** context, because object properties are always
+ *   rendered (creating an infinite loop), whereas array items and anyOf/oneOf branches are data-driven.
  * @returns - given schema will all references resolved or the original schema if no internal `$refs` were resolved
  */
 export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
@@ -356,6 +361,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   recurseList: string[],
   baseURI?: string,
   resolveAnyOfOrOneOfRefs?: boolean,
+  markCycleOnDetection = false,
 ): S {
   if (!isObject(schema)) {
     return schema;
@@ -367,7 +373,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
     const { $ref, ...localSchema } = resolvedSchema;
     // Check for a recursive reference and stop the loop
     if (recurseList.includes($ref!)) {
-      return resolvedSchema;
+      return markCycleOnDetection ? ({ ...resolvedSchema, [RJSF_REF_CYCLE_KEY]: true } as S) : resolvedSchema;
     }
     recurseList.push($ref!);
     // Retrieve the referenced schema definition.
@@ -384,7 +390,18 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
       resolvedSchema[PROPERTIES_KEY]!,
       (acc, value, key: string) => {
         const childList: string[] = [...recurseList];
-        acc[key] = resolveAllReferences(value as S, rootSchema, childList, currentBaseURI, resolveAnyOfOrOneOfRefs);
+        // Mark cycles only when NOT in resolveAnyOfOrOneOfRefs mode. When resolveAnyOfOrOneOfRefs=true
+        // (e.g. from ObjectField), options are resolved against a shared recurseList that accumulates
+        // refs across branches, causing false positives. In simple (non-anyOf) resolution, a $ref cycle
+        // in an object property always causes an infinite render loop and must be caught.
+        acc[key] = resolveAllReferences(
+          value as S,
+          rootSchema,
+          childList,
+          baseURI,
+          resolveAnyOfOrOneOfRefs,
+          !resolveAnyOfOrOneOfRefs,
+        );
         childrenLists.push(childList);
       },
       {} as RJSFSchema,
@@ -400,6 +417,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   ) {
     resolvedSchema = {
       ...resolvedSchema,
+      // Array items are only rendered when data exists, so a $ref cycle here does NOT cause an infinite render.
       items: resolveAllReferences(
         resolvedSchema.items as S,
         rootSchema,
