@@ -11,7 +11,14 @@ export type ShadIconButtonProps<
   F extends FormContextType = any,
 > = IconButtonProps<T, S, F> & VariantProps<typeof buttonVariants>;
 
-function IconButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+/** Base button component that renders a Shadcn button with an icon for RJSF form actions.
+ * This component serves as the foundation for other specialized buttons used in array operations.
+ * It combines RJSF's IconButtonProps with Shadcn's ButtonProps to provide a consistent styling
+ * and behavior across the form.
+ *
+ * @param props - The combined props from RJSF IconButtonProps and Shadcn ButtonProps, including icon and event handlers
+ */
+ function IconButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: ShadIconButtonProps<T, S, F>,
 ) {
   const { icon, iconType, className, uiSchema, registry, ...otherProps } = props;
