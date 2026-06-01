@@ -158,6 +158,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         setLoaded(true);
       } catch (error) {
         alert('Unable to load form setup data.');
+        // oxlint-disable-next-line no-console
         console.error(error);
       }
 
@@ -174,6 +175,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     (event: IChangeEvent, id?: string) => {
       const { formData: newFormData } = event;
       if (id) {
+        // oxlint-disable-next-line no-console
         console.log('Field changed, id: ', id);
       }
 
@@ -184,7 +186,9 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   );
 
   const onFormDataSubmit = useCallback(({ formData: submittedFormData }: IChangeEvent, event: FormEvent<any>) => {
+    // oxlint-disable-next-line no-console
     console.log('submitted formData', submittedFormData);
+    // oxlint-disable-next-line no-console
     console.log('submit event', event);
     window.alert('Form submitted');
   }, []);
@@ -243,8 +247,11 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
                 validator={validators[validator]}
                 onChange={onFormDataChange}
                 onSubmit={onFormDataSubmit}
+                // oxlint-disable-next-line no-console
                 onBlur={(id: string, value: string) => console.log(`Blurred ${id} with value ${value}`)}
+                // oxlint-disable-next-line no-console
                 onFocus={(id: string, value: string) => console.log(`Focused ${id} with value ${value}`)}
+                // oxlint-disable-next-line no-console
                 onError={(errorList: RJSFValidationError[]) => console.log('errors', errorList)}
                 ref={playGroundFormRef}
               />
