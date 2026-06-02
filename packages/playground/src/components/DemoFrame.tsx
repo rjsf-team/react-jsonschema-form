@@ -87,6 +87,14 @@ function AntdPopupPatcher({ frameDoc }: { frameDoc: Document }) {
 
       const trigger = frameDoc.querySelector(triggerSelector) as HTMLElement | null;
       if (!trigger) {
+        // The popup is still visible but the trigger's open class is already gone — it's in the
+        // process of closing. Restore our last known position so it doesn't flash to (0, 0)
+        // during the close animation while antd resets its own inset before hiding the element.
+        const lastInset = ourInsets.get(popup);
+        if (lastInset !== undefined && popup.style.inset !== lastInset) {
+          popup.style.position = 'absolute';
+          popup.style.inset = lastInset;
+        }
         return;
       }
 
