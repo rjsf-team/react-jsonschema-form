@@ -39,6 +39,12 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
   FieldProps<T, S, F>,
   AnyOfFieldState<S>
 > {
+  /** Flag to skip the formData-change-driven option recalculation when the user just selected an option.
+   * Set to true in the setState callback of onOptionChange (after onChange is called), consumed and reset in
+   * componentDidUpdate. This prevents the matching-option recalculation from overriding a user's explicit choice
+   * when getDefaultFormState populates undefined properties that make deepEquals see a false formData change.
+   */
+  private _skipNextOptionRecalculation = false;
   /** Constructs an `AnyOfField` with the given `props` to initialize the initially selected option in state
    *
    * @param props - The `FieldProps` for this template
@@ -79,11 +85,15 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       newState = { selectedOption, retrievedOptions };
     }
     if (!deepEquals(formData, prevProps.formData) && fieldPathId.$id === prevProps.fieldPathId.$id) {
-      const { retrievedOptions } = newState;
-      const matchingOption = this.getMatchingOption(selectedOption, formData, retrievedOptions);
+      if (this._skipNextOptionRecalculation) {
+        this._skipNextOptionRecalculation = false;
+      } else {
+        const { retrievedOptions } = newState;
+        const matchingOption = this.getMatchingOption(selectedOption, formData, retrievedOptions);
 
-      if (prevState && matchingOption !== selectedOption) {
-        newState = { selectedOption: matchingOption, retrievedOptions };
+        if (prevState && matchingOption !== selectedOption) {
+          newState = { selectedOption: matchingOption, retrievedOptions };
+        }
       }
     }
     if (newState !== this.state) {
@@ -136,6 +146,7 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     }
 
     this.setState({ selectedOption: intOption }, () => {
+      this._skipNextOptionRecalculation = true;
       onChange(newFormData, fieldPathId.path, undefined, this.getFieldId());
     });
   };
