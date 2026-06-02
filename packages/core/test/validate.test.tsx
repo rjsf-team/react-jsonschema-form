@@ -481,7 +481,7 @@ describe('Validation', () => {
             name: 'pattern',
             params: { pattern: '\\d+' },
             property: '.datasetId',
-            schemaPath: '#/properties/datasetId/pattern',
+            schemaPath: '#/definitions/Dataset/properties/datasetId/pattern',
             stack: '.datasetId must match pattern "\\d+"',
             title: '',
           },
