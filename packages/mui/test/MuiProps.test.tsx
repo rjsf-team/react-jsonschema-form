@@ -1,7 +1,7 @@
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import '@testing-library/jest-dom';
 import validator from '@rjsf/validator-ajv8';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import Form from '../src';
 
@@ -97,5 +97,18 @@ describe('MUI Theme-Specific Props', () => {
 
     const select = container.querySelector('.MuiFilledInput-root');
     expect(select).toBeInTheDocument();
+  });
+
+  it('should render a title for null fields without losing the description', () => {
+    const schema: RJSFSchema = {
+      type: 'null',
+      title: 'My title extra info',
+      description: 'My extra info description',
+    };
+
+    render(<Form schema={schema} validator={validator} />);
+
+    expect(screen.getByText('My title extra info')).toBeInTheDocument();
+    expect(screen.getByText('My extra info description')).toBeInTheDocument();
   });
 });

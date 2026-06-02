@@ -1,4 +1,5 @@
 import FormControl, { FormControlProps } from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import {
   FieldTemplateProps,
@@ -68,6 +69,7 @@ export default function FieldTemplate<
   }
 
   const isCheckbox = uiOptions.widget === 'checkbox';
+  const isNullField = schema.type === 'null';
 
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, FieldTemplateMuiProps>(uiOptions);
 
@@ -97,6 +99,11 @@ export default function FieldTemplate<
         sx={otherMuiProps.sx}
         className={otherMuiProps.className}
       >
+        {displayLabel && !isCheckbox && isNullField && label ? (
+          <FormLabel id={`${id}__title`} required={required}>
+            {label}
+          </FormLabel>
+        ) : null}
         {children}
         {displayLabel && !isCheckbox && rawDescription ? (
           <Typography variant='caption' color='textSecondary' {...muiSlotProps?.fieldTypography}>
