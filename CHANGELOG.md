@@ -28,11 +28,14 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `sanitizeDataForNewSchema()` to preserve valid enum values while replacing or clearing stale values across enum, `oneOf`, and `anyOf` schema changes, fixing [#3838](https://github.com/rjsf-team/react-jsonschema-form/issues/3838)
 - Updated `sanitizeDataForNewSchema()` to filter out invalid enum values in arrays, fixing [#1357](https://github.com/rjsf-team/react-jsonschema-form/issues/1357) and [#2492](https://github.com/rjsf-team/react-jsonschema-form/issues/2492)
+- Updated `Experimental_DefaultFormStateBehavior` to add a new `nestedDefaultsPrecedence` option
+- Updated `getDefaultFormState()` to use the new `nestedDefaultsPrecedence` option to control how defaults defined on multiple levels are merged together, fixing [#5089](https://github.com/rjsf-team/react-jsonschema-form/issues/5089)
 
 ## Dev / docs / playground
 
 - Upgraded `vitest` and `jsdom` to the latest to remove deprecated package warnings
 - Fix a documentation error related to precedence when setting default values ([#5089](https://github.com/rjsf-team/react-jsonschema-form/issues/5089))
+- Updated the playground to add a selector for the `nestedDefaultsPrecedence` option
 
 # 6.6.1
 

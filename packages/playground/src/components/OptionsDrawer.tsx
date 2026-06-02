@@ -206,6 +206,23 @@ const liveSettingsBooleanSchema: RJSFSchema = {
             },
           ],
         },
+        nestedDefaultsPrecedence: {
+          type: 'string',
+          title: 'Nested defaults precedence',
+          default: 'innermostWins',
+          oneOf: [
+            {
+              type: 'string',
+              title: 'Innermost default value wins',
+              enum: ['innermostWins'],
+            },
+            {
+              type: 'string',
+              title: 'Outermost default value wins',
+              enum: ['outermostWins'],
+            },
+          ],
+        },
       },
     },
     idPrefix: { type: 'string', title: 'ID prefix', default: DEFAULT_ID_PREFIX },
