@@ -25,6 +25,7 @@ should change the heading of the (upcoming) version to include a major version b
   - Also added `console` message suppression support to the tests to reduce noise
 - Updated `MultiSchemaField` by skipping next option recalculation when a user selects an option, fixing [#3833](https://github.com/rjsf-team/react-jsonschema-form/issues/3833)
 - Updated `Form`'s `validate()` function to pass the original schema to AJV when no pre-resolved schema is provided, fixing [#3368](https://github.com/rjsf-team/react-jsonschema-form/issues/3368)
+- Improved performance of `IconButtons` in all themes, `ArrayField` components and `ObjectField` components using memoization, partially fixing [#3183](https://github.com/rjsf-team/react-jsonschema-form/issues/3183)
 
 ## @rjsf/utils
 

@@ -1,4 +1,4 @@
-import { MouseEventHandler } from 'react';
+import { memo, MouseEventHandler } from 'react';
 import { ActionIcon, ActionIconProps } from '@mantine/core';
 import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
 
@@ -10,7 +10,7 @@ export type MantineIconButtonProps<
   F extends FormContextType = any,
 > = IconButtonProps<T, S, F> & Omit<ActionIconProps, 'onClick'>;
 
-export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function IconButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: MantineIconButtonProps<T, S, F>,
 ) {
   const { icon, iconType = 'sm', color, onClick, uiSchema, registry, ...otherProps } = props;
@@ -25,8 +25,10 @@ export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSch
     </ActionIcon>
   );
 }
+const IconButton = memo(IconButtonFn) as typeof IconButtonFn;
+export default IconButton;
 
-export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function CopyButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: MantineIconButtonProps<T, S, F>,
 ) {
   const {
@@ -36,8 +38,9 @@ export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     <IconButton title={translateString(TranslatableString.CopyButton)} variant='subtle' {...props} icon={<Copy />} />
   );
 }
+export const CopyButton = memo(CopyButtonFn) as typeof CopyButtonFn;
 
-export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function MoveDownButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: MantineIconButtonProps<T, S, F>,
 ) {
   const {
@@ -52,8 +55,9 @@ export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema,
     />
   );
 }
+export const MoveDownButton = memo(MoveDownButtonFn) as typeof MoveDownButtonFn;
 
-export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function MoveUpButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: MantineIconButtonProps<T, S, F>,
 ) {
   const {
@@ -68,8 +72,9 @@ export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
     />
   );
 }
+export const MoveUpButton = memo(MoveUpButtonFn) as typeof MoveUpButtonFn;
 
-export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function RemoveButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: MantineIconButtonProps<T, S, F>,
 ) {
   const {
@@ -85,15 +90,16 @@ export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
     />
   );
 }
+export const RemoveButton = memo(RemoveButtonFn) as typeof RemoveButtonFn;
 
-export function ClearButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function ClearButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: MantineIconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
   } = props;
-
   return (
     <IconButton title={translateString(TranslatableString.ClearButton)} variant='subtle' {...props} icon={<X />} />
   );
 }
+export const ClearButton = memo(ClearButtonFn) as typeof ClearButtonFn;
