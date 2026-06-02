@@ -1,12 +1,6 @@
-import { ChangeEvent } from 'react';
-import {
-  ariaDescribedByIds,
-  labelValue,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { ChangeEvent } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, labelValue } from '@rjsf/utils';
 import { Form } from 'semantic-ui-react';
 
 import { getSemanticProps } from '../util';
@@ -43,7 +37,7 @@ export default function TextareaWidget<
     options,
     defaultSchemaProps: { inverted: 'false' },
   });
-  // eslint-disable-next-line no-shadow
+  // oxlint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange && onChange(value === '' ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);

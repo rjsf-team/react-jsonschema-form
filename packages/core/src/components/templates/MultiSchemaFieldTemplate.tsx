@@ -1,4 +1,4 @@
-import { FormContextType, MultiSchemaFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { FormContextType, MultiSchemaFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 /** The `MultiSchemaFieldTemplate` component renders the layout for the MultiSchemaField, which supports choosing
  * a schema from a list of schemas defined using `anyOf` or `oneOf`.

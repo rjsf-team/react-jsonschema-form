@@ -1,16 +1,13 @@
 import { useCallback } from 'react';
-import {
-  getWidget,
-  getUiOptions,
-  optionsList,
+import type {
   FieldProps,
   FormContextType,
   EnumOptionsType,
   ErrorSchema,
   RJSFSchema,
   StrictRJSFSchema,
-  TranslatableString,
 } from '@rjsf/utils';
+import { getWidget, getUiOptions, optionsList, TranslatableString } from '@rjsf/utils';
 import isObject from 'lodash/isObject';
 
 /** The `BooleanField` component is used to render a field in the schema is boolean. It constructs `enumOptions` for the
@@ -89,10 +86,8 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     }
   }
   const onWidgetChange = useCallback(
-    (value: T | undefined, errorSchema?: ErrorSchema, id?: string) => {
-      // Boolean field change passes an empty path array to the parent field which adds the appropriate path
-      return onChange(value, fieldPathId.path, errorSchema, id);
-    },
+    (value: T | undefined, errorSchema?: ErrorSchema, id?: string) =>
+      onChange(value, fieldPathId.path, errorSchema, id),
     [onChange, fieldPathId],
   );
 

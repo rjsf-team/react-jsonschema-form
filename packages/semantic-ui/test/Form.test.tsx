@@ -1,5 +1,5 @@
 import { formTests } from '@rjsf/snapshot-tests';
-import { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 

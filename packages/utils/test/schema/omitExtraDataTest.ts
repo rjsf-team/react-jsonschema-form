@@ -1,15 +1,14 @@
+import type { PathSchema, RJSFSchema } from '../../src';
 import {
   createSchemaUtils,
   getFieldNames,
   getUsedFormData,
   isValueEmpty,
   omitExtraData,
-  PathSchema,
   NAME_KEY,
   RJSF_ADDITIONAL_PROPERTIES_FLAG,
-  RJSFSchema,
 } from '../../src';
-import { TestValidatorType } from './types';
+import type { TestValidatorType } from './types';
 
 export default function omitExtraDataTest(testValidator: TestValidatorType) {
   describe('isValueEmpty()', () => {

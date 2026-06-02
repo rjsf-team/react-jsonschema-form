@@ -1,12 +1,6 @@
-import { GlobalUISchemaOptions } from '../lib';
-import {
-  createSchemaUtils,
-  englishStringTranslator,
-  shouldRenderOptionalField,
-  Registry,
-  RJSFSchema,
-  TemplatesType,
-} from '../src';
+import type { GlobalUISchemaOptions } from '../lib';
+import type { Registry, RJSFSchema, TemplatesType } from '../src';
+import { createSchemaUtils, englishStringTranslator, shouldRenderOptionalField } from '../src';
 import { getSchemaTypesForXxxOf } from '../src/shouldRenderOptionalField';
 import getTestValidator from './testUtils/getTestValidator';
 import { GLOBAL_FORM_OPTIONS } from './testUtils/testData';

@@ -1,13 +1,14 @@
-import defaultValidator, { customizeValidator, Localizer } from '../src';
+import type { Localizer } from '../src';
+import defaultValidator, { customizeValidator } from '../src';
 import AJV8Validator from '../src/validator';
 import { CUSTOM_OPTIONS } from './harness/testData';
 
 vi.mock('../src/validator');
 
-type TestType = {
+interface TestType {
   foo: string;
   bar: boolean;
-};
+}
 
 describe('customizeValidator()', () => {
   it('defaultValidator was created', () => {

@@ -1,5 +1,5 @@
 import { Children } from 'react';
-import { FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
+import type { FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
 
 import { createFormComponent } from './testUtils';
 

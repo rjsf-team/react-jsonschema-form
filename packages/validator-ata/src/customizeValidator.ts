@@ -1,4 +1,4 @@
-import { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 import type { CustomValidatorOptionsType, Localizer } from './types';
 import ATAValidator from './validator';

@@ -1,18 +1,9 @@
-import {
-  ErrorSchema,
-  ErrorSchemaBuilder,
-  FormValidation,
-  hashForSchema,
-  RJSFSchema,
-  RJSFValidationError,
-  UiSchema,
-  JUNK_OPTION_ID,
-  retrieveSchema,
-} from '@rjsf/utils';
+import type { ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
+import { ErrorSchemaBuilder, hashForSchema, JUNK_OPTION_ID, retrieveSchema } from '@rjsf/utils';
 import noop from 'lodash/noop';
 import type { Mock } from 'vitest';
 
-import { Localizer, ValidatorFunctions } from '../src';
+import type { Localizer, ValidatorFunctions } from '../src';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators';
 import ATAPrecompiledValidator from '../src/precompiledValidator';
 import superSchemaObj from './harness/superSchema.json';
@@ -21,7 +12,7 @@ const rootSchema = superSchemaObj as unknown as RJSFSchema;
 
 function loadModule(code: string) {
   const module = { exports: {} as Record<string, any> };
-  // eslint-disable-next-line no-new-func
+  // oxlint-disable-next-line no-new-func, no-implied-eval
   new Function('module', 'exports', code)(module, module.exports);
   return module.exports;
 }
@@ -253,9 +244,7 @@ describe('ATAPrecompiledValidator', () => {
             name: { 'ui:label': false },
           };
           newErrorMessage = 'Better error message';
-          transformErrors = vi.fn((errors: RJSFValidationError[]) => {
-            return [Object.assign({}, errors[0], { message: newErrorMessage })];
-          });
+          transformErrors = vi.fn((errors: RJSFValidationError[]) => [{ ...errors[0], message: newErrorMessage }]);
           const result = validator.validateFormData({ name: 42 }, rootSchema, undefined, transformErrors, uiSchema);
           errors = result.errors;
         });
@@ -278,7 +267,7 @@ describe('ATAPrecompiledValidator', () => {
             name: { 'ui:label': false },
           };
 
-          validate = vi.fn((formData: any, errors: FormValidation<any>) => {
+          validate = vi.fn((formData: any, errors: FormValidation) => {
             if (formData.passwords.pass1 !== formData.passwords.pass2) {
               errors.passwords!.pass2!.addError('passwords don`t match.');
             }

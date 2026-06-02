@@ -1,15 +1,7 @@
-import {
-  ariaDescribedByIds,
-  descriptionId,
-  getTemplate,
-  labelValue,
-  schemaRequiresTrueValue,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
-import { Checkbox, CheckboxChangeEvent } from 'primereact/checkbox';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, descriptionId, getTemplate, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
+import type { CheckboxChangeEvent } from 'primereact/checkbox';
+import { Checkbox } from 'primereact/checkbox';
 
 import { Label } from '../util';
 

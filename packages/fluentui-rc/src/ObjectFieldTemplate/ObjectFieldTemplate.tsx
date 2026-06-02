@@ -1,16 +1,6 @@
 import { Flex } from '@fluentui/react-migration-v0-v9';
-import {
-  FormContextType,
-  ObjectFieldTemplateProps,
-  RJSFSchema,
-  StrictRJSFSchema,
-  canExpand,
-  descriptionId,
-  getTemplate,
-  getUiOptions,
-  titleId,
-  buttonId,
-} from '@rjsf/utils';
+import type { FormContextType, ObjectFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { canExpand, descriptionId, getTemplate, getUiOptions, titleId, buttonId } from '@rjsf/utils';
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all

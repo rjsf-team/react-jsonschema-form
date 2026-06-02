@@ -4,15 +4,10 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ClearIcon from '@mui/icons-material/Clear';
 import CopyIcon from '@mui/icons-material/ContentCopy';
 import RemoveIcon from '@mui/icons-material/Remove';
-import IconButton, { IconButtonProps as MuiIconButtonProps } from '@mui/material/IconButton';
-import {
-  FormContextType,
-  IconButtonProps,
-  RJSFSchema,
-  StrictRJSFSchema,
-  TranslatableString,
-  getUiOptions,
-} from '@rjsf/utils';
+import type { IconButtonProps as MuiIconButtonProps } from '@mui/material/IconButton';
+import IconButton from '@mui/material/IconButton';
+import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { TranslatableString, getUiOptions } from '@rjsf/utils';
 
 import { getMuiProps } from '../util';
 

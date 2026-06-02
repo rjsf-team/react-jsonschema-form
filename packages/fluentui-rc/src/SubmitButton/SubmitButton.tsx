@@ -1,5 +1,6 @@
 import { Button, makeStyles, tokens } from '@fluentui/react-components';
-import { FormContextType, getSubmitButtonOptions, RJSFSchema, StrictRJSFSchema, SubmitButtonProps } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, SubmitButtonProps } from '@rjsf/utils';
+import { getSubmitButtonOptions } from '@rjsf/utils';
 
 const useStyles = makeStyles({
   buttonRow: {

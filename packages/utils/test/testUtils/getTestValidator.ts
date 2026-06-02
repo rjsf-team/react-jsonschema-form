@@ -1,7 +1,7 @@
 import noop from 'lodash/noop';
 
-import { RJSFValidationError, ValidationData } from '../../src';
-import { TestValidatorParams, TestValidatorType } from '../schema/types';
+import type { RJSFValidationError, ValidationData } from '../../src';
+import type { TestValidatorParams, TestValidatorType } from '../schema/types';
 
 /** A test validator implements the `ValidatorType` interface needed by all the `schema` based tests. Inside the `utils`
  * directory, there is no actual validator implementation, so it can be necessary to mock the expected return values

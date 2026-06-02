@@ -1,4 +1,5 @@
-import { FocusEvent } from 'react';
+import type { FocusEvent } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
@@ -6,11 +7,7 @@ import {
   enumOptionsIsSelected,
   enumOptionsSelectValue,
   getOptionValueFormat,
-  FormContextType,
   optionId,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
 } from '@rjsf/utils';
 
 import { Checkbox } from '../components/ui/checkbox';
@@ -54,7 +51,7 @@ export default function CheckboxesWidget<
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index: number) => {
           const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
-          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
+          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
           const indexOptionId = optionId(id, index);
 
           return (

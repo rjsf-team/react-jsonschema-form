@@ -1,16 +1,9 @@
-import { FocusEvent } from 'react';
+import type { FocusEvent } from 'react';
 import FormLabel from '@mui/material/FormLabel';
-import Slider, { SliderProps } from '@mui/material/Slider';
-import {
-  ariaDescribedByIds,
-  labelValue,
-  FormContextType,
-  GenericObjectType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-  rangeSpec,
-} from '@rjsf/utils';
+import type { SliderProps } from '@mui/material/Slider';
+import Slider from '@mui/material/Slider';
+import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, labelValue, rangeSpec } from '@rjsf/utils';
 
 import { getMuiProps } from '../util';
 

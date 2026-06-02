@@ -1,5 +1,5 @@
+import type { FieldPathId } from '../src';
 import {
-  FieldPathId,
   ID_KEY,
   ariaDescribedByIds,
   buttonId,
@@ -64,7 +64,7 @@ describe('idGenerators', () => {
     );
   });
   it('optionId generates the proper id for an option', () => {
-    expect(optionId(SIMPLE_ID, 1)).toEqual(`${SIMPLE_ID}-${1}`);
+    expect(optionId(SIMPLE_ID, 1)).toEqual(`${SIMPLE_ID}-1`);
   });
   it('button ids of an add button are generated for simple id', () => {
     expect(buttonId(SIMPLE_ID, 'add')).toEqual(`${SIMPLE_ID}__add`);

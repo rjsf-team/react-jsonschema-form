@@ -1,15 +1,5 @@
-import {
-  createSchemaUtils,
-  Experimental_DefaultFormStateBehavior,
-  ID_KEY,
-  JSON_SCHEMA_DRAFT_2020_12,
-  PROPERTIES_KEY,
-  REF_KEY,
-  RJSFSchema,
-  SCHEMA_KEY,
-  SchemaUtilsType,
-  ValidatorType,
-} from '../src';
+import type { Experimental_DefaultFormStateBehavior, RJSFSchema, SchemaUtilsType, ValidatorType } from '../src';
+import { createSchemaUtils, ID_KEY, JSON_SCHEMA_DRAFT_2020_12, PROPERTIES_KEY, REF_KEY, SCHEMA_KEY } from '../src';
 import getTestValidator from './testUtils/getTestValidator';
 
 describe('createSchemaUtils()', () => {

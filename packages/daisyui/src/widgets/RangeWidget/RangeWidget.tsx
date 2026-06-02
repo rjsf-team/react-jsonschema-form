@@ -1,5 +1,6 @@
-import { FocusEvent, useCallback } from 'react';
-import { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
+import type { FocusEvent } from 'react';
+import { useCallback } from 'react';
+import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 
 /** The `RangeWidget` component renders a range slider input with DaisyUI styling
  *

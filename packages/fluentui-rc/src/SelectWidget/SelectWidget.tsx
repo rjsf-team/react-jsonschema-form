@@ -1,16 +1,13 @@
-import { OptionOnSelectData } from '@fluentui/react-combobox';
+import type { OptionOnSelectData } from '@fluentui/react-combobox';
 import { Dropdown, Field, Option } from '@fluentui/react-components';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   enumOptionsIndexForValue,
   getOptionValueFormat,
-  FormContextType,
   labelValue,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
 } from '@rjsf/utils';
 
 function getValue(data: OptionOnSelectData, multiple: boolean) {
@@ -91,7 +88,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
         {showPlaceholderOption && <Option value=''>{placeholder || ''}</Option>}
         {Array.isArray(enumOptions) &&
           enumOptions.map(({ value, label }, i) => {
-            const disabled = enumDisabled && enumDisabled.indexOf(value) !== -1;
+            const disabled = enumDisabled && enumDisabled.includes(value);
             return (
               <Option key={i} value={enumOptionValueEncoder(value, i, optionValueFormat)} disabled={disabled}>
                 {label}

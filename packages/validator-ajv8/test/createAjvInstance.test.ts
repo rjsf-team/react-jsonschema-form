@@ -2,7 +2,7 @@ import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 import Ajv2019 from 'ajv/dist/2019';
 
-import { CustomValidatorOptionsType } from '../src';
+import type { CustomValidatorOptionsType } from '../src';
 import createAjvInstance, { AJV_CONFIG, COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from '../src/createAjvInstance';
 import { CUSTOM_OPTIONS } from './harness/testData';
 

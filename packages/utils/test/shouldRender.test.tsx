@@ -3,23 +3,23 @@ import React from 'react';
 import { shouldRender } from '../src';
 
 type VoidFunc = () => void;
-type MyComponentProps = {
+interface MyComponentProps {
   myProp:
     | number
     | VoidFunc
     | {
         mySubProp: number | VoidFunc;
       };
-};
+}
 
-type MyComponentState = {
+interface MyComponentState {
   myState:
     | number
     | VoidFunc
     | {
         mySubState: number | VoidFunc;
       };
-};
+}
 
 describe('shouldRender()', () => {
   describe('default strategy (customDeep)', () => {
@@ -45,7 +45,9 @@ describe('shouldRender()', () => {
       });
 
       it('should handle equivalent function prop', () => {
-        const fn = () => {};
+        const fn = () => {
+          /* empty */
+        };
         initial = {
           props: { myProp: fn },
           state: { myState: 1 },
@@ -76,7 +78,9 @@ describe('shouldRender()', () => {
       });
 
       it('should handle equivalent function prop', () => {
-        const fn = () => {};
+        const fn = () => {
+          /* empty */
+        };
         initial = {
           props: { myProp: { mySubProp: fn } },
           state: { myState: { mySubState: fn } },

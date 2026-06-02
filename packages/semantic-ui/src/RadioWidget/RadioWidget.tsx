@@ -1,4 +1,5 @@
-import { FormEvent } from 'react';
+import type { FormEvent } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
@@ -6,12 +7,9 @@ import {
   enumOptionsIsSelected,
   getOptionValueFormat,
   optionId,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
 } from '@rjsf/utils';
-import { CheckboxProps, Form, Radio } from 'semantic-ui-react';
+import type { CheckboxProps } from 'semantic-ui-react';
+import { Form, Radio } from 'semantic-ui-react';
 
 import { getSemanticProps } from '../util';
 
@@ -45,9 +43,8 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     options,
     uiSchema,
   });
-  const _onChange = (_: FormEvent<HTMLInputElement>, { value: eventValue }: CheckboxProps) => {
-    return onChange(enumOptionValueDecoder<S>(String(eventValue!), enumOptions, optionValueFormat, emptyValue));
-  };
+  const _onChange = (_: FormEvent<HTMLInputElement>, { value: eventValue }: CheckboxProps) =>
+    onChange(enumOptionValueDecoder<S>(String(eventValue!), enumOptions, optionValueFormat, emptyValue));
 
   const _onBlur = () => onBlur(id, value);
   const _onFocus = () => onFocus(id, value);
@@ -57,7 +54,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index) => {
           const checked = enumOptionsIsSelected<S>(option.value, value);
-          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
+          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
           return (
             <Form.Field
               required={required}

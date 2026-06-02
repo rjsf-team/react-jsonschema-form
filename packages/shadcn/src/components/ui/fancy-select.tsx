@@ -1,6 +1,7 @@
 'use client';
 
-import { FocusEvent, FocusEventHandler, ReactElement, useEffect, useRef, useState } from 'react';
+import type { FocusEvent, FocusEventHandler, ReactElement } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Check, ChevronDown } from 'lucide-react';
 
 import { cn } from '../../lib/utils';
@@ -9,7 +10,7 @@ import { Command, CommandGroup, CommandItem, CommandList } from './command';
 /**
  * Represents an item in the fancy select dropdown
  */
-export type FancySelectItem = {
+export interface FancySelectItem {
   /** The value of the item */
   value: any;
   /** The display label for the item */
@@ -18,7 +19,7 @@ export type FancySelectItem = {
   index: number;
   /** Whether the item is disabled */
   disabled?: boolean;
-};
+}
 
 /**
  * Props interface for the FancySelect component

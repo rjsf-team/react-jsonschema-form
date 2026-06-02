@@ -1,5 +1,5 @@
 import { PureComponent } from 'react';
-import { DescriptionFieldProps, ObjectFieldTemplateProps } from '@rjsf/utils';
+import type { DescriptionFieldProps, ObjectFieldTemplateProps } from '@rjsf/utils';
 
 import { createFormComponent } from './testUtils';
 

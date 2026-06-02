@@ -1,6 +1,7 @@
-import { ComponentType } from 'react';
-import { FormProps } from '@rjsf/core';
-import { LOOKUP_MAP_NAME, RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { ComponentType } from 'react';
+import type { FormProps } from '@rjsf/core';
+import type { RJSFSchema, UiSchema } from '@rjsf/utils';
+import { LOOKUP_MAP_NAME } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 
@@ -10,7 +11,7 @@ vi.mock('@rjsf/utils', async (importOriginal) => ({
   getTestIds: vi.fn(() => ({})),
 }));
 
-export type GridRenderCustomOptions = {
+export interface GridRenderCustomOptions {
   ColumnWidthAll: object;
   ColumnWidth4: object;
   ColumnWidth6: object;
@@ -18,7 +19,7 @@ export type GridRenderCustomOptions = {
   Row2Columns?: object;
   Row3Columns?: object;
   ComplexUiSchema?: UiSchema;
-};
+}
 
 const schema = {
   type: 'object',
@@ -474,7 +475,7 @@ export function gridTests(Form: ComponentType<FormProps>, customOptions: GridRen
           formContext={FORM_CONTEXT}
         />,
       );
-      expect(asFragment!()).toMatchSnapshot();
+      expect(asFragment()).toMatchSnapshot();
     });
     test('renders person and address and employment in a complex grid, job_type = education', async () => {
       const { asFragment } = render(

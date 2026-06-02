@@ -1,13 +1,7 @@
-import { FocusEvent } from 'react';
-import { NumberInputValueChangeDetails } from '@chakra-ui/react';
-import {
-  ariaDescribedByIds,
-  labelValue,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { FocusEvent } from 'react';
+import type { NumberInputValueChangeDetails } from '@chakra-ui/react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, labelValue } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field';
 import { NumberInputRoot } from '../components/ui/number-input';

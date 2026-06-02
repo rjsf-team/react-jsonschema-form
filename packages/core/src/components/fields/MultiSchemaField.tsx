@@ -1,10 +1,9 @@
 import { Component } from 'react';
+import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
   deepEquals,
   ERRORS_KEY,
-  FieldProps,
-  FormContextType,
   getDiscriminatorFieldFromSchema,
   getTemplate,
   getUiOptions,
@@ -12,23 +11,20 @@ import {
   isFormDataAvailable,
   mergeSchemas,
   ONE_OF_KEY,
-  RJSFSchema,
   shouldRenderOptionalField,
-  StrictRJSFSchema,
   TranslatableString,
-  UiSchema,
 } from '@rjsf/utils';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import omit from 'lodash/omit';
 
 /** Type used for the state of the `AnyOfField` component */
-type AnyOfFieldState<S extends StrictRJSFSchema = RJSFSchema> = {
+interface AnyOfFieldState<S extends StrictRJSFSchema = RJSFSchema> {
   /** The currently selected option */
   selectedOption: number;
   /** The option schemas after retrieving all $refs */
   retrievedOptions: S[];
-};
+}
 
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It tracks
  * the currently selected option and cleans up any irrelevant data in `formData`.

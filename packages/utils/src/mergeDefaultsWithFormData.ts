@@ -1,7 +1,7 @@
 import get from 'lodash/get';
 import isNil from 'lodash/isNil';
 
-import { GenericObjectType } from '../src';
+import type { GenericObjectType } from '../src';
 import isObject from './isObject';
 
 /** Merges the `defaults` object of type `T` into the `formData` of type `T`
@@ -43,7 +43,7 @@ export default function mergeDefaultsWithFormData<T = any>(
     const mapped = overrideArray.map((value, idx) => {
       // We want to explicitly make sure that the value is NOT undefined since null, 0 and empty space are valid values
       if (overrideOppositeArray[idx] !== undefined) {
-        return mergeDefaultsWithFormData<any>(
+        return mergeDefaultsWithFormData(
           defaultsArray[idx],
           formData[idx],
           mergeExtraArrayDefaults,
@@ -62,6 +62,7 @@ export default function mergeDefaultsWithFormData<T = any>(
     return mapped as unknown as T;
   }
   if (isObject(formData)) {
+    // eslint-disable-next-line prefer-object-spread -- spread loses T type, Object.assign preserves it
     const acc: { [key in keyof T]: any } = Object.assign({}, defaults); // Prevent mutation of source object.
     return Object.keys(formData as GenericObjectType).reduce((acc, key) => {
       const keyValue = get(formData, key);

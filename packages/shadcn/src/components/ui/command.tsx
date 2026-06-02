@@ -1,6 +1,7 @@
 'use client';
 
-import { ComponentProps, ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react';
+import type { ComponentProps, ComponentPropsWithoutRef, ElementRef } from 'react';
+import { forwardRef } from 'react';
 import { Command as CommandPrimitive } from 'cmdk';
 import { Search } from 'lucide-react';
 
@@ -14,19 +15,17 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
  */
 
 const Command = forwardRef<ElementRef<typeof CommandPrimitive>, ComponentPropsWithoutRef<typeof CommandPrimitive>>(
-  ({ className, ...props }, ref) => {
-    return (
-      <CommandPrimitive
-        ref={ref}
-        data-slot='command'
-        className={cn(
-          'bg-popover text-popover-foreground flex h-full w-full flex-col overflow-hidden rounded-md',
-          className,
-        )}
-        {...props}
-      />
-    );
-  },
+  ({ className, ...props }, ref) => (
+    <CommandPrimitive
+      ref={ref}
+      data-slot='command'
+      className={cn(
+        'bg-popover text-popover-foreground flex h-full w-full flex-col overflow-hidden rounded-md',
+        className,
+      )}
+      {...props}
+    />
+  ),
 );
 
 /**

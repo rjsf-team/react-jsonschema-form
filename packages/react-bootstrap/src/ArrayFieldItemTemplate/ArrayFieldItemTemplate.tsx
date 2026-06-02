@@ -1,12 +1,6 @@
-import { CSSProperties } from 'react';
-import {
-  ArrayFieldItemTemplateProps,
-  FormContextType,
-  getTemplate,
-  getUiOptions,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { CSSProperties } from 'react';
+import type { ArrayFieldItemTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { getTemplate, getUiOptions } from '@rjsf/utils';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 

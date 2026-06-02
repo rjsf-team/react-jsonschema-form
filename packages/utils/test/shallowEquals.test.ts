@@ -44,8 +44,12 @@ describe('shallowEquals()', () => {
   });
 
   it('should handle function references correctly with Object.is', () => {
-    const fn1 = () => {};
-    const fn2 = () => {};
+    const fn1 = () => {
+      /* empty */
+    };
+    const fn2 = () => {
+      /* empty */
+    };
 
     // Same function reference should be equal
     expect(shallowEquals({ fn: fn1 }, { fn: fn1 })).toBe(true);

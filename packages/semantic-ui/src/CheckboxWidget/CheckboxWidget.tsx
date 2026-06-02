@@ -1,16 +1,8 @@
-import { FormEvent } from 'react';
-import {
-  ariaDescribedByIds,
-  descriptionId,
-  getTemplate,
-  labelValue,
-  schemaRequiresTrueValue,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
-import { Form, CheckboxProps } from 'semantic-ui-react';
+import type { FormEvent } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, descriptionId, getTemplate, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
+import type { CheckboxProps } from 'semantic-ui-react';
+import { Form } from 'semantic-ui-react';
 
 import { getSemanticProps } from '../util';
 
@@ -59,7 +51,7 @@ export default function CheckboxWidget<
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
   const required = schemaRequiresTrueValue<S>(schema);
-  const checked = value == 'true' || value == true;
+  const checked = value === 'true' || value === true;
   const _onChange = (_: FormEvent<HTMLInputElement>, data: CheckboxProps) => onChange && onChange(data.checked);
   const _onBlur: React.FocusEventHandler<HTMLInputElement> = () => onBlur && onBlur(id, value);
   const _onFocus: React.FocusEventHandler<HTMLInputElement> = () => onFocus && onFocus(id, value);

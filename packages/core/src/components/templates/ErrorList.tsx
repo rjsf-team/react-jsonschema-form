@@ -1,11 +1,5 @@
-import {
-  ErrorListProps,
-  FormContextType,
-  RJSFValidationError,
-  RJSFSchema,
-  StrictRJSFSchema,
-  TranslatableString,
-} from '@rjsf/utils';
+import type { ErrorListProps, FormContextType, RJSFValidationError, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { TranslatableString } from '@rjsf/utils';
 
 /** The `ErrorList` component is the template that renders the all the errors associated with the fields in the `Form`
  *
@@ -22,13 +16,11 @@ export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSche
         <h3 className='panel-title'>{translateString(TranslatableString.ErrorsLabel)}</h3>
       </div>
       <ul className='list-group'>
-        {errors.map((error: RJSFValidationError, i: number) => {
-          return (
-            <li key={i} className='list-group-item text-danger'>
-              {error.stack}
-            </li>
-          );
-        })}
+        {errors.map((error: RJSFValidationError, i: number) => (
+          <li key={i} className='list-group-item text-danger'>
+            {error.stack}
+          </li>
+        ))}
       </ul>
     </div>
   );

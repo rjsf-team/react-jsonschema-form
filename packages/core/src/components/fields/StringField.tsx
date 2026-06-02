@@ -1,15 +1,6 @@
 import { useCallback } from 'react';
-import {
-  getWidget,
-  getUiOptions,
-  optionsList,
-  hasWidget,
-  FieldProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  ErrorSchema,
-} from '@rjsf/utils';
+import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, ErrorSchema } from '@rjsf/utils';
+import { getWidget, getUiOptions, optionsList, hasWidget } from '@rjsf/utils';
 
 /** The `StringField` component is used to render a schema field that represents a string type
  *
@@ -48,10 +39,8 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   const label = uiTitle ?? title ?? schemaTitle ?? name;
   const Widget = getWidget<T, S, F>(schema, widget, widgets);
   const onWidgetChange = useCallback(
-    (value: T | undefined, errorSchema?: ErrorSchema, id?: string) => {
-      // String field change passes an empty path array to the parent field which adds the appropriate path
-      return onChange(value, fieldPathId.path, errorSchema, id);
-    },
+    (value: T | undefined, errorSchema?: ErrorSchema, id?: string) =>
+      onChange(value, fieldPathId.path, errorSchema, id),
     [onChange, fieldPathId],
   );
   return (

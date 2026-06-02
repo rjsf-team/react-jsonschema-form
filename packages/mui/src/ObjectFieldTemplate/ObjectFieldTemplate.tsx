@@ -1,17 +1,13 @@
-import Grid, { GridProps } from '@mui/material/Grid';
-import {
+import type { GridProps } from '@mui/material/Grid';
+import Grid from '@mui/material/Grid';
+import type {
   FormContextType,
   GenericObjectType,
   ObjectFieldTemplateProps,
   RJSFSchema,
   StrictRJSFSchema,
-  canExpand,
-  descriptionId,
-  getTemplate,
-  getUiOptions,
-  titleId,
-  buttonId,
 } from '@rjsf/utils';
+import { canExpand, descriptionId, getTemplate, getUiOptions, titleId, buttonId } from '@rjsf/utils';
 
 import { computeSxProps, getMuiProps } from '../util';
 

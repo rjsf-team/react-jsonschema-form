@@ -1,4 +1,4 @@
-import { GenericObjectType } from './types';
+import type { GenericObjectType } from './types';
 
 /** Given a list of `properties` and an `order` list, returns a list that contains the `properties` ordered correctly.
  * If `order` is not an array, then the untouched `properties` list is returned. Otherwise `properties` is ordered per

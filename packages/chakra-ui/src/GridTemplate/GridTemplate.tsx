@@ -1,5 +1,5 @@
 import { Grid, GridItem } from '@chakra-ui/react';
-import { GridTemplateProps } from '@rjsf/utils';
+import type { GridTemplateProps } from '@rjsf/utils';
 
 /** Renders a `GridTemplate` for chakra-ui, which is expecting the column sizing information coming in via the
  * extra props provided by the caller, which are spread directly on the `Grid`/`GridItem`.

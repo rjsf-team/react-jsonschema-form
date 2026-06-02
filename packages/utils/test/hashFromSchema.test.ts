@@ -1,4 +1,5 @@
-import { hashForSchema, hashObject, hashString, RJSFSchema, sortedJSONStringify } from '../src';
+import type { RJSFSchema } from '../src';
+import { hashForSchema, hashObject, hashString, sortedJSONStringify } from '../src';
 import { RECURSIVE_REF } from './testUtils/testData';
 
 const TINY_SCHEMA: RJSFSchema = {
@@ -50,11 +51,7 @@ const NON_PLAIN_OBJECT_HASH = hashString(JSON.stringify([null]));
 const TEST_ARRAY_1 = ['foo', 'bar'];
 const TEST_ARRAY_2 = ['foo', TEST_OBJECT_2];
 const TEST_ARRAY_3 = ['foo', TEST_ARRAY_2];
-const TEST_ARRAY_4 = [
-  (name: string) => {
-    return { name };
-  },
-];
+const TEST_ARRAY_4 = [(name: string) => ({ name })];
 
 describe('hashObject', () => {
   it('returns hash of zero for an empty object', () => {

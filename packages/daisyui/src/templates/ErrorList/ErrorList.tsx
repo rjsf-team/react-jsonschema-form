@@ -1,4 +1,4 @@
-import { ErrorListProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
+import type { ErrorListProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 
 /** The `ErrorList` component renders a list of form-level validation errors
  * with DaisyUI styling. It displays errors as a bulleted list in red text.

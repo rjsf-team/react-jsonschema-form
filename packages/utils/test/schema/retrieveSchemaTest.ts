@@ -2,7 +2,8 @@ import get from 'lodash/get';
 import noop from 'lodash/noop';
 import type { MockInstance } from 'vitest';
 
-import { ADDITIONAL_PROPERTY_FLAG, createSchemaUtils, PROPERTIES_KEY, retrieveSchema, RJSFSchema } from '../../src';
+import type { RJSFSchema } from '../../src';
+import { ADDITIONAL_PROPERTY_FLAG, createSchemaUtils, PROPERTIES_KEY, retrieveSchema } from '../../src';
 import {
   getAllPermutationsOfXxxOf,
   relaxOptionsForScoring,
@@ -26,7 +27,7 @@ import {
   SCHEMA_WITH_SINGLE_CONDITION,
   SUPER_SCHEMA,
 } from '../testUtils/testData';
-import { TestValidatorType } from './types';
+import type { TestValidatorType } from './types';
 
 export default function retrieveSchemaTest(testValidator: TestValidatorType) {
   describe('retrieveSchema()', () => {
@@ -1940,7 +1941,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
       it('handles a mixed array of booleans and schemas', () => {
         const schemaFalse: RJSFSchema = { type: 'object', additionalProperties: false };
-        expect(relaxOptionsForScoring<RJSFSchema>([true, false, schemaFalse])).toEqual([
+        expect(relaxOptionsForScoring([true, false, schemaFalse])).toEqual([
           {},
           { not: {} },
           { type: 'object', additionalProperties: true },
@@ -1953,7 +1954,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
               Strict: { type: 'object', properties: { a: { type: 'string' } }, additionalProperties: false },
             },
           };
-          expect(relaxOptionsForScoring<RJSFSchema>([{ $ref: '#/definitions/Strict' }], true, rootSchema)).toEqual([
+          expect(relaxOptionsForScoring([{ $ref: '#/definitions/Strict' }], true, rootSchema)).toEqual([
             expect.objectContaining({
               type: 'object',
               properties: { a: { type: 'string' } },
@@ -1965,13 +1966,13 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           const rootSchema: RJSFSchema = {
             definitions: { Open: { type: 'object', properties: { b: { type: 'number' } } } },
           };
-          expect(relaxOptionsForScoring<RJSFSchema>([{ $ref: '#/definitions/Open' }], true, rootSchema)).toEqual([
+          expect(relaxOptionsForScoring([{ $ref: '#/definitions/Open' }], true, rootSchema)).toEqual([
             expect.objectContaining({ type: 'object', properties: { b: { type: 'number' } } }),
           ]);
         });
         it('leaves a plain schema (no $ref) unchanged when there is no additionalProperties:false', () => {
           const schema: RJSFSchema = { type: 'object', properties: { c: { type: 'string' } } };
-          expect(relaxOptionsForScoring<RJSFSchema>([schema], true, {})).toEqual([schema]);
+          expect(relaxOptionsForScoring([schema], true, {})).toEqual([schema]);
         });
         it('does not resolve refs when resolveRefs is false (default)', () => {
           const rootSchema: RJSFSchema = {
@@ -1980,11 +1981,11 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             },
           };
           const ref: RJSFSchema = { $ref: '#/definitions/Strict' };
-          expect(relaxOptionsForScoring<RJSFSchema>([ref], false, rootSchema)).toEqual([ref]);
+          expect(relaxOptionsForScoring([ref], false, rootSchema)).toEqual([ref]);
         });
         it('does not resolve refs when resolveRefs is true but rootSchema is omitted', () => {
           const ref: RJSFSchema = { $ref: '#/definitions/Strict' };
-          expect(relaxOptionsForScoring<RJSFSchema>([ref], true)).toEqual([ref]);
+          expect(relaxOptionsForScoring([ref], true)).toEqual([ref]);
         });
       });
     });

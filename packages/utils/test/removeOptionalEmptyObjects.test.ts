@@ -1,4 +1,4 @@
-import { RJSFSchema } from '../src';
+import type { RJSFSchema } from '../src';
 import removeOptionalEmptyObjects from '../src/removeOptionalEmptyObjects';
 import getTestValidator from './testUtils/getTestValidator';
 

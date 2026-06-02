@@ -1,7 +1,7 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
-import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faArrowDown, faArrowUp, faCopy, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
+import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { TranslatableString } from '@rjsf/utils';
 
 import DaisyUIButton from './DaisyUIButton';
 
@@ -26,7 +26,7 @@ export default function AddButton<T = any, S extends StrictRJSFSchema = RJSFSche
           title={translateString(TranslatableString.AddButton)}
           {...otherProps}
           iconType='info'
-          icon={faPlus as IconDefinition}
+          icon={faPlus}
           className='btn-add col-xs-12 btn-primary btn-primary-content'
           onClick={onClick}
           disabled={disabled}

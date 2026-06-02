@@ -28,7 +28,7 @@ import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema'
 import guessType from '../guessType';
 import isObject from '../isObject';
 import mergeSchemas from '../mergeSchemas';
-import {
+import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
   GenericObjectType,
@@ -187,7 +187,7 @@ export function getAllPermutationsOfXxxOf<S extends StrictRJSFSchema = RJSFSchem
       permutations.forEach((permutation) => permutation.push(list[0]));
       return permutations;
     },
-    [[]] as S[][], // Start with an empty list
+    [[]], // Start with an empty list
   );
 
   return allPermutations;
@@ -265,8 +265,8 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
       formData,
       experimental_customMergeAllOf,
     );
-    return resolvedSchemas.flatMap((s) => {
-      return retrieveSchemaInternal<T, S, F>(
+    return resolvedSchemas.flatMap((s) =>
+      retrieveSchemaInternal<T, S, F>(
         validator,
         s,
         rootSchema,
@@ -274,8 +274,8 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
         expandAllBranches,
         recurseList,
         experimental_customMergeAllOf,
-      );
-    });
+      ),
+    );
   }
   if (ALL_OF_KEY in schema && Array.isArray(schema[ALL_OF_KEY])) {
     const allOfSchemaElements: S[][] = schema.allOf.map((allOfSubschema) =>
@@ -676,11 +676,7 @@ export function resolveAnyOrOneOfSchemas<
     // Ensure that during expand all branches we pass an object rather than undefined so that all options are interrogated
     const formData = rawFormData === undefined && expandAllBranches ? ({} as T) : rawFormData;
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
-    anyOrOneOf = anyOrOneOf.map((s) => {
-      // Due to anyOf/oneOf possibly using the same $ref we always pass a fresh recurse list array so that each option
-      // can resolve recursive references independently
-      return resolveAllReferences(s, rootSchema, []);
-    });
+    anyOrOneOf = anyOrOneOf.map((s) => resolveAllReferences(s, rootSchema, []));
     // Call this to trigger the set of isValid() calls that the schema parser will need
     const option = getFirstMatchingOption<T, S, F>(validator, formData, anyOrOneOf, rootSchema, discriminator);
     if (expandAllBranches) {
@@ -714,7 +710,7 @@ export function resolveAnyOrOneOfSchemas<
  * @returns - A new array of plain schema objects with `additionalProperties` relaxed where needed
  */
 export function relaxOptionsForScoring<S extends StrictRJSFSchema = RJSFSchema>(
-  options: Array<S | boolean>,
+  options: (S | boolean)[],
   resolveRefs = false,
   rootSchema?: S,
 ): S[] {
@@ -722,7 +718,7 @@ export function relaxOptionsForScoring<S extends StrictRJSFSchema = RJSFSchema>(
     if (!isObject(d)) {
       return (d ? {} : { not: {} }) as S;
     }
-    const schema = resolveRefs && rootSchema ? resolveAllReferences<S>(d as S, rootSchema, []) : (d as S);
+    const schema = resolveRefs && rootSchema ? resolveAllReferences<S>(d, rootSchema, []) : d;
     return schema.additionalProperties === false ? { ...schema, additionalProperties: true } : schema;
   });
 }
@@ -975,7 +971,7 @@ export function withExactlyOneSubschema<
     return false;
   });
 
-  if (!expandAllBranches && validSubschemas!.length !== 1) {
+  if (!expandAllBranches && validSubschemas.length !== 1) {
     console.warn("ignoring oneOf in dependencies because there isn't exactly one subschema that is valid");
     return [schema];
   }

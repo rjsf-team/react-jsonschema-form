@@ -1,5 +1,5 @@
 import pad from './pad';
-import { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types';
+import type { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types';
 
 /** Returns a list of options for a date range between `start` and `stop`. If the start date is greater than the end
  * date, then the date range is reversed. If `start` and `stop` are negative numbers (or zero), then they will be

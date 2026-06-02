@@ -1,4 +1,16 @@
-import { FocusEvent, memo, useCallback, useMemo, useRef, useState } from 'react';
+import type { FocusEvent } from 'react';
+import { memo, useCallback, useMemo, useRef, useState } from 'react';
+import type {
+  ErrorSchema,
+  FieldPathId,
+  FieldPathList,
+  FieldProps,
+  FormContextType,
+  GenericObjectType,
+  Registry,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
@@ -9,18 +21,9 @@ import {
   shouldRenderOptionalField,
   toFieldPathId,
   useDeepCompareMemo,
-  ErrorSchema,
-  FieldPathId,
-  FieldPathList,
-  FieldProps,
-  FormContextType,
-  GenericObjectType,
   ONE_OF_KEY,
   PROPERTIES_KEY,
   REF_KEY,
-  Registry,
-  RJSFSchema,
-  StrictRJSFSchema,
   TranslatableString,
 } from '@rjsf/utils';
 import get from 'lodash/get';
@@ -38,7 +41,7 @@ import { ADDITIONAL_PROPERTY_KEY_REMOVE } from '../constants';
  * @returns - True if the field `name` is required, false otherwise
  */
 function isRequired<S extends StrictRJSFSchema = RJSFSchema>(schema: S, name: string) {
-  return Array.isArray(schema.required) && schema.required.indexOf(name) !== -1;
+  return Array.isArray(schema.required) && schema.required.includes(name);
 }
 
 /** Returns a default value to be used for a new additional schema property of the given `type`

@@ -1,6 +1,8 @@
-import { FocusEvent } from 'react';
-import { ariaDescribedByIds, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, rangeSpec } from '@rjsf/utils';
-import { Slider, SliderChangeEvent } from 'primereact/slider';
+import type { FocusEvent } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, rangeSpec } from '@rjsf/utils';
+import type { SliderChangeEvent } from 'primereact/slider';
+import { Slider } from 'primereact/slider';
 
 /** The `RangeWidget` component uses the `Slider` from PrimeReact, wrapping the result
  * in a div, with the value alongside it.

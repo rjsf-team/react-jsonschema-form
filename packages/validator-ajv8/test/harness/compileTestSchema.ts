@@ -8,10 +8,10 @@
  *
  * Then add the two updated `superSchema.cjs` and `superSchemaOptions.cjs` files to your PR
  */
-import { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema } from '@rjsf/utils';
 import additionalMetaSchema from 'ajv/lib/refs/json-schema-draft-06.json';
 
-import { CustomValidatorOptionsType } from '../../src';
+import type { CustomValidatorOptionsType } from '../../src';
 import compileSchemaValidators from '../../src/compileSchemaValidators';
 import superSchemaObj from './superSchema.json';
 

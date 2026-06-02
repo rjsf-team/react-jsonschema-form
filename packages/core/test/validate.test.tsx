@@ -1,9 +1,10 @@
-import { ErrorListProps, FormValidation, GenericObjectType, RJSFSchema } from '@rjsf/utils';
+import type { ErrorListProps, FormValidation, GenericObjectType, RJSFSchema } from '@rjsf/utils';
 import { customizeValidator as customizeV8Validator } from '@rjsf/validator-ajv8';
 import userEvent from '@testing-library/user-event';
+import draft06 from 'ajv/lib/refs/json-schema-draft-06.json';
 import type { Mock } from 'vitest';
 
-import { FormProps } from '../src';
+import type { FormProps } from '../src';
 import { createFormComponent, submitForm } from './testUtils';
 
 const user = userEvent.setup();
@@ -459,7 +460,7 @@ describe('Validation', () => {
 
       beforeEach(async () => {
         const validator = customizeV8Validator({
-          additionalMetaSchemas: [require('ajv/lib/refs/json-schema-draft-06.json')],
+          additionalMetaSchemas: [draft06],
         });
         const withMetaSchema = createFormComponent(
           {

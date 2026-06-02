@@ -2,7 +2,7 @@ import { forwardRef } from 'react';
 import { Slider as ChakraSlider, HStack } from '@chakra-ui/react';
 
 export interface SliderProps extends ChakraSlider.RootProps {
-  marks?: Array<number | { value: number; label: React.ReactNode }>;
+  marks?: (number | { value: number; label: React.ReactNode })[];
   showValue?: boolean;
 }
 
@@ -15,7 +15,7 @@ export interface SliderProps extends ChakraSlider.RootProps {
  * @param {boolean} [props.showValue] - Whether to show the current value of the slider.
  * @returns {JSX.Element} The rendered slider component.
  */
-export const Slider = forwardRef<HTMLDivElement, SliderProps>(function Slider(props, ref) {
+export const Slider = forwardRef<HTMLDivElement, SliderProps>((props, ref) => {
   const { marks: marksProp, showValue, ...rest } = props;
   const value = props.defaultValue ?? props.value;
 
@@ -67,7 +67,7 @@ function SliderThumbs(props: { value?: number[] }) {
 }
 
 interface SliderMarksProps {
-  marks?: Array<number | { value: number; label: React.ReactNode }>;
+  marks?: (number | { value: number; label: React.ReactNode })[];
 }
 
 /**
@@ -77,7 +77,7 @@ interface SliderMarksProps {
  * @param {Array<number | { value: number; label: React.ReactNode }>} [props.marks] - The marks to display on the slider.
  * @returns {JSX.Element | null} The rendered slider marks component or null if no marks are provided.
  */
-const SliderMarks = forwardRef<HTMLDivElement, SliderMarksProps>(function SliderMarks(props, ref) {
+const SliderMarks = forwardRef<HTMLDivElement, SliderMarksProps>((props, ref) => {
   const { marks } = props;
   if (!marks?.length) {
     return null;

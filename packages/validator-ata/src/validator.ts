@@ -1,18 +1,14 @@
-import {
+import type {
   CustomValidator,
-  deepEquals,
   ErrorTransformer,
   FormContextType,
-  hashForSchema,
-  ID_KEY,
   RJSFSchema,
-  ROOT_SCHEMA_PREFIX,
   StrictRJSFSchema,
   UiSchema,
   ValidationData,
   ValidatorType,
-  withIdRefPrefix,
 } from '@rjsf/utils';
+import { deepEquals, hashForSchema, ID_KEY, ROOT_SCHEMA_PREFIX, withIdRefPrefix } from '@rjsf/utils';
 import type { ValidationError, Validator } from 'ata-validator';
 import cloneDeep from 'lodash/cloneDeep';
 
@@ -141,7 +137,7 @@ export default class ATAValidator<
     let errors: ValidationError[] | undefined;
 
     try {
-      const id = (schema[ID_KEY] as string | undefined) ?? hashForSchema(schema);
+      const id = schema[ID_KEY] ?? hashForSchema(schema);
       const validator = this.getOrBuild(id, schema);
       const result = validator.validate(this.cloneForValidation(formData));
       errors = result.valid ? undefined : result.errors;
@@ -195,7 +191,7 @@ export default class ATAValidator<
     if (this.lastSeenRootSchema === rootSchema && this.hasRegisteredRootSchema) {
       return;
     }
-    const rootSchemaId = (rootSchema[ID_KEY] as string | undefined) ?? ROOT_SCHEMA_PREFIX;
+    const rootSchemaId = rootSchema[ID_KEY] ?? ROOT_SCHEMA_PREFIX;
     // Inject $id into a copy of the rootSchema so ata's schema registry can
     // resolve `<rootSchemaId>#/...` refs produced by `withIdRefPrefix`.
     // The original user-supplied schema is left untouched.
@@ -219,11 +215,11 @@ export default class ATAValidator<
     try {
       this.handleSchemaUpdate(rootSchema);
       const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema) as S;
-      const id = (schemaWithIdRefPrefix[ID_KEY] as string | undefined) ?? hashForSchema(schemaWithIdRefPrefix);
+      const id = schemaWithIdRefPrefix[ID_KEY] ?? hashForSchema(schemaWithIdRefPrefix);
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
       return validator.validate(this.cloneForValidation(formData)).valid;
     } catch (e) {
-      // eslint-disable-next-line no-console
+      // oxlint-disable-next-line no-console
       console.warn('Error encountered compiling schema:', e);
       return false;
     }

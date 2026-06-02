@@ -1,14 +1,8 @@
-import { FocusEvent } from 'react';
-import {
-  ariaDescribedByIds,
-  labelValue,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-  GenericObjectType,
-} from '@rjsf/utils';
-import { Checkbox, CheckboxProps } from 'antd';
+import type { FocusEvent } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, GenericObjectType } from '@rjsf/utils';
+import { ariaDescribedByIds, labelValue } from '@rjsf/utils';
+import type { CheckboxProps } from 'antd';
+import { Checkbox } from 'antd';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.

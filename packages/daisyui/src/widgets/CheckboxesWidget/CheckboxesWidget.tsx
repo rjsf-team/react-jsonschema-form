@@ -1,13 +1,7 @@
-import { FocusEvent, useCallback } from 'react';
-import {
-  enumOptionValueDecoder,
-  enumOptionValueEncoder,
-  getOptionValueFormat,
-  WidgetProps,
-  StrictRJSFSchema,
-  RJSFSchema,
-  FormContextType,
-} from '@rjsf/utils';
+import type { FocusEvent } from 'react';
+import { useCallback } from 'react';
+import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
+import { enumOptionValueDecoder, enumOptionValueEncoder, getOptionValueFormat } from '@rjsf/utils';
 
 /** The `CheckboxesWidget` component renders a set of checkboxes for multiple choice selection
  * with DaisyUI styling.

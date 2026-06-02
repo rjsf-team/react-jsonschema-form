@@ -1,13 +1,7 @@
-import { FocusEvent, useCallback } from 'react';
-import {
-  enumOptionValueDecoder,
-  enumOptionValueEncoder,
-  getOptionValueFormat,
-  WidgetProps,
-  StrictRJSFSchema,
-  FormContextType,
-  RJSFSchema,
-} from '@rjsf/utils';
+import type { FocusEvent } from 'react';
+import { useCallback } from 'react';
+import type { WidgetProps, StrictRJSFSchema, FormContextType, RJSFSchema } from '@rjsf/utils';
+import { enumOptionValueDecoder, enumOptionValueEncoder, getOptionValueFormat } from '@rjsf/utils';
 
 /** The `RadioWidget` component renders a group of radio buttons with DaisyUI styling
  *

@@ -1,14 +1,10 @@
-import {
-  useCallback,
-  ButtonHTMLAttributes,
-  Dispatch,
-  MutableRefObject,
-  PropsWithChildren,
-  SetStateAction,
-} from 'react';
+import type { ButtonHTMLAttributes, Dispatch, MutableRefObject, PropsWithChildren, SetStateAction } from 'react';
+import { useCallback } from 'react';
 import Drawer from '@mui/material/Drawer';
-import Form, { IChangeEvent } from '@rjsf/core';
-import { RJSFSchema, UiSchema, ValidatorType, DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR } from '@rjsf/utils';
+import type { IChangeEvent } from '@rjsf/core';
+import Form from '@rjsf/core';
+import type { RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
+import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
 
 import base64 from '../utils/base64';
@@ -259,23 +255,21 @@ export interface LiveSettings {
   [key: string]: any;
 }
 
-type OptionsDrawerProps = {
+interface OptionsDrawerProps {
   schema: RJSFSchema;
   uiSchema: UiSchema;
   formData: any;
   shareURL: string | null;
   theme: string;
   sampleName: string;
-  validators: {
-    [validatorName: string]: ValidatorType<any, RJSFSchema, any>;
-  };
+  validators: Record<string, ValidatorType>;
   validator: string;
   liveSettings: LiveSettings;
   playGroundFormRef: MutableRefObject<any>;
   setValidator: Dispatch<SetStateAction<string>>;
   setLiveSettings: Dispatch<SetStateAction<LiveSettings>>;
   setShareURL: Dispatch<SetStateAction<string | null>>;
-};
+}
 
 export default function OptionsDrawer({
   schema,

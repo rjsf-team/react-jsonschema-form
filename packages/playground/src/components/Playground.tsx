@@ -1,30 +1,33 @@
-import { ComponentType, FormEvent, useCallback, useEffect, useRef, useState } from 'react';
+import type { ComponentType, FormEvent } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
-import { FormProps, IChangeEvent, withTheme } from '@rjsf/core';
-import { ErrorSchema, RJSFSchema, RJSFValidationError, UiSchema, ValidatorType } from '@rjsf/utils';
+import type { FormProps, IChangeEvent } from '@rjsf/core';
+import { withTheme } from '@rjsf/core';
+import type { ErrorSchema, RJSFSchema, RJSFValidationError, UiSchema, ValidatorType } from '@rjsf/utils';
 import { isFunction } from 'lodash';
 
 import { samples } from '../samples';
-import { Sample, UiSchemaForTheme } from '../samples/Sample';
+import type { Sample, UiSchemaForTheme } from '../samples/Sample';
 import base64 from '../utils/base64';
 import DemoFrame from './DemoFrame';
 import Editors from './Editors';
 import ErrorBoundary from './ErrorBoundary';
 import GeoPosition from './GeoPosition';
-import OptionsDrawer, { LiveSettings } from './OptionsDrawer';
+import type { LiveSettings } from './OptionsDrawer';
+import OptionsDrawer from './OptionsDrawer';
 import SampleSelector from './SampleSelector';
 import SpecialInput from './SpecialInput';
-import { ThemesType } from './ThemeSelector';
+import type { ThemesType } from './ThemeSelector';
 
 export interface PlaygroundProps {
-  themes: { [themeName: string]: ThemesType };
-  validators: { [validatorName: string]: ValidatorType };
+  themes: Record<string, ThemesType>;
+  validators: Record<string, ValidatorType>;
 }
 
 export default function Playground({ themes, validators }: PlaygroundProps) {
   const [loaded, setLoaded] = useState(false);
-  const [schema, setSchema] = useState<RJSFSchema>(samples.Simple.schema as RJSFSchema);
+  const [schema, setSchema] = useState<RJSFSchema>(samples.Simple.schema);
   const [uiSchema, setUiSchema] = useState<UiSchema>(samples.Simple.uiSchema as UiSchema);
   // Store the generator inside of an object, otherwise react treats it as an initializer function
   const [uiSchemaGenerator, setUiSchemaGenerator] = useState<{ generator: UiSchemaForTheme } | undefined>(undefined);

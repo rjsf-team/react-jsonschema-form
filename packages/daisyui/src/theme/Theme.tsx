@@ -1,6 +1,8 @@
-import { createContext, ReactNode, useCallback, useContext, useState } from 'react';
-import { getDefaultRegistry, ThemeProps } from '@rjsf/core';
-import { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { ReactNode } from 'react';
+import { createContext, useCallback, useContext, useState } from 'react';
+import type { ThemeProps } from '@rjsf/core';
+import { getDefaultRegistry } from '@rjsf/core';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 import { generateTemplates } from '../templates/Templates';
 import { generateWidgets } from '../widgets/Widgets';
@@ -47,7 +49,9 @@ interface ThemeContextType {
 /** React context for sharing theme information throughout the application */
 export const ThemeContext = createContext<ThemeContextType>({
   theme: 'night',
-  setTheme: () => {},
+  setTheme: () => {
+    /* empty */
+  },
 });
 
 /** Props for the ThemeProvider component */

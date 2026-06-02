@@ -1,6 +1,7 @@
 import { Caption1 } from '@fluentui/react-components';
 import { RichHelp } from '@rjsf/core';
-import { helpId, FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { helpId } from '@rjsf/utils';
 
 /** The `FieldHelpTemplate` component renders any help desired for a field
  *

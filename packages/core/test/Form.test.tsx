@@ -1,29 +1,35 @@
-import { Component, RefObject, createRef, useEffect, useState, useCallback } from 'react';
-import {
-  bracketNameGenerator,
-  buttonId,
-  dotNotationNameGenerator,
+import type { RefObject } from 'react';
+import { Component, createRef, useEffect, useState, useCallback } from 'react';
+import type {
   ErrorSchema,
   Experimental_DefaultFormStateBehavior,
   FieldProps,
   FieldTemplateProps,
   FormValidation,
-  getTemplate,
-  getUiOptions,
-  optionalControlsId,
   RJSFSchema,
   UiSchema,
   ValidatorType,
   WidgetProps,
 } from '@rjsf/utils';
+import {
+  bracketNameGenerator,
+  buttonId,
+  dotNotationNameGenerator,
+  getTemplate,
+  getUiOptions,
+  optionalControlsId,
+} from '@rjsf/utils';
 import validator, { customizeValidator } from '@rjsf/validator-ajv8';
 import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import draft06 from 'ajv/lib/refs/json-schema-draft-06.json';
 import { noop } from 'lodash';
 import { Portal } from 'react-portal';
 import type { Mock } from 'vitest';
 
-import Form, { FormProps, IChangeEvent } from '../src';
+import type { FormProps, IChangeEvent } from '../src';
+import Form from '../src';
+import type { NoValFormProps, RerenderType } from './testUtils';
 import {
   actWrappedDelayPromise,
   createComponent,
@@ -31,9 +37,7 @@ import {
   delayPromise,
   describeRepeated,
   expectToHaveBeenCalledWithFormData,
-  NoValFormProps,
   renderNode,
-  RerenderType,
   setupConsoleErrorSuppression,
   submitForm,
 } from './testUtils';
@@ -222,8 +226,8 @@ describeRepeated('Form common', (createFormComponent) => {
     });
   });
 
-  describe('Option idPrefix', function () {
-    it('should change the rendered ids', function () {
+  describe('Option idPrefix', () => {
+    it('should change the rendered ids', () => {
       const schema: RJSFSchema = {
         type: 'object',
         title: 'root object',
@@ -246,8 +250,8 @@ describeRepeated('Form common', (createFormComponent) => {
     });
   });
 
-  describe('Changing idPrefix', function () {
-    it('should work with simple example', function () {
+  describe('Changing idPrefix', () => {
+    it('should work with simple example', () => {
       const schema: RJSFSchema = {
         type: 'object',
         title: 'root object',
@@ -269,7 +273,7 @@ describeRepeated('Form common', (createFormComponent) => {
       expect(node.querySelector('fieldset')).toHaveAttribute('id', 'rjsf');
     });
 
-    it('should work with oneOf', function () {
+    it('should work with oneOf', () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -323,8 +327,8 @@ describeRepeated('Form common', (createFormComponent) => {
     });
   });
 
-  describe('Option idSeparator', function () {
-    it('should change the rendered ids', function () {
+  describe('Option idSeparator', () => {
+    it('should change the rendered ids', () => {
       const schema: RJSFSchema = {
         type: 'object',
         title: 'root object',
@@ -383,7 +387,7 @@ describeRepeated('Form common', (createFormComponent) => {
         children,
       } = props;
       return (
-        <div className={'my-template ' + classNames}>
+        <div className={`my-template ${classNames}`}>
           <label htmlFor={id}>
             {label}
             {required ? '*' : null}
@@ -1449,7 +1453,7 @@ describeRepeated('Form common', (createFormComponent) => {
         default: { types: 'advanced', content: 'placeholder' },
       };
 
-      const onChangeCalls: Array<{ event: IChangeEvent; id?: string }> = [];
+      const onChangeCalls: { event: IChangeEvent; id?: string }[] = [];
 
       const { node } = createFormComponent({
         schema,
@@ -1520,7 +1524,7 @@ describeRepeated('Form common', (createFormComponent) => {
         default: { types: 'advanced', content: 'placeholder' },
       };
 
-      const onChangeCalls: Array<{ event: IChangeEvent; id?: string }> = [];
+      const onChangeCalls: { event: IChangeEvent; id?: string }[] = [];
       let currentFormData: unknown = undefined;
 
       const { node, rerender } = createFormComponent({
@@ -3127,7 +3131,7 @@ describeRepeated('Form common', (createFormComponent) => {
       });
 
       it('should sanitize stale enum data and persist the retrieved dependency schema', async () => {
-        const formRef = createRef<Form<any, RJSFSchema, any>>();
+        const formRef = createRef<Form>();
         const dependentEnumSchema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -3178,7 +3182,7 @@ describeRepeated('Form common', (createFormComponent) => {
         await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_animal')!, '0');
 
         expectToHaveBeenCalledWithFormData(onChange, { animal: 'Cat', food: 'meat', water: undefined }, 'root_animal');
-        const retrievedSchema = formRef.current!.state.retrievedSchema as RJSFSchema;
+        const { retrievedSchema } = formRef.current!.state;
         expect(retrievedSchema.properties).toEqual(
           expect.objectContaining({
             food: expect.objectContaining({ enum: ['meat'] }),
@@ -3187,7 +3191,7 @@ describeRepeated('Form common', (createFormComponent) => {
         expect(retrievedSchema.properties).not.toHaveProperty('water');
 
         await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_food')!, '0');
-        expect((formRef.current!.state.retrievedSchema as RJSFSchema).properties).not.toHaveProperty('water');
+        expect(formRef.current!.state.retrievedSchema.properties).not.toHaveProperty('water');
       });
     });
 
@@ -3585,7 +3589,7 @@ describeRepeated('Form common', (createFormComponent) => {
       ]);
 
       const customValidator = customizeValidator({
-        additionalMetaSchemas: [require('ajv/lib/refs/json-schema-draft-06.json')],
+        additionalMetaSchemas: [draft06],
       });
 
       rerender(
@@ -6008,7 +6012,7 @@ describe('extraErrors set after submit (#4965)', () => {
     await actWrappedDelayPromise(200);
 
     // Check the form state directly
-    const state = formRef.current!.state;
+    const { state } = formRef.current!;
     expect(state.errors.length).toBeGreaterThan(0);
     expect(state.errorSchema).toEqual(sampleErrors);
 
@@ -6053,7 +6057,7 @@ describe('extraErrors not duplicated when sibling array field mutated (#5041)', 
     await user.click(addBtn!);
 
     // The name field's extraErrors should still contain exactly one error
-    const state = formRef.current!.state;
+    const { state } = formRef.current!;
     const nameErrors = (state.errorSchema as any)?.name?.__errors ?? [];
     expect(nameErrors).toHaveLength(1);
     expect(nameErrors[0]).toBe('Name is required');

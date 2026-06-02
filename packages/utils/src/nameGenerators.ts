@@ -1,4 +1,4 @@
-import { NameGeneratorFunction, FieldPathList } from './types';
+import type { NameGeneratorFunction, FieldPathList } from './types';
 
 /**
  * Generates bracketed names

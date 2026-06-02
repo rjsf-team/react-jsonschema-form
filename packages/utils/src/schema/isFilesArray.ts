@@ -1,5 +1,5 @@
 import { UI_WIDGET_KEY } from '../constants';
-import {
+import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
   RJSFSchema,

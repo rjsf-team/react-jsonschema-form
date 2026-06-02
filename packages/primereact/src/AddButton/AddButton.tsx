@@ -1,4 +1,5 @@
-import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
+import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { TranslatableString } from '@rjsf/utils';
 import { Button } from 'primereact/button';
 
 /** The `AddButton` renders a button that represents the `Add` action on a form

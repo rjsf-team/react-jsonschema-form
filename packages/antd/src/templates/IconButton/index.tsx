@@ -1,4 +1,4 @@
-import { MouseEventHandler } from 'react';
+import type { MouseEventHandler } from 'react';
 import {
   ArrowDownOutlined,
   ArrowUpOutlined,
@@ -7,15 +7,10 @@ import {
   PlusCircleOutlined,
   CloseOutlined,
 } from '@ant-design/icons';
-import {
-  getUiOptions,
-  FormContextType,
-  IconButtonProps,
-  RJSFSchema,
-  StrictRJSFSchema,
-  TranslatableString,
-} from '@rjsf/utils';
-import { Button, ButtonProps } from 'antd';
+import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { getUiOptions, TranslatableString } from '@rjsf/utils';
+import type { ButtonProps } from 'antd';
+import { Button } from 'antd';
 
 export type AntdIconButtonProps<
   T = any,

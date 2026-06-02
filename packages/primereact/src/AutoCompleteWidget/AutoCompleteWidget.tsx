@@ -1,13 +1,9 @@
-import { ChangeEvent, useState } from 'react';
-import {
-  ariaDescribedByIds,
-  FormContextType,
-  getInputProps,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
-import { AutoComplete, AutoCompleteCompleteEvent } from 'primereact/autocomplete';
+import type { ChangeEvent } from 'react';
+import { useState } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, getInputProps } from '@rjsf/utils';
+import type { AutoCompleteCompleteEvent } from 'primereact/autocomplete';
+import { AutoComplete } from 'primereact/autocomplete';
 
 /** The `AutoCompleteWidget` is a widget for rendering a field with options.
  *  This is used instead of the base input template if the schema has examples.
@@ -71,7 +67,7 @@ export default function AutoCompleteWidget<
       value={value || value === 0 ? value : ''}
       dropdown
       invalid={rawErrors.length > 0}
-      onChange={(onChangeOverride as any) || _onChange}
+      onChange={onChangeOverride || _onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
       aria-describedby={ariaDescribedByIds(id, !!schema.examples)}

@@ -1,5 +1,5 @@
 import { BsPlus } from '@react-icons/all-files/bs/BsPlus';
-import { FormContextType, OptionalDataControlsTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { FormContextType, OptionalDataControlsTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 import IconButton, { RemoveButton } from '../IconButton';
 

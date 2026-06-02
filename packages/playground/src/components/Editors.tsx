@@ -1,4 +1,5 @@
-import { Dispatch, SetStateAction, useCallback, useState } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
+import { useCallback, useState } from 'react';
 import MonacoEditor from '@monaco-editor/react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
@@ -7,12 +8,14 @@ import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import { ErrorSchema, RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { ErrorSchema, RJSFSchema, UiSchema } from '@rjsf/utils';
 import isEqualWith from 'lodash/isEqualWith';
 import { Panel, Group, Separator } from 'react-resizable-panels';
 
-import SubthemeSelector, { SubthemeType } from './SubthemeSelector';
-import ThemeSelector, { ThemesType } from './ThemeSelector';
+import type { SubthemeType } from './SubthemeSelector';
+import SubthemeSelector from './SubthemeSelector';
+import type { ThemesType } from './ThemeSelector';
+import ThemeSelector from './ThemeSelector';
 
 const monacoEditorOptions = {
   minimap: {
@@ -31,11 +34,11 @@ const AccordionSummary = styled(MuiAccordionSummary)({
   },
 });
 
-type EditorProps = {
+interface EditorProps {
   title: string;
   code: string;
   onChange: (data: any) => void;
-};
+}
 
 function Editor({ title, code, onChange }: EditorProps) {
   const [valid, setValid] = useState(true);
@@ -64,7 +67,7 @@ function Editor({ title, code, onChange }: EditorProps) {
     <div className='panel panel-default' style={{ marginBottom: 0 }}>
       <div className='panel-heading'>
         <span className={`${cls} glyphicon glyphicon-${icon}`} />
-        {' ' + title}
+        {` ${title}`}
       </div>
       <div style={{ overscrollBehavior: 'auto' }}>
         <MonacoEditor
@@ -82,7 +85,7 @@ function Editor({ title, code, onChange }: EditorProps) {
 
 const toJson = (val: unknown) => JSON.stringify(val, null, 2);
 
-type EditorsProps = {
+interface EditorsProps {
   schema: RJSFSchema;
   setSchema: React.Dispatch<React.SetStateAction<RJSFSchema>>;
   uiSchema: UiSchema;
@@ -93,13 +96,13 @@ type EditorsProps = {
   setExtraErrors: React.Dispatch<React.SetStateAction<ErrorSchema | undefined>>;
   setShareURL: React.Dispatch<React.SetStateAction<string | null>>;
   hasUiSchemaGenerator: boolean;
-  themes: { [themeName: string]: ThemesType };
+  themes: Record<string, ThemesType>;
   theme: string;
   subtheme: string | null;
   onThemeSelected: (theme: string, themeObj: ThemesType) => void;
   setSubtheme: Dispatch<SetStateAction<string | null>>;
   setStylesheet: Dispatch<SetStateAction<string | null>>;
-};
+}
 
 export default function Editors({
   extraErrors,
@@ -145,12 +148,14 @@ export default function Editors({
   const onFormDataEdited = useCallback(
     (newFormData: any) => {
       if (
-        !isEqualWith(newFormData, formData, (newValue, oldValue) => {
+        !isEqualWith(
+          newFormData,
+          formData,
           // Since this is coming from the editor which uses JSON.stringify to trim undefined values compare the values
           // using JSON.stringify to see if the trimmed formData is the same as the untrimmed state
           // Sometimes passing the trimmed value back into the Form causes the defaults to be improperly assigned
-          return JSON.stringify(oldValue) === JSON.stringify(newValue);
-        })
+          (newValue, oldValue) => JSON.stringify(oldValue) === JSON.stringify(newValue),
+        )
       ) {
         setFormData(newFormData);
         setShareURL(null);
@@ -182,7 +187,7 @@ export default function Editors({
           </Grid>
           <Grid size={3}>
             {themes[theme] && themes[theme].subthemes && (
-              <SubthemeSelector subthemes={themes[theme].subthemes!} subtheme={subtheme} select={onSubthemeSelected} />
+              <SubthemeSelector subthemes={themes[theme].subthemes} subtheme={subtheme} select={onSubthemeSelected} />
             )}
           </Grid>
         </Grid>

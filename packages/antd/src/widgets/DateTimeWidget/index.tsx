@@ -1,11 +1,5 @@
-import {
-  ariaDescribedByIds,
-  FormContextType,
-  GenericObjectType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds } from '@rjsf/utils';
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
 

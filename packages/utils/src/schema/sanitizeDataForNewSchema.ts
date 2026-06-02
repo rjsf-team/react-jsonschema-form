@@ -3,7 +3,7 @@ import has from 'lodash/has';
 
 import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY, REF_KEY } from '../constants';
 import deepEquals from '../deepEquals';
-import {
+import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
   GenericObjectType,
@@ -209,7 +209,7 @@ export default function sanitizeDataForNewSchema<
     });
 
     newFormData = {
-      ...(typeof data == 'string' || Array.isArray(data) ? undefined : data),
+      ...(typeof data === 'string' || Array.isArray(data) ? undefined : data),
       ...removeOldSchemaData,
       ...nestedData,
     };

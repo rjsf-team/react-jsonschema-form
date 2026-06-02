@@ -1,5 +1,7 @@
-import { FocusEvent } from 'react';
-import { Label, Radio, RadioGroup, RadioGroupOnChangeData } from '@fluentui/react-components';
+import type { FocusEvent } from 'react';
+import type { RadioGroupOnChangeData } from '@fluentui/react-components';
+import { Label, Radio, RadioGroup } from '@fluentui/react-components';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
@@ -8,10 +10,6 @@ import {
   getOptionValueFormat,
   labelValue,
   optionId,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
 } from '@rjsf/utils';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
@@ -65,7 +63,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       >
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index) => {
-            const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
+            const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
             return (
               <Radio
                 id={optionId(id, index)}

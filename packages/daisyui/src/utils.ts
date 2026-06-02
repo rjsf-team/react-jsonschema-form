@@ -1,6 +1,6 @@
-import { UiSchema } from '@rjsf/utils';
+import type { UiSchema } from '@rjsf/utils';
 
-import { DaisyProps } from './types/DaisyProps';
+import type { DaisyProps } from './types/DaisyProps';
 
 export interface DaisyUiSchema extends Omit<UiSchema, 'ui:options'> {
   'ui:options'?: DaisyUiOptions;

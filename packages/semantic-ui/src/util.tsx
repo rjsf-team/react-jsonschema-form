@@ -1,32 +1,32 @@
-import { ElementType } from 'react';
-import {
+import type { ElementType } from 'react';
+import type {
   UiSchema,
   GenericObjectType,
-  getUiOptions,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   UIOptionsType,
 } from '@rjsf/utils';
+import { getUiOptions } from '@rjsf/utils';
 
-export type SemanticPropsTypes<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = {
+export interface SemanticPropsTypes<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
   formContext?: F;
   uiSchema?: UiSchema<T, S, F>;
   options?: UIOptionsType<T, S, F>;
   defaultSchemaProps?: GenericObjectType;
   defaultContextProps?: GenericObjectType;
-};
+}
 
-export type SemanticErrorPropsType<
+export interface SemanticErrorPropsType<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
-> = {
+> {
   formContext?: F;
   uiSchema?: UiSchema<T, S, F>;
   options?: UIOptionsType<T, S, F>;
   defaultProps?: GenericObjectType;
-};
+}
 
 export type WrapProps = GenericObjectType & {
   wrap: boolean;
@@ -55,14 +55,13 @@ export function getSemanticProps<T = any, S extends StrictRJSFSchema = RJSFSchem
   const schemaProps = getUiOptions<T, S, F>(uiSchema).semantic;
   const optionProps = options.semantic;
   // formContext props should overide other props
-  return Object.assign(
-    {},
-    { ...defaultSchemaProps },
-    { ...defaultContextProps },
-    schemaProps,
-    optionProps,
-    formContextProps,
-  );
+  return {
+    ...defaultSchemaProps,
+    ...defaultContextProps,
+    ...schemaProps,
+    ...optionProps,
+    ...formContextProps,
+  };
 }
 
 /**
@@ -89,7 +88,7 @@ export function getSemanticErrorProps<
   const schemaProps = semanticOptions && semanticOptions.errorOptions;
   const optionProps = options.semantic && (options.semantic as GenericObjectType).errorOptions;
 
-  return Object.assign({}, { ...defaultProps }, schemaProps, optionProps, formContextProps);
+  return { ...defaultProps, ...schemaProps, ...optionProps, ...formContextProps };
 }
 
 /**
@@ -101,7 +100,7 @@ export function getSemanticErrorProps<
  * @param {Array} omit
  * @returns {string}
  */
-export function cleanClassNames(classNameArr: Array<string | undefined>, omit: string[] = []) {
+export function cleanClassNames(classNameArr: (string | undefined)[], omit: string[] = []) {
   // Split each arg on whitespace, and add it to an array. Skip false-y args
   // like "" and undefined.
   const classList = classNameArr

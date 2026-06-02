@@ -1,13 +1,7 @@
-import { ChangeEvent, MouseEvent, useCallback } from 'react';
-import {
-  ariaDescribedByIds,
-  BaseInputTemplateProps,
-  examplesId,
-  FormContextType,
-  getInputProps,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { ChangeEvent, MouseEvent } from 'react';
+import { useCallback } from 'react';
+import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { ariaDescribedByIds, examplesId, getInputProps } from '@rjsf/utils';
 import { InputText } from 'primereact/inputtext';
 
 /** The `BaseInputTemplate` is the template the fallback if no widget is specified.

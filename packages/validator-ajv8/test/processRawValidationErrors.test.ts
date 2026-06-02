@@ -1,4 +1,4 @@
-import { RJSFValidationError } from '@rjsf/utils';
+import type { RJSFValidationError } from '@rjsf/utils';
 
 import { filterDuplicateErrors, transformRJSFValidationErrors } from '../src/processRawValidationErrors';
 

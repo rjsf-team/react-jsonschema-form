@@ -1,13 +1,8 @@
-import { ChangeEvent, FocusEvent, useCallback } from 'react';
+import type { ChangeEvent, FocusEvent } from 'react';
+import { useCallback } from 'react';
 import { TimeInput } from '@mantine/dates';
-import {
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-  labelValue,
-  ariaDescribedByIds,
-} from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { labelValue, ariaDescribedByIds } from '@rjsf/utils';
 
 /** The `TimeWidget` component uses the `TimeInput` component from `@mantine/dates` for rendering.
  *

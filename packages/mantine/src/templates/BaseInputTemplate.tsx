@@ -1,16 +1,9 @@
-import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
+import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
+import { useCallback } from 'react';
 import { TextInput, NumberInput } from '@mantine/core';
 import { SchemaExamples } from '@rjsf/core';
-import {
-  ariaDescribedByIds,
-  BaseInputTemplateProps,
-  examplesId,
-  getInputProps,
-  labelValue,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { ariaDescribedByIds, examplesId, getInputProps, labelValue } from '@rjsf/utils';
 
 import { cleanupOptions } from '../utils';
 
@@ -57,7 +50,7 @@ export default function BaseInputTemplate<
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      const handler = onChangeOverride ? onChangeOverride : onChange;
+      const handler = onChangeOverride || onChange;
       const value = e.target.value === '' ? options.emptyValue : e.target.value;
       handler(value);
     },

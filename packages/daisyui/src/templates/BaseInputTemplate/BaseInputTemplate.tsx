@@ -1,14 +1,8 @@
-import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
+import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
+import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
-import {
-  WidgetProps,
-  StrictRJSFSchema,
-  RJSFSchema,
-  FormContextType,
-  getInputProps,
-  ariaDescribedByIds,
-  examplesId,
-} from '@rjsf/utils';
+import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
+import { getInputProps, ariaDescribedByIds, examplesId } from '@rjsf/utils';
 
 /** The `BaseInputTemplate` component is a template for rendering basic input elements
  * with DaisyUI styling. It's used as the foundation for various input types in forms.

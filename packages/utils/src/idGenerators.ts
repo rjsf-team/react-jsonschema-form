@@ -1,7 +1,7 @@
 import isString from 'lodash/isString';
 
 import { ID_KEY } from './constants';
-import { FieldPathId } from './types';
+import type { FieldPathId } from './types';
 
 /** Generates a consistent `id` pattern for a given `id` and a `suffix`
  *

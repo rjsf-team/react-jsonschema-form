@@ -1,4 +1,4 @@
-import { RJSFSchema, StrictRJSFSchema } from './types';
+import type { RJSFSchema, StrictRJSFSchema } from './types';
 
 /** Check to see if a `schema` specifies that a value must be true. This happens when:
  * - `schema.const` is truthy
