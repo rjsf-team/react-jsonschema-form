@@ -24,6 +24,22 @@ import get from 'lodash/get';
 
 import type { SuppressDuplicateFilteringType } from './types';
 
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function replacePropertyName(message: string, propertyName: string, title: string) {
+  const quotedProperty = `'${propertyName}'`;
+  if (message.includes(quotedProperty)) {
+    return message.replace(quotedProperty, `'${title}'`);
+  }
+
+  return message.replace(
+    new RegExp(`(^|[^\\w'])${escapeRegExp(propertyName)}(?=$|[^\\w'])`),
+    (_, prefix) => `${prefix}${title}`,
+  );
+}
+
 export interface RawValidationErrorsType<Result = any> {
   errors?: Result[];
   validationError?: Error;
@@ -111,12 +127,12 @@ export function transformRJSFValidationErrors<
           uiSchemaTitle = getUiOptions(get(uiSchema, uiSchemaPath)).title;
         }
         if (uiSchemaTitle) {
-          message = message.replace(`'${currentProperty}'`, `'${uiSchemaTitle}'`);
+          message = replacePropertyName(message, currentProperty, uiSchemaTitle);
           uiTitle = uiSchemaTitle;
         } else {
           const parentSchemaTitle = get(parentSchema, [PROPERTIES_KEY, currentProperty, 'title']);
           if (parentSchemaTitle) {
-            message = message.replace(`'${currentProperty}'`, `'${parentSchemaTitle}'`);
+            message = replacePropertyName(message, currentProperty, parentSchemaTitle);
             uiTitle = parentSchemaTitle;
           }
         }

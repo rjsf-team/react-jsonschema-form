@@ -2376,6 +2376,73 @@ describe('AJV8Validator', () => {
         });
       });
     });
+    describe('validating dependencies without localizer', () => {
+      beforeAll(() => {
+        validator = new AJV8Validator({ AjvClass: Ajv2019 });
+      });
+      it('should return an error with title when a dependent is missing', () => {
+        schema = {
+          type: 'object',
+          properties: {
+            creditCard: {
+              type: 'number',
+              title: 'Credit card',
+            },
+            billingAddress: {
+              type: 'string',
+              title: 'Billing address',
+            },
+          },
+          dependentRequired: {
+            creditCard: ['billingAddress'],
+          },
+        };
+        const errors = validator.validateFormData({ creditCard: 1234567890 }, schema);
+        const errMessage = 'must have property Billing address when property Credit card is present';
+        expect(errors.errors[0].message).toEqual(errMessage);
+        expect(errors.errors[0].stack).toEqual(errMessage);
+        expect(errors.errorSchema).toEqual({
+          billingAddress: {
+            __errors: [errMessage],
+          },
+        });
+        expect(errors.errors[0].params.deps).toEqual('billingAddress');
+      });
+      it('should return an error with uiSchema title when a dependent is missing', () => {
+        schema = {
+          type: 'object',
+          properties: {
+            creditCard: {
+              type: 'number',
+            },
+            billingAddress: {
+              type: 'string',
+            },
+          },
+          dependentRequired: {
+            creditCard: ['billingAddress'],
+          },
+        };
+        const uiSchema: UiSchema = {
+          creditCard: {
+            'ui:title': 'uiSchema Credit card',
+          },
+          billingAddress: {
+            'ui:title': 'uiSchema Billing address',
+          },
+        };
+        const errors = validator.validateFormData({ creditCard: 1234567890 }, schema, undefined, undefined, uiSchema);
+        const errMessage = 'must have property uiSchema Billing address when property uiSchema Credit card is present';
+        expect(errors.errors[0].message).toEqual(errMessage);
+        expect(errors.errors[0].stack).toEqual(errMessage);
+        expect(errors.errorSchema).toEqual({
+          billingAddress: {
+            __errors: [errMessage],
+          },
+        });
+        expect(errors.errors[0].params.deps).toEqual('billingAddress');
+      });
+    });
     describe('validating dependencies', () => {
       beforeAll(() => {
         validator = new AJV8Validator({ AjvClass: Ajv2019 }, localize.en as Localizer);
