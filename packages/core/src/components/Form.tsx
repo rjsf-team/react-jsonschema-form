@@ -756,10 +756,12 @@ export default class Form<
   ): ValidationData<T> {
     const schemaUtils = altSchemaUtils ? altSchemaUtils : this.state.schemaUtils;
     const { customValidate, transformErrors, uiSchema } = this.props;
-    const resolvedSchema = retrievedSchema ?? schemaUtils.retrieveSchema(schema, formData);
+    // When a pre-resolved schema is provided (e.g., from live validation), use it directly.
+    // Otherwise validate against the original schema so AJV sees the full constraint set.
+    const validationSchema = retrievedSchema ?? schema;
     return schemaUtils
       .getValidator()
-      .validateFormData(formData, resolvedSchema, customValidate, transformErrors, uiSchema);
+      .validateFormData(formData, validationSchema, customValidate, transformErrors, uiSchema);
   }
 
   /** Renders any errors contained in the `state` in using the `ErrorList`, if not disabled by `showErrorList`. */
