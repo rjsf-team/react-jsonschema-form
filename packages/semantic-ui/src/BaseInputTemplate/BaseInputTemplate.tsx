@@ -1,15 +1,8 @@
-import { ChangeEvent, MouseEvent, useCallback } from 'react';
+import type { ChangeEvent, MouseEvent } from 'react';
+import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
-import {
-  ariaDescribedByIds,
-  BaseInputTemplateProps,
-  examplesId,
-  getInputProps,
-  labelValue,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { ariaDescribedByIds, examplesId, getInputProps, labelValue } from '@rjsf/utils';
 import { Form } from 'semantic-ui-react';
 
 import { getSemanticProps } from '../util';

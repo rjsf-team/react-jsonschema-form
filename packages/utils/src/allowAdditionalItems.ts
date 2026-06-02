@@ -1,5 +1,5 @@
 import isObject from './isObject';
-import { RJSFSchema, StrictRJSFSchema } from './types';
+import type { RJSFSchema, StrictRJSFSchema } from './types';
 
 /** Checks the schema to see if it is allowing additional items, by verifying that `schema.additionalItems` is an
  * object. The user is warned in the console if `schema.additionalItems` has the value `true`.

@@ -1,25 +1,19 @@
+import { memo } from 'react';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ClearIcon from '@mui/icons-material/Clear';
 import CopyIcon from '@mui/icons-material/ContentCopy';
 import RemoveIcon from '@mui/icons-material/Remove';
-import IconButton, { IconButtonProps as MuiIconButtonProps } from '@mui/material/IconButton';
-import {
-  FormContextType,
-  IconButtonProps,
-  RJSFSchema,
-  StrictRJSFSchema,
-  TranslatableString,
-  getUiOptions,
-} from '@rjsf/utils';
+import type { IconButtonProps as MuiIconButtonProps } from '@mui/material/IconButton';
+import IconButton from '@mui/material/IconButton';
+import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { TranslatableString, getUiOptions } from '@rjsf/utils';
 
 import { getMuiProps } from '../util';
 
-export default function MuiIconButton<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(props: IconButtonProps<T, S, F>) {
+function MuiIconButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: IconButtonProps<T, S, F>,
+) {
   const { icon, color, uiSchema, registry, ...otherProps } = props;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
@@ -38,8 +32,10 @@ export default function MuiIconButton<
     </IconButton>
   );
 }
+const MuiIconButton = memo(MuiIconButtonFn) as typeof MuiIconButtonFn;
+export default MuiIconButton;
 
-export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function CopyButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: IconButtonProps<T, S, F>,
 ) {
   const {
@@ -53,8 +49,9 @@ export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     />
   );
 }
+export const CopyButton = memo(CopyButtonFn) as typeof CopyButtonFn;
 
-export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function MoveDownButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: IconButtonProps<T, S, F>,
 ) {
   const {
@@ -68,8 +65,9 @@ export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema,
     />
   );
 }
+export const MoveDownButton = memo(MoveDownButtonFn) as typeof MoveDownButtonFn;
 
-export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function MoveUpButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: IconButtonProps<T, S, F>,
 ) {
   const {
@@ -83,8 +81,9 @@ export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
     />
   );
 }
+export const MoveUpButton = memo(MoveUpButtonFn) as typeof MoveUpButtonFn;
 
-export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function RemoveButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: IconButtonProps<T, S, F>,
 ) {
   const { iconType, ...otherProps } = props;
@@ -100,8 +99,9 @@ export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
     />
   );
 }
+export const RemoveButton = memo(RemoveButtonFn) as typeof RemoveButtonFn;
 
-export function ClearButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function ClearButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: IconButtonProps<T, S, F>,
 ) {
   const { iconType, ...otherProps } = props;
@@ -116,3 +116,4 @@ export function ClearButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
     />
   );
 }
+export const ClearButton = memo(ClearButtonFn) as typeof ClearButtonFn;

@@ -1,12 +1,5 @@
-import {
-  DateElement,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  TranslatableString,
-  WidgetProps,
-  useAltDateWidgetProps,
-} from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { DateElement, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
 
 /** The `AltDateWidget` is an alternative widget for rendering date properties.
  * @param props - The `WidgetProps` for this component

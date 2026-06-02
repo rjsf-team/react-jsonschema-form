@@ -1,13 +1,13 @@
 const REQUIRED_FIELD_SYMBOL = '*';
 
-export type LabelProps = {
+export interface LabelProps {
   /** The label for the field */
   label?: string;
   /** A boolean value stating if the field is required */
   required?: boolean;
   /** The id of the input field being labeled */
   id?: string;
-};
+}
 
 /** Renders a label for a field
  *

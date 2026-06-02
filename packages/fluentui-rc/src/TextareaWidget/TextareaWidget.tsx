@@ -1,13 +1,7 @@
-import { ChangeEvent, FocusEvent } from 'react';
+import type { ChangeEvent, FocusEvent } from 'react';
 import { Label, Textarea, makeStyles } from '@fluentui/react-components';
-import {
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-  ariaDescribedByIds,
-  labelValue,
-} from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, labelValue } from '@rjsf/utils';
 
 const useStyles = makeStyles({
   label: {

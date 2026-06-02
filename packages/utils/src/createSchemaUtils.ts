@@ -19,7 +19,7 @@ import {
   sanitizeDataForNewSchema,
   toPathSchema,
 } from './schema';
-import {
+import type {
   Experimental_CustomMergeAllOf,
   Experimental_DefaultFormStateBehavior,
   FormContextType,

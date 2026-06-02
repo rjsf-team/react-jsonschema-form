@@ -1,13 +1,15 @@
-import Box, { BoxProps } from '@mui/material/Box';
-import FormControl, { FormControlProps } from '@mui/material/FormControl';
-import {
+import type { BoxProps } from '@mui/material/Box';
+import Box from '@mui/material/Box';
+import type { FormControlProps } from '@mui/material/FormControl';
+import FormControl from '@mui/material/FormControl';
+import type {
   FormContextType,
   GenericObjectType,
   MultiSchemaFieldTemplateProps,
   RJSFSchema,
   StrictRJSFSchema,
-  getUiOptions,
 } from '@rjsf/utils';
+import { getUiOptions } from '@rjsf/utils';
 
 import { getMuiProps } from '../util';
 

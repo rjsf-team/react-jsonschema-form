@@ -1,14 +1,7 @@
 import { useCallback } from 'react';
 import { Slider, Input } from '@mantine/core';
-import {
-  ariaDescribedByIds,
-  rangeSpec,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-  titleId,
-} from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, rangeSpec, titleId } from '@rjsf/utils';
 
 import { cleanupOptions } from '../utils';
 

@@ -1,4 +1,4 @@
-import { FormContextType, TemplatesType, Registry, UIOptionsType, StrictRJSFSchema, RJSFSchema } from './types';
+import type { FormContextType, TemplatesType, Registry, UIOptionsType, StrictRJSFSchema, RJSFSchema } from './types';
 
 /** Returns the template with the given `name` from either the `uiSchema` if it is defined or from the `registry`
  * otherwise. NOTE, since `ButtonTemplates` are not overridden in `uiSchema` only those in the `registry` are returned.

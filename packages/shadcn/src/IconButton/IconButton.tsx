@@ -1,8 +1,11 @@
-import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
+import { memo } from 'react';
+import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { TranslatableString } from '@rjsf/utils';
 import type { VariantProps } from 'class-variance-authority';
 import { ChevronDown, ChevronUp, Copy, Trash2, X } from 'lucide-react';
 
-import { Button, buttonVariants } from '../components/ui/button';
+import type { buttonVariants } from '../components/ui/button';
+import { Button } from '../components/ui/button';
 
 export type ShadIconButtonProps<
   T = any,
@@ -17,7 +20,7 @@ export type ShadIconButtonProps<
  *
  * @param props - The combined props from RJSF IconButtonProps and Shadcn ButtonProps, including icon and event handlers
  */
-export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function IconButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: ShadIconButtonProps<T, S, F>,
 ) {
   const { icon, iconType, className, uiSchema, registry, ...otherProps } = props;
@@ -27,6 +30,8 @@ export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSch
     </Button>
   );
 }
+const IconButton = memo(IconButtonFn) as typeof IconButtonFn;
+export default IconButton;
 
 /** Renders a copy button for RJSF array fields that allows users to duplicate array items.
  * The button includes a copy icon and uses the RJSF translation system for the tooltip text.
@@ -34,7 +39,7 @@ export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSch
  *
  * @param props - The RJSF icon button properties, including registry for translations and event handlers
  */
-export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function CopyButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: ShadIconButtonProps<T, S, F>,
 ) {
   const {
@@ -44,6 +49,7 @@ export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     <IconButton title={translateString(TranslatableString.CopyButton)} {...props} icon={<Copy className='h-4 w-4' />} />
   );
 }
+export const CopyButton = memo(CopyButtonFn) as typeof CopyButtonFn;
 
 /** Renders a move down button for RJSF array fields that allows reordering of array items.
  * The button includes a chevron-down icon and uses the RJSF translation system for the tooltip text.
@@ -51,7 +57,7 @@ export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
  *
  * @param props - The RJSF icon button properties, including registry for translations and event handlers
  */
-export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function MoveDownButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: ShadIconButtonProps<T, S, F>,
 ) {
   const {
@@ -65,6 +71,7 @@ export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema,
     />
   );
 }
+export const MoveDownButton = memo(MoveDownButtonFn) as typeof MoveDownButtonFn;
 
 /** Renders a move up button for RJSF array fields that allows reordering of array items.
  * The button includes a chevron-up icon and uses the RJSF translation system for the tooltip text.
@@ -72,7 +79,7 @@ export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema,
  *
  * @param props - The RJSF icon button properties, including registry for translations and event handlers
  */
-export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function MoveUpButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: ShadIconButtonProps<T, S, F>,
 ) {
   const {
@@ -86,6 +93,7 @@ export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
     />
   );
 }
+export const MoveUpButton = memo(MoveUpButtonFn) as typeof MoveUpButtonFn;
 
 /** Renders a remove button for RJSF array fields that allows deletion of array items.
  * The button includes a trash icon and uses the RJSF translation system for the tooltip text.
@@ -94,7 +102,7 @@ export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
  *
  * @param props - The RJSF icon button properties, including registry for translations and event handlers
  */
-export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function RemoveButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: ShadIconButtonProps<T, S, F>,
 ) {
   const {
@@ -109,8 +117,9 @@ export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
     />
   );
 }
+export const RemoveButton = memo(RemoveButtonFn) as typeof RemoveButtonFn;
 
-export function ClearButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function ClearButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: ShadIconButtonProps<T, S, F>,
 ) {
   const {
@@ -118,3 +127,4 @@ export function ClearButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   } = props;
   return <IconButton title={translateString(TranslatableString.ClearButton)} {...props} icon={<X />} />;
 }
+export const ClearButton = memo(ClearButtonFn) as typeof ClearButtonFn;

@@ -1,15 +1,7 @@
 'use client';
 
-import {
-  FocusEvent,
-  FocusEventHandler,
-  KeyboardEvent,
-  ReactElement,
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import type { FocusEvent, FocusEventHandler, KeyboardEvent, ReactElement } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { Command as CommandPrimitive } from 'cmdk';
 import isEqual from 'lodash/isEqual';
 import { X } from 'lucide-react';
@@ -21,7 +13,7 @@ import { Command, CommandGroup, CommandItem, CommandList } from './command';
 /**
  * Represents an item in the fancy multi-select dropdown
  */
-export type FancySelectItem = {
+export interface FancySelectItem {
   /** The value of the item */
   value: any;
   /** The display label for the item */
@@ -30,7 +22,7 @@ export type FancySelectItem = {
   index: number;
   /** Whether the item is disabled */
   disabled?: boolean;
-};
+}
 
 /**
  * Props interface for the FancyMultiSelect component

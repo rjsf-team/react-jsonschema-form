@@ -1,4 +1,5 @@
-import { ChangeEvent, FocusEvent } from 'react';
+import type { ChangeEvent, FocusEvent } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
@@ -6,10 +7,6 @@ import {
   enumOptionsIsSelected,
   getOptionValueFormat,
   optionId,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
 } from '@rjsf/utils';
 import Form from 'react-bootstrap/Form';
 
@@ -41,7 +38,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     <Form.Group className='mb-0'>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index) => {
-          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
+          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
           const checked = enumOptionsIsSelected<S>(option.value, value);
 
           const radio = (

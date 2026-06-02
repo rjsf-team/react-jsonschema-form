@@ -1,4 +1,4 @@
-import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 
 /** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
  * in a div, with the value along side it.

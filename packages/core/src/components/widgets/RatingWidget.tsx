@@ -1,5 +1,6 @@
-import { FocusEvent, useCallback } from 'react';
-import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FocusEvent } from 'react';
+import { useCallback } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 
 /** The `RatingWidget` component renders a star or heart rating input
  *

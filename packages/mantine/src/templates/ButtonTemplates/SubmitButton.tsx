@@ -1,5 +1,6 @@
 import { Button } from '@mantine/core';
-import { getSubmitButtonOptions, FormContextType, RJSFSchema, StrictRJSFSchema, SubmitButtonProps } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, SubmitButtonProps } from '@rjsf/utils';
+import { getSubmitButtonOptions } from '@rjsf/utils';
 
 /** The `SubmitButton` renders a button that represent the `Submit` action on a form
  */

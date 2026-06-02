@@ -1,9 +1,10 @@
-import Ajv from 'ajv';
+import type Ajv from 'ajv';
 
-import { CustomValidatorOptionsType } from '../../src';
+import type { CustomValidatorOptionsType } from '../../src';
 
 // NOTE these are the same as the CUSTOM_OPTIONS in `compileTestSchema.js`, keep them in sync
 export const CUSTOM_OPTIONS: CustomValidatorOptionsType = {
+  // oxlint-disable-next-line typescript/no-var-requires
   additionalMetaSchemas: [require('ajv/lib/refs/json-schema-draft-06.json')],
   customFormats: {
     'phone-us': /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/,

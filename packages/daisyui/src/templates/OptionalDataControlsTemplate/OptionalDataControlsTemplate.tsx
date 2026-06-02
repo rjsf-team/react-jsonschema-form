@@ -1,6 +1,5 @@
-import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FormContextType, OptionalDataControlsTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { FormContextType, OptionalDataControlsTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 import { RemoveButton } from '../ButtonTemplates';
 import DaisyUIButton from '../ButtonTemplates/DaisyUIButton';
@@ -25,7 +24,7 @@ export default function OptionalDataControlsTemplate<
         id={id}
         registry={registry}
         iconType='info'
-        icon={faPlus as IconDefinition}
+        icon={faPlus}
         className='rjsf-add-optional-data'
         onClick={onAddClick}
         title={label}

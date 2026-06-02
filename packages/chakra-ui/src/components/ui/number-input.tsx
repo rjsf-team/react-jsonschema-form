@@ -10,7 +10,7 @@ export type NumberInputProps = ChakraNumberInput.RootProps;
  * @param {ReactNode} [props.children] - The content to display inside the number input.
  * @returns {JSX.Element} The rendered number input component.
  */
-export const NumberInputRoot = forwardRef<HTMLDivElement, NumberInputProps>(function NumberInput(props, ref) {
+export const NumberInputRoot = forwardRef<HTMLDivElement, NumberInputProps>((props, ref) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {

@@ -1,8 +1,9 @@
-import { Component, ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import { Component } from 'react';
 
-type Props = {
+interface Props {
   children: ReactNode;
-};
+}
 
 type State =
   | {
@@ -11,7 +12,10 @@ type State =
     }
   | { hasError: true; error: Error };
 
-type Error = { message: string; [key: string]: unknown };
+interface Error {
+  message: string;
+  [key: string]: unknown;
+}
 
 class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {

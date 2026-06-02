@@ -1,13 +1,13 @@
 import { enumOptionSelectedValue } from '../src';
-import { EnumOptionsType, RJSFSchema } from '../src';
+import type { EnumOptionsType } from '../src';
 
-const stringOptions: EnumOptionsType<RJSFSchema>[] = [
+const stringOptions: EnumOptionsType[] = [
   { value: 'foo', label: 'Foo' },
   { value: 'bar', label: 'Bar' },
   { value: 'baz', label: 'Baz' },
 ];
 
-const numericOptions: EnumOptionsType<RJSFSchema>[] = [
+const numericOptions: EnumOptionsType[] = [
   { value: 10, label: 'Ten' },
   { value: 20, label: 'Twenty' },
 ];

@@ -1,20 +1,19 @@
-import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
-import { InputProps as MuiInputProps } from '@mui/material/Input';
+import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
+import { useCallback } from 'react';
+import type { InputProps as MuiInputProps } from '@mui/material/Input';
 import InputAdornment from '@mui/material/InputAdornment';
-import { InputLabelProps as MuiInputLabelProps } from '@mui/material/InputLabel';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import type { InputLabelProps as MuiInputLabelProps } from '@mui/material/InputLabel';
+import type { TextFieldProps } from '@mui/material/TextField';
+import TextField from '@mui/material/TextField';
 import { SchemaExamples } from '@rjsf/core';
-import {
-  ariaDescribedByIds,
+import type {
   BaseInputTemplateProps,
-  examplesId,
-  getInputProps,
-  labelValue,
   FormContextType,
   GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
+import { ariaDescribedByIds, examplesId, getInputProps, labelValue } from '@rjsf/utils';
 
 import { getMuiProps } from '../util';
 

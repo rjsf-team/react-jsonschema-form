@@ -1,5 +1,6 @@
-import { ChangeEvent, FocusEvent } from 'react';
+import type { ChangeEvent, FocusEvent } from 'react';
 import { Stack } from '@chakra-ui/react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
@@ -8,10 +9,6 @@ import {
   getOptionValueFormat,
   labelValue,
   optionId,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
 } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field';
@@ -68,7 +65,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         <Stack direction={row ? 'row' : 'column'}>
           {Array.isArray(enumOptions) &&
             enumOptions.map((option, index) => {
-              const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
+              const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
 
               return (
                 <Radio

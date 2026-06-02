@@ -1,4 +1,16 @@
-import { FocusEvent, useCallback, useRef, useState } from 'react';
+import type { FocusEvent } from 'react';
+import { memo, useCallback, useMemo, useRef, useState } from 'react';
+import type {
+  ErrorSchema,
+  FieldPathId,
+  FieldPathList,
+  FieldProps,
+  FormContextType,
+  GenericObjectType,
+  Registry,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
@@ -9,18 +21,9 @@ import {
   shouldRenderOptionalField,
   toFieldPathId,
   useDeepCompareMemo,
-  ErrorSchema,
-  FieldPathId,
-  FieldPathList,
-  FieldProps,
-  FormContextType,
-  GenericObjectType,
   ONE_OF_KEY,
   PROPERTIES_KEY,
   REF_KEY,
-  Registry,
-  RJSFSchema,
-  StrictRJSFSchema,
   TranslatableString,
 } from '@rjsf/utils';
 import get from 'lodash/get';
@@ -38,7 +41,7 @@ import { ADDITIONAL_PROPERTY_KEY_REMOVE } from '../constants';
  * @returns - True if the field `name` is required, false otherwise
  */
 function isRequired<S extends StrictRJSFSchema = RJSFSchema>(schema: S, name: string) {
-  return Array.isArray(schema.required) && schema.required.indexOf(name) !== -1;
+  return Array.isArray(schema.required) && schema.required.includes(name);
 }
 
 /** Returns a default value to be used for a new additional schema property of the given `type`
@@ -86,7 +89,7 @@ interface ObjectFieldPropertyProps<
 
 /** The `ObjectFieldProperty` component is used to render the `SchemaField` for a child property of an object
  */
-function ObjectFieldProperty<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function ObjectFieldPropertyFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: ObjectFieldPropertyProps<T, S, F>,
 ) {
   const {
@@ -193,6 +196,8 @@ function ObjectFieldProperty<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   );
 }
 
+const ObjectFieldProperty = memo(ObjectFieldPropertyFn) as typeof ObjectFieldPropertyFn;
+
 /** The `ObjectField` component is used to render a field in the schema that is of type `object`. It tracks whether an
  * additional property key was modified and what it was modified to
  *
@@ -222,8 +227,11 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
   const { OptionalDataControlsField } = fields;
   const formDataRef = useRef(formData);
   formDataRef.current = formData;
-  const schema: S = schemaUtils.retrieveSchema(rawSchema, formData, true);
-  const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
+  const schema: S = useMemo(
+    () => schemaUtils.retrieveSchema(rawSchema, formData, true),
+    [schemaUtils, rawSchema, formData],
+  );
+  const uiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema, globalUiOptions), [uiSchema, globalUiOptions]);
   const { properties: schemaProperties = {} } = schema;
   // All the children will use childFieldPathId if present in the props, falling back to the fieldPathId
   const childFieldPathId = props.childFieldPathId ?? fieldPathId;

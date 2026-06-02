@@ -1,5 +1,6 @@
-import { ChangeEvent, FocusEvent } from 'react';
-import { ariaDescribedByIds, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { ChangeEvent, FocusEvent } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds } from '@rjsf/utils';
 
 import { Textarea } from '../components/ui/textarea';
 

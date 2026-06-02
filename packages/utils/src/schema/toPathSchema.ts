@@ -17,7 +17,7 @@ import {
 } from '../constants';
 import deepEquals from '../deepEquals';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
-import {
+import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
   GenericObjectType,
@@ -82,7 +82,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
       discriminator,
       experimental_customMergeAllOf,
     );
-    const _schema: S = xxxOf![index] as S;
+    const _schema: S = xxxOf[index];
     pathSchema = {
       ...pathSchema,
       ...toPathSchemaInternal<T, S, F>(

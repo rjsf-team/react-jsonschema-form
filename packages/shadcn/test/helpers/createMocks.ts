@@ -1,5 +1,5 @@
 import { getTestRegistry } from '@rjsf/core';
-import { WidgetProps, RJSFSchema } from '@rjsf/utils';
+import type { WidgetProps, RJSFSchema } from '@rjsf/utils';
 
 import BaseInputTemplate from '../../src/BaseInputTemplate';
 import Templates from '../../src/Templates';

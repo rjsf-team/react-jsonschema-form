@@ -1,4 +1,4 @@
-import { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } from '@rjsf/utils';
 
 import ArrayFieldItemTemplate from './ArrayFieldItemTemplate';
 import ArrayFieldTemplate from './ArrayFieldTemplate';

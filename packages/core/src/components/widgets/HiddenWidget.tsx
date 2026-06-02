@@ -1,4 +1,4 @@
-import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 
 /** The `HiddenWidget` is a widget for rendering a hidden input field.
  *  It is typically used by setting type to "hidden".

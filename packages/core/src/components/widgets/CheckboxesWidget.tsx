@@ -1,4 +1,6 @@
-import { ChangeEvent, FocusEvent, useCallback } from 'react';
+import type { ChangeEvent, FocusEvent } from 'react';
+import { useCallback } from 'react';
+import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
@@ -8,10 +10,6 @@ import {
   enumOptionsSelectValue,
   getOptionValueFormat,
   optionId,
-  FormContextType,
-  WidgetProps,
-  RJSFSchema,
-  StrictRJSFSchema,
 } from '@rjsf/utils';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
@@ -52,7 +50,7 @@ function CheckboxesWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index) => {
           const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
-          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
+          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
           const disabledCls = disabled || itemDisabled || readonly ? 'disabled' : '';
 
           const handleChange = (event: ChangeEvent<HTMLInputElement>) => {

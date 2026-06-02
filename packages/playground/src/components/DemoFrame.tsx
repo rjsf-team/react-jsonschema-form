@@ -1,6 +1,8 @@
-import { cloneElement, useCallback, useEffect, useRef, useState, ReactElement, ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
+import { cloneElement, useCallback, useEffect, useRef, useState } from 'react';
 import { StyleProvider as AntdStyleProvider } from '@ant-design/cssinjs';
-import createCache, { EmotionCache } from '@emotion/cache';
+import type { EmotionCache } from '@emotion/cache';
+import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import { MantineProvider } from '@mantine/core';
 import { CssBaseline } from '@mui/material';
@@ -10,7 +12,8 @@ import { __createDaisyUIFrameProvider } from '@rjsf/daisyui';
 import { __createFluentUIRCFrameProvider } from '@rjsf/fluentui-rc';
 import { ConfigProvider } from 'antd';
 import { PrimeReactProvider } from 'primereact/api';
-import Frame, { FrameComponentProps, FrameContextConsumer } from 'react-frame-component';
+import type { FrameComponentProps } from 'react-frame-component';
+import Frame, { FrameContextConsumer } from 'react-frame-component';
 
 const DEMO_FRAME_JSS = 'demo-frame-jss';
 
@@ -63,7 +66,7 @@ function AntdSelectPatcher({ frameDoc }: { frameDoc: Document }) {
     }
 
     const handleDropdownPositioning = (dropdown: HTMLElement) => {
-      const style = dropdown.style;
+      const { style } = dropdown;
 
       // Check if dropdown needs repositioning
       const isHidden = style.inset && style.inset.includes('-1000vh');
@@ -87,8 +90,8 @@ function AntdSelectPatcher({ frameDoc }: { frameDoc: Document }) {
       }
     };
 
-    const createObserver = () => {
-      return new MutationObserver((mutations) => {
+    const createObserver = () =>
+      new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
           if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
             const dropdown = mutation.target as HTMLElement;
@@ -111,7 +114,6 @@ function AntdSelectPatcher({ frameDoc }: { frameDoc: Document }) {
           }
         });
       });
-    };
 
     // Observe iframe document
     const iframeObserver = createObserver();

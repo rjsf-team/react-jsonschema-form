@@ -12,10 +12,8 @@ export type CloseButtonProps = ButtonProps;
  * @param {ReactNode} [props.children] - The content to display inside the button.
  * @returns {JSX.Element} The rendered close button component.
  */
-export const CloseButton = forwardRef<HTMLButtonElement, CloseButtonProps>(function CloseButton(props, ref) {
-  return (
-    <ChakraIconButton variant='ghost' aria-label='Close' ref={ref} {...props}>
-      {props.children ?? <LuX />}
-    </ChakraIconButton>
-  );
-});
+export const CloseButton = forwardRef<HTMLButtonElement, CloseButtonProps>((props, ref) => (
+  <ChakraIconButton variant='ghost' aria-label='Close' ref={ref} {...props}>
+    {props.children ?? <LuX />}
+  </ChakraIconButton>
+));

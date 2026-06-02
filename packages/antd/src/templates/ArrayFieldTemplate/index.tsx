@@ -1,14 +1,12 @@
 import { useContext } from 'react';
-import {
-  getTemplate,
-  getUiOptions,
+import type {
   ArrayFieldTemplateProps,
   FormContextType,
   GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
-  buttonId,
 } from '@rjsf/utils';
+import { getTemplate, getUiOptions, buttonId } from '@rjsf/utils';
 import { Col, Row, ConfigProvider } from 'antd';
 import classNames from 'classnames';
 

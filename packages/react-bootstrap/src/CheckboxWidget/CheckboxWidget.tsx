@@ -1,15 +1,6 @@
-import { FocusEvent } from 'react';
-import {
-  ariaDescribedByIds,
-  descriptionId,
-  getTemplate,
-  labelValue,
-  WidgetProps,
-  schemaRequiresTrueValue,
-  StrictRJSFSchema,
-  RJSFSchema,
-  FormContextType,
-} from '@rjsf/utils';
+import type { FocusEvent } from 'react';
+import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
+import { ariaDescribedByIds, descriptionId, getTemplate, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
 import Form from 'react-bootstrap/Form';
 
 export default function CheckboxWidget<

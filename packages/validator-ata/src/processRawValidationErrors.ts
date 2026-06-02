@@ -1,31 +1,33 @@
-import {
-  ANY_OF_KEY,
-  createErrorHandler,
+import type {
   CustomValidator,
   ErrorTransformer,
   FormContextType,
+  RJSFSchema,
+  RJSFValidationError,
+  StrictRJSFSchema,
+  UiSchema,
+  ValidatorType,
+} from '@rjsf/utils';
+import {
+  ANY_OF_KEY,
+  createErrorHandler,
   getDefaultFormState,
   getUiOptions,
   ONE_OF_KEY,
   PROPERTIES_KEY,
-  RJSFSchema,
-  RJSFValidationError,
-  StrictRJSFSchema,
   toErrorSchema,
-  UiSchema,
   unwrapErrorHandler,
   validationDataMerge,
-  ValidatorType,
 } from '@rjsf/utils';
 import type { ValidationError } from 'ata-validator';
 import get from 'lodash/get';
 
 import type { SuppressDuplicateFilteringType } from './types';
 
-export type RawValidationErrorsType<Result = any> = {
+export interface RawValidationErrorsType<Result = any> {
   errors?: Result[];
   validationError?: Error;
-};
+}
 
 /** Filters duplicate errors from `anyOf`/`oneOf` schema paths according to
  * the `suppressDuplicateFiltering` flag. Mirrors the `@rjsf/validator-ajv8`
@@ -40,7 +42,7 @@ export function filterDuplicateErrors(
   if (suppressDuplicateFiltering === 'all') {
     return errorList;
   }
-  return errorList.reduce((acc: RJSFValidationError[], err: RJSFValidationError) => {
+  return errorList.reduce<RJSFValidationError[]>((acc: RJSFValidationError[], err: RJSFValidationError) => {
     const { message, schemaPath } = err;
     const anyOfIndex = suppressDuplicateFiltering !== 'anyOf' ? schemaPath?.indexOf(`/${ANY_OF_KEY}/`) : undefined;
     const oneOfIndex = suppressDuplicateFiltering !== 'oneOf' ? schemaPath?.indexOf(`/${ONE_OF_KEY}/`) : undefined;
@@ -57,7 +59,7 @@ export function filterDuplicateErrors(
       acc.push(err);
     }
     return acc;
-  }, [] as RJSFValidationError[]);
+  }, []);
 }
 
 /** Transforms ata-validator errors into the RJSF-internal `RJSFValidationError`
@@ -91,7 +93,7 @@ export function transformRJSFValidationErrors<
     if (rawPropertyNames.length > 0) {
       rawPropertyNames.forEach((currentProperty) => {
         const path = property ? `${property}.${currentProperty}` : currentProperty;
-        let uiSchemaTitle = getUiOptions(get(uiSchema, `${path.replace(/^\./, '')}`)).title;
+        let uiSchemaTitle = getUiOptions(get(uiSchema, path.replace(/^\./, ''))).title;
         if (uiSchemaTitle === undefined) {
           const uiSchemaPath = schemaPath
             .replace(/\/properties\//g, '/')
@@ -114,7 +116,7 @@ export function transformRJSFValidationErrors<
 
       stack = message;
     } else {
-      const uiSchemaTitle = getUiOptions<T, S, F>(get(uiSchema, `${property.replace(/^\./, '')}`)).title;
+      const uiSchemaTitle = getUiOptions<T, S, F>(get(uiSchema, property.replace(/^\./, ''))).title;
 
       if (uiSchemaTitle) {
         stack = `'${uiSchemaTitle}' ${message}`.trim();
@@ -168,7 +170,7 @@ export default function processRawValidationErrors<
   let errors = transformRJSFValidationErrors<T, S, F>(rawErrors.errors, uiSchema, suppressDuplicateFiltering);
 
   if (invalidSchemaError) {
-    errors = [...errors, { stack: invalidSchemaError!.message }];
+    errors = [...errors, { stack: invalidSchemaError.message }];
   }
   if (typeof transformErrors === 'function') {
     errors = transformErrors(errors, uiSchema);
@@ -180,7 +182,7 @@ export default function processRawValidationErrors<
     errorSchema = {
       ...errorSchema,
       $schema: {
-        __errors: [invalidSchemaError!.message],
+        __errors: [invalidSchemaError.message],
       },
     };
   }

@@ -1,4 +1,5 @@
-import { ERRORS_KEY, ErrorSchema, validationDataMerge, ValidationData } from '../src';
+import type { ErrorSchema, ValidationData } from '../src';
+import { ERRORS_KEY, validationDataMerge } from '../src';
 
 describe('validationDataMerge()', () => {
   it('Returns validationData when no additionalErrorSchema is passed', () => {

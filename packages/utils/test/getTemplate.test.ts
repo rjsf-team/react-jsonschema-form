@@ -1,14 +1,7 @@
 import cloneDeep from 'lodash/cloneDeep';
 
-import {
-  createSchemaUtils,
-  englishStringTranslator,
-  getTemplate,
-  RJSFSchema,
-  Registry,
-  TemplatesType,
-  UIOptionsType,
-} from '../src';
+import type { RJSFSchema, Registry, UIOptionsType } from '../src';
+import { createSchemaUtils, englishStringTranslator, getTemplate } from '../src';
 import getTestValidator from './testUtils/getTestValidator';
 import { GLOBAL_FORM_OPTIONS } from './testUtils/testData';
 
@@ -91,19 +84,19 @@ describe('getTemplate', () => {
   });
   it('returns the template from registry', () => {
     KEYS.forEach((key) => {
-      const name = key as keyof TemplatesType;
+      const name = key;
       expect(getTemplate<typeof name>(name, registry)).toBe(FakeTemplate);
     });
   });
   it('returns the template from uiOptions when available', () => {
     KEYS.forEach((key) => {
-      const name = key as keyof TemplatesType;
+      const name = key;
       expect(getTemplate<typeof name>(name, registry, uiOptions)).toBe(CustomTemplate);
     });
   });
   it('returns the template from registry using uiOptions key when available', () => {
     KEYS.forEach((key) => {
-      const name = key as keyof TemplatesType;
+      const name = key;
       expect(
         getTemplate<typeof name>(
           name,

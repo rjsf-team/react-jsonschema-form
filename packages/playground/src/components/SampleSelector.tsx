@@ -1,9 +1,11 @@
-import { SyntheticEvent, useState } from 'react';
+import type { SyntheticEvent } from 'react';
+import { useState } from 'react';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import MuiDrawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import { styled, Theme, CSSObject } from '@mui/material/styles';
+import type { Theme, CSSObject } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import MuiTab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';

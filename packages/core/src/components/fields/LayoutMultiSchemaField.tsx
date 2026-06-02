@@ -1,25 +1,27 @@
 import { useState, useEffect } from 'react';
+import type {
+  EnumOptionsType,
+  FieldProps,
+  FormContextType,
+  RJSFSchema,
+  SchemaUtilsType,
+  StrictRJSFSchema,
+  UiSchema,
+} from '@rjsf/utils';
 import {
   ANY_OF_KEY,
   CONST_KEY,
   DEFAULT_KEY,
-  EnumOptionsType,
   ERRORS_KEY,
-  FieldProps,
-  FormContextType,
   getDiscriminatorFieldFromSchema,
   hashObject,
   ID_KEY,
   ONE_OF_KEY,
   optionsList,
   PROPERTIES_KEY,
-  RJSFSchema,
   getTemplate,
   getUiOptions,
   getWidget,
-  SchemaUtilsType,
-  StrictRJSFSchema,
-  UiSchema,
 } from '@rjsf/utils';
 import get from 'lodash/get';
 import has from 'lodash/has';
@@ -111,7 +113,7 @@ export default function LayoutMultiSchemaField<
     hideError = false,
   } = props;
   const { widgets, schemaUtils, globalUiOptions } = registry;
-  const [enumOptions, setEnumOptions] = useState(computeEnumOptions(schema, options, schemaUtils, uiSchema, formData)!);
+  const [enumOptions, setEnumOptions] = useState(computeEnumOptions(schema, options, schemaUtils, uiSchema, formData));
   const id = get(fieldPathId, ID_KEY);
   const discriminator = getDiscriminatorFieldFromSchema(schema);
   const FieldErrorTemplate = getTemplate<'FieldErrorTemplate', T, S, F>('FieldErrorTemplate', registry, options);
@@ -124,7 +126,7 @@ export default function LayoutMultiSchemaField<
   useEffect(() => {
     setEnumOptions(computeEnumOptions(schema, options, schemaUtils, uiSchema, formData));
     // We are using hashes in place of the dependencies
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
   }, [schemaHash, optionsHash, schemaUtils, uiSchemaHash, formDataHash]);
   const {
     widget = discriminator ? 'radio' : 'select',
@@ -142,7 +144,7 @@ export default function LayoutMultiSchemaField<
   const option = getSelectedOption<S>(enumOptions, selectorField, selectedOption);
   // If the subschema doesn't declare a type, infer the type from the parent schema
   optionSchema = optionSchema?.type ? optionSchema : ({ ...optionSchema, type: option?.type || baseType } as S);
-  const Widget = getWidget<T, S, F>(optionSchema!, widget, widgets);
+  const Widget = getWidget<T, S, F>(optionSchema, widget, widgets);
 
   // The following code was copied from `@rjsf`'s `SchemaField`
   // Set hideError to the value provided in the uiSchema, otherwise stick with the prop to propagate to children

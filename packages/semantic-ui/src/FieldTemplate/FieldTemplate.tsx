@@ -1,11 +1,5 @@
-import {
-  FieldTemplateProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  getTemplate,
-  getUiOptions,
-} from '@rjsf/utils';
+import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { getTemplate, getUiOptions } from '@rjsf/utils';
 import { Form } from 'semantic-ui-react';
 
 import { getSemanticProps, MaybeWrap } from '../util';

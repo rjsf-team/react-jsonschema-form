@@ -1,5 +1,5 @@
 import { createRef } from 'react';
-import { FormValidation, RJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FormValidation, RJSFSchema, WidgetProps } from '@rjsf/utils';
 import userEvent from '@testing-library/user-event';
 import noop from 'lodash/noop';
 
@@ -314,9 +314,7 @@ describe('anyOf', () => {
       ],
     };
     const widgets = {
-      SelectWidget: () => {
-        return <section id='CustomSelect'>Custom Widget</section>;
-      },
+      SelectWidget: () => <section id='CustomSelect'>Custom Widget</section>,
     };
 
     const { node } = createFormComponent({
@@ -530,9 +528,7 @@ describe('anyOf', () => {
       },
     };
 
-    const CustomField = () => {
-      return <div id='custom-anyof-field' />;
-    };
+    const CustomField = () => <div id='custom-anyof-field' />;
 
     const { node } = createFormComponent({
       schema,
@@ -1683,7 +1679,7 @@ describe('anyOf', () => {
     });
   });
 
-  describe('Custom Field without ui:fieldReplacesAnyOrOneOf', function () {
+  describe('Custom Field without ui:fieldReplacesAnyOrOneOf', () => {
     const schema: RJSFSchema = {
       anyOf: [
         {
@@ -1697,19 +1693,19 @@ describe('anyOf', () => {
     const uiSchema = {
       'ui:field': () => <div className='custom-field'>Custom field</div>,
     };
-    it('should be rendered twice', function () {
+    it('should be rendered twice', () => {
       const { node } = createFormComponent({ schema, uiSchema });
       const fields = node.querySelectorAll('.custom-field');
       expect(fields).toHaveLength(2);
     });
-    it('should render <select>', function () {
+    it('should render <select>', () => {
       const { node } = createFormComponent({ schema, uiSchema });
       const selects = node.querySelectorAll('select');
       expect(selects).toHaveLength(1);
     });
   });
 
-  describe('Custom Field with ui:fieldReplacesAnyOrOneOf', function () {
+  describe('Custom Field with ui:fieldReplacesAnyOrOneOf', () => {
     const schema: RJSFSchema = {
       anyOf: [
         {
@@ -1724,12 +1720,12 @@ describe('anyOf', () => {
       'ui:field': () => <div className='custom-field'>Custom field</div>,
       'ui:fieldReplacesAnyOrOneOf': true,
     };
-    it('should be rendered once', function () {
+    it('should be rendered once', () => {
       const { node } = createFormComponent({ schema, uiSchema });
       const fields = node.querySelectorAll('.custom-field');
       expect(fields).toHaveLength(1);
     });
-    it('should not render <select>', function () {
+    it('should not render <select>', () => {
       const { node } = createFormComponent({ schema, uiSchema });
       const selects = node.querySelectorAll('select');
       expect(selects).toHaveLength(0);
@@ -1880,5 +1876,44 @@ describe('anyOf', () => {
         );
       }
     });
+  });
+  it('$ref objects pointing to objects with oneOf lists do not change (#3833)', async () => {
+    const schema: RJSFSchema = {
+      title: 'oneOf Example',
+      type: 'object',
+      properties: {
+        status: {
+          $ref: '#/definitions/status',
+        },
+      },
+      definitions: {
+        status: {
+          title: 'Field Status',
+          type: 'object',
+          anyOf: [
+            {
+              title: 'Approved',
+              type: 'object',
+            },
+            {
+              title: 'Rejected',
+              type: 'object',
+              properties: {
+                reason: {
+                  title: 'Rejection Reason',
+                  type: 'string',
+                },
+              },
+            },
+          ],
+        },
+      },
+    };
+    const formData = { status: {} };
+    const { node } = createFormComponent({ schema, formData });
+    const select = node.querySelector('#root_status__anyof_select');
+    await user.selectOptions(select!, '1');
+
+    expect(select).toHaveValue('1');
   });
 });

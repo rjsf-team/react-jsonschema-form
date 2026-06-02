@@ -1,14 +1,11 @@
-import { ChangeEvent, FocusEvent } from 'react';
+import type { ChangeEvent, FocusEvent } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
 } from '@rjsf/utils';
 import FormSelect from 'react-bootstrap/FormSelect';
 
@@ -41,7 +38,7 @@ export default function SelectWidget<
   function getValue(event: FocusEvent | ChangeEvent | any, multiple?: boolean) {
     if (multiple) {
       return [].slice
-        .call(event.target.options as any)
+        .call(event.target.options)
         .filter((o: any) => o.selected)
         .map((o: any) => o.value);
     } else {
@@ -82,8 +79,8 @@ export default function SelectWidget<
       aria-describedby={ariaDescribedByIds(id)}
     >
       {showPlaceholderOption && <option value=''>{placeholder}</option>}
-      {(enumOptions as any).map(({ value, label }: any, i: number) => {
-        const disabled: any = Array.isArray(enumDisabled) && (enumDisabled as any).indexOf(value) != -1;
+      {enumOptions?.map(({ value, label }: any, i: number) => {
+        const disabled = Array.isArray(enumDisabled) && enumDisabled.includes(value);
         return (
           <option key={i} id={label} value={enumOptionValueEncoder(value, i, optionValueFormat)} disabled={disabled}>
             {label}

@@ -1,4 +1,5 @@
-import { FormContextType, getUiOptions, RJSFSchema, StrictRJSFSchema, TitleFieldProps, titleId } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, TitleFieldProps } from '@rjsf/utils';
+import { getUiOptions, titleId } from '@rjsf/utils';
 import { Divider } from 'primereact/divider';
 
 /** The `TitleField` is the template to use to render the title of a field

@@ -5,7 +5,7 @@ import { ANY_OF_KEY, ONE_OF_KEY } from './constants';
 import getSchemaType from './getSchemaType';
 import getUiOptions from './getUiOptions';
 import isRootSchema from './isRootSchema';
-import { FormContextType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from './types';
+import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from './types';
 
 /** Returns the unique list of schema types for all of the options in a anyOf/oneOf
  *

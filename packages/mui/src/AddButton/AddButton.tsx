@@ -1,13 +1,8 @@
 import AddIcon from '@mui/icons-material/Add';
-import IconButton, { IconButtonProps as MuiIconButtonProps } from '@mui/material/IconButton';
-import {
-  FormContextType,
-  getUiOptions,
-  IconButtonProps,
-  RJSFSchema,
-  StrictRJSFSchema,
-  TranslatableString,
-} from '@rjsf/utils';
+import type { IconButtonProps as MuiIconButtonProps } from '@mui/material/IconButton';
+import IconButton from '@mui/material/IconButton';
+import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { getUiOptions, TranslatableString } from '@rjsf/utils';
 
 import { getMuiProps } from '../util';
 

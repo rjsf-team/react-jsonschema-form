@@ -1,5 +1,7 @@
-import { FocusEvent, useCallback } from 'react';
+import type { FocusEvent } from 'react';
+import { useCallback } from 'react';
 import { Radio, Flex } from '@mantine/core';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
@@ -7,10 +9,6 @@ import {
   enumOptionsIndexForValue,
   getOptionValueFormat,
   optionId,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
 } from '@rjsf/utils';
 
 import { cleanupOptions } from '../utils';
@@ -94,7 +92,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
               id={optionId(id, i)}
               value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
               label={option.label}
-              disabled={Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1}
+              disabled={Array.isArray(enumDisabled) && enumDisabled.includes(option.value)}
               autoFocus={i === 0 && autofocus}
               onBlur={handleBlur}
               onFocus={handleFocus}

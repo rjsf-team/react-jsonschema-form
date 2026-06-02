@@ -1,22 +1,22 @@
 import { enumOptionValueDecoder } from '../src';
-import { EnumOptionsType, RJSFSchema } from '../src';
+import type { EnumOptionsType, RJSFSchema } from '../src';
 
-const stringOptions: EnumOptionsType<RJSFSchema>[] = [
+const stringOptions: EnumOptionsType[] = [
   { value: 'foo', label: 'Foo' },
   { value: 'bar', label: 'Bar' },
 ];
 
-const numericOptions: EnumOptionsType<RJSFSchema>[] = [
+const numericOptions: EnumOptionsType[] = [
   { value: 123, label: '123' },
   { value: 456, label: '456' },
 ];
 
-const booleanOptions: EnumOptionsType<RJSFSchema>[] = [
+const booleanOptions: EnumOptionsType[] = [
   { value: true, label: 'Yes' },
   { value: false, label: 'No' },
 ];
 
-const objectOptions: EnumOptionsType<RJSFSchema>[] = [
+const objectOptions: EnumOptionsType[] = [
   { value: { name: 'NY' } as unknown as RJSFSchema, label: 'New York' },
   { value: { name: 'LA' } as unknown as RJSFSchema, label: 'Los Angeles' },
 ];

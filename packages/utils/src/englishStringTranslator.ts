@@ -1,4 +1,4 @@
-import { TranslatableString } from './enums';
+import type { TranslatableString } from './enums';
 import replaceStringParameters from './replaceStringParameters';
 
 /** Translates a `TranslatableString` value `stringToTranslate` into english. When a `params` array is provided, each

@@ -1,5 +1,6 @@
 import { PureComponent } from 'react';
-import { ArrayFieldTemplateProps, ArrayFieldItemTemplateProps, RJSFSchema, getUiOptions } from '@rjsf/utils';
+import type { ArrayFieldTemplateProps, ArrayFieldItemTemplateProps, RJSFSchema } from '@rjsf/utils';
+import { getUiOptions } from '@rjsf/utils';
 import userEvent from '@testing-library/user-event';
 
 import { createFormComponent } from './testUtils';

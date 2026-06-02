@@ -1,5 +1,7 @@
-import { FocusEvent, useCallback } from 'react';
+import type { FocusEvent } from 'react';
+import { useCallback } from 'react';
 import { Checkbox, Flex, Input } from '@mantine/core';
+import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
@@ -8,10 +10,6 @@ import {
   getOptionValueFormat,
   optionId,
   titleId,
-  FormContextType,
-  WidgetProps,
-  RJSFSchema,
-  StrictRJSFSchema,
 } from '@rjsf/utils';
 
 import { cleanupOptions } from '../utils';
@@ -102,7 +100,7 @@ export default function CheckboxesWidget<
                 name={htmlName || id}
                 value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
                 label={option.label}
-                disabled={Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1}
+                disabled={Array.isArray(enumDisabled) && enumDisabled.includes(option.value)}
                 autoFocus={i === 0 && autofocus}
                 onBlur={handleBlur}
                 onFocus={handleFocus}

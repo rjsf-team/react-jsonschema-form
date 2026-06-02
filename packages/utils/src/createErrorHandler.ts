@@ -1,7 +1,7 @@
 import isPlainObject from 'lodash/isPlainObject';
 
 import { ERRORS_KEY } from './constants';
-import { FieldValidation, FormValidation, GenericObjectType } from './types';
+import type { FieldValidation, FormValidation, GenericObjectType } from './types';
 
 /** Given a `formData` object, recursively creates a `FormValidation` error handling structure around it
  *
@@ -19,15 +19,14 @@ export default function createErrorHandler<T = any>(formData: T): FormValidation
     },
   };
   if (Array.isArray(formData)) {
-    return formData.reduce((acc, value, key) => {
-      return { ...acc, [key]: createErrorHandler(value) };
-    }, handler);
+    return formData.reduce((acc, value, key) => ({ ...acc, [key]: createErrorHandler(value) }), handler);
   }
   if (isPlainObject(formData)) {
     const formObject: GenericObjectType = formData as GenericObjectType;
-    return Object.keys(formObject).reduce((acc, key) => {
-      return { ...acc, [key]: createErrorHandler(formObject[key]) };
-    }, handler as FormValidation<T>);
+    return Object.keys(formObject).reduce(
+      (acc, key) => ({ ...acc, [key]: createErrorHandler(formObject[key]) }),
+      handler as FormValidation<T>,
+    );
   }
   return handler as FormValidation<T>;
 }

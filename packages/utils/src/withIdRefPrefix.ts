@@ -1,7 +1,7 @@
 import isObject from 'lodash/isObject';
 
 import { REF_KEY, ROOT_SCHEMA_PREFIX } from './constants';
-import { RJSFSchema, StrictRJSFSchema } from './types';
+import type { RJSFSchema, StrictRJSFSchema } from './types';
 
 /** Takes a `node` object and transforms any contained `$ref` node variables with a prefix, recursively calling
  * `withIdRefPrefix` for any other elements.
@@ -10,7 +10,7 @@ import { RJSFSchema, StrictRJSFSchema } from './types';
  */
 function withIdRefPrefixObject<S extends StrictRJSFSchema = RJSFSchema>(node: S): S {
   for (const key in node) {
-    const realObj: { [k: string]: any } = node;
+    const realObj: Record<string, any> = node;
     const value = realObj[key];
     if (key === REF_KEY && typeof value === 'string' && value.startsWith('#')) {
       realObj[key] = ROOT_SCHEMA_PREFIX + value;

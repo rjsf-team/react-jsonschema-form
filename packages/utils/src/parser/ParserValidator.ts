@@ -3,7 +3,7 @@ import get from 'lodash/get';
 import { ID_KEY } from '../constants';
 import deepEquals from '../deepEquals';
 import hashForSchema from '../hashForSchema';
-import {
+import type {
   CustomValidator,
   ErrorSchema,
   ErrorTransformer,
@@ -18,9 +18,7 @@ import {
 
 /** The type of the map of schema hash to schema
  */
-export type SchemaMap<S extends StrictRJSFSchema = RJSFSchema> = {
-  [hash: string]: S;
-};
+export type SchemaMap<S extends StrictRJSFSchema = RJSFSchema> = Record<string, S>;
 
 /** An implementation of the `ValidatorType` interface that is designed for use in capturing schemas used by the
  * `isValid()` function. The rest of the implementation of the interface throws errors when it is attempted to be used.

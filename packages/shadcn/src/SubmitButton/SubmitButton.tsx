@@ -1,4 +1,5 @@
-import { FormContextType, getSubmitButtonOptions, RJSFSchema, StrictRJSFSchema, SubmitButtonProps } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, SubmitButtonProps } from '@rjsf/utils';
+import { getSubmitButtonOptions } from '@rjsf/utils';
 
 import { Button } from '../components/ui/button';
 import { cn } from '../lib/utils';

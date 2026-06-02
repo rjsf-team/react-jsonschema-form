@@ -3,7 +3,7 @@ import isEmpty from 'lodash/isEmpty';
 import { ANY_OF_KEY, ONE_OF_KEY, REF_KEY, RJSF_REF_KEY } from './constants';
 import findSchemaDefinition from './findSchemaDefinition';
 import mergeObjects from './mergeObjects';
-import { FormContextType, GenericObjectType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from './types';
+import type { FormContextType, GenericObjectType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from './types';
 
 /** Resolves the uiSchema for a given schema, considering `ui:definitions` stored in the registry.
  *
@@ -49,7 +49,7 @@ export default function resolveUiSchema<
     let resolvedSchema: S = schema;
     if (ref && schema[REF_KEY] && !(schema as GenericObjectType)[RJSF_REF_KEY]) {
       try {
-        resolvedSchema = findSchemaDefinition<S>(ref, registry.rootSchema as S);
+        resolvedSchema = findSchemaDefinition<S>(ref, registry.rootSchema);
       } catch (e) {
         console.warn('could not resolve $ref in resolveUiSchema:\n', e);
         return result;

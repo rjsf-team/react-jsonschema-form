@@ -1,11 +1,12 @@
 import { useCallback } from 'react';
-import Form, { IChangeEvent } from '@rjsf/core';
-import { RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
+import type { IChangeEvent } from '@rjsf/core';
+import Form from '@rjsf/core';
+import type { RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
 
 interface ValidatorSelectorProps {
   validator: string;
-  validators: { [validatorName: string]: ValidatorType };
+  validators: Record<string, ValidatorType>;
   select: (validator: string) => void;
 }
 

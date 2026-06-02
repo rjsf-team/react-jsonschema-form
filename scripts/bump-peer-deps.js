@@ -46,7 +46,7 @@ dirs.forEach((dir) => {
   });
   // Now write the package.json file with the update packageObject, maintaining the 2 character spacing and remembering
   // to add the OS end of line character
-  fs.writeFileSync(fileName, JSON.stringify(packageObject, null, 2) + os.EOL, function handleError(err) {
+  fs.writeFileSync(fileName, JSON.stringify(packageObject, null, 2) + os.EOL, (err) => {
     if (err) {
       return console.log(err);
     }

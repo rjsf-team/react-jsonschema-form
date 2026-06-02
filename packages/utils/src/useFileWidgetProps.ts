@@ -5,7 +5,7 @@ import { useCallback, useMemo } from 'react';
 import dataURItoBlob from './dataURItoBlob';
 
 /** The information about files used by a FileWidget */
-export type FileInfoType = {
+export interface FileInfoType {
   /** The url of the data containing the file */
   dataURL?: string | null;
   /** The name of the file */
@@ -14,7 +14,7 @@ export type FileInfoType = {
   size: number;
   /** The type of the file */
   type: string;
-};
+}
 
 export interface UseFileWidgetPropsResult {
   /** The list of FileInfoType contained within the FileWidget */
@@ -81,7 +81,7 @@ function processFiles(files: FileList) {
  * @returns - The list of `FileInfoType` objects extracted from the data urls
  */
 function extractFileInfo(dataURLs: string[]): FileInfoType[] {
-  return dataURLs.reduce((acc, dataURL) => {
+  return dataURLs.reduce<FileInfoType[]>((acc, dataURL) => {
     if (!dataURL) {
       return acc;
     }
@@ -100,7 +100,7 @@ function extractFileInfo(dataURLs: string[]): FileInfoType[] {
       // Invalid dataURI, so just ignore it.
       return acc;
     }
-  }, [] as FileInfoType[]);
+  }, []);
 }
 
 /** Hook which encapsulates the logic needed to read and convert a `value` of `File` or `File[]` into the

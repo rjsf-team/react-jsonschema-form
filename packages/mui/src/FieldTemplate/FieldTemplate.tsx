@@ -1,14 +1,9 @@
-import FormControl, { FormControlProps } from '@mui/material/FormControl';
-import Typography, { TypographyProps } from '@mui/material/Typography';
-import {
-  FieldTemplateProps,
-  FormContextType,
-  GenericObjectType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  getTemplate,
-  getUiOptions,
-} from '@rjsf/utils';
+import type { FormControlProps } from '@mui/material/FormControl';
+import FormControl from '@mui/material/FormControl';
+import type { TypographyProps } from '@mui/material/Typography';
+import Typography from '@mui/material/Typography';
+import type { FieldTemplateProps, FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { getTemplate, getUiOptions } from '@rjsf/utils';
 
 import { getMuiProps } from '../util';
 
@@ -91,7 +86,7 @@ export default function FieldTemplate<
     >
       <FormControl
         fullWidth={true}
-        error={rawErrors.length ? true : false}
+        error={!!rawErrors.length}
         required={required}
         {...muiSlotProps?.fieldFormControl}
         sx={otherMuiProps.sx}

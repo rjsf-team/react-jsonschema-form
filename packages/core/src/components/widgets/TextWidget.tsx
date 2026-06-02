@@ -1,4 +1,5 @@
-import { getTemplate, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { getTemplate } from '@rjsf/utils';
 
 /** The `TextWidget` component uses the `BaseInputTemplate`.
  *

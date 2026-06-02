@@ -13,7 +13,7 @@ import retrieveSchemaTest from './retrieveSchemaTest';
 import sanitizeDataForNewSchemaTest from './sanitizeDataForNewSchemaTest';
 import toPathSchemaTest from './toPathSchemaTest';
 
-export * from './types';
+export type * from './types';
 
 export {
   findFieldInSchemaTest,

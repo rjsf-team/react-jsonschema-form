@@ -1,12 +1,5 @@
-import {
-  DateElement,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  TranslatableString,
-  useAltDateWidgetProps,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { DateElement, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
 
 /** The `AltDateWidget` component provides an alternative date/time input
  * with individual fields for year, month, day, and optionally time components.

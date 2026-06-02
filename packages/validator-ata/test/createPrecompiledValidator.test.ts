@@ -1,6 +1,6 @@
-import { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema } from '@rjsf/utils';
 
-import { Localizer, ValidatorFunctions } from '../src';
+import type { Localizer, ValidatorFunctions } from '../src';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators';
 import createPrecompiledValidator from '../src/createPrecompiledValidator';
 import ATAPrecompiledValidator from '../src/precompiledValidator';
@@ -8,14 +8,14 @@ import superSchemaObj from './harness/superSchema.json';
 
 vi.mock('../src/precompiledValidator');
 
-type TestType = {
+interface TestType {
   foo: string;
   bar: boolean;
-};
+}
 
 function loadModule(code: string) {
   const module = { exports: {} as Record<string, any> };
-  // eslint-disable-next-line no-new-func
+  // oxlint-disable-next-line no-new-func, no-implied-eval
   new Function('module', 'exports', code)(module, module.exports);
   return module.exports;
 }

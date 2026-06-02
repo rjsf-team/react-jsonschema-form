@@ -1,4 +1,4 @@
-import { AliasReplacerArguments } from 'tsc-alias';
+import type { AliasReplacerArguments } from 'tsc-alias';
 
 /** A `tsc-alias` replacer that fixes up the imports `from 'lodash/xxxx'` to be `from `lodash/xxxx.js`
  *

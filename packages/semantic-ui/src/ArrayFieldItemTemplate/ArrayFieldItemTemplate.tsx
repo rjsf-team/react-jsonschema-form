@@ -1,11 +1,5 @@
-import {
-  ArrayFieldItemTemplateProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  getUiOptions,
-  getTemplate,
-} from '@rjsf/utils';
+import type { ArrayFieldItemTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { getUiOptions, getTemplate } from '@rjsf/utils';
 import { Button, Grid, Segment } from 'semantic-ui-react';
 
 import { getSemanticProps, MaybeWrap } from '../util';

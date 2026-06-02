@@ -1,6 +1,7 @@
 import { renderHook } from '@testing-library/react';
 
-import { FieldPathId, ID_KEY, useDeepCompareMemo } from '../src';
+import type { FieldPathId } from '../src';
+import { ID_KEY, useDeepCompareMemo } from '../src';
 
 const ID_1 = 'id-1';
 const ID_2 = 'id-2';

@@ -1,7 +1,7 @@
 import get from 'lodash/get';
 import uniqueId from 'lodash/uniqueId';
 
-import { TestIdShape } from './types';
+import type { TestIdShape } from './types';
 
 /** Returns an object of test IDs that can only be used in test mode. If the function is called in a test environment
  * (`NODE_ENV === 'test'`, this is set by vitest) then a Proxy object will be returned. If a key within the returned

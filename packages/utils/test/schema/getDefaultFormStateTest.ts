@@ -1,7 +1,8 @@
 import noop from 'lodash/noop';
 import type { MockInstance } from 'vitest';
 
-import { createSchemaUtils, Experimental_DefaultFormStateBehavior, getDefaultFormState, RJSFSchema } from '../../src';
+import type { Experimental_DefaultFormStateBehavior, RJSFSchema } from '../../src';
+import { createSchemaUtils, getDefaultFormState } from '../../src';
 import {
   AdditionalItemsHandling,
   computeDefaultBasedOnSchemaTypeAndDefaults,
@@ -14,7 +15,7 @@ import {
 } from '../../src/schema/getDefaultFormState';
 import { resolveDependencies } from '../../src/schema/retrieveSchema';
 import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData';
-import { TestValidatorType } from './types';
+import type { TestValidatorType } from './types';
 
 export default function getDefaultFormStateTest(testValidator: TestValidatorType) {
   describe('getDefaultFormState()', () => {
@@ -6491,8 +6492,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(Array.isArray(result.config.items)).toBe(true);
 
         // Verify objects are independent instances - modifying one shouldn't affect the other
-        (result.config.items[0] as any).field = 'test-value-1';
-        expect((result.config.items[1] as any).field).toBeUndefined();
+        result.config.items[0].field = 'test-value-1';
+        expect(result.config.items[1].field).toBeUndefined();
         expect(result.config.items[0]).not.toBe(result.config.items[1]);
       });
 
@@ -6508,8 +6509,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(Array.isArray(result.config.items)).toBe(true);
 
         // Verify objects are independent instances - modifying one shouldn't affect the other
-        (result.config.items[0] as any).field = 'test-value-1';
-        expect((result.config.items[1] as any).field).toBeUndefined();
+        result.config.items[0].field = 'test-value-1';
+        expect(result.config.items[1].field).toBeUndefined();
         expect(result.config.items[0]).not.toBe(result.config.items[1]);
       });
 
@@ -6538,9 +6539,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(Array.isArray(result)).toBe(true);
 
         // Verify objects are independent instances
-        (result![0] as any).field = 'test-value-1';
-        (result![1] as any).field = 'test-value-2';
-        expect((result![2] as any).field).toBeUndefined();
+        result![0].field = 'test-value-1';
+        result![1].field = 'test-value-2';
+        expect(result![2].field).toBeUndefined();
         expect(result![0]).not.toBe(result![1]);
         expect(result![1]).not.toBe(result![2]);
         expect(result![0]).not.toBe(result![2]);
@@ -6572,8 +6573,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(Array.isArray(result)).toBe(true);
 
         // Verify objects are independent instances - modifying one shouldn't affect the other
-        (result![0] as any).field = 'modified-value';
-        expect((result![1] as any).field).toBe('default-value');
+        result![0].field = 'modified-value';
+        expect(result![1].field).toBe('default-value');
         expect(result![0]).not.toBe(result![1]);
       });
 
@@ -6611,10 +6612,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(Array.isArray(result)).toBe(true);
 
         // Verify nested objects are independent instances
-        (result![0] as any).nested.value = 'modified-nested-value';
-        expect((result![1] as any).nested.value).toBe('nested-default');
+        result![0].nested.value = 'modified-nested-value';
+        expect(result![1].nested.value).toBe('nested-default');
         expect(result![0]).not.toBe(result![1]);
-        expect((result![0] as any).nested).not.toBe((result![1] as any).nested);
+        expect(result![0].nested).not.toBe(result![1].nested);
       });
     });
   });

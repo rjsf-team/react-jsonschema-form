@@ -1,4 +1,4 @@
-import { DescriptionFieldProps } from '@rjsf/utils';
+import type { DescriptionFieldProps } from '@rjsf/utils';
 import { render } from '@testing-library/react';
 
 import { getTestRegistry } from '../src';

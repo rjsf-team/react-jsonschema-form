@@ -1,19 +1,17 @@
-import { FocusEvent, useMemo, useRef } from 'react';
-import { createListCollection, SelectValueChangeDetails, Select as ChakraSelect } from '@chakra-ui/react';
+import type { FocusEvent } from 'react';
+import { useMemo, useRef } from 'react';
+import type { SelectValueChangeDetails } from '@chakra-ui/react';
+import { createListCollection, Select as ChakraSelect } from '@chakra-ui/react';
+import type { EnumOptionsType, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
-  EnumOptionsType,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
   labelValue,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
 } from '@rjsf/utils';
-import { OptionsOrGroups } from 'chakra-react-select';
+import type { OptionsOrGroups } from 'chakra-react-select';
 
 import { Field } from '../components/ui/field';
 import { SelectRoot, SelectTrigger, SelectValueText } from '../components/ui/select';
@@ -45,9 +43,8 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
 
-  const _onMultiChange = ({ value }: SelectValueChangeDetails) => {
-    return onChange(enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, emptyValue));
-  };
+  const _onMultiChange = ({ value }: SelectValueChangeDetails) =>
+    onChange(enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, emptyValue));
 
   const _onSingleChange = ({ value }: SelectValueChangeDetails) => {
     const selected = enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, emptyValue);
@@ -69,7 +66,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         return {
           label,
           value: enumOptionValueEncoder(value, index, optionValueFormat),
-          disabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1,
+          disabled: Array.isArray(enumDisabled) && enumDisabled.includes(value),
         };
       });
       if (showPlaceholderOption) {

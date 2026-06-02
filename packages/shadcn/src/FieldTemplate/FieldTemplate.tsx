@@ -1,11 +1,5 @@
-import {
-  FieldTemplateProps,
-  FormContextType,
-  getTemplate,
-  getUiOptions,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { getTemplate, getUiOptions } from '@rjsf/utils';
 
 import { cn } from '../lib/utils';
 

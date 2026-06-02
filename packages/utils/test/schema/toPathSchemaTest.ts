@@ -1,9 +1,10 @@
 import noop from 'lodash/noop';
 import type { MockInstance } from 'vitest';
 
-import { toPathSchema, RJSFSchema, createSchemaUtils } from '../../src';
+import type { RJSFSchema } from '../../src';
+import { toPathSchema, createSchemaUtils } from '../../src';
 import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData';
-import { TestValidatorType } from './types';
+import type { TestValidatorType } from './types';
 
 export default function toPathSchemaTest(testValidator: TestValidatorType) {
   describe('toPathSchema()', () => {

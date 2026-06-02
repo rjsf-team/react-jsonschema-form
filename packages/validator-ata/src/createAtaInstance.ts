@@ -54,7 +54,7 @@ export default function createAtaInstance(schema: object, options: CustomValidat
     'data-url': asFormatChecker(DATA_URL_FORMAT_REGEX),
   };
   if (isObject(customFormats)) {
-    for (const [name, spec] of Object.entries(customFormats!)) {
+    for (const [name, spec] of Object.entries(customFormats)) {
       formats[name] = asFormatChecker(spec);
     }
   }

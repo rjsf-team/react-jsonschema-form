@@ -1,4 +1,4 @@
-import { OptionValueFormat } from './types';
+import type { OptionValueFormat } from './types';
 
 /** Resolves the effective `optionValueFormat` for enum-backed widgets.
  *

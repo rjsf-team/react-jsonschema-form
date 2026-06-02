@@ -1,5 +1,5 @@
 import getUiOptions from './getUiOptions';
-import { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from './types';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from './types';
 
 /** Checks whether the field described by `schema`, having the `uiSchema` and `formData` supports expanding. The UI for
  * the field can expand if it has additional properties, is not forced as non-expandable by the `uiSchema` and the

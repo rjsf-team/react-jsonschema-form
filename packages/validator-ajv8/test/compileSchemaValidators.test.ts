@@ -1,4 +1,4 @@
-import { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema } from '@rjsf/utils';
 import { writeFileSync } from 'fs';
 import noop from 'lodash/noop';
 import type { MockInstance } from 'vitest';

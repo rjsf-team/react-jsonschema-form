@@ -1,4 +1,4 @@
-import { GridTemplateProps } from '@rjsf/utils';
+import type { GridTemplateProps } from '@rjsf/utils';
 
 /** Renders a `GridTemplate` for bootstrap 3, which is expecting the column information coming in via the `className`
  * prop. Also spreads all the other props provided by the user directly on the div.

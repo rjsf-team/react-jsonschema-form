@@ -1,4 +1,6 @@
-import { Button, ButtonProps } from '@fluentui/react-components';
+import { memo } from 'react';
+import type { ButtonProps } from '@fluentui/react-components';
+import { Button } from '@fluentui/react-components';
 import {
   ArrowSortUpRegular,
   ArrowSortDownRegular,
@@ -6,7 +8,8 @@ import {
   SubtractRegular,
   DismissRegular,
 } from '@fluentui/react-icons';
-import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
+import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { TranslatableString } from '@rjsf/utils';
 
 export type FluentIconButtonProps<
   T = any,
@@ -14,17 +17,17 @@ export type FluentIconButtonProps<
   F extends FormContextType = any,
 > = IconButtonProps<T, S, F> & Omit<ButtonProps, 'onChange' | 'as'>;
 
-export default function FluentIconButton<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(props: FluentIconButtonProps<T, S, F>) {
+function FluentIconButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: FluentIconButtonProps<T, S, F>,
+) {
   const { color, uiSchema, registry, ...otherProps } = props;
 
   return <Button {...otherProps} color='secondary' />;
 }
+const FluentIconButton = memo(FluentIconButtonFn) as typeof FluentIconButtonFn;
+export default FluentIconButton;
 
-export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function CopyButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: FluentIconButtonProps<T, S, F>,
 ) {
   const {
@@ -38,8 +41,9 @@ export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     />
   );
 }
+export const CopyButton = memo(CopyButtonFn) as typeof CopyButtonFn;
 
-export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function MoveDownButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: FluentIconButtonProps<T, S, F>,
 ) {
   const {
@@ -53,8 +57,9 @@ export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema,
     />
   );
 }
+export const MoveDownButton = memo(MoveDownButtonFn) as typeof MoveDownButtonFn;
 
-export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function MoveUpButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: FluentIconButtonProps<T, S, F>,
 ) {
   const {
@@ -68,8 +73,9 @@ export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
     />
   );
 }
+export const MoveUpButton = memo(MoveUpButtonFn) as typeof MoveUpButtonFn;
 
-export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function RemoveButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: FluentIconButtonProps<T, S, F>,
 ) {
   const {
@@ -83,8 +89,9 @@ export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
     />
   );
 }
+export const RemoveButton = memo(RemoveButtonFn) as typeof RemoveButtonFn;
 
-export function ClearButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function ClearButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: FluentIconButtonProps<T, S, F>,
 ) {
   const {
@@ -98,3 +105,4 @@ export function ClearButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
     />
   );
 }
+export const ClearButton = memo(ClearButtonFn) as typeof ClearButtonFn;

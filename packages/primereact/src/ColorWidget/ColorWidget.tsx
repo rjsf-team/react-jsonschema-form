@@ -1,12 +1,6 @@
-import { ChangeEvent } from 'react';
-import {
-  ariaDescribedByIds,
-  FormContextType,
-  getInputProps,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { ChangeEvent } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, getInputProps } from '@rjsf/utils';
 import { ColorPicker } from 'primereact/colorpicker';
 
 /** The `ColorWidget` component renders a color picker.

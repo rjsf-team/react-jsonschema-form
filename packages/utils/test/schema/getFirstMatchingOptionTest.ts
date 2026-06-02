@@ -1,7 +1,8 @@
 import noop from 'lodash/noop';
 
-import { createSchemaUtils, getFirstMatchingOption, RJSFSchema } from '../../src';
-import { TestValidatorType } from './types';
+import type { RJSFSchema } from '../../src';
+import { createSchemaUtils, getFirstMatchingOption } from '../../src';
+import type { TestValidatorType } from './types';
 
 export default function getFirstMatchingOptionTest(testValidator: TestValidatorType) {
   describe('getFirstMatchingOption()', () => {

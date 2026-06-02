@@ -1,4 +1,5 @@
-import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, getTemplate } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { getTemplate } from '@rjsf/utils';
 
 /** The `TextareaWidget` is a widget for rendering input fields as textarea.
  *

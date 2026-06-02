@@ -1,14 +1,12 @@
-import { ChangeEvent, FocusEvent, useCallback } from 'react';
+import type { ChangeEvent, FocusEvent } from 'react';
+import { useCallback } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   descriptionId,
   getTemplate,
   labelValue,
   schemaRequiresTrueValue,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
   getUiOptions,
 } from '@rjsf/utils';
 
