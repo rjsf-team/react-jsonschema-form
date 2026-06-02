@@ -89,6 +89,44 @@ describe('oneOf', () => {
     expect(node.querySelectorAll('span.required')).toHaveLength(2);
   });
 
+  it('should render the selected oneOf const option description for select fields', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        dessert: {
+          type: 'string',
+          oneOf: [
+            {
+              const: 'vanilla',
+              title: 'Vanilla',
+              description: 'Classic vanilla bean description should render for vanilla',
+            },
+            {
+              const: 'chocolate',
+              title: 'Chocolate',
+              description: 'Dark chocolate description should render for chocolate',
+            },
+          ],
+        },
+      },
+    };
+
+    const { node } = createFormComponent({
+      schema,
+      formData: { dessert: 'vanilla' },
+    });
+    const select = node.querySelector('#root_dessert') as HTMLSelectElement;
+
+    expect([...select.options].map((option) => option.textContent)).toEqual(['', 'Vanilla', 'Chocolate']);
+    expect(node).toHaveTextContent('Classic vanilla bean description should render for vanilla');
+    expect(node).not.toHaveTextContent('Dark chocolate description should render for chocolate');
+
+    await user.selectOptions(select, '1');
+
+    expect(node).not.toHaveTextContent('Classic vanilla bean description should render for vanilla');
+    expect(node).toHaveTextContent('Dark chocolate description should render for chocolate');
+  });
+
   it('should assign a default value and set defaults on option change', async () => {
     const { node, onChange } = createFormComponent({
       schema: {

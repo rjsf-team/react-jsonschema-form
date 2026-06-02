@@ -17,12 +17,14 @@ import {
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
   descriptionId,
+  enumOptionsIndexForValue,
   getSchemaType,
   getTemplate,
   getUiOptions,
   ID_KEY,
   isFormDataAvailable,
   ONE_OF_KEY,
+  optionsList,
   resolveUiSchema,
   shouldRender,
   shouldRenderOptionalField,
@@ -84,6 +86,24 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   }
 
   return componentName in fields ? fields[componentName] : fields['FallbackField'];
+}
+
+function getSelectedOptionDescription<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>(schema: S, uiSchema: FieldProps<T, S, F>['uiSchema'], formData: T | undefined) {
+  if (!schema.oneOf && !schema.anyOf) {
+    return undefined;
+  }
+
+  const enumOptions = optionsList<T, S, F>(schema, uiSchema);
+  const selectedIndex = enumOptionsIndexForValue<S>(formData, enumOptions);
+  if (typeof selectedIndex !== 'string') {
+    return undefined;
+  }
+
+  return enumOptions?.[Number(selectedIndex)]?.schema?.description;
 }
 
 /** The `SchemaFieldRender` component is the work-horse of react-jsonschema-form, determining what kind of real field to
@@ -226,8 +246,13 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     label = registry.translateString(TranslatableString.DeprecatedLabel, [label]);
   }
 
-  const description = uiOptions.description || props.schema.description || schema.description || '';
-  const { help } = uiOptions;
+  const selectedOptionDescription =
+    schemaUtils.isSelect(schema) && !XxxOfField
+      ? getSelectedOptionDescription<T, S, F>(schema, uiSchema, formData)
+      : '';
+  const description =
+    uiOptions.description || props.schema.description || schema.description || selectedOptionDescription || '';
+  const help = uiOptions.help;
   const hidden = uiOptions.widget === 'hidden' || deprecatedHandling === 'hide';
 
   const classNames = ['rjsf-field', `rjsf-field-${getSchemaType(schema)}`];
