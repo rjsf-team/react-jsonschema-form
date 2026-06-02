@@ -4472,6 +4472,40 @@ describe('omitExtraData prunes empty optional objects', () => {
   });
 });
 
+describe('optional object with required children after clearing inputs', () => {
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: {
+      test: {
+        type: 'object',
+        properties: {
+          field1: { type: 'string' },
+          field2: { type: 'string' },
+        },
+        required: ['field1', 'field2'],
+      },
+    },
+  };
+
+  it('submits without errors after the user clears all fields in an optional object', async () => {
+    const { node, onSubmit, onError } = createFormComponent({
+      schema,
+      formData: {},
+      noHtml5Validate: true,
+    });
+
+    await user.type(node.querySelector('#root_test_field1')!, 'value');
+    await user.type(node.querySelector('#root_test_field2')!, 'value');
+    await user.clear(node.querySelector('#root_test_field1')!);
+    await user.clear(node.querySelector('#root_test_field2')!);
+
+    await submitForm(node, user);
+
+    expect(onError).not.toHaveBeenCalled();
+    expectToHaveBeenCalledWithFormData(onSubmit, {}, true);
+  });
+});
+
 describe('Async errors', () => {
   it('should render the async errors', () => {
     const schema: RJSFSchema = {

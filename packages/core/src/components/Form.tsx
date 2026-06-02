@@ -45,6 +45,7 @@ import {
   NameGeneratorFunction,
   getUsedFormData,
   getFieldNames,
+  isValueEmpty,
   ANY_OF_KEY,
   ONE_OF_KEY,
 } from '@rjsf/utils';
@@ -885,6 +886,69 @@ export default class Form<
     return schemaUtils.omitExtraData(schema, formData);
   };
 
+  /** Removes optional object branches that became empty after their child fields were cleared. This keeps validation
+   * aligned with untouched optional objects without enabling full `omitExtraData` filtering.
+   */
+  pruneOptionalEmptyObjects = (formData?: T): T | undefined => {
+    const { schema, schemaUtils } = this.state;
+
+    const prune = (currentSchema: S, value: unknown): unknown => {
+      const resolvedSchema = schemaUtils.retrieveSchema(currentSchema, value as T);
+
+      if (Array.isArray(value)) {
+        const { items } = resolvedSchema;
+        if (!items) {
+          return value;
+        }
+        return value.map((item, index) => {
+          const itemSchema = Array.isArray(items) ? (items[index] as S) : (items as S);
+          return itemSchema ? prune(itemSchema, item) : item;
+        });
+      }
+
+      if (!isObject(value) || !isObject(resolvedSchema.properties)) {
+        return value;
+      }
+
+      const data = value as Record<string, unknown>;
+      const result: Record<string, unknown> = {};
+      const requiredFields = new Set((resolvedSchema.required ?? []) as string[]);
+
+      Object.keys(data).forEach((key) => {
+        const propertySchema = resolvedSchema.properties![key] as S | undefined;
+        const propertyValue = data[key];
+
+        if (!propertySchema || (!isObject(propertyValue) && !Array.isArray(propertyValue))) {
+          result[key] = propertyValue;
+          return;
+        }
+
+        const prunedValue = prune(propertySchema, propertyValue);
+        const effectivePropertySchema = schemaUtils.retrieveSchema(propertySchema, propertyValue as T);
+        const isFixedObject =
+          isObject(propertyValue) &&
+          isObject(effectivePropertySchema.properties) &&
+          effectivePropertySchema.additionalProperties === undefined &&
+          effectivePropertySchema.patternProperties === undefined;
+        const onlySchemaDefinedKeys =
+          isFixedObject &&
+          Object.keys(propertyValue as Record<string, unknown>).every(
+            (propertyKey) => effectivePropertySchema.properties![propertyKey],
+          );
+
+        if (!requiredFields.has(key) && isFixedObject && onlySchemaDefinedKeys && isValueEmpty(prunedValue)) {
+          return;
+        }
+
+        result[key] = prunedValue;
+      });
+
+      return result;
+    };
+
+    return prune(schema, formData) as T | undefined;
+  };
+
   /** Allows a user to set a value for the provided `fieldPath`, which must be either a dotted path to the field OR a
    * `FieldPathList`. To set the root element, used either `''` or `[]` for the path. Passing undefined will clear the
    * value in the field.
@@ -1200,9 +1264,8 @@ export default class Form<
     const { omitExtraData, extraErrors, noValidate, onSubmit } = this.props;
     let { formData: newFormData } = this.state;
 
-    if (omitExtraData === true) {
-      newFormData = this.omitExtraData(newFormData);
-    }
+    newFormData =
+      omitExtraData === true ? this.omitExtraData(newFormData) : this.pruneOptionalEmptyObjects(newFormData);
 
     if (noValidate || this.validateFormWithFormData(newFormData)) {
       // There are no errors generated through schema validation.
@@ -1389,9 +1452,8 @@ export default class Form<
   validateForm() {
     const { omitExtraData } = this.props;
     let { formData: newFormData } = this.state;
-    if (omitExtraData === true) {
-      newFormData = this.omitExtraData(newFormData);
-    }
+    newFormData =
+      omitExtraData === true ? this.omitExtraData(newFormData) : this.pruneOptionalEmptyObjects(newFormData);
     return this.validateFormWithFormData(newFormData);
   }
 
