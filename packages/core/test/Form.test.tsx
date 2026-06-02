@@ -1864,7 +1864,7 @@ describeRepeated('Form common', (createFormComponent) => {
           name: 'required',
           params: { missingProperty: 'street_address' },
           property: '.shipping_address.street_address',
-          schemaPath: '#/properties/shipping_address/required',
+          schemaPath: '#/definitions/address/required',
           stack: "must have required property 'street_address'",
           title: '',
         },
@@ -1873,7 +1873,7 @@ describeRepeated('Form common', (createFormComponent) => {
           name: 'required',
           params: { missingProperty: 'city' },
           property: '.shipping_address.city',
-          schemaPath: '#/properties/shipping_address/required',
+          schemaPath: '#/definitions/address/required',
           stack: "must have required property 'city'",
           title: '',
         },
@@ -1882,7 +1882,7 @@ describeRepeated('Form common', (createFormComponent) => {
           name: 'required',
           params: { missingProperty: 'state' },
           property: '.shipping_address.state',
-          schemaPath: '#/properties/shipping_address/required',
+          schemaPath: '#/definitions/address/required',
           stack: "must have required property 'state'",
           title: '',
         },
@@ -6255,5 +6255,68 @@ describe('enum-based array values do not update when dependencies change (#1357 
       },
       'root_select_item',
     );
+  });
+});
+
+describe('dependencies/oneOf constraint violation produces validation errors on submit (#3368)', () => {
+  it('submitting form data that matches no oneOf branch in dependencies reports errors and blocks submission', async () => {
+    const schema: RJSFSchema = {
+      dependencies: {
+        commands: {
+          oneOf: [
+            {
+              properties: {
+                commands: {
+                  enum: ['docker_pull'],
+                },
+                image: {
+                  default: 'sasdasd',
+                  description: 'Images to pull - the image name specifically and defaults to latest',
+                  title: 'Images',
+                  type: 'string',
+                },
+              },
+            },
+            {
+              properties: {
+                commands: {
+                  enum: ['docker_prune'],
+                },
+                prune_opts: {
+                  default: 'until_24',
+                  description: 'The prune options to get the images from',
+                  enum: ['until_24'],
+                  title: 'Prune Options',
+                },
+              },
+            },
+          ],
+        },
+      },
+      properties: {
+        commands: {
+          description: 'Commands for host',
+          enum: ['docker_pull', 'docker_ps', 'docker_images', 'docker_prune'],
+          title: 'Commands',
+        },
+        env: {
+          description: 'The env we SSH and make requests against',
+          enum: ['develop'],
+          title: 'Environment (Will connect against container host)',
+        },
+      },
+      required: ['commands', 'env'],
+      type: 'object',
+    };
+    const formData = {
+      image: 'sasdasd',
+      commands: 'docker_ps',
+      env: 'develop',
+    };
+    const { node, onSubmit, onError } = createFormComponent({ schema, formData });
+    await submitForm(node, user);
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(onError).toHaveBeenCalledTimes(1);
   });
 });
