@@ -593,7 +593,7 @@ Previously, setting `removeEmptyOptionalObjects` to `true` caused the form to re
 
 ## schema
 
-**Required**! Form schema. We support JSON schema draft-07 by default. See [Schema Reference](https://json-schema.org/draft-07/json-schema-release-notes.html) for more information.
+**Required**! Form schema. We support JSON Schema draft-07 by default. Newer drafts can be used for validation with a customized validator, but newer keywords may not affect form rendering. See [JSON Schema draft support](../usage/validation.md#json-schema-draft-support) for more information.
 
 ## showErrorList
 

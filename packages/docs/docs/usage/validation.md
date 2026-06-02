@@ -451,7 +451,7 @@ If you want to have the field set to a default value when empty you can provide 
 
 ## Custom meta schema validation
 
-To have your schemas validated against any other meta schema than draft-07 (the current version of [JSON Schema](http://json-schema.org/)), make sure your schema has a `$schema` attribute that enables the validator to use the correct meta schema.
+To have your schemas validated against any other meta schema than draft-07, make sure your schema has a `$schema` attribute that enables the validator to use the correct meta schema.
 For example:
 
 ```json
@@ -462,7 +462,8 @@ For example:
 ```
 
 Note that react-jsonschema-form supports JSON Schema draft-07 by default.
-To support additional meta schemas, you can create and pass to the `Form` component a customized `@rjsf/validator-ajv8`:
+To validate form data against additional meta schemas, you can create and pass to the `Form` component a customized `@rjsf/validator-ajv8`.
+This configures validation only; the form rendering code has its own schema keyword support, described in [JSON Schema draft support](#json-schema-draft-support).
 
 ### additionalMetaSchemas
 
@@ -683,6 +684,43 @@ const schema: RJSFSchema = {
 const validator = customizeValidator({ AjvClass: Ajv2019 });
 // or
 // const validator = customizeValidator({ AjvClass: Ajv2020 });
+
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+```
+
+## JSON Schema draft support
+
+RJSF has two separate layers of JSON Schema support:
+
+- Validation is handled by the validator you pass to `Form`.
+- Form rendering is handled by RJSF's schema utilities and fields.
+
+The default `@rjsf/validator-ajv8` instance supports draft-07 validation. You can use `customizeValidator({ AjvClass })` to validate newer drafts such as 2019-09 or 2020-12, but that does not make every newer keyword affect form rendering.
+
+| Draft / feature | Validation support | Form rendering support |
+| --- | --- | --- |
+| draft-07 | Supported by default with `@rjsf/validator-ajv8` | Supported by default |
+| draft-2019-09 | Supported when you use an AJV class such as `Ajv2019` | Partially supported; draft-07-compatible schemas generally work, but newer rendering keywords are not broadly implemented |
+| draft-2020-12 | Supported when you use an AJV class such as `Ajv2020` | Partially supported; draft-07-compatible schemas generally work, but newer rendering keywords are not broadly implemented |
+| `deprecated` | Requires a validator configured for draft-2019-09 or newer | Supported for field labels; see [Deprecated fields](../json-schema/single.md#deprecated-fields) |
+| `prefixItems` tuple syntax | Requires a validator configured for draft-2020-12 | Not currently used by RJSF's array rendering; use draft-07 tuple syntax with array-form `items` for rendered tuple arrays |
+| `$dynamicRef` / `$dynamicAnchor` | Requires a validator configured for draft-2020-12 | Not currently resolved by RJSF schema utilities |
+| `unevaluatedProperties` / `unevaluatedItems` | Requires a validator configured for draft-2019-09 or newer | Not currently used by RJSF's object or array rendering |
+
+If your schema declares `$schema: 'https://json-schema.org/draft/2020-12/schema'` and only uses keywords that RJSF already understands for rendering, configure the validator with `Ajv2020` to avoid meta-schema validation errors:
+
+```tsx
+import { Form } from '@rjsf/core';
+import { RJSFSchema } from '@rjsf/utils';
+import { customizeValidator } from '@rjsf/validator-ajv8';
+import Ajv2020 from 'ajv/dist/2020';
+
+const schema: RJSFSchema = {
+  $schema: 'https://json-schema.org/draft/2020-12/schema',
+  type: 'string',
+};
+
+const validator = customizeValidator({ AjvClass: Ajv2020 });
 
 render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
