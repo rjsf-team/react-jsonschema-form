@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
+  enumOptionsIndexForValue,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
@@ -70,6 +71,16 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
 
   const selectValue = enumOptionSelectedValue<S>(value, enumOptions, multiple, optionValueFormat, emptyValue);
   const showPlaceholderOption = !multiple && schema.default === undefined;
+  if (
+    !multiple &&
+    Array.isArray(enumOptions) &&
+    schema.default !== undefined &&
+    enumOptionsIndexForValue<S>(schema.default, enumOptions, multiple) === undefined
+  ) {
+    console.error(
+      `The schema default value "${schema.default}" is not one of the values in the enum options for "${id}"`,
+    );
+  }
 
   return (
     // oxlint-disable-next-line jsx-a11y/no-autofocus

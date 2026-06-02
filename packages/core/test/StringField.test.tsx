@@ -13,7 +13,7 @@ import {
   expectToHaveBeenCalledWithFormData,
 } from './testUtils';
 
-setupConsoleErrorSuppression();
+const consoleErrorSuppression = setupConsoleErrorSuppression();
 
 const mockFileReader = {
   // oxlint-disable-next-line no-unused-vars
@@ -488,6 +488,20 @@ describe('StringField', () => {
       await submitForm(node, user);
 
       expectToHaveBeenCalledWithFormData(onSubmit, 'bar', true);
+    });
+
+    it('should warn when the default value is not in the enum options', () => {
+      createFormComponent({
+        schema: {
+          type: 'string',
+          enum: ['foo', 'bar'],
+          default: 'baz',
+        },
+      });
+
+      expect(consoleErrorSuppression.consoleSpy).toHaveBeenCalledWith(
+        'The schema default value "baz" is not one of the values in the enum options for "root"',
+      );
     });
 
     it('should reflect the change in the change event', async () => {
