@@ -588,11 +588,11 @@ export function retrieveSchemaInternal<
       try {
         const withContainsSchemas = [] as S[];
         const withoutContainsSchemas = [] as S[];
-        resolvedSchema.allOf?.forEach((s) => {
-          if (typeof s === 'object' && s.contains) {
-            withContainsSchemas.push(s as S);
+        resolvedSchema.allOf?.forEach((allOfItem) => {
+          if (typeof allOfItem === 'object' && allOfItem.contains) {
+            withContainsSchemas.push(allOfItem as S);
           } else {
-            withoutContainsSchemas.push(s as S);
+            withoutContainsSchemas.push(allOfItem as S);
           }
         });
         if (withContainsSchemas.length) {
@@ -612,18 +612,18 @@ export function retrieveSchemaInternal<
     }
     if (PROPERTIES_KEY in resolvedSchema && PATTERN_PROPERTIES_KEY in resolvedSchema) {
       resolvedSchema = Object.keys(resolvedSchema.properties!).reduce(
-        (schema, key) => {
-          const matchingProperties = getMatchingPatternProperties(schema, key);
+        (accumSchema, key) => {
+          const matchingProperties = getMatchingPatternProperties(accumSchema, key);
           if (!isEmpty(matchingProperties)) {
-            schema.properties[key] = retrieveSchema<T, S, F>(
+            accumSchema.properties[key] = retrieveSchema<T, S, F>(
               validator,
-              { allOf: [schema.properties[key], ...Object.values(matchingProperties)] } as S,
+              { allOf: [accumSchema.properties[key], ...Object.values(matchingProperties)] } as S,
               rootSchema,
               get(rawFormData, [key]) as T,
               experimental_customMergeAllOf,
             );
           }
-          return schema;
+          return accumSchema;
         },
         {
           ...resolvedSchema,
@@ -854,7 +854,7 @@ export function withDependentProperties<S extends StrictRJSFSchema = RJSFSchema>
   const required = Array.isArray(schema.required)
     ? Array.from(new Set([...schema.required, ...additionallyRequired]))
     : additionallyRequired;
-  return { ...schema, required: required };
+  return { ...schema, required };
 }
 
 /** Merges a dependent schema into the `schema` dealing with oneOfs and references. Passes the `expandAllBranches` flag
@@ -988,6 +988,6 @@ export function withExactlyOneSubschema<
       recurseList,
       experimental_customMergeAllOf,
     );
-    return schemas.map((s) => mergeSchemas(schema, s) as S);
+    return schemas.map((resolvedSubschema) => mergeSchemas(schema, resolvedSubschema) as S);
   });
 }

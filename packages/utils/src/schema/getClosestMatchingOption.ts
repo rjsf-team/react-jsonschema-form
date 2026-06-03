@@ -91,7 +91,7 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
             );
           }
           if ((has(value, ONE_OF_KEY) || has(value, ANY_OF_KEY)) && formValue) {
-            const key = has(value, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
+            const xxxOfKey = has(value, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
             const discriminator = getDiscriminatorFieldFromSchema<S>(value as S);
             return (
               score +
@@ -99,7 +99,7 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
                 validator,
                 rootSchema,
                 formValue,
-                get(value, key) as S[],
+                get(value, xxxOfKey) as S[],
                 -1,
                 discriminator,
                 experimental_customMergeAllOf,

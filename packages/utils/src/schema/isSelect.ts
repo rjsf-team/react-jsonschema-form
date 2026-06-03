@@ -28,7 +28,7 @@ export default function isSelect<T = any, S extends StrictRJSFSchema = RJSFSchem
     return true;
   }
   if (Array.isArray(altSchemas)) {
-    return altSchemas.every((altSchemas) => typeof altSchemas !== 'boolean' && isConstant(altSchemas));
+    return altSchemas.every((altSchema) => typeof altSchema !== 'boolean' && isConstant(altSchema));
   }
   return false;
 }

@@ -24,20 +24,20 @@ function parseSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   schema: S,
 ) {
   const schemas = retrieveSchemaInternal<T, S, F>(validator, schema, rootSchema, undefined, true);
-  schemas.forEach((schema) => {
-    const sameSchemaIndex = recurseList.findIndex((item) => deepEquals(item, schema));
+  schemas.forEach((localSchema) => {
+    const sameSchemaIndex = recurseList.findIndex((item) => deepEquals(item, localSchema));
     if (sameSchemaIndex === -1) {
-      recurseList.push(schema);
-      const allOptions = resolveAnyOrOneOfSchemas<T, S, F>(validator, schema, rootSchema, true);
+      recurseList.push(localSchema);
+      const allOptions = resolveAnyOrOneOfSchemas<T, S, F>(validator, localSchema, rootSchema, true);
       allOptions.forEach((s) => {
         if (PROPERTIES_KEY in s && s[PROPERTIES_KEY]) {
-          forEach(schema[PROPERTIES_KEY], (value) => {
+          forEach(localSchema[PROPERTIES_KEY], (value) => {
             parseSchema<T, S, F>(validator, recurseList, rootSchema, value as S);
           });
         }
       });
-      if (ITEMS_KEY in schema && !Array.isArray(schema.items) && typeof schema.items !== 'boolean') {
-        parseSchema<T, S, F>(validator, recurseList, rootSchema, schema.items as S);
+      if (ITEMS_KEY in localSchema && !Array.isArray(localSchema.items) && typeof localSchema.items !== 'boolean') {
+        parseSchema<T, S, F>(validator, recurseList, rootSchema, localSchema.items as S);
       }
     }
   });

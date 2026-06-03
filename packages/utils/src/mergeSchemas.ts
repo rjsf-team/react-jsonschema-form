@@ -15,11 +15,11 @@ import type { GenericObjectType } from './types';
  */
 export default function mergeSchemas(obj1: GenericObjectType, obj2: GenericObjectType) {
   const acc = { ...obj1 }; // Prevent mutation of source object.
-  return Object.keys(obj2).reduce((acc, key) => {
+  return Object.keys(obj2).reduce((merged, key) => {
     const left = obj1 ? obj1[key] : {},
       right = obj2[key];
     if (obj1 && key in obj1 && isObject(right)) {
-      acc[key] = mergeSchemas(left, right);
+      merged[key] = mergeSchemas(left, right);
     } else if (
       obj1 &&
       obj2 &&
@@ -29,10 +29,10 @@ export default function mergeSchemas(obj1: GenericObjectType, obj2: GenericObjec
       Array.isArray(right)
     ) {
       // Don't include duplicate values when merging 'required' fields.
-      acc[key] = union(left, right);
+      merged[key] = union(left, right);
     } else {
-      acc[key] = right;
+      merged[key] = right;
     }
-    return acc;
+    return merged;
   }, acc);
 }

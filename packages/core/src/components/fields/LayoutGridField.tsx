@@ -454,8 +454,8 @@ export function computeUIComponentPropsFromGridSchema<
         if (isString(prop)) {
           const match: string[] | null = LOOKUP_REGEX.exec(prop);
           if (Array.isArray(match) && match.length > 1) {
-            const name = match[1];
-            uiProps[key] = lookupFromFormContext(registry, name, name);
+            const lookupName = match[1];
+            uiProps[key] = lookupFromFormContext(registry, lookupName, lookupName);
           }
         }
       });

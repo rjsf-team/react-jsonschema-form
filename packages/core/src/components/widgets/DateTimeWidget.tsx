@@ -18,7 +18,7 @@ export default function DateTimeWidget<
       type='datetime-local'
       {...props}
       value={utcToLocal(value)}
-      onChange={(value) => onChange(localToUTC(value))}
+      onChange={(newValue) => onChange(localToUTC(newValue))}
     />
   );
 }

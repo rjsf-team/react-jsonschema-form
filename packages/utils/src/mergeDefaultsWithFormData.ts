@@ -64,7 +64,7 @@ export default function mergeDefaultsWithFormData<T = any>(
   if (isObject(formData)) {
     // eslint-disable-next-line prefer-object-spread -- spread loses T type, Object.assign preserves it
     const acc: { [key in keyof T]: any } = Object.assign({}, defaults); // Prevent mutation of source object.
-    return Object.keys(formData as GenericObjectType).reduce((acc, key) => {
+    return Object.keys(formData as GenericObjectType).reduce((reduced, key) => {
       const keyValue = get(formData, key);
       const keyExistsInDefaults = isObject(defaults) && key in (defaults as GenericObjectType);
       const keyExistsInFormData = key in (formData as GenericObjectType);
@@ -76,14 +76,14 @@ export default function mergeDefaultsWithFormData<T = any>(
       const keyHasFormDataObject = keyExistsInFormData && isObject(keyValue);
 
       if (keyDefaultIsObject && keyHasFormDataObject && !defaultValueIsNestedObject) {
-        acc[key as keyof T] = {
+        reduced[key as keyof T] = {
           ...get(defaults, key),
           ...keyValue,
         };
-        return acc;
+        return reduced;
       }
 
-      acc[key as keyof T] = mergeDefaultsWithFormData<T>(
+      reduced[key as keyof T] = mergeDefaultsWithFormData<T>(
         get(defaults, key),
         keyValue,
         mergeExtraArrayDefaults,
@@ -92,7 +92,7 @@ export default function mergeDefaultsWithFormData<T = any>(
         // Or if the key value doesn't exist in formData
         overrideFormDataWithDefaults && (keyExistsInDefaults || !keyExistsInFormData),
       );
-      return acc;
+      return reduced;
     }, acc);
   }
 
@@ -104,7 +104,7 @@ export default function mergeDefaultsWithFormData<T = any>(
    */
   if (
     (defaultSupercedesUndefined &&
-      ((!(defaults === undefined) && isNil(formData)) || (typeof formData === 'number' && isNaN(formData)))) ||
+      ((!(defaults === undefined) && isNil(formData)) || (typeof formData === 'number' && Number.isNaN(formData)))) ||
     (overrideFormDataWithDefaults && !isNil(formData))
   ) {
     return defaults;

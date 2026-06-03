@@ -513,7 +513,7 @@ function ArrayFieldItemInner<T = any, S extends StrictRJSFSchema = RJSFSchema, F
       hasMoveUp: has.moveUp,
       hasMoveDown: has.moveDown,
       hasRemove: has.remove,
-      index: index,
+      index,
       totalItems,
       onAddItem,
       onCopyItem,
@@ -859,8 +859,8 @@ function useKeyedFormData<T = any>(formData: T[] = []): KeyedFormDataState<T> {
 
   const updateKeyedFormData = useCallback((newData: KeyedFormDataType<T>[]) => {
     const plainFormData = keyedToPlainFormData(newData);
-    const newHash = hashObject(plainFormData);
-    setState({ formDataHash: newHash, keyedFormData: newData });
+    const updatedHash = hashObject(plainFormData);
+    setState({ formDataHash: updatedHash, keyedFormData: newData });
     return plainFormData;
   }, []);
 
@@ -1069,7 +1069,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
     ...props,
     formData,
     fieldPathId: childFieldPathId,
-    onSelectChange: onSelectChange,
+    onSelectChange,
   };
   const arrayProps: InternalArrayFieldProps<T, S, F> = {
     ...props,

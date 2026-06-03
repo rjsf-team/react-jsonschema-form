@@ -38,8 +38,8 @@ export default function BaseInputTemplate<
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   const { ClearButton } = registry.templates.ButtonTemplates;
 
-  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
-    onChange(value === '' ? options.emptyValue : value);
+  const _onChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
+    onChange(newValue === '' ? options.emptyValue : newValue);
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
   const onClear = useCallback(

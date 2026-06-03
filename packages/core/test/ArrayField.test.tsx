@@ -1045,7 +1045,7 @@ describe('ArrayField', () => {
           },
         },
       };
-      const { node } = createFormComponent({ schema: schema });
+      const { node } = createFormComponent({ schema });
       const inputs = node.querySelectorAll('input[type=text]');
       expect(inputs).toHaveLength(4);
       expect(inputs[0]).toHaveValue('Raphael');
@@ -1123,8 +1123,8 @@ describe('ArrayField', () => {
         },
       };
       let form = createFormComponent({
-        schema: schema,
-        uiSchema: uiSchema,
+        schema,
+        uiSchema,
         formData: {},
         liveValidate: true,
         noValidate: true,
@@ -1134,8 +1134,8 @@ describe('ArrayField', () => {
       expectToHaveBeenCalledWithFormData(form.onSubmit, { multipleChoicesList: [] }, true);
 
       form = createFormComponent({
-        schema: schema,
-        uiSchema: uiSchema,
+        schema,
+        uiSchema,
         formData: {},
         liveValidate: true,
         noValidate: false,
@@ -2111,7 +2111,7 @@ describe('ArrayField', () => {
           },
         },
         widgets: {
-          CustomWidget: CustomWidget,
+          CustomWidget,
         },
         uiSchema: {
           'ui:widget': 'CustomWidget',

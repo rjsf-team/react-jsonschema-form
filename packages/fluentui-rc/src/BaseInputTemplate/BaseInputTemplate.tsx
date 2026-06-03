@@ -52,8 +52,8 @@ export default function BaseInputTemplate<
   const classes = useStyles();
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   // Now we need to pull out the step, min, max into an inner `inputProps` for fluentui-rc
-  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
-    onChange(value === '' ? options.emptyValue : value);
+  const _onChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
+    onChange(newValue === '' ? options.emptyValue : newValue);
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
   const _onClear = useCallback(

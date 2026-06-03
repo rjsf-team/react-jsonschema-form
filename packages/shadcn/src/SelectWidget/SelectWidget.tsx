@@ -47,11 +47,11 @@ export default function SelectWidget<
     onBlur(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, optEmptyValue));
   };
 
-  const items = (enumOptions as any)?.map(({ value, label }: any, index: number) => ({
-    value: multiple ? value : enumOptionValueEncoder(value, index, optionValueFormat),
-    label: label,
+  const items = (enumOptions as any)?.map(({ value: enumValue, label: enumLabel }: any, index: number) => ({
+    value: multiple ? enumValue : enumOptionValueEncoder(enumValue, index, optionValueFormat),
+    label: enumLabel,
     index,
-    disabled: Array.isArray(enumDisabled) && enumDisabled.includes(value),
+    disabled: Array.isArray(enumDisabled) && enumDisabled.includes(enumValue),
   }));
 
   const cnClassName = cn({ 'border-destructive': rawErrors.length > 0 }, className);

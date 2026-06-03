@@ -121,7 +121,7 @@ export function FancyMultiSelect({
       }
       setInputValue('');
       const newSelected = multiple ? [...selectedItems, item] : [item];
-      onValueChange?.(newSelected.map((item) => item.index));
+      onValueChange?.(newSelected.map((selectedItem) => selectedItem.index));
     },
     [multiple, selectedItems, onValueChange, disabled],
   );

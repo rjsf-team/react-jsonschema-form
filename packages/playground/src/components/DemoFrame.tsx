@@ -201,8 +201,8 @@ export default function DemoFrame(props: DemoFrameProps) {
       <CacheProvider value={emotionCache}>
         <CssBaseline />
         {cloneElement(children, {
-          container: container,
-          window: window,
+          container,
+          window,
         })}
       </CacheProvider>
     ) : null;

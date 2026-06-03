@@ -7,7 +7,7 @@ const complexObject = {
   b: '2',
   c: { c1: {}, c2: [] },
   d: ['item1', 'item2', 'item2'],
-  e: function () {
+  e() {
     /* empty */
   },
 };
@@ -68,7 +68,7 @@ describe('getChangedFields()', () => {
         b: '3',
         c: { c1: {}, c2: [], c3: [] },
         d: ['item1', 'item2'],
-        e: function () {
+        e() {
           /* empty */
         },
       }),
@@ -80,7 +80,7 @@ describe('getChangedFields()', () => {
           b: '3',
           c: { c1: {}, c2: [], c3: [] },
           d: ['item1', 'item2'],
-          e: function () {
+          e() {
             /* empty */
           },
         },

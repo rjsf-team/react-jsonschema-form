@@ -28,8 +28,8 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     props;
   const sliderProps = { value, label, id, name: id, ...rangeSpec<S>(schema) };
 
-  const _onChange = (_: any, value?: number | number[]) => {
-    onChange(value ?? options.emptyValue);
+  const _onChange = (_: any, newValue?: number | number[]) => {
+    onChange(newValue ?? options.emptyValue);
   };
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
