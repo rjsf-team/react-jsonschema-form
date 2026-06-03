@@ -516,7 +516,7 @@ export function stubExistingAdditionalProperties<
             validator,
             { [REF_KEY]: get(schema.additionalProperties, [REF_KEY]) } as S,
             rootSchema,
-            formData as T,
+            get(formData, [key]) as T,
             experimental_customMergeAllOf,
           );
         } else if ('type' in schema.additionalProperties!) {
