@@ -29,6 +29,7 @@ const DescriptionFieldTemplate = ({ description }: DescriptionFieldProps) =>
   description ? <div className='description-field' /> : null;
 
 describe('ObjectFieldTemplate', () => {
+  let node: Element;
   function sharedIts() {
     it('should render one root element', () => {
       expect(node.querySelectorAll('.root')).toHaveLength(1);
@@ -44,7 +45,6 @@ describe('ObjectFieldTemplate', () => {
     });
   }
 
-  let node: Element;
   describe('with template globally configured', () => {
     createFormComponent({
       schema: {

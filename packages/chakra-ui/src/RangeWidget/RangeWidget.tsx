@@ -21,8 +21,8 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   id,
   uiSchema,
 }: WidgetProps<T, S, F>) {
-  const _onChange = ({ value }: SliderValueChangeDetails) =>
-    onChange(value === undefined ? options.emptyValue : value[0]);
+  const _onChange = ({ value: newValue }: SliderValueChangeDetails) =>
+    onChange(newValue === undefined ? options.emptyValue : newValue[0]);
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
 

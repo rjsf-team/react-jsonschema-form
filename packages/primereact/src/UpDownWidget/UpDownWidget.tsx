@@ -41,7 +41,7 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
       name={id}
       {...primeProps}
       placeholder={placeholder}
-      step={isNaN(Number(inputProps.step)) ? 1 : Number(inputProps.step)}
+      step={Number.isNaN(Number(inputProps.step)) ? 1 : Number(inputProps.step)}
       required={required}
       autoFocus={autofocus}
       disabled={disabled || readonly}
@@ -54,7 +54,7 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
       locale={locale as string}
       mode={currency ? 'currency' : 'decimal'}
       currency={currency as string}
-      value={isNaN(Number(value)) ? null : Number(value)}
+      value={Number.isNaN(Number(value)) ? null : Number(value)}
       invalid={rawErrors.length > 0}
       onChange={onChangeOverride || _onChange}
       onBlur={_onBlur}

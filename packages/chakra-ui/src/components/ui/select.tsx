@@ -5,6 +5,18 @@ import { Select as ChakraSelect, Portal } from '@chakra-ui/react';
 
 import { CloseButton } from './close-button';
 
+/**
+ * SelectClearTrigger component that renders a clear button for the select component.
+ *
+ * @param props - The properties for the clear trigger component.
+ * @returns - The rendered select clear trigger component.
+ */
+const SelectClearTrigger = forwardRef<HTMLButtonElement, ChakraSelect.ClearTriggerProps>((props, ref) => (
+  <ChakraSelect.ClearTrigger asChild {...props} ref={ref}>
+    <CloseButton size='xs' variant='plain' focusVisibleRing='inside' focusRingWidth='2px' pointerEvents='auto' />
+  </ChakraSelect.ClearTrigger>
+));
+
 interface SelectTriggerProps extends ChakraSelect.ControlProps {
   clearable?: boolean;
 }
@@ -29,18 +41,6 @@ export const SelectTrigger = forwardRef<HTMLButtonElement, SelectTriggerProps>((
     </ChakraSelect.Control>
   );
 });
-
-/**
- * SelectClearTrigger component that renders a clear button for the select component.
- *
- * @param {ChakraSelect.ClearTriggerProps} props - The properties for the clear trigger component.
- * @returns {JSX.Element} The rendered select clear trigger component.
- */
-const SelectClearTrigger = forwardRef<HTMLButtonElement, ChakraSelect.ClearTriggerProps>((props, ref) => (
-  <ChakraSelect.ClearTrigger asChild {...props} ref={ref}>
-    <CloseButton size='xs' variant='plain' focusVisibleRing='inside' focusRingWidth='2px' pointerEvents='auto' />
-  </ChakraSelect.ClearTrigger>
-));
 
 interface SelectContentProps extends ChakraSelect.ContentProps {
   portalled?: boolean;

@@ -44,13 +44,13 @@ function Editor({ title, code, onChange }: EditorProps) {
   const [valid, setValid] = useState(true);
 
   const onCodeChange = useCallback(
-    (code: string | undefined) => {
-      if (!code) {
+    (newCode: string | undefined) => {
+      if (!newCode) {
         return;
       }
 
       try {
-        const parsedCode = JSON.parse(code);
+        const parsedCode = JSON.parse(newCode);
         setValid(true);
         onChange(parsedCode);
       } catch {
@@ -123,8 +123,8 @@ export default function Editors({
   setStylesheet,
 }: EditorsProps) {
   const onSubthemeSelected = useCallback(
-    (subtheme: any, { stylesheet }: SubthemeType) => {
-      setSubtheme(subtheme);
+    (newSubtheme: any, { stylesheet }: SubthemeType) => {
+      setSubtheme(newSubtheme);
       setStylesheet(stylesheet || null);
     },
     [setSubtheme, setStylesheet],

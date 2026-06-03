@@ -4346,7 +4346,7 @@ describe('omitExtraData on submit', () => {
       ref: formRef,
       schema,
       formData,
-      omitExtraData: omitExtraData,
+      omitExtraData,
     };
     const { node } = createFormComponent(props);
     const theSpy = vi.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
@@ -4368,7 +4368,7 @@ describe('omitExtraData on submit', () => {
       ref: formRef,
       schema,
       formData,
-      omitExtraData: omitExtraData,
+      omitExtraData,
     };
     const { node } = createFormComponent(props);
     const theSpy = vi.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
@@ -4920,7 +4920,7 @@ describe('validateForm()', () => {
       ref: formRef,
       schema,
       formData,
-      omitExtraData: omitExtraData,
+      omitExtraData,
     };
     createFormComponent(props);
     const theSpy = vi.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
@@ -4944,7 +4944,7 @@ describe('validateForm()', () => {
       ref: formRef,
       schema,
       formData,
-      omitExtraData: omitExtraData,
+      omitExtraData,
     };
     createFormComponent(props);
     const theSpy = vi.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);

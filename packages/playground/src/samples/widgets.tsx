@@ -270,9 +270,9 @@ const widgets: Sample = {
             value={value}
             onChange={(event) => onChange(event.target.value)}
           >
-            {enumOptions.map(({ label, value }, i) => (
-              <option key={i} value={value}>
-                {label}
+            {enumOptions.map(({ label: enumLabel, value: enumValue }, i) => (
+              <option key={i} value={enumValue}>
+                {enumLabel}
               </option>
             ))}
           </select>

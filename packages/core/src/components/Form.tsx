@@ -1027,10 +1027,10 @@ export default class Form<
           customErrors = new ErrorSchemaBuilder<T>();
         }
         if (isRootPath) {
-          const errors = _get(newErrorSchema, ERRORS_KEY);
-          if (errors) {
+          const pathErrors = _get(newErrorSchema, ERRORS_KEY);
+          if (pathErrors) {
             // only set errors when there are some
-            customErrors.setErrors(errors);
+            customErrors.setErrors(pathErrors);
           }
         } else {
           _set(customErrors.ErrorSchema, path, newErrorSchema);

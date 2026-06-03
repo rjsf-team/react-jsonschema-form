@@ -30,8 +30,8 @@ export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const { inline } = options;
   const primeProps = (options.prime || {}) as object;
 
-  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
-    onChange(value === '' ? options.emptyValue : value);
+  const _onChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
+    onChange(newValue === '' ? options.emptyValue : newValue);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
 

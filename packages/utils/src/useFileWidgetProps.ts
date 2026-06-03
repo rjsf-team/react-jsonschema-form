@@ -91,7 +91,7 @@ function extractFileInfo(dataURLs: string[]): FileInfoType[] {
         ...acc,
         {
           dataURL,
-          name: name,
+          name,
           size: blob.size,
           type: blob.type,
         },

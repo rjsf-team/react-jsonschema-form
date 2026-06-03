@@ -35,8 +35,8 @@ export default function SelectWidget<
   const emptyValue = multiple ? [] : '';
   const optionValueFormat = getOptionValueFormat(options);
 
-  function getValue(event: FocusEvent | ChangeEvent | any, multiple?: boolean) {
-    if (multiple) {
+  function getValue(event: FocusEvent | ChangeEvent | any, isMultiple?: boolean) {
+    if (isMultiple) {
       return [].slice
         .call(event.target.options)
         .filter((o: any) => o.selected)
@@ -79,11 +79,16 @@ export default function SelectWidget<
       aria-describedby={ariaDescribedByIds(id)}
     >
       {showPlaceholderOption && <option value=''>{placeholder}</option>}
-      {enumOptions?.map(({ value, label }: any, i: number) => {
-        const disabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1;
+      {enumOptions?.map(({ value: enumValue, label: enumLabel }: any, i: number) => {
+        const isDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(enumValue);
         return (
-          <option key={i} id={label} value={enumOptionValueEncoder(value, i, optionValueFormat)} disabled={disabled}>
-            {label}
+          <option
+            key={i}
+            id={enumLabel}
+            value={enumOptionValueEncoder(enumValue, i, optionValueFormat)}
+            disabled={isDisabled}
+          >
+            {enumLabel}
           </option>
         );
       })}

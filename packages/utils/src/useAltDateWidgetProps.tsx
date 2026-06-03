@@ -60,7 +60,7 @@ export function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   } = props;
   const id = `${rootId}_${type}`;
   const { SelectWidget } = registry.widgets;
-  const onChange = useCallback((value: any) => select(type as keyof DateObject, value), [select, type]);
+  const onChange = useCallback((newValue: any) => select(type as keyof DateObject, newValue), [select, type]);
   return (
     <SelectWidget
       schema={{ type: 'integer' } as S}
@@ -115,10 +115,10 @@ export default function useAltDateWidgetProps<
   }, [time, value]);
 
   const handleChange = useCallback(
-    (property: keyof DateObject, value?: string) => {
+    (property: keyof DateObject, newValue?: string) => {
       const nextState = {
         ...state,
-        [property]: typeof value === 'undefined' ? -1 : value,
+        [property]: typeof newValue === 'undefined' ? -1 : newValue,
       };
 
       if (readyForChange(nextState)) {

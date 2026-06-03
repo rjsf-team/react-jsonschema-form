@@ -99,7 +99,9 @@ export function expectToHaveBeenCalledWithFormData(mock: any, formData: any, sec
 }
 
 export async function delayPromise(delay = 100) {
-  return new Promise((r) => setTimeout(r, delay));
+  return new Promise((r) => {
+    setTimeout(r, delay);
+  });
 }
 
 export function actWrappedDelayPromise(delay = 100) {

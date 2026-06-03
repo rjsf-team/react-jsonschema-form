@@ -96,6 +96,42 @@
     "prefer-object-spread": "error",
     "prefer-template": "error",
     "eqeqeq": ["error", "always", { "null": "ignore" }],
+    "no-await-in-loop": "error",
+    "no-inner-declarations": "error",
+    "no-promise-executor-return": "error",
+    "no-template-curly-in-string": "error",
+    "no-restricted-exports": "off",
+    "no-useless-constructor": "error",
+    "object-shorthand": ["error", "always", { "ignoreConstructors": false, "avoidQuotes": true }],
+    "symbol-description": "error",
+    "no-label-var": "error",
+    "no-restricted-globals": ["error",
+      { "name": "isFinite", "message": "Use Number.isFinite instead." },
+      { "name": "isNaN", "message": "Use Number.isNaN instead." },
+      { "name": "addEventListener" }, { "name": "blur" }, { "name": "close" },
+      { "name": "closed" }, { "name": "confirm" }, { "name": "defaultStatus" },
+      { "name": "defaultstatus" }, { "name": "event" }, { "name": "external" },
+      { "name": "find" }, { "name": "focus" }, { "name": "frameElement" },
+      { "name": "frames" }, { "name": "history" }, { "name": "innerHeight" },
+      { "name": "innerWidth" }, { "name": "length" }, { "name": "location" },
+      { "name": "locationbar" }, { "name": "menubar" }, { "name": "moveBy" },
+      { "name": "moveTo" }, { "name": "name" }, { "name": "onblur" },
+      { "name": "onerror" }, { "name": "onfocus" }, { "name": "onload" },
+      { "name": "onresize" }, { "name": "onunload" }, { "name": "open" },
+      { "name": "opener" }, { "name": "opera" }, { "name": "outerHeight" },
+      { "name": "outerWidth" }, { "name": "pageXOffset" }, { "name": "pageYOffset" },
+      { "name": "parent" }, { "name": "print" }, { "name": "removeEventListener" },
+      { "name": "resizeBy" }, { "name": "resizeTo" }, { "name": "screen" },
+      { "name": "screenLeft" }, { "name": "screenTop" }, { "name": "screenX" },
+      { "name": "screenY" }, { "name": "scroll" }, { "name": "scrollbars" },
+      { "name": "scrollBy" }, { "name": "scrollTo" }, { "name": "scrollX" },
+      { "name": "scrollY" }, { "name": "self" }, { "name": "status" },
+      { "name": "statusbar" }, { "name": "stop" }, { "name": "toolbar" },
+      { "name": "top" }
+    ],
+    "no-shadow": "error",
+    "no-undef": "error",
+    "no-use-before-define": ["error", { "functions": false, "classes": false, "variables": true }],
     "react/display-name": "error",
     "react/jsx-key": "error",
     "react/jsx-no-comment-textnodes": "error",
@@ -174,7 +210,8 @@
         "typescript/prefer-nullish-coalescing": "off",
         "typescript/prefer-reduce-type-parameter": "error",
         "typescript/prefer-string-starts-ends-with": "warn",
-        "typescript/return-await": ["error", "in-try-catch"]
+        "typescript/return-await": ["error", "in-try-catch"],
+        "no-undef": "off"
       }
     },
     {
@@ -207,7 +244,8 @@
         "vitest": true
       },
       "rules": {
-        "typescript/no-misused-promises": "off"
+        "typescript/no-misused-promises": "off",
+        "no-shadow": "off"
       }
     },
     {

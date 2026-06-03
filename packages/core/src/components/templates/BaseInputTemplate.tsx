@@ -59,7 +59,8 @@ export default function BaseInputTemplate<
   }
 
   const _onChange = useCallback(
-    ({ target: { value } }: ChangeEvent<HTMLInputElement>) => onChange(value === '' ? options.emptyValue : value),
+    ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
+      onChange(newValue === '' ? options.emptyValue : newValue),
     [onChange, options],
   );
   const _onBlur = useCallback(
