@@ -743,7 +743,8 @@ export function getDefaultBasedOnSchemaType<
     case 'array': {
       return getArrayDefaults(validator, rawSchema, computeDefaultsProps, defaults as T[]);
     }
-    // no default
+    default:
+      return undefined;
   }
 }
 

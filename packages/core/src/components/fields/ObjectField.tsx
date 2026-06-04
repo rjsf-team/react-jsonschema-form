@@ -132,7 +132,10 @@ function ObjectFieldPropertyFn<T = any, S extends StrictRJSFSchema = RJSFSchema,
       // formData, which causes them to completely disappear (including the input field for the property name). Unlike
       // fields which are "mandated" by the schema, these fields can be set to undefined by clicking a "delete field"
       // button, so set empty values to the empty string.
-      const normalizedValue = value === undefined && addedByAdditionalProperties ? ('' as unknown as T) : value;
+      let normalizedValue = value;
+      if (value === undefined && addedByAdditionalProperties) {
+        normalizedValue = '' as unknown as T;
+      }
       onChange(normalizedValue, path, newErrorSchema, id);
     },
     [onChange, addedByAdditionalProperties],

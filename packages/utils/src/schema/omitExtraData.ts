@@ -176,7 +176,6 @@ export default function omitExtraData<
    * @returns - `target` after all schema-defined properties have been processed
    */
   function handleObject(childSchema: S, source: GenericObjectType, target: GenericObjectType): GenericObjectType {
-    const result = target;
     const { properties, additionalProperties, patternProperties, propertyNames } = childSchema;
     const requiredSet = new Set(childSchema.required ?? []);
 
@@ -194,7 +193,7 @@ export default function omitExtraData<
      * @param [required=false] - When true the property is never pruned regardless of its filtered value
      */
     function setProperty(key: string, schemaDef: S | boolean, value: unknown, required = false) {
-      const v = omit(schemaDef, value, result[key]);
+      const v = omit(schemaDef, value, target[key]);
       if (!required && isObject(v)) {
         // Resolve $ref so we can inspect the effective required list for the inner schema.
         let sd = isSchemaObj(schemaDef) ? schemaDef : ({} as S);
@@ -212,7 +211,8 @@ export default function omitExtraData<
         }
       }
       if (v !== undefined) {
-        result[key] = v;
+        // oxlint-disable-next-line no-param-reassign
+        target[key] = v;
       }
     }
 
@@ -266,11 +266,12 @@ export default function omitExtraData<
     // When propertyNames is present, the schema only constrains key names — all source keys are valid.
     if (propertyNames !== undefined) {
       for (const [key, value] of Object.entries(source)) {
-        result[key] = value;
+        // oxlint-disable-next-line no-param-reassign
+        target[key] = value;
       }
     }
 
-    return result;
+    return target;
   }
 
   /** Filters array elements from `source` into `target` according to `schema.items` and

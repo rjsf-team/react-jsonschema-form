@@ -117,16 +117,17 @@ export default class AJV8Validator<
         // `AJV8Validator#transformRJSFValidationErrors` replaces property names
         // with `title` or `ui:title`. See #4348, #4349, #4387, and #4402.
         (compiledValidator.errors ?? []).forEach((error) => {
-          const { params } = error;
           ['missingProperty', 'property'].forEach((key) => {
-            if (params?.[key]) {
-              params[key] = `'${params[key]}'`;
+            if (error.params?.[key]) {
+              // oxlint-disable-next-line no-param-reassign
+              error.params[key] = `'${error.params[key]}'`;
             }
           });
-          if (params?.deps) {
+          if (error.params?.deps) {
             // As `error.params.deps` is the comma+space separated list of missing dependencies, enclose each dependency separately.
             // For example, `A, B` is converted into `'A', 'B'`.
-            params.deps = params.deps
+            // oxlint-disable-next-line no-param-reassign
+            error.params.deps = error.params.deps
               .split(', ')
               .map((v: string) => `'${v}'`)
               .join(', ');
@@ -135,15 +136,16 @@ export default class AJV8Validator<
         this.localizer(compiledValidator.errors);
         // Revert to originals
         (compiledValidator.errors ?? []).forEach((error) => {
-          const { params } = error;
           ['missingProperty', 'property'].forEach((key) => {
-            if (params?.[key]) {
-              params[key] = params[key].slice(1, -1);
+            if (error.params?.[key]) {
+              // oxlint-disable-next-line no-param-reassign
+              error.params[key] = error.params[key].slice(1, -1);
             }
           });
-          if (params?.deps) {
+          if (error.params?.deps) {
             // Remove surrounding quotes from each missing dependency. For example, `'A', 'B'` is reverted to `A, B`.
-            params.deps = params.deps
+            // oxlint-disable-next-line no-param-reassign
+            error.params.deps = error.params.deps
               .split(', ')
               .map((v: string) => v.slice(1, -1))
               .join(', ');
