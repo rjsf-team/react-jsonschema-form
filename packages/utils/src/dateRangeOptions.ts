@@ -26,7 +26,7 @@ export default function dateRangeOptions<S extends StrictRJSFSchema = RJSFSchema
     return dateRangeOptions<S>(stop, start).reverse();
   }
   const options: EnumOptionsType<S>[] = [];
-  for (let i = resolvedStart; i <= resolvedStop; i++) {
+  for (let i = resolvedStart; i <= resolvedStop; i += 1) {
     options.push({ value: i, label: pad(i, 2) });
   }
   return options;

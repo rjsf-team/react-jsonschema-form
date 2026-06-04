@@ -25,7 +25,7 @@ export default function getOptionMatchingSimpleDiscriminator<T = any, S extends 
       return undefined;
     }
 
-    for (let i = 0; i < options.length; i++) {
+    for (let i = 0; i < options.length; i += 1) {
       const option = options[i];
       const discriminator: S = get(option, [PROPERTIES_KEY, discriminatorField], {}) as S;
 

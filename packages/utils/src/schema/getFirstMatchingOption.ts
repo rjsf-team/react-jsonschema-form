@@ -39,7 +39,7 @@ export default function getFirstMatchingOption<
     return simpleDiscriminatorMatch;
   }
 
-  for (let i = 0; i < options.length; i++) {
+  for (let i = 0; i < options.length; i += 1) {
     const option = options[i];
 
     // If we have a discriminator field, then we will use this to make the determination
