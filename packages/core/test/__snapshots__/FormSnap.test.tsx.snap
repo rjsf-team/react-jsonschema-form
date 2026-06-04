@@ -812,7 +812,6 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
             class="form-control"
             id="root_color"
             name="root[color]"
-            role="combobox"
           >
             <option
               value=""
@@ -1616,7 +1615,6 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
             class="form-control"
             id="root_color"
             name="root.color"
-            role="combobox"
           >
             <option
               value=""
@@ -3148,7 +3146,6 @@ exports[`single fields > optional data controls > does not show optional control
                 class="form-control"
                 id="root_optionalObjectWithOneofs__oneof_select"
                 name="root_optionalObjectWithOneofs__oneof_select"
-                role="combobox"
               >
                 <option
                   value="0"
@@ -3223,7 +3220,6 @@ exports[`single fields > optional data controls > does not show optional control
                 class="form-control"
                 id="root_optionalArrayWithAnyofs__anyof_select"
                 name="root_optionalArrayWithAnyofs__anyof_select"
-                role="combobox"
               >
                 <option
                   value="0"
@@ -3666,7 +3662,6 @@ exports[`single fields > optional data controls > does not show optional control
                 disabled=""
                 id="root_optionalObjectWithOneofs__oneof_select"
                 name="root_optionalObjectWithOneofs__oneof_select"
-                role="combobox"
               >
                 <option
                   value="0"
@@ -3742,7 +3737,6 @@ exports[`single fields > optional data controls > does not show optional control
                 disabled=""
                 id="root_optionalArrayWithAnyofs__anyof_select"
                 name="root_optionalArrayWithAnyofs__anyof_select"
-                role="combobox"
               >
                 <option
                   value="0"
@@ -5536,7 +5530,6 @@ exports[`single fields > select field 1`] = `
         class="form-control"
         id="root"
         name="root"
-        role="combobox"
       >
         <option
           value=""
@@ -5579,7 +5572,6 @@ exports[`single fields > select field multiple choice 1`] = `
         id="root"
         multiple=""
         name="root"
-        role="combobox"
       >
         <option
           value="0"
@@ -5629,7 +5621,6 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
         id="root"
         multiple=""
         name="root"
-        role="combobox"
       >
         <option
           value="0"
@@ -5779,7 +5770,6 @@ exports[`single fields > select field multiple choice formData 1`] = `
         id="root"
         multiple=""
         name="root"
-        role="combobox"
       >
         <option
           value="0"
@@ -5829,7 +5819,6 @@ exports[`single fields > select field multiple choice with labels 1`] = `
         id="root"
         multiple=""
         name="root"
-        role="combobox"
       >
         <option
           value="0"
@@ -5873,7 +5862,6 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
         class="form-control"
         id="root"
         name="root"
-        role="combobox"
       >
         <option
           value=""
@@ -6046,7 +6034,6 @@ exports[`single fields > select field single choice formData 1`] = `
         class="form-control"
         id="root"
         name="root"
-        role="combobox"
       >
         <option
           value=""
@@ -6165,7 +6152,6 @@ exports[`single fields > select widget with description in schema and FieldTempl
         class="form-control"
         id="root"
         name="root"
-        role="combobox"
       >
         <option
           value=""

@@ -529,6 +529,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 />
                                 <div
                                   class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 border-red-500"
+                                  role="button"
+                                  tabindex="0"
                                 >
                                   <span
                                     class="flex-1 line-clamp-1 text-muted-foreground"
@@ -882,6 +884,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       />
                       <div
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 border-red-500"
+                        role="button"
+                        tabindex="0"
                       >
                         <span
                           class="flex-1 line-clamp-1 text-muted-foreground"
@@ -1458,6 +1462,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 />
                                 <div
                                   class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 border-red-500"
+                                  role="button"
+                                  tabindex="0"
                                 >
                                   <span
                                     class="flex-1 line-clamp-1 text-muted-foreground"
@@ -1843,6 +1849,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       />
                       <div
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 border-red-500"
+                        role="button"
+                        tabindex="0"
                       >
                         <span
                           class="flex-1 line-clamp-1 text-muted-foreground"
@@ -2419,6 +2427,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 />
                                 <div
                                   class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 border-red-500"
+                                  role="button"
+                                  tabindex="0"
                                 >
                                   <span
                                     class="flex-1 line-clamp-1 text-muted-foreground"
@@ -3218,6 +3228,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 />
                                 <div
                                   class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 border-red-500"
+                                  role="button"
+                                  tabindex="0"
                                 >
                                   <span
                                     class="flex-1 line-clamp-1 text-muted-foreground"
@@ -3571,6 +3583,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       />
                       <div
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 border-red-500"
+                        role="button"
+                        tabindex="0"
                       >
                         <span
                           class="flex-1 line-clamp-1 text-muted-foreground"
@@ -4117,6 +4131,8 @@ exports[`Three even column grid > renders person and address in three columns, n
                     />
                     <div
                       class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 border-red-500"
+                      role="button"
+                      tabindex="0"
                     >
                       <span
                         class="flex-1 line-clamp-1 text-muted-foreground"
@@ -4665,6 +4681,8 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     />
                     <div
                       class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 border-red-500"
+                      role="button"
+                      tabindex="0"
                     >
                       <span
                         class="flex-1 line-clamp-1 text-muted-foreground"

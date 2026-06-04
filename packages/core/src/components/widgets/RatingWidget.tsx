@@ -98,6 +98,7 @@ export default function RatingWidget<
             // oxlint-disable-next-line react/no-array-index-key
             key={index}
             onClick={() => handleStarClick(starValue)}
+            onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleStarClick(starValue)}
             onFocus={handleFocus}
             onBlur={handleBlur}
             data-value={starValue}

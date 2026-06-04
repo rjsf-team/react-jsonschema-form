@@ -388,7 +388,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_address_state"
                         name="root_person_address_state"
                         required=""
-                        role="combobox"
                       >
                         <option
                           value=""
@@ -887,7 +886,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 id="root_employment_location_state"
                 name="root_employment_location_state"
                 required=""
-                role="combobox"
               >
                 <option
                   value=""
@@ -1578,7 +1576,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_address_state"
                         name="root_person_address_state"
                         required=""
-                        role="combobox"
                       >
                         <option
                           value=""
@@ -2101,7 +2098,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 id="root_employment_location_state"
                 name="root_employment_location_state"
                 required=""
-                role="combobox"
               >
                 <option
                   value=""
@@ -2792,7 +2788,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_address_state"
                         name="root_person_address_state"
                         required=""
-                        role="combobox"
                       >
                         <option
                           value=""
@@ -3615,7 +3610,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_address_state"
                         name="root_person_address_state"
                         required=""
-                        role="combobox"
                       >
                         <option
                           value=""
@@ -4114,7 +4108,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 id="root_employment_location_state"
                 name="root_employment_location_state"
                 required=""
-                role="combobox"
               >
                 <option
                   value=""
@@ -4782,7 +4775,6 @@ exports[`Three even column grid > renders person and address in three columns, n
               id="root_person_address_state"
               name="root_person_address_state"
               required=""
-              role="combobox"
             >
               <option
                 value=""
@@ -5452,7 +5444,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
               id="root_person_address_state"
               name="root_person_address_state"
               required=""
-              role="combobox"
             >
               <option
                 value=""

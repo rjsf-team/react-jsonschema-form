@@ -257,7 +257,6 @@ exports[`array fields > checkboxes 1`] = `
         id="root"
         multiple=""
         name="root"
-        role="combobox"
       >
         <option
           value="0"
@@ -970,7 +969,6 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
         id="root"
         multiple=""
         name="root"
-        role="combobox"
       >
         <option
           value="0"
@@ -2316,7 +2314,6 @@ exports[`with title and description > checkboxes 1`] = `
         id="root"
         multiple=""
         name="root"
-        role="combobox"
       >
         <option
           value="0"
@@ -2796,7 +2793,6 @@ exports[`with title and description from both > checkboxes 1`] = `
         id="root"
         multiple=""
         name="root"
-        role="combobox"
       >
         <option
           value="0"
@@ -3276,7 +3272,6 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
         id="root"
         multiple=""
         name="root"
-        role="combobox"
       >
         <option
           value="0"
@@ -3688,7 +3683,6 @@ exports[`with title and description with global label off > checkboxes 1`] = `
         id="root"
         multiple=""
         name="root"
-        role="combobox"
       >
         <option
           value="0"

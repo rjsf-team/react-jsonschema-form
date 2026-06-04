@@ -23,12 +23,13 @@ function FileInfoPreview<T = any, S extends StrictRJSFSchema = RJSFSchema, F ext
   if (!dataURL) {
     return null;
   }
+  const previewLabel = translateString(TranslatableString.PreviewLabel);
 
   // If type is JPEG or PNG then show image preview.
   // Originally, any type of image was supported, but this was changed into a whitelist
   // since SVGs and animated GIFs are also images, which are generally considered a security risk.
   if (['image/jpeg', 'image/png'].includes(type)) {
-    return <img src={dataURL} style={{ maxWidth: '100%' }} className='file-preview' />;
+    return <img src={dataURL} alt={previewLabel} style={{ maxWidth: '100%' }} className='file-preview' />;
   }
 
   // otherwise, let users download file
@@ -37,7 +38,7 @@ function FileInfoPreview<T = any, S extends StrictRJSFSchema = RJSFSchema, F ext
     <>
       {' '}
       <a download={`preview-${name}`} href={dataURL} className='file-download'>
-        {translateString(TranslatableString.PreviewLabel)}
+        {previewLabel}
       </a>
     </>
   );

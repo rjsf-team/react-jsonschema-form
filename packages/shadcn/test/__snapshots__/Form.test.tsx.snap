@@ -1551,6 +1551,8 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                       />
                       <div
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        role="button"
+                        tabindex="0"
                       >
                         <span
                           class="flex-1 line-clamp-1 text-muted-foreground"
@@ -3088,6 +3090,8 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                       />
                       <div
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        role="button"
+                        tabindex="0"
                       >
                         <span
                           class="flex-1 line-clamp-1 text-muted-foreground"
@@ -5705,6 +5709,8 @@ exports[`single fields > optional data controls > does not show optional control
                           />
                           <div
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                            role="button"
+                            tabindex="0"
                           >
                             <span
                               class="flex-1 line-clamp-1"
@@ -5848,6 +5854,8 @@ exports[`single fields > optional data controls > does not show optional control
                           />
                           <div
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                            role="button"
+                            tabindex="0"
                           >
                             <span
                               class="flex-1 line-clamp-1"
@@ -6783,6 +6791,8 @@ exports[`single fields > optional data controls > does not show optional control
                           />
                           <div
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 opacity-50 cursor-not-allowed"
+                            role="button"
+                            tabindex="-1"
                           >
                             <span
                               class="flex-1 line-clamp-1"
@@ -6926,6 +6936,8 @@ exports[`single fields > optional data controls > does not show optional control
                           />
                           <div
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 opacity-50 cursor-not-allowed"
+                            role="button"
+                            tabindex="-1"
                           >
                             <span
                               class="flex-1 line-clamp-1"
@@ -10568,6 +10580,8 @@ exports[`single fields > select field 1`] = `
             />
             <div
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              role="button"
+              tabindex="0"
             >
               <span
                 class="flex-1 line-clamp-1 text-muted-foreground"
@@ -11155,6 +11169,8 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
             />
             <div
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              role="button"
+              tabindex="0"
             >
               <span
                 class="flex-1 line-clamp-1 text-muted-foreground"
@@ -11460,6 +11476,8 @@ exports[`single fields > select field single choice formData 1`] = `
             />
             <div
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              role="button"
+              tabindex="0"
             >
               <span
                 class="flex-1 line-clamp-1"
@@ -11656,6 +11674,8 @@ exports[`single fields > select widget with description in schema and FieldTempl
             />
             <div
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              role="button"
+              tabindex="0"
             >
               <span
                 class="flex-1 line-clamp-1 text-muted-foreground"

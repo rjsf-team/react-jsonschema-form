@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import type { FieldProps } from '@rjsf/utils';
 
-export default function GeoPosition() {
+export default function GeoPosition({ id }: FieldProps) {
   const [lat, setLat] = useState<number>(0);
   const [lon, setLon] = useState<number>(0);
 
@@ -13,8 +14,9 @@ export default function GeoPosition() {
       </p>
       <div className='row'>
         <div className='col-sm-6'>
-          <label>Latitude</label>
+          <label htmlFor={`${id}-geo-lat`}>Latitude</label>
           <input
+            id={`${id}-geo-lat`}
             className='form-control'
             type='number'
             value={lat}
@@ -23,8 +25,9 @@ export default function GeoPosition() {
           />
         </div>
         <div className='col-sm-6'>
-          <label>Longitude</label>
+          <label htmlFor={`${id}-geo-lon`}>Longitude</label>
           <input
+            id={`${id}-geo-lon`}
             className='form-control'
             type='number'
             value={lon}

@@ -1167,7 +1167,10 @@ describe('StringField', () => {
           uiSchema,
         });
 
-        const buttonLabels = [].map.call(node.querySelectorAll('a.btn'), (x: HTMLElement) => x.textContent);
+        const buttonLabels = [].map.call(
+          node.querySelectorAll('button.btn-now, button.btn-clear'),
+          (x: HTMLElement) => x.textContent,
+        );
         expect(buttonLabels).toEqual(['Now', 'Clear']);
       });
 
@@ -1180,7 +1183,7 @@ describe('StringField', () => {
           uiSchema,
         });
 
-        await user.click(node.querySelector('a.btn-now')!);
+        await user.click(node.querySelector('button.btn-now')!);
 
         const formValue = onChange.mock.lastCall![0].formData;
         // Test that the two DATETIMEs are within 5 seconds of each other.
@@ -1198,8 +1201,8 @@ describe('StringField', () => {
           uiSchema,
         });
 
-        await user.click(node.querySelector('a.btn-now')!);
-        await user.click(node.querySelector('a.btn-clear')!);
+        await user.click(node.querySelector('button.btn-now')!);
+        await user.click(node.querySelector('button.btn-clear')!);
 
         expectToHaveBeenCalledWithFormData(onChange, undefined, 'root');
       });
@@ -1614,7 +1617,10 @@ describe('StringField', () => {
           uiSchema,
         });
 
-        const buttonLabels = [].map.call(node.querySelectorAll('a.btn'), (x: HTMLElement) => x.textContent);
+        const buttonLabels = [].map.call(
+          node.querySelectorAll('button.btn-now, button.btn-clear'),
+          (x: HTMLElement) => x.textContent,
+        );
         expect(buttonLabels).toEqual(['Now', 'Clear']);
       });
 
@@ -1627,7 +1633,7 @@ describe('StringField', () => {
           uiSchema,
         });
 
-        await user.click(node.querySelector('a.btn-now')!);
+        await user.click(node.querySelector('button.btn-now')!);
 
         const expected = toDateString(parseDateString(new Date().toJSON()), false);
 
@@ -1643,8 +1649,8 @@ describe('StringField', () => {
           uiSchema,
         });
 
-        await user.click(node.querySelector('a.btn-now')!);
-        await user.click(node.querySelector('a.btn-clear')!);
+        await user.click(node.querySelector('button.btn-now')!);
+        await user.click(node.querySelector('button.btn-clear')!);
 
         expectToHaveBeenCalledWithFormData(onChange, undefined, 'root');
       });

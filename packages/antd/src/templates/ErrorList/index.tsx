@@ -1,9 +1,9 @@
-import { Alert, Space, theme, version } from 'antd';
-
-const antdMajor = parseInt(version.split('.')[0], 10);
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import type { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { TranslatableString } from '@rjsf/utils';
+import { Alert, Space, theme, version } from 'antd';
+
+const antdMajor = parseInt(version.split('.')[0], 10);
 
 /** The `ErrorList` component is the template that renders the all the errors associated with the fields in the `Form`
  *
