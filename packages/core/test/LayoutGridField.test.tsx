@@ -654,7 +654,7 @@ function stringifyProps(props: Partial<FieldProps>) {
   // oxlint-disable-next-line no-unused-vars
   const { uiSchema, registry, ...otherProps } = props;
   const { ...otherUIOptions } = getUiOptions(uiSchema);
-  return sortedJSONStringify({ ...otherProps, otherUIOptions: otherUIOptions });
+  return sortedJSONStringify({ ...otherProps, otherUIOptions });
 }
 
 // Render a strong with the props stringified

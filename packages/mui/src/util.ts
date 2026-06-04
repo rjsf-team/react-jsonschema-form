@@ -22,9 +22,9 @@ export function getMuiProps<
   if (propsToFilter) {
     return Object.keys(muiProps)
       .filter((key) => propsToFilter.includes(key))
-      .reduce((obj, key) => {
-        obj[key as keyof P] = muiProps[key as keyof P];
-        return obj;
+      .reduce((acc, key) => {
+        acc[key as keyof P] = muiProps[key as keyof P];
+        return acc;
       }, {} as P);
   }
   return muiProps;

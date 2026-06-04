@@ -19,15 +19,18 @@ export default function withTheme<T = any, S extends StrictRJSFSchema = RJSFSche
 ): ComponentType<FormProps<T, S, F>> {
   // @ts-expect-error TS2322 because the latest types complain about LegacyRef's string form not working with Form
   return forwardRef<Form<T, S, F>, FormProps<T, S, F>>(
-    ({ fields, widgets, templates, ...directProps }: FormProps<T, S, F>, ref: ForwardedRef<Form<T, S, F>>) => {
-      fields = { ...themeProps?.fields, ...fields };
-      widgets = { ...themeProps?.widgets, ...widgets };
-      templates = {
+    (
+      { fields: propFields, widgets: propWidgets, templates: propTemplates, ...directProps }: FormProps<T, S, F>,
+      ref: ForwardedRef<Form<T, S, F>>,
+    ) => {
+      const fields = { ...themeProps?.fields, ...propFields };
+      const widgets = { ...themeProps?.widgets, ...propWidgets };
+      const templates = {
         ...themeProps?.templates,
-        ...templates,
+        ...propTemplates,
         ButtonTemplates: {
           ...themeProps?.templates?.ButtonTemplates,
-          ...templates?.ButtonTemplates,
+          ...propTemplates?.ButtonTemplates,
         },
       };
 

@@ -28,6 +28,7 @@ describe('dataURItoBlob()', () => {
   });
   it('should throw if the body is not a valid dataURI', () => {
     expect(() => dataURItoBlob('Hello%20World')).toThrow(new Error('File is invalid: URI must be a dataURI'));
+    // oxlint-disable-next-line no-script-url
     expect(() => dataURItoBlob('javascript:alert()')).toThrow(new Error('File is invalid: URI must be a dataURI'));
   });
 

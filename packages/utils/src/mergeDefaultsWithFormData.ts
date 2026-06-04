@@ -62,9 +62,9 @@ export default function mergeDefaultsWithFormData<T = any>(
     return mapped as unknown as T;
   }
   if (isObject(formData)) {
-    // eslint-disable-next-line prefer-object-spread -- spread loses T type, Object.assign preserves it
+    // oxlint-disable-next-line prefer-object-spread -- spread loses T type, Object.assign preserves it
     const acc: { [key in keyof T]: any } = Object.assign({}, defaults); // Prevent mutation of source object.
-    return Object.keys(formData as GenericObjectType).reduce((acc, key) => {
+    return Object.keys(formData as GenericObjectType).reduce((accumulator, key) => {
       const keyValue = get(formData, key);
       const keyExistsInDefaults = isObject(defaults) && key in (defaults as GenericObjectType);
       const keyExistsInFormData = key in (formData as GenericObjectType);
@@ -76,14 +76,14 @@ export default function mergeDefaultsWithFormData<T = any>(
       const keyHasFormDataObject = keyExistsInFormData && isObject(keyValue);
 
       if (keyDefaultIsObject && keyHasFormDataObject && !defaultValueIsNestedObject) {
-        acc[key as keyof T] = {
+        accumulator[key as keyof T] = {
           ...get(defaults, key),
           ...keyValue,
         };
-        return acc;
+        return accumulator;
       }
 
-      acc[key as keyof T] = mergeDefaultsWithFormData<T>(
+      accumulator[key as keyof T] = mergeDefaultsWithFormData<T>(
         get(defaults, key),
         keyValue,
         mergeExtraArrayDefaults,
@@ -104,7 +104,7 @@ export default function mergeDefaultsWithFormData<T = any>(
    */
   if (
     (defaultSupercedesUndefined &&
-      ((!(defaults === undefined) && isNil(formData)) || (typeof formData === 'number' && isNaN(formData)))) ||
+      ((!(defaults === undefined) && isNil(formData)) || (typeof formData === 'number' && Number.isNaN(formData)))) ||
     (overrideFormDataWithDefaults && !isNil(formData))
   ) {
     return defaults;

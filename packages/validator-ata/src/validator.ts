@@ -92,7 +92,7 @@ export default class ATAValidator<
    * a mutated probe changes subsequent answers, so the wrapper has to
    * preserve referential purity that AJV provides by default.
    */
-  private cloneForValidation<D>(data: D): D {
+  private static cloneForValidation<D>(data: D): D {
     if (data === null || typeof data !== 'object') {
       return data;
     }
@@ -139,7 +139,7 @@ export default class ATAValidator<
     try {
       const id = schema[ID_KEY] ?? hashForSchema(schema);
       const validator = this.getOrBuild(id, schema);
-      const result = validator.validate(this.cloneForValidation(formData));
+      const result = validator.validate(ATAValidator.cloneForValidation(formData));
       errors = result.valid ? undefined : result.errors;
 
       if (errors && typeof this.localizer === 'function') {
@@ -217,7 +217,7 @@ export default class ATAValidator<
       const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema) as S;
       const id = schemaWithIdRefPrefix[ID_KEY] ?? hashForSchema(schemaWithIdRefPrefix);
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
-      return validator.validate(this.cloneForValidation(formData)).valid;
+      return validator.validate(ATAValidator.cloneForValidation(formData)).valid;
     } catch (e) {
       // oxlint-disable-next-line no-console
       console.warn('Error encountered compiling schema:', e);

@@ -29,7 +29,8 @@ export default function OptionalDataControlsTemplate<
         block={false}
       />
     );
-  } else if (onRemoveClick) {
+  }
+  if (onRemoveClick) {
     return (
       <RemoveButton
         id={id}

@@ -40,7 +40,7 @@ export default function SelectWidget<
 }: WidgetProps<T, S, F>) {
   const { enumOptions, emptyValue: optEmptyVal } = options;
   const optionValueFormat = getOptionValueFormat(options);
-  multiple = typeof multiple === 'undefined' ? false : !!multiple;
+  const isMultiple = typeof multiple === 'undefined' ? false : multiple;
 
   const getDisplayValue = (val: any) => {
     if (!val) {
@@ -60,11 +60,11 @@ export default function SelectWidget<
   const handleOptionClick = useCallback(
     (event: React.MouseEvent<HTMLLIElement>) => {
       const index = Number(event.currentTarget.dataset.value);
-      if (isNaN(index)) {
+      if (Number.isNaN(index)) {
         return;
       }
 
-      if (multiple) {
+      if (isMultiple) {
         const currentValue = Array.isArray(value) ? value : [];
         const optionValue = isEnumeratedObject
           ? enumOptions[index].value
@@ -81,7 +81,7 @@ export default function SelectWidget<
         );
       }
     },
-    [value, multiple, isEnumeratedObject, enumOptions, optEmptyVal, optionValueFormat, onChange],
+    [value, isMultiple, isEnumeratedObject, enumOptions, optEmptyVal, optionValueFormat, onChange],
   );
 
   const _onBlur = useCallback(
@@ -108,7 +108,7 @@ export default function SelectWidget<
   // it always needs a string array regardless of `multiple`. Flatten the
   // helper's single/multiple return shape and strip the empty-single case.
   const selectedValues: string[] = [
-    enumOptionSelectedValue<S>(value, enumOptions, !!multiple, optionValueFormat, multiple ? [] : ''),
+    enumOptionSelectedValue<S>(value, enumOptions, isMultiple, optionValueFormat, isMultiple ? [] : ''),
   ]
     .flat()
     .filter((v) => v !== '');
@@ -137,7 +137,7 @@ export default function SelectWidget<
           <span className='ml-2'>▼</span>
         </div>
         <ul className='dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg'>
-          {optionsList.map(({ value: optValue, label }, i) => {
+          {optionsList.map(({ value: optValue, label: enumLabel }, i) => {
             const encodedValue = enumOptionValueEncoder(optValue, i, optionValueFormat);
             return (
               <li
@@ -151,7 +151,7 @@ export default function SelectWidget<
                 data-value={i}
               >
                 <div className='flex items-center gap-2'>
-                  {multiple && (
+                  {isMultiple && (
                     <input
                       type='checkbox'
                       className='checkbox checkbox-sm'
@@ -159,7 +159,7 @@ export default function SelectWidget<
                       readOnly
                     />
                   )}
-                  <span>{isEnumeratedObject ? label : getDisplayValue(label)}</span>
+                  <span>{isEnumeratedObject ? enumLabel : getDisplayValue(enumLabel)}</span>
                 </div>
               </li>
             );

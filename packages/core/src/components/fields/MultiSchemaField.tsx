@@ -198,9 +198,9 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
 
     if (option) {
       // merge top level required field
-      const { required } = schema;
+      const { required: schemaRequired } = schema;
       // Merge in all the non-oneOf/anyOf properties and also skip the special ADDITIONAL_PROPERTY_FLAG property
-      optionSchema = required ? (mergeSchemas({ required }, option) as S) : option;
+      optionSchema = schemaRequired ? (mergeSchemas({ required: schemaRequired }, option) as S) : option;
     }
 
     // First we will check to see if there is an anyOf/oneOf override for the UI schema
@@ -209,12 +209,14 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       if (Array.isArray(uiSchema[ONE_OF_KEY])) {
         optionsUiSchema = uiSchema[ONE_OF_KEY];
       } else {
+        // oxlint-disable-next-line no-console
         console.warn(`uiSchema.oneOf is not an array for "${title || name}"`);
       }
     } else if (ANY_OF_KEY in schema && uiSchema && ANY_OF_KEY in uiSchema) {
       if (Array.isArray(uiSchema[ANY_OF_KEY])) {
         optionsUiSchema = uiSchema[ANY_OF_KEY];
       } else {
+        // oxlint-disable-next-line no-console
         console.warn(`uiSchema.anyOf is not an array for "${title || name}"`);
       }
     }

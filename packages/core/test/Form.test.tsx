@@ -1,5 +1,4 @@
-import type { RefObject } from 'react';
-import { Component, createRef, useEffect, useState, useCallback } from 'react';
+import { createRef, useEffect, useRef, useState, useCallback } from 'react';
 import type {
   ErrorSchema,
   Experimental_DefaultFormStateBehavior,
@@ -2468,6 +2467,7 @@ describeRepeated('Form common', (createFormComponent) => {
         const onError = vi.fn();
 
         const focusCallback = () => {
+          // oxlint-disable-next-line no-console
           console.log('focusCallback called');
         };
 
@@ -2505,6 +2505,7 @@ describeRepeated('Form common', (createFormComponent) => {
         const onError = vi.fn();
 
         const focusCallback = () => {
+          // oxlint-disable-next-line no-console
           console.log('focusCallback called');
         };
         const extraErrors = {
@@ -3650,34 +3651,27 @@ describeRepeated('Form common', (createFormComponent) => {
     it('should call provided submit handler with form state', async () => {
       const innerOnSubmit = vi.fn();
       const outerOnSubmit = vi.fn();
-      let innerRef: RefObject<HTMLDivElement> | undefined;
+      const innerRef = createRef<HTMLDivElement>();
 
-      class ArrayTemplateWithForm extends Component<FormProps> {
-        constructor(props: FormProps) {
-          super(props);
-          innerRef = createRef();
-        }
+      const ArrayTemplateWithForm = (_props: FormProps) => {
+        const innerFormProps = {
+          validator,
+          schema: {},
+          onSubmit: innerOnSubmit,
+        };
 
-        render() {
-          const innerFormProps = {
-            validator,
-            schema: {},
-            onSubmit: innerOnSubmit,
-          };
-
-          return (
-            <Portal>
-              <div className='array' ref={innerRef}>
-                <Form {...innerFormProps}>
-                  <button className='array-form-submit' type='submit'>
-                    Submit
-                  </button>
-                </Form>
-              </div>
-            </Portal>
-          );
-        }
-      }
+        return (
+          <Portal>
+            <div className='array' ref={innerRef}>
+              <Form {...innerFormProps}>
+                <button className='array-form-submit' type='submit'>
+                  Submit
+                </button>
+              </Form>
+            </div>
+          </Portal>
+        );
+      };
 
       createFormComponent({
         schema: {
@@ -3691,8 +3685,8 @@ describeRepeated('Form common', (createFormComponent) => {
         onSubmit: outerOnSubmit,
       });
       expect(innerRef).toBeDefined();
-      expect(innerRef!.current).not.toBeNull();
-      const arrayForm = innerRef!.current!.querySelector('form')!;
+      expect(innerRef.current).not.toBeNull();
+      const arrayForm = innerRef.current!.querySelector('form')!;
       const arraySubmit = arrayForm.querySelector<HTMLButtonElement>('.array-form-submit')!;
 
       await user.click(arraySubmit);
@@ -4346,7 +4340,7 @@ describe('omitExtraData on submit', () => {
       ref: formRef,
       schema,
       formData,
-      omitExtraData: omitExtraData,
+      omitExtraData,
     };
     const { node } = createFormComponent(props);
     const theSpy = vi.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
@@ -4368,7 +4362,7 @@ describe('omitExtraData on submit', () => {
       ref: formRef,
       schema,
       formData,
-      omitExtraData: omitExtraData,
+      omitExtraData,
     };
     const { node } = createFormComponent(props);
     const theSpy = vi.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
@@ -4723,19 +4717,24 @@ describe('Calling onChange right after updating a Form with props formData', () 
   };
 
   let changed = false;
-  class ArrayThatTriggersOnChangeRightAfterUpdated extends Component<FieldProps> {
-    componentDidUpdate = () => {
+  const ArrayThatTriggersOnChangeRightAfterUpdated = (fieldProps: FieldProps) => {
+    const { ArrayField } = fieldProps.registry.fields;
+    const isMounted = useRef(false);
+    const latestProps = useRef(fieldProps);
+    latestProps.current = fieldProps;
+    useEffect(() => {
+      if (!isMounted.current) {
+        isMounted.current = true;
+        return;
+      }
       if (changed) {
         return;
       }
       changed = true;
-      this.props.onChange('test', [this.props.formData.length]);
-    };
-    render() {
-      const { ArrayField } = this.props.registry.fields;
-      return <ArrayField {...this.props} />;
-    }
-  }
+      latestProps.current.onChange('test', [latestProps.current.formData.length]);
+    });
+    return <ArrayField {...fieldProps} />;
+  };
 
   const uiSchema: UiSchema = {
     'ui:field': ArrayThatTriggersOnChangeRightAfterUpdated,
@@ -4747,20 +4746,13 @@ describe('Calling onChange right after updating a Form with props formData', () 
     validator,
   };
 
-  class Container extends Component<FormProps> {
-    constructor(props: FormProps) {
-      super(props);
-      this.state = {};
-    }
-
-    onChange = ({ formData }: IChangeEvent) => {
-      this.setState({ formData });
-    };
-
-    render() {
-      return <Form {...this.props} {...this.state} onChange={this.onChange} />;
-    }
-  }
+  const Container = (containerProps: FormProps) => {
+    const [state, setState] = useState<{ formData?: any }>({});
+    const onChange = useCallback(({ formData }: IChangeEvent) => {
+      setState({ formData });
+    }, []);
+    return <Form {...containerProps} {...state} onChange={onChange} />;
+  };
 
   it("doesn't cause a race condition", async () => {
     const { node } = createComponent(Container, { ...props });
@@ -4920,7 +4912,7 @@ describe('validateForm()', () => {
       ref: formRef,
       schema,
       formData,
-      omitExtraData: omitExtraData,
+      omitExtraData,
     };
     createFormComponent(props);
     const theSpy = vi.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
@@ -4944,7 +4936,7 @@ describe('validateForm()', () => {
       ref: formRef,
       schema,
       formData,
-      omitExtraData: omitExtraData,
+      omitExtraData,
     };
     createFormComponent(props);
     const theSpy = vi.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);

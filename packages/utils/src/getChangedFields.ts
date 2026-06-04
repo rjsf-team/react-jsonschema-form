@@ -31,11 +31,11 @@ export default function getChangedFields(a: unknown, b: unknown): string[] {
   }
   if (aIsPlainObject && !bIsPlainObject) {
     return keys(a);
-  } else if (!aIsPlainObject && bIsPlainObject) {
-    return keys(b);
-  } else {
-    const unequalFields = keys(pickBy(a as object, (value, key) => !deepEquals(value, get(b, key))));
-    const diffFields = difference(keys(b), keys(a));
-    return [...unequalFields, ...diffFields];
   }
+  if (!aIsPlainObject && bIsPlainObject) {
+    return keys(b);
+  }
+  const unequalFields = keys(pickBy(a as object, (value, key) => !deepEquals(value, get(b, key))));
+  const diffFields = difference(keys(b), keys(a));
+  return [...unequalFields, ...diffFields];
 }

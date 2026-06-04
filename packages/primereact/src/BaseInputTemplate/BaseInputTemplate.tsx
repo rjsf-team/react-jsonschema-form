@@ -36,8 +36,8 @@ export default function BaseInputTemplate<
 
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   const primeProps = (options.prime || {}) as object;
-  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
-    onChange(value === '' ? options.emptyValue : value);
+  const _onChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
+    onChange(newValue === '' ? options.emptyValue : newValue);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
   const _onClear = useCallback(

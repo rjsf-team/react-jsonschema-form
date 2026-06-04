@@ -22,7 +22,8 @@ function TextareaWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
   htmlName,
 }: WidgetProps<T, S, F>) {
   const handleChange = useCallback(
-    ({ target: { value } }: ChangeEvent<HTMLTextAreaElement>) => onChange(value === '' ? options.emptyValue : value),
+    ({ target: { value: newValue } }: ChangeEvent<HTMLTextAreaElement>) =>
+      onChange(newValue === '' ? options.emptyValue : newValue),
     [onChange, options.emptyValue],
   );
 

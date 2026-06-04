@@ -25,7 +25,7 @@ class ErrorBoundary extends Component<Props, State> {
 
   /** Update state so the next render will show the fallback UI. */
   static getDerivedStateFromError(error: Error) {
-    return { hasError: true, error: error };
+    return { hasError: true, error };
   }
 
   resetErrorBoundary = () => {

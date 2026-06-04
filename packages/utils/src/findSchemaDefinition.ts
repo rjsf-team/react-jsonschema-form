@@ -53,22 +53,23 @@ function findEmbeddedSchemaRecursive<S extends StrictRJSFSchema = RJSFSchema>(sc
  */
 export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchema>(schema: S, baseURI: string): S {
   const currentURI = get(schema, ID_KEY, baseURI);
+  let result = schema;
   // Make all other references absolute
-  if (REF_KEY in schema) {
-    schema = { ...schema, [REF_KEY]: UriResolver.resolve(currentURI, schema[REF_KEY]!) };
+  if (REF_KEY in result) {
+    result = { ...result, [REF_KEY]: UriResolver.resolve(currentURI, result[REF_KEY]!) };
   }
   // Look for references in nested subschemas
-  for (const [key, subSchema] of Object.entries(schema)) {
+  for (const [key, subSchema] of Object.entries(result)) {
     if (Array.isArray(subSchema)) {
-      schema = {
-        ...schema,
+      result = {
+        ...result,
         [key]: subSchema.map((item) => (isObject(item) ? makeAllReferencesAbsolute(item as S, currentURI) : item)),
       };
     } else if (isObject(subSchema)) {
-      schema = { ...schema, [key]: makeAllReferencesAbsolute(subSchema as S, currentURI) };
+      result = { ...result, [key]: makeAllReferencesAbsolute(subSchema as S, currentURI) };
     }
   }
-  return schema;
+  return result;
 }
 
 /** Splits out the value at the `key` in `object` from the `object`, returning an array that contains in the first
@@ -105,23 +106,24 @@ export function findSchemaDefinitionRecursive<S extends StrictRJSFSchema = RJSFS
 ): S {
   const ref = $ref || '';
   let current: S | undefined = undefined;
+  let currentBaseURI = baseURI;
   if (ref.startsWith('#')) {
     // Decode URI fragment representation.
     const decodedRef = decodeURIComponent(ref.substring(1));
-    if (baseURI === undefined || (ID_KEY in rootSchema && rootSchema[ID_KEY] === baseURI)) {
+    if (currentBaseURI === undefined || (ID_KEY in rootSchema && rootSchema[ID_KEY] === currentBaseURI)) {
       current = jsonpointer.get(rootSchema, decodedRef);
     } else if (rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
-      current = findEmbeddedSchemaRecursive<S>(rootSchema, baseURI.replace(/\/$/, ''));
+      current = findEmbeddedSchemaRecursive<S>(rootSchema, currentBaseURI.replace(/\/$/, ''));
       if (current !== undefined) {
         current = jsonpointer.get(current, decodedRef);
       }
     }
   } else if (rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
-    const resolvedRef = baseURI ? UriResolver.resolve(baseURI, ref) : ref;
+    const resolvedRef = currentBaseURI ? UriResolver.resolve(currentBaseURI, ref) : ref;
     const [refId, ...refAnchor] = resolvedRef.replace(/#\/?$/, '').split('#');
     current = findEmbeddedSchemaRecursive<S>(rootSchema, refId.replace(/\/$/, ''));
     if (current !== undefined) {
-      baseURI = current[ID_KEY];
+      currentBaseURI = current[ID_KEY];
       if (!isEmpty(refAnchor)) {
         current = jsonpointer.get(current, decodeURIComponent(refAnchor.join('#')));
       }
@@ -142,16 +144,15 @@ export function findSchemaDefinitionRecursive<S extends StrictRJSFSchema = RJSFS
       throw new Error(`Definition for ${firstRef} contains a circular reference through ${circularPath}`);
     }
     const [remaining, theRef] = splitKeyElementFromObject(REF_KEY, current);
-    const subSchema = findSchemaDefinitionRecursive<S>(theRef, rootSchema, [...recurseList, ref], baseURI);
+    const subSchema = findSchemaDefinitionRecursive<S>(theRef, rootSchema, [...recurseList, ref], currentBaseURI);
     if (Object.keys(remaining).length > 0) {
       if (
         rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2019_09 ||
         rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12
       ) {
         return { [ALL_OF_KEY]: [remaining, subSchema] } as S;
-      } else {
-        return { ...remaining, ...subSchema };
       }
+      return { ...remaining, ...subSchema };
     }
     return subSchema;
   }

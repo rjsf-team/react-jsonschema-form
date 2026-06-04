@@ -1,3 +1,4 @@
+// oxlint-disable no-console
 import type { ComponentType, FormEvent } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Box from '@mui/material/Box';
@@ -59,12 +60,12 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const [FormComponent, setFormComponent] = useState<ComponentType<FormProps>>(withTheme({}));
 
   const onThemeSelected = useCallback(
-    (theme: string, { stylesheet, theme: themeObj }: ThemesType) => {
-      setTheme(theme);
+    (newTheme: string, { stylesheet: newStylesheet, theme: themeObj }: ThemesType) => {
+      setTheme(newTheme);
       setFormComponent(withTheme(themeObj));
-      setStylesheet(stylesheet);
+      setStylesheet(newStylesheet);
       if (uiSchemaGenerator) {
-        setUiSchema(uiSchemaGenerator.generator(theme));
+        setUiSchema(uiSchemaGenerator.generator(newTheme));
       }
     },
     [uiSchemaGenerator, setTheme, setFormComponent, setStylesheet],
@@ -73,19 +74,19 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const load = useCallback(
     (data: Sample & { theme: string; liveSettings: LiveSettings; sampleName?: string; validator?: string }) => {
       const {
-        schema,
+        schema: loadedSchema,
         // uiSchema is missing on some examples. Provide a default to
         // clear the field in all cases.
-        uiSchema = {},
+        uiSchema: loadedUiSchema = {},
         // Always reset templates and fields
         templates = {},
         fields = {},
-        formData,
+        formData: loadedFormData,
         theme: dataTheme = theme,
-        extraErrors,
-        liveSettings,
+        extraErrors: loadedExtraErrors,
+        liveSettings: loadedLiveSettings,
         validator: theValidator,
-        sampleName,
+        sampleName: loadedSampleName,
         ...rest
       } = data;
 
@@ -95,14 +96,14 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       onThemeSelected(theTheme, themes[theTheme]);
 
       let theUiSchema: UiSchema;
-      if (isFunction(uiSchema)) {
-        theUiSchema = uiSchema(theme);
+      if (isFunction(loadedUiSchema)) {
+        theUiSchema = loadedUiSchema(theme);
       } else {
-        theUiSchema = uiSchema;
+        theUiSchema = loadedUiSchema;
       }
-      if (sampleName) {
-        setSampleName(sampleName);
-        const sample = samples[sampleName];
+      if (loadedSampleName) {
+        setSampleName(loadedSampleName);
+        const sample = samples[loadedSampleName];
         if (isFunction(sample.uiSchema)) {
           setUiSchemaGenerator({ generator: sample.uiSchema });
         } else {
@@ -112,20 +113,20 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
 
       // force resetting form component instance
       setShowForm(false);
-      setSchema(schema);
+      setSchema(loadedSchema);
       setUiSchema(theUiSchema);
-      setFormData(formData);
-      setExtraErrors(extraErrors);
+      setFormData(loadedFormData);
+      setExtraErrors(loadedExtraErrors);
       setShowForm(true);
-      if (liveSettings?.liveValidate === true) {
+      if (loadedLiveSettings?.liveValidate === true) {
         // Convert v5 true value to `onChange`
-        liveSettings.liveValidate = 'onChange';
+        loadedLiveSettings.liveValidate = 'onChange';
       }
-      if (liveSettings?.liveOmit === true) {
+      if (loadedLiveSettings?.liveOmit === true) {
         // Convert v5 true value to `onChange`
-        liveSettings.liveOmit = 'onChange';
+        loadedLiveSettings.liveOmit = 'onChange';
       }
-      setLiveSettings(liveSettings);
+      setLiveSettings(loadedLiveSettings);
       if ('validator' in data && theValidator !== undefined) {
         setValidator(theValidator);
       }
@@ -135,9 +136,14 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   );
 
   const onSampleSelected = useCallback(
-    (sampleName: string) => {
-      const { liveSettings: sampleLiveSettings, ...sample } = samples[sampleName];
-      load({ ...sample, sampleName, liveSettings: { ...liveSettings, ...sampleLiveSettings }, theme });
+    (selectedSampleName: string) => {
+      const { liveSettings: sampleLiveSettings, ...sample } = samples[selectedSampleName];
+      load({
+        ...sample,
+        sampleName: selectedSampleName,
+        liveSettings: { ...liveSettings, ...sampleLiveSettings },
+        theme,
+      });
     },
     [load, liveSettings, theme],
   );
@@ -166,19 +172,19 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
 
   const onFormDataChange = useCallback(
     (event: IChangeEvent, id?: string) => {
-      const { formData } = event;
+      const { formData: newFormData } = event;
       if (id) {
         console.log('Field changed, id: ', id);
       }
 
-      setFormData(formData);
+      setFormData(newFormData);
       setShareURL(null);
     },
     [setFormData, setShareURL],
   );
 
-  const onFormDataSubmit = useCallback(({ formData }: IChangeEvent, event: FormEvent<any>) => {
-    console.log('submitted formData', formData);
+  const onFormDataSubmit = useCallback(({ formData: submittedFormData }: IChangeEvent, event: FormEvent<any>) => {
+    console.log('submitted formData', submittedFormData);
     console.log('submit event', event);
     window.alert('Form submitted');
   }, []);

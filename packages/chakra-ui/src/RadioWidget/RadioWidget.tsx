@@ -33,12 +33,12 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
 
-  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
-    onChange(enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, emptyValue));
-  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, emptyValue));
-  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, emptyValue));
+  const _onChange = ({ target: { value: enumValue } }: ChangeEvent<HTMLInputElement>) =>
+    onChange(enumOptionValueDecoder<S>(enumValue, enumOptions, optionValueFormat, emptyValue));
+  const _onBlur = ({ target: { value: enumValue } }: FocusEvent<HTMLInputElement>) =>
+    onBlur(id, enumOptionValueDecoder<S>(enumValue, enumOptions, optionValueFormat, emptyValue));
+  const _onFocus = ({ target: { value: enumValue } }: FocusEvent<HTMLInputElement>) =>
+    onFocus(id, enumOptionValueDecoder<S>(enumValue, enumOptions, optionValueFormat, emptyValue));
 
   const row = options ? options.inline : false;
   const selectValue = enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat, null);

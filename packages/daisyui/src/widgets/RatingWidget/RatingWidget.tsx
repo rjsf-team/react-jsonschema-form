@@ -48,8 +48,8 @@ export default function RatingWidget<
 
   /** Handles change events from radio inputs */
   const _onChange = useCallback(
-    ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-      onChange(parseInt(value));
+    ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) => {
+      onChange(parseInt(newValue, 10));
     },
     [onChange],
   );

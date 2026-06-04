@@ -91,7 +91,7 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
             );
           }
           if ((has(value, ONE_OF_KEY) || has(value, ANY_OF_KEY)) && formValue) {
-            const key = has(value, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
+            const xxxOfKey = has(value, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
             const discriminator = getDiscriminatorFieldFromSchema<S>(value as S);
             return (
               score +
@@ -99,7 +99,7 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
                 validator,
                 rootSchema,
                 formValue,
-                get(value, key) as S[],
+                get(value, xxxOfKey) as S[],
                 -1,
                 discriminator,
                 experimental_customMergeAllOf,
@@ -107,12 +107,11 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
             );
           }
           if (value.type === 'object') {
-            if (isObject(formValue)) {
-              // If the structure is matching then give it a little boost in score
-              score += 1;
-            }
+            // If the structure is matching then give it a little boost in score
+            const structureBoost = isObject(formValue) ? 1 : 0;
             return (
               score +
+              structureBoost +
               calculateIndexScore<T, S, F>(validator, rootSchema, value as S, formValue, experimental_customMergeAllOf)
             );
           }

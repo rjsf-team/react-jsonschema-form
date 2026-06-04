@@ -22,7 +22,7 @@ export default function getOptionMatchingSimpleDiscriminator<T = any, S extends 
     const value = get(formData, discriminatorField);
 
     if (value === undefined) {
-      return;
+      return undefined;
     }
 
     for (let i = 0; i < options.length; i++) {
@@ -42,6 +42,5 @@ export default function getOptionMatchingSimpleDiscriminator<T = any, S extends 
       }
     }
   }
-
-  return;
+  return undefined;
 }

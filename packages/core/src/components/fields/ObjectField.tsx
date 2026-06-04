@@ -128,14 +128,15 @@ function ObjectFieldPropertyFn<T = any, S extends StrictRJSFSchema = RJSFSchema,
    */
   const onPropertyChange = useCallback(
     (value: T | undefined, path: FieldPathList, newErrorSchema?: ErrorSchema<T>, id?: string) => {
+      // Don't set value = undefined for fields added by additionalProperties. Doing so removes them from the
+      // formData, which causes them to completely disappear (including the input field for the property name). Unlike
+      // fields which are "mandated" by the schema, these fields can be set to undefined by clicking a "delete field"
+      // button, so set empty values to the empty string.
+      let normalizedValue = value;
       if (value === undefined && addedByAdditionalProperties) {
-        // Don't set value = undefined for fields added by additionalProperties. Doing so removes them from the
-        // formData, which causes them to completely disappear (including the input field for the property name). Unlike
-        // fields which are "mandated" by the schema, these fields can be set to undefined by clicking a "delete field"
-        // button, so set empty values to the empty string.
-        value = '' as unknown as T;
+        normalizedValue = '' as unknown as T;
       }
-      onChange(value, path, newErrorSchema, id);
+      onChange(normalizedValue, path, newErrorSchema, id);
     },
     [onChange, addedByAdditionalProperties],
   );
@@ -251,12 +252,12 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
    * @returns - The name of the next available key from `preferredKey`
    */
   const getAvailableKey = useCallback(
-    (preferredKey: string, formData?: T) => {
+    (preferredKey: string, existingFormData?: T) => {
       const { duplicateKeySuffixSeparator = '-' } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
 
       let index = 0;
       let newKey = preferredKey;
-      while (has(formData, newKey)) {
+      while (has(existingFormData, newKey)) {
         newKey = `${preferredKey}${duplicateKeySuffixSeparator}${++index}`;
       }
       return newKey;
@@ -271,7 +272,6 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     if (!(schema.additionalProperties || schema.patternProperties)) {
       return;
     }
-    const { translateString } = registry;
     const newFormData = { ...formData } as T;
     const newKey = getAvailableKey('newKey', newFormData);
     if (schema.patternProperties) {
@@ -287,7 +287,6 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
         defaultValue = schema.additionalProperties.default;
         let apSchema = schema.additionalProperties;
         if (REF_KEY in apSchema) {
-          const { schemaUtils } = registry;
           apSchema = schemaUtils.retrieveSchema({ [REF_KEY]: apSchema[REF_KEY] } as S, formData);
           type = apSchema.type;
           constValue = apSchema.const;
@@ -308,7 +307,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       lastRenamedProperty.current.previousKey = getAvailableKey(newKey, newFormData);
     }
     onChange(newFormData, childFieldPathId.path);
-  }, [formData, onChange, registry, childFieldPathId, getAvailableKey, schema]);
+  }, [formData, onChange, translateString, schemaUtils, childFieldPathId, getAvailableKey, schema]);
 
   /** Returns a callback function that deals with the rename of a key for an additional property for a schema. That
    * callback will attempt to rename the key and move the existing data to that key, calling `onChange` when it does.
@@ -327,8 +326,8 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
         };
         const newKeys: GenericObjectType = { [oldKey]: actualNewKey };
         const keyValues = Object.keys(newFormData).map((key) => {
-          const newKey = newKeys[key] || key;
-          return { [newKey]: newFormData[key] };
+          const mappedKey = newKeys[key] || key;
+          return { [mappedKey]: newFormData[key] };
         });
         const renamedObj = Object.assign({}, ...keyValues);
 
@@ -392,20 +391,20 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     // getDisplayLabel() always returns false for object types, so just check the `uiOptions.label`
     title: uiOptions.label === false ? '' : templateTitle,
     description: uiOptions.label === false ? undefined : description,
-    properties: orderedProperties.map((name) => {
-      const addedByAdditionalProperties = has(schema, [PROPERTIES_KEY, name, ADDITIONAL_PROPERTY_FLAG]);
-      const fieldUiSchema = addedByAdditionalProperties ? uiSchema.additionalProperties : uiSchema[name];
+    properties: orderedProperties.map((propertyName) => {
+      const addedByAdditionalProperties = has(schema, [PROPERTIES_KEY, propertyName, ADDITIONAL_PROPERTY_FLAG]);
+      const fieldUiSchema = addedByAdditionalProperties ? uiSchema.additionalProperties : uiSchema[propertyName];
       const hidden = getUiOptions<T, S, F>(fieldUiSchema).widget === 'hidden';
       const content = (
         <ObjectFieldProperty<T, S, F>
-          key={getStableKey(name)}
-          propertyName={name}
-          required={isRequired<S>(schema, name)}
-          schema={get(schema, [PROPERTIES_KEY, name], {}) as S}
+          key={getStableKey(propertyName)}
+          propertyName={propertyName}
+          required={isRequired<S>(schema, propertyName)}
+          schema={get(schema, [PROPERTIES_KEY, propertyName], {}) as S}
           uiSchema={fieldUiSchema}
-          errorSchema={get(errorSchema, [name])}
+          errorSchema={get(errorSchema, [propertyName])}
           fieldPathId={childFieldPathId}
-          formData={get(formData, [name])}
+          formData={get(formData, [propertyName])}
           handleKeyRename={handleKeyRename}
           handleRemoveProperty={handleRemoveProperty}
           addedByAdditionalProperties={addedByAdditionalProperties}
@@ -420,7 +419,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       );
       return {
         content,
-        name,
+        name: propertyName,
         readonly,
         disabled,
         required,

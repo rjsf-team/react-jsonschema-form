@@ -43,6 +43,7 @@ export default function BaseInputTemplate<
   // Note: since React 15.2.0 we can't forward unknown element attributes, so we
   // exclude the "options" and "schema" ones here.
   if (!id) {
+    // oxlint-disable-next-line no-console
     console.log('No id for', props);
     throw new Error(`no id for props ${JSON.stringify(props)}`);
   }
@@ -59,7 +60,8 @@ export default function BaseInputTemplate<
   }
 
   const _onChange = useCallback(
-    ({ target: { value } }: ChangeEvent<HTMLInputElement>) => onChange(value === '' ? options.emptyValue : value),
+    ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
+      onChange(newValue === '' ? options.emptyValue : newValue),
     [onChange, options],
   );
   const _onBlur = useCallback(

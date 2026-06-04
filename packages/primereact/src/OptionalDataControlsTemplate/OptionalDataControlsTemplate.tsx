@@ -28,7 +28,8 @@ export default function OptionalDataControlsTemplate<
         style={{ height: '1.5rem', width: '1.5rem' }} // Shrink the button
       />
     );
-  } else if (onRemoveClick) {
+  }
+  if (onRemoveClick) {
     return (
       <RemoveButton
         id={id}

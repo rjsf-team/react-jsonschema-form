@@ -1,4 +1,3 @@
-import { PureComponent } from 'react';
 import type { ArrayFieldTemplateProps, ArrayFieldItemTemplateProps, RJSFSchema } from '@rjsf/utils';
 import { getUiOptions } from '@rjsf/utils';
 import userEvent from '@testing-library/user-event';
@@ -32,17 +31,9 @@ describe('ArrayFieldTemplate', () => {
     }
 
     describe('Stateful ArrayFieldTemplate', () => {
-      class ArrayFieldTemplate extends PureComponent<ArrayFieldTemplateProps> {
-        render() {
-          return <div className='field-content'>{this.props.items}</div>;
-        }
-      }
+      const ArrayFieldTemplate = ({ items }: ArrayFieldTemplateProps) => <div className='field-content'>{items}</div>;
 
-      class ArrayFieldItemTemplate extends PureComponent<ArrayFieldItemTemplateProps> {
-        render() {
-          return <div>this.props.children</div>;
-        }
-      }
+      const ArrayFieldItemTemplate = (_props: ArrayFieldItemTemplateProps) => <div>this.props.children</div>;
 
       describe('with template globally configured', () => {
         it('should render a stateful custom component', () => {
@@ -264,17 +255,9 @@ describe('ArrayFieldTemplate', () => {
   });
 
   describe('Stateful ArrayFieldTemplate', () => {
-    class ArrayFieldTemplate extends PureComponent<ArrayFieldTemplateProps> {
-      render() {
-        return <div className='field-content'>{this.props.items}</div>;
-      }
-    }
+    const ArrayFieldTemplate = ({ items }: ArrayFieldTemplateProps) => <div className='field-content'>{items}</div>;
 
-    class ArrayFieldItemTemplate extends PureComponent<ArrayFieldItemTemplateProps> {
-      render() {
-        return <div>this.props.children</div>;
-      }
-    }
+    const ArrayFieldItemTemplate = (_props: ArrayFieldItemTemplateProps) => <div>this.props.children</div>;
 
     it('should render a stateful custom component', () => {
       const { node } = createFormComponent({
@@ -290,7 +273,7 @@ describe('ArrayFieldTemplate', () => {
     it('should pass registry prop', () => {
       const ArrayFieldTemplate = ({ registry }: ArrayFieldTemplateProps) => {
         if (!registry) {
-          throw 'Error';
+          throw new Error('Error');
         }
         return null;
       };
@@ -304,7 +287,7 @@ describe('ArrayFieldTemplate', () => {
     it('should pass formData so it is in sync with items', async () => {
       const ArrayFieldTemplate = ({ formData, items, onAddClick }: ArrayFieldTemplateProps) => {
         if (formData.length !== items.length) {
-          throw 'Error';
+          throw new Error('Error');
         }
         return (
           <div>

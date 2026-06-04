@@ -17,7 +17,7 @@ export default function guessType(value: any) {
   if (typeof value === 'boolean') {
     return 'boolean';
   }
-  if (!isNaN(value)) {
+  if (typeof value === 'number' && !Number.isNaN(value)) {
     return 'number';
   }
   if (typeof value === 'object') {
