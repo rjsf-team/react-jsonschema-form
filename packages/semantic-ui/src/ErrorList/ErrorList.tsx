@@ -16,6 +16,7 @@ export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSche
       <Message.Header>{translateString(TranslatableString.ErrorsLabel)}</Message.Header>
       <Message.List>
         {errors.map((error, index) => (
+          // oxlint-disable-next-line react/no-array-index-key
           <Message.Item key={`error-${index}`}>{error.stack}</Message.Item>
         ))}
       </Message.List>

@@ -43,11 +43,11 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     options,
     uiSchema,
   });
-  const _onChange = (_: FormEvent<HTMLInputElement>, { value: eventValue }: CheckboxProps) =>
+  const handleChange = (_: FormEvent<HTMLInputElement>, { value: eventValue }: CheckboxProps) =>
     onChange(enumOptionValueDecoder<S>(String(eventValue!), enumOptions, optionValueFormat, emptyValue));
 
-  const _onBlur = () => onBlur(id, value);
-  const _onFocus = () => onFocus(id, value);
+  const handleBlur = () => onBlur(id, value);
+  const handleFocus = () => onFocus(id, value);
   const inlineOption = options.inline ? { inline: true } : { grouped: true };
   return (
     <Form.Group {...inlineOption}>
@@ -62,13 +62,13 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
               id={optionId(id, index)}
               name={htmlName || id}
               {...semanticProps}
-              onFocus={_onFocus}
-              onBlur={_onBlur}
-              onChange={_onChange}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              onChange={handleChange}
               label={option.label}
               value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
               error={rawErrors.length > 0}
-              key={index}
+              key={String(option.value)}
               checked={checked}
               disabled={disabled || itemDisabled || readonly}
               aria-describedby={ariaDescribedByIds(id)}

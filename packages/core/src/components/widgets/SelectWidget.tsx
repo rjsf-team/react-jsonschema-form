@@ -92,7 +92,11 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
         enumOptions.map(({ value: enumValue, label: enumLabel }, i) => {
           const isDisabled = enumDisabled && enumDisabled.includes(enumValue);
           return (
-            <option key={i} value={enumOptionValueEncoder(enumValue, i, optionValueFormat)} disabled={isDisabled}>
+            <option
+              key={String(enumValue)}
+              value={enumOptionValueEncoder(enumValue, i, optionValueFormat)}
+              disabled={isDisabled}
+            >
               {enumLabel}
             </option>
           );

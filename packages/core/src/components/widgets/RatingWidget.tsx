@@ -81,51 +81,50 @@ export default function RatingWidget<
   };
 
   return (
-    <>
-      <div
-        className='rating-widget'
-        style={{
-          display: 'inline-flex',
-          fontSize: '1.5rem',
-          cursor: disabled || readonly ? 'default' : 'pointer',
-        }}
-      >
-        {[...Array(numStars)].map((_, index) => {
-          const starValue = min + index;
-          const isFilled = starValue <= value;
+    <div
+      className='rating-widget'
+      style={{
+        display: 'inline-flex',
+        fontSize: '1.5rem',
+        cursor: disabled || readonly ? 'default' : 'pointer',
+      }}
+    >
+      {[...Array(numStars)].map((_, index) => {
+        const starValue = min + index;
+        const isFilled = starValue <= value;
 
-          return (
-            <span
-              key={index}
-              onClick={() => handleStarClick(starValue)}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              data-value={starValue}
-              tabIndex={disabled || readonly ? -1 : 0}
-              role='radio'
-              aria-checked={starValue === value}
-              aria-label={`${starValue} ${shape === 'heart' ? 'heart' : 'star'}${starValue === 1 ? '' : 's'}`}
-              style={{
-                color: isFilled ? '#FFD700' : '#ccc',
-                padding: '0 0.2rem',
-                transition: 'color 0.2s',
-                userSelect: 'none',
-              }}
-            >
-              {getSymbol(isFilled)}
-            </span>
-          );
-        })}
-        <input
-          type='hidden'
-          id={id}
-          name={htmlName || id}
-          value={value || ''}
-          required={required}
-          disabled={disabled || readonly}
-          aria-hidden='true'
-        />
-      </div>
-    </>
+        return (
+          <span
+            // oxlint-disable-next-line react/no-array-index-key
+            key={index}
+            onClick={() => handleStarClick(starValue)}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            data-value={starValue}
+            tabIndex={disabled || readonly ? -1 : 0}
+            role='radio'
+            aria-checked={starValue === value}
+            aria-label={`${starValue} ${shape === 'heart' ? 'heart' : 'star'}${starValue === 1 ? '' : 's'}`}
+            style={{
+              color: isFilled ? '#FFD700' : '#ccc',
+              padding: '0 0.2rem',
+              transition: 'color 0.2s',
+              userSelect: 'none',
+            }}
+          >
+            {getSymbol(isFilled)}
+          </span>
+        );
+      })}
+      <input
+        type='hidden'
+        id={id}
+        name={htmlName || id}
+        value={value || ''}
+        required={required}
+        disabled={disabled || readonly}
+        aria-hidden='true'
+      />
+    </div>
   );
 }

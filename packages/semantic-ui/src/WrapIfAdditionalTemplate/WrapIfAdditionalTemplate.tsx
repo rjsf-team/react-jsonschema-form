@@ -67,7 +67,7 @@ export default function WrapIfAdditionalTemplate<
                 onBlur={!readonly ? onKeyRenameBlur : undefined}
                 style={wrapperStyle}
                 type='text'
-              ></Form.Input>
+              />
             </Form.Group>
           </Grid.Column>
           <Grid.Column width={7} className='form-additional' verticalAlign='middle'>

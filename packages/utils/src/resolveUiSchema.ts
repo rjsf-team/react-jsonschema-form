@@ -59,30 +59,28 @@ export default function resolveUiSchema<
 
     for (const keyword of [ONE_OF_KEY, ANY_OF_KEY] as const) {
       const schemaOptions = resolvedSchema[keyword];
-      if (!Array.isArray(schemaOptions) || schemaOptions.length === 0) {
-        continue;
-      }
+      if (Array.isArray(schemaOptions) && schemaOptions.length > 0) {
+        const currentUiSchemaArray = (result as GenericObjectType)[keyword];
+        const uiSchemaArray: UiSchema<T, S, F>[] = Array.isArray(currentUiSchemaArray) ? [...currentUiSchemaArray] : [];
 
-      const currentUiSchemaArray = (result as GenericObjectType)[keyword];
-      const uiSchemaArray: UiSchema<T, S, F>[] = Array.isArray(currentUiSchemaArray) ? [...currentUiSchemaArray] : [];
-
-      let hasExpanded = false;
-      for (let i = 0; i < schemaOptions.length; i++) {
-        const option = schemaOptions[i] as GenericObjectType | undefined;
-        const optionRef = (option?.[RJSF_REF_KEY] ?? option?.[REF_KEY]) as string | undefined;
-        if (optionRef && optionRef in definitions) {
-          const optionUiSchema = (uiSchemaArray[i] || {}) as GenericObjectType;
-          uiSchemaArray[i] = mergeObjects(definitions[optionRef] as GenericObjectType, optionUiSchema) as UiSchema<
-            T,
-            S,
-            F
-          >;
-          hasExpanded = true;
+        let hasExpanded = false;
+        for (let i = 0; i < schemaOptions.length; i += 1) {
+          const option = schemaOptions[i] as GenericObjectType | undefined;
+          const optionRef = (option?.[RJSF_REF_KEY] ?? option?.[REF_KEY]) as string | undefined;
+          if (optionRef && optionRef in definitions) {
+            const optionUiSchema = (uiSchemaArray[i] || {}) as GenericObjectType;
+            uiSchemaArray[i] = mergeObjects(definitions[optionRef] as GenericObjectType, optionUiSchema) as UiSchema<
+              T,
+              S,
+              F
+            >;
+            hasExpanded = true;
+          }
         }
-      }
 
-      if (hasExpanded) {
-        (result as GenericObjectType)[keyword] = uiSchemaArray;
+        if (hasExpanded) {
+          (result as GenericObjectType)[keyword] = uiSchemaArray;
+        }
       }
     }
   }

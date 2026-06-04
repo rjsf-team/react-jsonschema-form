@@ -83,7 +83,7 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     return () => null;
   }
 
-  return componentName in fields ? fields[componentName] : fields['FallbackField'];
+  return componentName in fields ? fields[componentName] : fields.FallbackField;
 }
 
 /** The `SchemaFieldRender` component is the work-horse of react-jsonschema-form, determining what kind of real field to

@@ -157,6 +157,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         load(JSON.parse(decoded));
         setLoaded(true);
       } catch (error) {
+        // oxlint-disable-next-line no-alert
         alert('Unable to load form setup data.');
         console.error(error);
       }
@@ -186,6 +187,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const onFormDataSubmit = useCallback(({ formData: submittedFormData }: IChangeEvent, event: FormEvent<any>) => {
     console.log('submitted formData', submittedFormData);
     console.log('submit event', event);
+    // oxlint-disable-next-line no-alert
     window.alert('Form submitted');
   }, []);
 
@@ -215,11 +217,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         <ErrorBoundary>
           {showForm && (
             <DemoFrame
-              head={
-                <>
-                  <link rel='stylesheet' id='theme' href={stylesheet || ''} />
-                </>
-              }
+              head={<link rel='stylesheet' id='theme' href={stylesheet || ''} />}
               style={{
                 width: '100%',
                 height: 1000,

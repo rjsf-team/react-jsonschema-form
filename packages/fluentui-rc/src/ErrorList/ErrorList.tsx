@@ -33,6 +33,7 @@ export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSche
       </Text>
       <ul>
         {errors.map((error, i: number) => (
+          // oxlint-disable-next-line react/no-array-index-key
           <li key={i}>{error.stack}</li>
         ))}
       </ul>

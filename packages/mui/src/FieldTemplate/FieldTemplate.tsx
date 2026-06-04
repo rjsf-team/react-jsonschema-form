@@ -85,7 +85,7 @@ export default function FieldTemplate<
       registry={registry}
     >
       <FormControl
-        fullWidth={true}
+        fullWidth
         error={!!rawErrors.length}
         required={required}
         {...muiSlotProps?.fieldFormControl}

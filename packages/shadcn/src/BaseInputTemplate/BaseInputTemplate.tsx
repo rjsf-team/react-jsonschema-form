@@ -44,11 +44,11 @@ export default function BaseInputTemplate<
     ...extraProps,
     ...getInputProps<T, S, F>(schema, type, options),
   };
-  const _onChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
+  const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
-  const _onClear = useCallback(
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
+  const handleClear = useCallback(
     (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
@@ -72,13 +72,13 @@ export default function BaseInputTemplate<
         list={schema.examples ? examplesId(id) : undefined}
         {...inputProps}
         value={value || value === 0 ? value : ''}
-        onChange={onChangeOverride || _onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
+        onChange={onChangeOverride || handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
       {options.allowClearTextInputs && !readonly && !disabled && value && (
-        <ClearButton onClick={_onClear} registry={registry} />
+        <ClearButton onClick={handleClear} registry={registry} />
       )}
       {children}
       <SchemaExamples id={id} schema={schema} />

@@ -2,7 +2,7 @@ import type { Sample } from './Sample';
 
 function largeEnum(n: number) {
   const list = [];
-  for (let i = 0; i < n; i++) {
+  for (let i = 0; i < n; i += 1) {
     list.push(`option #${i}`);
   }
   return list;

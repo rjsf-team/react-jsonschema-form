@@ -69,6 +69,7 @@ function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends F
         const { name, size, type } = fileInfo;
         const handleRemove = () => onRemove(key);
         return (
+          // oxlint-disable-next-line react/no-array-index-key
           <li key={key}>
             <Markdown>{translateString(TranslatableString.FilesInfo, [name, type, String(size)])}</Markdown>
             {preview && <FileInfoPreview<T, S, F> fileInfo={fileInfo} registry={registry} />}

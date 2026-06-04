@@ -112,7 +112,7 @@ function RemoveButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
     <IconButton
       title={translateString(TranslatableString.RemoveButton)}
       {...props}
-      className={'border-destructive'}
+      className='border-destructive'
       icon={<Trash2 className='h-4 w-4 stroke-destructive' />}
     />
   );

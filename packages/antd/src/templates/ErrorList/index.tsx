@@ -22,6 +22,7 @@ export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSche
     <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
       {errors.map((error, index) => (
         <li
+          // oxlint-disable-next-line react/no-array-index-key
           key={index}
           style={{
             display: 'flex',

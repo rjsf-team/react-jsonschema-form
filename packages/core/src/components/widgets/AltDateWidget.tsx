@@ -14,6 +14,7 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
   return (
     <ul className='list-inline'>
       {elements.map((elemProps, i) => (
+        // oxlint-disable-next-line react/no-array-index-key
         <li className='list-inline-item' key={i}>
           <DateElement
             rootId={id}

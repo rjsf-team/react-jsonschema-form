@@ -43,18 +43,18 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
 
-  const _onMultiChange = ({ value: newValue }: SelectValueChangeDetails) =>
+  const handleMultiChange = ({ value: newValue }: SelectValueChangeDetails) =>
     onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, emptyValue));
 
-  const _onSingleChange = ({ value: newValue }: SelectValueChangeDetails) => {
+  const handleSingleChange = ({ value: newValue }: SelectValueChangeDetails) => {
     const selected = enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, emptyValue);
     return onChange(Array.isArray(selected) && selected.length === 1 ? selected[0] : selected);
   };
 
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
 
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
 
   const showPlaceholderOption = !multiple && schema.default === undefined;
@@ -111,9 +111,9 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         name={htmlName || id}
         multiple={isMultiple}
         closeOnSelect={!isMultiple}
-        onBlur={_onBlur}
-        onValueChange={isMultiple ? _onMultiChange : _onSingleChange}
-        onFocus={_onFocus}
+        onBlur={handleBlur}
+        onValueChange={isMultiple ? handleMultiChange : handleSingleChange}
+        onFocus={handleFocus}
         autoFocus={autofocus}
         value={formValue}
         aria-describedby={ariaDescribedByIds(id)}

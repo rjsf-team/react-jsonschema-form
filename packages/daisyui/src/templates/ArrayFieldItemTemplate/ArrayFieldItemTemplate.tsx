@@ -29,7 +29,12 @@ export default function ArrayFieldItemTemplate<
   // Different styling for first, middle, and last items to create connected feel
   const isFirstItem = index === 0;
   const isLastItem = index === totalItems - 1;
-  const borderRadius = isFirstItem ? 'rounded-t-lg' : isLastItem ? 'rounded-b-lg' : '';
+  let borderRadius = '';
+  if (isFirstItem) {
+    borderRadius = 'rounded-t-lg';
+  } else if (isLastItem) {
+    borderRadius = 'rounded-b-lg';
+  }
   const marginBottom = isLastItem ? '' : 'mb-[-1px]';
   const zIndex = index === undefined ? '' : `z-${10 - Math.min(index, 9)}`;
 

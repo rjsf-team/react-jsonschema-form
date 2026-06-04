@@ -20,6 +20,7 @@ const mockFileReader = {
   set onload(fn: (event: { target: { result: string } }) => void) {
     fn({ target: { result: 'data:text/plain;base64,x=' } });
   },
+  // oxlint-disable-next-line no-empty-function
   readAsDataURL() {},
 } as unknown as FileReader;
 
@@ -57,7 +58,7 @@ describe('StringField', () => {
   const CustomWidget = () => <div id='custom' />;
   beforeAll(() => {
     // oxlint-disable-next-line prefer-arrow-callback -- arrow functions can't be constructors (new FileReader())
-    vi.spyOn(window, 'FileReader').mockImplementation(function () {
+    vi.spyOn(window, 'FileReader').mockImplementation(function mockFileReaderFactory() {
       return mockFileReader;
     });
   });
@@ -1256,7 +1257,7 @@ describe('StringField', () => {
       });
 
       it('should render a date field with DMY format', () => {
-        uiSchema['ui:options']!['format'] = 'DMY';
+        uiSchema['ui:options']!.format = 'DMY';
         const { node } = createFormComponent({
           schema: {
             type: 'string',
@@ -1271,7 +1272,7 @@ describe('StringField', () => {
       });
 
       it('should render a date field with MDY format', () => {
-        uiSchema['ui:options']!['format'] = 'MDY';
+        uiSchema['ui:options']!.format = 'MDY';
         const { node } = createFormComponent({
           schema: {
             type: 'string',
@@ -1573,7 +1574,7 @@ describe('StringField', () => {
       });
 
       it('should render a date field with MDY format', () => {
-        uiSchema['ui:options']!['format'] = 'MDY';
+        uiSchema['ui:options']!.format = 'MDY';
         const { node } = createFormComponent({
           schema: {
             type: 'string',
@@ -1588,7 +1589,7 @@ describe('StringField', () => {
       });
 
       it('should render a date field with DMY format', () => {
-        uiSchema['ui:options']!['format'] = 'DMY';
+        uiSchema['ui:options']!.format = 'DMY';
         const { node } = createFormComponent({
           schema: {
             type: 'string',

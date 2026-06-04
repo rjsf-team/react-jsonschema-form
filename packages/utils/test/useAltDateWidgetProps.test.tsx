@@ -32,6 +32,7 @@ function SelectWidget({ id, options, value, required, disabled, readonly, onChan
     >
       {Array.isArray(enumOptions) &&
         enumOptions.map(({ label }, i) => (
+          // oxlint-disable-next-line react/no-array-index-key
           <option key={i} value={String(i)}>
             {label}
           </option>
@@ -48,6 +49,7 @@ function DateElementsTester(
     <>
       {elements.map((elemProps, i) => (
         <DateElement
+          // oxlint-disable-next-line react/no-array-index-key
           key={i}
           rootId={id}
           name={name}

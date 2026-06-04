@@ -42,9 +42,10 @@ export default function FieldErrorTemplate<
   const { rjsfSlotProps: muiSlotProps } = muiProps;
 
   return (
-    <List id={id} dense={true} disablePadding={true} {...muiSlotProps?.fieldErrorList}>
+    <List id={id} dense disablePadding {...muiSlotProps?.fieldErrorList}>
       {errors.map((error, i: number) => (
-        <ListItem key={i} disableGutters={true} {...muiSlotProps?.fieldErrorListItem}>
+        // oxlint-disable-next-line react/no-array-index-key
+        <ListItem key={i} disableGutters {...muiSlotProps?.fieldErrorListItem}>
           <FormHelperText component='div' id={`${id}-${i}`} {...muiSlotProps?.fieldErrorFormHelperText}>
             {error}
           </FormHelperText>

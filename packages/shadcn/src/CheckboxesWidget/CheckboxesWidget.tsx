@@ -41,9 +41,9 @@ export default function CheckboxesWidget<
   const optionValueFormat = getOptionValueFormat(options);
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
-  const _onBlur = ({ target }: FocusEvent<HTMLButtonElement>) =>
+  const handleBlur = ({ target }: FocusEvent<HTMLButtonElement>) =>
     onBlur(id, enumOptionValueDecoder<S>(target && (target as any).value, enumOptions, optionValueFormat, emptyValue));
-  const _onFocus = ({ target }: FocusEvent<HTMLButtonElement>) =>
+  const handleFocus = ({ target }: FocusEvent<HTMLButtonElement>) =>
     onFocus(id, enumOptionValueDecoder<S>(target && (target as any).value, enumOptions, optionValueFormat, emptyValue));
 
   return (
@@ -71,8 +71,8 @@ export default function CheckboxesWidget<
                 className={className}
                 checked={checked}
                 autoFocus={autofocus && index === 0}
-                onBlur={_onBlur}
-                onFocus={_onFocus}
+                onBlur={handleBlur}
+                onFocus={handleFocus}
                 aria-describedby={ariaDescribedByIds(id)}
               />
               <Label className='leading-tight' htmlFor={optionId(id, index)}>
