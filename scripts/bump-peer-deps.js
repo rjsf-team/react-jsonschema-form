@@ -1,3 +1,4 @@
+// oxlint-disable no-console
 const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
@@ -15,7 +16,6 @@ const dirs = fs.readdirSync(path.resolve(rootDir, 'packages'));
 dirs.forEach((dir) => {
   // Get the name of each of the package.json files from the directory
   const fileName = path.resolve(rootDir, `packages/${dir}/package.json`);
-  // oxlint-disable-next-line no-console
   console.log(`Processing ${fileName}...`);
   // Read the file and parse it into a json object and find the dev and peer dependencies
   const packageJson = fs.readFileSync(fileName);
@@ -29,7 +29,7 @@ dirs.forEach((dir) => {
       // the same value as the devDependency, so instead we extract out the major.minor versions
       const majorMinorMatch = devDeps[key].match(MAJOR_MINOR_REGEX);
       if (!majorMinorMatch) {
-        // oxlint-disable-next-line no-console
+
         console.log(`Can't find major.minor version in ${devDeps[key]} for ${key}`);
         process.exit(1);
       }
@@ -50,10 +50,8 @@ dirs.forEach((dir) => {
   // to add the OS end of line character
   fs.writeFileSync(fileName, JSON.stringify(packageObject, null, 2) + os.EOL, (err) => {
     if (err) {
-      // oxlint-disable-next-line no-console
       return console.log(err);
     }
-    // oxlint-disable-next-line no-console
     console.log(`Writing peerDep changes to ${fileName}`);
   });
 });

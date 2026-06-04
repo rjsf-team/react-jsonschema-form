@@ -11,7 +11,6 @@ interface FeatureItem {
 const FeatureList: FeatureItem[] = [
   {
     title: 'Easy to Use',
-    // oxlint-disable-next-line typescript/no-var-requires
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
@@ -22,7 +21,6 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: 'Focus on What Matters',
-    // oxlint-disable-next-line typescript/no-var-requires
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
@@ -33,7 +31,6 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: 'Powered by React',
-    // oxlint-disable-next-line typescript/no-var-requires
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
@@ -64,7 +61,6 @@ export default function HomepageFeatures(): JSX.Element {
       <div className='container'>
         <div className='row'>
           {FeatureList.map((props, idx) => (
-            // oxlint-disable-next-line react/no-array-index-key
             <Feature key={idx} {...props} />
           ))}
         </div>
