@@ -55,12 +55,12 @@ function cleanNode(node: TestNode, visited = new WeakSet<TestNode>()): TestNode 
             .join(' ');
         }
       }
-      node = { ...node, props: newProps, [CLEANED_FLAG]: true };
+      return cleanNode({ ...node, props: newProps, [CLEANED_FLAG]: true }, visited);
     }
 
     // Recursively clean children if they exist.
     if (node.children && Array.isArray(node.children)) {
-      node = {
+      return {
         ...node,
         children: node.children.map((child) => {
           if (typeof child === 'string') {

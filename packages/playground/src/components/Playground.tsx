@@ -1,3 +1,4 @@
+// oxlint-disable no-console
 import type { ComponentType, FormEvent } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Box from '@mui/material/Box';

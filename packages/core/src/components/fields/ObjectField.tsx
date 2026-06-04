@@ -128,14 +128,15 @@ function ObjectFieldPropertyFn<T = any, S extends StrictRJSFSchema = RJSFSchema,
    */
   const onPropertyChange = useCallback(
     (value: T | undefined, path: FieldPathList, newErrorSchema?: ErrorSchema<T>, id?: string) => {
+      // Don't set value = undefined for fields added by additionalProperties. Doing so removes them from the
+      // formData, which causes them to completely disappear (including the input field for the property name). Unlike
+      // fields which are "mandated" by the schema, these fields can be set to undefined by clicking a "delete field"
+      // button, so set empty values to the empty string.
+      let normalizedValue = value;
       if (value === undefined && addedByAdditionalProperties) {
-        // Don't set value = undefined for fields added by additionalProperties. Doing so removes them from the
-        // formData, which causes them to completely disappear (including the input field for the property name). Unlike
-        // fields which are "mandated" by the schema, these fields can be set to undefined by clicking a "delete field"
-        // button, so set empty values to the empty string.
-        value = '' as unknown as T;
+        normalizedValue = '' as unknown as T;
       }
-      onChange(value, path, newErrorSchema, id);
+      onChange(normalizedValue, path, newErrorSchema, id);
     },
     [onChange, addedByAdditionalProperties],
   );

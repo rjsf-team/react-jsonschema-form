@@ -107,12 +107,11 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
             );
           }
           if (value.type === 'object') {
-            if (isObject(formValue)) {
-              // If the structure is matching then give it a little boost in score
-              score += 1;
-            }
+            // If the structure is matching then give it a little boost in score
+            const structureBoost = isObject(formValue) ? 1 : 0;
             return (
               score +
+              structureBoost +
               calculateIndexScore<T, S, F>(validator, rootSchema, value as S, formValue, experimental_customMergeAllOf)
             );
           }

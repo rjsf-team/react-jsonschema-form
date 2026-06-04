@@ -29,13 +29,13 @@ export default function toErrorList<T = any>(
       }),
     );
   }
-  return Object.keys(errorSchema).reduce((acc, key) => {
+  return Object.keys(errorSchema).reduce((currentList, key) => {
     if (key !== ERRORS_KEY) {
       const childSchema = (errorSchema as GenericObjectType)[key];
       if (isPlainObject(childSchema)) {
-        acc = acc.concat(toErrorList(childSchema, [...fieldPath, key]));
+        return currentList.concat(toErrorList(childSchema, [...fieldPath, key]));
       }
     }
-    return acc;
+    return currentList;
   }, errorList);
 }

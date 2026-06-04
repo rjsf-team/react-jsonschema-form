@@ -7,7 +7,7 @@ describe('FieldTemplate', () => {
   describe('FieldTemplate should only have one child', () => {
     function FieldTemplate(props: FieldTemplateProps) {
       if (Children.count(props.children) !== 1) {
-        throw 'Got wrong number of children';
+        throw new Error('Got wrong number of children');
       }
       return null;
     }

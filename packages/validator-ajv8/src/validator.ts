@@ -119,12 +119,14 @@ export default class AJV8Validator<
         (compiledValidator.errors ?? []).forEach((error) => {
           ['missingProperty', 'property'].forEach((key) => {
             if (error.params?.[key]) {
+              // oxlint-disable-next-line no-param-reassign
               error.params[key] = `'${error.params[key]}'`;
             }
           });
           if (error.params?.deps) {
             // As `error.params.deps` is the comma+space separated list of missing dependencies, enclose each dependency separately.
             // For example, `A, B` is converted into `'A', 'B'`.
+            // oxlint-disable-next-line no-param-reassign
             error.params.deps = error.params.deps
               .split(', ')
               .map((v: string) => `'${v}'`)
@@ -136,11 +138,13 @@ export default class AJV8Validator<
         (compiledValidator.errors ?? []).forEach((error) => {
           ['missingProperty', 'property'].forEach((key) => {
             if (error.params?.[key]) {
+              // oxlint-disable-next-line no-param-reassign
               error.params[key] = error.params[key].slice(1, -1);
             }
           });
           if (error.params?.deps) {
             // Remove surrounding quotes from each missing dependency. For example, `'A', 'B'` is reverted to `A, B`.
+            // oxlint-disable-next-line no-param-reassign
             error.params.deps = error.params.deps
               .split(', ')
               .map((v: string) => v.slice(1, -1))
@@ -244,6 +248,7 @@ export default class AJV8Validator<
       const result = compiledValidator(formData);
       return result;
     } catch (e) {
+      // oxlint-disable-next-line no-console
       console.warn('Error encountered compiling schema:', e);
       return false;
     }

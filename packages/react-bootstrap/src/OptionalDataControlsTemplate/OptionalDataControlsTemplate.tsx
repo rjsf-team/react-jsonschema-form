@@ -30,7 +30,8 @@ export default function OptionalDataControlsTemplate<
         variant='secondary'
       />
     );
-  } else if (onRemoveClick) {
+  }
+  if (onRemoveClick) {
     return (
       <RemoveButton
         id={id}

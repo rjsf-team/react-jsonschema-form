@@ -140,6 +140,7 @@ function computeItemUiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F
       // Only use the result if it's truthy
       return result as UiSchema<T[], S, F>;
     } catch (e) {
+      // oxlint-disable-next-line no-console
       console.error(`Error executing dynamic uiSchema.items function for item at index ${index}:`, e);
       // Fall back to undefined to allow the field to still render
       return undefined;
@@ -902,11 +903,13 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
       if (errorSchemaRef.current) {
         newErrorSchema = {};
         for (const idx in errorSchemaRef.current) {
-          const i = parseInt(idx);
-          if (index === undefined || i < index) {
-            set(newErrorSchema, [i], errorSchemaRef.current[idx]);
-          } else if (i >= index) {
-            set(newErrorSchema, [i + 1], errorSchemaRef.current[idx]);
+          if (Object.hasOwn(errorSchemaRef.current, idx)) {
+            const i = parseInt(idx, 10);
+            if (index === undefined || i < index) {
+              set(newErrorSchema, [i], errorSchemaRef.current[idx]);
+            } else if (i >= index) {
+              set(newErrorSchema, [i + 1], errorSchemaRef.current[idx]);
+            }
           }
         }
       }
@@ -942,11 +945,13 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
       if (errorSchemaRef.current) {
         newErrorSchema = {};
         for (const idx in errorSchemaRef.current) {
-          const i = parseInt(idx);
-          if (i <= index) {
-            set(newErrorSchema, [i], errorSchemaRef.current[idx]);
-          } else if (i > index) {
-            set(newErrorSchema, [i + 1], errorSchemaRef.current[idx]);
+          if (Object.hasOwn(errorSchemaRef.current, idx)) {
+            const i = parseInt(idx, 10);
+            if (i <= index) {
+              set(newErrorSchema, [i], errorSchemaRef.current[idx]);
+            } else if (i > index) {
+              set(newErrorSchema, [i + 1], errorSchemaRef.current[idx]);
+            }
           }
         }
       }
@@ -982,11 +987,13 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
       if (errorSchemaRef.current) {
         newErrorSchema = {};
         for (const idx in errorSchemaRef.current) {
-          const i = parseInt(idx);
-          if (i < index) {
-            set(newErrorSchema, [i], errorSchemaRef.current[idx]);
-          } else if (i > index) {
-            set(newErrorSchema, [i - 1], errorSchemaRef.current[idx]);
+          if (Object.hasOwn(errorSchemaRef.current, idx)) {
+            const i = parseInt(idx, 10);
+            if (i < index) {
+              set(newErrorSchema, [i], errorSchemaRef.current[idx]);
+            } else if (i > index) {
+              set(newErrorSchema, [i - 1], errorSchemaRef.current[idx]);
+            }
           }
         }
       }
@@ -1013,13 +1020,15 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
       if (errorSchemaRef.current) {
         newErrorSchema = {};
         for (const idx in errorSchemaRef.current) {
-          const i = parseInt(idx);
-          if (i === index) {
-            set(newErrorSchema, [newIndex], errorSchemaRef.current[index]);
-          } else if (i === newIndex) {
-            set(newErrorSchema, [index], errorSchemaRef.current[newIndex]);
-          } else {
-            set(newErrorSchema, [idx], errorSchemaRef.current[i]);
+          if (Object.hasOwn(errorSchemaRef.current, idx)) {
+            const i = parseInt(idx, 10);
+            if (i === index) {
+              set(newErrorSchema, [newIndex], errorSchemaRef.current[index]);
+            } else if (i === newIndex) {
+              set(newErrorSchema, [index], errorSchemaRef.current[newIndex]);
+            } else {
+              set(newErrorSchema, [idx], errorSchemaRef.current[i]);
+            }
           }
         }
       }

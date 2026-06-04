@@ -211,6 +211,7 @@ export default function omitExtraData<
         }
       }
       if (v !== undefined) {
+        // oxlint-disable-next-line no-param-reassign
         target[key] = v;
       }
     }
@@ -265,6 +266,7 @@ export default function omitExtraData<
     // When propertyNames is present, the schema only constrains key names — all source keys are valid.
     if (propertyNames !== undefined) {
       for (const [key, value] of Object.entries(source)) {
+        // oxlint-disable-next-line no-param-reassign
         target[key] = value;
       }
     }
@@ -387,10 +389,11 @@ export default function omitExtraData<
       (Array.isArray(source) && source.length === 0) ||
       (isObject(source) && Object.keys(source).length === 0)
     ) {
+      let result = target;
       for (const branch of anyOf as (S | boolean)[]) {
-        target = omit(branch, source, target);
+        result = omit(branch, source, result);
       }
-      return target;
+      return result;
     }
     return handleOneOf(anyOf, childSchema, source, target);
   }
@@ -410,14 +413,15 @@ export default function omitExtraData<
     if (dependencies === undefined || !isObjectValue(source)) {
       return target;
     }
+    let result = target;
     for (const [key, deps] of Object.entries(dependencies)) {
       // Skip property dependencies (string arrays); only process schema dependencies.
       if (!(key in source) || Array.isArray(deps)) {
         continue;
       }
-      target = omit(deps as S | boolean, source, target);
+      result = omit(deps as S | boolean, source, result);
     }
-    return target;
+    return result;
   }
 
   /** Core recursive filter. Resolves `$ref`s, merges `allOf`, then delegates to the type-specific
@@ -448,24 +452,24 @@ export default function omitExtraData<
       localSchema = doMergeAllOf<S>(localSchema, experimental_customMergeAllOf);
     }
 
-    target = handleAnyOf(localSchema, source, handleOneOf(localSchema.oneOf, localSchema, source, target));
+    let filtered = handleAnyOf(localSchema, source, handleOneOf(localSchema.oneOf, localSchema, source, target));
 
     const type = getSchemaType<S>(localSchema);
     if (type === 'object') {
       if (!isObjectValue(source)) {
         return undefined;
       }
-      target = handleObject(localSchema, source, isObjectValue(target) ? target : {});
+      filtered = handleObject(localSchema, source, isObjectValue(filtered) ? filtered : {});
     } else if (type === 'array') {
       if (!Array.isArray(source)) {
         return undefined;
       }
-      target = handleArray(localSchema, source, Array.isArray(target) ? target : []);
-    } else if (target === undefined) {
-      target = source;
+      filtered = handleArray(localSchema, source, Array.isArray(filtered) ? filtered : []);
+    } else if (filtered === undefined) {
+      filtered = source;
     }
 
-    return handleDependencies(localSchema, source, handleConditions(localSchema, source, target));
+    return handleDependencies(localSchema, source, handleConditions(localSchema, source, filtered));
   }
 
   return omit(schema, formData) as T | undefined;

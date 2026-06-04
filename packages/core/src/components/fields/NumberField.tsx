@@ -58,17 +58,15 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
 
       // Normalize decimals that don't start with a zero character in advance so
       // that the rest of the normalization logic is simpler
-      if (`${newValue}`.startsWith('.')) {
-        newValue = `0${newValue}`;
-      }
+      const normalizedValue = `${newValue}`.startsWith('.') ? `0${newValue}` : newValue;
 
       // Check that the value is a string (this can happen if the widget used is a
       // <select>, due to an enum declaration etc) then, if the value ends in a
       // trailing decimal point or multiple zeroes, strip the trailing values
       const processed =
-        typeof newValue === 'string' && newValue.match(trailingCharMatcherWithPrefix)
-          ? asNumber(newValue.replace(trailingCharMatcher, ''))
-          : asNumber(newValue);
+        typeof normalizedValue === 'string' && normalizedValue.match(trailingCharMatcherWithPrefix)
+          ? asNumber(normalizedValue.replace(trailingCharMatcher, ''))
+          : asNumber(normalizedValue);
 
       onChange(processed as unknown as T, path, errorSchema, id);
     },

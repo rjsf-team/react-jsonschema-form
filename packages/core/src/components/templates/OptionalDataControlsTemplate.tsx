@@ -27,7 +27,8 @@ export default function OptionalDataControlsTemplate<
         title={label}
       />
     );
-  } else if (onRemoveClick) {
+  }
+  if (onRemoveClick) {
     return (
       <IconButton
         id={id}

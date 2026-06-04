@@ -647,7 +647,8 @@ export default class Form<
       // If the `props.noValidate` option is set or the schema has changed, we reset the error state.
       if (props.noValidate || isSchemaChanged) {
         return { errors: [], errorSchema: {} };
-      } else if (!props.liveValidate) {
+      }
+      if (!props.liveValidate) {
         return {
           errors: state.schemaValidationErrors || [],
           errorSchema: state.schemaValidationErrorSchema || {},
@@ -696,13 +697,13 @@ export default class Form<
           'preventDuplicates',
         ) as ErrorSchema<T>;
       }
-      const mergedErrors = this.mergeErrors({ errorSchema, errors }, props.extraErrors, state.customErrors);
+      const mergedErrors = Form.mergeErrors<T>({ errorSchema, errors }, props.extraErrors, state.customErrors);
       errors = mergedErrors.errors;
       errorSchema = mergedErrors.errorSchema;
     }
 
     // Only store a new registry when the props cause a different one to be created
-    const newRegistry = this.getRegistry(props, rootSchema, schemaUtils);
+    const newRegistry = Form.getRegistry(props, rootSchema, schemaUtils);
     const registry = deepEquals(state.registry, newRegistry) ? state.registry : newRegistry;
 
     // Only compute a new `fieldPathId` when the `idPrefix` is different than the existing fieldPathId's ID_KEY
@@ -791,7 +792,7 @@ export default class Form<
    * @return - The `extraErrors` and `customErrors` merged into the `schemaValidation`
    * @private
    */
-  private mergeErrors(
+  private static mergeErrors<T = any>(
     schemaValidation: ValidationData<T>,
     extraErrors?: FormProps['extraErrors'],
     customErrors?: ErrorSchemaBuilder,
@@ -847,7 +848,7 @@ export default class Form<
     }
     const schemaValidationErrors = errors;
     const schemaValidationErrorSchema = errorSchema;
-    const mergedErrors = this.mergeErrors({ errorSchema, errors }, extraErrors, customErrors);
+    const mergedErrors = Form.mergeErrors<T>({ errorSchema, errors }, extraErrors, customErrors);
     return { ...mergedErrors, schemaValidationErrors, schemaValidationErrorSchema };
   }
 
@@ -857,6 +858,7 @@ export default class Form<
    * @param fields - The fields to keep while filtering
    * @deprecated - To be removed as an exported `Form` function in a future release; there isn't a planned replacement
    */
+  // oxlint-disable-next-line class-methods-use-this
   getUsedFormData = (formData: T | undefined, fields: string[]): T | undefined => getUsedFormData(formData, fields);
 
   /** Returns the list of field names from inspecting the `pathSchema` as well as using the `formData`
@@ -865,6 +867,7 @@ export default class Form<
    * @param [formData] - The form data to use while checking for empty objects/arrays
    * @deprecated - To be removed as an exported `Form` function in a future release; there isn't a planned replacement
    */
+  // oxlint-disable-next-line class-methods-use-this
   getFieldNames = (pathSchema: PathSchema<T>, formData?: T): string[][] => getFieldNames(pathSchema, formData);
 
   /** Returns the `formData` after filtering to remove any extra data not in a form field
@@ -1054,7 +1057,11 @@ export default class Form<
       state = { ...state, formData: newFormData, ...liveValidation, customErrors };
     } else if (!noValidate && newErrorSchema) {
       // Merging 'newErrorSchema' into 'errorSchema' to display the custom raised errors.
-      const mergedErrors = this.mergeErrors({ errorSchema: mergeBaseErrorSchema, errors }, extraErrors, customErrors);
+      const mergedErrors = Form.mergeErrors<T>(
+        { errorSchema: mergeBaseErrorSchema, errors },
+        extraErrors,
+        customErrors,
+      );
       state = { ...state, formData: newFormData, ...mergedErrors, customErrors };
     }
 
@@ -1226,7 +1233,11 @@ export default class Form<
    * @returns - The `GlobalFormOptions` from the props
    * @private
    */
-  private getGlobalFormOptions(props: FormProps<T, S, F>): GlobalFormOptions {
+  private static getGlobalFormOptions<
+    T = any,
+    S extends StrictRJSFSchema = RJSFSchema,
+    F extends FormContextType = any,
+  >(props: FormProps<T, S, F>): GlobalFormOptions {
     const {
       uiSchema = {},
       experimental_componentUpdateStrategy,
@@ -1247,7 +1258,11 @@ export default class Form<
   }
 
   /** Computed the registry for the form using the given `props`, `schema` and `schemaUtils` */
-  getRegistry(props: FormProps<T, S, F>, schema: S, schemaUtils: SchemaUtilsType<T, S, F>): Registry<T, S, F> {
+  static getRegistry<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+    props: FormProps<T, S, F>,
+    schema: S,
+    schemaUtils: SchemaUtilsType<T, S, F>,
+  ): Registry<T, S, F> {
     const { translateString: customTranslateString, uiSchema = {} } = props;
     const { fields, templates, widgets, formContext, translateString } = getDefaultRegistry<T, S, F>();
     return {
@@ -1266,7 +1281,7 @@ export default class Form<
       schemaUtils,
       translateString: customTranslateString || translateString,
       globalUiOptions: uiSchema[UI_GLOBAL_OPTIONS_KEY],
-      globalFormOptions: this.getGlobalFormOptions(props),
+      globalFormOptions: Form.getGlobalFormOptions(props),
       uiSchemaDefinitions: uiSchema[UI_DEFINITIONS_KEY] ?? {},
     };
   }
@@ -1329,7 +1344,7 @@ export default class Form<
     const { errors: prevErrors } = this.state;
     const schemaValidation = this.validate(formData);
     // Always merge extraErrors so they remain visible in state regardless of extraErrorsBlockSubmit.
-    const { errors, errorSchema } = extraErrors ? this.mergeErrors(schemaValidation, extraErrors) : schemaValidation;
+    const { errors, errorSchema } = extraErrors ? Form.mergeErrors<T>(schemaValidation, extraErrors) : schemaValidation;
     // hasError gates submission: schema errors always block; extraErrors only block when
     // extraErrorsBlockSubmit is set (non-breaking default: extraErrors are informational only).
     const hasError = schemaValidation.errors.length > 0 || (extraErrors && extraErrorsBlockSubmit);
@@ -1352,6 +1367,7 @@ export default class Form<
           if (onError) {
             onError(errors);
           } else {
+            // oxlint-disable-next-line no-console
             console.error('Form validation failed', errors);
           }
         },

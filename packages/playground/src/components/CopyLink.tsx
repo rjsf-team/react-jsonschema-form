@@ -10,8 +10,10 @@ export default function CopyLink({ shareURL, onShare }: CopyLinkProps) {
 
   function onCopyClick() {
     input.current?.select();
-    // clipboard.writeText returns a Promise; fire-and-forget is intentional here
-    void navigator.clipboard.writeText(input.current?.value ?? '');
+    navigator.clipboard.writeText(input.current?.value ?? '').catch((e) => {
+      // oxlint-disable-next-line no-console
+      console.error('clipboard write failed', e);
+    });
   }
 
   const style = { maxWidth: '21.525rem', margin: '5px 0' };

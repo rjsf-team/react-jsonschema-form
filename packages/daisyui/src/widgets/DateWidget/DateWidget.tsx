@@ -225,6 +225,7 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
       }
     } catch (e) {
       // Security error, we're in a cross-origin iframe
+      // oxlint-disable-next-line no-console
       console.log('Unable to access parent frame:', e);
     }
 

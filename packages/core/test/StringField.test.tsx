@@ -20,9 +20,7 @@ const mockFileReader = {
   set onload(fn: (event: { target: { result: string } }) => void) {
     fn({ target: { result: 'data:text/plain;base64,x=' } });
   },
-  readAsDataURL() {
-    return;
-  },
+  readAsDataURL() {},
 } as unknown as FileReader;
 
 function StringFieldTest(props: FieldProps) {
@@ -58,7 +56,7 @@ const user = userEvent.setup();
 describe('StringField', () => {
   const CustomWidget = () => <div id='custom' />;
   beforeAll(() => {
-    // eslint-disable-next-line prefer-arrow-callback -- arrow functions can't be constructors (new FileReader())
+    // oxlint-disable-next-line prefer-arrow-callback -- arrow functions can't be constructors (new FileReader())
     vi.spyOn(window, 'FileReader').mockImplementation(function () {
       return mockFileReader;
     });

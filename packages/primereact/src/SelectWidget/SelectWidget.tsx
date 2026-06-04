@@ -52,9 +52,9 @@ function SingleSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   const optionValueFormat = getOptionValueFormat(options);
   const primeProps = (options.prime || {}) as object;
 
-  multiple = typeof multiple === 'undefined' ? false : multiple;
+  const isMultiple = typeof multiple === 'undefined' ? false : multiple;
 
-  const emptyValue = multiple ? [] : '';
+  const emptyValue = isMultiple ? [] : '';
 
   const _onChange = (e: { value: any }) =>
     onChange(enumOptionValueDecoder<S>(e.value, enumOptions, optionValueFormat, optEmptyVal));
@@ -69,7 +69,7 @@ function SingleSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
       id={id}
       name={htmlName || id}
       {...primeProps}
-      value={enumOptionSelectedValue<S>(value, enumOptions, !!multiple, optionValueFormat, emptyValue)}
+      value={enumOptionSelectedValue<S>(value, enumOptions, isMultiple, optionValueFormat, emptyValue)}
       options={(enumOptions ?? []).map(({ value: enumValue, label: enumLabel }, i: number) => ({
         label: enumLabel,
         value: enumOptionValueEncoder(enumValue, i, optionValueFormat),
