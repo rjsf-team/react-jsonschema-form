@@ -2,7 +2,9 @@
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": [
     "typescript",
-    "react"
+    "react",
+    "jsx-a11y",
+    "import"
   ],
   "options": {
     "typeAware": true
@@ -40,6 +42,7 @@
     "no-control-regex": "error",
     "no-debugger": "error",
     "no-delete-var": "error",
+    "typescript/no-deprecated": "error",
     "no-dupe-class-members": "error",
     "no-dupe-else-if": "error",
     "no-dupe-keys": "error",
@@ -206,6 +209,16 @@
     "typescript/no-floating-promises": "error",
     "typescript/no-misused-promises": "error",
 
+    "node/global-require": "error",
+    "node/no-exports-assign": "error",
+    "node/no-new-require": "error",
+    "node/no-path-concat": "error",
+
+    "react-perf/jsx-no-jsx-as-prop": "error",
+    "react-perf/jsx-no-new-array-as-prop": "error",
+    "react-perf/jsx-no-new-function-as-prop": "error",
+    "react-perf/jsx-no-new-object-as-prop": "error",
+
     "no-console": "error",
 
     "array-callback-return": ["error", { "allowImplicit": true }],
@@ -260,7 +273,62 @@
     "prefer-regex-literals": ["error", { "disallowRedundantWrapping": true }],
     "radix": "error",
     "vars-on-top": "error",
-    "yoda": "error"
+    "yoda": "error",
+
+    "import/default": "error",
+    "import/export": "off",
+    "import/extensions": ["error", "ignorePackages", { "js": "never", "mjs": "never", "cjs": "never", "jsx": "never" }],
+    "import/first": "error",
+    "import/named": "error",
+    "import/namespace": "error",
+    "import/newline-after-import": "error",
+    "import/no-absolute-path": "error",
+    "import/no-amd": "error",
+    "import/no-cycle": "off",
+    "import/no-duplicates": "error",
+    "import/no-dynamic-require": "error",
+    "import/no-empty-named-blocks": "error",
+    "import/no-mutable-exports": "error",
+    "import/no-named-as-default": "error",
+    "import/no-named-as-default-member": "error",
+    "import/no-named-default": "error",
+    "import/no-self-import": "error",
+    "import/no-webpack-loader-syntax": "error",
+    "import/prefer-default-export": "off",
+
+    "jsx-a11y/alt-text": ["error", { "elements": ["img", "object", "area", "input[type=\"image\"]"], "img": [], "object": [], "area": [], "input[type=\"image\"]": [] }],
+    "jsx-a11y/anchor-has-content": "error",
+    "jsx-a11y/anchor-is-valid": ["error", { "components": ["Link"], "specialLink": ["to"], "aspects": ["noHref", "invalidHref", "preferButton"] }],
+    "jsx-a11y/aria-activedescendant-has-tabindex": "error",
+    "jsx-a11y/aria-props": "error",
+    "jsx-a11y/aria-proptypes": "error",
+    "jsx-a11y/aria-role": ["error", { "ignoreNonDOM": false }],
+    "jsx-a11y/aria-unsupported-elements": "error",
+    "jsx-a11y/autocomplete-valid": ["error", { "inputComponents": ["Input"] }],
+    "jsx-a11y/click-events-have-key-events": "error",
+    "jsx-a11y/control-has-associated-label": ["error", { "labelAttributes": ["label"], "controlComponents": [], "ignoreElements": ["audio", "canvas", "embed", "input", "textarea", "tr", "video"], "ignoreRoles": ["grid", "listbox", "menu", "menubar", "radiogroup", "row", "tablist", "toolbar", "tree", "treegrid"], "depth": 5 }],
+    "jsx-a11y/heading-has-content": ["error", { "components": ["Typography", "Text"] }],
+    "jsx-a11y/html-has-lang": "error",
+    "jsx-a11y/iframe-has-title": "error",
+    "jsx-a11y/img-redundant-alt": "error",
+    "jsx-a11y/interactive-supports-focus": "error",
+    "jsx-a11y/label-has-associated-control": ["error", { "labelComponents": [], "labelAttributes": [], "controlComponents": [], "assert": "either", "depth": 25 }],
+    "jsx-a11y/lang": "error",
+    "jsx-a11y/media-has-caption": ["error", { "audio": [], "video": [], "track": [] }],
+    "jsx-a11y/mouse-events-have-key-events": "error",
+    "jsx-a11y/no-access-key": "error",
+    "jsx-a11y/no-autofocus": ["error", { "ignoreNonDOM": true }],
+    "jsx-a11y/no-distracting-elements": ["error", { "elements": ["marquee", "blink"] }],
+    "jsx-a11y/no-interactive-element-to-noninteractive-role": ["error", { "tr": ["none", "presentation"] }],
+    "jsx-a11y/no-noninteractive-element-interactions": ["error", { "handlers": ["onClick", "onMouseDown", "onMouseUp", "onKeyPress", "onKeyDown", "onKeyUp"] }],
+    "jsx-a11y/no-noninteractive-element-to-interactive-role": ["error", { "ul": ["listbox", "menu", "menubar", "radiogroup", "tablist", "tree", "treegrid"], "ol": ["listbox", "menu", "menubar", "radiogroup", "tablist", "tree", "treegrid"], "li": ["menuitem", "option", "row", "tab", "treeitem"], "table": ["grid"], "td": ["gridcell"] }],
+    "jsx-a11y/no-noninteractive-tabindex": ["error", { "tags": [], "roles": ["tabpanel"], "allowExpressionValues": true }],
+    "jsx-a11y/no-redundant-roles": "error",
+    "jsx-a11y/no-static-element-interactions": ["error", { "handlers": ["onClick", "onMouseDown", "onMouseUp", "onKeyPress", "onKeyDown", "onKeyUp"] }],
+    "jsx-a11y/role-has-required-aria-props": "error",
+    "jsx-a11y/role-supports-aria-props": "error",
+    "jsx-a11y/scope": "error",
+    "jsx-a11y/tabindex-no-positive": "error"
   },
   "overrides": [
     {
@@ -318,7 +386,12 @@
         "typescript/prefer-reduce-type-parameter": "error",
         "typescript/prefer-string-starts-ends-with": "warn",
         "typescript/return-await": ["error", "in-try-catch"],
-        "no-undef": "off"
+        "typescript/only-throw-error": "error",
+        "no-throw-literal": "off",
+        "no-undef": "off",
+        "import/named": "off",
+        "import/no-named-as-default-member": "off",
+        "import/extensions": ["error", "ignorePackages", { "js": "never", "mjs": "never", "cjs": "never", "jsx": "never", "ts": "never", "cts": "never", "mts": "never", "tsx": "never" }]
       }
     },
     {
@@ -350,8 +423,26 @@
         "vitest": true
       },
       "rules": {
+        "import/no-named-as-default": "off",
         "typescript/no-misused-promises": "off",
-        "no-shadow": "off"
+        "no-shadow": "off",
+        "vitest/expect-expect": "error",
+        "vitest/no-commented-out-tests": "error",
+        "vitest/no-conditional-expect": "error",
+        "vitest/no-disabled-tests": "warn",
+        "vitest/no-focused-tests": "error",
+        "vitest/no-identical-title": "error",
+        "vitest/no-import-node-test": "error",
+        "vitest/no-interpolation-in-snapshots": "error",
+        "vitest/no-mocks-import": "error",
+        "vitest/no-standalone-expect": "error",
+        "vitest/no-unneeded-async-expect-function": "error",
+        "vitest/prefer-called-exactly-once-with": "error",
+        "vitest/require-local-test-context-for-concurrent-snapshots": "error",
+        "vitest/valid-describe-callback": "error",
+        "vitest/valid-expect": "error",
+        "vitest/valid-expect-in-promise": "error",
+        "vitest/valid-title": "error"
       }
     },
     {
@@ -374,6 +465,17 @@
       "rules": {
         "typescript/no-var-requires": "off",
         "react/no-array-index-key": "off"
+      }
+    },
+    {
+      "files": [
+        "**/components/widgets/*.tsx",
+        "**/components/templates/*.tsx",
+        "**/widgets/**/*.tsx",
+        "**/templates/**/*.tsx"
+      ],
+      "rules": {
+        "jsx-a11y/no-autofocus": "off"
       }
     }
   ]

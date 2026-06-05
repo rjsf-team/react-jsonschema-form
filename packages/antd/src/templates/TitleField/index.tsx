@@ -39,11 +39,15 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
     [`${prefixCls}-item-required`]: required,
     [`${prefixCls}-item-no-colon`]: !colon,
   });
+  // The antd theme, for some reason, made its labels cause the associated field to get the focus when clicked (which
+  // kinda breaks a11y), but since it's built that way we will honor it until we decided to break it in a major release
+  // oxlint-disable jsx-a11y/no-noninteractive-element-interactions -- <label> is interactive; oxlint incorrectly flags it
   let heading = title ? (
     <label
       className={labelClassName}
       htmlFor={id}
       onClick={handleLabelClick}
+      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleLabelClick()}
       title={typeof title === 'string' ? title : ''}
     >
       {labelChildren}

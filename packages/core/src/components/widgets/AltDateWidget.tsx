@@ -32,16 +32,16 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
       ))}
       {(options.hideNowButton !== 'undefined' ? !options.hideNowButton : true) && (
         <li className='list-inline-item'>
-          <a href='#' className='btn btn-info btn-now' onClick={handleSetNow}>
+          <button type='button' className='btn btn-info btn-now' onClick={handleSetNow}>
             {translateString(TranslatableString.NowLabel)}
-          </a>
+          </button>
         </li>
       )}
       {(options.hideClearButton !== 'undefined' ? !options.hideClearButton : true) && (
         <li className='list-inline-item'>
-          <a href='#' className='btn btn-warning btn-clear' onClick={handleClear}>
+          <button type='button' className='btn btn-warning btn-clear' onClick={handleClear}>
             {translateString(TranslatableString.ClearLabel)}
-          </a>
+          </button>
         </li>
       )}
     </ul>

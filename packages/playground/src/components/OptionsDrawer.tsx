@@ -46,7 +46,7 @@ function OptionsButtons({ playGroundFormRef }: { playGroundFormRef: MutableRefOb
   }, [playGroundFormRef]);
   return (
     <>
-      <label className='control-label'>Programmatic</label>
+      <span className='control-label'>Programmatic</span>
       <div className='btn-group'>
         <HeaderButton title='Click me to submit the form programmatically.' onClick={submitClick}>
           Submit

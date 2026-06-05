@@ -111,7 +111,7 @@ export default function SelectWidget<
       {...extraProps}
       // When the open change is called, set the open state, needed so that the select opens properly in the playground
       onOpenChange={setOpen}
-      filterOption={filterOption}
+      showSearch={{ filterOption }}
       aria-describedby={ariaDescribedByIds(id)}
       options={selectOptions}
     />

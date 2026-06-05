@@ -24,7 +24,6 @@ function SelectWidget({ id, options, value, required, disabled, readonly, onChan
   return (
     <select
       id={id}
-      role='combobox'
       value={typeof selectedIndexes === 'undefined' ? '' : selectedIndexes}
       required={required}
       disabled={disabled || readonly}

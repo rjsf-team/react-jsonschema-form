@@ -240,7 +240,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const { node } = createFormComponent({ schema, idPrefix: 'rjsf' });
       const inputs = node.querySelectorAll('input');
       const ids = [];
-      for (let i = 0, len = inputs.length; i < len; i++) {
+      for (let i = 0, len = inputs.length; i < len; i += 1) {
         const input = inputs[i];
         ids.push(input.getAttribute('id'));
       }
@@ -264,7 +264,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const { node } = createFormComponent({ schema, idPrefix: 'rjsf' });
       const inputs = node.querySelectorAll('input');
       const ids = [];
-      for (let i = 0, len = inputs.length; i < len; i++) {
+      for (let i = 0, len = inputs.length; i < len; i += 1) {
         const input = inputs[i];
         ids.push(input.getAttribute('id'));
       }
@@ -318,7 +318,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const { node } = createFormComponent({ schema, idPrefix: 'rjsf' });
       const inputs = node.querySelectorAll('input');
       const ids = [];
-      for (let i = 0, len = inputs.length; i < len; i++) {
+      for (let i = 0, len = inputs.length; i < len; i += 1) {
         const input = inputs[i];
         ids.push(input.getAttribute('id'));
       }
@@ -341,7 +341,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const { node } = createFormComponent({ schema, idSeparator: '.' });
       const inputs = node.querySelectorAll('input');
       const ids = [];
-      for (let i = 0, len = inputs.length; i < len; i++) {
+      for (let i = 0, len = inputs.length; i < len; i += 1) {
         const input = inputs[i];
         ids.push(input.getAttribute('id'));
       }
@@ -5954,6 +5954,7 @@ describe('extraErrors set after submit (#4965)', () => {
         setExtraErrors(sampleErrors);
       }, []);
 
+      // oxlint-disable-next-line typescript/no-deprecated
       return <Form schema={schema} validator={validator} onSubmit={onSubmit} extraErrors={extraErrors} noValidate />;
     }
 

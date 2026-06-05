@@ -30,7 +30,7 @@ import get from 'lodash/get';
 import has from 'lodash/has';
 import isObject from 'lodash/isObject';
 import set from 'lodash/set';
-import { Markdown } from 'markdown-to-jsx';
+import { Markdown } from 'markdown-to-jsx/react';
 
 import { ADDITIONAL_PROPERTY_KEY_REMOVE } from '../constants';
 
