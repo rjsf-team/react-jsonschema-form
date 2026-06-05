@@ -82,7 +82,7 @@ export default function SelectWidget<
         const isDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(enumValue);
         return (
           <option
-            key={i}
+            key={String(enumValue)}
             id={enumLabel}
             value={enumOptionValueEncoder(enumValue, i, optionValueFormat)}
             disabled={isDisabled}

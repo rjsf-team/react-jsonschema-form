@@ -208,11 +208,13 @@ export interface FieldPath {
  */
 export type PathSchema<T = any> = T extends (infer U)[]
   ? FieldPath & {
+      // oxlint-disable-next-line typescript/no-deprecated
       [i: number]: PathSchema<U>;
     }
   : T extends GenericObjectType
     ? FieldPath & {
         /** The set of names for fields in the recursive object structure */
+        // oxlint-disable-next-line typescript/no-deprecated
         [key in keyof T]?: PathSchema<T[key]>;
       }
     : FieldPath;
@@ -1472,5 +1474,6 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    * @returns - The `PathSchema` object for the `schema`
    * @deprecated - To be removed as an exported `@rjsf/utils` function in a future release
    */
+  // oxlint-disable-next-line typescript/no-deprecated
   toPathSchema(schema: S, name?: string, formData?: T): PathSchema<T>;
 }

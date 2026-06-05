@@ -105,7 +105,6 @@ export default function WrapIfAdditionalTemplate<
       <div className={hasDescription ? classes.alignCenter : classes.alignEnd}>
         <RemoveButton
           id={buttonId(id, 'remove')}
-          iconType='default'
           className='rjsf-object-property-remove'
           style={btnStyle}
           disabled={disabled || readonly}

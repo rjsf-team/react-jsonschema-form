@@ -32,6 +32,7 @@ export default function FieldErrorTemplate<
   return (
     <ul className={classes.list}>
       {errors.map((error, i: number) => (
+        // oxlint-disable-next-line react/no-array-index-key
         <li key={i} className={classes.listItem}>
           <small className={classes.errorLabel} id={id}>
             {error}

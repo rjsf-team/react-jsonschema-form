@@ -38,9 +38,9 @@ export default function CheckboxesWidget<
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
 
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement | any>) =>
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement | any>) =>
     onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement | any>) =>
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement | any>) =>
     onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
 
   const row = options ? options.inline : false;
@@ -71,13 +71,13 @@ export default function CheckboxesWidget<
               const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
               return (
                 <Checkbox
-                  key={index}
+                  key={String(option.value)}
                   id={optionId(id, index)}
                   name={htmlName || id}
                   value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
                   disabled={disabled || itemDisabled || readonly}
-                  onBlur={_onBlur}
-                  onFocus={_onFocus}
+                  onBlur={handleBlur}
+                  onFocus={handleFocus}
                 >
                   {option.label && <Text>{option.label}</Text>}
                 </Checkbox>

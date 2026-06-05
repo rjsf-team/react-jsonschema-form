@@ -16,7 +16,7 @@ export default function ArrayFieldItemTemplate<
   );
 
   return (
-    <HStack alignItems={'flex-end'} py={1}>
+    <HStack alignItems='flex-end' py={1}>
       <Box w='100%'>{children}</Box>
       {hasToolbar && (
         <Box>

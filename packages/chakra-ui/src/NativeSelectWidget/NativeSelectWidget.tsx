@@ -44,13 +44,13 @@ export default function NativeSelectWidget<
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
 
-  const _onChange = ({ target }: ChangeEvent<HTMLSelectElement>) =>
+  const handleChange = ({ target }: ChangeEvent<HTMLSelectElement>) =>
     onChange(enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
 
-  const _onBlur = ({ target }: FocusEvent<HTMLSelectElement>) =>
+  const handleBlur = ({ target }: FocusEvent<HTMLSelectElement>) =>
     onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
 
-  const _onFocus = ({ target }: FocusEvent<HTMLSelectElement>) =>
+  const handleFocus = ({ target }: FocusEvent<HTMLSelectElement>) =>
     onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
 
   const showPlaceholderOption = !multiple && schema.default === undefined;
@@ -107,9 +107,9 @@ export default function NativeSelectWidget<
       <NativeSelect.Root>
         <NativeSelect.Field
           id={id}
-          onBlur={_onBlur}
-          onChange={_onChange}
-          onFocus={_onFocus}
+          onBlur={handleBlur}
+          onChange={handleChange}
+          onFocus={handleFocus}
           autoFocus={autofocus}
           value={formValue}
           aria-describedby={ariaDescribedByIds(id)}

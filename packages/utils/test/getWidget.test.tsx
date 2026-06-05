@@ -43,6 +43,7 @@ const TestRefWidget: Widget = forwardRef<HTMLSpanElement, Partial<WidgetProps>>(
   },
 );
 
+// oxlint-disable-next-line typescript/no-deprecated
 TestRefWidget.defaultProps = {
   options: { id: 'test-id' },
 };

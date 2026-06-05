@@ -13,6 +13,7 @@ export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSche
     <Alert status='error' title={translateString(TranslatableString.ErrorsLabel)} mb={3}>
       <ListRoot listStylePosition='inside'>
         {errors.map((error, i) => (
+          // oxlint-disable-next-line react/no-array-index-key
           <ListItem key={i}>{error.stack}</ListItem>
         ))}
       </ListRoot>

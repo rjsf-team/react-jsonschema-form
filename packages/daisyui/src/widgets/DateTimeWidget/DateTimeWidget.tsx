@@ -13,6 +13,8 @@ import 'react-day-picker/dist/style.css';
  * Props for the DateTimePicker popup component
  */
 interface DateTimePickerProps {
+  /** DayTimePicker id */
+  id: string;
   /** Currently selected date */
   selectedDate?: Date;
   /** Currently displayed month */
@@ -93,7 +95,7 @@ const dayPickerStyles: { classNames: Partial<ClassNames>; modifiers: Partial<Mod
  *
  * @param props - The DateTimePickerProps for this component
  */
-function DateTimePickerPopup({ selectedDate, month, onMonthChange, onSelect, onTimeChange }: DateTimePickerProps) {
+function DateTimePickerPopup({ id, selectedDate, month, onMonthChange, onSelect, onTimeChange }: DateTimePickerProps) {
   const customDayModifiers = {
     selected: selectedDate,
     'custom-today': (date: Date) => isToday(date) && !(selectedDate && isSameDay(date, selectedDate)),
@@ -128,10 +130,11 @@ function DateTimePickerPopup({ selectedDate, month, onMonthChange, onSelect, onT
 
       <div className='mt-3 border-t border-base-300 pt-3'>
         <div className='form-control w-full'>
-          <label className='label'>
+          <label htmlFor={id} className='label'>
             <span className='label-text'>Time</span>
           </label>
           <input
+            id={id}
             type='time'
             className='input input-bordered w-full'
             value={selectedDate ? format(selectedDate, 'HH:mm') : ''}
@@ -296,24 +299,21 @@ export default function DateTimeWidget<
 
   return (
     <div className='form-control my-4 w-full relative'>
-      <div
-        className='w-full'
-        tabIndex={0}
-        onKeyDown={handleKeyDown}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        ref={inputRef}
-      >
+      <div className='w-full'>
         <div
           id={id}
           className={`input input-bordered w-full flex items-center justify-between cursor-pointer ${
             isOpen ? 'ring-2 ring-primary/50' : ''
           }`}
           onClick={togglePicker}
+          onKeyDown={handleKeyDown}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           role='button'
           aria-haspopup='true'
           aria-expanded={isOpen}
-          tabIndex={-1}
+          tabIndex={0}
+          ref={inputRef}
         >
           <span className={localDate && isValid(localDate) ? '' : 'text-base-content/50'}>
             {localDate && isValid(localDate) ? format(localDate, 'PP p') : schema.title}
@@ -322,11 +322,13 @@ export default function DateTimeWidget<
         </div>
         {isOpen && (
           <div
+            role='presentation'
             ref={containerRef}
             className='absolute z-[100] mt-2 w-full max-w-xs bg-base-100 border border-base-300 shadow-lg rounded-box'
             onClick={handleContainerClick}
           >
             <MemoizedDateTimePickerPopup
+              id={`${id}-picker`}
               selectedDate={localDate}
               month={month}
               onMonthChange={handleMonthChange}

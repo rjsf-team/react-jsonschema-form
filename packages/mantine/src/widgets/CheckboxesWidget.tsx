@@ -95,7 +95,7 @@ export default function CheckboxesWidget<
           <Flex mt='xs' direction={inline ? 'row' : 'column'} gap='xs' wrap='wrap'>
             {enumOptions.map((option, i) => (
               <Checkbox
-                key={i}
+                key={String(option.value)}
                 id={optionId(id, i)}
                 name={htmlName || id}
                 value={enumOptionValueEncoder(option.value, i, optionValueFormat)}

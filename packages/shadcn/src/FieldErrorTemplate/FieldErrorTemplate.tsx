@@ -19,7 +19,8 @@ export default function FieldErrorTemplate<
   return (
     <div className='flex flex-col gap-1' id={id}>
       {errors.map((error, i: number) => (
-        <span className={'text-xs font-medium text-destructive mb-1'} key={i}>
+        // oxlint-disable-next-line react/no-array-index-key
+        <span className='text-xs font-medium text-destructive mb-1' key={i}>
           {error}
         </span>
       ))}

@@ -44,7 +44,7 @@ export default function ThemeSelector({ theme, themes, select }: ThemeSelectorPr
   };
 
   return (
-    <div onClick={cancelBubble}>
+    <div role='presentation' onClick={cancelBubble}>
       <Form
         className='form_rjsf_themeSelector'
         idPrefix='rjsf_themeSelector'

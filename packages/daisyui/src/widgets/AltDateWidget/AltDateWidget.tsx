@@ -37,6 +37,7 @@ export default function AltDateWidget<
     <div className='space-y-3'>
       <div className='grid grid-cols-3 gap-2'>
         {elements.map((elemProps, i) => (
+          // oxlint-disable-next-line react/no-array-index-key
           <div key={i} className='form-control'>
             <label className='label'>
               <span className='label-text capitalize'>{elemProps.type}</span>

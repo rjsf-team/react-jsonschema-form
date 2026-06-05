@@ -30,7 +30,7 @@ import get from 'lodash/get';
 import has from 'lodash/has';
 import isObject from 'lodash/isObject';
 import set from 'lodash/set';
-import { Markdown } from 'markdown-to-jsx';
+import { Markdown } from 'markdown-to-jsx/react';
 
 import { ADDITIONAL_PROPERTY_KEY_REMOVE } from '../constants';
 
@@ -258,7 +258,8 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       let index = 0;
       let newKey = preferredKey;
       while (has(existingFormData, newKey)) {
-        newKey = `${preferredKey}${duplicateKeySuffixSeparator}${++index}`;
+        index += 1;
+        newKey = `${preferredKey}${duplicateKeySuffixSeparator}${index}`;
       }
       return newKey;
     },

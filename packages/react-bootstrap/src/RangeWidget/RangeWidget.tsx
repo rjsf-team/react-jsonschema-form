@@ -8,18 +8,18 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
 ) {
   const { id, value, disabled, onChange, onBlur, onFocus, schema } = props;
 
-  const _onChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) => onChange(newValue);
-  const _onBlur = ({ target: { value: newValue } }: FocusEvent<HTMLInputElement>) => onBlur(id, newValue);
-  const _onFocus = ({ target: { value: newValue } }: FocusEvent<HTMLInputElement>) => onFocus(id, newValue);
+  const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) => onChange(newValue);
+  const handleBlur = ({ target: { value: newValue } }: FocusEvent<HTMLInputElement>) => onBlur(id, newValue);
+  const handleFocus = ({ target: { value: newValue } }: FocusEvent<HTMLInputElement>) => onFocus(id, newValue);
 
   const rangeProps = {
     value,
     id,
     name: id,
     disabled,
-    onChange: _onChange,
-    onBlur: _onBlur,
-    onFocus: _onFocus,
+    onChange: handleChange,
+    onBlur: handleBlur,
+    onFocus: handleFocus,
     ...rangeSpec<S>(schema),
   };
 

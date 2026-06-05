@@ -37,9 +37,11 @@ describe('nodejs behavior', () => {
 describe('browser behavior', () => {
   // capture the TextEncoder and TextDecoder from the util module and assign them to the global object (for mocking browser environment)
   beforeAll(() => {
+    // oxlint-disable-next-line typescript/no-var-requires
     const { TextDecoder } = require('util');
     global.TextDecoder = TextDecoder;
 
+    // oxlint-disable-next-line typescript/no-var-requires
     const { TextEncoder } = require('util');
     global.TextEncoder = TextEncoder;
   });

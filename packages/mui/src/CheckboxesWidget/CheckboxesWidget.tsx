@@ -62,7 +62,7 @@ export default function CheckboxesWidget<
   const optionValueFormat = getOptionValueFormat(options);
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
-  const _onChange =
+  const handleChange =
     (index: number) =>
     ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
       if (checked) {
@@ -72,9 +72,9 @@ export default function CheckboxesWidget<
       }
     };
 
-  const _onBlur = ({ target }: FocusEvent<HTMLButtonElement>) =>
+  const handleBlur = ({ target }: FocusEvent<HTMLButtonElement>) =>
     onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
-  const _onFocus = ({ target }: FocusEvent<HTMLButtonElement>) =>
+  const handleFocus = ({ target }: FocusEvent<HTMLButtonElement>) =>
     onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
 
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, CheckboxesWidgetMuiProps>(options);
@@ -100,9 +100,9 @@ export default function CheckboxesWidget<
                 checked={checked}
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={autofocus && index === 0}
-                onChange={_onChange(index)}
-                onBlur={_onBlur}
-                onFocus={_onFocus}
+                onChange={handleChange(index)}
+                onBlur={handleBlur}
+                onFocus={handleFocus}
                 aria-describedby={ariaDescribedByIds(id)}
               />
             );
@@ -110,7 +110,7 @@ export default function CheckboxesWidget<
               <FormControlLabel
                 {...muiSlotProps?.formControlLabel}
                 control={checkbox}
-                key={index}
+                key={String(option.value)}
                 label={option.label}
               />
             );

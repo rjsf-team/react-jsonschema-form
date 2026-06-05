@@ -22,7 +22,7 @@ export default function ToggleWidget<
    *
    * @param event - The change event
    */
-  const _onChange = useCallback(
+  const handleChange = useCallback(
     ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => onChange(checked),
     [onChange],
   );
@@ -59,7 +59,7 @@ export default function ToggleWidget<
           required={required}
           disabled={disabled || readonly}
           autoFocus={autofocus}
-          onChange={_onChange}
+          onChange={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
           className={`toggle ${sizeClass}`}

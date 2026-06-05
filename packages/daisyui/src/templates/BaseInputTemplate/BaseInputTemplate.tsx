@@ -56,23 +56,23 @@ export default function BaseInputTemplate<
   const { step, min, max, accept, ...rest } = inputProps;
   const htmlInputProps = { step, min, max, accept, ...(schema.examples ? { list: examplesId(id) } : undefined) };
 
-  const _onChange = useCallback(
+  const handleChange = useCallback(
     ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
       onChange(newValue === '' ? options.emptyValue : newValue),
     [onChange, options],
   );
 
-  const _onBlur = useCallback(
+  const handleBlur = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) => onBlur && onBlur(id, target.value),
     [onBlur, id],
   );
 
-  const _onFocus = useCallback(
+  const handleFocus = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) => onFocus && onFocus(id, target.value),
     [onFocus, id],
   );
 
-  const _onClear = useCallback(
+  const handleClear = useCallback(
     (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
@@ -100,13 +100,13 @@ export default function BaseInputTemplate<
             multiple={isMulti}
             {...rest}
             {...htmlInputProps}
-            onChange={onChangeOverride || _onChange}
-            onBlur={_onBlur}
-            onFocus={_onFocus}
+            onChange={onChangeOverride || handleChange}
+            onBlur={handleBlur}
+            onFocus={handleFocus}
             aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
           />
           {options.allowClearTextInputs && !readonly && !disabled && value && (
-            <ClearButton registry={registry} onClick={_onClear} />
+            <ClearButton registry={registry} onClick={handleClear} />
           )}
         </div>
       </div>

@@ -48,7 +48,7 @@ export default function SubthemeSelector({ subtheme, subthemes, select }: Subthe
   };
 
   return (
-    <div onClick={cancelBubble}>
+    <div role='presentation' onClick={cancelBubble}>
       <Form
         className='form_rjsf_subthemeSelector'
         idPrefix='rjsf_subthemeSelector'

@@ -15,10 +15,15 @@ import { cn } from '../../lib/utils';
  * @returns A slider input element with track and thumb
  */
 function Slider({ className, defaultValue, value, min = 0, max = 100, ...props }: ComponentProps<typeof Root>) {
-  const _values = useMemo(
-    () => (Array.isArray(value) ? value : Array.isArray(defaultValue) ? defaultValue : [min, max]),
-    [value, defaultValue, min, max],
-  );
+  const enumValues = useMemo(() => {
+    if (Array.isArray(value)) {
+      return value;
+    }
+    if (Array.isArray(defaultValue)) {
+      return defaultValue;
+    }
+    return [min, max];
+  }, [value, defaultValue, min, max]);
   return (
     <Root
       data-slot='slider'
@@ -43,7 +48,7 @@ function Slider({ className, defaultValue, value, min = 0, max = 100, ...props }
           className={cn('bg-primary absolute data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full')}
         />
       </Track>
-      {Array.from({ length: _values.length }, (_, index) => (
+      {Array.from({ length: enumValues.length }, (_, index) => (
         <Thumb
           data-slot='slider-thumb'
           key={index}

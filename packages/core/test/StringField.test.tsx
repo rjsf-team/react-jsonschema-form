@@ -20,6 +20,7 @@ const mockFileReader = {
   set onload(fn: (event: { target: { result: string } }) => void) {
     fn({ target: { result: 'data:text/plain;base64,x=' } });
   },
+  // oxlint-disable-next-line no-empty-function
   readAsDataURL() {},
 } as unknown as FileReader;
 
@@ -57,7 +58,7 @@ describe('StringField', () => {
   const CustomWidget = () => <div id='custom' />;
   beforeAll(() => {
     // oxlint-disable-next-line prefer-arrow-callback -- arrow functions can't be constructors (new FileReader())
-    vi.spyOn(window, 'FileReader').mockImplementation(function () {
+    vi.spyOn(window, 'FileReader').mockImplementation(function mockFileReaderFactory() {
       return mockFileReader;
     });
   });
@@ -1166,7 +1167,10 @@ describe('StringField', () => {
           uiSchema,
         });
 
-        const buttonLabels = [].map.call(node.querySelectorAll('a.btn'), (x: HTMLElement) => x.textContent);
+        const buttonLabels = [].map.call(
+          node.querySelectorAll('button.btn-now, button.btn-clear'),
+          (x: HTMLElement) => x.textContent,
+        );
         expect(buttonLabels).toEqual(['Now', 'Clear']);
       });
 
@@ -1179,7 +1183,7 @@ describe('StringField', () => {
           uiSchema,
         });
 
-        await user.click(node.querySelector('a.btn-now')!);
+        await user.click(node.querySelector('button.btn-now')!);
 
         const formValue = onChange.mock.lastCall![0].formData;
         // Test that the two DATETIMEs are within 5 seconds of each other.
@@ -1197,8 +1201,8 @@ describe('StringField', () => {
           uiSchema,
         });
 
-        await user.click(node.querySelector('a.btn-now')!);
-        await user.click(node.querySelector('a.btn-clear')!);
+        await user.click(node.querySelector('button.btn-now')!);
+        await user.click(node.querySelector('button.btn-clear')!);
 
         expectToHaveBeenCalledWithFormData(onChange, undefined, 'root');
       });
@@ -1256,7 +1260,7 @@ describe('StringField', () => {
       });
 
       it('should render a date field with DMY format', () => {
-        uiSchema['ui:options']!['format'] = 'DMY';
+        uiSchema['ui:options']!.format = 'DMY';
         const { node } = createFormComponent({
           schema: {
             type: 'string',
@@ -1271,7 +1275,7 @@ describe('StringField', () => {
       });
 
       it('should render a date field with MDY format', () => {
-        uiSchema['ui:options']!['format'] = 'MDY';
+        uiSchema['ui:options']!.format = 'MDY';
         const { node } = createFormComponent({
           schema: {
             type: 'string',
@@ -1573,7 +1577,7 @@ describe('StringField', () => {
       });
 
       it('should render a date field with MDY format', () => {
-        uiSchema['ui:options']!['format'] = 'MDY';
+        uiSchema['ui:options']!.format = 'MDY';
         const { node } = createFormComponent({
           schema: {
             type: 'string',
@@ -1588,7 +1592,7 @@ describe('StringField', () => {
       });
 
       it('should render a date field with DMY format', () => {
-        uiSchema['ui:options']!['format'] = 'DMY';
+        uiSchema['ui:options']!.format = 'DMY';
         const { node } = createFormComponent({
           schema: {
             type: 'string',
@@ -1613,7 +1617,10 @@ describe('StringField', () => {
           uiSchema,
         });
 
-        const buttonLabels = [].map.call(node.querySelectorAll('a.btn'), (x: HTMLElement) => x.textContent);
+        const buttonLabels = [].map.call(
+          node.querySelectorAll('button.btn-now, button.btn-clear'),
+          (x: HTMLElement) => x.textContent,
+        );
         expect(buttonLabels).toEqual(['Now', 'Clear']);
       });
 
@@ -1626,7 +1633,7 @@ describe('StringField', () => {
           uiSchema,
         });
 
-        await user.click(node.querySelector('a.btn-now')!);
+        await user.click(node.querySelector('button.btn-now')!);
 
         const expected = toDateString(parseDateString(new Date().toJSON()), false);
 
@@ -1642,8 +1649,8 @@ describe('StringField', () => {
           uiSchema,
         });
 
-        await user.click(node.querySelector('a.btn-now')!);
-        await user.click(node.querySelector('a.btn-clear')!);
+        await user.click(node.querySelector('button.btn-now')!);
+        await user.click(node.querySelector('button.btn-clear')!);
 
         expectToHaveBeenCalledWithFormData(onChange, undefined, 'root');
       });

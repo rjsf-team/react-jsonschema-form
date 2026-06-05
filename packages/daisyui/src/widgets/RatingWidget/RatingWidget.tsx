@@ -47,7 +47,7 @@ export default function RatingWidget<
   const sizeClass = size === 'md' ? '' : `rating-${size}`;
 
   /** Handles change events from radio inputs */
-  const _onChange = useCallback(
+  const handleChange = useCallback(
     ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) => {
       onChange(parseInt(newValue, 10));
     },
@@ -99,12 +99,13 @@ export default function RatingWidget<
           const starValue = min + index;
           return (
             <input
+              // oxlint-disable-next-line react/no-array-index-key
               key={index}
               type='radio'
               name={id}
               value={starValue}
               checked={value === starValue}
-              onChange={_onChange}
+              onChange={handleChange}
               onFocus={handleFocus}
               onBlur={handleBlur}
               className={`mask ${maskClass} ${getColorClass(index)}`}

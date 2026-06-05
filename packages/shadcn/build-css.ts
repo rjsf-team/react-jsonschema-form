@@ -21,6 +21,7 @@ fs.readdirSync(srcDir).forEach((file) => {
         },
       );
     } catch (error) {
+      // oxlint-disable-next-line no-console
       console.error(`Error building ${srcFile}:`, error);
       process.exit(1); // Exit with error code if any file fails
     }

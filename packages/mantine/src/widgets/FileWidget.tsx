@@ -48,6 +48,7 @@ export default function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSch
       return (
         <Pill.Group>
           {filesInfo.map((file, index) => (
+            // oxlint-disable-next-line react/no-array-index-key
             <Pill key={index} withRemoveButton onRemove={() => handleRemove(index)}>
               {file.name}
             </Pill>

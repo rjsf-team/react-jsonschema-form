@@ -18,6 +18,7 @@ export default function FieldErrorTemplate<
   const id = errorId(fieldPathId);
 
   return errors.map((error, i: number) => (
+    // oxlint-disable-next-line react/no-array-index-key
     <Fieldset.ErrorText mt={0} key={i} id={id}>
       {error}
     </Fieldset.ErrorText>
