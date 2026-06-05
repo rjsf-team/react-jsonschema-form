@@ -57,7 +57,7 @@ export function createFormComponent(props: NoValFormProps, v: ValidatorType = va
   return createComponent(Form, { validator: v, ...props });
 }
 
-// eslint-disable-next-line no-unused-vars
+// oxlint-disable-next-line no-unused-vars
 type CreatorFn = (creatorFn: typeof createFormComponent) => void;
 
 /* Run a group of tests with different combinations of omitExtraData and liveOmit as form props.
