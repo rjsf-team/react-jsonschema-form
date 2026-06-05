@@ -1,4 +1,5 @@
-import { enumOptionsSelectValue, EnumOptionsType } from '../src';
+import type { EnumOptionsType } from '../src';
+import { enumOptionsSelectValue } from '../src';
 import { ALL_OPTIONS, FALSY_OPTIONS } from './testUtils/testData';
 
 describe('enumOptionsSelectValue()', () => {

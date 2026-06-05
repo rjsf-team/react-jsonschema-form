@@ -19,7 +19,7 @@ import {
   sanitizeDataForNewSchema,
   toPathSchema,
 } from './schema';
-import {
+import type {
   Experimental_CustomMergeAllOf,
   Experimental_DefaultFormStateBehavior,
   FormContextType,
@@ -364,7 +364,9 @@ class SchemaUtils<
    * @param [formData] - The current formData, if any, onto which to provide any missing defaults
    * @returns - The `PathSchema` object for the `schema`
    */
+  // oxlint-disable-next-line typescript/no-deprecated
   toPathSchema(schema: S, name?: string, formData?: T): PathSchema<T> {
+    // oxlint-disable-next-line typescript/no-deprecated
     return toPathSchema<T, S, F>(
       this.validator,
       schema,

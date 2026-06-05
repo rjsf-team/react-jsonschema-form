@@ -1,5 +1,6 @@
-import { ChangeEvent, FocusEvent } from 'react';
+import type { ChangeEvent, FocusEvent } from 'react';
 import { Stack } from '@chakra-ui/react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
@@ -8,10 +9,6 @@ import {
   getOptionValueFormat,
   labelValue,
   optionId,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
 } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field';
@@ -36,12 +33,12 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
 
-  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
-    onChange(enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, emptyValue));
-  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, emptyValue));
-  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, emptyValue));
+  const handleChange = ({ target: { value: enumValue } }: ChangeEvent<HTMLInputElement>) =>
+    onChange(enumOptionValueDecoder<S>(enumValue, enumOptions, optionValueFormat, emptyValue));
+  const handleBlur = ({ target: { value: enumValue } }: FocusEvent<HTMLInputElement>) =>
+    onBlur(id, enumOptionValueDecoder<S>(enumValue, enumOptions, optionValueFormat, emptyValue));
+  const handleFocus = ({ target: { value: enumValue } }: FocusEvent<HTMLInputElement>) =>
+    onFocus(id, enumOptionValueDecoder<S>(enumValue, enumOptions, optionValueFormat, emptyValue));
 
   const row = options ? options.inline : false;
   const selectValue = enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat, null);
@@ -58,9 +55,9 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       {...chakraProps}
     >
       <RadioGroup
-        onChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         value={selectValue}
         name={htmlName || id}
         aria-describedby={ariaDescribedByIds(id)}
@@ -68,12 +65,12 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         <Stack direction={row ? 'row' : 'column'}>
           {Array.isArray(enumOptions) &&
             enumOptions.map((option, index) => {
-              const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
+              const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
 
               return (
                 <Radio
                   value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
-                  key={index}
+                  key={String(option.value)}
                   id={optionId(id, index)}
                   disabled={disabled || itemDisabled || readonly}
                 >

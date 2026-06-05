@@ -3,7 +3,7 @@ import has from 'lodash/has';
 import isEmpty from 'lodash/isEmpty';
 
 import { REF_KEY } from '../constants';
-import {
+import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
   RJSFSchema,

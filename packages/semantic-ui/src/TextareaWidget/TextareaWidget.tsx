@@ -1,12 +1,6 @@
-import { ChangeEvent } from 'react';
-import {
-  ariaDescribedByIds,
-  labelValue,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { ChangeEvent } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, labelValue } from '@rjsf/utils';
 import { Form } from 'semantic-ui-react';
 
 import { getSemanticProps } from '../util';
@@ -43,11 +37,11 @@ export default function TextareaWidget<
     options,
     defaultSchemaProps: { inverted: 'false' },
   });
-  // eslint-disable-next-line no-shadow
-  const _onChange = ({ target: { value } }: ChangeEvent<HTMLTextAreaElement>) =>
+  // oxlint-disable-next-line no-shadow
+  const handleChange = ({ target: { value } }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange && onChange(value === '' ? options.emptyValue : value);
-  const _onBlur = () => onBlur && onBlur(id, value);
-  const _onFocus = () => onFocus && onFocus(id, value);
+  const handleBlur = () => onBlur && onBlur(id, value);
+  const handleFocus = () => onFocus && onFocus(id, value);
   return (
     <Form.TextArea
       id={id}
@@ -62,9 +56,9 @@ export default function TextareaWidget<
       value={value || ''}
       error={rawErrors.length > 0}
       rows={options.rows || 5}
-      onChange={_onChange}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      onFocus={handleFocus}
       aria-describedby={ariaDescribedByIds(id)}
     />
   );

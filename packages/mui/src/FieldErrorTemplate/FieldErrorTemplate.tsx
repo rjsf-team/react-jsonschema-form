@@ -1,15 +1,11 @@
-import FormHelperText, { FormHelperTextProps } from '@mui/material/FormHelperText';
-import List, { ListProps } from '@mui/material/List';
-import ListItem, { ListItemProps } from '@mui/material/ListItem';
-import {
-  errorId,
-  FieldErrorProps,
-  FormContextType,
-  GenericObjectType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  getUiOptions,
-} from '@rjsf/utils';
+import type { FormHelperTextProps } from '@mui/material/FormHelperText';
+import FormHelperText from '@mui/material/FormHelperText';
+import type { ListProps } from '@mui/material/List';
+import List from '@mui/material/List';
+import type { ListItemProps } from '@mui/material/ListItem';
+import ListItem from '@mui/material/ListItem';
+import type { FieldErrorProps, FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { errorId, getUiOptions } from '@rjsf/utils';
 
 import { getMuiProps } from '../util';
 
@@ -46,16 +42,15 @@ export default function FieldErrorTemplate<
   const { rjsfSlotProps: muiSlotProps } = muiProps;
 
   return (
-    <List id={id} dense={true} disablePadding={true} {...muiSlotProps?.fieldErrorList}>
-      {errors.map((error, i: number) => {
-        return (
-          <ListItem key={i} disableGutters={true} {...muiSlotProps?.fieldErrorListItem}>
-            <FormHelperText component='div' id={`${id}-${i}`} {...muiSlotProps?.fieldErrorFormHelperText}>
-              {error}
-            </FormHelperText>
-          </ListItem>
-        );
-      })}
+    <List id={id} dense disablePadding {...muiSlotProps?.fieldErrorList}>
+      {errors.map((error, i: number) => (
+        // oxlint-disable-next-line react/no-array-index-key
+        <ListItem key={i} disableGutters {...muiSlotProps?.fieldErrorListItem}>
+          <FormHelperText component='div' id={`${id}-${i}`} {...muiSlotProps?.fieldErrorFormHelperText}>
+            {error}
+          </FormHelperText>
+        </ListItem>
+      ))}
     </List>
   );
 }

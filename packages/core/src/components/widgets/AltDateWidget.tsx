@@ -1,12 +1,5 @@
-import {
-  DateElement,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  TranslatableString,
-  WidgetProps,
-  useAltDateWidgetProps,
-} from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { DateElement, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
 
 /** The `AltDateWidget` is an alternative widget for rendering date properties.
  * @param props - The `WidgetProps` for this component
@@ -21,6 +14,7 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
   return (
     <ul className='list-inline'>
       {elements.map((elemProps, i) => (
+        // oxlint-disable-next-line react/no-array-index-key
         <li className='list-inline-item' key={i}>
           <DateElement
             rootId={id}
@@ -38,16 +32,16 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
       ))}
       {(options.hideNowButton !== 'undefined' ? !options.hideNowButton : true) && (
         <li className='list-inline-item'>
-          <a href='#' className='btn btn-info btn-now' onClick={handleSetNow}>
+          <button type='button' className='btn btn-info btn-now' onClick={handleSetNow}>
             {translateString(TranslatableString.NowLabel)}
-          </a>
+          </button>
         </li>
       )}
       {(options.hideClearButton !== 'undefined' ? !options.hideClearButton : true) && (
         <li className='list-inline-item'>
-          <a href='#' className='btn btn-warning btn-clear' onClick={handleClear}>
+          <button type='button' className='btn btn-warning btn-clear' onClick={handleClear}>
             {translateString(TranslatableString.ClearLabel)}
-          </a>
+          </button>
         </li>
       )}
     </ul>

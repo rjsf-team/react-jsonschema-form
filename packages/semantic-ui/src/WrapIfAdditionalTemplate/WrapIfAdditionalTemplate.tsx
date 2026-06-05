@@ -1,12 +1,5 @@
-import {
-  ADDITIONAL_PROPERTY_FLAG,
-  buttonId,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  TranslatableString,
-  WrapIfAdditionalTemplateProps,
-} from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
+import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString } from '@rjsf/utils';
 import { Form, Grid } from 'semantic-ui-react';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
@@ -64,17 +57,17 @@ export default function WrapIfAdditionalTemplate<
                 className='form-group'
                 hasFeedback
                 fluid
-                htmlFor={`${id}`}
+                htmlFor={id}
                 label={displayLabel ? keyLabel : undefined}
                 required={required}
                 defaultValue={label}
                 disabled={disabled || (readonlyAsDisabled && readonly)}
-                id={`${id}`}
-                name={`${id}`}
+                id={id}
+                name={id}
                 onBlur={!readonly ? onKeyRenameBlur : undefined}
                 style={wrapperStyle}
                 type='text'
-              ></Form.Input>
+              />
             </Form.Group>
           </Grid.Column>
           <Grid.Column width={7} className='form-additional' verticalAlign='middle'>

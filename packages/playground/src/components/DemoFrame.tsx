@@ -1,6 +1,8 @@
-import { cloneElement, useCallback, useEffect, useRef, useState, ReactElement, ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
+import { cloneElement, useCallback, useEffect, useRef, useState } from 'react';
 import { StyleProvider as AntdStyleProvider } from '@ant-design/cssinjs';
-import createCache, { EmotionCache } from '@emotion/cache';
+import type { EmotionCache } from '@emotion/cache';
+import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import { MantineProvider } from '@mantine/core';
 import { CssBaseline } from '@mui/material';
@@ -10,18 +12,22 @@ import { __createDaisyUIFrameProvider } from '@rjsf/daisyui';
 import { __createFluentUIRCFrameProvider } from '@rjsf/fluentui-rc';
 import { ConfigProvider } from 'antd';
 import { PrimeReactProvider } from 'primereact/api';
-import Frame, { FrameComponentProps, FrameContextConsumer } from 'react-frame-component';
+import type { FrameComponentProps } from 'react-frame-component';
+import Frame, { FrameContextConsumer } from 'react-frame-component';
 
 const DEMO_FRAME_JSS = 'demo-frame-jss';
 
-const { SelectWidget } = Widgets;
+const { SelectWidget, DateWidget } = Widgets;
 
-// Override the static function on the antd `SelectWidget` so that we can "disable" the getPopupContainer callback
+// Override the static functions on the antd widgets so that we can "disable" the getPopupContainer callback
 // function because, when it is active, the `SelectPatcher` code below along with the `ConfigProvider` for the antd
-// theme conditional branch won't take effect as the antd `Select` `getPopupContainer()` supercedes it, so we make it
+// theme conditional branch won't take effect as the antd component `getPopupContainer()` supercedes it, so we make it
 // return undefined to disable it.
 // @ts-expect-error TS2339 because the Widget interface doesn't have the static function on it
 SelectWidget.getPopupContainerCallback = () => undefined;
+// @ts-expect-error TS2339 because the Widget interface doesn't have the static function on it
+// DateWidget also covers DateTimeWidget since it delegates to DateWidget internally
+DateWidget.getPopupContainerCallback = () => undefined;
 
 /*
 Adapted from https://github.com/mui-org/material-ui/blob/master/docs/src/modules/components/DemoSandboxed.js
@@ -49,89 +55,113 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-/** This is a hack to fix the antd `SelectWidget` so that the popup works properly within the iframe of the playground.
- * It basically observes when the `antd-select-dropdown` is created and attaches a dropdown positioning callback that is
- * tracking the scrolling of the iFrome document and fixing up the dropdown's `inset` style attribute so that it is
- * positioned properly.
+/** This is a hack to fix antd popups (Select dropdown, DatePicker panel) so they work properly within the iframe of
+ * the playground. The root issue is that antd's positioning code runs two passes: first it places the popup at
+ * `-1000vh` to measure it, then calculates a final position. We need to override BOTH passes — not just the first —
+ * because antd's final calculation uses `window.scrollY` from the parent window context (since react-frame-component
+ * runs JS in the parent window), while `getBoundingClientRect()` returns iframe-relative coordinates. This mismatch
+ * puts the popup in the wrong place when the iframe is scrolled.
+ *
+ * Strategy: observe every style change on popup elements and always reapply the correct position using the iframe's
+ * own scroll offsets. A WeakMap tracks the inset value we last set so we can skip our own changes and avoid infinite
+ * observer loops.
  *
  * @param frameDoc - The iFrame document of the playground
  */
-function AntdSelectPatcher({ frameDoc }: { frameDoc: Document }) {
+function AntdPopupPatcher({ frameDoc }: { frameDoc: Document }) {
   useEffect(() => {
     if (!frameDoc) {
       return;
     }
 
-    const handleDropdownPositioning = (dropdown: HTMLElement) => {
-      const style = dropdown.style;
+    // Maps each popup element to the inset string we last wrote, so we can skip our own style changes.
+    const ourInsets = new WeakMap<HTMLElement, string>();
 
-      // Check if dropdown needs repositioning
-      const isHidden = style.inset && style.inset.includes('-1000vh');
-      if (isHidden) {
-        const trigger = frameDoc.querySelector('.ant-select-focused, .ant-select-open');
+    const correctPosition = (popup: HTMLElement, triggerSelector: string) => {
+      if (
+        popup.classList.contains('ant-select-dropdown-hidden') ||
+        popup.classList.contains('ant-picker-dropdown-hidden')
+      ) {
+        return;
+      }
 
-        if (trigger) {
-          const rect = trigger.getBoundingClientRect();
-          // Get scroll offsets
-          const scrollTop = frameDoc.documentElement.scrollTop || frameDoc.body.scrollTop;
-          const scrollLeft = frameDoc.documentElement.scrollLeft || frameDoc.body.scrollLeft;
-
-          // Calculate absolute position accounting for scroll
-          const top = rect.bottom + scrollTop + 4;
-          const left = rect.left + scrollLeft;
-
-          // Position the dropdown BELOW the select
-          dropdown.style.inset = `${top}px auto auto ${left}px`;
-          dropdown.style.position = 'absolute';
+      const trigger = frameDoc.querySelector(triggerSelector) as HTMLElement | null;
+      if (!trigger) {
+        // The popup is still visible but the trigger's open class is already gone — it's in the
+        // process of closing. Restore our last known position so it doesn't flash to (0, 0)
+        // during the close animation while antd resets its own inset before hiding the element.
+        const lastInset = ourInsets.get(popup);
+        if (lastInset !== undefined && popup.style.inset !== lastInset) {
+          // since we are actually wanting to update the popup's style disable this rule
+          // oxlint-disable no-param-reassign
+          popup.style.position = 'absolute';
+          popup.style.inset = lastInset;
+          // oxlint-enable no-param-reassign
         }
+        return;
+      }
+
+      const rect = trigger.getBoundingClientRect();
+      const scrollTop = frameDoc.documentElement.scrollTop || frameDoc.body.scrollTop;
+      const scrollLeft = frameDoc.documentElement.scrollLeft || frameDoc.body.scrollLeft;
+
+      const inset = `${rect.bottom + scrollTop + 4}px auto auto ${rect.left + scrollLeft}px`;
+      ourInsets.set(popup, inset);
+      // since we are actually wanting to update the popup's style disable this rule
+      // oxlint-disable no-param-reassign
+      popup.style.position = 'absolute';
+      popup.style.inset = inset;
+      popup.style.minWidth = `${rect.right - rect.left}px`;
+      // oxlint-enable no-param-reassign
+    };
+
+    const handleElement = (el: HTMLElement) => {
+      // Skip changes that we ourselves made (prevents infinite observer loop).
+      if (ourInsets.has(el) && el.style.inset === ourInsets.get(el)) {
+        return;
+      }
+      if (el.classList.contains('ant-select-dropdown')) {
+        correctPosition(el, '.ant-select-focused, .ant-select-open');
+      } else if (el.classList.contains('ant-picker-dropdown')) {
+        correctPosition(el, '.ant-picker-focused, .ant-picker-open');
       }
     };
 
-    const createObserver = () => {
-      return new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-            const dropdown = mutation.target as HTMLElement;
-
-            if (dropdown.classList.contains('ant-select-dropdown')) {
-              handleDropdownPositioning(dropdown);
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+          handleElement(mutation.target as HTMLElement);
+        }
+        if (mutation.type === 'childList') {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === 1) {
+              handleElement(node as HTMLElement);
             }
-          }
-
-          // Also check for newly added dropdowns
-          if (mutation.type === 'childList') {
-            mutation.addedNodes.forEach((node) => {
-              if (node.nodeType === 1) {
-                const element = node as HTMLElement;
-                if (element.classList.contains('ant-select-dropdown')) {
-                  handleDropdownPositioning(element);
-                }
-              }
-            });
-          }
-        });
+          });
+        }
       });
-    };
+    });
 
-    // Observe iframe document
-    const iframeObserver = createObserver();
-    iframeObserver.observe(frameDoc.body, {
+    observer.observe(frameDoc.body, {
       childList: true,
       subtree: true,
       attributes: true,
       attributeFilter: ['style', 'class'],
     });
 
-    // Also reposition on scroll
+    // Reposition visible popups on scroll so they track the trigger element.
     const handleScroll = () => {
-      const dropdowns = frameDoc.querySelectorAll('.ant-select-dropdown:not(.ant-select-dropdown-hidden)');
-      dropdowns.forEach((dropdown) => {
-        handleDropdownPositioning(dropdown as HTMLElement);
-      });
+      frameDoc
+        .querySelectorAll<HTMLElement>('.ant-select-dropdown:not(.ant-select-dropdown-hidden)')
+        .forEach((el) => correctPosition(el, '.ant-select-focused, .ant-select-open'));
+      frameDoc
+        .querySelectorAll<HTMLElement>('.ant-picker-dropdown:not(.ant-picker-dropdown-hidden)')
+        .forEach((el) => correctPosition(el, '.ant-picker-focused, .ant-picker-open'));
     };
     frameDoc.addEventListener('scroll', handleScroll, true);
+
     return () => {
-      iframeObserver.disconnect();
+      observer.disconnect();
       frameDoc.removeEventListener('scroll', handleScroll, true);
     };
   }, [frameDoc]);
@@ -177,8 +207,8 @@ export default function DemoFrame(props: DemoFrameProps) {
       <CacheProvider value={emotionCache}>
         <CssBaseline />
         {cloneElement(children, {
-          container: container,
-          window: window,
+          container,
+          window,
         })}
       </CacheProvider>
     ) : null;
@@ -194,7 +224,7 @@ export default function DemoFrame(props: DemoFrameProps) {
             frameDoc?.getElementById(DEMO_FRAME_JSS) || instanceRef.current.contentWindow[DEMO_FRAME_JSS];
           return (
             <>
-              <AntdSelectPatcher frameDoc={frameDoc || instanceRef.current.contentDocument} />
+              <AntdPopupPatcher frameDoc={frameDoc || instanceRef.current.contentDocument} />
               <AntdStyleProvider container={jssContainer}>
                 <ConfigProvider getPopupContainer={() => jssContainer.parentElement}>{children}</ConfigProvider>
               </AntdStyleProvider>

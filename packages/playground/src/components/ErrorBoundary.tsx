@@ -1,8 +1,9 @@
-import { Component, ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import { Component } from 'react';
 
-type Props = {
+interface Props {
   children: ReactNode;
-};
+}
 
 type State =
   | {
@@ -11,7 +12,10 @@ type State =
     }
   | { hasError: true; error: Error };
 
-type Error = { message: string; [key: string]: unknown };
+interface Error {
+  message: string;
+  [key: string]: unknown;
+}
 
 class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
@@ -21,7 +25,7 @@ class ErrorBoundary extends Component<Props, State> {
 
   /** Update state so the next render will show the fallback UI. */
   static getDerivedStateFromError(error: Error) {
-    return { hasError: true, error: error };
+    return { hasError: true, error };
   }
 
   resetErrorBoundary = () => {
@@ -38,7 +42,7 @@ class ErrorBoundary extends Component<Props, State> {
         <div className='alert alert-danger'>
           <p>The following error was encountered:</p>
           <pre>{error.message}</pre>
-          <button className='btn' onClick={this.resetErrorBoundary}>
+          <button type='button' className='btn' onClick={this.resetErrorBoundary}>
             Refresh Form
           </button>
         </div>

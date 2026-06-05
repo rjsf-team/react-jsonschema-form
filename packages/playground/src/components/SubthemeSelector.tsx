@@ -1,6 +1,8 @@
-import { SyntheticEvent, useCallback, useMemo } from 'react';
-import Form, { IChangeEvent } from '@rjsf/core';
-import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { SyntheticEvent } from 'react';
+import { useCallback, useMemo } from 'react';
+import type { IChangeEvent } from '@rjsf/core';
+import Form from '@rjsf/core';
+import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
 
 const uiSchema: UiSchema = {
@@ -12,9 +14,7 @@ export interface SubthemeType {
   dataTheme?: string;
 }
 
-export interface SubthemesType {
-  [subtheme: string]: SubthemeType;
-}
+export type SubthemesType = Record<string, SubthemeType>;
 
 interface SubthemeSelectorProps {
   subtheme: string | null;
@@ -48,7 +48,7 @@ export default function SubthemeSelector({ subtheme, subthemes, select }: Subthe
   };
 
   return (
-    <div onClick={cancelBubble}>
+    <div role='presentation' onClick={cancelBubble}>
       <Form
         className='form_rjsf_subthemeSelector'
         idPrefix='rjsf_subthemeSelector'

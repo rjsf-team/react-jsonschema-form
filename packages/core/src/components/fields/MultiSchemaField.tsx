@@ -1,10 +1,9 @@
 import { Component } from 'react';
+import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
   deepEquals,
   ERRORS_KEY,
-  FieldProps,
-  FormContextType,
   getDiscriminatorFieldFromSchema,
   getTemplate,
   getUiOptions,
@@ -12,23 +11,20 @@ import {
   isFormDataAvailable,
   mergeSchemas,
   ONE_OF_KEY,
-  RJSFSchema,
   shouldRenderOptionalField,
-  StrictRJSFSchema,
   TranslatableString,
-  UiSchema,
 } from '@rjsf/utils';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import omit from 'lodash/omit';
 
 /** Type used for the state of the `AnyOfField` component */
-type AnyOfFieldState<S extends StrictRJSFSchema = RJSFSchema> = {
+interface AnyOfFieldState<S extends StrictRJSFSchema = RJSFSchema> {
   /** The currently selected option */
   selectedOption: number;
   /** The option schemas after retrieving all $refs */
   retrievedOptions: S[];
-};
+}
 
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It tracks
  * the currently selected option and cleans up any irrelevant data in `formData`.
@@ -39,6 +35,12 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
   FieldProps<T, S, F>,
   AnyOfFieldState<S>
 > {
+  /** Flag to skip the formData-change-driven option recalculation when the user just selected an option.
+   * Set to true in the setState callback of onOptionChange (after onChange is called), consumed and reset in
+   * componentDidUpdate. This prevents the matching-option recalculation from overriding a user's explicit choice
+   * when getDefaultFormState populates undefined properties that make deepEquals see a false formData change.
+   */
+  private skipNextOptionRecalculation = false;
   /** Constructs an `AnyOfField` with the given `props` to initialize the initially selected option in state
    *
    * @param props - The `FieldProps` for this template
@@ -79,14 +81,19 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       newState = { selectedOption, retrievedOptions };
     }
     if (!deepEquals(formData, prevProps.formData) && fieldPathId.$id === prevProps.fieldPathId.$id) {
-      const { retrievedOptions } = newState;
-      const matchingOption = this.getMatchingOption(selectedOption, formData, retrievedOptions);
+      if (this.skipNextOptionRecalculation) {
+        this.skipNextOptionRecalculation = false;
+      } else {
+        const { retrievedOptions } = newState;
+        const matchingOption = this.getMatchingOption(selectedOption, formData, retrievedOptions);
 
-      if (prevState && matchingOption !== selectedOption) {
-        newState = { selectedOption: matchingOption, retrievedOptions };
+        if (prevState && matchingOption !== selectedOption) {
+          newState = { selectedOption: matchingOption, retrievedOptions };
+        }
       }
     }
     if (newState !== this.state) {
+      // oxlint-disable-next-line react/no-did-update-set-state -- guarded to prevent infinite loop
       this.setState(newState);
     }
   }
@@ -136,6 +143,7 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     }
 
     this.setState({ selectedOption: intOption }, () => {
+      this.skipNextOptionRecalculation = true;
       onChange(newFormData, fieldPathId.path, undefined, this.getFieldId());
     });
   };
@@ -163,7 +171,7 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     } = this.props;
 
     const { widgets, fields, translateString, globalUiOptions, schemaUtils } = registry;
-    const { SchemaField: _SchemaField } = fields;
+    const { SchemaField: SchemaFieldComponent } = fields;
     const MultiSchemaFieldTemplate = getTemplate<'MultiSchemaFieldTemplate', T, S, F>(
       'MultiSchemaFieldTemplate',
       registry,
@@ -191,9 +199,9 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
 
     if (option) {
       // merge top level required field
-      const { required } = schema;
+      const { required: schemaRequired } = schema;
       // Merge in all the non-oneOf/anyOf properties and also skip the special ADDITIONAL_PROPERTY_FLAG property
-      optionSchema = required ? (mergeSchemas({ required }, option) as S) : option;
+      optionSchema = schemaRequired ? (mergeSchemas({ required: schemaRequired }, option) as S) : option;
     }
 
     // First we will check to see if there is an anyOf/oneOf override for the UI schema
@@ -202,12 +210,14 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       if (Array.isArray(uiSchema[ONE_OF_KEY])) {
         optionsUiSchema = uiSchema[ONE_OF_KEY];
       } else {
+        // oxlint-disable-next-line no-console
         console.warn(`uiSchema.oneOf is not an array for "${title || name}"`);
       }
     } else if (ANY_OF_KEY in schema && uiSchema && ANY_OF_KEY in uiSchema) {
       if (Array.isArray(uiSchema[ANY_OF_KEY])) {
         optionsUiSchema = uiSchema[ANY_OF_KEY];
       } else {
+        // oxlint-disable-next-line no-console
         console.warn(`uiSchema.anyOf is not an array for "${title || name}"`);
       }
     }
@@ -257,7 +267,7 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
 
     const optionsSchemaField =
       (optionSchema && optionSchema.type !== 'null' && (
-        <_SchemaField {...this.props} schema={optionSchema} uiSchema={optionUiSchema} />
+        <SchemaFieldComponent {...this.props} schema={optionSchema} uiSchema={optionUiSchema} />
       )) ||
       null;
 

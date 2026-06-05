@@ -1,5 +1,5 @@
 import { AddSquareMultipleRegular, SubtractSquareMultipleRegular } from '@fluentui/react-icons';
-import { FormContextType, OptionalDataControlsTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { FormContextType, OptionalDataControlsTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 import FluentIconButton from '../IconButton';
 
@@ -30,7 +30,8 @@ export default function OptionalDataControlsTemplate<
         appearance='secondary'
       />
     );
-  } else if (onRemoveClick) {
+  }
+  if (onRemoveClick) {
     return (
       <FluentIconButton
         id={id}

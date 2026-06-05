@@ -1,5 +1,6 @@
-import { ChangeEvent, FocusEvent, useCallback } from 'react';
-import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { ChangeEvent, FocusEvent } from 'react';
+import { useCallback } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 
 /** The `RatingWidget` component renders a star or heart rating input with DaisyUI styling
  *
@@ -46,9 +47,9 @@ export default function RatingWidget<
   const sizeClass = size === 'md' ? '' : `rating-${size}`;
 
   /** Handles change events from radio inputs */
-  const _onChange = useCallback(
-    ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-      onChange(parseInt(value));
+  const handleChange = useCallback(
+    ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) => {
+      onChange(parseInt(newValue, 10));
     },
     [onChange],
   );
@@ -98,12 +99,13 @@ export default function RatingWidget<
           const starValue = min + index;
           return (
             <input
+              // oxlint-disable-next-line react/no-array-index-key
               key={index}
               type='radio'
               name={id}
               value={starValue}
               checked={value === starValue}
-              onChange={_onChange}
+              onChange={handleChange}
               onFocus={handleFocus}
               onBlur={handleBlur}
               className={`mask ${maskClass} ${getColorClass(index)}`}

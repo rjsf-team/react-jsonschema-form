@@ -2,7 +2,8 @@ import get from 'lodash/get';
 import noop from 'lodash/noop';
 import type { MockInstance } from 'vitest';
 
-import { CONST_KEY, optionsList, PROPERTIES_KEY, RJSFSchema, UiSchema } from '../src';
+import type { RJSFSchema, UiSchema } from '../src';
+import { CONST_KEY, optionsList, PROPERTIES_KEY } from '../src';
 
 describe('optionsList()', () => {
   let consoleWarnSpy: MockInstance;

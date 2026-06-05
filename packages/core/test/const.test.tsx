@@ -1,4 +1,4 @@
-import { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema } from '@rjsf/utils';
 
 import { createFormComponent } from './testUtils';
 

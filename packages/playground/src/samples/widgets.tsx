@@ -1,4 +1,4 @@
-import { Sample } from './Sample';
+import type { Sample } from './Sample';
 
 const widgets: Sample = {
   schema: {
@@ -270,13 +270,12 @@ const widgets: Sample = {
             value={value}
             onChange={(event) => onChange(event.target.value)}
           >
-            {enumOptions.map(({ label, value }, i) => {
-              return (
-                <option key={i} value={value}>
-                  {label}
-                </option>
-              );
-            })}
+            {enumOptions.map(({ label: enumLabel, value: enumValue }, i) => (
+              // oxlint-disable-next-line react/no-array-index-key
+              <option key={i} value={enumValue}>
+                {enumLabel}
+              </option>
+            ))}
           </select>
         );
       },

@@ -1,8 +1,8 @@
-import { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import fs from 'fs';
 
 import { compileSchemaValidatorsCode } from './compileSchemaValidatorsCode';
-import { CustomValidatorOptionsType } from './types';
+import type { CustomValidatorOptionsType } from './types';
 
 export { compileSchemaValidatorsCode };
 
@@ -22,9 +22,11 @@ export default function compileSchemaValidators<S extends StrictRJSFSchema = RJS
   output: string,
   options: CustomValidatorOptionsType = {},
 ) {
+  // oxlint-disable-next-line no-console
   console.log('parsing the schema');
 
   const moduleCode = compileSchemaValidatorsCode(schema, options);
+  // oxlint-disable-next-line no-console
   console.log(`writing ${output}`);
   fs.writeFileSync(output, moduleCode);
 }

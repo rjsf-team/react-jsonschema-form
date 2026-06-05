@@ -1,14 +1,8 @@
-import { FocusEvent } from 'react';
-import { Label, Slider, SliderOnChangeData } from '@fluentui/react-components';
-import {
-  ariaDescribedByIds,
-  labelValue,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-  rangeSpec,
-} from '@rjsf/utils';
+import type { FocusEvent } from 'react';
+import type { SliderOnChangeData } from '@fluentui/react-components';
+import { Label, Slider } from '@fluentui/react-components';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, labelValue, rangeSpec } from '@rjsf/utils';
 
 /** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
  * in a div, with the value along side it.
@@ -22,11 +16,11 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     props;
   const sliderProps = { value, label, id, name: id, ...rangeSpec<S>(schema) };
 
-  const _onChange = (_: any, data: SliderOnChangeData) => {
+  const handleChange = (_: any, data: SliderOnChangeData) => {
     onChange(data.value ?? options.emptyValue);
   };
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
 
   return (
     <>
@@ -38,9 +32,9 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       )}
       <Slider
         disabled={disabled || readonly}
-        onChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         {...sliderProps}
         aria-describedby={ariaDescribedByIds(id)}
       />

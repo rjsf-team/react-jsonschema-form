@@ -1,5 +1,5 @@
 import { getTestRegistry } from '@rjsf/core';
-import { RJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { RJSFSchema, WidgetProps } from '@rjsf/utils';
 
 import Templates from '../../src/templates/Templates';
 import generateWidgets from '../../src/widgets/Widgets';
@@ -11,7 +11,7 @@ export const mockSchema: RJSFSchema = {
   },
 };
 
-export const mockEventHandlers = (): void => void 0;
+export const mockEventHandlers = (): void => undefined;
 
 export function mockRegistry() {
   return getTestRegistry({ templates: Templates, rootSchema: mockSchema, widgets: generateWidgets() });

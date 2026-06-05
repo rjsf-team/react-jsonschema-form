@@ -1,19 +1,17 @@
-import { FocusEvent, useMemo, useRef } from 'react';
-import { createListCollection, SelectValueChangeDetails, Select as ChakraSelect } from '@chakra-ui/react';
+import type { FocusEvent } from 'react';
+import { useMemo, useRef } from 'react';
+import type { SelectValueChangeDetails } from '@chakra-ui/react';
+import { createListCollection, Select as ChakraSelect } from '@chakra-ui/react';
+import type { EnumOptionsType, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
-  EnumOptionsType,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
   labelValue,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
 } from '@rjsf/utils';
-import { OptionsOrGroups } from 'chakra-react-select';
+import type { OptionsOrGroups } from 'chakra-react-select';
 
 import { Field } from '../components/ui/field';
 import { SelectRoot, SelectTrigger, SelectValueText } from '../components/ui/select';
@@ -45,41 +43,40 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
 
-  const _onMultiChange = ({ value }: SelectValueChangeDetails) => {
-    return onChange(enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, emptyValue));
-  };
+  const handleMultiChange = ({ value: newValue }: SelectValueChangeDetails) =>
+    onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, emptyValue));
 
-  const _onSingleChange = ({ value }: SelectValueChangeDetails) => {
-    const selected = enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, emptyValue);
+  const handleSingleChange = ({ value: newValue }: SelectValueChangeDetails) => {
+    const selected = enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, emptyValue);
     return onChange(Array.isArray(selected) && selected.length === 1 ? selected[0] : selected);
   };
 
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
 
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
 
   const showPlaceholderOption = !multiple && schema.default === undefined;
   const displayEnumOptions = useMemo((): OptionsOrGroups<any, any> => {
-    let displayEnumOptions: OptionsOrGroups<any, any> = [];
+    let computedOptions: OptionsOrGroups<any, any> = [];
     if (Array.isArray(enumOptions)) {
-      displayEnumOptions = enumOptions.map((option: EnumOptionsType<S>, index: number) => {
-        const { value, label } = option;
+      computedOptions = enumOptions.map((option: EnumOptionsType<S>, index: number) => {
+        const { value: enumValue, label: enumLabel } = option;
         return {
-          label,
-          value: enumOptionValueEncoder(value, index, optionValueFormat),
-          disabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1,
+          label: enumLabel,
+          value: enumOptionValueEncoder(enumValue, index, optionValueFormat),
+          disabled: Array.isArray(enumDisabled) && enumDisabled.includes(enumValue),
         };
       });
       if (showPlaceholderOption) {
-        (displayEnumOptions as any[]).unshift({ value: '', label: placeholder || '' });
+        (computedOptions as any[]).unshift({ value: '', label: placeholder || '' });
       }
     }
-    return displayEnumOptions;
+    return computedOptions;
   }, [enumDisabled, enumOptions, placeholder, showPlaceholderOption, optionValueFormat]);
 
-  const isMultiple = typeof multiple !== 'undefined' && multiple !== false && Boolean(enumOptions);
+  const isMultiple = typeof multiple !== 'undefined' && multiple && Boolean(enumOptions);
 
   // Chakra's SelectRoot always expects a string array, so flatten the helper's
   // single/multiple return shape and strip the empty-single case.
@@ -114,9 +111,9 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         name={htmlName || id}
         multiple={isMultiple}
         closeOnSelect={!isMultiple}
-        onBlur={_onBlur}
-        onValueChange={isMultiple ? _onMultiChange : _onSingleChange}
-        onFocus={_onFocus}
+        onBlur={handleBlur}
+        onValueChange={isMultiple ? handleMultiChange : handleSingleChange}
+        onFocus={handleFocus}
         autoFocus={autofocus}
         value={formValue}
         aria-describedby={ariaDescribedByIds(id)}

@@ -1,12 +1,7 @@
-import {
-  ariaDescribedByIds,
-  FormContextType,
-  getInputProps,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
-import { InputNumber, InputNumberChangeEvent } from 'primereact/inputnumber';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, getInputProps } from '@rjsf/utils';
+import type { InputNumberChangeEvent } from 'primereact/inputnumber';
+import { InputNumber } from 'primereact/inputnumber';
 
 /** The `UpDownWidget` renders an input component for a number.
  *
@@ -36,9 +31,9 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const { showButtons, buttonLayout, useGrouping, minFractionDigits, maxFractionDigits, locale, currency } = options;
   const primeProps = (options.prime || {}) as object;
 
-  const _onChange = (event: InputNumberChangeEvent) => onChange(event.value === null ? options.emptyValue : value);
-  const _onBlur = () => onBlur && onBlur(id, value);
-  const _onFocus = () => onFocus && onFocus(id, value);
+  const handleChange = (event: InputNumberChangeEvent) => onChange(event.value === null ? options.emptyValue : value);
+  const handleBlur = () => onBlur && onBlur(id, value);
+  const handleFocus = () => onFocus && onFocus(id, value);
 
   return (
     <InputNumber
@@ -46,24 +41,24 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
       name={id}
       {...primeProps}
       placeholder={placeholder}
-      step={isNaN(Number(inputProps.step)) ? 1 : Number(inputProps.step)}
+      step={Number.isNaN(Number(inputProps.step)) ? 1 : Number(inputProps.step)}
       required={required}
       autoFocus={autofocus}
       disabled={disabled || readonly}
       style={buttonLayout === 'vertical' ? { width: '4em' } : {}}
       showButtons={typeof showButtons === 'undefined' ? true : !!showButtons}
-      buttonLayout={(buttonLayout as any) ?? 'stacked'}
+      buttonLayout={buttonLayout ?? 'stacked'}
       useGrouping={!!useGrouping}
       minFractionDigits={minFractionDigits as number}
       maxFractionDigits={maxFractionDigits as number}
       locale={locale as string}
       mode={currency ? 'currency' : 'decimal'}
       currency={currency as string}
-      value={isNaN(Number(value)) ? null : Number(value)}
+      value={Number.isNaN(Number(value)) ? null : Number(value)}
       invalid={rawErrors.length > 0}
-      onChange={(onChangeOverride as any) || _onChange}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
+      onChange={onChangeOverride || handleChange}
+      onBlur={handleBlur}
+      onFocus={handleFocus}
       aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
     />
   );

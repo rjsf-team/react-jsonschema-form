@@ -1,12 +1,13 @@
 import uniqueIdFn from 'lodash/uniqueId';
 
-import { TestIdShape, getTestIds } from '../src';
+import type { TestIdShape } from '../src';
+import { getTestIds } from '../src';
 
 const TEST_UUID_BASE = 'test-uuid-';
 
 vi.mock('lodash/uniqueId', async (importOriginal) => {
   const { default: realUniqueId } = await importOriginal<{ default: () => string }>();
-  return { default: vi.fn(() => 'test-uuid-' + realUniqueId()) };
+  return { default: vi.fn(() => `test-uuid-${realUniqueId()}`) };
 });
 
 const uniqueIdMock = vi.mocked(uniqueIdFn);

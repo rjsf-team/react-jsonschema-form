@@ -1,15 +1,8 @@
-import { ChangeEvent, MouseEvent, useCallback } from 'react';
+import type { ChangeEvent, MouseEvent } from 'react';
+import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
-import {
-  ariaDescribedByIds,
-  BaseInputTemplateProps,
-  examplesId,
-  getInputProps,
-  labelValue,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { ariaDescribedByIds, examplesId, getInputProps, labelValue } from '@rjsf/utils';
 import { Form } from 'semantic-ui-react';
 
 import { getSemanticProps } from '../util';
@@ -54,11 +47,11 @@ export default function BaseInputTemplate<
     formContext: registry.formContext,
     options,
   });
-  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
-    onChange(value === '' ? options.emptyValue : value);
-  const _onBlur = () => onBlur && onBlur(id, value);
-  const _onFocus = () => onFocus && onFocus(id, value);
-  const _onClear = useCallback(
+  const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
+    onChange(newValue === '' ? options.emptyValue : newValue);
+  const handleBlur = () => onBlur && onBlur(id, value);
+  const handleFocus = () => onFocus && onFocus(id, value);
+  const handleClear = useCallback(
     (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
@@ -83,13 +76,13 @@ export default function BaseInputTemplate<
         {...semanticProps}
         value={value || value === 0 ? value : ''}
         error={rawErrors.length > 0}
-        onChange={onChangeOverride || _onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
+        onChange={onChangeOverride || handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
       {options.allowClearTextInputs && !readonly && !disabled && value && (
-        <ClearButton registry={registry} onClick={_onClear} />
+        <ClearButton registry={registry} onClick={handleClear} />
       )}
       <SchemaExamples id={id} schema={schema} />
     </>

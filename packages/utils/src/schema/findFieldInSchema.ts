@@ -2,7 +2,7 @@ import get from 'lodash/get';
 import has from 'lodash/has';
 
 import { ANY_OF_KEY, ONE_OF_KEY, PROPERTIES_KEY, REQUIRED_KEY } from '../constants';
-import {
+import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
   FoundFieldType,

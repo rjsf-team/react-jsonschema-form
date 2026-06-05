@@ -1,16 +1,13 @@
-import { OptionOnSelectData } from '@fluentui/react-combobox';
+import type { OptionOnSelectData } from '@fluentui/react-combobox';
 import { Dropdown, Field, Option } from '@fluentui/react-components';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   enumOptionsIndexForValue,
   getOptionValueFormat,
-  FormContextType,
   labelValue,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
 } from '@rjsf/utils';
 
 function getValue(data: OptionOnSelectData, multiple: boolean) {
@@ -60,9 +57,9 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     .map((index) => (enumOptions ? enumOptions[Number(index)].label : undefined))
     .join(', ');
 
-  const _onBlur = () => onBlur(id, selectedIndexes);
-  const _onFocus = () => onFocus(id, selectedIndexes);
-  const _onChange = (_: any, data: OptionOnSelectData) => {
+  const handleBlur = () => onBlur(id, selectedIndexes);
+  const handleFocus = () => onFocus(id, selectedIndexes);
+  const handleChange = (_: any, data: OptionOnSelectData) => {
     const newValue = getValue(data, multiple);
     return onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));
   };
@@ -82,19 +79,23 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
         value={dropdownValue}
         disabled={disabled || readonly}
         autoFocus={autofocus}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
-        onOptionSelect={_onChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
+        onOptionSelect={handleChange}
         selectedOptions={selectedIndexesAsArray}
         aria-describedby={ariaDescribedByIds(id)}
       >
         {showPlaceholderOption && <Option value=''>{placeholder || ''}</Option>}
         {Array.isArray(enumOptions) &&
-          enumOptions.map(({ value, label }, i) => {
-            const disabled = enumDisabled && enumDisabled.indexOf(value) !== -1;
+          enumOptions.map(({ value: enumValue, label: enumLabel }, i) => {
+            const isDisabled = enumDisabled && enumDisabled.includes(enumValue);
             return (
-              <Option key={i} value={enumOptionValueEncoder(value, i, optionValueFormat)} disabled={disabled}>
-                {label}
+              <Option
+                key={String(enumValue)}
+                value={enumOptionValueEncoder(enumValue, i, optionValueFormat)}
+                disabled={isDisabled}
+              >
+                {enumLabel}
               </Option>
             );
           })}

@@ -1,9 +1,11 @@
-import { memo, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { RefObject } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { format, isSameDay, isToday, isValid } from 'date-fns';
-import { ClassNames, DayPicker, ModifiersClassNames, UI } from 'react-day-picker';
+import type { ClassNames, ModifiersClassNames } from 'react-day-picker';
+import { DayPicker, UI } from 'react-day-picker';
 
 import 'react-day-picker/dist/style.css';
 
@@ -223,6 +225,7 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
       }
     } catch (e) {
       // Security error, we're in a cross-origin iframe
+      // oxlint-disable-next-line no-console
       console.log('Unable to access parent frame:', e);
     }
 
@@ -337,28 +340,25 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
 
   return (
     <div className='form-control my-4 w-full relative'>
-      <div
-        className='w-full'
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            togglePicker(e as unknown as React.MouseEvent);
-          }
-        }}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        ref={inputRef}
-      >
+      <div className='w-full'>
         <div
           id={id}
           className={`input input-bordered w-full flex items-center justify-between cursor-pointer ${
             isOpen ? 'ring-2 ring-primary/50' : ''
           }`}
           onClick={togglePicker}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              togglePicker(e as unknown as React.MouseEvent);
+            }
+          }}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           role='button'
           aria-haspopup='true'
           aria-expanded={isOpen}
-          tabIndex={-1}
+          tabIndex={0}
+          ref={inputRef}
         >
           <span className={localDate && isValid(localDate) ? '' : 'text-base-content/50'}>
             {localDate && isValid(localDate) ? format(localDate, 'PP') : schema.title}
@@ -368,6 +368,7 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
         {isOpen && (
           <div
             ref={containerRef}
+            role='presentation'
             className='date-picker-popup fixed z-[99999] w-full max-w-xs bg-base-100 border border-base-300 shadow-lg rounded-box'
             style={{
               maxHeight: 'none',

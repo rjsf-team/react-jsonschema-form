@@ -1,14 +1,5 @@
-import {
-  ariaDescribedByIds,
-  descriptionId,
-  FormContextType,
-  getTemplate,
-  labelValue,
-  RJSFSchema,
-  schemaRequiresTrueValue,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, descriptionId, getTemplate, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
 
 import { Checkbox } from '../components/ui/checkbox';
 import { Label } from '../components/ui/label';
@@ -51,9 +42,9 @@ export default function CheckboxWidget<
     options,
   );
 
-  const _onChange = (checked: boolean) => onChange(checked);
-  const _onBlur = () => onBlur(id, value);
-  const _onFocus = () => onFocus(id, value);
+  const handleChange = (checked: boolean) => onChange(checked);
+  const handleBlur = () => onBlur(id, value);
+  const handleFocus = () => onFocus(id, value);
 
   const description = options.description || schema.description;
   return (
@@ -78,9 +69,9 @@ export default function CheckboxWidget<
           required={required}
           disabled={disabled || readonly}
           autoFocus={autofocus}
-          onCheckedChange={_onChange}
-          onBlur={_onBlur}
-          onFocus={_onFocus}
+          onCheckedChange={handleChange}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
           className={className}
         />
         <Label className='leading-tight' htmlFor={id}>

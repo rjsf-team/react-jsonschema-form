@@ -1,5 +1,5 @@
-import { BoxProps, FormHelperTextProps, GridProps, PaperProps, SxProps, TypographyProps } from '@mui/material';
-import { FormContextType, RJSFSchema, StrictRJSFSchema, UIOptionsType, GenericObjectType } from '@rjsf/utils';
+import type { BoxProps, FormHelperTextProps, GridProps, PaperProps, SxProps, TypographyProps } from '@mui/material';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, UIOptionsType, GenericObjectType } from '@rjsf/utils';
 
 /**
  * Extract props meant for MUI components from the `options` field of the `uiSchema`.
@@ -22,9 +22,9 @@ export function getMuiProps<
   if (propsToFilter) {
     return Object.keys(muiProps)
       .filter((key) => propsToFilter.includes(key))
-      .reduce((obj, key) => {
-        obj[key as keyof P] = muiProps[key as keyof P];
-        return obj;
+      .reduce((acc, key) => {
+        acc[key as keyof P] = muiProps[key as keyof P];
+        return acc;
       }, {} as P);
   }
   return muiProps;

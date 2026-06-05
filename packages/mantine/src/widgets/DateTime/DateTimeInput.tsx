@@ -1,13 +1,7 @@
 import { useCallback } from 'react';
 import { DateInput } from '@mantine/dates';
-import {
-  ariaDescribedByIds,
-  FormContextType,
-  labelValue,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, labelValue } from '@rjsf/utils';
 import dayjs from 'dayjs';
 
 const dateParser = (input: string, format: string) => {

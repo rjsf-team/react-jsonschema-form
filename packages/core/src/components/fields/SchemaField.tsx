@@ -1,8 +1,6 @@
-import { useCallback, Component, ComponentType } from 'react';
-import {
-  ADDITIONAL_PROPERTY_FLAG,
-  ANY_OF_KEY,
-  descriptionId,
+import type { ComponentType } from 'react';
+import { useCallback, Component } from 'react';
+import type {
   ErrorSchema,
   Field,
   FieldPathId,
@@ -10,28 +8,33 @@ import {
   FieldProps,
   FieldTemplateProps,
   FormContextType,
+  Registry,
+  RJSFSchema,
+  StrictRJSFSchema,
+  UIOptionsType,
+} from '@rjsf/utils';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  ANY_OF_KEY,
+  descriptionId,
   getSchemaType,
   getTemplate,
   getUiOptions,
   ID_KEY,
   isFormDataAvailable,
   ONE_OF_KEY,
-  Registry,
   resolveUiSchema,
-  RJSFSchema,
   shouldRender,
   shouldRenderOptionalField,
-  StrictRJSFSchema,
   toFieldPathId,
   TranslatableString,
   UI_OPTIONS_KEY,
-  UIOptionsType,
 } from '@rjsf/utils';
 import isObject from 'lodash/isObject';
 import omit from 'lodash/omit';
 
 /** The map of component type to FieldName */
-const COMPONENT_TYPES: { [key: string]: string } = {
+const COMPONENT_TYPES: Record<string, string> = {
   array: 'ArrayField',
   boolean: 'BooleanField',
   integer: 'NumberField',
@@ -55,7 +58,7 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   uiOptions: UIOptionsType<T, S, F>,
   registry: Registry<T, S, F>,
 ): ComponentType<FieldProps<T, S, F>> {
-  const field = uiOptions.field;
+  const { field } = uiOptions;
   const { fields } = registry;
   if (typeof field === 'function') {
     return field;
@@ -80,7 +83,7 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     return () => null;
   }
 
-  return componentName in fields ? fields[componentName] : fields['FallbackField'];
+  return componentName in fields ? fields[componentName] : fields.FallbackField;
 }
 
 /** The `SchemaFieldRender` component is the work-horse of react-jsonschema-form, determining what kind of real field to
@@ -126,9 +129,9 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * `onChange` chain if it is not already being provided from a deeper level in the hierarchy
    */
   const handleFieldComponentChange = useCallback(
-    (formData: T | undefined, path: FieldPathList, newErrorSchema?: ErrorSchema<T>, id?: string) => {
+    (newFormData: T | undefined, path: FieldPathList, newErrorSchema?: ErrorSchema<T>, id?: string) => {
       const theId = id || fieldId;
-      return onChange(formData, path, newErrorSchema, theId);
+      return onChange(newFormData, path, newErrorSchema, theId);
     },
     [fieldId, onChange],
   );
@@ -162,13 +165,13 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   if ((ANY_OF_KEY in schema || ONE_OF_KEY in schema) && !isReplacingAnyOrOneOf && !schemaUtils.isSelect(schema)) {
     if (schema[ANY_OF_KEY]) {
       XxxOfField = _AnyOfField;
-      XxxOfOptions = schema[ANY_OF_KEY].map((_schema) =>
-        schemaUtils.retrieveSchema(isObject(_schema) ? (_schema as S) : ({} as S), formData),
+      XxxOfOptions = schema[ANY_OF_KEY].map((xxxOfSchema) =>
+        schemaUtils.retrieveSchema(isObject(xxxOfSchema) ? (xxxOfSchema as S) : ({} as S), formData),
       );
     } else if (schema[ONE_OF_KEY]) {
       XxxOfField = _OneOfField;
-      XxxOfOptions = schema[ONE_OF_KEY].map((_schema) =>
-        schemaUtils.retrieveSchema(isObject(_schema) ? (_schema as S) : ({} as S), formData),
+      XxxOfOptions = schema[ONE_OF_KEY].map((xxxOfSchema) =>
+        schemaUtils.retrieveSchema(isObject(xxxOfSchema) ? (xxxOfSchema as S) : ({} as S), formData),
       );
     }
     // When the anyOf/oneOf is an optional data control render AND it does not have form data, hide the label
@@ -224,7 +227,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   }
 
   const description = uiOptions.description || props.schema.description || schema.description || '';
-  const help = uiOptions.help;
+  const { help } = uiOptions;
   const hidden = uiOptions.widget === 'hidden' || deprecatedHandling === 'hide';
 
   const classNames = ['rjsf-field', `rjsf-field-${getSchemaType(schema)}`];

@@ -1,6 +1,6 @@
-import { ArrayFieldItemButtonsTemplateProps, ArrayFieldTemplateProps } from '@rjsf/utils';
+import type { ArrayFieldItemButtonsTemplateProps, ArrayFieldTemplateProps } from '@rjsf/utils';
 
-import { Sample } from './Sample';
+import type { Sample } from './Sample';
 
 function ArrayFieldTemplate(props: ArrayFieldTemplateProps) {
   const { className, items, canAdd, onAddClick } = props;
@@ -24,9 +24,19 @@ function ArrayFieldItemButtonsTemplate(props: ArrayFieldItemButtonsTemplateProps
   const { hasMoveDown, hasMoveUp, onMoveDownItem, onMoveUpItem, onRemoveItem } = props;
   return (
     <>
-      {hasMoveDown && <button onClick={onMoveDownItem}>Down</button>}
-      {hasMoveUp && <button onClick={onMoveUpItem}>Up</button>}
-      <button onClick={onRemoveItem}>Delete</button>
+      {hasMoveDown && (
+        <button type='button' onClick={onMoveDownItem}>
+          Down
+        </button>
+      )}
+      {hasMoveUp && (
+        <button type='button' onClick={onMoveUpItem}>
+          Up
+        </button>
+      )}
+      <button type='button' onClick={onRemoveItem}>
+        Delete
+      </button>
       <hr />
     </>
   );

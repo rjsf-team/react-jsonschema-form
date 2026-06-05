@@ -4,7 +4,7 @@
  *
  * This is built as an on-the-fly executed function to support testing the node vs browser implementations
  */
-const base64 = (function () {
+const base64 = (function base64() {
   // If we are in the browser, we can use the built-in TextEncoder and TextDecoder
   // Otherwise, it is assumed that we are in node.js, and we can use the util module's TextEncoder and TextDecoder
   return {
@@ -13,6 +13,7 @@ const base64 = (function () {
       if (typeof TextEncoder !== 'undefined') {
         encoder = new TextEncoder();
       } else {
+        // oxlint-disable-next-line typescript/no-var-requires
         const { TextEncoder } = require('util');
         encoder = new TextEncoder();
       }
@@ -23,6 +24,7 @@ const base64 = (function () {
       if (typeof TextDecoder !== 'undefined') {
         decoder = new TextDecoder();
       } else {
+        // oxlint-disable-next-line typescript/no-var-requires
         const { TextDecoder } = require('util');
         decoder = new TextDecoder();
       }

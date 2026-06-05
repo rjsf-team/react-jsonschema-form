@@ -1,17 +1,15 @@
-import { ChangeEvent } from 'react';
-import {
+import type { ChangeEvent } from 'react';
+import type {
   FileInfoType,
   FormContextType,
-  getTemplate,
   Registry,
   RJSFSchema,
   StrictRJSFSchema,
-  TranslatableString,
   UIOptionsType,
-  useFileWidgetProps,
   WidgetProps,
 } from '@rjsf/utils';
-import { Markdown } from 'markdown-to-jsx';
+import { getTemplate, TranslatableString, useFileWidgetProps } from '@rjsf/utils';
+import { Markdown } from 'markdown-to-jsx/react';
 
 function FileInfoPreview<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   fileInfo,
@@ -25,12 +23,13 @@ function FileInfoPreview<T = any, S extends StrictRJSFSchema = RJSFSchema, F ext
   if (!dataURL) {
     return null;
   }
+  const previewLabel = translateString(TranslatableString.PreviewLabel);
 
   // If type is JPEG or PNG then show image preview.
   // Originally, any type of image was supported, but this was changed into a whitelist
   // since SVGs and animated GIFs are also images, which are generally considered a security risk.
   if (['image/jpeg', 'image/png'].includes(type)) {
-    return <img src={dataURL} style={{ maxWidth: '100%' }} className='file-preview' />;
+    return <img src={dataURL} alt={previewLabel} style={{ maxWidth: '100%' }} className='file-preview' />;
   }
 
   // otherwise, let users download file
@@ -39,7 +38,7 @@ function FileInfoPreview<T = any, S extends StrictRJSFSchema = RJSFSchema, F ext
     <>
       {' '}
       <a download={`preview-${name}`} href={dataURL} className='file-download'>
-        {translateString(TranslatableString.PreviewLabel)}
+        {previewLabel}
       </a>
     </>
   );
@@ -71,6 +70,7 @@ function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends F
         const { name, size, type } = fileInfo;
         const handleRemove = () => onRemove(key);
         return (
+          // oxlint-disable-next-line react/no-array-index-key
           <li key={key}>
             <Markdown>{translateString(TranslatableString.FilesInfo, [name, type, String(size)])}</Markdown>
             {preview && <FileInfoPreview<T, S, F> fileInfo={fileInfo} registry={registry} />}
@@ -96,6 +96,7 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
   const handleOnChangeEvent = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       // handleChange is async; DOM event handlers are void-returning, so we intentionally don't await
+      // oxlint-disable-next-line no-floating-promises, no-void
       void handleChange(event.target.files);
     }
   };

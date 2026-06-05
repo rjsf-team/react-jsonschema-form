@@ -1,9 +1,11 @@
-import { SyntheticEvent, useCallback } from 'react';
-import Form, { IChangeEvent } from '@rjsf/core';
-import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { SyntheticEvent } from 'react';
+import { useCallback } from 'react';
+import type { IChangeEvent } from '@rjsf/core';
+import Form from '@rjsf/core';
+import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
 
-import { SubthemesType } from './SubthemeSelector';
+import type { SubthemesType } from './SubthemeSelector';
 
 export interface ThemesType {
   theme: any;
@@ -13,7 +15,7 @@ export interface ThemesType {
 
 interface ThemeSelectorProps {
   theme: string;
-  themes: { [themeName: string]: ThemesType };
+  themes: Record<string, ThemesType>;
   select: (themeName: string, theme: ThemesType) => void;
 }
 
@@ -42,7 +44,7 @@ export default function ThemeSelector({ theme, themes, select }: ThemeSelectorPr
   };
 
   return (
-    <div onClick={cancelBubble}>
+    <div role='presentation' onClick={cancelBubble}>
       <Form
         className='form_rjsf_themeSelector'
         idPrefix='rjsf_themeSelector'

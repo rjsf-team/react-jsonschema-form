@@ -1,13 +1,6 @@
-import { ReactElement } from 'react';
-import {
-  FormContextType,
-  Registry,
-  RJSFSchema,
-  StrictRJSFSchema,
-  UiSchema,
-  getTestIds,
-  getUiOptions,
-} from '@rjsf/utils';
+import type { ReactElement } from 'react';
+import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
+import { getTestIds, getUiOptions } from '@rjsf/utils';
 import { Markdown } from 'markdown-to-jsx/react';
 
 const TEST_IDS = getTestIds();

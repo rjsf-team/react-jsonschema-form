@@ -1,16 +1,6 @@
 import { Grid, GridItem } from '@chakra-ui/react';
-import {
-  buttonId,
-  canExpand,
-  descriptionId,
-  FormContextType,
-  getTemplate,
-  getUiOptions,
-  ObjectFieldTemplateProps,
-  RJSFSchema,
-  StrictRJSFSchema,
-  titleId,
-} from '@rjsf/utils';
+import type { FormContextType, ObjectFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { buttonId, canExpand, descriptionId, getTemplate, getUiOptions, titleId } from '@rjsf/utils';
 
 export default function ObjectFieldTemplate<
   T = any,
@@ -69,12 +59,8 @@ export default function ObjectFieldTemplate<
       )}
       <Grid gap={description ? 2 : 4} mb={4}>
         {!showOptionalDataControlInTitle ? <GridItem>{optionalDataControl}</GridItem> : undefined}
-        {properties.map((element, index) =>
-          element.hidden ? (
-            element.content
-          ) : (
-            <GridItem key={`${fieldPathId.$id}-${element.name}-${index}`}>{element.content}</GridItem>
-          ),
+        {properties.map((element) =>
+          element.hidden ? element.content : <GridItem key={element.name}>{element.content}</GridItem>,
         )}
         {canExpand<T, S, F>(schema, uiSchema, formData) && (
           <GridItem justifySelf='flex-end'>

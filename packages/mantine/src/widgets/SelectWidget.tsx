@@ -1,5 +1,7 @@
-import { FocusEvent, useCallback, useMemo } from 'react';
+import type { FocusEvent } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Select, MultiSelect } from '@mantine/core';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
@@ -7,10 +9,6 @@ import {
   enumOptionValueEncoder,
   getOptionValueFormat,
   labelValue,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
 } from '@rjsf/utils';
 
 import { cleanupOptions } from '../utils';
@@ -79,7 +77,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         key: String(index),
         value: enumOptionValueEncoder(option.value, index, optionValueFormat),
         label: option.label,
-        disabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1,
+        disabled: Array.isArray(enumDisabled) && enumDisabled.includes(option.value),
       }));
     }
     return [];

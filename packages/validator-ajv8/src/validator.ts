@@ -1,23 +1,21 @@
-import {
+import type {
   CustomValidator,
-  deepEquals,
   ErrorTransformer,
   FormContextType,
-  ID_KEY,
   RJSFSchema,
-  ROOT_SCHEMA_PREFIX,
   StrictRJSFSchema,
   UiSchema,
   ValidationData,
   ValidatorType,
-  withIdRefPrefix,
-  hashForSchema,
 } from '@rjsf/utils';
-import Ajv, { ErrorObject, ValidateFunction } from 'ajv';
+import { deepEquals, ID_KEY, ROOT_SCHEMA_PREFIX, withIdRefPrefix, hashForSchema } from '@rjsf/utils';
+import type { ErrorObject, ValidateFunction } from 'ajv';
+import type Ajv from 'ajv';
 
 import createAjvInstance from './createAjvInstance';
-import processRawValidationErrors, { RawValidationErrorsType } from './processRawValidationErrors';
-import { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringType } from './types';
+import type { RawValidationErrorsType } from './processRawValidationErrors';
+import processRawValidationErrors from './processRawValidationErrors';
+import type { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringType } from './types';
 
 /** `ValidatorType` implementation that uses the AJV 8 validation mechanism.
  */
@@ -121,12 +119,14 @@ export default class AJV8Validator<
         (compiledValidator.errors ?? []).forEach((error) => {
           ['missingProperty', 'property'].forEach((key) => {
             if (error.params?.[key]) {
+              // oxlint-disable-next-line no-param-reassign
               error.params[key] = `'${error.params[key]}'`;
             }
           });
           if (error.params?.deps) {
             // As `error.params.deps` is the comma+space separated list of missing dependencies, enclose each dependency separately.
             // For example, `A, B` is converted into `'A', 'B'`.
+            // oxlint-disable-next-line no-param-reassign
             error.params.deps = error.params.deps
               .split(', ')
               .map((v: string) => `'${v}'`)
@@ -138,11 +138,13 @@ export default class AJV8Validator<
         (compiledValidator.errors ?? []).forEach((error) => {
           ['missingProperty', 'property'].forEach((key) => {
             if (error.params?.[key]) {
+              // oxlint-disable-next-line no-param-reassign
               error.params[key] = error.params[key].slice(1, -1);
             }
           });
           if (error.params?.deps) {
             // Remove surrounding quotes from each missing dependency. For example, `'A', 'B'` is reverted to `A, B`.
+            // oxlint-disable-next-line no-param-reassign
             error.params.deps = error.params.deps
               .split(', ')
               .map((v: string) => v.slice(1, -1))
@@ -244,8 +246,9 @@ export default class AJV8Validator<
           this.ajv.compile(schemaWithIdRefPrefix);
       }
       const result = compiledValidator(formData);
-      return result as boolean;
+      return result;
     } catch (e) {
+      // oxlint-disable-next-line no-console
       console.warn('Error encountered compiling schema:', e);
       return false;
     }

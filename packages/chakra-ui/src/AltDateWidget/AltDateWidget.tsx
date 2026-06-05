@@ -1,14 +1,6 @@
 import { Box, Button, FieldsetRoot } from '@chakra-ui/react';
-import {
-  DateElement,
-  DateElementProp,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  TranslatableString,
-  useAltDateWidgetProps,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { DateElementProp, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { DateElement, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
 
 import { getChakra } from '../utils';
 

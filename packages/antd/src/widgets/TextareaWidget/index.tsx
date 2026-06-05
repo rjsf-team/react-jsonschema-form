@@ -1,12 +1,6 @@
-import { ChangeEvent, FocusEvent } from 'react';
-import {
-  ariaDescribedByIds,
-  FormContextType,
-  GenericObjectType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { ChangeEvent, FocusEvent } from 'react';
+import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds } from '@rjsf/utils';
 import { Input } from 'antd';
 
 const INPUT_STYLE = {

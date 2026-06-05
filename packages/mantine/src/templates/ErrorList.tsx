@@ -1,5 +1,6 @@
 import { Alert, Title, List } from '@mantine/core';
-import { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
+import type { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { TranslatableString } from '@rjsf/utils';
 
 import { ExclamationCircle } from './icons';
 
@@ -26,6 +27,7 @@ export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSche
     >
       <List>
         {errors.map((error, index) => (
+          // oxlint-disable-next-line react/no-array-index-key
           <List.Item key={`error-${index}`} c='red'>
             {error.stack}
           </List.Item>

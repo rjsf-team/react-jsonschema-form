@@ -1,16 +1,9 @@
-import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
+import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
+import { useCallback } from 'react';
 import { Input } from '@chakra-ui/react';
 import { SchemaExamples } from '@rjsf/core';
-import {
-  ariaDescribedByIds,
-  BaseInputTemplateProps,
-  examplesId,
-  labelValue,
-  FormContextType,
-  getInputProps,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { ariaDescribedByIds, examplesId, labelValue, getInputProps } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field';
 import { getChakra } from '../utils';
@@ -45,10 +38,10 @@ export default function BaseInputTemplate<
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   const { ClearButton } = registry.templates.ButtonTemplates;
 
-  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
-    onChange(value === '' ? options.emptyValue : value);
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
+  const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
+    onChange(newValue === '' ? options.emptyValue : newValue);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
   const onClear = useCallback(
     (e: MouseEvent) => {
       e.preventDefault();
@@ -74,9 +67,9 @@ export default function BaseInputTemplate<
         id={id}
         name={htmlName || id}
         value={value || value === 0 ? value : ''}
-        onChange={onChangeOverride || _onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
+        onChange={onChangeOverride || handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         autoFocus={autofocus}
         placeholder={placeholder}
         {...inputProps}

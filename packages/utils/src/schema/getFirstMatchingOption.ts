@@ -4,7 +4,7 @@ import isNumber from 'lodash/isNumber';
 
 import { PROPERTIES_KEY } from '../constants';
 import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDiscriminator';
-import { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
 
 /** Given the `formData` and list of `options`, attempts to find the index of the first option that matches the data.
  * Always returns the first option if there is nothing that matches.
@@ -39,7 +39,7 @@ export default function getFirstMatchingOption<
     return simpleDiscriminatorMatch;
   }
 
-  for (let i = 0; i < options.length; i++) {
+  for (let i = 0; i < options.length; i += 1) {
     const option = options[i];
 
     // If we have a discriminator field, then we will use this to make the determination
@@ -84,7 +84,7 @@ export default function getFirstMatchingOption<
 
         augmentedSchema = shallowClone;
       } else {
-        augmentedSchema = Object.assign({}, option, requiresAnyOf);
+        augmentedSchema = { ...option, ...requiresAnyOf };
       }
 
       // Remove the "required" field as it's likely that not all fields have

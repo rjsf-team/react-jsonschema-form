@@ -1,5 +1,6 @@
 import { Box, List } from '@mantine/core';
-import { errorId, FieldErrorProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { FieldErrorProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { errorId } from '@rjsf/utils';
 
 /** The `FieldErrorTemplate` component renders the errors local to the particular field
  *
@@ -19,6 +20,7 @@ export default function FieldErrorTemplate<
     <Box id={id} c='red' display='none'>
       <List>
         {errors.map((error, index) => (
+          // oxlint-disable-next-line react/no-array-index-key
           <List.Item key={`field-error-${index}`}>{error}</List.Item>
         ))}
       </List>

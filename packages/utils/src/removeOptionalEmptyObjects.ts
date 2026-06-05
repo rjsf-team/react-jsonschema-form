@@ -1,6 +1,6 @@
 import isObject from './isObject';
 import { isValueEmpty, retrieveSchema } from './schema';
-import { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, ValidatorType } from './types';
+import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, ValidatorType } from './types';
 
 /** Recursively removes optional objects from the `formData` that are empty (i.e., all their fields
  * are undefined, null, empty strings, or themselves empty optional objects). This solves the problem
@@ -19,7 +19,7 @@ import { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, Valid
  * @deprecated - This function will be removed in a future release. The equivalent pruning behavior
  *   is now built into `omitExtraData` — use that instead.
  */
-// eslint-disable-next-line @typescript-eslint/no-deprecated
+// oxlint-disable-next-line @typescript-eslint/no-deprecated
 export default function removeOptionalEmptyObjects<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
@@ -43,7 +43,7 @@ export default function removeOptionalEmptyObjects<
       if (Array.isArray(itemsSchema)) {
         itemSchema = itemsSchema[index] || (resolvedSchema.additionalItems as S) || ({} as S);
       }
-      // eslint-disable-next-line @typescript-eslint/no-deprecated
+      // oxlint-disable-next-line @typescript-eslint/no-deprecated
       const cleaned = removeOptionalEmptyObjects<T, S, F>(validator, itemSchema, rootSchema, item);
       if (cleaned !== item) {
         hasChanges = true;
@@ -69,23 +69,20 @@ export default function removeOptionalEmptyObjects<
   for (const key of Object.keys(data)) {
     const value = data[key];
     const propertySchema = (properties[key] || {}) as S;
-    const isRequired = (requiredFields as string[]).includes(key);
+    const isRequired = requiredFields.includes(key);
 
     const isObj = isObject(value);
     const isArr = Array.isArray(value);
 
     if ((isObj || isArr) && properties[key]) {
       // Recursively process nested objects and arrays
-      // eslint-disable-next-line @typescript-eslint/no-deprecated
+      // oxlint-disable-next-line @typescript-eslint/no-deprecated
       const cleaned = removeOptionalEmptyObjects<T, S, F>(validator, propertySchema, rootSchema, value as T);
 
-      if (!isRequired && isValueEmpty(cleaned)) {
-        // This is an optional property and the cleaned result is empty — omit it
-        continue;
+      if (isRequired || !isValueEmpty(cleaned)) {
+        result[key] = cleaned;
+        hasAnyValue = true;
       }
-
-      result[key] = cleaned;
-      hasAnyValue = true;
     } else if (isRequired || !isValueEmpty(value) || !properties[key]) {
       // Keep: required, non-empty, or not schema-defined; skip optional empty scalars silently
       result[key] = value;

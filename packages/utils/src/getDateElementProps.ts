@@ -1,14 +1,14 @@
-import { type DateObject } from './types';
+import type { DateObject } from './types';
 
 /** Available options for re-ordering date input element */
 export type DateElementFormat = 'DMY' | 'MDY' | 'YMD';
 
 /** Type describing format of DateElement prop */
-export type DateElementProp = {
+export interface DateElementProp {
   type: string;
   range: [number, number];
   value: number | undefined;
-};
+}
 
 /** Given date & time information with optional yearRange & format, returns props for DateElement
  *

@@ -1,11 +1,5 @@
-import {
-  ArrayFieldTitleProps,
-  FormContextType,
-  getUiOptions,
-  RJSFSchema,
-  StrictRJSFSchema,
-  titleId,
-} from '@rjsf/utils';
+import type { ArrayFieldTitleProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { getUiOptions, titleId } from '@rjsf/utils';
 
 /** The `ArrayFieldTitleTemplate` component renders a header for the array.
  *

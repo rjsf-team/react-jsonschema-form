@@ -1,14 +1,7 @@
 import { useCallback } from 'react';
 import { Slider, Input } from '@mantine/core';
-import {
-  ariaDescribedByIds,
-  rangeSpec,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-  titleId,
-} from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, rangeSpec, titleId } from '@rjsf/utils';
 
 import { cleanupOptions } from '../utils';
 
@@ -88,6 +81,7 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       {rawErrors &&
         rawErrors?.length > 0 &&
         rawErrors.map((error: string, index: number) => (
+          // oxlint-disable-next-line react/no-array-index-key
           <Input.Error key={`range-widget-input-errors-${index}`}>{error}</Input.Error>
         ))}
     </>

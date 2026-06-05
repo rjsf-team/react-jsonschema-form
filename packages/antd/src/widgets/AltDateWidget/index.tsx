@@ -1,13 +1,5 @@
-import {
-  DateElement,
-  FormContextType,
-  GenericObjectType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  TranslatableString,
-  useAltDateWidgetProps,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { DateElement, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
 import { Row, Col, Button } from 'antd';
 
 export default function AltDateWidget<

@@ -1,13 +1,15 @@
 'use client';
 
-import { MouseEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import type { MouseEvent } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import dateRangeOptions from './dateRangeOptions';
-import getDateElementProps, { DateElementFormat, DateElementProp } from './getDateElementProps';
+import type { DateElementFormat, DateElementProp } from './getDateElementProps';
+import getDateElementProps from './getDateElementProps';
 import { ariaDescribedByIds } from './idGenerators';
 import parseDateString from './parseDateString';
 import toDateString from './toDateString';
-import { DateObject, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types';
+import type { DateObject, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types';
 
 /** Function that checks to see if a `DateObject` is ready for the onChange callback to be triggered
  *
@@ -58,7 +60,7 @@ export function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   } = props;
   const id = `${rootId}_${type}`;
   const { SelectWidget } = registry.widgets;
-  const onChange = useCallback((value: any) => select(type as keyof DateObject, value), [select, type]);
+  const onChange = useCallback((newValue: any) => select(type as keyof DateObject, newValue), [select, type]);
   return (
     <SelectWidget
       schema={{ type: 'integer' } as S}
@@ -82,7 +84,7 @@ export function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
 }
 
 /** The result of a call to the `useAltDateWidgetProps()` hook */
-export type UseAltDateWidgetResult = {
+export interface UseAltDateWidgetResult {
   /** The list of `DateElementProp` data to render for the `AltDateWidget` */
   elements: DateElementProp[];
   /** The callback that handles the changing of DateElement components */
@@ -91,7 +93,7 @@ export type UseAltDateWidgetResult = {
   handleClear: (event: MouseEvent) => void;
   /** The callback that will set the `AltDateWidget` to NOW when a button is clicked */
   handleSetNow: (event: MouseEvent) => void;
-};
+}
 
 /** Hook which encapsulates the logic needed to render an `AltDateWidget` with optional `time` elements. It contains
  * the `state` of the current date(/time) selections in the widget. It returns a `UseAltDateWidgetResult` object
@@ -113,10 +115,10 @@ export default function useAltDateWidgetProps<
   }, [time, value]);
 
   const handleChange = useCallback(
-    (property: keyof DateObject, value?: string) => {
+    (property: keyof DateObject, newValue?: string) => {
       const nextState = {
         ...state,
-        [property]: typeof value === 'undefined' ? -1 : value,
+        [property]: typeof newValue === 'undefined' ? -1 : newValue,
       };
 
       if (readyForChange(nextState)) {

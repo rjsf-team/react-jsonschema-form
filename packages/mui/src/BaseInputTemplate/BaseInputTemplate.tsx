@@ -1,20 +1,19 @@
-import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
-import { InputProps as MuiInputProps } from '@mui/material/Input';
+import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
+import { useCallback } from 'react';
+import type { InputProps as MuiInputProps } from '@mui/material/Input';
 import InputAdornment from '@mui/material/InputAdornment';
-import { InputLabelProps as MuiInputLabelProps } from '@mui/material/InputLabel';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import type { InputLabelProps as MuiInputLabelProps } from '@mui/material/InputLabel';
+import type { TextFieldProps } from '@mui/material/TextField';
+import TextField from '@mui/material/TextField';
 import { SchemaExamples } from '@rjsf/core';
-import {
-  ariaDescribedByIds,
+import type {
   BaseInputTemplateProps,
-  examplesId,
-  getInputProps,
-  labelValue,
   FormContextType,
   GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
+import { ariaDescribedByIds, examplesId, getInputProps, labelValue } from '@rjsf/utils';
 
 import { getMuiProps } from '../util';
 
@@ -91,14 +90,14 @@ export default function BaseInputTemplate<
     accept,
     ...(schema.examples ? { list: examplesId(id) } : undefined),
   };
-  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
-    onChange(value === '' ? options.emptyValue : value);
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
+  const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
+    onChange(newValue === '' ? options.emptyValue : newValue);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
   const DisplayInputLabelProps = TYPES_THAT_SHRINK_LABEL.includes(type)
     ? { ...slotProps?.inputLabel, ...muiSlotProps?.inputLabel, ...InputLabelProps, shrink: true }
     : { ...slotProps?.inputLabel, ...muiSlotProps?.inputLabel, ...InputLabelProps };
-  const _onClear = useCallback(
+  const handleClear = useCallback(
     (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
@@ -110,7 +109,7 @@ export default function BaseInputTemplate<
   if (options.allowClearTextInputs && value && !readonly && !disabled) {
     const clearAdornment = (
       <InputAdornment position='end'>
-        <ClearButton registry={registry} onClick={_onClear} />
+        <ClearButton registry={registry} onClick={handleClear} />
       </InputAdornment>
     );
     inputProps.endAdornment = !inputProps.endAdornment ? (
@@ -143,9 +142,9 @@ export default function BaseInputTemplate<
         {...rest}
         value={value || value === 0 ? value : ''}
         error={rawErrors.length > 0}
-        onChange={onChangeOverride || _onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
+        onChange={onChangeOverride || handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         {...({ ...otherMuiProps, ...textFieldProps } as TextFieldProps)}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />

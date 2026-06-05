@@ -1,12 +1,6 @@
 import { Fieldset } from '@chakra-ui/react';
-import {
-  FieldTemplateProps,
-  FormContextType,
-  getTemplate,
-  getUiOptions,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { getTemplate, getUiOptions } from '@rjsf/utils';
 
 export default function FieldTemplate<
   T = any,

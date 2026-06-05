@@ -1,5 +1,6 @@
 import { Card, Text, makeStyles, shorthands, tokens } from '@fluentui/react-components';
-import { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
+import type { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { TranslatableString } from '@rjsf/utils';
 
 const useStyles = makeStyles({
   errorCard: {
@@ -31,9 +32,10 @@ export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSche
         {translateString(TranslatableString.ErrorsLabel)}
       </Text>
       <ul>
-        {errors.map((error, i: number) => {
-          return <li key={i}>{error.stack}</li>;
-        })}
+        {errors.map((error, i: number) => (
+          // oxlint-disable-next-line react/no-array-index-key
+          <li key={i}>{error.stack}</li>
+        ))}
       </ul>
     </Card>
   );

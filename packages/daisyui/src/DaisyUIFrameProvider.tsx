@@ -16,7 +16,8 @@
  * backwards compatibility guarantees!)
  */
 
-import { useEffect, ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import { useEffect } from 'react';
 
 interface DaisyUIFrameProviderProps {
   children: ReactNode;
@@ -99,9 +100,8 @@ function DaisyUIFrameComponent(props: DaisyUIFrameProviderProps & { document?: D
  * @param props - The component props
  * @returns A component that sets up DaisyUI within an iframe context
  */
-export const __createDaisyUIFrameProvider = (props: DaisyUIFrameProviderProps) => {
-  return function DaisyUIFrame({ document }: { document?: Document }) {
+export const __createDaisyUIFrameProvider = (props: DaisyUIFrameProviderProps) =>
+  function DaisyUIFrame({ document }: { document?: Document }) {
     // Get theme from localStorage or use default
     return <DaisyUIFrameComponent document={document} {...props} />;
   };
-};

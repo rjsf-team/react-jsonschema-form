@@ -28,7 +28,7 @@ import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema'
 import guessType from '../guessType';
 import isObject from '../isObject';
 import mergeSchemas from '../mergeSchemas';
-import {
+import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
   GenericObjectType,
@@ -187,7 +187,7 @@ export function getAllPermutationsOfXxxOf<S extends StrictRJSFSchema = RJSFSchem
       permutations.forEach((permutation) => permutation.push(list[0]));
       return permutations;
     },
-    [[]] as S[][], // Start with an empty list
+    [[]], // Start with an empty list
   );
 
   return allPermutations;
@@ -265,8 +265,8 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
       formData,
       experimental_customMergeAllOf,
     );
-    return resolvedSchemas.flatMap((s) => {
-      return retrieveSchemaInternal<T, S, F>(
+    return resolvedSchemas.flatMap((s) =>
+      retrieveSchemaInternal<T, S, F>(
         validator,
         s,
         rootSchema,
@@ -274,8 +274,8 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
         expandAllBranches,
         recurseList,
         experimental_customMergeAllOf,
-      );
-    });
+      ),
+    );
   }
   if (ALL_OF_KEY in schema && Array.isArray(schema[ALL_OF_KEY])) {
     const allOfSchemaElements: S[][] = schema.allOf.map((allOfSubschema) =>
@@ -361,6 +361,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
     return schema;
   }
   let resolvedSchema: S = schema;
+  let currentBaseURI = baseURI;
   // resolve top level ref
   if (REF_KEY in resolvedSchema) {
     const { $ref, ...localSchema } = resolvedSchema;
@@ -370,10 +371,10 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
     }
     recurseList.push($ref!);
     // Retrieve the referenced schema definition.
-    const refSchema = findSchemaDefinition<S>($ref, rootSchema, baseURI);
+    const refSchema = findSchemaDefinition<S>($ref, rootSchema, currentBaseURI);
     resolvedSchema = { ...refSchema, ...localSchema, [RJSF_REF_KEY]: $ref };
     if (ID_KEY in resolvedSchema) {
-      baseURI = resolvedSchema[ID_KEY];
+      currentBaseURI = resolvedSchema[ID_KEY];
     }
   }
 
@@ -381,9 +382,9 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
     const childrenLists: string[][] = [];
     const updatedProps = transform(
       resolvedSchema[PROPERTIES_KEY]!,
-      (result, value, key: string) => {
+      (acc, value, key: string) => {
         const childList: string[] = [...recurseList];
-        result[key] = resolveAllReferences(value as S, rootSchema, childList, baseURI, resolveAnyOfOrOneOfRefs);
+        acc[key] = resolveAllReferences(value as S, rootSchema, childList, currentBaseURI, resolveAnyOfOrOneOfRefs);
         childrenLists.push(childList);
       },
       {} as RJSFSchema,
@@ -399,7 +400,13 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   ) {
     resolvedSchema = {
       ...resolvedSchema,
-      items: resolveAllReferences(resolvedSchema.items as S, rootSchema, recurseList, baseURI, resolveAnyOfOrOneOfRefs),
+      items: resolveAllReferences(
+        resolvedSchema.items as S,
+        rootSchema,
+        recurseList,
+        currentBaseURI,
+        resolveAnyOfOrOneOfRefs,
+      ),
     };
   }
 
@@ -417,7 +424,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
       resolvedSchema = {
         ...resolvedSchema,
         [key]: schemas.map((s: S) =>
-          resolveAllReferences(s, rootSchema, recurseList, baseURI, resolveAnyOfOrOneOfRefs),
+          resolveAllReferences(s, rootSchema, recurseList, currentBaseURI, resolveAnyOfOrOneOfRefs),
         ),
       };
     }
@@ -588,11 +595,11 @@ export function retrieveSchemaInternal<
       try {
         const withContainsSchemas = [] as S[];
         const withoutContainsSchemas = [] as S[];
-        resolvedSchema.allOf?.forEach((s) => {
-          if (typeof s === 'object' && s.contains) {
-            withContainsSchemas.push(s as S);
+        resolvedSchema.allOf?.forEach((allOfItem) => {
+          if (typeof allOfItem === 'object' && allOfItem.contains) {
+            withContainsSchemas.push(allOfItem as S);
           } else {
-            withoutContainsSchemas.push(s as S);
+            withoutContainsSchemas.push(allOfItem as S);
           }
         });
         if (withContainsSchemas.length) {
@@ -605,6 +612,7 @@ export function retrieveSchemaInternal<
           resolvedSchema.allOf = withContainsSchemas;
         }
       } catch (e) {
+        // oxlint-disable-next-line no-console
         console.warn('could not merge subschemas in allOf:\n', e);
         const { allOf, ...resolvedSchemaWithoutAllOf } = resolvedSchema;
         return resolvedSchemaWithoutAllOf as S;
@@ -612,18 +620,18 @@ export function retrieveSchemaInternal<
     }
     if (PROPERTIES_KEY in resolvedSchema && PATTERN_PROPERTIES_KEY in resolvedSchema) {
       resolvedSchema = Object.keys(resolvedSchema.properties!).reduce(
-        (schema, key) => {
-          const matchingProperties = getMatchingPatternProperties(schema, key);
+        (acc, key) => {
+          const matchingProperties = getMatchingPatternProperties(acc, key);
           if (!isEmpty(matchingProperties)) {
-            schema.properties[key] = retrieveSchema<T, S, F>(
+            acc.properties[key] = retrieveSchema<T, S, F>(
               validator,
-              { allOf: [schema.properties[key], ...Object.values(matchingProperties)] } as S,
+              { allOf: [acc.properties[key], ...Object.values(matchingProperties)] } as S,
               rootSchema,
               get(rawFormData, [key]) as T,
               experimental_customMergeAllOf,
             );
           }
-          return schema;
+          return acc;
         },
         {
           ...resolvedSchema,
@@ -676,11 +684,7 @@ export function resolveAnyOrOneOfSchemas<
     // Ensure that during expand all branches we pass an object rather than undefined so that all options are interrogated
     const formData = rawFormData === undefined && expandAllBranches ? ({} as T) : rawFormData;
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
-    anyOrOneOf = anyOrOneOf.map((s) => {
-      // Due to anyOf/oneOf possibly using the same $ref we always pass a fresh recurse list array so that each option
-      // can resolve recursive references independently
-      return resolveAllReferences(s, rootSchema, []);
-    });
+    anyOrOneOf = anyOrOneOf.map((s) => resolveAllReferences(s, rootSchema, []));
     // Call this to trigger the set of isValid() calls that the schema parser will need
     const option = getFirstMatchingOption<T, S, F>(validator, formData, anyOrOneOf, rootSchema, discriminator);
     if (expandAllBranches) {
@@ -694,7 +698,7 @@ export function resolveAnyOrOneOfSchemas<
       getFirstMatchingOption<T, S, F>(validator, formData, relaxed, rootSchema, discriminator);
       return anyOrOneOf.map((item) => mergeSchemas(remaining, item) as S);
     }
-    schema = mergeSchemas(remaining, anyOrOneOf[option]) as S;
+    return [mergeSchemas(remaining, anyOrOneOf[option]) as S];
   }
   return [schema];
 }
@@ -714,7 +718,7 @@ export function resolveAnyOrOneOfSchemas<
  * @returns - A new array of plain schema objects with `additionalProperties` relaxed where needed
  */
 export function relaxOptionsForScoring<S extends StrictRJSFSchema = RJSFSchema>(
-  options: Array<S | boolean>,
+  options: (S | boolean)[],
   resolveRefs = false,
   rootSchema?: S,
 ): S[] {
@@ -722,7 +726,7 @@ export function relaxOptionsForScoring<S extends StrictRJSFSchema = RJSFSchema>(
     if (!isObject(d)) {
       return (d ? {} : { not: {} }) as S;
     }
-    const schema = resolveRefs && rootSchema ? resolveAllReferences<S>(d as S, rootSchema, []) : (d as S);
+    const schema = resolveRefs && rootSchema ? resolveAllReferences<S>(d, rootSchema, []) : d;
     return schema.additionalProperties === false ? { ...schema, additionalProperties: true } : schema;
   });
 }
@@ -799,45 +803,42 @@ export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
   let schemas = [resolvedSchema];
   // Process dependencies updating the local schema properties as appropriate.
   for (const dependencyKey in dependencies) {
-    // Skip this dependency if its trigger property is not present.
-    if (!expandAllBranches && get(formData, [dependencyKey]) === undefined) {
-      continue;
-    }
-    // Skip this dependency if it is not included in the schema (such as when dependencyKey is itself a hidden dependency.)
-    if (resolvedSchema.properties && !(dependencyKey in resolvedSchema.properties)) {
-      continue;
-    }
-    const [remainingDependencies, dependencyValue] = splitKeyElementFromObject(
-      dependencyKey,
-      dependencies as GenericObjectType,
-    );
-    if (Array.isArray(dependencyValue)) {
-      schemas[0] = withDependentProperties<S>(resolvedSchema, dependencyValue);
-    } else if (isObject(dependencyValue)) {
-      schemas = withDependentSchema<T, S, F>(
-        validator,
-        resolvedSchema,
-        rootSchema,
+    if (
+      (expandAllBranches || get(formData, [dependencyKey]) !== undefined) &&
+      (!resolvedSchema.properties || dependencyKey in resolvedSchema.properties)
+    ) {
+      const [remainingDependencies, dependencyValue] = splitKeyElementFromObject(
         dependencyKey,
-        dependencyValue as S,
-        expandAllBranches,
-        recurseList,
-        formData,
-        experimental_customMergeAllOf,
+        dependencies as GenericObjectType,
+      );
+      if (Array.isArray(dependencyValue)) {
+        schemas[0] = withDependentProperties<S>(resolvedSchema, dependencyValue);
+      } else if (isObject(dependencyValue)) {
+        schemas = withDependentSchema<T, S, F>(
+          validator,
+          resolvedSchema,
+          rootSchema,
+          dependencyKey,
+          dependencyValue as S,
+          expandAllBranches,
+          recurseList,
+          formData,
+          experimental_customMergeAllOf,
+        );
+      }
+      return schemas.flatMap((schema) =>
+        processDependencies<T, S, F>(
+          validator,
+          remainingDependencies,
+          schema,
+          rootSchema,
+          expandAllBranches,
+          recurseList,
+          formData,
+          experimental_customMergeAllOf,
+        ),
       );
     }
-    return schemas.flatMap((schema) =>
-      processDependencies<T, S, F>(
-        validator,
-        remainingDependencies,
-        schema,
-        rootSchema,
-        expandAllBranches,
-        recurseList,
-        formData,
-        experimental_customMergeAllOf,
-      ),
-    );
   }
   return schemas;
 }
@@ -858,7 +859,7 @@ export function withDependentProperties<S extends StrictRJSFSchema = RJSFSchema>
   const required = Array.isArray(schema.required)
     ? Array.from(new Set([...schema.required, ...additionallyRequired]))
     : additionallyRequired;
-  return { ...schema, required: required };
+  return { ...schema, required };
 }
 
 /** Merges a dependent schema into the `schema` dealing with oneOfs and references. Passes the `expandAllBranches` flag
@@ -898,10 +899,10 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
   );
   return dependentSchemas.flatMap((dependent) => {
     const { oneOf, ...dependentSchema } = dependent;
-    schema = mergeSchemas(schema, dependentSchema) as S;
+    const mergedSchema = mergeSchemas(schema, dependentSchema) as S;
     // Since it does not contain oneOf, we return the original schema.
     if (oneOf === undefined) {
-      return schema;
+      return mergedSchema;
     }
     // Resolve $refs inside oneOf.
     const resolvedOneOfs = oneOf.map((subschema) => {
@@ -914,7 +915,7 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
     return allPermutations.flatMap((resolvedOneOf) =>
       withExactlyOneSubschema<T, S, F>(
         validator,
-        schema,
+        mergedSchema,
         rootSchema,
         dependencyKey,
         resolvedOneOf,
@@ -975,7 +976,8 @@ export function withExactlyOneSubschema<
     return false;
   });
 
-  if (!expandAllBranches && validSubschemas!.length !== 1) {
+  if (!expandAllBranches && validSubschemas.length !== 1) {
+    // oxlint-disable-next-line no-console
     console.warn("ignoring oneOf in dependencies because there isn't exactly one subschema that is valid");
     return [schema];
   }
@@ -992,6 +994,6 @@ export function withExactlyOneSubschema<
       recurseList,
       experimental_customMergeAllOf,
     );
-    return schemas.map((s) => mergeSchemas(schema, s) as S);
+    return schemas.map((resolvedSubschema) => mergeSchemas(schema, resolvedSubschema) as S);
   });
 }

@@ -1,14 +1,8 @@
-import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
+import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
+import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
-import {
-  ariaDescribedByIds,
-  BaseInputTemplateProps,
-  examplesId,
-  FormContextType,
-  getInputProps,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { ariaDescribedByIds, examplesId, getInputProps } from '@rjsf/utils';
 import Form from 'react-bootstrap/Form';
 
 export default function BaseInputTemplate<
@@ -41,11 +35,11 @@ export default function BaseInputTemplate<
     ...extraProps,
     ...getInputProps<T, S, F>(schema, type, options),
   };
-  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
-    onChange(value === '' ? options.emptyValue : value);
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
-  const _onClear = useCallback(
+  const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
+    onChange(newValue === '' ? options.emptyValue : newValue);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
+  const handleClear = useCallback(
     (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
@@ -69,13 +63,13 @@ export default function BaseInputTemplate<
         list={schema.examples ? examplesId(id) : undefined}
         {...inputProps}
         value={value || value === 0 ? value : ''}
-        onChange={onChangeOverride || _onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
+        onChange={onChangeOverride || handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
       {options.allowClearTextInputs && !readonly && !disabled && value && (
-        <ClearButton registry={registry} onClick={_onClear} />
+        <ClearButton registry={registry} onClick={handleClear} />
       )}
       {children}
       <SchemaExamples id={id} schema={schema} />

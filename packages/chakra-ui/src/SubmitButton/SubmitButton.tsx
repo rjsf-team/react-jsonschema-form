@@ -1,5 +1,6 @@
 import { Box, Button } from '@chakra-ui/react';
-import { FormContextType, getSubmitButtonOptions, RJSFSchema, StrictRJSFSchema, SubmitButtonProps } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, SubmitButtonProps } from '@rjsf/utils';
+import { getSubmitButtonOptions } from '@rjsf/utils';
 
 export default function SubmitButton<
   T = any,

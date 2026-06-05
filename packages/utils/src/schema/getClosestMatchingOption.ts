@@ -10,7 +10,13 @@ import { ONE_OF_KEY, REF_KEY, JUNK_OPTION_ID, ANY_OF_KEY } from '../constants';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
 import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDiscriminator';
 import guessType from '../guessType';
-import { Experimental_CustomMergeAllOf, FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
+import type {
+  Experimental_CustomMergeAllOf,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  ValidatorType,
+} from '../types';
 import getFirstMatchingOption from './getFirstMatchingOption';
 import retrieveSchema, { resolveAllReferences } from './retrieveSchema';
 
@@ -85,7 +91,7 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
             );
           }
           if ((has(value, ONE_OF_KEY) || has(value, ANY_OF_KEY)) && formValue) {
-            const key = has(value, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
+            const xxxOfKey = has(value, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
             const discriminator = getDiscriminatorFieldFromSchema<S>(value as S);
             return (
               score +
@@ -93,7 +99,7 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
                 validator,
                 rootSchema,
                 formValue,
-                get(value, key) as S[],
+                get(value, xxxOfKey) as S[],
                 -1,
                 discriminator,
                 experimental_customMergeAllOf,
@@ -101,12 +107,11 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
             );
           }
           if (value.type === 'object') {
-            if (isObject(formValue)) {
-              // If the structure is matching then give it a little boost in score
-              score += 1;
-            }
+            // If the structure is matching then give it a little boost in score
+            const structureBoost = isObject(formValue) ? 1 : 0;
             return (
               score +
+              structureBoost +
               calculateIndexScore<T, S, F>(validator, rootSchema, value as S, formValue, experimental_customMergeAllOf)
             );
           }
@@ -173,9 +178,7 @@ export default function getClosestMatchingOption<
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): number {
   // First resolve any refs in the options
-  const resolvedOptions = options.map((option) => {
-    return resolveAllReferences<S>(option, rootSchema, []);
-  });
+  const resolvedOptions = options.map((option) => resolveAllReferences<S>(option, rootSchema, []));
 
   const simpleDiscriminatorMatch = getOptionMatchingSimpleDiscriminator(formData, options, discriminatorField);
   if (isNumber(simpleDiscriminatorMatch)) {
@@ -201,7 +204,10 @@ export default function getClosestMatchingOption<
     // No indexes were valid, so we'll score all the options, add all the indexes
     times(resolvedOptions.length, (i) => allValidIndexes.push(i));
   }
-  type BestType = { bestIndex: number; bestScore: number };
+  interface BestType {
+    bestIndex: number;
+    bestScore: number;
+  }
   const scoreCount = new Set<number>();
   // Score all the options in the list of valid indexes and return the index with the best score
   const { bestIndex }: BestType = allValidIndexes.reduce(

@@ -1,4 +1,5 @@
-import { ChangeEvent } from 'react';
+import type { ChangeEvent } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionsDeselectValue,
@@ -7,10 +8,6 @@ import {
   getTemplate,
   optionId,
   titleId,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
 } from '@rjsf/utils';
 import { Form } from 'semantic-ui-react';
 
@@ -55,10 +52,10 @@ export default function CheckboxesWidget<
       inverted: 'false',
     },
   });
-  const _onChange =
+  const handleChange =
     (index: number) =>
     ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
-      // eslint-disable-next-line no-shadow
+      // oxlint-disable-next-line no-shadow
       if (checked) {
         onChange(enumOptionsSelectValue<S>(index, checkboxesValues, enumOptions));
       } else {
@@ -66,8 +63,8 @@ export default function CheckboxesWidget<
       }
     };
 
-  const _onBlur = () => onBlur(id, value);
-  const _onFocus = () => onFocus(id, value);
+  const handleBlur = () => onBlur(id, value);
+  const handleFocus = () => onFocus(id, value);
   const inlineOption = inline ? { inline: true } : { grouped: true };
   return (
     <>
@@ -78,21 +75,21 @@ export default function CheckboxesWidget<
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index) => {
             const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
-            const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
+            const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
             return (
               <Form.Checkbox
                 id={optionId(id, index)}
                 name={htmlName || id}
-                key={index}
+                key={String(option.value)}
                 label={option.label}
                 {...semanticProps}
                 checked={checked}
                 error={rawErrors.length > 0}
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={autofocus && index === 0}
-                onChange={_onChange(index)}
-                onBlur={_onBlur}
-                onFocus={_onFocus}
+                onChange={handleChange(index)}
+                onBlur={handleBlur}
+                onFocus={handleFocus}
                 aria-describedby={ariaDescribedByIds(id)}
               />
             );

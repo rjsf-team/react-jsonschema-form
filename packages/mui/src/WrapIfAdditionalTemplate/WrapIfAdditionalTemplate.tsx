@@ -1,17 +1,15 @@
-import { CSSProperties } from 'react';
-import Grid, { GridProps } from '@mui/material/Grid';
+import type { CSSProperties } from 'react';
+import type { GridProps } from '@mui/material/Grid';
+import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
-import {
-  ADDITIONAL_PROPERTY_FLAG,
+import type {
   GenericObjectType,
-  buttonId,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-  TranslatableString,
   WrapIfAdditionalTemplateProps,
-  getUiOptions,
 } from '@rjsf/utils';
+import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString, getUiOptions } from '@rjsf/utils';
 
 import { computeSxProps, getMuiProps } from '../util';
 /** Properties available for the `rjsfSlotProps` target of the WrapIfAdditionalTemplate. */
@@ -92,7 +90,7 @@ export default function WrapIfAdditionalTemplate<
       <Grid size={5.5} {...wrapKeyGridItem}>
         <TextField
           key={label}
-          fullWidth={true}
+          fullWidth
           required={required}
           label={displayLabel ? keyLabel : undefined}
           defaultValue={label}

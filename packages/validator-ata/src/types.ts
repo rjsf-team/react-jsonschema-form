@@ -32,15 +32,13 @@ export interface CustomValidatorOptionsType {
    * Mirrors `ajv.addMetaSchema` / `ajv.addSchema` semantics; ata resolves
    * `$ref` against the registered set.
    */
-  additionalMetaSchemas?: ReadonlyArray<object>;
+  additionalMetaSchemas?: readonly object[];
 
   /** Custom format checkers. Keys are format names referenced from `format`
    * in the schema. Values are validation functions, RegExps, or pre-anchored
    * regex source strings (compiled into a function for ata).
    */
-  customFormats?: {
-    [k: string]: string | RegExp | AtaFormatChecker;
-  };
+  customFormats?: Record<string, string | RegExp | AtaFormatChecker>;
 
   /** Overrides spread on top of the default `ata-validator` options. Use this
    * to flip `coerceTypes`, `removeAdditional`, `verbose`, or `abortEarly`.
@@ -68,4 +66,4 @@ export interface CompiledValidateFunction {
   (data: unknown): boolean;
 }
 
-export type ValidatorFunctions = { [key: string]: CompiledValidateFunction };
+export type ValidatorFunctions = Record<string, CompiledValidateFunction>;

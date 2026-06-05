@@ -1,5 +1,6 @@
-import { ChangeEvent } from 'react';
-import { ariaDescribedByIds, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, rangeSpec } from '@rjsf/utils';
+import type { ChangeEvent } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, rangeSpec } from '@rjsf/utils';
 import { Input } from 'semantic-ui-react';
 
 import { getSemanticProps } from '../util';
@@ -36,11 +37,11 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     },
   });
 
-  // eslint-disable-next-line no-shadow
-  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
+  // oxlint-disable-next-line no-shadow
+  const handleChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange && onChange(value === '' ? options.emptyValue : value);
-  const _onBlur = () => onBlur && onBlur(id, value);
-  const _onFocus = () => onFocus && onFocus(id, value);
+  const handleBlur = () => onBlur && onBlur(id, value);
+  const handleFocus = () => onFocus && onFocus(id, value);
 
   return (
     <>
@@ -55,9 +56,9 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         {...semanticProps}
         value={value || ''}
         error={rawErrors.length > 0}
-        onChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         aria-describedby={ariaDescribedByIds(id)}
       />
       <span>{value}</span>

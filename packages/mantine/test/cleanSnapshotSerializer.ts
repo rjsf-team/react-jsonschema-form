@@ -24,7 +24,7 @@ const hasAttributesToClean = (key: string): boolean => attributesToCleanKeys.inc
 
 interface TestNode {
   props?: Record<string, any>;
-  children?: Array<TestNode | string>;
+  children?: (TestNode | string)[];
 
   // Allow additional string-keyed properties…
   [key: string]: any;
@@ -36,7 +36,7 @@ interface TestNode {
 type SerializeFn = (val: any) => string;
 
 // A recursive cleaning function that marks nodes as cleaned.
-function cleanNode(node: TestNode, visited: WeakSet<TestNode> = new WeakSet()): TestNode {
+function cleanNode(node: TestNode, visited = new WeakSet<TestNode>()): TestNode {
   if (node && typeof node === 'object') {
     // Prevent infinite loops in case of circular references.
     if (visited.has(node)) {
@@ -51,18 +51,16 @@ function cleanNode(node: TestNode, visited: WeakSet<TestNode> = new WeakSet()): 
         if (hasAttributesToClean(key) && typeof newProps[key] === 'string') {
           newProps[key] = newProps[key]
             .split(' ')
-            .filter((attrValue: string) => {
-              return !attributesToClean[key].some((regex: RegExp) => regex.test(attrValue));
-            })
+            .filter((attrValue: string) => !attributesToClean[key].some((regex: RegExp) => regex.test(attrValue)))
             .join(' ');
         }
       }
-      node = { ...node, props: newProps, [CLEANED_FLAG]: true };
+      return cleanNode({ ...node, props: newProps, [CLEANED_FLAG]: true }, visited);
     }
 
     // Recursively clean children if they exist.
     if (node.children && Array.isArray(node.children)) {
-      node = {
+      return {
         ...node,
         children: node.children.map((child) => {
           if (typeof child === 'string') {

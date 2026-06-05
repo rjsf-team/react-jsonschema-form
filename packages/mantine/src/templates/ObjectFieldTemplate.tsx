@@ -1,17 +1,13 @@
-import { Box, Container, Group, MantineSpacing, SimpleGrid } from '@mantine/core';
-import {
-  buttonId,
-  canExpand,
-  descriptionId,
+import type { MantineSpacing } from '@mantine/core';
+import { Box, Container, Group, SimpleGrid } from '@mantine/core';
+import type {
   FormContextType,
-  getTemplate,
-  getUiOptions,
   ObjectFieldTemplatePropertyType,
   ObjectFieldTemplateProps,
   RJSFSchema,
   StrictRJSFSchema,
-  titleId,
 } from '@rjsf/utils';
+import { buttonId, canExpand, descriptionId, getTemplate, getUiOptions, titleId } from '@rjsf/utils';
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all

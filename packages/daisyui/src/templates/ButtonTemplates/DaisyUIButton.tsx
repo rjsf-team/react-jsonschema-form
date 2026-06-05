@@ -1,7 +1,7 @@
 import { memo } from 'react';
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 /** Interface for props specific to DaisyUIButton, extending IconButtonProps but with stricter icon typing */
 interface DaisyUIButtonProps<
@@ -23,7 +23,7 @@ function DaisyUIButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
 ) {
   const { icon, iconType, uiSchema, registry, className, ...otherProps } = props;
   return (
-    <button type='button' className={className} aria-label={props.title!} {...otherProps}>
+    <button type='button' className={className} aria-label={props.title} {...otherProps}>
       <FontAwesomeIcon icon={icon} className='h-5 w-5' />
     </button>
   );

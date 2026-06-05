@@ -6,7 +6,7 @@
  */
 export default function dataURItoBlob(dataURILike: string) {
   // check if is dataURI
-  if (dataURILike.indexOf('data:') === -1) {
+  if (!dataURILike.includes('data:')) {
     throw new Error('File is invalid: URI must be a dataURI');
   }
   const dataURI = dataURILike.slice(5);
@@ -32,7 +32,7 @@ export default function dataURItoBlob(dataURILike: string) {
   try {
     const binary = atob(base64);
     const array = new Array(binary.length);
-    for (let i = 0; i < binary.length; i++) {
+    for (let i = 0; i < binary.length; i += 1) {
       array[i] = binary.charCodeAt(i);
     }
     // Create the blob object
@@ -40,6 +40,6 @@ export default function dataURItoBlob(dataURILike: string) {
 
     return { blob, name };
   } catch (error) {
-    throw new Error('File is invalid: ' + (error as Error).message);
+    throw new Error(`File is invalid: ${(error as Error).message}`);
   }
 }

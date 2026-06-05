@@ -1,19 +1,12 @@
-import { Component, ElementType, FormEvent, ReactNode, Ref, RefObject, createRef } from 'react';
-import {
-  createSchemaUtils,
+import type { ElementType, FormEvent, ReactNode, Ref, RefObject } from 'react';
+import { Component, createRef } from 'react';
+import type {
   CustomValidator,
-  deepEquals,
   ErrorSchema,
-  ErrorSchemaBuilder,
   ErrorTransformer,
   FieldPathId,
   FieldPathList,
   FormContextType,
-  getChangedFields,
-  getTemplate,
-  getUiOptions,
-  isObject,
-  mergeObjects,
   PathSchema,
   StrictRJSFSchema,
   Registry,
@@ -22,26 +15,37 @@ import {
   RJSFSchema,
   RJSFValidationError,
   SchemaUtilsType,
-  shouldRender,
-  SUBMIT_BTN_OPTIONS_KEY,
   TemplatesType,
-  toErrorList,
-  toFieldPathId,
   UiSchema,
-  UI_DEFINITIONS_KEY,
-  UI_GLOBAL_OPTIONS_KEY,
-  UI_OPTIONS_KEY,
   ValidationData,
-  validationDataMerge,
   ValidatorType,
   Experimental_DefaultFormStateBehavior,
   Experimental_CustomMergeAllOf,
+  GlobalFormOptions,
+  NameGeneratorFunction,
+} from '@rjsf/utils';
+import {
+  createSchemaUtils,
+  deepEquals,
+  ErrorSchemaBuilder,
+  getChangedFields,
+  getTemplate,
+  getUiOptions,
+  hashObject,
+  isObject,
+  mergeObjects,
+  shouldRender,
+  SUBMIT_BTN_OPTIONS_KEY,
+  toErrorList,
+  toFieldPathId,
+  UI_DEFINITIONS_KEY,
+  UI_GLOBAL_OPTIONS_KEY,
+  UI_OPTIONS_KEY,
+  validationDataMerge,
   DEFAULT_ID_SEPARATOR,
   DEFAULT_ID_PREFIX,
-  GlobalFormOptions,
   ERRORS_KEY,
   ID_KEY,
-  NameGeneratorFunction,
   getUsedFormData,
   getFieldNames,
   ANY_OF_KEY,
@@ -193,6 +197,7 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    *
    * NOTE: In a future major release, the `boolean` options for this flag will be removed
    */
+  // oxlint-disable-next-line typescript/no-deprecated
   liveValidate?: 'onChange' | 'onBlur' | DeprecatedBooleanOption;
   /** Flag that describes when live omit will be performed. Live omit happens only when `omitExtraData` is also set to
    * to `true` and the form's data is updated by the user.
@@ -204,6 +209,7 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    *
    * NOTE: In a future major release, the `boolean` options for this flag will be removed
    */
+  // oxlint-disable-next-line typescript/no-deprecated
   liveOmit?: 'onChange' | 'onBlur' | DeprecatedBooleanOption;
   /** If set to true, then extra form data values that are not in any form field will be removed whenever `onSubmit` is
    * called. Set to `false` by default.
@@ -315,7 +321,7 @@ export interface FormState<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   /** The registry (re)computed only when props changed */
   registry: Registry<T, S, F>;
   /** Tracks the previous `extraErrors` prop reference so that `getDerivedStateFromProps` can detect changes */
-  _prevExtraErrors?: ErrorSchema<T>;
+  prevExtraErrors?: ErrorSchema<T>;
 }
 
 /** The event data passed when changes have been made to the form, includes everything from the `FormState` except
@@ -380,7 +386,7 @@ export default class Form<
   /** Flag to track when we're processing a user-initiated field change.
    * This prevents componentDidUpdate from reverting oneOf/anyOf option switches.
    */
-  private _isProcessingUserChange = false;
+  private isProcessingUserChange = false;
 
   /** When the `extraErrors` prop changes, re-merges `schemaValidationErrors` + `extraErrors` + `customErrors` into
    * state before render, ensuring the updated errors are visible immediately in a single render cycle.
@@ -393,10 +399,10 @@ export default class Form<
     props: FormProps<T, S, F>,
     state: FormState<T, S, F>,
   ): Partial<FormState<T, S, F>> | null {
-    if (props.extraErrors !== state._prevExtraErrors) {
+    if (props.extraErrors !== state.prevExtraErrors) {
       const baseErrors: ValidationData<T> = {
         errors: state.schemaValidationErrors || [],
-        errorSchema: (state.schemaValidationErrorSchema || {}) as ErrorSchema<T>,
+        errorSchema: state.schemaValidationErrorSchema || {},
       };
       let { errors, errorSchema } = baseErrors;
       if (props.extraErrors) {
@@ -409,7 +415,7 @@ export default class Form<
           true,
         ));
       }
-      return { _prevExtraErrors: props.extraErrors, errors, errorSchema };
+      return { prevExtraErrors: props.extraErrors, errors, errorSchema };
     }
     return null;
   }
@@ -431,7 +437,7 @@ export default class Form<
     const formData = propsFormData ?? initialFormData;
     this.state = {
       ...this.getStateFromProps(props, formData, undefined, undefined, undefined, true),
-      _prevExtraErrors: props.extraErrors,
+      prevExtraErrors: props.extraErrors,
     };
     if (onChange && !deepEquals(this.state.formData, formData)) {
       onChange(toIChangeEvent(this.state));
@@ -515,8 +521,8 @@ export default class Form<
       // Prevent oneOf/anyOf option switches from reverting when getStateFromProps
       // re-evaluates and produces stale formData.
       const nextStateDiffersFromProps = !deepEquals(nextState.formData, this.props.formData);
-      const wasProcessingUserChange = this._isProcessingUserChange;
-      this._isProcessingUserChange = false;
+      const wasProcessingUserChange = this.isProcessingUserChange;
+      this.isProcessingUserChange = false;
 
       if (wasProcessingUserChange && nextStateDiffersFromProps) {
         // Skip - the user's option switch is already applied via processPendingChange
@@ -526,6 +532,7 @@ export default class Form<
       if (nextStateDiffersFromProps && !deepEquals(nextState.formData, prevState.formData) && this.props.onChange) {
         this.props.onChange(toIChangeEvent(nextState));
       }
+      // oxlint-disable-next-line react/no-did-update-set-state -- guarded to prevent infinite loop
       this.setState(nextState);
     }
   }
@@ -537,9 +544,10 @@ export default class Form<
    * @param props - The props passed to the `Form`
    * @param inputFormData - The new or current data for the `Form`
    * @param retrievedSchema - An expanded schema, if not provided, it will be retrieved from the `schema` and `formData`.
-   * @param isSchemaChanged - A flag indicating whether the schema has changed.
-   * @param formDataChangedFields - The changed fields of `formData`
-   * @param skipLiveValidate - Optional flag, if true, means that we are not running live validation
+   * @param [isSchemaChanged=false] - A flag indicating whether the schema has changed.
+   * @param [formDataChangedFields=[]] - The changed fields of `formData`
+   * @param [skipLiveValidate=false] - Optional flag, if true, means that we are not running live validation
+   * @param [shouldSanitize=false] - Optional flag, if true, means that we should attempt to sanitize formData
    * @returns - The new state for the `Form`
    */
   getStateFromProps(
@@ -549,6 +557,7 @@ export default class Form<
     isSchemaChanged = false,
     formDataChangedFields: string[] = [],
     skipLiveValidate = false,
+    shouldSanitize = false,
   ): FormState<T, S, F> {
     const state: FormState<T, S, F> = this.state || {};
     const schema = 'schema' in props ? props.schema : this.props.schema;
@@ -557,6 +566,7 @@ export default class Form<
     const isUncontrolled = props.formData === undefined && this.props.formData === undefined;
     const edit = typeof inputFormData !== 'undefined';
     const liveValidate = 'liveValidate' in props ? props.liveValidate : this.props.liveValidate;
+    // oxlint-disable-next-line typescript/no-deprecated
     const mustValidate = edit && !props.noValidate && liveValidate;
     const experimental_defaultFormStateBehavior =
       'experimental_defaultFormStateBehavior' in props
@@ -566,7 +576,7 @@ export default class Form<
       'experimental_customMergeAllOf' in props
         ? props.experimental_customMergeAllOf
         : this.props.experimental_customMergeAllOf;
-    let schemaUtils: SchemaUtilsType<T, S, F> = state.schemaUtils;
+    let { schemaUtils } = state;
     if (
       !schemaUtils ||
       schemaUtils.doesSchemaUtilsDiffer(
@@ -593,21 +603,57 @@ export default class Form<
     } else if (inputFormData === undefined && isUncontrolled) {
       defaultsFormData = state.formData;
     }
-    const formData: T = schemaUtils.getDefaultFormState(
-      rootSchema,
-      defaultsFormData,
-      false,
-      state.initialDefaultsGenerated,
-    ) as T;
-    const _retrievedSchema = this.updateRetrievedSchema(
-      retrievedSchema ?? schemaUtils.retrieveSchema(rootSchema, formData),
-    );
+    let formData: T;
+    let computedRetrievedSchema: S;
+    let wasSanitized = false;
+    const preventInfiniteSanitize: string[] = [];
+    do {
+      formData = schemaUtils.getDefaultFormState(
+        rootSchema,
+        defaultsFormData,
+        false,
+        state.initialDefaultsGenerated,
+      ) as T;
+      // Only hash when sanitizing, wrapping `formData` in an object to deal with a scalar/undefined value
+      const formHash = shouldSanitize ? hashObject({ formData }) : '';
+      computedRetrievedSchema = this.updateRetrievedSchema(
+        retrievedSchema ?? schemaUtils.retrieveSchema(rootSchema, formData),
+      );
+      if (
+        shouldSanitize &&
+        !preventInfiniteSanitize.includes(formHash) &&
+        !deepEquals(computedRetrievedSchema, state.retrievedSchema)
+      ) {
+        // Sanitize the form data if shouldSanitize is true, we haven't already processed this same formData AND
+        // we have a different retrieved schema from when we last ran the state
+        const sanitizedFormData = schemaUtils.sanitizeDataForNewSchema(
+          computedRetrievedSchema,
+          state.retrievedSchema,
+          formData,
+        );
+        wasSanitized = !deepEquals(sanitizedFormData, formData);
+        if (wasSanitized) {
+          // Update both the formData AND defaultsFormData due to the sanitize so the loop works with the new data
+          formData = sanitizedFormData;
+          defaultsFormData = sanitizedFormData;
+          const sanitizedFormHash = hashObject({ formData: sanitizedFormData });
+          // If we've seen the sanitized data before, we are done
+          wasSanitized = !preventInfiniteSanitize.includes(sanitizedFormHash);
+          preventInfiniteSanitize.push(sanitizedFormHash);
+        }
+        preventInfiniteSanitize.push(formHash);
+      } else {
+        wasSanitized = false;
+      }
+    } while (wasSanitized);
 
     const getCurrentErrors = (): ValidationData<T> => {
       // If the `props.noValidate` option is set or the schema has changed, we reset the error state.
+      // oxlint-disable-next-line typescript/no-deprecated
       if (props.noValidate || isSchemaChanged) {
         return { errors: [], errorSchema: {} };
-      } else if (!props.liveValidate) {
+      }
+      if (!props.liveValidate) {
         return {
           errors: state.schemaValidationErrors || [],
           errorSchema: state.schemaValidationErrorSchema || {},
@@ -621,8 +667,7 @@ export default class Form<
 
     let errors: RJSFValidationError[];
     let errorSchema: ErrorSchema<T> | undefined;
-    let schemaValidationErrors: RJSFValidationError[] = state.schemaValidationErrors;
-    let schemaValidationErrorSchema: ErrorSchema<T> = state.schemaValidationErrorSchema;
+    let { schemaValidationErrors, schemaValidationErrorSchema } = state;
     // If we are skipping live validate, it means that the state has already been updated with live validation errors
     if (mustValidate && !skipLiveValidate) {
       const liveValidation = this.liveValidate(
@@ -647,26 +692,24 @@ export default class Form<
       errorSchema = currentErrors.errorSchema;
       // We only update the error schema for changed fields if mustValidate is false
       if (formDataChangedFields.length > 0 && !mustValidate) {
-        const newErrorSchema = formDataChangedFields.reduce(
-          (acc, key) => {
-            acc[key] = undefined;
-            return acc;
-          },
-          {} as Record<string, undefined>,
-        );
-        errorSchema = schemaValidationErrorSchema = mergeObjects(
+        const newErrorSchema = formDataChangedFields.reduce<Record<string, undefined>>((acc, key) => {
+          acc[key] = undefined;
+          return acc;
+        }, {});
+        schemaValidationErrorSchema = mergeObjects(
           currentErrors.errorSchema,
           newErrorSchema,
           'preventDuplicates',
         ) as ErrorSchema<T>;
+        errorSchema = schemaValidationErrorSchema;
       }
-      const mergedErrors = this.mergeErrors({ errorSchema, errors }, props.extraErrors, state.customErrors);
+      const mergedErrors = Form.mergeErrors<T>({ errorSchema, errors }, props.extraErrors, state.customErrors);
       errors = mergedErrors.errors;
       errorSchema = mergedErrors.errorSchema;
     }
 
     // Only store a new registry when the props cause a different one to be created
-    const newRegistry = this.getRegistry(props, rootSchema, schemaUtils);
+    const newRegistry = Form.getRegistry(props, rootSchema, schemaUtils);
     const registry = deepEquals(state.registry, newRegistry) ? state.registry : newRegistry;
 
     // Only compute a new `fieldPathId` when the `idPrefix` is different than the existing fieldPathId's ID_KEY
@@ -685,7 +728,7 @@ export default class Form<
       errorSchema,
       schemaValidationErrors,
       schemaValidationErrorSchema,
-      retrievedSchema: _retrievedSchema,
+      retrievedSchema: computedRetrievedSchema,
       initialDefaultsGenerated: true,
       registry,
     };
@@ -717,12 +760,14 @@ export default class Form<
     altSchemaUtils?: SchemaUtilsType<T, S, F>,
     retrievedSchema?: S,
   ): ValidationData<T> {
-    const schemaUtils = altSchemaUtils ? altSchemaUtils : this.state.schemaUtils;
+    const schemaUtils = altSchemaUtils || this.state.schemaUtils;
     const { customValidate, transformErrors, uiSchema } = this.props;
-    const resolvedSchema = retrievedSchema ?? schemaUtils.retrieveSchema(schema, formData);
+    // When a pre-resolved schema is provided (e.g., from live validation), use it directly.
+    // Otherwise validate against the original schema so AJV sees the full constraint set.
+    const validationSchema = retrievedSchema ?? schema;
     return schemaUtils
       .getValidator()
-      .validateFormData(formData, resolvedSchema, customValidate, transformErrors, uiSchema);
+      .validateFormData(formData, validationSchema, customValidate, transformErrors, uiSchema);
   }
 
   /** Renders any errors contained in the `state` in using the `ErrorList`, if not disabled by `showErrorList`. */
@@ -753,13 +798,12 @@ export default class Form<
    * @return - The `extraErrors` and `customErrors` merged into the `schemaValidation`
    * @private
    */
-  private mergeErrors(
+  private static mergeErrors<T = any>(
     schemaValidation: ValidationData<T>,
     extraErrors?: FormProps['extraErrors'],
     customErrors?: ErrorSchemaBuilder,
   ): ValidationData<T> {
-    let errorSchema: ErrorSchema<T> = schemaValidation.errorSchema;
-    let errors: RJSFValidationError[] = schemaValidation.errors;
+    let { errorSchema, errors } = schemaValidation;
     if (extraErrors) {
       const merged = validationDataMerge(schemaValidation, extraErrors);
       errorSchema = merged.errorSchema;
@@ -798,8 +842,8 @@ export default class Form<
     mergeIntoOriginalErrorSchema = false,
   ) {
     const schemaValidation = this.validate(formData, rootSchema, schemaUtils, retrievedSchema);
-    const errors = schemaValidation.errors;
-    let errorSchema = schemaValidation.errorSchema;
+    const { errors } = schemaValidation;
+    let { errorSchema } = schemaValidation;
     // We merge 'originalErrorSchema' with 'schemaValidation.errorSchema.'; This done to display the raised field error.
     if (mergeIntoOriginalErrorSchema) {
       errorSchema = mergeObjects(
@@ -810,7 +854,7 @@ export default class Form<
     }
     const schemaValidationErrors = errors;
     const schemaValidationErrorSchema = errorSchema;
-    const mergedErrors = this.mergeErrors({ errorSchema, errors }, extraErrors, customErrors);
+    const mergedErrors = Form.mergeErrors<T>({ errorSchema, errors }, extraErrors, customErrors);
     return { ...mergedErrors, schemaValidationErrors, schemaValidationErrorSchema };
   }
 
@@ -820,9 +864,8 @@ export default class Form<
    * @param fields - The fields to keep while filtering
    * @deprecated - To be removed as an exported `Form` function in a future release; there isn't a planned replacement
    */
-  getUsedFormData = (formData: T | undefined, fields: string[]): T | undefined => {
-    return getUsedFormData(formData, fields);
-  };
+  // oxlint-disable-next-line class-methods-use-this, typescript/no-deprecated
+  getUsedFormData = (formData: T | undefined, fields: string[]): T | undefined => getUsedFormData(formData, fields);
 
   /** Returns the list of field names from inspecting the `pathSchema` as well as using the `formData`
    *
@@ -830,9 +873,8 @@ export default class Form<
    * @param [formData] - The form data to use while checking for empty objects/arrays
    * @deprecated - To be removed as an exported `Form` function in a future release; there isn't a planned replacement
    */
-  getFieldNames = (pathSchema: PathSchema<T>, formData?: T): string[][] => {
-    return getFieldNames(pathSchema, formData);
-  };
+  // oxlint-disable-next-line class-methods-use-this, typescript/no-deprecated
+  getFieldNames = (pathSchema: PathSchema<T>, formData?: T): string[][] => getFieldNames(pathSchema, formData);
 
   /** Returns the `formData` after filtering to remove any extra data not in a form field
    *
@@ -890,20 +932,20 @@ export default class Form<
     }
     // Mark that we're processing a user-initiated change.
     // This prevents componentDidUpdate from reverting oneOf/anyOf option switches.
-    this._isProcessingUserChange = true;
+    this.isProcessingUserChange = true;
     const { newValue, path, id } = this.pendingChanges[0];
     const { newErrorSchema } = this.pendingChanges[0];
+    // oxlint-disable-next-line typescript/no-deprecated
     const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, onChange, disabled, readonly } = this.props;
     const { formData: oldFormData, schemaUtils, schema, fieldPathId, schemaValidationErrorSchema, errors } = this.state;
-    let { customErrors } = this.state;
+    let { customErrors, retrievedSchema } = this.state;
     // Use the un-merged AJV-only schema as the base for re-merging extraErrors. Mirrors the
     // pattern in getStateFromProps/getDerivedStateFromProps and avoids the duplication that
     // happened when state.errorSchema (already containing merged extraErrors) was passed in.
-    let mergeBaseErrorSchema: ErrorSchema<T> = schemaValidationErrorSchema as ErrorSchema<T>;
+    let mergeBaseErrorSchema: ErrorSchema<T> = schemaValidationErrorSchema;
     const rootPathId = fieldPathId.path[0] || '';
 
     const isRootPath = !path || path.length === 0 || (path.length === 1 && path[0] === rootPathId);
-    let retrievedSchema = this.state.retrievedSchema;
     let formData = isRootPath ? newValue : _cloneDeep(oldFormData);
 
     // When switching from null to an object option in oneOf, MultiSchemaField sends
@@ -918,7 +960,6 @@ export default class Form<
     const inputForDefaults = hasOnlyUndefinedValues && wasPreviouslyNull ? undefined : formData;
 
     if (isObject(formData) || Array.isArray(formData)) {
-      const previousRetrievedSchema = retrievedSchema;
       if (newValue === ADDITIONAL_PROPERTY_KEY_REMOVE) {
         // For additional properties, we were given the special remove this key value, so unset it
         _unset(formData, path);
@@ -952,51 +993,30 @@ export default class Form<
           _set(formData, path, valueForPath);
         }
       }
+      const shouldSanitize =
+        retrievedSchema && !isRootPath && !isObject(newValue) && !Array.isArray(newValue) && !disabled && !readonly;
       // Pass true to skip live validation in `getStateFromProps()` since we will do it a bit later
-      const newState = this.getStateFromProps(this.props, inputForDefaults, undefined, undefined, undefined, true);
+      const newState = this.getStateFromProps(
+        this.props,
+        inputForDefaults,
+        undefined,
+        undefined,
+        undefined,
+        true,
+        shouldSanitize,
+      );
       formData = newState.formData;
       retrievedSchema = newState.retrievedSchema;
-
-      if (
-        previousRetrievedSchema &&
-        !isRootPath &&
-        !isObject(newValue) &&
-        !Array.isArray(newValue) &&
-        !disabled &&
-        !readonly &&
-        _get(schema, 'readOnly') !== true &&
-        !deepEquals(previousRetrievedSchema, retrievedSchema)
-      ) {
-        // If this is a writable scalar field and the schema changed, sanitize the data to remove bad data
-        const sanitizedFormData = schemaUtils.sanitizeDataForNewSchema(
-          retrievedSchema,
-          previousRetrievedSchema,
-          formData,
-        );
-        if (!deepEquals(sanitizedFormData, formData)) {
-          const sanitizedState = this.getStateFromProps(
-            this.props,
-            sanitizedFormData,
-            undefined,
-            undefined,
-            undefined,
-            true,
-          );
-          formData = sanitizedState.formData;
-          retrievedSchema = sanitizedState.retrievedSchema;
-        }
-      }
     }
 
     const mustValidate = !noValidate && (liveValidate === true || liveValidate === 'onChange');
-    let state: Partial<FormState<T, S, F>> = { formData, schema };
+    let state: Partial<FormState<T, S, F>> = { formData, retrievedSchema };
     let newFormData = formData;
 
     if (omitExtraData === true && (liveOmit === true || liveOmit === 'onChange')) {
+      // oxlint-disable-next-line typescript/no-deprecated
       newFormData = this.omitExtraData(formData);
-      state = {
-        formData: newFormData,
-      };
+      state = { ...state, formData: newFormData };
     }
 
     if (newErrorSchema) {
@@ -1008,20 +1028,20 @@ export default class Form<
         // Apply the user-supplied newErrorSchema onto a clone of the AJV-only base, so that
         // mergeErrors below sees the user's error at this path without mutating shared state.
         if (!isRootPath) {
-          mergeBaseErrorSchema = _cloneDeep(schemaValidationErrorSchema) as ErrorSchema<T>;
+          mergeBaseErrorSchema = _cloneDeep(schemaValidationErrorSchema);
           _set(mergeBaseErrorSchema, path, newErrorSchema);
         } else {
-          mergeBaseErrorSchema = newErrorSchema as ErrorSchema<T>;
+          mergeBaseErrorSchema = newErrorSchema;
         }
       } else {
         if (!customErrors) {
           customErrors = new ErrorSchemaBuilder<T>();
         }
         if (isRootPath) {
-          const errors = _get(newErrorSchema, ERRORS_KEY);
-          if (errors) {
+          const pathErrors = _get(newErrorSchema, ERRORS_KEY);
+          if (pathErrors) {
             // only set errors when there are some
-            customErrors.setErrors(errors);
+            customErrors.setErrors(pathErrors);
           }
         } else {
           _set(customErrors.ErrorSchema, path, newErrorSchema);
@@ -1042,22 +1062,16 @@ export default class Form<
         customErrors,
         retrievedSchema,
       );
-      state = { formData: newFormData, ...liveValidation, customErrors };
+      state = { ...state, formData: newFormData, ...liveValidation, customErrors };
     } else if (!noValidate && newErrorSchema) {
       // Merging 'newErrorSchema' into 'errorSchema' to display the custom raised errors.
-      const mergedErrors = this.mergeErrors({ errorSchema: mergeBaseErrorSchema, errors }, extraErrors, customErrors);
-      state = {
-        formData: newFormData,
-        ...mergedErrors,
+      const mergedErrors = Form.mergeErrors<T>(
+        { errorSchema: mergeBaseErrorSchema, errors },
+        extraErrors,
         customErrors,
-      };
+      );
+      state = { ...state, formData: newFormData, ...mergedErrors, customErrors };
     }
-    // Keep the resolved dependency branch in state after sanitizing, so the next dependent-field change compares
-    // against the same schema branch as the cleaned formData.
-    state = {
-      ...state,
-      retrievedSchema,
-    };
 
     this.setState(state as FormState<T, S, F>, () => {
       if (onChange) {
@@ -1132,6 +1146,7 @@ export default class Form<
       let newFormData: T | undefined = formData;
       let state: Partial<FormState<T, S, F>> = { formData: newFormData };
       if (omitExtraData === true && liveOmit === 'onBlur') {
+        // oxlint-disable-next-line typescript/no-deprecated
         newFormData = this.omitExtraData(formData);
         state = { formData: newFormData };
       }
@@ -1192,10 +1207,12 @@ export default class Form<
     }
 
     event.persist();
+    // oxlint-disable-next-line typescript/no-deprecated
     const { omitExtraData, extraErrors, noValidate, onSubmit } = this.props;
     let { formData: newFormData } = this.state;
 
     if (omitExtraData === true) {
+      // oxlint-disable-next-line typescript/no-deprecated
       newFormData = this.omitExtraData(newFormData);
     }
 
@@ -1227,7 +1244,11 @@ export default class Form<
    * @returns - The `GlobalFormOptions` from the props
    * @private
    */
-  private getGlobalFormOptions(props: FormProps<T, S, F>): GlobalFormOptions {
+  private static getGlobalFormOptions<
+    T = any,
+    S extends StrictRJSFSchema = RJSFSchema,
+    F extends FormContextType = any,
+  >(props: FormProps<T, S, F>): GlobalFormOptions {
     const {
       uiSchema = {},
       experimental_componentUpdateStrategy,
@@ -1236,6 +1257,7 @@ export default class Form<
       nameGenerator,
       useFallbackUiForUnsupportedType = false,
     } = props;
+    // oxlint-disable-next-line typescript/no-deprecated
     const rootFieldId = uiSchema['ui:rootFieldId'];
     // Omit any options that are undefined or null
     return {
@@ -1248,7 +1270,11 @@ export default class Form<
   }
 
   /** Computed the registry for the form using the given `props`, `schema` and `schemaUtils` */
-  getRegistry(props: FormProps<T, S, F>, schema: S, schemaUtils: SchemaUtilsType<T, S, F>): Registry<T, S, F> {
+  static getRegistry<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+    props: FormProps<T, S, F>,
+    schema: S,
+    schemaUtils: SchemaUtilsType<T, S, F>,
+  ): Registry<T, S, F> {
     const { translateString: customTranslateString, uiSchema = {} } = props;
     const { fields, templates, widgets, formContext, translateString } = getDefaultRegistry<T, S, F>();
     return {
@@ -1267,7 +1293,7 @@ export default class Form<
       schemaUtils,
       translateString: customTranslateString || translateString,
       globalUiOptions: uiSchema[UI_GLOBAL_OPTIONS_KEY],
-      globalFormOptions: this.getGlobalFormOptions(props),
+      globalFormOptions: Form.getGlobalFormOptions(props),
       uiSchemaDefinitions: uiSchema[UI_DEFINITIONS_KEY] ?? {},
     };
   }
@@ -1311,6 +1337,7 @@ export default class Form<
     }
     if (field && field.length) {
       // If we got a list with length > 0
+      // oxlint-disable-next-line prefer-destructuring
       field = field[0];
     }
     if (field) {
@@ -1329,7 +1356,7 @@ export default class Form<
     const { errors: prevErrors } = this.state;
     const schemaValidation = this.validate(formData);
     // Always merge extraErrors so they remain visible in state regardless of extraErrorsBlockSubmit.
-    const { errors, errorSchema } = extraErrors ? this.mergeErrors(schemaValidation, extraErrors) : schemaValidation;
+    const { errors, errorSchema } = extraErrors ? Form.mergeErrors<T>(schemaValidation, extraErrors) : schemaValidation;
     // hasError gates submission: schema errors always block; extraErrors only block when
     // extraErrorsBlockSubmit is set (non-breaking default: extraErrors are informational only).
     const hasError = schemaValidation.errors.length > 0 || (extraErrors && extraErrorsBlockSubmit);
@@ -1352,6 +1379,7 @@ export default class Form<
           if (onError) {
             onError(errors);
           } else {
+            // oxlint-disable-next-line no-console
             console.error('Form validation failed', errors);
           }
         },
@@ -1385,6 +1413,7 @@ export default class Form<
     const { omitExtraData } = this.props;
     let { formData: newFormData } = this.state;
     if (omitExtraData === true) {
+      // oxlint-disable-next-line typescript/no-deprecated
       newFormData = this.omitExtraData(newFormData);
     }
     return this.validateFormWithFormData(newFormData);
@@ -1414,7 +1443,7 @@ export default class Form<
     } = this.props;
 
     const { schema, uiSchema, formData, errorSchema, fieldPathId, registry } = this.state;
-    const { SchemaField: _SchemaField } = registry.fields;
+    const { SchemaField: SchemaFieldComponent } = registry.fields;
     const { SubmitButton } = registry.templates.ButtonTemplates;
     // The `semantic-ui` and `material-ui` themes have `_internalFormWrapper`s that take an `as` prop that is the
     // PropTypes.elementType to use for the inner tag, so we'll need to pass `tagName` along if it is provided.
@@ -1430,7 +1459,7 @@ export default class Form<
 
     return (
       <FormTag
-        className={className ? className : 'rjsf'}
+        className={className || 'rjsf'}
         id={id}
         name={name}
         method={method}
@@ -1445,7 +1474,7 @@ export default class Form<
         ref={this.formElement}
       >
         {showErrorList === 'top' && this.renderErrors(registry)}
-        <_SchemaField
+        <SchemaFieldComponent
           name=''
           schema={schema}
           uiSchema={uiSchema}
@@ -1460,7 +1489,7 @@ export default class Form<
           readonly={readonly}
         />
 
-        {children ? children : <SubmitButton uiSchema={submitUiSchema} registry={registry} />}
+        {children || <SubmitButton uiSchema={submitUiSchema} registry={registry} />}
         {showErrorList === 'bottom' && this.renderErrors(registry)}
       </FormTag>
     );

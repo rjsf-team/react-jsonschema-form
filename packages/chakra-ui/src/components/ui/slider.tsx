@@ -2,9 +2,43 @@ import { forwardRef } from 'react';
 import { Slider as ChakraSlider, HStack } from '@chakra-ui/react';
 
 export interface SliderProps extends ChakraSlider.RootProps {
-  marks?: Array<number | { value: number; label: React.ReactNode }>;
+  marks?: (number | { value: number; label: React.ReactNode })[];
   showValue?: boolean;
 }
+
+interface SliderMarksProps {
+  marks?: (number | { value: number; label: React.ReactNode })[];
+}
+
+/**
+ * SliderMarks component that renders the marks for the slider.
+ *
+ * @param props - The properties for the slider marks component.
+ * @param [props.marks] - The marks to display on the slider.
+ * @returns - The rendered slider marks component or null if no marks are provided.
+ */
+const SliderMarks = forwardRef<HTMLDivElement, SliderMarksProps>((props, ref) => {
+  const { marks } = props;
+  if (!marks?.length) {
+    return null;
+  }
+
+  return (
+    <ChakraSlider.MarkerGroup ref={ref}>
+      {marks.map((mark, index) => {
+        const value = typeof mark === 'number' ? mark : mark.value;
+        const label = typeof mark === 'number' ? undefined : mark.label;
+        return (
+          // oxlint-disable-next-line react/no-array-index-key
+          <ChakraSlider.Marker key={index} value={value}>
+            <ChakraSlider.MarkerIndicator />
+            {label}
+          </ChakraSlider.Marker>
+        );
+      })}
+    </ChakraSlider.MarkerGroup>
+  );
+});
 
 /**
  * Slider component that allows users to select a value from a range.
@@ -15,7 +49,7 @@ export interface SliderProps extends ChakraSlider.RootProps {
  * @param {boolean} [props.showValue] - Whether to show the current value of the slider.
  * @returns {JSX.Element} The rendered slider component.
  */
-export const Slider = forwardRef<HTMLDivElement, SliderProps>(function Slider(props, ref) {
+export const Slider = forwardRef<HTMLDivElement, SliderProps>((props, ref) => {
   const { marks: marksProp, showValue, ...rest } = props;
   const value = props.defaultValue ?? props.value;
 
@@ -58,6 +92,7 @@ function SliderThumbs(props: { value?: number[] }) {
   return (
     <>
       {value?.map((_, index) => (
+        // oxlint-disable-next-line react/no-array-index-key
         <ChakraSlider.Thumb key={index} index={index}>
           <ChakraSlider.HiddenInput />
         </ChakraSlider.Thumb>
@@ -65,36 +100,3 @@ function SliderThumbs(props: { value?: number[] }) {
     </>
   );
 }
-
-interface SliderMarksProps {
-  marks?: Array<number | { value: number; label: React.ReactNode }>;
-}
-
-/**
- * SliderMarks component that renders the marks for the slider.
- *
- * @param {SliderMarksProps} props - The properties for the slider marks component.
- * @param {Array<number | { value: number; label: React.ReactNode }>} [props.marks] - The marks to display on the slider.
- * @returns {JSX.Element | null} The rendered slider marks component or null if no marks are provided.
- */
-const SliderMarks = forwardRef<HTMLDivElement, SliderMarksProps>(function SliderMarks(props, ref) {
-  const { marks } = props;
-  if (!marks?.length) {
-    return null;
-  }
-
-  return (
-    <ChakraSlider.MarkerGroup ref={ref}>
-      {marks.map((mark, index) => {
-        const value = typeof mark === 'number' ? mark : mark.value;
-        const label = typeof mark === 'number' ? undefined : mark.label;
-        return (
-          <ChakraSlider.Marker key={index} value={value}>
-            <ChakraSlider.MarkerIndicator />
-            {label}
-          </ChakraSlider.Marker>
-        );
-      })}
-    </ChakraSlider.MarkerGroup>
-  );
-});

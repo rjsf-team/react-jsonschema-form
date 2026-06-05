@@ -1,6 +1,6 @@
 import type { Validator } from 'ata-validator';
 
-import { CustomValidatorOptionsType } from '../../src';
+import type { CustomValidatorOptionsType } from '../../src';
 
 /** Shared option fixture used across the validator-ata test suite. The
  * shape mirrors the corresponding fixture in `@rjsf/validator-ajv8` where

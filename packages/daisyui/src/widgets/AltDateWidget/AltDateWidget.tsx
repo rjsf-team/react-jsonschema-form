@@ -1,12 +1,5 @@
-import {
-  DateElement,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  TranslatableString,
-  useAltDateWidgetProps,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { DateElement, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
 
 /** The `AltDateWidget` component provides an alternative date/time input
  * with individual fields for year, month, day, and optionally time components.
@@ -44,6 +37,7 @@ export default function AltDateWidget<
     <div className='space-y-3'>
       <div className='grid grid-cols-3 gap-2'>
         {elements.map((elemProps, i) => (
+          // oxlint-disable-next-line react/no-array-index-key
           <div key={i} className='form-control'>
             <label className='label'>
               <span className='label-text capitalize'>{elemProps.type}</span>

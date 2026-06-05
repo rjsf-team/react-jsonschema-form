@@ -1,5 +1,5 @@
 import enumOptionsValueForIndex from './enumOptionsValueForIndex';
-import { EnumOptionsType, OptionValueFormat, StrictRJSFSchema, RJSFSchema } from './types';
+import type { EnumOptionsType, OptionValueFormat, StrictRJSFSchema, RJSFSchema } from './types';
 
 /** Resolves a single DOM value string back to its typed enum value in `'realValue'` mode.
  *
@@ -27,7 +27,7 @@ function decodeSingle<S extends StrictRJSFSchema = RJSFSchema>(
   }
   // Fallback: value might be an index (for object/array enum values)
   const index = Number(value);
-  if (!isNaN(index) && index >= 0 && index < enumOptions.length) {
+  if (!Number.isNaN(index) && index >= 0 && index < enumOptions.length) {
     return enumOptions[index].value;
   }
   return emptyValue;

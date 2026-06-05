@@ -1,5 +1,5 @@
 import { BsPlus } from '@react-icons/all-files/bs/BsPlus';
-import { FormContextType, OptionalDataControlsTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { FormContextType, OptionalDataControlsTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 import IconButton, { RemoveButton } from '../IconButton';
 
@@ -30,7 +30,8 @@ export default function OptionalDataControlsTemplate<
         variant='secondary'
       />
     );
-  } else if (onRemoveClick) {
+  }
+  if (onRemoveClick) {
     return (
       <RemoveButton
         id={id}

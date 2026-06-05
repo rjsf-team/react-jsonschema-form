@@ -8,7 +8,7 @@ import findSchemaDefinition from '../findSchemaDefinition';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
 import getSchemaType from '../getSchemaType';
 import isObject from '../isObject';
-import {
+import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
   GenericObjectType,
@@ -48,6 +48,7 @@ export function getUsedFormData<T = any>(formData: T | undefined, fields: string
  * @param [formData] - The form data to use while checking for empty objects/arrays
  * @deprecated - To be removed as an exported `@rjsf/utils` function in a future release
  */
+// oxlint-disable-next-line typescript/no-deprecated
 export function getFieldNames<T = any>(pathSchema: PathSchema<T>, formData?: T): string[][] {
   const formValueHasData = (value: T, isLeaf: boolean) =>
     typeof value !== 'object' || isEmpty(value) || (isLeaf && !isEmpty(value));
@@ -170,14 +171,14 @@ export default function omitExtraData<
    * are always written when defined. Always returns `target` — pruning of the object itself is
    * the caller's responsibility.
    *
-   * @param schema - The object schema describing which properties are allowed
+   * @param childSchema - The object schema describing which properties are allowed
    * @param source - The source form data object to read values from
    * @param target - The accumulator object to write filtered values into
    * @returns - `target` after all schema-defined properties have been processed
    */
-  function handleObject(schema: S, source: GenericObjectType, target: GenericObjectType): GenericObjectType {
-    const { properties, additionalProperties, patternProperties, propertyNames } = schema;
-    const requiredSet = new Set((schema.required ?? []) as string[]);
+  function handleObject(childSchema: S, source: GenericObjectType, target: GenericObjectType): GenericObjectType {
+    const { properties, additionalProperties, patternProperties, propertyNames } = childSchema;
+    const requiredSet = new Set(childSchema.required ?? []);
 
     /** Recursively omits extra data from `value` via `omit`, then conditionally writes the result to
      * `target[key]`. Optional object-valued properties are dropped when every key in the filtered
@@ -196,11 +197,11 @@ export default function omitExtraData<
       const v = omit(schemaDef, value, target[key]);
       if (!required && isObject(v)) {
         // Resolve $ref so we can inspect the effective required list for the inner schema.
-        let sd = isSchemaObj(schemaDef as S | boolean) ? (schemaDef as S) : ({} as S);
+        let sd = isSchemaObj(schemaDef) ? schemaDef : ({} as S);
         if (sd.$ref !== undefined) {
-          sd = findSchemaDefinition(sd.$ref, rootSchema) as S;
+          sd = findSchemaDefinition<S>(sd.$ref, rootSchema);
         }
-        const innerRequired = new Set((sd.required ?? []) as string[]);
+        const innerRequired = new Set(sd.required ?? []);
         // Drop this optional object when every key in v is both optional in the inner schema
         // and has an empty value. Vacuously true for {} so empty objects are always dropped.
         const shouldDrop = Object.entries(v as GenericObjectType).every(
@@ -211,6 +212,7 @@ export default function omitExtraData<
         }
       }
       if (v !== undefined) {
+        // oxlint-disable-next-line no-param-reassign
         target[key] = v;
       }
     }
@@ -231,15 +233,14 @@ export default function omitExtraData<
       ]);
       const knownProperties = new Set(Object.keys(properties ?? {}));
       for (const [key, value] of Object.entries(source)) {
-        if (knownProperties.has(key)) {
-          continue;
+        if (!knownProperties.has(key)) {
+          const matched = patterns.find(([re]) => re.test(key));
+          if (matched === undefined) {
+            patternPropertiesRest.push(key);
+          } else {
+            setProperty(key, matched[1], value);
+          }
         }
-        const matched = patterns.find(([re]) => re.test(key));
-        if (matched === undefined) {
-          patternPropertiesRest.push(key);
-          continue;
-        }
-        setProperty(key, matched[1], value);
       }
     }
 
@@ -254,10 +255,9 @@ export default function omitExtraData<
       } else {
         const knownProperties = new Set(Object.keys(properties ?? {}));
         for (const [key, value] of Object.entries(source)) {
-          if (knownProperties.has(key)) {
-            continue;
+          if (!knownProperties.has(key)) {
+            setProperty(key, addlSchema, value);
           }
-          setProperty(key, addlSchema, value);
         }
       }
     }
@@ -265,6 +265,7 @@ export default function omitExtraData<
     // When propertyNames is present, the schema only constrains key names — all source keys are valid.
     if (propertyNames !== undefined) {
       for (const [key, value] of Object.entries(source)) {
+        // oxlint-disable-next-line no-param-reassign
         target[key] = value;
       }
     }
@@ -277,27 +278,27 @@ export default function omitExtraData<
    * per-index schema; elements beyond the tuple length are covered by `additionalItems` when present.
    * For list schemas (`items` is a single schema) every element is filtered by that schema.
    *
-   * @param schema - The array schema describing `items` and optionally `additionalItems`
+   * @param childSchema - The array schema describing `items` and optionally `additionalItems`
    * @param source - The source array to read elements from
    * @param target - The accumulator array to push filtered elements into
    * @returns - `target` after all applicable source elements have been pushed
    */
-  function handleArray(schema: S, source: unknown[], target: unknown[]): unknown[] {
-    const { items, additionalItems } = schema;
+  function handleArray(childSchema: S, source: unknown[], target: unknown[]): unknown[] {
+    const { items, additionalItems } = childSchema;
     if (items !== undefined) {
       if (Array.isArray(items)) {
-        for (let i = 0; i < items.length; i++) {
+        for (let i = 0; i < items.length; i += 1) {
           target.push(omit(items[i] as S | boolean, source[i]));
         }
       } else {
-        for (let i = 0; i < source.length; i++) {
+        for (let i = 0; i < source.length; i += 1) {
           target.push(omit(items as S | boolean, source[i]));
         }
       }
     }
     // additionalItems covers tuple items beyond the items array length.
     if (additionalItems) {
-      for (let i = target.length; i < source.length; i++) {
+      for (let i = target.length; i < source.length; i += 1) {
         target.push(omit(additionalItems as S | boolean, source[i]));
       }
     }
@@ -310,13 +311,13 @@ export default function omitExtraData<
    * (`then` or `else`) is applied via `omit`. When the selected branch is absent, `target` is returned
    * unchanged.
    *
-   * @param schema - The schema potentially containing `if`, `then`, and `else` keywords
+   * @param childSchema - The schema potentially containing `if`, `then`, and `else` keywords
    * @param source - The current form data value, passed to `validator.isValid` and the branch `omit`
    * @param target - The already-filtered value to merge the branch result into
    * @returns - The result of applying the matched branch, or `target` when no branch applies
    */
-  function handleConditions(schema: S, source: unknown, target: unknown): unknown {
-    const { if: condition, then, else: otherwise } = schema;
+  function handleConditions(childSchema: S, source: unknown, target: unknown): unknown {
+    const { if: condition, then, else: otherwise } = childSchema;
     if (condition === undefined) {
       return target;
     }
@@ -335,33 +336,33 @@ export default function omitExtraData<
    * actual `omit` call.
    *
    * @param oneOf - The `oneOf` array from the schema, or `undefined`
-   * @param schema - The parent schema containing the `oneOf` keyword
+   * @param childSchema - The parent schema containing the `oneOf` keyword
    * @param source - The current form data value used to score each option
    * @param target - The already-filtered value to merge the winning option's result into
    * @returns - The result of applying the best-matching option, or `target` when no matching applies
    */
-  function handleOneOf(oneOf: S['oneOf'], schema: S, source: unknown, target: unknown): unknown {
-    if (!Array.isArray(oneOf) || isSelect(validator, schema, rootSchema, experimental_customMergeAllOf)) {
+  function handleOneOf(oneOf: S['oneOf'], childSchema: S, source: unknown, target: unknown): unknown {
+    if (!Array.isArray(oneOf) || isSelect(validator, childSchema, rootSchema, experimental_customMergeAllOf)) {
       return target;
     }
     // Resolve $refs and relax additionalProperties:false → true in one pass for scoring only.
     // The unrelaxed resolved schema is re-derived for the winning option so that omit() still
     // respects additionalProperties:false during filtering.
-    const scoringOptions = relaxOptionsForScoring<S>(oneOf as Array<S | boolean>, true, rootSchema);
+    const scoringOptions = relaxOptionsForScoring<S>(oneOf as (S | boolean)[], true, rootSchema);
     const bestIndex = getClosestMatchingOption<T, S, F>(
       validator,
       rootSchema,
       source as T,
       scoringOptions,
       0,
-      getDiscriminatorFieldFromSchema<S>(schema),
+      getDiscriminatorFieldFromSchema<S>(childSchema),
       experimental_customMergeAllOf,
     );
-    const winning = (oneOf as Array<S | boolean>)[bestIndex];
+    const winning = (oneOf as (S | boolean)[])[bestIndex];
     // For object options, re-resolve without relaxation so additionalProperties:false is respected.
     // For boolean options, scoringOptions already holds the converted schema (true→{}, false→{not:{}}).
     const resolved: S = isObject(winning)
-      ? resolveAllReferences<S>(winning as S, rootSchema, [])
+      ? resolveAllReferences<S>(winning, rootSchema, [])
       : scoringOptions[bestIndex];
     return omit(resolved, source, target);
   }
@@ -371,13 +372,13 @@ export default function omitExtraData<
    * defaults can flow through all branches) every branch is applied in sequence. For non-empty sources
    * the best-matching branch is selected via `handleOneOf`.
    *
-   * @param schema - The schema potentially containing an `anyOf` keyword
+   * @param childSchema - The schema potentially containing an `anyOf` keyword
    * @param source - The current form data value; empty or undefined triggers all-branch application
    * @param target - The already-filtered value to merge branch results into
    * @returns - The result after applying the relevant `anyOf` branch(es), or `target` when inapplicable
    */
-  function handleAnyOf(schema: S, source: unknown, target: unknown): unknown {
-    const { anyOf } = schema;
+  function handleAnyOf(childSchema: S, source: unknown, target: unknown): unknown {
+    const { anyOf } = childSchema;
     if (!Array.isArray(anyOf)) {
       return target;
     }
@@ -385,14 +386,15 @@ export default function omitExtraData<
     if (
       source === undefined ||
       (Array.isArray(source) && source.length === 0) ||
-      (isObject(source) && Object.keys(source as object).length === 0)
+      (isObject(source) && Object.keys(source).length === 0)
     ) {
-      for (const branch of anyOf as Array<S | boolean>) {
-        target = omit(branch, source, target);
+      let result = target;
+      for (const branch of anyOf as (S | boolean)[]) {
+        result = omit(branch, source, result);
       }
-      return target;
+      return result;
     }
-    return handleOneOf(anyOf, schema, source, target);
+    return handleOneOf(anyOf, childSchema, source, target);
   }
 
   /** Applies schema-based `dependencies` from `schema` to `source`, merging each active dependency's
@@ -400,24 +402,24 @@ export default function omitExtraData<
    * schema dependencies are processed. A dependency is considered active when its trigger key is
    * present on `source`.
    *
-   * @param schema - The schema potentially containing a `dependencies` keyword
+   * @param childSchema - The schema potentially containing a `dependencies` keyword
    * @param source - The current form data value; must be a plain object for dependencies to apply
    * @param target - The already-filtered value to merge dependency results into
    * @returns - The result after applying all active schema dependencies, or `target` when inapplicable
    */
-  function handleDependencies(schema: S, source: unknown, target: unknown): unknown {
-    const { dependencies } = schema;
+  function handleDependencies(childSchema: S, source: unknown, target: unknown): unknown {
+    const { dependencies } = childSchema;
     if (dependencies === undefined || !isObjectValue(source)) {
       return target;
     }
+    let result = target;
     for (const [key, deps] of Object.entries(dependencies)) {
       // Skip property dependencies (string arrays); only process schema dependencies.
-      if (!(key in source) || Array.isArray(deps)) {
-        continue;
+      if (key in source && !Array.isArray(deps)) {
+        result = omit(deps as S | boolean, source, result);
       }
-      target = omit(deps as S | boolean, source, target);
     }
-    return target;
+    return result;
   }
 
   /** Core recursive filter. Resolves `$ref`s, merges `allOf`, then delegates to the type-specific
@@ -438,34 +440,34 @@ export default function omitExtraData<
       return source;
     }
 
-    let schema = schemaDef as S;
-    const { $ref: ref, allOf } = schema;
+    let localSchema = schemaDef;
+    const { $ref: ref, allOf } = localSchema;
 
     if (ref !== undefined) {
       return omit(findSchemaDefinition<S>(ref, rootSchema), source, target);
     }
     if (allOf) {
-      schema = doMergeAllOf<S>(schema, experimental_customMergeAllOf);
+      localSchema = doMergeAllOf<S>(localSchema, experimental_customMergeAllOf);
     }
 
-    target = handleAnyOf(schema, source, handleOneOf(schema.oneOf, schema, source, target));
+    let filtered = handleAnyOf(localSchema, source, handleOneOf(localSchema.oneOf, localSchema, source, target));
 
-    const type = getSchemaType<S>(schema);
+    const type = getSchemaType<S>(localSchema);
     if (type === 'object') {
       if (!isObjectValue(source)) {
         return undefined;
       }
-      target = handleObject(schema, source, isObjectValue(target) ? target : {});
+      filtered = handleObject(localSchema, source, isObjectValue(filtered) ? filtered : {});
     } else if (type === 'array') {
       if (!Array.isArray(source)) {
         return undefined;
       }
-      target = handleArray(schema, source, Array.isArray(target) ? target : []);
-    } else if (target === undefined) {
-      target = source;
+      filtered = handleArray(localSchema, source, Array.isArray(filtered) ? filtered : []);
+    } else if (filtered === undefined) {
+      filtered = source;
     }
 
-    return handleDependencies(schema, source, handleConditions(schema, source, target));
+    return handleDependencies(localSchema, source, handleConditions(localSchema, source, filtered));
   }
 
   return omit(schema, formData) as T | undefined;

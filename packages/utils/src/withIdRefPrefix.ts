@@ -1,7 +1,7 @@
 import isObject from 'lodash/isObject';
 
 import { REF_KEY, ROOT_SCHEMA_PREFIX } from './constants';
-import { RJSFSchema, StrictRJSFSchema } from './types';
+import type { RJSFSchema, StrictRJSFSchema } from './types';
 
 /** Takes a `node` object and transforms any contained `$ref` node variables with a prefix, recursively calling
  * `withIdRefPrefix` for any other elements.
@@ -9,13 +9,16 @@ import { RJSFSchema, StrictRJSFSchema } from './types';
  * @param node - The object node to which a ROOT_SCHEMA_PREFIX is added when a REF_KEY is part of it
  */
 function withIdRefPrefixObject<S extends StrictRJSFSchema = RJSFSchema>(node: S): S {
-  for (const key in node) {
-    const realObj: { [k: string]: any } = node;
-    const value = realObj[key];
-    if (key === REF_KEY && typeof value === 'string' && value.startsWith('#')) {
-      realObj[key] = ROOT_SCHEMA_PREFIX + value;
-    } else {
-      realObj[key] = withIdRefPrefix<S>(value);
+  const realObj: Record<string, any> = node;
+  for (const key in realObj) {
+    /* v8 ignore next -- spread in caller guarantees only own properties reach this loop */
+    if (Object.hasOwn(realObj, key)) {
+      const value = realObj[key];
+      if (key === REF_KEY && typeof value === 'string' && value.startsWith('#')) {
+        realObj[key] = ROOT_SCHEMA_PREFIX + value;
+      } else {
+        realObj[key] = withIdRefPrefix<S>(value);
+      }
     }
   }
   return node;
@@ -27,10 +30,7 @@ function withIdRefPrefixObject<S extends StrictRJSFSchema = RJSFSchema>(node: S)
  * @param node - The list of object nodes to which a ROOT_SCHEMA_PREFIX is added when a REF_KEY is part of it
  */
 function withIdRefPrefixArray<S extends StrictRJSFSchema = RJSFSchema>(node: S[]): S[] {
-  for (let i = 0; i < node.length; i++) {
-    node[i] = withIdRefPrefix<S>(node[i]) as S;
-  }
-  return node;
+  return node.map((item) => withIdRefPrefix<S>(item) as S);
 }
 
 /** Recursively prefixes all `$ref`s in a schema with the value of the `ROOT_SCHEMA_PREFIX` constant.

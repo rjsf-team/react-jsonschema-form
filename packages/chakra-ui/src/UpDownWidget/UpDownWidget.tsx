@@ -1,13 +1,7 @@
-import { FocusEvent } from 'react';
-import { NumberInputValueChangeDetails } from '@chakra-ui/react';
-import {
-  ariaDescribedByIds,
-  labelValue,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { FocusEvent } from 'react';
+import type { NumberInputValueChangeDetails } from '@chakra-ui/react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, labelValue } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field';
 import { NumberInputRoot } from '../components/ui/number-input';
@@ -18,9 +12,9 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
 ) {
   const { id, readonly, disabled, label, hideLabel, value, onChange, onBlur, onFocus, rawErrors, required } = props;
 
-  const _onChange = ({ value }: NumberInputValueChangeDetails) => onChange(value);
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement | any>) => onBlur(id, target && target.value);
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement | any>) => onFocus(id, target && target.value);
+  const handleChange = ({ value: newValue }: NumberInputValueChangeDetails) => onChange(newValue);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement | any>) => onBlur(id, target && target.value);
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement | any>) => onFocus(id, target && target.value);
 
   const chakraProps = getChakra({ uiSchema: props.uiSchema });
 
@@ -36,9 +30,9 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
     >
       <NumberInputRoot
         value={value}
-        onValueChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
+        onValueChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         aria-describedby={ariaDescribedByIds(id)}
         id={id}
         name={id}

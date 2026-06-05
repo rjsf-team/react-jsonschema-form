@@ -1,14 +1,9 @@
-import Box, { BoxProps } from '@mui/material/Box';
-import Button, { ButtonProps } from '@mui/material/Button';
-import {
-  getSubmitButtonOptions,
-  GenericObjectType,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  SubmitButtonProps,
-  getUiOptions,
-} from '@rjsf/utils';
+import type { BoxProps } from '@mui/material/Box';
+import Box from '@mui/material/Box';
+import type { ButtonProps } from '@mui/material/Button';
+import Button from '@mui/material/Button';
+import type { GenericObjectType, FormContextType, RJSFSchema, StrictRJSFSchema, SubmitButtonProps } from '@rjsf/utils';
+import { getSubmitButtonOptions, getUiOptions } from '@rjsf/utils';
 
 import { computeSxProps, getMuiProps } from '../util';
 

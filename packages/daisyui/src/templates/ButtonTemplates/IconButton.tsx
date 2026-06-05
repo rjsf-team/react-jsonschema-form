@@ -1,51 +1,41 @@
-import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { memo } from 'react';
 import { faCopy, faArrowDown, faArrowUp, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
+import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { TranslatableString } from '@rjsf/utils';
 
 import DaisyUIButton from './DaisyUIButton';
 
-export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function CopyButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: IconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
   } = props;
-  return (
-    <DaisyUIButton title={translateString(TranslatableString.CopyButton)} {...props} icon={faCopy as IconDefinition} />
-  );
+  return <DaisyUIButton title={translateString(TranslatableString.CopyButton)} {...props} icon={faCopy} />;
 }
+export const CopyButton = memo(CopyButtonFn) as typeof CopyButtonFn;
 
-export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function MoveDownButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: IconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
   } = props;
-  return (
-    <DaisyUIButton
-      title={translateString(TranslatableString.MoveDownButton)}
-      {...props}
-      icon={faArrowDown as IconDefinition}
-    />
-  );
+  return <DaisyUIButton title={translateString(TranslatableString.MoveDownButton)} {...props} icon={faArrowDown} />;
 }
+export const MoveDownButton = memo(MoveDownButtonFn) as typeof MoveDownButtonFn;
 
-export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function MoveUpButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: IconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
   } = props;
-  return (
-    <DaisyUIButton
-      title={translateString(TranslatableString.MoveUpButton)}
-      {...props}
-      icon={faArrowUp as IconDefinition}
-    />
-  );
+  return <DaisyUIButton title={translateString(TranslatableString.MoveUpButton)} {...props} icon={faArrowUp} />;
 }
+export const MoveUpButton = memo(MoveUpButtonFn) as typeof MoveUpButtonFn;
 
-export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function RemoveButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: IconButtonProps<T, S, F>,
 ) {
   const {
@@ -56,24 +46,25 @@ export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
       title={translateString(TranslatableString.RemoveButton)}
       {...props}
       iconType='danger'
-      icon={faTrash as IconDefinition}
+      icon={faTrash}
     />
   );
 }
+export const RemoveButton = memo(RemoveButtonFn) as typeof RemoveButtonFn;
 
-export function ClearButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function ClearButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: IconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
   } = props;
-
   return (
     <DaisyUIButton
       title={translateString(TranslatableString.ClearButton)}
       {...props}
       iconType='default'
-      icon={faXmark as IconDefinition}
+      icon={faXmark}
     />
   );
 }
+export const ClearButton = memo(ClearButtonFn) as typeof ClearButtonFn;

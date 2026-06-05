@@ -1,17 +1,14 @@
-import {
-  DEFAULT_ID_PREFIX,
-  DEFAULT_ID_SEPARATOR,
+import type {
   FieldProps,
   RJSFSchema,
   UiSchema,
-  createSchemaUtils,
-  englishStringTranslator,
   DescriptionFieldProps,
   FormValidation,
   FieldErrorProps,
   FieldHelpProps,
   WidgetProps,
 } from '@rjsf/utils';
+import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR, createSchemaUtils, englishStringTranslator } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import userEvent from '@testing-library/user-event';
 
@@ -117,7 +114,7 @@ describe('SchemaField', () => {
     });
 
     it('should be able to be overwritten with a custom UnsupportedField component', () => {
-      const CustomUnsupportedField = function () {
+      const CustomUnsupportedField = function CustomUnsupportedField() {
         return <span id='custom'>Custom UnsupportedField</span>;
       };
 
@@ -133,7 +130,7 @@ describe('SchemaField', () => {
   });
 
   describe('Custom SchemaField component', () => {
-    const CustomSchemaField = function (props: FieldProps) {
+    const CustomSchemaField = function CustomSchemaField(props: FieldProps) {
       return (
         <div id='custom'>
           <SchemaField {...props} />
@@ -153,7 +150,7 @@ describe('SchemaField', () => {
   });
 
   describe('Custom type component', () => {
-    const CustomStringField = function () {
+    const CustomStringField = function CustomStringField() {
       return <div id='custom-type' />;
     };
 
@@ -169,7 +166,7 @@ describe('SchemaField', () => {
   });
 
   describe('Custom id component', () => {
-    const CustomIdField = function () {
+    const CustomIdField = function CustomIdField() {
       return <div id='custom-id' />;
     };
 
@@ -278,7 +275,7 @@ describe('SchemaField', () => {
     });
 
     it('should not pass ui:classNames or ui:style to child component', () => {
-      const CustomSchemaField = function (props: FieldProps) {
+      const CustomSchemaField = function CustomSchemaField(props: FieldProps) {
         return <SchemaField {...props} uiSchema={{ ...props.uiSchema, 'ui:field': undefined }} />;
       };
 
@@ -298,7 +295,7 @@ describe('SchemaField', () => {
       expect(node.querySelectorAll("[style*='red']")).toHaveLength(1);
     });
     it('should not pass ui:options { classNames or style } to child component', () => {
-      const CustomSchemaField = function (props: FieldProps) {
+      const CustomSchemaField = function CustomSchemaField(props: FieldProps) {
         return <SchemaField {...props} uiSchema={{ ...props.uiSchema, 'ui:field': undefined }} />;
       };
 
@@ -496,7 +493,7 @@ describe('SchemaField', () => {
 
     const uiSchema: UiSchema = {
       'ui:field': (props) => {
-        const { uiSchema, ...fieldProps } = props; //eslint-disable-line
+        const { uiSchema, ...fieldProps } = props; //oxlint-disable-line
         return <SchemaField {...fieldProps} />;
       },
     };
@@ -605,9 +602,7 @@ describe('SchemaField', () => {
     });
 
     it('should pass errors to custom FieldErrorTemplate', async () => {
-      const customFieldError = (props: FieldErrorProps) => {
-        return <div className='custom-field-error'>{props.errors}</div>;
-      };
+      const customFieldError = (props: FieldErrorProps) => <div className='custom-field-error'>{props.errors}</div>;
       const { node } = createFormComponent({
         schema,
         uiSchema,
@@ -625,12 +620,10 @@ describe('SchemaField', () => {
     });
 
     it('should pass errors to custom FieldErrorTemplate, via uiSchema', async () => {
-      const customFieldError = (props: FieldErrorProps) => {
-        return <div className='custom-field-error'>{props.errors}</div>;
-      };
+      const customFieldError = (props: FieldErrorProps) => <div className='custom-field-error'>{props.errors}</div>;
       const uiSchema: UiSchema = {
         'ui:field': (props) => {
-          const { uiSchema, ...fieldProps } = props; //eslint-disable-line
+          const { uiSchema, ...fieldProps } = props; //oxlint-disable-line
           return <SchemaField {...fieldProps} uiSchema={{ foo: { 'ui:FieldErrorTemplate': customFieldError } }} />;
         },
       };
@@ -651,9 +644,7 @@ describe('SchemaField', () => {
     });
 
     describe('Custom error rendering', () => {
-      const customStringWidget = (props: WidgetProps) => {
-        return <div className='custom-text-widget'>{props.rawErrors}</div>;
-      };
+      const customStringWidget = (props: WidgetProps) => <div className='custom-text-widget'>{props.rawErrors}</div>;
 
       it('should pass rawErrors down to custom widgets', async () => {
         const { node } = createFormComponent({
@@ -704,9 +695,7 @@ describe('SchemaField', () => {
       });
 
       describe('Custom error rendering', () => {
-        const customStringWidget = (props: WidgetProps) => {
-          return <div className='custom-text-widget'>{props.rawErrors}</div>;
-        };
+        const customStringWidget = (props: WidgetProps) => <div className='custom-text-widget'>{props.rawErrors}</div>;
 
         it('should pass rawErrors down to custom widgets and render them', async () => {
           const { node } = createFormComponent({
@@ -729,7 +718,7 @@ describe('SchemaField', () => {
       const hideUiSchema = {
         'ui:hideError': true,
         'ui:field': (props: FieldProps) => {
-          const { uiSchema, ...fieldProps } = props; //eslint-disable-line
+          const { uiSchema, ...fieldProps } = props; //oxlint-disable-line
           // Pass the children schema in after removing the global one
           return <SchemaField {...fieldProps} uiSchema={{ 'ui:hideError': false }} />;
         },
@@ -789,9 +778,7 @@ describe('SchemaField', () => {
     });
 
     it('should pass help to custom FieldHelpTemplate', async () => {
-      const customFieldHelp = (props: FieldHelpProps) => {
-        return <div className='custom-field-help'>{props.help}</div>;
-      };
+      const customFieldHelp = (props: FieldHelpProps) => <div className='custom-field-help'>{props.help}</div>;
       const { node } = createFormComponent({
         schema,
         uiSchema,
@@ -808,9 +795,7 @@ describe('SchemaField', () => {
     });
 
     it('should pass errors to custom FieldErrorTemplate, via uiSchema', async () => {
-      const customFieldHelp = (props: FieldHelpProps) => {
-        return <div className='custom-field-help'>{props.help}</div>;
-      };
+      const customFieldHelp = (props: FieldHelpProps) => <div className='custom-field-help'>{props.help}</div>;
       const uiSchema: UiSchema = {
         foo: { 'ui:help': helpText, 'ui:FieldHelpTemplate': customFieldHelp },
       };

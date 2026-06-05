@@ -1,6 +1,7 @@
 'use client';
 
-import { FocusEvent, FocusEventHandler, ReactElement, useEffect, useRef, useState } from 'react';
+import type { FocusEvent, FocusEventHandler, ReactElement } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Check, ChevronDown } from 'lucide-react';
 
 import { cn } from '../../lib/utils';
@@ -9,7 +10,7 @@ import { Command, CommandGroup, CommandItem, CommandList } from './command';
 /**
  * Represents an item in the fancy select dropdown
  */
-export type FancySelectItem = {
+export interface FancySelectItem {
   /** The value of the item */
   value: any;
   /** The display label for the item */
@@ -18,7 +19,7 @@ export type FancySelectItem = {
   index: number;
   /** Whether the item is disabled */
   disabled?: boolean;
-};
+}
 
 /**
  * Props interface for the FancySelect component
@@ -101,7 +102,10 @@ export function FancySelect({
       aria-placeholder={ariaPlaceholder}
     >
       <div
+        role='button'
+        tabIndex={disabled ? -1 : 0}
         onClick={() => !disabled && setOpen(!open)}
+        onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && !disabled && setOpen(!open)}
         className={cn(
           'flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
           !selectedItem && required && 'border-red-500',

@@ -1,15 +1,5 @@
-import {
-  canExpand,
-  descriptionId,
-  FormContextType,
-  getTemplate,
-  getUiOptions,
-  ObjectFieldTemplateProps,
-  RJSFSchema,
-  StrictRJSFSchema,
-  titleId,
-  buttonId,
-} from '@rjsf/utils';
+import type { FormContextType, ObjectFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { canExpand, descriptionId, getTemplate, getUiOptions, titleId, buttonId } from '@rjsf/utils';
 
 /** The `ObjectFieldTemplate` component renders a layout for object fields in the form
  * with DaisyUI styling. It handles:
@@ -82,14 +72,11 @@ export default function ObjectFieldTemplate<
       )}
       <div className={`grid grid-cols-1 gap-${description ? 3 : 4} ${isRoot ? '' : 'mb-4'}`}>
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
-        {properties.map((element, index) =>
+        {properties.map((element) =>
           element.hidden ? (
             element.content
           ) : (
-            <div
-              key={`${fieldPathId.$id}-${element.name}-${index}`}
-              className={fieldPathId.$id === 'root' && element.name === 'tasks' ? 'mt-2' : ''}
-            >
+            <div key={element.name} className={fieldPathId.$id === 'root' && element.name === 'tasks' ? 'mt-2' : ''}>
               {element.content}
             </div>
           ),

@@ -18,10 +18,12 @@ export {
   findSelectedOptionInXxxOf,
   getDefaultFormState,
   getDisplayLabel,
+  // oxlint-disable-next-line typescript/no-deprecated
   getFieldNames, // Exported only to prevent breaking change in core
   getClosestMatchingOption,
   getFirstMatchingOption,
   getFromSchema,
+  // oxlint-disable-next-line typescript/no-deprecated
   getUsedFormData, // Exported only to prevent breaking change in core
   isFilesArray,
   isMultiSelect,
@@ -31,5 +33,6 @@ export {
   relaxOptionsForScoring,
   retrieveSchema,
   sanitizeDataForNewSchema,
+  // oxlint-disable-next-line typescript/no-deprecated
   toPathSchema,
 };

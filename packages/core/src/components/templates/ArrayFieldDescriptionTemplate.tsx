@@ -1,12 +1,5 @@
-import {
-  descriptionId,
-  getTemplate,
-  getUiOptions,
-  ArrayFieldDescriptionProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { ArrayFieldDescriptionProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { descriptionId, getTemplate, getUiOptions } from '@rjsf/utils';
 
 /** The `ArrayFieldDescriptionTemplate` component renders a `DescriptionFieldTemplate` with an `id` derived from
  * the `fieldPathId`.

@@ -1,5 +1,5 @@
 import { withTheme } from '@rjsf/core';
-import { RJSFSchema, StrictRJSFSchema, FormContextType } from '@rjsf/utils';
+import type { RJSFSchema, StrictRJSFSchema, FormContextType } from '@rjsf/utils';
 
 import { generateTheme } from '../theme/Theme';
 

@@ -1,4 +1,5 @@
-import { findSchemaDefinition, ID_KEY, RJSFSchema } from '../src';
+import type { RJSFSchema } from '../src';
+import { findSchemaDefinition, ID_KEY } from '../src';
 import { findSchemaDefinitionRecursive, makeAllReferencesAbsolute } from '../src/findSchemaDefinition';
 
 const schema: RJSFSchema = {

@@ -1,6 +1,6 @@
 import { Text } from '@chakra-ui/react';
 import { RichDescription } from '@rjsf/core';
-import { DescriptionFieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { DescriptionFieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 /** The `DescriptionField` is the template to use to render the description of a field
  *

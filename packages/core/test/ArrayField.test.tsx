@@ -1,4 +1,4 @@
-import {
+import type {
   ArrayFieldTemplateProps,
   ArrayFieldItemButtonsTemplateProps,
   ArrayFieldItemTemplateProps,
@@ -24,27 +24,27 @@ import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } f
 const user = userEvent.setup();
 
 const ArrayKeyDataAttr = 'data-rjsf-itemkey';
-const ExposedArrayKeyItemTemplate = function (props: ArrayFieldItemTemplateProps) {
+const ExposedArrayKeyItemTemplate = function ExposedArrayKeyItemTemplate(props: ArrayFieldItemTemplateProps) {
   return (
     <div className='rjsf-array-item' data-rjsf-itemkey={props.itemKey}>
       <div>{props.children}</div>
       {(props.buttonsProps.hasMoveUp || props.buttonsProps.hasMoveDown) && (
-        <button className='rjsf-array-item-move-down' onClick={props.buttonsProps.onMoveDownItem}>
+        <button type='button' className='rjsf-array-item-move-down' onClick={props.buttonsProps.onMoveDownItem}>
           Down
         </button>
       )}
       {(props.buttonsProps.hasMoveUp || props.buttonsProps.hasMoveDown) && (
-        <button className='rjsf-array-item-move-up' onClick={props.buttonsProps.onMoveUpItem}>
+        <button type='button' className='rjsf-array-item-move-up' onClick={props.buttonsProps.onMoveUpItem}>
           Up
         </button>
       )}
       {props.buttonsProps.hasCopy && (
-        <button className='rjsf-array-item-copy' onClick={props.buttonsProps.onCopyItem}>
+        <button type='button' className='rjsf-array-item-copy' onClick={props.buttonsProps.onCopyItem}>
           Copy
         </button>
       )}
       {props.buttonsProps.hasRemove && (
-        <button className='rjsf-array-item-remove' onClick={props.buttonsProps.onRemoveItem}>
+        <button type='button' className='rjsf-array-item-remove' onClick={props.buttonsProps.onRemoveItem}>
           Remove
         </button>
       )}
@@ -53,13 +53,13 @@ const ExposedArrayKeyItemTemplate = function (props: ArrayFieldItemTemplateProps
   );
 };
 
-const ExposedArrayKeyTemplate = function (props: ArrayFieldTemplateProps) {
+const ExposedArrayKeyTemplate = function ExposedArrayKeyTemplate(props: ArrayFieldTemplateProps) {
   return (
     <div className='array'>
       {props.items}
       {props.canAdd && (
         <div className='rjsf-array-item-add'>
-          <button onClick={props.onAddClick} type='button'>
+          <button type='button' onClick={props.onAddClick}>
             Add New
           </button>
         </div>
@@ -68,7 +68,7 @@ const ExposedArrayKeyTemplate = function (props: ArrayFieldTemplateProps) {
   );
 };
 
-const CustomOnAddClickItemTemplate = function (props: ArrayFieldItemTemplateProps) {
+const CustomOnAddClickItemTemplate = function CustomOnAddClickItemTemplate(props: ArrayFieldItemTemplateProps) {
   return (
     <div className='rjsf-array-item'>
       <div>{props.children}</div>
@@ -76,13 +76,13 @@ const CustomOnAddClickItemTemplate = function (props: ArrayFieldItemTemplateProp
   );
 };
 
-const CustomOnAddClickTemplate = function (props: ArrayFieldTemplateProps) {
+const CustomOnAddClickTemplate = function CustomOnAddClickTemplate(props: ArrayFieldTemplateProps) {
   return (
     <div className='array'>
       {props.items}
       {props.canAdd && (
         <div className='rjsf-array-item-add'>
-          <button onClick={() => props.onAddClick()} type='button'>
+          <button type='button' onClick={() => props.onAddClick()}>
             Add New
           </button>
         </div>
@@ -109,27 +109,27 @@ const ArrayFieldTestItemButtonsTemplate = (props: ArrayFieldItemButtonsTemplateP
   return (
     <>
       {hasMoveDown && (
-        <button title='move-down' style={style} disabled={disabled || readonly} onClick={onMoveDownItem}>
+        <button type='button' title='move-down' style={style} disabled={disabled || readonly} onClick={onMoveDownItem}>
           move down
         </button>
       )}
       {hasMoveUp && (
-        <button title='move-up' style={style} disabled={disabled || readonly} onClick={onMoveUpItem}>
+        <button type='button' title='move-up' style={style} disabled={disabled || readonly} onClick={onMoveUpItem}>
           move up
         </button>
       )}
       {hasCopy && (
-        <button title='copy' style={style} disabled={disabled || readonly} onClick={onCopyItem}>
+        <button type='button' title='copy' style={style} disabled={disabled || readonly} onClick={onCopyItem}>
           copy
         </button>
       )}
       {hasRemove && (
-        <button title='remove' style={style} disabled={disabled || readonly} onClick={onRemoveItem}>
+        <button type='button' title='remove' style={style} disabled={disabled || readonly} onClick={onRemoveItem}>
           remove
         </button>
       )}
       {hasMoveDown && (
-        <button title='insert' style={style} disabled={disabled || readonly} onClick={onAddItem}>
+        <button type='button' title='insert' style={style} disabled={disabled || readonly} onClick={onAddItem}>
           insert
         </button>
       )}
@@ -179,33 +179,30 @@ const ArrayFieldTest = (props: FieldProps<any[]>) => {
 };
 
 const mockFileReader = {
-  // eslint-disable-next-line no-unused-vars
+  // oxlint-disable-next-line no-unused-vars
   set onload(fn: (event: { target: { result: string } }) => void) {
     fn({ target: { result: 'data:text/plain;base64,x=' } });
   },
-  readAsDataURL() {
-    return;
-  },
+  // oxlint-disable-next-line no-empty-function
+  readAsDataURL() {},
 } as unknown as FileReader;
 
 describe('ArrayField', () => {
-  const CustomComponent = (props: WidgetProps) => {
-    return <div id='custom'>{props.rawErrors}</div>;
-  };
+  const CustomComponent = (props: WidgetProps) => <div id='custom'>{props.rawErrors}</div>;
 
-  const CustomSelectComponent = (props: WidgetProps) => {
-    return (
-      <select>
-        {props.value.map((item: any, index: number) => (
-          <option key={index} id='custom-select'>
-            {item}
-          </option>
-        ))}
-      </select>
-    );
-  };
+  const CustomSelectComponent = (props: WidgetProps) => (
+    <select>
+      {props.value.map((item: any, index: number) => (
+        // oxlint-disable-next-line react/no-array-index-key
+        <option key={index} id='custom-select'>
+          {item}
+        </option>
+      ))}
+    </select>
+  );
   beforeAll(() => {
-    vi.spyOn(window, 'FileReader').mockImplementation(function () {
+    // oxlint-disable-next-line prefer-arrow-callback -- arrow functions can't be constructors (new FileReader())
+    vi.spyOn(window, 'FileReader').mockImplementation(function mockFileReaderFactory() {
       return mockFileReader;
     });
   });
@@ -220,7 +217,7 @@ describe('ArrayField', () => {
     });
 
     it('should be able to be overwritten with a custom UnsupportedField component', () => {
-      const CustomUnsupportedField = function () {
+      const CustomUnsupportedField = function CustomUnsupportedField() {
         return <span id='custom'>Custom UnsupportedField</span>;
       };
 
@@ -384,13 +381,11 @@ describe('ArrayField', () => {
     });
 
     it('should pass parentUiSchema to ArrayFieldItemTemplate', () => {
-      const ParentUiSchemaItemTemplate = (props: ArrayFieldItemTemplateProps) => {
-        return (
-          <div className='custom-item' data-has-parent-uischema={props.parentUiSchema ? 'true' : 'false'}>
-            {props.children}
-          </div>
-        );
-      };
+      const ParentUiSchemaItemTemplate = (props: ArrayFieldItemTemplateProps) => (
+        <div className='custom-item' data-has-parent-uischema={props.parentUiSchema ? 'true' : 'false'}>
+          {props.children}
+        </div>
+      );
 
       const { node } = createFormComponent({
         schema,
@@ -1050,7 +1045,7 @@ describe('ArrayField', () => {
           },
         },
       };
-      const { node } = createFormComponent({ schema: schema });
+      const { node } = createFormComponent({ schema });
       const inputs = node.querySelectorAll('input[type=text]');
       expect(inputs).toHaveLength(4);
       expect(inputs[0]).toHaveValue('Raphael');
@@ -1128,8 +1123,8 @@ describe('ArrayField', () => {
         },
       };
       let form = createFormComponent({
-        schema: schema,
-        uiSchema: uiSchema,
+        schema,
+        uiSchema,
         formData: {},
         liveValidate: true,
         noValidate: true,
@@ -1139,8 +1134,8 @@ describe('ArrayField', () => {
       expectToHaveBeenCalledWithFormData(form.onSubmit, { multipleChoicesList: [] }, true);
 
       form = createFormComponent({
-        schema: schema,
-        uiSchema: uiSchema,
+        schema,
+        uiSchema,
         formData: {},
         liveValidate: true,
         noValidate: false,
@@ -1676,14 +1671,12 @@ describe('ArrayField', () => {
 
     it('should pass rawErrors down to every level of custom widgets', async () => {
       const CustomItem = (props: FieldProps) => <div id='custom-item'>{props.children}</div>;
-      const CustomTemplate = (props: ArrayFieldTemplateProps) => {
-        return (
-          <div id='custom'>
-            {props.items}
-            <div id='custom-error'>{props.rawErrors && props.rawErrors.join(', ')}</div>
-          </div>
-        );
-      };
+      const CustomTemplate = (props: ArrayFieldTemplateProps) => (
+        <div id='custom'>
+          {props.items}
+          <div id='custom-error'>{props.rawErrors && props.rawErrors.join(', ')}</div>
+        </div>
+      );
 
       const schema: RJSFSchema = {
         type: 'array',
@@ -2106,9 +2099,9 @@ describe('ArrayField', () => {
     });
 
     it('should pass uiSchema to custom widget', () => {
-      const CustomWidget = ({ uiSchema }: WidgetProps) => {
-        return <div id='custom-ui-option-value'>{uiSchema?.custom_field_key['ui:options'].test}</div>;
-      };
+      const CustomWidget = ({ uiSchema }: WidgetProps) => (
+        <div id='custom-ui-option-value'>{uiSchema?.custom_field_key['ui:options'].test}</div>
+      );
 
       const { node } = createFormComponent({
         schema: {
@@ -2118,7 +2111,7 @@ describe('ArrayField', () => {
           },
         },
         widgets: {
-          CustomWidget: CustomWidget,
+          CustomWidget,
         },
         uiSchema: {
           'ui:widget': 'CustomWidget',
@@ -3270,13 +3263,11 @@ describe('ArrayField', () => {
         },
       };
 
-      const dynamicUiSchemaFunction = vi.fn((itemData) => {
-        return {
-          name: {
-            'ui:widget': itemData.role === 'admin' ? 'textarea' : 'text',
-          },
-        };
-      });
+      const dynamicUiSchemaFunction = vi.fn((itemData) => ({
+        name: {
+          'ui:widget': itemData.role === 'admin' ? 'textarea' : 'text',
+        },
+      }));
 
       const uiSchema: UiSchema = {
         items: dynamicUiSchemaFunction,
@@ -3545,7 +3536,7 @@ describe('ArrayField', () => {
       let callCount = 0;
       const uiSchema: UiSchema = {
         items: (_: any, index) => {
-          callCount++;
+          callCount += 1;
           return {
             name: {
               'ui:widget': 'textarea',

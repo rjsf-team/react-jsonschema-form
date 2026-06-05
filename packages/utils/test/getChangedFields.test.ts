@@ -7,7 +7,9 @@ const complexObject = {
   b: '2',
   c: { c1: {}, c2: [] },
   d: ['item1', 'item2', 'item2'],
-  e: function () {},
+  e() {
+    /* empty */
+  },
 };
 const complexObjectKeys = ['a', 'b', 'c', 'd', 'e'];
 
@@ -22,8 +24,12 @@ describe('getChangedFields()', () => {
     expect(getChangedFields(2, '1')).toEqual([]);
     expect(
       getChangedFields(
-        function a() {},
-        function b() {},
+        () => {
+          /* empty */
+        },
+        () => {
+          /* empty */
+        },
       ),
     ).toEqual([]);
     expect(getChangedFields(new Date(), new Date())).toEqual([]);
@@ -31,12 +37,20 @@ describe('getChangedFields()', () => {
   it('One is not plainObject parameter', () => {
     expect(getChangedFields(1, complexObject)).toEqual(complexObjectKeys);
     expect(getChangedFields('1', complexObject)).toEqual(complexObjectKeys);
-    expect(getChangedFields(function noop() {}, complexObject)).toEqual(complexObjectKeys);
+    expect(
+      getChangedFields(() => {
+        /* empty */
+      }, complexObject),
+    ).toEqual(complexObjectKeys);
     expect(getChangedFields(new Date(), complexObject)).toEqual(complexObjectKeys);
 
     expect(getChangedFields(complexObject, 1)).toEqual(complexObjectKeys);
     expect(getChangedFields(complexObject, '1')).toEqual(complexObjectKeys);
-    expect(getChangedFields(complexObject, function noop() {})).toEqual(complexObjectKeys);
+    expect(
+      getChangedFields(complexObject, () => {
+        /* empty */
+      }),
+    ).toEqual(complexObjectKeys);
     expect(getChangedFields(complexObject, new Date())).toEqual(complexObjectKeys);
   });
   it('Deep equal', () => {
@@ -54,7 +68,9 @@ describe('getChangedFields()', () => {
         b: '3',
         c: { c1: {}, c2: [], c3: [] },
         d: ['item1', 'item2'],
-        e: function () {},
+        e() {
+          /* empty */
+        },
       }),
     ).toEqual(['a', 'b', 'c', 'd']);
     expect(
@@ -64,7 +80,9 @@ describe('getChangedFields()', () => {
           b: '3',
           c: { c1: {}, c2: [], c3: [] },
           d: ['item1', 'item2'],
-          e: function () {},
+          e() {
+            /* empty */
+          },
         },
         complexObject,
       ),

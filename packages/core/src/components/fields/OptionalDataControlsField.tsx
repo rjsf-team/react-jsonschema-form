@@ -1,14 +1,16 @@
-import {
+import type {
   FieldProps,
   FormContextType,
+  OptionalDataControlsTemplateProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from '@rjsf/utils';
+import {
   getSchemaType,
   getTemplate,
   getUiOptions,
   isFormDataAvailable,
   optionalControlsId,
-  OptionalDataControlsTemplateProps,
-  RJSFSchema,
-  StrictRJSFSchema,
   TranslatableString,
 } from '@rjsf/utils';
 

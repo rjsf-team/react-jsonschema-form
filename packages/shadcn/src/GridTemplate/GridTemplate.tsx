@@ -1,4 +1,4 @@
-import { GridTemplateProps } from '@rjsf/utils';
+import type { GridTemplateProps } from '@rjsf/utils';
 
 import { cn } from '../lib/utils';
 

@@ -1,8 +1,12 @@
-import { ChangeEvent, FocusEvent } from 'react';
-import Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
-import FormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel';
-import FormGroup, { FormGroupProps } from '@mui/material/FormGroup';
+import type { ChangeEvent, FocusEvent } from 'react';
+import type { CheckboxProps } from '@mui/material/Checkbox';
+import Checkbox from '@mui/material/Checkbox';
+import type { FormControlLabelProps } from '@mui/material/FormControlLabel';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import type { FormGroupProps } from '@mui/material/FormGroup';
+import FormGroup from '@mui/material/FormGroup';
 import FormLabel from '@mui/material/FormLabel';
+import type { FormContextType, GenericObjectType, WidgetProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
@@ -12,11 +16,6 @@ import {
   getOptionValueFormat,
   labelValue,
   optionId,
-  FormContextType,
-  GenericObjectType,
-  WidgetProps,
-  RJSFSchema,
-  StrictRJSFSchema,
 } from '@rjsf/utils';
 
 import { getMuiProps } from '../util';
@@ -63,7 +62,7 @@ export default function CheckboxesWidget<
   const optionValueFormat = getOptionValueFormat(options);
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
-  const _onChange =
+  const handleChange =
     (index: number) =>
     ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
       if (checked) {
@@ -73,9 +72,9 @@ export default function CheckboxesWidget<
       }
     };
 
-  const _onBlur = ({ target }: FocusEvent<HTMLButtonElement>) =>
+  const handleBlur = ({ target }: FocusEvent<HTMLButtonElement>) =>
     onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
-  const _onFocus = ({ target }: FocusEvent<HTMLButtonElement>) =>
+  const handleFocus = ({ target }: FocusEvent<HTMLButtonElement>) =>
     onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
 
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, CheckboxesWidgetMuiProps>(options);
@@ -92,7 +91,7 @@ export default function CheckboxesWidget<
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index: number) => {
             const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
-            const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
+            const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
             const checkbox = (
               <Checkbox
                 {...muiSlotProps?.checkbox}
@@ -101,9 +100,9 @@ export default function CheckboxesWidget<
                 checked={checked}
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={autofocus && index === 0}
-                onChange={_onChange(index)}
-                onBlur={_onBlur}
-                onFocus={_onFocus}
+                onChange={handleChange(index)}
+                onBlur={handleBlur}
+                onFocus={handleFocus}
                 aria-describedby={ariaDescribedByIds(id)}
               />
             );
@@ -111,7 +110,7 @@ export default function CheckboxesWidget<
               <FormControlLabel
                 {...muiSlotProps?.formControlLabel}
                 control={checkbox}
-                key={index}
+                key={String(option.value)}
                 label={option.label}
               />
             );

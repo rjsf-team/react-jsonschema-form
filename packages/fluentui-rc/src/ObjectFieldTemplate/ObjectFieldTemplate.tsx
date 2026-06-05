@@ -1,16 +1,6 @@
 import { Flex } from '@fluentui/react-migration-v0-v9';
-import {
-  FormContextType,
-  ObjectFieldTemplateProps,
-  RJSFSchema,
-  StrictRJSFSchema,
-  canExpand,
-  descriptionId,
-  getTemplate,
-  getUiOptions,
-  titleId,
-  buttonId,
-} from '@rjsf/utils';
+import type { FormContextType, ObjectFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { canExpand, descriptionId, getTemplate, getUiOptions, titleId, buttonId } from '@rjsf/utils';
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
@@ -74,13 +64,13 @@ export default function ObjectFieldTemplate<
       )}
       <Flex fill column gap='gap.medium'>
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
-        {properties.map((element, index) =>
+        {properties.map((element) =>
           // Remove the <Grid> if the inner element is hidden as the <Grid>
           // itself would otherwise still take up space.
           element.hidden ? (
             element.content
           ) : (
-            <Flex column fill key={index} style={{ marginBottom: '10px' }}>
+            <Flex column fill key={element.name} style={{ marginBottom: '10px' }}>
               {element.content}
             </Flex>
           ),

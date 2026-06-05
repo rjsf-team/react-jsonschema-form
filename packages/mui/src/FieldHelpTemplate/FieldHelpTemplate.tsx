@@ -1,14 +1,8 @@
-import FormHelperText, { FormHelperTextProps } from '@mui/material/FormHelperText';
+import type { FormHelperTextProps } from '@mui/material/FormHelperText';
+import FormHelperText from '@mui/material/FormHelperText';
 import { RichHelp } from '@rjsf/core';
-import {
-  helpId,
-  FieldHelpProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  getUiOptions,
-  GenericObjectType,
-} from '@rjsf/utils';
+import type { FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema, GenericObjectType } from '@rjsf/utils';
+import { helpId, getUiOptions } from '@rjsf/utils';
 
 import { computeSxProps, getMuiProps } from '../util';
 

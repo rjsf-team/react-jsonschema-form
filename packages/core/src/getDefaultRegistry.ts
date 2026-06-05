@@ -1,12 +1,5 @@
-import {
-  DEFAULT_ID_PREFIX,
-  DEFAULT_ID_SEPARATOR,
-  englishStringTranslator,
-  FormContextType,
-  Registry,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR, englishStringTranslator } from '@rjsf/utils';
 
 import fields from './components/fields';
 import templates from './components/templates';

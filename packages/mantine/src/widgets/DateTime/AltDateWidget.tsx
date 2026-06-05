@@ -1,16 +1,6 @@
 import { Flex, Box, Group, Button, Select, Input } from '@mantine/core';
-import {
-  ariaDescribedByIds,
-  dateRangeOptions,
-  titleId,
-  DateObject,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  TranslatableString,
-  useAltDateWidgetProps,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { DateObject, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, dateRangeOptions, titleId, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
 
 /** The `AltDateWidget` is an alternative widget for rendering date properties.
  * @param props - The `WidgetProps` for this component
@@ -34,6 +24,7 @@ export default function AltDateWidget<
         {elements.map((elemProps, i) => {
           const elemId = `${id}_${elemProps.type}`;
           return (
+            // oxlint-disable-next-line react/no-array-index-key
             <Box key={i}>
               <Select
                 id={elemId}
@@ -67,6 +58,7 @@ export default function AltDateWidget<
       {rawErrors &&
         rawErrors?.length > 0 &&
         rawErrors.map((error: string, index: number) => (
+          // oxlint-disable-next-line react/no-array-index-key
           <Input.Error key={`alt-date-widget-input-errors-${index}`}>{error}</Input.Error>
         ))}
     </>

@@ -1,13 +1,7 @@
-import { ChangeEvent, FocusEvent } from 'react';
+import type { ChangeEvent, FocusEvent } from 'react';
 import { Label, Textarea, makeStyles } from '@fluentui/react-components';
-import {
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-  ariaDescribedByIds,
-  labelValue,
-} from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, labelValue } from '@rjsf/utils';
 
 const useStyles = makeStyles({
   label: {
@@ -45,10 +39,10 @@ export default function TextareaWidget<
     schema,
   } = props;
   const classes = useStyles();
-  const _onChange = ({ target: { value } }: ChangeEvent<HTMLTextAreaElement>) =>
-    onChange(value === '' ? options.emptyValue : value);
-  const _onBlur = ({ target }: FocusEvent<HTMLTextAreaElement>) => onBlur(id, target && target.value);
-  const _onFocus = ({ target }: FocusEvent<HTMLTextAreaElement>) => onFocus(id, target && target.value);
+  const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLTextAreaElement>) =>
+    onChange(newValue === '' ? options.emptyValue : newValue);
+  const handleBlur = ({ target }: FocusEvent<HTMLTextAreaElement>) => onBlur(id, target && target.value);
+  const handleFocus = ({ target }: FocusEvent<HTMLTextAreaElement>) => onFocus(id, target && target.value);
 
   let rows: string | number = 5;
   if (typeof options.rows === 'string' || typeof options.rows === 'number') {
@@ -71,9 +65,9 @@ export default function TextareaWidget<
         required={required}
         disabled={disabled || readonly}
         value={value || value === 0 ? value : ''}
-        onChange={onChangeOverride || _onChange}
-        onFocus={_onFocus}
-        onBlur={_onBlur}
+        onChange={onChangeOverride || handleChange}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
         rows={rows}
       />

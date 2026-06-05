@@ -4,12 +4,46 @@ describe('deepEquals()', () => {
   it('should assume functions are always equivalent', () => {
     expect(
       deepEquals(
-        () => {},
-        () => {},
+        () => {
+          /* empty */
+        },
+        () => {
+          /* empty */
+        },
       ),
     ).toBe(true);
-    expect(deepEquals({ foo() {} }, { foo() {} })).toBe(true);
-    expect(deepEquals({ foo: { bar() {} } }, { foo: { bar() {} } })).toBe(true);
+    expect(
+      deepEquals(
+        {
+          foo() {
+            /* empty */
+          },
+        },
+        {
+          foo() {
+            /* empty */
+          },
+        },
+      ),
+    ).toBe(true);
+    expect(
+      deepEquals(
+        {
+          foo: {
+            bar() {
+              /* empty */
+            },
+          },
+        },
+        {
+          foo: {
+            bar() {
+              /* empty */
+            },
+          },
+        },
+      ),
+    ).toBe(true);
   });
 
   it('does not stack-overflow on self-referential objects', () => {

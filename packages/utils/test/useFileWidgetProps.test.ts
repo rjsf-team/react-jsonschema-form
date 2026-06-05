@@ -1,7 +1,8 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import type { Mock } from 'vitest';
 
-import { useFileWidgetProps, FileInfoType } from '../src';
+import type { FileInfoType } from '../src';
+import { useFileWidgetProps } from '../src';
 
 const FILE_1_STR = 'data:text/plain;name=file1.txt;base64,';
 const FILE_2_STR = 'data:text/plain;name=file2.txt;base64,';
@@ -58,9 +59,10 @@ describe('useFileWidgetProps()', () => {
   beforeAll(() => {
     onChange = vi.fn();
     FN_RESULT = { target: { result: 'data:text/plain;base64,' } };
-    windowFileReaderSpy = vi.spyOn(window, 'FileReader').mockImplementation(function () {
+    // oxlint-disable-next-line prefer-arrow-callback -- arrow functions can't be constructors (new FileReader())
+    windowFileReaderSpy = vi.spyOn(window, 'FileReader').mockImplementation(function windowFileReaderSpy() {
       return {
-        // eslint-disable-next-line no-unused-vars
+        // oxlint-disable-next-line no-unused-vars
         set onload(fn: (event: any) => void) {
           fn(FN_RESULT);
         },

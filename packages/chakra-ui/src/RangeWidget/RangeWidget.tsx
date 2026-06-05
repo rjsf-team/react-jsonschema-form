@@ -1,14 +1,7 @@
-import { FocusEvent } from 'react';
-import { SliderValueChangeDetails } from '@chakra-ui/react';
-import {
-  ariaDescribedByIds,
-  FormContextType,
-  labelValue,
-  rangeSpec,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { FocusEvent } from 'react';
+import type { SliderValueChangeDetails } from '@chakra-ui/react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, labelValue, rangeSpec } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field';
 import { Slider } from '../components/ui/slider';
@@ -28,10 +21,10 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   id,
   uiSchema,
 }: WidgetProps<T, S, F>) {
-  const _onChange = ({ value }: SliderValueChangeDetails) =>
-    onChange(value === undefined ? options.emptyValue : value[0]);
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
+  const handleChange = ({ value: newValue }: SliderValueChangeDetails) =>
+    onChange(newValue === undefined ? options.emptyValue : newValue[0]);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
 
   const chakraProps = getChakra({ uiSchema });
 
@@ -43,9 +36,9 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         name={id}
         disabled={disabled || readonly}
         value={[value]}
-        onValueChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
+        onValueChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         aria-describedby={ariaDescribedByIds(id)}
       />
     </Field>

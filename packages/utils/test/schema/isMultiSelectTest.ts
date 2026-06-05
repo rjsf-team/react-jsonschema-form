@@ -1,5 +1,6 @@
-import { createSchemaUtils, isMultiSelect, RJSFSchema } from '../../src';
-import { TestValidatorType } from './types';
+import type { RJSFSchema } from '../../src';
+import { createSchemaUtils, isMultiSelect } from '../../src';
+import type { TestValidatorType } from './types';
 
 export default function isMultiSelectTest(testValidator: TestValidatorType) {
   describe('isMultiSelect()', () => {

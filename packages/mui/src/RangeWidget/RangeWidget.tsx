@@ -1,16 +1,9 @@
-import { FocusEvent } from 'react';
+import type { FocusEvent } from 'react';
 import FormLabel from '@mui/material/FormLabel';
-import Slider, { SliderProps } from '@mui/material/Slider';
-import {
-  ariaDescribedByIds,
-  labelValue,
-  FormContextType,
-  GenericObjectType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-  rangeSpec,
-} from '@rjsf/utils';
+import type { SliderProps } from '@mui/material/Slider';
+import Slider from '@mui/material/Slider';
+import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, labelValue, rangeSpec } from '@rjsf/utils';
 
 import { getMuiProps } from '../util';
 
@@ -35,11 +28,11 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     props;
   const sliderProps = { value, label, id, name: id, ...rangeSpec<S>(schema) };
 
-  const _onChange = (_: any, value?: number | number[]) => {
-    onChange(value ?? options.emptyValue);
+  const handleChange = (_: any, newValue?: number | number[]) => {
+    onChange(newValue ?? options.emptyValue);
   };
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
 
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, RangeWidgetMuiProps>(options);
 
@@ -53,9 +46,9 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       )}
       <Slider
         disabled={disabled || readonly}
-        onChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         valueLabelDisplay='auto'
         {...otherMuiProps}
         {...muiSlotProps?.slider}

@@ -1,6 +1,7 @@
-import { ComponentType } from 'react';
-import { FormProps } from '@rjsf/core';
-import { RJSFSchema, UiSchema, bracketNameGenerator, dotNotationNameGenerator } from '@rjsf/utils';
+import type { ComponentType } from 'react';
+import type { FormProps } from '@rjsf/core';
+import type { RJSFSchema, UiSchema } from '@rjsf/utils';
+import { bracketNameGenerator, dotNotationNameGenerator } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 

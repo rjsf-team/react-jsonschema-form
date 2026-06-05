@@ -1,15 +1,13 @@
-import { FocusEvent } from 'react';
-import { CheckboxCheckedChangeDetails, Text } from '@chakra-ui/react';
+import type { FocusEvent } from 'react';
+import type { CheckboxCheckedChangeDetails } from '@chakra-ui/react';
+import { Text } from '@chakra-ui/react';
+import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   descriptionId,
   getTemplate,
   labelValue,
-  WidgetProps,
   schemaRequiresTrueValue,
-  StrictRJSFSchema,
-  RJSFSchema,
-  FormContextType,
   getUiOptions,
 } from '@rjsf/utils';
 
@@ -51,9 +49,9 @@ export default function CheckboxWidget<
   const isCheckbox = uiOptions.widget === 'checkbox';
   const description = isCheckbox ? undefined : (options.description ?? schema.description);
 
-  const _onChange = ({ checked }: CheckboxCheckedChangeDetails) => onChange(checked);
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement | any>) => onBlur(id, target && target.checked);
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement | any>) => onFocus(id, target && target.checked);
+  const handleChange = ({ checked }: CheckboxCheckedChangeDetails) => onChange(checked);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement | any>) => onBlur(id, target && target.checked);
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement | any>) => onFocus(id, target && target.checked);
 
   const chakraProps = getChakra({ uiSchema });
 
@@ -73,9 +71,9 @@ export default function CheckboxWidget<
         name={htmlName || id}
         checked={typeof value === 'undefined' ? false : value}
         disabled={disabled || readonly}
-        onCheckedChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
+        onCheckedChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         aria-describedby={ariaDescribedByIds(id)}
       >
         {labelValue(<Text>{label}</Text>, hideLabel || !label)}

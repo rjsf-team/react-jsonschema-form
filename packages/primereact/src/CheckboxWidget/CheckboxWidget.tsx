@@ -1,15 +1,7 @@
-import {
-  ariaDescribedByIds,
-  descriptionId,
-  getTemplate,
-  labelValue,
-  schemaRequiresTrueValue,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
-import { Checkbox, CheckboxChangeEvent } from 'primereact/checkbox';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, descriptionId, getTemplate, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
+import type { CheckboxChangeEvent } from 'primereact/checkbox';
+import { Checkbox } from 'primereact/checkbox';
 
 import { Label } from '../util';
 
@@ -49,9 +41,9 @@ export default function CheckboxWidget<
 
   const required = schemaRequiresTrueValue<S>(schema);
   const checked = value === 'true' || value === true;
-  const _onChange = (e: CheckboxChangeEvent) => onChange && onChange(e.checked);
-  const _onBlur: React.FocusEventHandler<HTMLInputElement> = () => onBlur && onBlur(id, value);
-  const _onFocus: React.FocusEventHandler<HTMLInputElement> = () => onFocus && onFocus(id, value);
+  const handleChange = (e: CheckboxChangeEvent) => onChange && onChange(e.checked);
+  const handleBlur: React.FocusEventHandler<HTMLInputElement> = () => onBlur && onBlur(id, value);
+  const handleFocus: React.FocusEventHandler<HTMLInputElement> = () => onFocus && onFocus(id, value);
   const description = options.description ?? schema.description;
   const primeProps = (options.prime || {}) as object;
 
@@ -74,9 +66,9 @@ export default function CheckboxWidget<
           disabled={disabled || readonly}
           autoFocus={autofocus}
           checked={typeof value === 'undefined' ? false : checked}
-          onChange={_onChange}
-          onBlur={_onBlur}
-          onFocus={_onFocus}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
           required={required}
           aria-describedby={ariaDescribedByIds(id)}
         />

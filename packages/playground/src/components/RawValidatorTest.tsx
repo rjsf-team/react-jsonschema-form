@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ValidatorType, RJSFSchema } from '@rjsf/utils';
+import type { ValidatorType, RJSFSchema } from '@rjsf/utils';
 
 interface RawValidatorTestProps {
   validator: ValidatorType;

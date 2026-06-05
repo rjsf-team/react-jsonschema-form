@@ -1,13 +1,7 @@
-import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
-import {
-  ariaDescribedByIds,
-  BaseInputTemplateProps,
-  examplesId,
-  getInputProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
+import { useCallback } from 'react';
+import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { ariaDescribedByIds, examplesId, getInputProps } from '@rjsf/utils';
 
 import SchemaExamples from '../SchemaExamples';
 
@@ -49,6 +43,7 @@ export default function BaseInputTemplate<
   // Note: since React 15.2.0 we can't forward unknown element attributes, so we
   // exclude the "options" and "schema" ones here.
   if (!id) {
+    // oxlint-disable-next-line no-console
     console.log('No id for', props);
     throw new Error(`no id for props ${JSON.stringify(props)}`);
   }
@@ -64,19 +59,20 @@ export default function BaseInputTemplate<
     inputValue = value == null ? '' : value;
   }
 
-  const _onChange = useCallback(
-    ({ target: { value } }: ChangeEvent<HTMLInputElement>) => onChange(value === '' ? options.emptyValue : value),
+  const handleChange = useCallback(
+    ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
+      onChange(newValue === '' ? options.emptyValue : newValue),
     [onChange, options],
   );
-  const _onBlur = useCallback(
+  const handleBlur = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value),
     [onBlur, id],
   );
-  const _onFocus = useCallback(
+  const handleFocus = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value),
     [onFocus, id],
   );
-  const _onClear = useCallback(
+  const handleClear = useCallback(
     (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
@@ -97,13 +93,13 @@ export default function BaseInputTemplate<
         value={inputValue}
         {...inputProps}
         list={schema.examples ? examplesId(id) : undefined}
-        onChange={onChangeOverride || _onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
+        onChange={onChangeOverride || handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
       {options.allowClearTextInputs && !readonly && !disabled && inputValue && (
-        <ClearButton registry={registry} onClick={_onClear} />
+        <ClearButton registry={registry} onClick={handleClear} />
       )}
       <SchemaExamples id={id} schema={schema} />
     </>

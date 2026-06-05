@@ -1,13 +1,8 @@
-import { ChangeEvent, FocusEvent, useCallback } from 'react';
+import type { ChangeEvent, FocusEvent } from 'react';
+import { useCallback } from 'react';
 import { PasswordInput } from '@mantine/core';
-import {
-  ariaDescribedByIds,
-  FormContextType,
-  labelValue,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, labelValue } from '@rjsf/utils';
 
 import { cleanupOptions } from '../utils';
 
@@ -39,7 +34,7 @@ export default function PasswordWidget<
     onFocus,
   } = props;
 
-  const emptyValue = options.emptyValue;
+  const { emptyValue } = options;
   const themeProps = cleanupOptions(options);
 
   const handleChange = useCallback(

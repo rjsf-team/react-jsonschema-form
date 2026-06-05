@@ -1,4 +1,5 @@
-import { FormContextType, getUiOptions, RJSFSchema, StrictRJSFSchema, TitleFieldProps } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, TitleFieldProps } from '@rjsf/utils';
+import { getUiOptions } from '@rjsf/utils';
 
 import { Separator } from '../components/ui/separator';
 

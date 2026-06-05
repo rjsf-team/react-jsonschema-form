@@ -31,7 +31,7 @@ import ordering from './ordering';
 import patternProperties from './patternProperties';
 import propertyDependencies from './propertyDependencies';
 import references from './references';
-import { Sample } from './Sample';
+import type { Sample } from './Sample';
 import schemaDependencies from './schemaDependencies';
 import simple from './simple';
 import single from './single';
@@ -40,7 +40,7 @@ import widgets from './widgets';
 
 export type { Sample };
 
-const _samples: Record<string, Sample> = {
+const samplesList: Record<string, Sample> = {
   Blank: { schema: {}, uiSchema: {}, formData: {} },
   Simple: simple,
   'UI Options': options,
@@ -82,4 +82,4 @@ const _samples: Record<string, Sample> = {
   'Fallback (unknown schema)': fallback,
 };
 
-export const samples = _samples;
+export const samples = samplesList;

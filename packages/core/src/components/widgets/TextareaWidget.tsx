@@ -1,5 +1,7 @@
-import { ChangeEvent, FocusEvent, useCallback } from 'react';
-import { ariaDescribedByIds, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { ChangeEvent, FocusEvent } from 'react';
+import { useCallback } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds } from '@rjsf/utils';
 
 /** The `TextareaWidget` is a widget for rendering input fields as textarea.
  *
@@ -20,7 +22,8 @@ function TextareaWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
   htmlName,
 }: WidgetProps<T, S, F>) {
   const handleChange = useCallback(
-    ({ target: { value } }: ChangeEvent<HTMLTextAreaElement>) => onChange(value === '' ? options.emptyValue : value),
+    ({ target: { value: newValue } }: ChangeEvent<HTMLTextAreaElement>) =>
+      onChange(newValue === '' ? options.emptyValue : newValue),
     [onChange, options.emptyValue],
   );
 
@@ -39,7 +42,7 @@ function TextareaWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
       id={id}
       name={htmlName || id}
       className='form-control'
-      value={value ? value : ''}
+      value={value || ''}
       placeholder={placeholder}
       required={required}
       disabled={disabled}

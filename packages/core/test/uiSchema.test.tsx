@@ -1,5 +1,5 @@
-import { CSSProperties } from 'react';
-import { GenericObjectType, RJSFSchema, UiSchema, Widget, WidgetProps } from '@rjsf/utils';
+import type { CSSProperties } from 'react';
+import type { GenericObjectType, RJSFSchema, UiSchema, Widget, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, fireEvent, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -113,18 +113,16 @@ describe('uiSchema', () => {
       };
 
       const uiSchema: UiSchema = {
-        'ui:widget': (props) => {
-          return (
-            <input
-              type='text'
-              className='custom'
-              value={props.value}
-              defaultValue={props.defaultValue}
-              required={props.required}
-              onChange={(event) => props.onChange(event.target.value)}
-            />
-          );
-        },
+        'ui:widget': (props) => (
+          <input
+            type='text'
+            className='custom'
+            value={props.value}
+            defaultValue={props.defaultValue}
+            required={props.required}
+            onChange={(event) => props.onChange(event.target.value)}
+          />
+        ),
       };
 
       it('should render a root custom widget', () => {
@@ -338,18 +336,16 @@ describe('uiSchema', () => {
         },
       };
 
-      const CustomWidget = (props: WidgetProps) => {
-        return (
-          <input
-            type='text'
-            className='custom'
-            value={props.value}
-            defaultValue={props.defaultValue}
-            required={props.required}
-            onChange={(event) => props.onChange(event.target.value)}
-          />
-        );
-      };
+      const CustomWidget = (props: WidgetProps) => (
+        <input
+          type='text'
+          className='custom'
+          value={props.value}
+          defaultValue={props.defaultValue}
+          required={props.required}
+          onChange={(event) => props.onChange(event.target.value)}
+        />
+      );
 
       const widgets = {
         custom: CustomWidget,
@@ -440,7 +436,7 @@ describe('uiSchema', () => {
         const { enumOptions, className } = options;
         return (
           <select className={className}>
-            {Array.isArray(enumOptions) && enumOptions.map(({ value }, i) => <option key={i}>{value}</option>)}
+            {Array.isArray(enumOptions) && enumOptions.map(({ value }) => <option key={String(value)}>{value}</option>)}
           </select>
         );
       };
@@ -2435,7 +2431,7 @@ describe('uiSchema', () => {
           const uiSchema: UiSchema = {};
 
           const rendered = createFormComponent({ schema, uiSchema });
-          const node = rendered.node;
+          const { node } = rendered;
 
           const disabled = [].map.call(node.querySelectorAll('[type=text]'), (node: Element) =>
             node.hasAttribute('readonly'),
@@ -2467,7 +2463,7 @@ describe('uiSchema', () => {
           };
 
           const rendered = createFormComponent({ schema, uiSchema });
-          const node = rendered.node;
+          const { node } = rendered;
 
           const disabled = [].map.call(node.querySelectorAll('[type=text]'), (node: Element) =>
             node.hasAttribute('readonly'),
@@ -2876,7 +2872,7 @@ describe('uiSchema', () => {
       const selects = node.querySelectorAll('select');
       expect(selects.length).toBeGreaterThanOrEqual(2);
       selects.forEach(($select) => {
-        const options = Array.from(($select as HTMLSelectElement).options);
+        const options = Array.from($select.options);
         const nodeOption = options.find((opt) => opt.text === 'Tree Node');
         expect(nodeOption).toBeDefined();
       });

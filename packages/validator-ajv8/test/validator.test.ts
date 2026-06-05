@@ -1,23 +1,23 @@
-import {
+import type {
   ErrorSchema,
-  ErrorSchemaBuilder,
   FormValidation,
   RJSFSchema,
   RJSFValidationError,
   UiSchema,
   ValidatorType,
 } from '@rjsf/utils';
+import { ErrorSchemaBuilder } from '@rjsf/utils';
 import localize from 'ajv-i18n';
 import Ajv2019 from 'ajv/dist/2019';
 import Ajv2020 from 'ajv/dist/2020';
+import metaSchemaDraft6 from 'ajv/lib/refs/json-schema-draft-06.json';
 import noop from 'lodash/noop';
 import type { Mock } from 'vitest';
 
-import { Localizer } from '../src';
+import type { Localizer } from '../src';
 import AJV8Validator from '../src/validator';
 
 const illFormedKey = "bar`'()=+*&^%$#@!";
-const metaSchemaDraft6 = require('ajv/lib/refs/json-schema-draft-06.json');
 
 describe('AJV8Validator', () => {
   let builder: ErrorSchemaBuilder;
@@ -402,9 +402,7 @@ describe('AJV8Validator', () => {
             foo: { 'ui:label': false },
           };
           newErrorMessage = 'Better error message';
-          transformErrors = vi.fn((errors: RJSFValidationError[]) => {
-            return [Object.assign({}, errors[0], { message: newErrorMessage })];
-          });
+          transformErrors = vi.fn((errors: RJSFValidationError[]) => [{ ...errors[0], message: newErrorMessage }]);
           const result = validator.validateFormData(
             { foo: 42, [illFormedKey]: 41 },
             schema,
@@ -433,7 +431,7 @@ describe('AJV8Validator', () => {
             foo: { 'ui:label': false },
           };
 
-          validate = vi.fn((formData: any, errors: FormValidation<any>) => {
+          validate = vi.fn((formData: any, errors: FormValidation) => {
             if (formData.pass1 !== formData.pass2) {
               errors.pass2!.addError('passwords don`t match.');
             }
@@ -498,7 +496,7 @@ describe('AJV8Validator', () => {
           beforeAll(() => {
             validate = vi.fn(
               (_formData: any, errors: any, _uiSchema?: any, errorSchema?: ErrorSchema<{ pass1: string }>) => {
-                if (errorSchema?.pass1?.__errors?.length ?? 0 > 0) {
+                if ((errorSchema?.pass1?.__errors?.length ?? 0) > 0) {
                   errors.pass1!.addError('custom error from customValidate');
                 }
                 return errors;
@@ -880,9 +878,7 @@ describe('AJV8Validator', () => {
             foo: { 'ui:label': false },
           };
           newErrorMessage = 'Better error message';
-          transformErrors = vi.fn((errors: RJSFValidationError[]) => {
-            return [Object.assign({}, errors[0], { message: newErrorMessage })];
-          });
+          transformErrors = vi.fn((errors: RJSFValidationError[]) => [{ ...errors[0], message: newErrorMessage }]);
           const result = validator.validateFormData(
             { foo: 42, [illFormedKey]: 41 },
             schema,
@@ -911,7 +907,7 @@ describe('AJV8Validator', () => {
             foo: { 'ui:label': false },
           };
 
-          validate = vi.fn((formData: any, errors: FormValidation<any>) => {
+          validate = vi.fn((formData: any, errors: FormValidation) => {
             if (formData.pass1 !== formData.pass2) {
               errors.pass2!.addError('passwords don`t match.');
             }
@@ -976,7 +972,7 @@ describe('AJV8Validator', () => {
           beforeAll(() => {
             validate = vi.fn(
               (_formData: any, errors: any, _uiSchema?: any, errorSchema?: ErrorSchema<{ pass1: string }>) => {
-                if (errorSchema?.pass1?.__errors?.length ?? 0 > 0) {
+                if ((errorSchema?.pass1?.__errors?.length ?? 0) > 0) {
                   errors.pass1!.addError('custom error from customValidate');
                 }
                 return errors;
@@ -1858,9 +1854,7 @@ describe('AJV8Validator', () => {
             foo: { 'ui:label': false },
           };
           newErrorMessage = 'Better error message';
-          transformErrors = vi.fn((errors: RJSFValidationError[]) => {
-            return [Object.assign({}, errors[0], { message: newErrorMessage })];
-          });
+          transformErrors = vi.fn((errors: RJSFValidationError[]) => [{ ...errors[0], message: newErrorMessage }]);
           const result = validator.validateFormData(
             { foo: 42, [illFormedKey]: 41 },
             schema,
@@ -1889,7 +1883,7 @@ describe('AJV8Validator', () => {
             foo: { 'ui:label': false },
           };
 
-          validate = vi.fn((formData: any, errors: FormValidation<any>) => {
+          validate = vi.fn((formData: any, errors: FormValidation) => {
             if (formData.pass1 !== formData.pass2) {
               errors.pass2!.addError('passwords don`t match.');
             }
@@ -1954,7 +1948,7 @@ describe('AJV8Validator', () => {
           beforeAll(() => {
             validate = vi.fn(
               (_formData: any, errors: any, _uiSchema?: any, errorSchema?: ErrorSchema<{ pass1: string }>) => {
-                if (errorSchema?.pass1?.__errors?.length ?? 0 > 0) {
+                if ((errorSchema?.pass1?.__errors?.length ?? 0) > 0) {
                   errors.pass1!.addError('custom error from customValidate');
                 }
                 return errors;

@@ -1,3 +1,4 @@
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
@@ -5,12 +6,9 @@ import {
   enumOptionsIsSelected,
   getOptionValueFormat,
   optionId,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
 } from '@rjsf/utils';
-import { RadioButton, RadioButtonChangeEvent } from 'primereact/radiobutton';
+import type { RadioButtonChangeEvent } from 'primereact/radiobutton';
+import { RadioButton } from 'primereact/radiobutton';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.
@@ -25,28 +23,28 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
 
-  const _onChange = (e: RadioButtonChangeEvent) => {
+  const handleChange = (e: RadioButtonChangeEvent) => {
     onChange(enumOptionValueDecoder<S>(e.value, enumOptions, optionValueFormat, emptyValue));
   };
 
-  const _onBlur = () => onBlur(id, value);
-  const _onFocus = () => onFocus(id, value);
+  const handleBlur = () => onBlur(id, value);
+  const handleFocus = () => onFocus(id, value);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index) => {
           const checked = enumOptionsIsSelected<S>(option.value, value);
-          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
+          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
           return (
-            <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
+            <div key={String(option.value)} style={{ display: 'flex', alignItems: 'center' }}>
               <RadioButton
                 inputId={optionId(id, index)}
                 name={htmlName || id}
                 {...primeProps}
-                onFocus={_onFocus}
-                onBlur={_onBlur}
-                onChange={_onChange}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                onChange={handleChange}
                 value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
                 checked={checked}
                 disabled={disabled || itemDisabled || readonly}

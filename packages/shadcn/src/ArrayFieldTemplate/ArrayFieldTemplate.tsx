@@ -1,12 +1,5 @@
-import {
-  ArrayFieldTemplateProps,
-  buttonId,
-  FormContextType,
-  getTemplate,
-  getUiOptions,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { buttonId, getTemplate, getUiOptions } from '@rjsf/utils';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *

@@ -1,17 +1,13 @@
-import Grid, { GridProps } from '@mui/material/Grid';
-import {
+import type { GridProps } from '@mui/material/Grid';
+import Grid from '@mui/material/Grid';
+import type {
   FormContextType,
   GenericObjectType,
   ObjectFieldTemplateProps,
   RJSFSchema,
   StrictRJSFSchema,
-  canExpand,
-  descriptionId,
-  getTemplate,
-  getUiOptions,
-  titleId,
-  buttonId,
 } from '@rjsf/utils';
+import { canExpand, descriptionId, getTemplate, getUiOptions, titleId, buttonId } from '@rjsf/utils';
 
 import { computeSxProps, getMuiProps } from '../util';
 
@@ -102,7 +98,7 @@ export default function ObjectFieldTemplate<
         sx={computeSxProps<GridProps>({ mt: 1.25 }, objectGridContainer)}
       >
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
-        {properties.map((element, index) =>
+        {properties.map((element) =>
           // Remove the <Grid> if the inner element is hidden as the <Grid>
           // itself would otherwise still take up space.
           element.hidden ? (
@@ -110,7 +106,7 @@ export default function ObjectFieldTemplate<
           ) : (
             <Grid
               size={{ xs: 12 }}
-              key={index}
+              key={element.name}
               {...objectGridItem}
               sx={computeSxProps<GridProps>({ mb: 1.25 }, objectGridItem)}
             >

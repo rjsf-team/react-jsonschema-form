@@ -1,12 +1,6 @@
 import { Box, ButtonGroup, HStack } from '@chakra-ui/react';
-import {
-  ArrayFieldItemTemplateProps,
-  FormContextType,
-  getTemplate,
-  getUiOptions,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { ArrayFieldItemTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { getTemplate, getUiOptions } from '@rjsf/utils';
 
 export default function ArrayFieldItemTemplate<
   T = any,
@@ -22,7 +16,7 @@ export default function ArrayFieldItemTemplate<
   );
 
   return (
-    <HStack alignItems={'flex-end'} py={1}>
+    <HStack alignItems='flex-end' py={1}>
       <Box w='100%'>{children}</Box>
       {hasToolbar && (
         <Box>

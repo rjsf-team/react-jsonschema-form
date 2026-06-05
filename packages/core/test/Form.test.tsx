@@ -1,29 +1,34 @@
-import { Component, RefObject, createRef, useEffect, useState, useCallback } from 'react';
-import {
-  bracketNameGenerator,
-  buttonId,
-  dotNotationNameGenerator,
+import { createRef, useEffect, useRef, useState, useCallback } from 'react';
+import type {
   ErrorSchema,
   Experimental_DefaultFormStateBehavior,
   FieldProps,
   FieldTemplateProps,
   FormValidation,
-  getTemplate,
-  getUiOptions,
-  optionalControlsId,
   RJSFSchema,
   UiSchema,
   ValidatorType,
   WidgetProps,
 } from '@rjsf/utils';
+import {
+  bracketNameGenerator,
+  buttonId,
+  dotNotationNameGenerator,
+  getTemplate,
+  getUiOptions,
+  optionalControlsId,
+} from '@rjsf/utils';
 import validator, { customizeValidator } from '@rjsf/validator-ajv8';
 import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import draft06 from 'ajv/lib/refs/json-schema-draft-06.json';
 import { noop } from 'lodash';
 import { Portal } from 'react-portal';
 import type { Mock } from 'vitest';
 
-import Form, { FormProps, IChangeEvent } from '../src';
+import type { FormProps, IChangeEvent } from '../src';
+import Form from '../src';
+import type { NoValFormProps, RerenderType } from './testUtils';
 import {
   actWrappedDelayPromise,
   createComponent,
@@ -31,9 +36,7 @@ import {
   delayPromise,
   describeRepeated,
   expectToHaveBeenCalledWithFormData,
-  NoValFormProps,
   renderNode,
-  RerenderType,
   setupConsoleErrorSuppression,
   submitForm,
 } from './testUtils';
@@ -222,8 +225,8 @@ describeRepeated('Form common', (createFormComponent) => {
     });
   });
 
-  describe('Option idPrefix', function () {
-    it('should change the rendered ids', function () {
+  describe('Option idPrefix', () => {
+    it('should change the rendered ids', () => {
       const schema: RJSFSchema = {
         type: 'object',
         title: 'root object',
@@ -237,7 +240,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const { node } = createFormComponent({ schema, idPrefix: 'rjsf' });
       const inputs = node.querySelectorAll('input');
       const ids = [];
-      for (let i = 0, len = inputs.length; i < len; i++) {
+      for (let i = 0, len = inputs.length; i < len; i += 1) {
         const input = inputs[i];
         ids.push(input.getAttribute('id'));
       }
@@ -246,8 +249,8 @@ describeRepeated('Form common', (createFormComponent) => {
     });
   });
 
-  describe('Changing idPrefix', function () {
-    it('should work with simple example', function () {
+  describe('Changing idPrefix', () => {
+    it('should work with simple example', () => {
       const schema: RJSFSchema = {
         type: 'object',
         title: 'root object',
@@ -261,7 +264,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const { node } = createFormComponent({ schema, idPrefix: 'rjsf' });
       const inputs = node.querySelectorAll('input');
       const ids = [];
-      for (let i = 0, len = inputs.length; i < len; i++) {
+      for (let i = 0, len = inputs.length; i < len; i += 1) {
         const input = inputs[i];
         ids.push(input.getAttribute('id'));
       }
@@ -269,7 +272,7 @@ describeRepeated('Form common', (createFormComponent) => {
       expect(node.querySelector('fieldset')).toHaveAttribute('id', 'rjsf');
     });
 
-    it('should work with oneOf', function () {
+    it('should work with oneOf', () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -315,7 +318,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const { node } = createFormComponent({ schema, idPrefix: 'rjsf' });
       const inputs = node.querySelectorAll('input');
       const ids = [];
-      for (let i = 0, len = inputs.length; i < len; i++) {
+      for (let i = 0, len = inputs.length; i < len; i += 1) {
         const input = inputs[i];
         ids.push(input.getAttribute('id'));
       }
@@ -323,8 +326,8 @@ describeRepeated('Form common', (createFormComponent) => {
     });
   });
 
-  describe('Option idSeparator', function () {
-    it('should change the rendered ids', function () {
+  describe('Option idSeparator', () => {
+    it('should change the rendered ids', () => {
       const schema: RJSFSchema = {
         type: 'object',
         title: 'root object',
@@ -338,7 +341,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const { node } = createFormComponent({ schema, idSeparator: '.' });
       const inputs = node.querySelectorAll('input');
       const ids = [];
-      for (let i = 0, len = inputs.length; i < len; i++) {
+      for (let i = 0, len = inputs.length; i < len; i += 1) {
         const input = inputs[i];
         ids.push(input.getAttribute('id'));
       }
@@ -383,7 +386,7 @@ describeRepeated('Form common', (createFormComponent) => {
         children,
       } = props;
       return (
-        <div className={'my-template ' + classNames}>
+        <div className={`my-template ${classNames}`}>
           <label htmlFor={id}>
             {label}
             {required ? '*' : null}
@@ -397,6 +400,7 @@ describeRepeated('Form common', (createFormComponent) => {
           {rawErrors ? (
             <ul>
               {rawErrors.map((error, i) => (
+                // oxlint-disable-next-line react/no-array-index-key
                 <li key={i} className='raw-error'>
                   {error}
                 </li>
@@ -1449,7 +1453,7 @@ describeRepeated('Form common', (createFormComponent) => {
         default: { types: 'advanced', content: 'placeholder' },
       };
 
-      const onChangeCalls: Array<{ event: IChangeEvent; id?: string }> = [];
+      const onChangeCalls: { event: IChangeEvent; id?: string }[] = [];
 
       const { node } = createFormComponent({
         schema,
@@ -1520,7 +1524,7 @@ describeRepeated('Form common', (createFormComponent) => {
         default: { types: 'advanced', content: 'placeholder' },
       };
 
-      const onChangeCalls: Array<{ event: IChangeEvent; id?: string }> = [];
+      const onChangeCalls: { event: IChangeEvent; id?: string }[] = [];
       let currentFormData: unknown = undefined;
 
       const { node, rerender } = createFormComponent({
@@ -1864,7 +1868,7 @@ describeRepeated('Form common', (createFormComponent) => {
           name: 'required',
           params: { missingProperty: 'street_address' },
           property: '.shipping_address.street_address',
-          schemaPath: '#/properties/shipping_address/required',
+          schemaPath: '#/definitions/address/required',
           stack: "must have required property 'street_address'",
           title: '',
         },
@@ -1873,7 +1877,7 @@ describeRepeated('Form common', (createFormComponent) => {
           name: 'required',
           params: { missingProperty: 'city' },
           property: '.shipping_address.city',
-          schemaPath: '#/properties/shipping_address/required',
+          schemaPath: '#/definitions/address/required',
           stack: "must have required property 'city'",
           title: '',
         },
@@ -1882,7 +1886,7 @@ describeRepeated('Form common', (createFormComponent) => {
           name: 'required',
           params: { missingProperty: 'state' },
           property: '.shipping_address.state',
-          schemaPath: '#/properties/shipping_address/required',
+          schemaPath: '#/definitions/address/required',
           stack: "must have required property 'state'",
           title: '',
         },
@@ -2464,6 +2468,7 @@ describeRepeated('Form common', (createFormComponent) => {
         const onError = vi.fn();
 
         const focusCallback = () => {
+          // oxlint-disable-next-line no-console
           console.log('focusCallback called');
         };
 
@@ -2501,6 +2506,7 @@ describeRepeated('Form common', (createFormComponent) => {
         const onError = vi.fn();
 
         const focusCallback = () => {
+          // oxlint-disable-next-line no-console
           console.log('focusCallback called');
         };
         const extraErrors = {
@@ -3127,7 +3133,7 @@ describeRepeated('Form common', (createFormComponent) => {
       });
 
       it('should sanitize stale enum data and persist the retrieved dependency schema', async () => {
-        const formRef = createRef<Form<any, RJSFSchema, any>>();
+        const formRef = createRef<Form>();
         const dependentEnumSchema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -3178,7 +3184,7 @@ describeRepeated('Form common', (createFormComponent) => {
         await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_animal')!, '0');
 
         expectToHaveBeenCalledWithFormData(onChange, { animal: 'Cat', food: 'meat', water: undefined }, 'root_animal');
-        const retrievedSchema = formRef.current!.state.retrievedSchema as RJSFSchema;
+        const { retrievedSchema } = formRef.current!.state;
         expect(retrievedSchema.properties).toEqual(
           expect.objectContaining({
             food: expect.objectContaining({ enum: ['meat'] }),
@@ -3187,7 +3193,7 @@ describeRepeated('Form common', (createFormComponent) => {
         expect(retrievedSchema.properties).not.toHaveProperty('water');
 
         await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_food')!, '0');
-        expect((formRef.current!.state.retrievedSchema as RJSFSchema).properties).not.toHaveProperty('water');
+        expect(formRef.current!.state.retrievedSchema.properties).not.toHaveProperty('water');
       });
     });
 
@@ -3208,8 +3214,8 @@ describeRepeated('Form common', (createFormComponent) => {
 
         // customValidate method to raise an error when Start is larger than End field.
         const customValidate = (formData: any, errors: FormValidation) => {
-          if (formData['Start'] > formData['End']) {
-            errors['Start']?.addError('Validate error: Test should be LE than End');
+          if (formData.Start > formData.End) {
+            errors.Start?.addError('Validate error: Test should be LE than End');
           }
           return errors;
         };
@@ -3585,7 +3591,7 @@ describeRepeated('Form common', (createFormComponent) => {
       ]);
 
       const customValidator = customizeValidator({
-        additionalMetaSchemas: [require('ajv/lib/refs/json-schema-draft-06.json')],
+        additionalMetaSchemas: [draft06],
       });
 
       rerender(
@@ -3646,34 +3652,27 @@ describeRepeated('Form common', (createFormComponent) => {
     it('should call provided submit handler with form state', async () => {
       const innerOnSubmit = vi.fn();
       const outerOnSubmit = vi.fn();
-      let innerRef: RefObject<HTMLDivElement> | undefined;
+      const innerRef = createRef<HTMLDivElement>();
 
-      class ArrayTemplateWithForm extends Component<FormProps> {
-        constructor(props: FormProps) {
-          super(props);
-          innerRef = createRef();
-        }
+      const ArrayTemplateWithForm = (_props: FormProps) => {
+        const innerFormProps = {
+          validator,
+          schema: {},
+          onSubmit: innerOnSubmit,
+        };
 
-        render() {
-          const innerFormProps = {
-            validator,
-            schema: {},
-            onSubmit: innerOnSubmit,
-          };
-
-          return (
-            <Portal>
-              <div className='array' ref={innerRef}>
-                <Form {...innerFormProps}>
-                  <button className='array-form-submit' type='submit'>
-                    Submit
-                  </button>
-                </Form>
-              </div>
-            </Portal>
-          );
-        }
-      }
+        return (
+          <Portal>
+            <div className='array' ref={innerRef}>
+              <Form {...innerFormProps}>
+                <button className='array-form-submit' type='submit'>
+                  Submit
+                </button>
+              </Form>
+            </div>
+          </Portal>
+        );
+      };
 
       createFormComponent({
         schema: {
@@ -3687,8 +3686,8 @@ describeRepeated('Form common', (createFormComponent) => {
         onSubmit: outerOnSubmit,
       });
       expect(innerRef).toBeDefined();
-      expect(innerRef!.current).not.toBeNull();
-      const arrayForm = innerRef!.current!.querySelector('form')!;
+      expect(innerRef.current).not.toBeNull();
+      const arrayForm = innerRef.current!.querySelector('form')!;
       const arraySubmit = arrayForm.querySelector<HTMLButtonElement>('.array-form-submit')!;
 
       await user.click(arraySubmit);
@@ -4342,7 +4341,7 @@ describe('omitExtraData on submit', () => {
       ref: formRef,
       schema,
       formData,
-      omitExtraData: omitExtraData,
+      omitExtraData,
     };
     const { node } = createFormComponent(props);
     const theSpy = vi.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
@@ -4364,7 +4363,7 @@ describe('omitExtraData on submit', () => {
       ref: formRef,
       schema,
       formData,
-      omitExtraData: omitExtraData,
+      omitExtraData,
     };
     const { node } = createFormComponent(props);
     const theSpy = vi.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
@@ -4719,19 +4718,24 @@ describe('Calling onChange right after updating a Form with props formData', () 
   };
 
   let changed = false;
-  class ArrayThatTriggersOnChangeRightAfterUpdated extends Component<FieldProps> {
-    componentDidUpdate = () => {
+  const ArrayThatTriggersOnChangeRightAfterUpdated = (fieldProps: FieldProps) => {
+    const { ArrayField } = fieldProps.registry.fields;
+    const isMounted = useRef(false);
+    const latestProps = useRef(fieldProps);
+    latestProps.current = fieldProps;
+    useEffect(() => {
+      if (!isMounted.current) {
+        isMounted.current = true;
+        return;
+      }
       if (changed) {
         return;
       }
       changed = true;
-      this.props.onChange('test', [this.props.formData.length]);
-    };
-    render() {
-      const { ArrayField } = this.props.registry.fields;
-      return <ArrayField {...this.props} />;
-    }
-  }
+      latestProps.current.onChange('test', [latestProps.current.formData.length]);
+    });
+    return <ArrayField {...fieldProps} />;
+  };
 
   const uiSchema: UiSchema = {
     'ui:field': ArrayThatTriggersOnChangeRightAfterUpdated,
@@ -4743,20 +4747,13 @@ describe('Calling onChange right after updating a Form with props formData', () 
     validator,
   };
 
-  class Container extends Component<FormProps> {
-    constructor(props: FormProps) {
-      super(props);
-      this.state = {};
-    }
-
-    onChange = ({ formData }: IChangeEvent) => {
-      this.setState({ formData });
-    };
-
-    render() {
-      return <Form {...this.props} {...this.state} onChange={this.onChange} />;
-    }
-  }
+  const Container = (containerProps: FormProps) => {
+    const [state, setState] = useState<{ formData?: any }>({});
+    const onChange = useCallback(({ formData }: IChangeEvent) => {
+      setState({ formData });
+    }, []);
+    return <Form {...containerProps} {...state} onChange={onChange} />;
+  };
 
   it("doesn't cause a race condition", async () => {
     const { node } = createComponent(Container, { ...props });
@@ -4916,7 +4913,7 @@ describe('validateForm()', () => {
       ref: formRef,
       schema,
       formData,
-      omitExtraData: omitExtraData,
+      omitExtraData,
     };
     createFormComponent(props);
     const theSpy = vi.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
@@ -4940,7 +4937,7 @@ describe('validateForm()', () => {
       ref: formRef,
       schema,
       formData,
-      omitExtraData: omitExtraData,
+      omitExtraData,
     };
     createFormComponent(props);
     const theSpy = vi.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
@@ -5957,6 +5954,7 @@ describe('extraErrors set after submit (#4965)', () => {
         setExtraErrors(sampleErrors);
       }, []);
 
+      // oxlint-disable-next-line typescript/no-deprecated
       return <Form schema={schema} validator={validator} onSubmit={onSubmit} extraErrors={extraErrors} noValidate />;
     }
 
@@ -6008,7 +6006,7 @@ describe('extraErrors set after submit (#4965)', () => {
     await actWrappedDelayPromise(200);
 
     // Check the form state directly
-    const state = formRef.current!.state;
+    const { state } = formRef.current!;
     expect(state.errors.length).toBeGreaterThan(0);
     expect(state.errorSchema).toEqual(sampleErrors);
 
@@ -6053,7 +6051,7 @@ describe('extraErrors not duplicated when sibling array field mutated (#5041)', 
     await user.click(addBtn!);
 
     // The name field's extraErrors should still contain exactly one error
-    const state = formRef.current!.state;
+    const { state } = formRef.current!;
     const nameErrors = (state.errorSchema as any)?.name?.__errors ?? [];
     expect(nameErrors).toHaveLength(1);
     expect(nameErrors[0]).toBe('Name is required');
@@ -6255,5 +6253,68 @@ describe('enum-based array values do not update when dependencies change (#1357 
       },
       'root_select_item',
     );
+  });
+});
+
+describe('dependencies/oneOf constraint violation produces validation errors on submit (#3368)', () => {
+  it('submitting form data that matches no oneOf branch in dependencies reports errors and blocks submission', async () => {
+    const schema: RJSFSchema = {
+      dependencies: {
+        commands: {
+          oneOf: [
+            {
+              properties: {
+                commands: {
+                  enum: ['docker_pull'],
+                },
+                image: {
+                  default: 'sasdasd',
+                  description: 'Images to pull - the image name specifically and defaults to latest',
+                  title: 'Images',
+                  type: 'string',
+                },
+              },
+            },
+            {
+              properties: {
+                commands: {
+                  enum: ['docker_prune'],
+                },
+                prune_opts: {
+                  default: 'until_24',
+                  description: 'The prune options to get the images from',
+                  enum: ['until_24'],
+                  title: 'Prune Options',
+                },
+              },
+            },
+          ],
+        },
+      },
+      properties: {
+        commands: {
+          description: 'Commands for host',
+          enum: ['docker_pull', 'docker_ps', 'docker_images', 'docker_prune'],
+          title: 'Commands',
+        },
+        env: {
+          description: 'The env we SSH and make requests against',
+          enum: ['develop'],
+          title: 'Environment (Will connect against container host)',
+        },
+      },
+      required: ['commands', 'env'],
+      type: 'object',
+    };
+    const formData = {
+      image: 'sasdasd',
+      commands: 'docker_ps',
+      env: 'develop',
+    };
+    const { node, onSubmit, onError } = createFormComponent({ schema, formData });
+    await submitForm(node, user);
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(onError).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,6 +1,5 @@
 import { createRef } from 'react';
-import {
-  UI_GLOBAL_OPTIONS_KEY,
+import type {
   RJSFSchema,
   FieldProps,
   FieldPathList,
@@ -9,10 +8,11 @@ import {
   DescriptionFieldProps,
   GenericObjectType,
 } from '@rjsf/utils';
+import { UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
 import { act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import Form from '../src';
+import type Form from '../src';
 import ObjectField from '../src/components/fields/ObjectField';
 import SchemaField from '../src/components/fields/SchemaField';
 import { TextWidgetTest } from './StringField.test';

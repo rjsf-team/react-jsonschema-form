@@ -1,13 +1,9 @@
-import { ChangeEvent, useState } from 'react';
-import {
-  ariaDescribedByIds,
-  FormContextType,
-  getInputProps,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
-import { AutoComplete, AutoCompleteCompleteEvent } from 'primereact/autocomplete';
+import type { ChangeEvent } from 'react';
+import { useState } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, getInputProps } from '@rjsf/utils';
+import type { AutoCompleteCompleteEvent } from 'primereact/autocomplete';
+import { AutoComplete } from 'primereact/autocomplete';
 
 /** The `AutoCompleteWidget` is a widget for rendering a field with options.
  *  This is used instead of the base input template if the schema has examples.
@@ -38,10 +34,10 @@ export default function AutoCompleteWidget<
   } = props;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   const primeProps = (options.prime || {}) as object;
-  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
-    onChange(value === '' ? options.emptyValue : value);
-  const _onBlur = () => onBlur && onBlur(id, value);
-  const _onFocus = () => onFocus && onFocus(id, value);
+  const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
+    onChange(newValue === '' ? options.emptyValue : newValue);
+  const handleBlur = () => onBlur && onBlur(id, value);
+  const handleFocus = () => onFocus && onFocus(id, value);
 
   const examples = (schema.examples as string[]).concat(
     schema.default && !(schema.examples as string[]).includes(schema.default.toString())
@@ -62,7 +58,7 @@ export default function AutoCompleteWidget<
       placeholder={placeholder}
       {...primeProps}
       {...inputProps}
-      loadingIcon={<></>}
+      loadingIcon={null}
       required={required}
       autoFocus={autofocus}
       disabled={disabled || readonly}
@@ -71,9 +67,9 @@ export default function AutoCompleteWidget<
       value={value || value === 0 ? value : ''}
       dropdown
       invalid={rawErrors.length > 0}
-      onChange={(onChangeOverride as any) || _onChange}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
+      onChange={onChangeOverride || handleChange}
+      onBlur={handleBlur}
+      onFocus={handleFocus}
       aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       /* Make autocomplete look like a dropdown, which looks much nicer */
       pt={{

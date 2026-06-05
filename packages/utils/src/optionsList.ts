@@ -4,7 +4,7 @@ import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY } from './constants';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema';
 import getUiOptions from './getUiOptions';
 import toConstant from './toConstant';
-import { RJSFSchema, EnumOptionsType, EnumValue, StrictRJSFSchema, FormContextType, UiSchema } from './types';
+import type { RJSFSchema, EnumOptionsType, EnumValue, StrictRJSFSchema, FormContextType, UiSchema } from './types';
 
 /** Reorders `options` according to `order`, which may contain a `'*'` wildcard representing all
  * remaining options in their original order. Options not listed in `order` (and not covered by

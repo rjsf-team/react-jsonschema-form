@@ -1,27 +1,29 @@
-import { ChangeEvent, FocusEvent, ReactElement } from 'react';
+import type { ChangeEvent, FocusEvent, ReactElement } from 'react';
+import type {
+  FieldPathId,
+  FieldPathList,
+  FieldProps,
+  GenericObjectType,
+  GlobalFormOptions,
+  Registry,
+  RJSFSchema,
+  UiSchema,
+} from '@rjsf/utils';
 import {
   DEFAULT_ID_PREFIX,
   DEFINITIONS_KEY,
   DISCRIMINATOR_PATH,
   ErrorSchemaBuilder,
-  FieldPathId,
-  FieldPathList,
-  FieldProps,
-  GenericObjectType,
   getUiOptions,
-  GlobalFormOptions,
   ID_KEY,
   LOOKUP_MAP_NAME,
   ONE_OF_KEY,
   PROPERTIES_KEY,
-  Registry,
   retrieveSchema,
-  RJSFSchema,
   sortedJSONStringify,
   toFieldPathId,
   UI_GLOBAL_OPTIONS_KEY,
   UI_OPTIONS_KEY,
-  UiSchema,
 } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen, within } from '@testing-library/react';
@@ -29,6 +31,7 @@ import userEvent from '@testing-library/user-event';
 import { get, has, isEmpty, omit, pick } from 'lodash';
 import type { MockInstance } from 'vitest';
 
+import type { LayoutGridFieldProps } from '../src/components/fields/LayoutGridField';
 import LayoutGridField, {
   computeArraySchemasIfPresent,
   computeFieldUiSchema,
@@ -39,7 +42,6 @@ import LayoutGridField, {
   getSchemaDetailsForField,
   GridType,
   LAYOUT_GRID_OPTION,
-  LayoutGridFieldProps,
   Operators,
 } from '../src/components/fields/LayoutGridField';
 import getTestRegistry from '../src/getTestRegistry';
@@ -649,10 +651,10 @@ const DEFAULT_ID = 'test-id';
 // Stringify the FieldProps, minus the registry, hasFormData and optionalObjectNode in the uiSchema
 // The registry causes an infinite loop and hasFormData & optionalObjectNode are tested elsewhere
 function stringifyProps(props: Partial<FieldProps>) {
-  // eslint-disable-next-line no-unused-vars
+  // oxlint-disable-next-line no-unused-vars
   const { uiSchema, registry, ...otherProps } = props;
   const { ...otherUIOptions } = getUiOptions(uiSchema);
-  return sortedJSONStringify({ ...otherProps, otherUIOptions: otherUIOptions });
+  return sortedJSONStringify({ ...otherProps, otherUIOptions });
 }
 
 // Render a strong with the props stringified
@@ -679,8 +681,8 @@ function FakeSchemaField({ 'data-testid': testId, ...props }: Readonly<FieldProp
   );
 }
 
-// eslint-disable-next-line no-unused-vars
-const LOOKUP_MAP: { [index: string]: string | ((props: FieldProps) => ReactElement) } = {
+// oxlint-disable-next-line no-unused-vars
+const LOOKUP_MAP: Record<string, string | ((props: FieldProps) => ReactElement)> = {
   FooClass: 'Foo',
   BarClass: 'Bar',
   TestRenderer,
@@ -705,7 +707,7 @@ const TEST_LAYOUT_GRID_CHILDREN = {
   },
 };
 
-const GRID_FORM_SCHEMA = gridFormSchema as RJSFSchema;
+const GRID_FORM_SCHEMA = gridFormSchema;
 const DOTTED_PATH = { idPrefix: DEFAULT_ID_PREFIX, idSeparator: '.' };
 const simpleOneOfRegistry = getTestRegistry(SIMPLE_ONEOF, REGISTRY_FIELDS, {}, {}, REGISTRY_FORM_CONTEXT, DOTTED_PATH);
 const gridFormSchemaRegistry = getTestRegistry(

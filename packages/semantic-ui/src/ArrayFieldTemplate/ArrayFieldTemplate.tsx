@@ -1,13 +1,5 @@
-import {
-  getTemplate,
-  getUiOptions,
-  isFixedItems,
-  ArrayFieldTemplateProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  buttonId,
-} from '@rjsf/utils';
+import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { getTemplate, getUiOptions, isFixedItems, buttonId } from '@rjsf/utils';
 
 import { cleanClassNames } from '../util';
 

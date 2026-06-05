@@ -9,17 +9,11 @@
  * that precompiled validators can find them via isValid() without throwing.
  */
 
-import {
-  getClosestMatchingOption,
-  getFirstMatchingOption,
-  omitExtraData,
-  relaxOptionsForScoring,
-  RJSFSchema,
-} from '@rjsf/utils';
+import type { RJSFSchema } from '@rjsf/utils';
+import { getClosestMatchingOption, getFirstMatchingOption, omitExtraData, relaxOptionsForScoring } from '@rjsf/utils';
 
-import { createPrecompiledValidator } from '../src';
+import { createPrecompiledValidator, type ValidatorFunctions } from '../src';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators';
-import { ValidatorFunctions } from '../src/types';
 
 /**
  * Compiles `schema` to AJV standalone code, evaluates it via Function constructor, and
@@ -31,7 +25,7 @@ import { ValidatorFunctions } from '../src/types';
 function buildPrecompiledValidator(schema: RJSFSchema) {
   const code = compileSchemaValidatorsCode(schema);
   const exports: ValidatorFunctions = {};
-  // eslint-disable-next-line no-new-func
+  // oxlint-disable-next-line no-new-func, no-implied-eval
   new Function('exports', code)(exports);
   return createPrecompiledValidator(exports, schema);
 }
@@ -107,14 +101,14 @@ describe('precompiled validator integration: oneOf with additionalProperties:fal
       });
 
       it('does not throw when called with manually relaxed options and data containing extra keys', () => {
-        const relaxed = relaxOptionsForScoring<RJSFSchema>(STRICT_ONEOF_SCHEMA.oneOf as RJSFSchema[]);
+        const relaxed = relaxOptionsForScoring(STRICT_ONEOF_SCHEMA.oneOf as RJSFSchema[]);
         expect(() =>
           getFirstMatchingOption(validator, { kind: 'a', foo: 'hello', extra: 'data' }, relaxed, STRICT_ONEOF_SCHEMA),
         ).not.toThrow();
       });
 
       it('finds the correct match with relaxed options and extra keys in formData', () => {
-        const relaxed = relaxOptionsForScoring<RJSFSchema>(STRICT_ONEOF_SCHEMA.oneOf as RJSFSchema[]);
+        const relaxed = relaxOptionsForScoring(STRICT_ONEOF_SCHEMA.oneOf as RJSFSchema[]);
         expect(
           getFirstMatchingOption(validator, { kind: 'a', foo: 'hello', extra: 'data' }, relaxed, STRICT_ONEOF_SCHEMA),
         ).toBe(0);
@@ -137,14 +131,14 @@ describe('precompiled validator integration: oneOf with additionalProperties:fal
       });
 
       it('does not throw with relaxed options and extra keys in formData', () => {
-        const relaxed = relaxOptionsForScoring<RJSFSchema>(STRICT_ONEOF_SCHEMA.oneOf as RJSFSchema[]);
+        const relaxed = relaxOptionsForScoring(STRICT_ONEOF_SCHEMA.oneOf as RJSFSchema[]);
         expect(() =>
           getClosestMatchingOption(validator, STRICT_ONEOF_SCHEMA, { kind: 'a', extra: 'data' }, relaxed, 0),
         ).not.toThrow();
       });
 
       it('picks the correct branch with relaxed options and extra keys', () => {
-        const relaxed = relaxOptionsForScoring<RJSFSchema>(STRICT_ONEOF_SCHEMA.oneOf as RJSFSchema[]);
+        const relaxed = relaxOptionsForScoring(STRICT_ONEOF_SCHEMA.oneOf as RJSFSchema[]);
         expect(
           getClosestMatchingOption(
             validator,

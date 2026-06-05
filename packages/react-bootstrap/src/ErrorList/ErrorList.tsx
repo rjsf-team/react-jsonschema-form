@@ -1,4 +1,5 @@
-import { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
+import type { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { TranslatableString } from '@rjsf/utils';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 
@@ -12,13 +13,12 @@ export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSche
       <Card.Header className='alert-danger'>{translateString(TranslatableString.ErrorsLabel)}</Card.Header>
       <Card.Body className='p-0'>
         <ListGroup>
-          {errors.map((error, i: number) => {
-            return (
-              <ListGroup.Item key={i} className='border-0'>
-                <span>{error.stack}</span>
-              </ListGroup.Item>
-            );
-          })}
+          {errors.map((error, i: number) => (
+            // oxlint-disable-next-line react/no-array-index-key
+            <ListGroup.Item key={i} className='border-0'>
+              <span>{error.stack}</span>
+            </ListGroup.Item>
+          ))}
         </ListGroup>
       </Card.Body>
     </Card>

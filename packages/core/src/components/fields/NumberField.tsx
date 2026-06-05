@@ -1,6 +1,5 @@
 import { useState, useCallback } from 'react';
-import {
-  asNumber,
+import type {
   ErrorSchema,
   FieldPathList,
   FieldProps,
@@ -8,6 +7,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
+import { asNumber } from '@rjsf/utils';
 
 // Matches a string that ends in a . character, optionally followed by a sequence of
 // digits followed by any number of 0 characters up until the end of the line.
@@ -52,23 +52,21 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
    * @param value - The current value for the change occurring
    */
   const handleChange = useCallback(
-    (value: FieldProps<T, S, F>['value'], path: FieldPathList, errorSchema?: ErrorSchema<T>, id?: string) => {
+    (newValue: FieldProps<T, S, F>['value'], path: FieldPathList, errorSchema?: ErrorSchema<T>, id?: string) => {
       // Cache the original value in component state
-      setLastValue(value);
+      setLastValue(newValue);
 
       // Normalize decimals that don't start with a zero character in advance so
       // that the rest of the normalization logic is simpler
-      if (`${value}`.charAt(0) === '.') {
-        value = `0${value}`;
-      }
+      const normalizedValue = `${newValue}`.startsWith('.') ? `0${newValue}` : newValue;
 
       // Check that the value is a string (this can happen if the widget used is a
       // <select>, due to an enum declaration etc) then, if the value ends in a
       // trailing decimal point or multiple zeroes, strip the trailing values
       const processed =
-        typeof value === 'string' && value.match(trailingCharMatcherWithPrefix)
-          ? asNumber(value.replace(trailingCharMatcher, ''))
-          : asNumber(value);
+        typeof normalizedValue === 'string' && normalizedValue.match(trailingCharMatcherWithPrefix)
+          ? asNumber(normalizedValue.replace(trailingCharMatcher, ''))
+          : asNumber(normalizedValue);
 
       onChange(processed as unknown as T, path, errorSchema, id);
     },

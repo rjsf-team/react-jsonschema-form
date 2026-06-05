@@ -1,13 +1,14 @@
-import Typography, { TypographyProps } from '@mui/material/Typography';
+import type { TypographyProps } from '@mui/material/Typography';
+import Typography from '@mui/material/Typography';
 import { RichDescription } from '@rjsf/core';
-import {
+import type {
   DescriptionFieldProps,
   FormContextType,
   GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
-  getUiOptions,
 } from '@rjsf/utils';
+import { getUiOptions } from '@rjsf/utils';
 
 import { computeSxProps, getMuiProps } from '../util';
 

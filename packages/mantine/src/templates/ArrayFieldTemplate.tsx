@@ -1,13 +1,6 @@
 import { Fieldset, Box, Group } from '@mantine/core';
-import {
-  getTemplate,
-  getUiOptions,
-  ArrayFieldTemplateProps,
-  buttonId,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { getTemplate, getUiOptions, buttonId } from '@rjsf/utils';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *

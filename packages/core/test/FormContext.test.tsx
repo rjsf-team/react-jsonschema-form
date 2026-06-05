@@ -1,4 +1,4 @@
-import { ArrayFieldTemplateProps, FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
+import type { ArrayFieldTemplateProps, FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
 
 import { createFormComponent } from './testUtils';
 
@@ -18,7 +18,7 @@ function CustomComponent(props: any) {
 describe('FormContext', () => {
   it('should be passed to custom field', () => {
     const { node } = createFormComponent({
-      schema: schema,
+      schema,
       uiSchema: { 'ui:field': 'custom' },
       fields: { custom: CustomComponent },
       formContext,

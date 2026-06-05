@@ -1,17 +1,14 @@
-import { ChangeEvent, MouseEvent } from 'react';
+import type { ChangeEvent, MouseEvent } from 'react';
 import { fireEvent, render, renderHook } from '@testing-library/react';
 
+import type { DateElementProp, Registry, UseAltDateWidgetResult, WidgetProps } from '../src';
 import {
   DateElement,
-  DateElementProp,
   enumOptionsIndexForValue,
   enumOptionsValueForIndex,
   getDateElementProps,
   parseDateString,
-  Registry,
   useAltDateWidgetProps,
-  UseAltDateWidgetResult,
-  WidgetProps,
 } from '../src';
 
 function SelectWidget({ id, options, value, required, disabled, readonly, onChange }: WidgetProps) {
@@ -27,20 +24,18 @@ function SelectWidget({ id, options, value, required, disabled, readonly, onChan
   return (
     <select
       id={id}
-      role='combobox'
       value={typeof selectedIndexes === 'undefined' ? '' : selectedIndexes}
       required={required}
       disabled={disabled || readonly}
       onChange={handleChange}
     >
       {Array.isArray(enumOptions) &&
-        enumOptions.map(({ label }, i) => {
-          return (
-            <option key={i} value={String(i)}>
-              {label}
-            </option>
-          );
-        })}
+        enumOptions.map(({ label }, i) => (
+          // oxlint-disable-next-line react/no-array-index-key
+          <option key={i} value={String(i)}>
+            {label}
+          </option>
+        ))}
     </select>
   );
 }
@@ -53,6 +48,7 @@ function DateElementsTester(
     <>
       {elements.map((elemProps, i) => (
         <DateElement
+          // oxlint-disable-next-line react/no-array-index-key
           key={i}
           rootId={id}
           name={name}

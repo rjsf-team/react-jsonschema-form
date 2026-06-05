@@ -1,5 +1,5 @@
 import { PureComponent } from 'react';
-import { DescriptionFieldProps, ObjectFieldTemplateProps } from '@rjsf/utils';
+import type { DescriptionFieldProps, ObjectFieldTemplateProps } from '@rjsf/utils';
 
 import { createFormComponent } from './testUtils';
 
@@ -14,6 +14,7 @@ class ObjectFieldTemplate extends PureComponent<ObjectFieldTemplateProps> {
         <DescriptionFieldTemplate id='test-desc' description={description} registry={registry} schema={schema} />
         <div>
           {properties.map(({ content }, index) => (
+            // oxlint-disable-next-line react/no-array-index-key
             <div key={index} className='property'>
               {content}
             </div>
@@ -29,6 +30,7 @@ const DescriptionFieldTemplate = ({ description }: DescriptionFieldProps) =>
   description ? <div className='description-field' /> : null;
 
 describe('ObjectFieldTemplate', () => {
+  let node: Element;
   function sharedIts() {
     it('should render one root element', () => {
       expect(node.querySelectorAll('.root')).toHaveLength(1);
@@ -44,7 +46,6 @@ describe('ObjectFieldTemplate', () => {
     });
   }
 
-  let node: Element;
   describe('with template globally configured', () => {
     createFormComponent({
       schema: {

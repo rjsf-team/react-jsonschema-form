@@ -1,12 +1,6 @@
-import { ChangeEvent } from 'react';
-import {
-  ariaDescribedByIds,
-  FormContextType,
-  getInputProps,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { ChangeEvent } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, getInputProps } from '@rjsf/utils';
 import { ColorPicker } from 'primereact/colorpicker';
 
 /** The `ColorWidget` component renders a color picker.
@@ -36,10 +30,10 @@ export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const { inline } = options;
   const primeProps = (options.prime || {}) as object;
 
-  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
-    onChange(value === '' ? options.emptyValue : value);
-  const _onBlur = () => onBlur && onBlur(id, value);
-  const _onFocus = () => onFocus && onFocus(id, value);
+  const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
+    onChange(newValue === '' ? options.emptyValue : newValue);
+  const handleBlur = () => onBlur && onBlur(id, value);
+  const handleFocus = () => onFocus && onFocus(id, value);
 
   return (
     <ColorPicker
@@ -53,9 +47,9 @@ export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       autoFocus={autofocus}
       disabled={disabled || readonly}
       value={value || ''}
-      onChange={onChangeOverride || _onChange}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
+      onChange={onChangeOverride || handleChange}
+      onBlur={handleBlur}
+      onFocus={handleFocus}
       aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
     />
   );

@@ -1,14 +1,8 @@
-import { ChangeEvent, FocusEvent, MouseEvent, useCallback } from 'react';
+import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
+import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
-import {
-  WidgetProps,
-  StrictRJSFSchema,
-  RJSFSchema,
-  FormContextType,
-  getInputProps,
-  ariaDescribedByIds,
-  examplesId,
-} from '@rjsf/utils';
+import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
+import { getInputProps, ariaDescribedByIds, examplesId } from '@rjsf/utils';
 
 /** The `BaseInputTemplate` component is a template for rendering basic input elements
  * with DaisyUI styling. It's used as the foundation for various input types in forms.
@@ -62,22 +56,23 @@ export default function BaseInputTemplate<
   const { step, min, max, accept, ...rest } = inputProps;
   const htmlInputProps = { step, min, max, accept, ...(schema.examples ? { list: examplesId(id) } : undefined) };
 
-  const _onChange = useCallback(
-    ({ target: { value } }: ChangeEvent<HTMLInputElement>) => onChange(value === '' ? options.emptyValue : value),
+  const handleChange = useCallback(
+    ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
+      onChange(newValue === '' ? options.emptyValue : newValue),
     [onChange, options],
   );
 
-  const _onBlur = useCallback(
+  const handleBlur = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) => onBlur && onBlur(id, target.value),
     [onBlur, id],
   );
 
-  const _onFocus = useCallback(
+  const handleFocus = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) => onFocus && onFocus(id, target.value),
     [onFocus, id],
   );
 
-  const _onClear = useCallback(
+  const handleClear = useCallback(
     (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
@@ -105,13 +100,13 @@ export default function BaseInputTemplate<
             multiple={isMulti}
             {...rest}
             {...htmlInputProps}
-            onChange={onChangeOverride || _onChange}
-            onBlur={_onBlur}
-            onFocus={_onFocus}
+            onChange={onChangeOverride || handleChange}
+            onBlur={handleBlur}
+            onFocus={handleFocus}
             aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
           />
           {options.allowClearTextInputs && !readonly && !disabled && value && (
-            <ClearButton registry={registry} onClick={_onClear} />
+            <ClearButton registry={registry} onClick={handleClear} />
           )}
         </div>
       </div>

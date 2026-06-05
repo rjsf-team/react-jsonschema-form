@@ -2,7 +2,7 @@ import get from 'lodash/get';
 import isString from 'lodash/isString';
 
 import { DISCRIMINATOR_PATH } from './constants';
-import { RJSFSchema, StrictRJSFSchema } from './types';
+import type { RJSFSchema, StrictRJSFSchema } from './types';
 
 /** Returns the `discriminator.propertyName` when defined in the `schema` if it is a string. A warning is generated when
  * it is not a string. Returns `undefined` when a valid discriminator is not present.
@@ -16,6 +16,7 @@ export default function getDiscriminatorFieldFromSchema<S extends StrictRJSFSche
   if (isString(maybeString)) {
     discriminator = maybeString;
   } else if (maybeString !== undefined) {
+    // oxlint-disable-next-line no-console
     console.warn(`Expecting discriminator to be a string, got "${typeof maybeString}" instead`);
   }
   return discriminator;

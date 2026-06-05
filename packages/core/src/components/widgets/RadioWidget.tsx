@@ -1,4 +1,6 @@
-import { FocusEvent, useCallback } from 'react';
+import type { FocusEvent } from 'react';
+import { useCallback } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
@@ -6,10 +8,6 @@ import {
   enumOptionsIsSelected,
   getOptionValueFormat,
   optionId,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
 } from '@rjsf/utils';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
@@ -50,7 +48,7 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, i) => {
           const checked = enumOptionsIsSelected<S>(option.value, value);
-          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
+          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
           const disabledCls = disabled || itemDisabled || readonly ? 'disabled' : '';
 
           const handleChange = () => onChange(option.value);
@@ -76,11 +74,11 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
           );
 
           return inline ? (
-            <label key={i} className={`radio-inline ${disabledCls}`}>
+            <label key={String(option.value)} className={`radio-inline ${disabledCls}`}>
               {radio}
             </label>
           ) : (
-            <div key={i} className={`radio ${disabledCls}`}>
+            <div key={String(option.value)} className={`radio ${disabledCls}`}>
               <label>{radio}</label>
             </div>
           );

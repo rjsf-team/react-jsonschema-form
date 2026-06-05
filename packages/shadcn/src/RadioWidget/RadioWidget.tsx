@@ -1,15 +1,12 @@
-import { FocusEvent } from 'react';
+import type { FocusEvent } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   enumOptionsIsSelected,
   getOptionValueFormat,
-  FormContextType,
   optionId,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
 } from '@rjsf/utils';
 
 import { Label } from '../components/ui/label';
@@ -36,11 +33,11 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
 
-  const _onChange = (value: string) =>
-    onChange(enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, emptyValue));
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
+  const handleChange = (enumValue: string) =>
+    onChange(enumOptionValueDecoder<S>(enumValue, enumOptions, optionValueFormat, emptyValue));
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
 
   const inline = Boolean(options && options.inline);
@@ -52,17 +49,17 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         required={required}
         disabled={disabled || readonly}
         onValueChange={(e: string) => {
-          _onChange(e);
+          handleChange(e);
         }}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         aria-describedby={ariaDescribedByIds(id)}
         orientation={inline ? 'horizontal' : 'vertical'}
         className={cn('flex flex-wrap', { 'flex-col': !inline }, className)}
       >
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index) => {
-            const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
+            const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
             const checked = enumOptionsIsSelected<S>(option.value, value);
             return (
               <div className='flex items-center gap-2' key={optionId(id, index)}>

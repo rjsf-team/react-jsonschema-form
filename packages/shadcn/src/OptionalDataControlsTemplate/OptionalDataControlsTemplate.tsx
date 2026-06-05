@@ -1,4 +1,4 @@
-import { FormContextType, OptionalDataControlsTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { FormContextType, OptionalDataControlsTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { PlusCircle } from 'lucide-react';
 
 import IconButton, { RemoveButton } from '../IconButton';
@@ -29,7 +29,8 @@ export default function OptionalDataControlsTemplate<
         size='xs'
       />
     );
-  } else if (onRemoveClick) {
+  }
+  if (onRemoveClick) {
     return (
       <RemoveButton
         id={id}

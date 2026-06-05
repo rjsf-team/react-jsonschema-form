@@ -1,12 +1,6 @@
 import { Field, Text } from '@fluentui/react-components';
-import {
-  FieldTemplateProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  getTemplate,
-  getUiOptions,
-} from '@rjsf/utils';
+import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { getTemplate, getUiOptions } from '@rjsf/utils';
 
 /** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
  * content, (label, description, children, errors and help) inside of a `WrapIfAdditional` component.

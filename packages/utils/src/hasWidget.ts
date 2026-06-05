@@ -1,5 +1,5 @@
 import getWidget from './getWidget';
-import { FormContextType, RegistryWidgetsType, RJSFSchema, StrictRJSFSchema, Widget } from './types';
+import type { FormContextType, RegistryWidgetsType, RJSFSchema, StrictRJSFSchema, Widget } from './types';
 
 /** Detects whether the `widget` exists for the `schema` with the associated `registryWidgets` and returns true if it
  * does, or false if it doesn't.

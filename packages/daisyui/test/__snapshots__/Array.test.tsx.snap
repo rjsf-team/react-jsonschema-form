@@ -508,11 +508,13 @@ exports[`array fields > checkboxes 1`] = `
             </div>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              role="listbox"
             >
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="0"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -529,9 +531,10 @@ exports[`array fields > checkboxes 1`] = `
                 </div>
               </li>
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="1"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -548,9 +551,10 @@ exports[`array fields > checkboxes 1`] = `
                 </div>
               </li>
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="2"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -1950,11 +1954,13 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
             </div>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              role="listbox"
             >
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="0"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -1971,9 +1977,10 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                 </div>
               </li>
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="1"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -1990,9 +1997,10 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                 </div>
               </li>
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="2"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -4533,11 +4541,13 @@ exports[`with title and description > checkboxes 1`] = `
             </div>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              role="listbox"
             >
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="0"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -4554,9 +4564,10 @@ exports[`with title and description > checkboxes 1`] = `
                 </div>
               </li>
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="1"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -4573,9 +4584,10 @@ exports[`with title and description > checkboxes 1`] = `
                 </div>
               </li>
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="2"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -5421,11 +5433,13 @@ exports[`with title and description from both > checkboxes 1`] = `
             </div>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              role="listbox"
             >
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="0"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -5442,9 +5456,10 @@ exports[`with title and description from both > checkboxes 1`] = `
                 </div>
               </li>
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="1"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -5461,9 +5476,10 @@ exports[`with title and description from both > checkboxes 1`] = `
                 </div>
               </li>
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="2"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -6309,11 +6325,13 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
             </div>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              role="listbox"
             >
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="0"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -6330,9 +6348,10 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                 </div>
               </li>
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="1"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -6349,9 +6368,10 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                 </div>
               </li>
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="2"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -7091,11 +7111,13 @@ exports[`with title and description with global label off > checkboxes 1`] = `
             </div>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              role="listbox"
             >
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="0"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -7112,9 +7134,10 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                 </div>
               </li>
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="1"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -7131,9 +7154,10 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                 </div>
               </li>
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="2"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div

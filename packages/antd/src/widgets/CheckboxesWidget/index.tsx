@@ -1,4 +1,5 @@
-import { FocusEvent } from 'react';
+import type { FocusEvent } from 'react';
+import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema, GenericObjectType } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
@@ -6,11 +7,6 @@ import {
   enumOptionValueEncoder,
   getOptionValueFormat,
   optionId,
-  FormContextType,
-  WidgetProps,
-  RJSFSchema,
-  StrictRJSFSchema,
-  GenericObjectType,
 } from '@rjsf/utils';
 import { Checkbox } from 'antd';
 
@@ -62,31 +58,30 @@ export default function CheckboxesWidget<
   const selectValue = enumOptionSelectedValue<S>(value, enumOptions, true, optionValueFormat, []) as string[];
 
   return Array.isArray(enumOptions) && enumOptions.length > 0 ? (
-    <>
-      <Checkbox.Group
-        disabled={disabled || (readonlyAsDisabled && readonly)}
-        name={htmlName || id}
-        onChange={!readonly ? handleChange : undefined}
-        value={selectValue}
-        {...extraProps}
-        aria-describedby={ariaDescribedByIds(id)}
-      >
-        {Array.isArray(enumOptions) &&
-          enumOptions.map((option, i) => (
-            <span key={i}>
-              <Checkbox
-                id={optionId(id, i)}
-                name={htmlName || id}
-                autoFocus={i === 0 ? autofocus : false}
-                disabled={Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1}
-                value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
-              >
-                {option.label}
-              </Checkbox>
-              {!inline && <br />}
-            </span>
-          ))}
-      </Checkbox.Group>
-    </>
+    <Checkbox.Group
+      disabled={disabled || (readonlyAsDisabled && readonly)}
+      name={htmlName || id}
+      onChange={!readonly ? handleChange : undefined}
+      value={selectValue}
+      {...extraProps}
+      aria-describedby={ariaDescribedByIds(id)}
+    >
+      {Array.isArray(enumOptions) &&
+        enumOptions.map((option, i) => (
+          // oxlint-disable-next-line react/no-array-index-key
+          <span key={i}>
+            <Checkbox
+              id={optionId(id, i)}
+              name={htmlName || id}
+              autoFocus={i === 0 ? autofocus : false}
+              disabled={Array.isArray(enumDisabled) && enumDisabled.includes(option.value)}
+              value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
+            >
+              {option.label}
+            </Checkbox>
+            {!inline && <br />}
+          </span>
+        ))}
+    </Checkbox.Group>
   ) : null;
 }

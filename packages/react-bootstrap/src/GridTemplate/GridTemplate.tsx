@@ -1,4 +1,4 @@
-import { GridTemplateProps } from '@rjsf/utils';
+import type { GridTemplateProps } from '@rjsf/utils';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 

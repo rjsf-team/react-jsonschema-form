@@ -1,13 +1,7 @@
 import { makeStyles } from '@fluentui/react-components';
 import { Flex } from '@fluentui/react-migration-v0-v9';
-import {
-  ArrayFieldItemTemplateProps,
-  FormContextType,
-  getTemplate,
-  getUiOptions,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { ArrayFieldItemTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { getTemplate, getUiOptions } from '@rjsf/utils';
 
 const useStyles = makeStyles({
   arrayFieldItem: {

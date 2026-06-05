@@ -1,4 +1,4 @@
-import { RJSFSchema, StrictRJSFSchema } from './types';
+import type { RJSFSchema, StrictRJSFSchema } from './types';
 
 /** Hashes a string using the algorithm based on Java's hashing function.
  * JS has no built-in hashing function, so rolling our own
@@ -10,10 +10,12 @@ import { RJSFSchema, StrictRJSFSchema } from './types';
  */
 export function hashString(string: string): string {
   let hash = 0;
-  for (let i = 0; i < string.length; i += 1) {
+  for (let i = 0; i < string.length; i++) {
     const chr = string.charCodeAt(i);
+    // oxlint-disable-next-line no-bitwise
     hash = (hash << 5) - hash + chr;
-    hash = hash & hash; // Convert to 32bit integer
+    // oxlint-disable-next-line no-bitwise
+    hash &= hash; // Convert to 32bit integer
   }
   return hash.toString(16);
 }
@@ -26,7 +28,10 @@ export function hashString(string: string): string {
 export function sortedJSONStringify(object: unknown): string {
   const allKeys = new Set<string>();
   // solution source: https://stackoverflow.com/questions/16167581/sort-object-properties-and-json-stringify/53593328#53593328
-  JSON.stringify(object, (key, value) => (allKeys.add(key), value));
+  JSON.stringify(object, (key, value) => {
+    allKeys.add(key);
+    return value;
+  });
   return JSON.stringify(object, Array.from(allKeys).sort());
 }
 

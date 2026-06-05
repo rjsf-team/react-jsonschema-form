@@ -1,17 +1,9 @@
-import { ChangeEvent, FocusEvent, useMemo } from 'react';
+import type { ChangeEvent, FocusEvent } from 'react';
+import { useMemo } from 'react';
 import { createListCollection, NativeSelect } from '@chakra-ui/react';
-import {
-  ariaDescribedByIds,
-  EnumOptionsType,
-  enumOptionsIndexForValue,
-  enumOptionsValueForIndex,
-  labelValue,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
-import { OptionsOrGroups } from 'chakra-react-select';
+import type { EnumOptionsType, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, enumOptionsIndexForValue, enumOptionsValueForIndex, labelValue } from '@rjsf/utils';
+import type { OptionsOrGroups } from 'chakra-react-select';
 
 import { Field } from '../components/ui/field';
 import { getChakra } from '../utils';
@@ -52,14 +44,13 @@ export default function NativeSelectWidget<
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
 
-  const _onChange = ({ target }: ChangeEvent<HTMLSelectElement>) => {
-    return onChange(enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
-  };
+  const handleChange = ({ target }: ChangeEvent<HTMLSelectElement>) =>
+    onChange(enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
 
-  const _onBlur = ({ target }: FocusEvent<HTMLSelectElement>) =>
+  const handleBlur = ({ target }: FocusEvent<HTMLSelectElement>) =>
     onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
 
-  const _onFocus = ({ target }: FocusEvent<HTMLSelectElement>) =>
+  const handleFocus = ({ target }: FocusEvent<HTMLSelectElement>) =>
     onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
 
   const showPlaceholderOption = !multiple && schema.default === undefined;
@@ -67,20 +58,20 @@ export default function NativeSelectWidget<
     valueLabelMap: Record<string | number, string>;
     displayEnumOptions: OptionsOrGroups<any, any>;
   } => {
-    const valueLabelMap: Record<string | number, string> = {};
-    let displayEnumOptions: OptionsOrGroups<any, any> = [];
+    const computedValueLabelMap: Record<string | number, string> = {};
+    let computedOptions: OptionsOrGroups<any, any> = [];
     if (Array.isArray(enumOptions)) {
-      displayEnumOptions = enumOptions.map((option: EnumOptionsType<S>, index: number) => {
-        const { value, label } = option;
-        valueLabelMap[index] = label || String(value);
+      computedOptions = enumOptions.map((option: EnumOptionsType<S>, index: number) => {
+        const { value: enumValue, label: enumLabel } = option;
+        computedValueLabelMap[index] = enumLabel || String(enumValue);
         return {
-          label,
+          label: enumLabel,
           value: String(index),
-          disabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1,
+          disabled: Array.isArray(enumDisabled) && enumDisabled.includes(enumValue),
         };
       });
     }
-    return { valueLabelMap: valueLabelMap, displayEnumOptions: displayEnumOptions };
+    return { valueLabelMap: computedValueLabelMap, displayEnumOptions: computedOptions };
   }, [enumDisabled, enumOptions]);
 
   const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions, false);
@@ -116,9 +107,9 @@ export default function NativeSelectWidget<
       <NativeSelect.Root>
         <NativeSelect.Field
           id={id}
-          onBlur={_onBlur}
-          onChange={_onChange}
-          onFocus={_onFocus}
+          onBlur={handleBlur}
+          onChange={handleChange}
+          onFocus={handleFocus}
           autoFocus={autofocus}
           value={formValue}
           aria-describedby={ariaDescribedByIds(id)}

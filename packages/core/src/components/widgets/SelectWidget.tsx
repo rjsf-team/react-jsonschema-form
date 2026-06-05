@@ -1,14 +1,12 @@
-import { ChangeEvent, FocusEvent, SyntheticEvent, useCallback } from 'react';
+import type { ChangeEvent, FocusEvent, SyntheticEvent } from 'react';
+import { useCallback } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
 } from '@rjsf/utils';
 
 function getValue(event: SyntheticEvent<HTMLSelectElement>, multiple: boolean) {
@@ -74,11 +72,11 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   const showPlaceholderOption = !multiple && schema.default === undefined;
 
   return (
+    // oxlint-disable-next-line jsx-a11y/no-autofocus
     <select
       id={id}
       name={htmlName || id}
       multiple={multiple}
-      role='combobox'
       className='form-control'
       value={selectValue}
       required={required}
@@ -91,11 +89,15 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     >
       {showPlaceholderOption && <option value=''>{placeholder}</option>}
       {Array.isArray(enumOptions) &&
-        enumOptions.map(({ value, label }, i) => {
-          const disabled = enumDisabled && enumDisabled.indexOf(value) !== -1;
+        enumOptions.map(({ value: enumValue, label: enumLabel }, i) => {
+          const isDisabled = enumDisabled && enumDisabled.includes(enumValue);
           return (
-            <option key={i} value={enumOptionValueEncoder(value, i, optionValueFormat)} disabled={disabled}>
-              {label}
+            <option
+              key={String(enumValue)}
+              value={enumOptionValueEncoder(enumValue, i, optionValueFormat)}
+              disabled={isDisabled}
+            >
+              {enumLabel}
             </option>
           );
         })}

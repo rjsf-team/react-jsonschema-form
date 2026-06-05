@@ -1,15 +1,13 @@
-import Box, { BoxProps } from '@mui/material/Box';
-import Divider, { DividerProps } from '@mui/material/Divider';
-import Grid, { GridProps } from '@mui/material/Grid';
-import Typography, { TypographyProps } from '@mui/material/Typography';
-import {
-  FormContextType,
-  GenericObjectType,
-  TitleFieldProps,
-  RJSFSchema,
-  StrictRJSFSchema,
-  getUiOptions,
-} from '@rjsf/utils';
+import type { BoxProps } from '@mui/material/Box';
+import Box from '@mui/material/Box';
+import type { DividerProps } from '@mui/material/Divider';
+import Divider from '@mui/material/Divider';
+import type { GridProps } from '@mui/material/Grid';
+import Grid from '@mui/material/Grid';
+import type { TypographyProps } from '@mui/material/Typography';
+import Typography from '@mui/material/Typography';
+import type { FormContextType, GenericObjectType, TitleFieldProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { getUiOptions } from '@rjsf/utils';
 
 import { computeSxProps, getMuiProps } from '../util';
 
@@ -60,7 +58,7 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
   );
   if (optionalDataControl) {
     heading = (
-      <Grid container={true} spacing={0} {...titleGridContainer}>
+      <Grid container spacing={0} {...titleGridContainer}>
         <Grid size='grow' {...titleGridItem}>
           {heading}
         </Grid>

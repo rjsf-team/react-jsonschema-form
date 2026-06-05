@@ -1,12 +1,5 @@
-import {
-  ArrayFieldTemplateProps,
-  buttonId,
-  FormContextType,
-  getTemplate,
-  getUiOptions,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { buttonId, getTemplate, getUiOptions } from '@rjsf/utils';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -72,7 +65,7 @@ export default function ArrayFieldTemplate<
             {canAdd && (
               <Container className=''>
                 <Row className='mt-2'>
-                  <Col xs={9} md={10} lg={11}></Col>
+                  <Col xs={9} md={10} lg={11} />
                   <Col xs={3} md={2} lg={1} className='py-4'>
                     <AddButton
                       id={buttonId(fieldPathId, 'add')}

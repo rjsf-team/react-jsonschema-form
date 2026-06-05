@@ -1,7 +1,7 @@
 import get from 'lodash/get';
 
 import { PROPERTIES_KEY } from './constants';
-import { RJSFSchema, StrictRJSFSchema } from './types';
+import type { RJSFSchema, StrictRJSFSchema } from './types';
 
 /** Compares the value of `discriminatorField` within `formData` against the value of `discriminatorField` within schema for each `option`.
  * Returns index of first `option` whose discriminator matches formData. Returns `undefined` if there is no match.
@@ -22,26 +22,22 @@ export default function getOptionMatchingSimpleDiscriminator<T = any, S extends 
     const value = get(formData, discriminatorField);
 
     if (value === undefined) {
-      return;
+      return undefined;
     }
 
-    for (let i = 0; i < options.length; i++) {
+    for (let i = 0; i < options.length; i += 1) {
       const option = options[i];
       const discriminator: S = get(option, [PROPERTIES_KEY, discriminatorField], {}) as S;
 
-      if (discriminator.type === 'object' || discriminator.type === 'array') {
-        continue;
-      }
-
-      if (discriminator.const === value) {
-        return i;
-      }
-
-      if (discriminator.enum?.includes(value)) {
-        return i;
+      if (discriminator.type !== 'object' && discriminator.type !== 'array') {
+        if (discriminator.const === value) {
+          return i;
+        }
+        if (discriminator.enum?.includes(value)) {
+          return i;
+        }
       }
     }
   }
-
-  return;
+  return undefined;
 }

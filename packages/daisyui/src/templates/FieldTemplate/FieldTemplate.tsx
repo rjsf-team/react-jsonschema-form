@@ -1,11 +1,5 @@
-import {
-  FieldTemplateProps,
-  StrictRJSFSchema,
-  RJSFSchema,
-  FormContextType,
-  getTemplate,
-  getUiOptions,
-} from '@rjsf/utils';
+import type { FieldTemplateProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
+import { getTemplate, getUiOptions } from '@rjsf/utils';
 
 /** The `FieldTemplate` component provides the main layout for each form field
  * with DaisyUI styling. It handles:

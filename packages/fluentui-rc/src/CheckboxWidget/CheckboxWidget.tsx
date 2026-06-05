@@ -1,15 +1,7 @@
-import { ChangeEvent, FocusEvent } from 'react';
+import type { ChangeEvent, FocusEvent } from 'react';
 import { Checkbox } from '@fluentui/react-components';
-import {
-  ariaDescribedByIds,
-  descriptionId,
-  getTemplate,
-  schemaRequiresTrueValue,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, descriptionId, getTemplate, schemaRequiresTrueValue } from '@rjsf/utils';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -48,9 +40,9 @@ export default function CheckboxWidget<
   // "const" or "enum" keywords
   const required = schemaRequiresTrueValue<S>(schema);
 
-  const _onChange = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => onChange(checked);
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.checked);
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.checked);
+  const handleChange = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => onChange(checked);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.checked);
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.checked);
   const description = options.description ?? schema.description;
 
   return (
@@ -72,9 +64,9 @@ export default function CheckboxWidget<
         required={required}
         disabled={disabled || readonly}
         autoFocus={autofocus}
-        onChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         aria-describedby={ariaDescribedByIds(id)}
       />
     </>

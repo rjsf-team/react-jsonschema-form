@@ -1,12 +1,5 @@
-import {
-  getTemplate,
-  localToUTC,
-  utcToLocal,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { getTemplate, localToUTC, utcToLocal } from '@rjsf/utils';
 
 /** The `DateTimeWidget` component uses the `BaseInputTemplate` changing the type to `datetime-local` and transforms
  * the value to/from utc using the appropriate utility functions.
@@ -25,7 +18,7 @@ export default function DateTimeWidget<
       type='datetime-local'
       {...props}
       value={utcToLocal(value)}
-      onChange={(value) => onChange(localToUTC(value))}
+      onChange={(newValue) => onChange(localToUTC(newValue))}
     />
   );
 }

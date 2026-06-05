@@ -1,10 +1,16 @@
-import { ComponentType, ReactNode } from 'react';
-import {
-  ANY_OF_KEY,
+import type { ComponentType, ReactNode } from 'react';
+import type {
   FieldProps,
   FieldPathId,
   FormContextType,
   GenericObjectType,
+  RJSFSchema,
+  Registry,
+  StrictRJSFSchema,
+  UiSchema,
+} from '@rjsf/utils';
+import {
+  ANY_OF_KEY,
   getDiscriminatorFieldFromSchema,
   getTemplate,
   getTestIds,
@@ -15,13 +21,9 @@ import {
   ONE_OF_KEY,
   PROPERTIES_KEY,
   READONLY_KEY,
-  RJSFSchema,
-  Registry,
-  StrictRJSFSchema,
   toFieldPathId,
   UI_OPTIONS_KEY,
   UI_GLOBAL_OPTIONS_KEY,
-  UiSchema,
   ITEMS_KEY,
   useDeepCompareMemo,
 } from '@rjsf/utils';
@@ -73,11 +75,7 @@ export interface GridProps extends GenericObjectType {
   value?: unknown;
 }
 
-export type GridSchemaType = {
-  /** The limited set of props which are keyed using the `GridType` enumeration and return an object
-   */
-  [gridType in GridType]?: object;
-};
+export type GridSchemaType = Partial<Record<GridType, object>>;
 
 /** The types which comprise the possibilities for the `layoutGridSchema` prop
  */
@@ -106,13 +104,16 @@ export const LAYOUT_GRID_UI_OPTION = 'layoutGrid';
 export const LAYOUT_GRID_OPTION = `ui:${LAYOUT_GRID_UI_OPTION}`;
 
 /** Type used to return options list and whether it has a discriminator */
-type OneOfOptionsInfoType<S extends StrictRJSFSchema = RJSFSchema> = { options: S[]; hasDiscriminator: boolean };
+interface OneOfOptionsInfoType<S extends StrictRJSFSchema = RJSFSchema> {
+  options: S[];
+  hasDiscriminator: boolean;
+}
 
 /** Type used to represent a React-based rendering component */
 type RenderComponent = ComponentType<any>;
 
 /** Type used to determine what are the UIComponent and props from the grid schema */
-type UIComponentPropsType = {
+interface UIComponentPropsType {
   /** The name of the component */
   name: string;
   /** The render component if specified */
@@ -121,7 +122,7 @@ type UIComponentPropsType = {
   uiProps: ConfigObject;
   /** The special case where the component is immediately rendered */
   rendered: ReactNode;
-};
+}
 
 /** Returns either the `value` if it is non-nullish or the fallback
  *
@@ -282,6 +283,7 @@ export function computeArraySchemasIfPresent<S extends StrictRJSFSchema = RJSFSc
   fieldPathId: FieldPathId;
 } {
   let rawSchema: S | undefined;
+  let resultPathId = fieldPathId;
   if (isNumericIndex(potentialIndex) && schema && schema?.type === 'array' && has(schema, ITEMS_KEY)) {
     const index = Number(potentialIndex);
     const items = schema[ITEMS_KEY];
@@ -294,12 +296,12 @@ export function computeArraySchemasIfPresent<S extends StrictRJSFSchema = RJSFSc
     } else {
       rawSchema = items as S;
     }
-    fieldPathId = {
+    resultPathId = {
       [ID_KEY]: fieldPathId[ID_KEY],
       path: [...fieldPathId.path.slice(0, fieldPathId.path.length - 1), index],
     };
   }
-  return { rawSchema, fieldPathId };
+  return { rawSchema, fieldPathId: resultPathId };
 }
 
 /** Given a `dottedPath` to a field in the `initialSchema`, iterate through each individual path in the schema until
@@ -453,8 +455,8 @@ export function computeUIComponentPropsFromGridSchema<
         if (isString(prop)) {
           const match: string[] | null = LOOKUP_REGEX.exec(prop);
           if (Array.isArray(match) && match.length > 1) {
-            const name = match[1];
-            uiProps[key] = lookupFromFormContext(registry, name, name);
+            const lookupName = match[1];
+            uiProps[key] = lookupFromFormContext(registry, lookupName, lookupName);
           }
         }
       });

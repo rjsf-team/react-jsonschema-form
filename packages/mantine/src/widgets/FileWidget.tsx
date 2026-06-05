@@ -1,14 +1,7 @@
 import { useCallback } from 'react';
 import { FileInput, Pill } from '@mantine/core';
-import {
-  ariaDescribedByIds,
-  FormContextType,
-  labelValue,
-  RJSFSchema,
-  StrictRJSFSchema,
-  useFileWidgetProps,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, labelValue, useFileWidgetProps } from '@rjsf/utils';
 
 import { cleanupOptions } from '../utils';
 
@@ -43,6 +36,7 @@ export default function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSch
     (files: any) => {
       if (typeof files === 'object') {
         // handleChange is async; DOM event handlers are void-returning, so we intentionally don't await
+        // oxlint-disable-next-line no-floating-promises, no-void
         void handleChange(files);
       }
     },
@@ -54,6 +48,7 @@ export default function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSch
       return (
         <Pill.Group>
           {filesInfo.map((file, index) => (
+            // oxlint-disable-next-line react/no-array-index-key
             <Pill key={index} withRemoveButton onRemove={() => handleRemove(index)}>
               {file.name}
             </Pill>

@@ -1,17 +1,9 @@
-import Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
-import FormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel';
-import {
-  ariaDescribedByIds,
-  descriptionId,
-  getTemplate,
-  labelValue,
-  schemaRequiresTrueValue,
-  FormContextType,
-  GenericObjectType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { CheckboxProps } from '@mui/material/Checkbox';
+import Checkbox from '@mui/material/Checkbox';
+import type { FormControlLabelProps } from '@mui/material/FormControlLabel';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, descriptionId, getTemplate, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
 
 import { getMuiProps } from '../util';
 
@@ -63,9 +55,9 @@ export default function CheckboxWidget<
   // "const" or "enum" keywords
   const required = schemaRequiresTrueValue<S>(schema);
 
-  const _onChange = (_: any, checked: boolean) => onChange(checked);
-  const _onBlur: React.FocusEventHandler<HTMLButtonElement> = () => onBlur(id, value);
-  const _onFocus: React.FocusEventHandler<HTMLButtonElement> = () => onFocus(id, value);
+  const handleChange = (_: any, checked: boolean) => onChange(checked);
+  const handleBlur: React.FocusEventHandler<HTMLButtonElement> = () => onBlur(id, value);
+  const handleFocus: React.FocusEventHandler<HTMLButtonElement> = () => onFocus(id, value);
   const description = options.description ?? schema.description;
 
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, CheckboxWidgetMuiProps>(options);
@@ -92,9 +84,9 @@ export default function CheckboxWidget<
             required={required}
             disabled={disabled || readonly}
             autoFocus={autofocus}
-            onChange={_onChange}
-            onBlur={_onBlur}
-            onFocus={_onFocus}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            onFocus={handleFocus}
             aria-describedby={ariaDescribedByIds(id)}
             {...muiSlotProps?.checkbox}
           />

@@ -1,18 +1,11 @@
-import { makeStyles, shorthands } from '@fluentui/react-components';
+import { makeStyles } from '@fluentui/react-components';
 import { Flex } from '@fluentui/react-migration-v0-v9';
-import {
-  getTemplate,
-  getUiOptions,
-  ArrayFieldTemplateProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  buttonId,
-} from '@rjsf/utils';
+import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { getTemplate, getUiOptions, buttonId } from '@rjsf/utils';
 
 const useStyles = makeStyles({
   arrayItemList: {
-    ...shorthands.gap('12px'),
+    gap: '12px',
   },
 });
 

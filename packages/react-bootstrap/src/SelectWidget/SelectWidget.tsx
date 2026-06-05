@@ -1,14 +1,11 @@
-import { ChangeEvent, FocusEvent } from 'react';
+import type { ChangeEvent, FocusEvent } from 'react';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
 } from '@rjsf/utils';
 import FormSelect from 'react-bootstrap/FormSelect';
 
@@ -38,15 +35,14 @@ export default function SelectWidget<
   const emptyValue = multiple ? [] : '';
   const optionValueFormat = getOptionValueFormat(options);
 
-  function getValue(event: FocusEvent | ChangeEvent | any, multiple?: boolean) {
-    if (multiple) {
+  function getValue(event: FocusEvent | ChangeEvent | any, isMultiple?: boolean) {
+    if (isMultiple) {
       return [].slice
-        .call(event.target.options as any)
+        .call(event.target.options)
         .filter((o: any) => o.selected)
         .map((o: any) => o.value);
-    } else {
-      return event.target.value;
     }
+    return event.target.value;
   }
   const selectValue = enumOptionSelectedValue<S>(value, enumOptions, !!multiple, optionValueFormat, emptyValue);
   const showPlaceholderOption = !multiple && schema.default === undefined;
@@ -82,11 +78,16 @@ export default function SelectWidget<
       aria-describedby={ariaDescribedByIds(id)}
     >
       {showPlaceholderOption && <option value=''>{placeholder}</option>}
-      {(enumOptions as any).map(({ value, label }: any, i: number) => {
-        const disabled: any = Array.isArray(enumDisabled) && (enumDisabled as any).indexOf(value) != -1;
+      {enumOptions?.map(({ value: enumValue, label: enumLabel }: any, i: number) => {
+        const isDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(enumValue);
         return (
-          <option key={i} id={label} value={enumOptionValueEncoder(value, i, optionValueFormat)} disabled={disabled}>
-            {label}
+          <option
+            key={String(enumValue)}
+            id={enumLabel}
+            value={enumOptionValueEncoder(enumValue, i, optionValueFormat)}
+            disabled={isDisabled}
+          >
+            {enumLabel}
           </option>
         );
       })}

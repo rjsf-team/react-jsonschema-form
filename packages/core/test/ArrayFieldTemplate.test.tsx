@@ -1,5 +1,5 @@
-import { PureComponent } from 'react';
-import { ArrayFieldTemplateProps, ArrayFieldItemTemplateProps, RJSFSchema, getUiOptions } from '@rjsf/utils';
+import type { ArrayFieldTemplateProps, ArrayFieldItemTemplateProps, RJSFSchema } from '@rjsf/utils';
+import { getUiOptions } from '@rjsf/utils';
 import userEvent from '@testing-library/user-event';
 
 import { createFormComponent } from './testUtils';
@@ -14,7 +14,7 @@ describe('ArrayFieldTemplate', () => {
       const { classNames } = getUiOptions(props.uiSchema);
       return (
         <div className={classNames}>
-          {props.canAdd && <button className='custom-array-add' />}
+          {props.canAdd && <button type='button' aria-label='Add item' className='custom-array-add' />}
           {props.items}
         </div>
       );
@@ -22,8 +22,12 @@ describe('ArrayFieldTemplate', () => {
     function ArrayFieldItemTemplate(props: ArrayFieldItemTemplateProps) {
       return (
         <div className='custom-array-item'>
-          {props.buttonsProps.hasMoveUp && <button className='custom-array-item-move-up' />}
-          {props.buttonsProps.hasMoveDown && <button className='custom-array-item-move-down' />}
+          {props.buttonsProps.hasMoveUp && (
+            <button type='button' aria-label='Move up' className='custom-array-item-move-up' />
+          )}
+          {props.buttonsProps.hasMoveDown && (
+            <button type='button' aria-label='Move down' className='custom-array-item-move-down' />
+          )}
 
           {props.children}
         </div>
@@ -31,17 +35,9 @@ describe('ArrayFieldTemplate', () => {
     }
 
     describe('Stateful ArrayFieldTemplate', () => {
-      class ArrayFieldTemplate extends PureComponent<ArrayFieldTemplateProps> {
-        render() {
-          return <div className='field-content'>{this.props.items}</div>;
-        }
-      }
+      const ArrayFieldTemplate = ({ items }: ArrayFieldTemplateProps) => <div className='field-content'>{items}</div>;
 
-      class ArrayFieldItemTemplate extends PureComponent<ArrayFieldItemTemplateProps> {
-        render() {
-          return <div>this.props.children</div>;
-        }
-      }
+      const ArrayFieldItemTemplate = (_props: ArrayFieldItemTemplateProps) => <div>this.props.children</div>;
 
       describe('with template globally configured', () => {
         it('should render a stateful custom component', () => {
@@ -263,17 +259,9 @@ describe('ArrayFieldTemplate', () => {
   });
 
   describe('Stateful ArrayFieldTemplate', () => {
-    class ArrayFieldTemplate extends PureComponent<ArrayFieldTemplateProps> {
-      render() {
-        return <div className='field-content'>{this.props.items}</div>;
-      }
-    }
+    const ArrayFieldTemplate = ({ items }: ArrayFieldTemplateProps) => <div className='field-content'>{items}</div>;
 
-    class ArrayFieldItemTemplate extends PureComponent<ArrayFieldItemTemplateProps> {
-      render() {
-        return <div>this.props.children</div>;
-      }
-    }
+    const ArrayFieldItemTemplate = (_props: ArrayFieldItemTemplateProps) => <div>this.props.children</div>;
 
     it('should render a stateful custom component', () => {
       const { node } = createFormComponent({
@@ -289,7 +277,7 @@ describe('ArrayFieldTemplate', () => {
     it('should pass registry prop', () => {
       const ArrayFieldTemplate = ({ registry }: ArrayFieldTemplateProps) => {
         if (!registry) {
-          throw 'Error';
+          throw new Error('Error');
         }
         return null;
       };
@@ -303,16 +291,17 @@ describe('ArrayFieldTemplate', () => {
     it('should pass formData so it is in sync with items', async () => {
       const ArrayFieldTemplate = ({ formData, items, onAddClick }: ArrayFieldTemplateProps) => {
         if (formData.length !== items.length) {
-          throw 'Error';
+          throw new Error('Error');
         }
         return (
           <div>
             {items.map((_, i) => (
+              // oxlint-disable-next-line react/no-array-index-key
               <span key={i} className='test-data'>
                 {formData[i]}
               </span>
             ))}
-            <button className='rjsf-array-item-add' onClick={onAddClick} />
+            <button type='button' aria-label='Add item' className='rjsf-array-item-add' onClick={onAddClick} />
           </div>
         );
       };

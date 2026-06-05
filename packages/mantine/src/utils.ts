@@ -1,6 +1,6 @@
-import { UIOptionsType } from '@rjsf/utils';
+import type { UIOptionsType } from '@rjsf/utils';
 
-const uiOptionsKeys: Array<keyof UIOptionsType> = [
+const uiOptionsKeys: (keyof UIOptionsType)[] = [
   'emptyValue',
   'classNames',
   'title',

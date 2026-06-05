@@ -1,5 +1,5 @@
 import isObject from './isObject';
-import { GenericObjectType } from './types';
+import type { GenericObjectType } from './types';
 
 /** Recursively merge deeply nested objects.
  *
@@ -37,6 +37,6 @@ export default function mergeObjects(
       }
       return acc;
     },
-    Object.assign({}, obj1),
+    { ...obj1 },
   ); // Prevent mutation of source object.
 }

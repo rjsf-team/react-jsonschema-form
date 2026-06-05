@@ -1,5 +1,11 @@
 import isConstant from '../isConstant';
-import { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType, Experimental_CustomMergeAllOf } from '../types';
+import type {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  ValidatorType,
+  Experimental_CustomMergeAllOf,
+} from '../types';
 import retrieveSchema from './retrieveSchema';
 
 /** Checks to see if the `schema` combination represents a select
@@ -22,7 +28,7 @@ export default function isSelect<T = any, S extends StrictRJSFSchema = RJSFSchem
     return true;
   }
   if (Array.isArray(altSchemas)) {
-    return altSchemas.every((altSchemas) => typeof altSchemas !== 'boolean' && isConstant(altSchemas));
+    return altSchemas.every((altSchema) => typeof altSchema !== 'boolean' && isConstant(altSchema));
   }
   return false;
 }

@@ -1,6 +1,7 @@
-import { Field as ChakraField, defaultSystem } from '@chakra-ui/react';
+import type { Field as ChakraField } from '@chakra-ui/react';
+import { defaultSystem } from '@chakra-ui/react';
 import shouldForwardProp from '@emotion/is-prop-valid';
-import { UiSchema } from '@rjsf/utils';
+import type { UiSchema } from '@rjsf/utils';
 
 const { isValidProperty } = defaultSystem;
 

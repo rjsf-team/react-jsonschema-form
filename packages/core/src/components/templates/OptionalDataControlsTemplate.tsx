@@ -1,4 +1,4 @@
-import { FormContextType, OptionalDataControlsTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { FormContextType, OptionalDataControlsTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 import IconButton from './ButtonTemplates/IconButton';
 
@@ -27,7 +27,8 @@ export default function OptionalDataControlsTemplate<
         title={label}
       />
     );
-  } else if (onRemoveClick) {
+  }
+  if (onRemoveClick) {
     return (
       <IconButton
         id={id}

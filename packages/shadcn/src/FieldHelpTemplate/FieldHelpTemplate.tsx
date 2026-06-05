@@ -1,5 +1,6 @@
 import { RichHelp } from '@rjsf/core';
-import { FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema, helpId } from '@rjsf/utils';
+import type { FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { helpId } from '@rjsf/utils';
 
 import { cn } from '../lib/utils';
 
