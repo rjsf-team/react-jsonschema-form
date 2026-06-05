@@ -140,7 +140,7 @@
     "no-lonely-if": "error",
     "no-multi-assign": "error",
     "no-nested-ternary": "error",
-    "no-plusplus": "error",
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
     "no-underscore-dangle": ["error", { "allow": ["__errors", "__createChakraFrameProvider", "__createFluentUIRCFrameProvider", "__createDaisyUIFrameProvider"], "allowAfterThis": false, "allowAfterSuper": false, "enforceInMethodNames": true }],
     "operator-assignment": ["error", "always"],
     "unicode-bom": ["error", "never"],

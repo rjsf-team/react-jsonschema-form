@@ -32,7 +32,7 @@ export default function dataURItoBlob(dataURILike: string) {
   try {
     const binary = atob(base64);
     const array = new Array(binary.length);
-    for (let i = 0; i < binary.length; i += 1) {
+    for (let i = 0; i < binary.length; i++) {
       array[i] = binary.charCodeAt(i);
     }
     // Create the blob object

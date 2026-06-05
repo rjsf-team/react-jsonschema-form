@@ -30,7 +30,7 @@ export default function shallowEquals(a: any, b: any): boolean {
   }
 
   // Check if all keys and values are equal
-  for (let i = 0; i < keysA.length; i += 1) {
+  for (let i = 0; i < keysA.length; i++) {
     const key = keysA[i];
     if (!Object.hasOwn(b, key) || !Object.is(a[key], b[key])) {
       return false;

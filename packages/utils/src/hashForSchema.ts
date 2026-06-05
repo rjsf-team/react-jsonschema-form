@@ -10,7 +10,7 @@ import type { RJSFSchema, StrictRJSFSchema } from './types';
  */
 export function hashString(string: string): string {
   let hash = 0;
-  for (let i = 0; i < string.length; i += 1) {
+  for (let i = 0; i < string.length; i++) {
     const chr = string.charCodeAt(i);
     // oxlint-disable-next-line no-bitwise
     hash = (hash << 5) - hash + chr;

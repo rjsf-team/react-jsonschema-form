@@ -286,18 +286,18 @@ export default function omitExtraData<
     const { items, additionalItems } = childSchema;
     if (items !== undefined) {
       if (Array.isArray(items)) {
-        for (let i = 0; i < items.length; i += 1) {
+        for (let i = 0; i < items.length; i++) {
           target.push(omit(items[i] as S | boolean, source[i]));
         }
       } else {
-        for (let i = 0; i < source.length; i += 1) {
+        for (let i = 0; i < source.length; i++) {
           target.push(omit(items as S | boolean, source[i]));
         }
       }
     }
     // additionalItems covers tuple items beyond the items array length.
     if (additionalItems) {
-      for (let i = target.length; i < source.length; i += 1) {
+      for (let i = target.length; i < source.length; i++) {
         target.push(omit(additionalItems as S | boolean, source[i]));
       }
     }

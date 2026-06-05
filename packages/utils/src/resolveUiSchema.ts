@@ -64,7 +64,7 @@ export default function resolveUiSchema<
         const uiSchemaArray: UiSchema<T, S, F>[] = Array.isArray(currentUiSchemaArray) ? [...currentUiSchemaArray] : [];
 
         let hasExpanded = false;
-        for (let i = 0; i < schemaOptions.length; i += 1) {
+        for (let i = 0; i < schemaOptions.length; i++) {
           const option = schemaOptions[i] as GenericObjectType | undefined;
           const optionRef = (option?.[RJSF_REF_KEY] ?? option?.[REF_KEY]) as string | undefined;
           if (optionRef && optionRef in definitions) {

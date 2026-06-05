@@ -240,7 +240,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const { node } = createFormComponent({ schema, idPrefix: 'rjsf' });
       const inputs = node.querySelectorAll('input');
       const ids = [];
-      for (let i = 0, len = inputs.length; i < len; i += 1) {
+      for (let i = 0, len = inputs.length; i < len; i++) {
         const input = inputs[i];
         ids.push(input.getAttribute('id'));
       }
@@ -264,7 +264,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const { node } = createFormComponent({ schema, idPrefix: 'rjsf' });
       const inputs = node.querySelectorAll('input');
       const ids = [];
-      for (let i = 0, len = inputs.length; i < len; i += 1) {
+      for (let i = 0, len = inputs.length; i < len; i++) {
         const input = inputs[i];
         ids.push(input.getAttribute('id'));
       }
@@ -318,7 +318,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const { node } = createFormComponent({ schema, idPrefix: 'rjsf' });
       const inputs = node.querySelectorAll('input');
       const ids = [];
-      for (let i = 0, len = inputs.length; i < len; i += 1) {
+      for (let i = 0, len = inputs.length; i < len; i++) {
         const input = inputs[i];
         ids.push(input.getAttribute('id'));
       }
@@ -341,7 +341,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const { node } = createFormComponent({ schema, idSeparator: '.' });
       const inputs = node.querySelectorAll('input');
       const ids = [];
-      for (let i = 0, len = inputs.length; i < len; i += 1) {
+      for (let i = 0, len = inputs.length; i < len; i++) {
         const input = inputs[i];
         ids.push(input.getAttribute('id'));
       }
