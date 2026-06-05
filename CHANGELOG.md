@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.7.0
+
+## Dev / docs / playground
+
+- Replaced npm with pnpm for development
+
 # 6.6.2
 
 ## @rjsf/core

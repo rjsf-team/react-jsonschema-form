@@ -14,17 +14,17 @@ export type NoValFormProps = Omit<FormProps, 'validator'>;
 
 // oxlint-disable-next-line no-unused-vars
 export type RerenderType = (newProps: NoValFormProps, v?: ValidatorType) => void;
-export type FormComponentResult = {
+export interface FormComponentResult {
   container: HTMLElement;
   node: Element;
   onChange: Mock;
   onError: Mock;
   onSubmit: Mock;
   rerender: RerenderType;
-};
-export type ConsoleSuppressionResult = {
+}
+export interface ConsoleSuppressionResult {
   readonly consoleSpy: MockInstance;
-};
+}
 
 export function renderNode(Component: ComponentType<any>, props: GenericObjectType) {
   const { container } = render(<Component {...props} />);
@@ -57,7 +57,7 @@ export function createFormComponent(props: NoValFormProps, v: ValidatorType = va
   return createComponent(Form, { validator: v, ...props });
 }
 
-// oxlint-disable-next-line no-unused-vars
+// eslint-disable-next-line no-unused-vars
 type CreatorFn = (creatorFn: typeof createFormComponent) => void;
 
 /* Run a group of tests with different combinations of omitExtraData and liveOmit as form props.
