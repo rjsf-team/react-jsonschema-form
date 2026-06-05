@@ -1,7 +1,9 @@
 // Mock style injection
+// oxlint-disable-next-line typescript/no-deprecated
 const originalCreateElement = document.createElement.bind(document);
 
 beforeAll(() => {
+  // oxlint-disable-next-line typescript/no-deprecated
   document.createElement = (tagName: string) => {
     const element = originalCreateElement(tagName);
     if (tagName === 'style') {
@@ -16,6 +18,7 @@ beforeAll(() => {
 });
 
 afterAll(() => {
+  // oxlint-disable-next-line typescript/no-deprecated
   document.createElement = originalCreateElement;
 });
 

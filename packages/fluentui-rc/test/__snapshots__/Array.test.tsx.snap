@@ -12,7 +12,7 @@ exports[`array fields > array 1`] = `
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
       >
         <div
-          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
         >
           <div
             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
@@ -72,7 +72,7 @@ exports[`array fields > array icons 1`] = `
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
       >
         <div
-          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
         >
           <div
             class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
@@ -568,7 +568,7 @@ exports[`array fields > fixed array 1`] = `
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
       >
         <div
-          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
         >
           <div
             class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
@@ -838,7 +838,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
       >
         <div
-          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
         >
           <div
             class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
@@ -1236,7 +1236,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
       >
         <div
-          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
         >
           <div
             class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
@@ -1617,7 +1617,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
       >
         <div
-          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
         >
           <div
             class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
@@ -1782,7 +1782,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
       >
         <div
-          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
         >
           <div
             class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
@@ -1797,7 +1797,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
                   <div
-                    class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                    class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                   >
                     <div
                       class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
@@ -2180,7 +2180,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
                   <div
-                    class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                    class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                   >
                     <div
                       class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
@@ -2608,7 +2608,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
       >
         <div
-          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
         >
           <div
             class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
@@ -3006,7 +3006,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
       >
         <div
-          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
         >
           <div
             class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
@@ -3338,7 +3338,7 @@ exports[`with title and description > array 1`] = `
           a test description
         </span>
         <div
-          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
         >
           <div
             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
@@ -3420,7 +3420,7 @@ exports[`with title and description > array icons 1`] = `
           a test description
         </span>
         <div
-          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
         >
           <div
             class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
@@ -3912,7 +3912,7 @@ exports[`with title and description > fixed array 1`] = `
           a test description
         </span>
         <div
-          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
         >
           <div
             class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
@@ -4072,7 +4072,7 @@ exports[`with title and description from both > array 1`] = `
           a fancier description
         </span>
         <div
-          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
         >
           <div
             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
@@ -4154,7 +4154,7 @@ exports[`with title and description from both > array icons 1`] = `
           a fancier description
         </span>
         <div
-          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
         >
           <div
             class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
@@ -4646,7 +4646,7 @@ exports[`with title and description from both > fixed array 1`] = `
           a fancier description
         </span>
         <div
-          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
         >
           <div
             class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
@@ -4806,7 +4806,7 @@ exports[`with title and description from uiSchema > array 1`] = `
           a fancier description
         </span>
         <div
-          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
         >
           <div
             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
@@ -4888,7 +4888,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
           a fancier description
         </span>
         <div
-          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
         >
           <div
             class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
@@ -5380,7 +5380,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
           a fancier description
         </span>
         <div
-          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
         >
           <div
             class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
@@ -5518,7 +5518,7 @@ exports[`with title and description with global label off > array 1`] = `
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
       >
         <div
-          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
         >
           <div
             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
@@ -5578,7 +5578,7 @@ exports[`with title and description with global label off > array icons 1`] = `
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
       >
         <div
-          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
         >
           <div
             class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
@@ -5983,7 +5983,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
       >
         <div
-          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
         >
           <div
             class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"

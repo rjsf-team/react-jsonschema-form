@@ -749,7 +749,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                                     class="ant-form-item-control-input-content"
                                                   >
                                                     <div
-                                                      class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow"
+                                                      class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow ant-select-show-search"
                                                       name="root_person_address_state"
                                                       style="width: 100%;"
                                                     >
@@ -768,7 +768,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                                           autocomplete="off"
                                                           class="ant-select-input"
                                                           id="root_person_address_state"
-                                                          readonly=""
                                                           role="combobox"
                                                           type="search"
                                                           value=""
@@ -1194,7 +1193,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                         class="ant-form-item-control-input-content"
                                       >
                                         <div
-                                          class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow"
+                                          class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow ant-select-show-search"
                                           name="root_employment_location_state"
                                           style="width: 100%;"
                                         >
@@ -1213,7 +1212,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                               autocomplete="off"
                                               class="ant-select-input"
                                               id="root_employment_location_state"
-                                              readonly=""
                                               role="combobox"
                                               type="search"
                                               value=""
@@ -2022,7 +2020,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                                     class="ant-form-item-control-input-content"
                                                   >
                                                     <div
-                                                      class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow"
+                                                      class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow ant-select-show-search"
                                                       name="root_person_address_state"
                                                       style="width: 100%;"
                                                     >
@@ -2041,7 +2039,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                                           autocomplete="off"
                                                           class="ant-select-input"
                                                           id="root_person_address_state"
-                                                          readonly=""
                                                           role="combobox"
                                                           type="search"
                                                           value=""
@@ -2523,7 +2520,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                         class="ant-form-item-control-input-content"
                                       >
                                         <div
-                                          class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow"
+                                          class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow ant-select-show-search"
                                           name="root_employment_location_state"
                                           style="width: 100%;"
                                         >
@@ -2542,7 +2539,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                               autocomplete="off"
                                               class="ant-select-input"
                                               id="root_employment_location_state"
-                                              readonly=""
                                               role="combobox"
                                               type="search"
                                               value=""
@@ -3351,7 +3347,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                                     class="ant-form-item-control-input-content"
                                                   >
                                                     <div
-                                                      class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow"
+                                                      class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow ant-select-show-search"
                                                       name="root_person_address_state"
                                                       style="width: 100%;"
                                                     >
@@ -3370,7 +3366,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                                           autocomplete="off"
                                                           class="ant-select-input"
                                                           id="root_person_address_state"
-                                                          readonly=""
                                                           role="combobox"
                                                           type="search"
                                                           value=""
@@ -4418,7 +4413,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                                     class="ant-form-item-control-input-content"
                                                   >
                                                     <div
-                                                      class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow"
+                                                      class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow ant-select-show-search"
                                                       name="root_person_address_state"
                                                       style="width: 100%;"
                                                     >
@@ -4437,7 +4432,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                                           autocomplete="off"
                                                           class="ant-select-input"
                                                           id="root_person_address_state"
-                                                          readonly=""
                                                           role="combobox"
                                                           type="search"
                                                           value=""
@@ -4863,7 +4857,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                         class="ant-form-item-control-input-content"
                                       >
                                         <div
-                                          class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow"
+                                          class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow ant-select-show-search"
                                           name="root_employment_location_state"
                                           style="width: 100%;"
                                         >
@@ -4882,7 +4876,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                               autocomplete="off"
                                               class="ant-select-input"
                                               id="root_employment_location_state"
-                                              readonly=""
                                               role="combobox"
                                               type="search"
                                               value=""
@@ -5638,7 +5631,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                                 class="ant-form-item-control-input-content"
                               >
                                 <div
-                                  class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow"
+                                  class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow ant-select-show-search"
                                   name="root_person_address_state"
                                   style="width: 100%;"
                                 >
@@ -5657,7 +5650,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                                       autocomplete="off"
                                       class="ant-select-input"
                                       id="root_person_address_state"
-                                      readonly=""
                                       role="combobox"
                                       type="search"
                                       value=""
@@ -6412,7 +6404,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                                 class="ant-form-item-control-input-content"
                               >
                                 <div
-                                  class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow"
+                                  class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow ant-select-show-search"
                                   name="root_person_address_state"
                                   style="width: 100%;"
                                 >
@@ -6431,7 +6423,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                                       autocomplete="off"
                                       class="ant-select-input"
                                       id="root_person_address_state"
-                                      readonly=""
                                       role="combobox"
                                       type="search"
                                       value=""

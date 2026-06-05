@@ -165,6 +165,7 @@ export {
   pad,
   parseDateString,
   rangeSpec,
+  // oxlint-disable-next-line typescript/no-deprecated
   removeOptionalEmptyObjects,
   replaceStringParameters,
   resolveUiSchema,

@@ -42,6 +42,7 @@
     "no-control-regex": "error",
     "no-debugger": "error",
     "no-delete-var": "error",
+    "typescript/no-deprecated": "error",
     "no-dupe-class-members": "error",
     "no-dupe-else-if": "error",
     "no-dupe-keys": "error",

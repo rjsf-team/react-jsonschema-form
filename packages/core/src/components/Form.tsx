@@ -197,6 +197,7 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    *
    * NOTE: In a future major release, the `boolean` options for this flag will be removed
    */
+  // oxlint-disable-next-line typescript/no-deprecated
   liveValidate?: 'onChange' | 'onBlur' | DeprecatedBooleanOption;
   /** Flag that describes when live omit will be performed. Live omit happens only when `omitExtraData` is also set to
    * to `true` and the form's data is updated by the user.
@@ -208,6 +209,7 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    *
    * NOTE: In a future major release, the `boolean` options for this flag will be removed
    */
+  // oxlint-disable-next-line typescript/no-deprecated
   liveOmit?: 'onChange' | 'onBlur' | DeprecatedBooleanOption;
   /** If set to true, then extra form data values that are not in any form field will be removed whenever `onSubmit` is
    * called. Set to `false` by default.
@@ -564,6 +566,7 @@ export default class Form<
     const isUncontrolled = props.formData === undefined && this.props.formData === undefined;
     const edit = typeof inputFormData !== 'undefined';
     const liveValidate = 'liveValidate' in props ? props.liveValidate : this.props.liveValidate;
+    // oxlint-disable-next-line typescript/no-deprecated
     const mustValidate = edit && !props.noValidate && liveValidate;
     const experimental_defaultFormStateBehavior =
       'experimental_defaultFormStateBehavior' in props
@@ -646,6 +649,7 @@ export default class Form<
 
     const getCurrentErrors = (): ValidationData<T> => {
       // If the `props.noValidate` option is set or the schema has changed, we reset the error state.
+      // oxlint-disable-next-line typescript/no-deprecated
       if (props.noValidate || isSchemaChanged) {
         return { errors: [], errorSchema: {} };
       }
@@ -860,7 +864,7 @@ export default class Form<
    * @param fields - The fields to keep while filtering
    * @deprecated - To be removed as an exported `Form` function in a future release; there isn't a planned replacement
    */
-  // oxlint-disable-next-line class-methods-use-this
+  // oxlint-disable-next-line class-methods-use-this, typescript/no-deprecated
   getUsedFormData = (formData: T | undefined, fields: string[]): T | undefined => getUsedFormData(formData, fields);
 
   /** Returns the list of field names from inspecting the `pathSchema` as well as using the `formData`
@@ -869,7 +873,7 @@ export default class Form<
    * @param [formData] - The form data to use while checking for empty objects/arrays
    * @deprecated - To be removed as an exported `Form` function in a future release; there isn't a planned replacement
    */
-  // oxlint-disable-next-line class-methods-use-this
+  // oxlint-disable-next-line class-methods-use-this, typescript/no-deprecated
   getFieldNames = (pathSchema: PathSchema<T>, formData?: T): string[][] => getFieldNames(pathSchema, formData);
 
   /** Returns the `formData` after filtering to remove any extra data not in a form field
@@ -931,6 +935,7 @@ export default class Form<
     this.isProcessingUserChange = true;
     const { newValue, path, id } = this.pendingChanges[0];
     const { newErrorSchema } = this.pendingChanges[0];
+    // oxlint-disable-next-line typescript/no-deprecated
     const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, onChange, disabled, readonly } = this.props;
     const { formData: oldFormData, schemaUtils, schema, fieldPathId, schemaValidationErrorSchema, errors } = this.state;
     let { customErrors, retrievedSchema } = this.state;
@@ -1009,6 +1014,7 @@ export default class Form<
     let newFormData = formData;
 
     if (omitExtraData === true && (liveOmit === true || liveOmit === 'onChange')) {
+      // oxlint-disable-next-line typescript/no-deprecated
       newFormData = this.omitExtraData(formData);
       state = { ...state, formData: newFormData };
     }
@@ -1140,6 +1146,7 @@ export default class Form<
       let newFormData: T | undefined = formData;
       let state: Partial<FormState<T, S, F>> = { formData: newFormData };
       if (omitExtraData === true && liveOmit === 'onBlur') {
+        // oxlint-disable-next-line typescript/no-deprecated
         newFormData = this.omitExtraData(formData);
         state = { formData: newFormData };
       }
@@ -1200,10 +1207,12 @@ export default class Form<
     }
 
     event.persist();
+    // oxlint-disable-next-line typescript/no-deprecated
     const { omitExtraData, extraErrors, noValidate, onSubmit } = this.props;
     let { formData: newFormData } = this.state;
 
     if (omitExtraData === true) {
+      // oxlint-disable-next-line typescript/no-deprecated
       newFormData = this.omitExtraData(newFormData);
     }
 
@@ -1248,6 +1257,7 @@ export default class Form<
       nameGenerator,
       useFallbackUiForUnsupportedType = false,
     } = props;
+    // oxlint-disable-next-line typescript/no-deprecated
     const rootFieldId = uiSchema['ui:rootFieldId'];
     // Omit any options that are undefined or null
     return {
@@ -1403,6 +1413,7 @@ export default class Form<
     const { omitExtraData } = this.props;
     let { formData: newFormData } = this.state;
     if (omitExtraData === true) {
+      // oxlint-disable-next-line typescript/no-deprecated
       newFormData = this.omitExtraData(newFormData);
     }
     return this.validateFormWithFormData(newFormData);

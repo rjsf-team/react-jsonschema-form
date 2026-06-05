@@ -48,6 +48,7 @@ export function getUsedFormData<T = any>(formData: T | undefined, fields: string
  * @param [formData] - The form data to use while checking for empty objects/arrays
  * @deprecated - To be removed as an exported `@rjsf/utils` function in a future release
  */
+// oxlint-disable-next-line typescript/no-deprecated
 export function getFieldNames<T = any>(pathSchema: PathSchema<T>, formData?: T): string[][] {
   const formValueHasData = (value: T, isLeaf: boolean) =>
     typeof value !== 'object' || isEmpty(value) || (isLeaf && !isEmpty(value));

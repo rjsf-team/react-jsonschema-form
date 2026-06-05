@@ -9,7 +9,7 @@ import type {
   WidgetProps,
 } from '@rjsf/utils';
 import { getTemplate, TranslatableString, useFileWidgetProps } from '@rjsf/utils';
-import { Markdown } from 'markdown-to-jsx';
+import { Markdown } from 'markdown-to-jsx/react';
 
 function FileInfoPreview<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   fileInfo,

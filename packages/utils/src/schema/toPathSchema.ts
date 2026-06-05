@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated
 import get from 'lodash/get';
 import isObject from 'lodash/isObject';
 import set from 'lodash/set';

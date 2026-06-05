@@ -338,7 +338,6 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                 <button
                   class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   color="secondary"
-                  icontype="default"
                   id="root_customField__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -568,7 +567,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   />
                 </div>
                 <div
-                  class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                  class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                 >
                   <div
                     class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
@@ -1299,7 +1298,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                   />
                 </div>
                 <div
-                  class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                  class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                 >
                   <div
                     class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
@@ -1812,7 +1811,6 @@ exports[`object fields > additionalProperties 1`] = `
                 <button
                   class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   color="secondary"
-                  icontype="default"
                   id="root_foo__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -1957,7 +1955,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                     />
                   </div>
                   <div
-                    class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                    class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                   >
                     <div
                       class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
@@ -1997,7 +1995,6 @@ exports[`object fields > additionalProperties, array type 1`] = `
                 <button
                   class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   color="secondary"
-                  icontype="default"
                   id="root_foo__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -2163,7 +2160,6 @@ exports[`object fields > additionalProperties, description 1`] = `
                 <button
                   class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   color="secondary"
-                  icontype="default"
                   id="root_foo__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -2318,7 +2314,6 @@ exports[`object fields > additionalProperties, label off 1`] = `
                 <button
                   class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   color="secondary"
-                  icontype="default"
                   id="root_foo__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -2506,7 +2501,6 @@ exports[`object fields > additionalProperties, object type 1`] = `
                 <button
                   class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   color="secondary"
-                  icontype="default"
                   id="root_foo__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -2757,7 +2751,6 @@ exports[`object fields > show add button and fields if additionalProperties is t
                 <button
                   class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   color="secondary"
-                  icontype="default"
                   id="root_additionalProperty__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -2934,7 +2927,6 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                 <button
                   class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   color="secondary"
-                  icontype="default"
                   id="root_foo__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -3251,7 +3243,6 @@ exports[`object fields > with title and description > show add button and fields
                 <button
                   class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   color="secondary"
-                  icontype="default"
                   id="root_additionalProperty__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -3428,7 +3419,6 @@ exports[`object fields > with title and description from both > additionalProper
                 <button
                   class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   color="secondary"
-                  icontype="default"
                   id="root_foo__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -3745,7 +3735,6 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                 <button
                   class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   color="secondary"
-                  icontype="default"
                   id="root_foo__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -4062,7 +4051,6 @@ exports[`object fields > with title and description from uiSchema > show add but
                 <button
                   class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   color="secondary"
-                  icontype="default"
                   id="root_additionalProperty__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -4203,7 +4191,6 @@ exports[`object fields > with title and description with global label off > addi
                 <button
                   class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   color="secondary"
-                  icontype="default"
                   id="root_foo__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"
@@ -4428,7 +4415,6 @@ exports[`object fields > with title and description with global label off > show
                 <button
                   class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                   color="secondary"
-                  icontype="default"
                   id="root_additionalProperty__remove"
                   style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
                   title="Remove"

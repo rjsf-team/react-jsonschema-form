@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated
 import noop from 'lodash/noop';
 import type { MockInstance } from 'vitest';
 

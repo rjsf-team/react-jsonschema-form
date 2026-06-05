@@ -5954,6 +5954,7 @@ describe('extraErrors set after submit (#4965)', () => {
         setExtraErrors(sampleErrors);
       }, []);
 
+      // oxlint-disable-next-line typescript/no-deprecated
       return <Form schema={schema} validator={validator} onSubmit={onSubmit} extraErrors={extraErrors} noValidate />;
     }
 

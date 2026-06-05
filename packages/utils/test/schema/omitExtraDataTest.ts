@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated
 import type { PathSchema, RJSFSchema } from '../../src';
 import {
   createSchemaUtils,
