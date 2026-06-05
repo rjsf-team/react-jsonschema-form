@@ -327,7 +327,8 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
         };
         const newKeys: GenericObjectType = { [oldKey]: actualNewKey };
         const keyValues = Object.keys(newFormData).map((key) => {
-          const mappedKey = newKeys[key] || key;
+          // `Object.hasOwn` so a falsy rename target (e.g. `""`) isn't dropped.
+          const mappedKey = Object.hasOwn(newKeys, key) ? newKeys[key] : key;
           return { [mappedKey]: newFormData[key] };
         });
         const renamedObj = Object.assign({}, ...keyValues);
