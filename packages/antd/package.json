@@ -77,7 +77,7 @@
     "rc-picker": "^4.11.3"
   },
   "devDependencies": {
-    "@ant-design/icons": "^6.2.3",
+    "@ant-design/icons": "^6.2.5",
     "@rjsf/core": "6.6.1",
     "@rjsf/snapshot-tests": "6.6.1",
     "@rjsf/utils": "6.6.1",
