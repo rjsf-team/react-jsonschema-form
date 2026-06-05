@@ -19,44 +19,44 @@ export default function getTestValidator<T = any>({
   errorList = [],
 }: TestValidatorParams): TestValidatorType {
   const testValidator: {
-    _data: ValidationData<T>[];
-    _isValid: boolean[];
-    _errorList: RJSFValidationError[][];
+    validatorData: ValidationData<T>[];
+    isValidResult: boolean[];
+    errorList: RJSFValidationError[][];
     validator: TestValidatorType;
   } = {
-    _data: data,
-    _isValid: isValid,
-    _errorList: errorList,
+    validatorData: data,
+    isValidResult: isValid,
+    errorList,
     validator: {
       validateFormData: vi.fn().mockImplementation(() => {
-        if (Array.isArray(testValidator._data) && testValidator._data.length > 0) {
-          return testValidator._data.shift();
+        if (Array.isArray(testValidator.validatorData) && testValidator.validatorData.length > 0) {
+          return testValidator.validatorData.shift();
         }
         return { errors: [], errorSchema: {} };
       }),
       isValid: vi.fn().mockImplementation(() => {
         // console.warn('isValid',  JSON.stringify(args));
-        if (Array.isArray(testValidator._isValid) && testValidator._isValid.length > 0) {
-          return testValidator._isValid.shift();
+        if (Array.isArray(testValidator.isValidResult) && testValidator.isValidResult.length > 0) {
+          return testValidator.isValidResult.shift();
         }
         return true;
       }),
       rawValidation: vi.fn().mockImplementation(noop),
       setReturnValues({ isValid, data, errorList }: TestValidatorParams) {
         if (isValid !== undefined) {
-          testValidator._isValid = isValid;
+          testValidator.isValidResult = isValid;
         }
         if (data !== undefined) {
-          testValidator._data = data;
+          testValidator.validatorData = data;
         }
         if (errorList !== undefined) {
-          testValidator._errorList = errorList;
+          testValidator.errorList = errorList;
         }
       },
       reset() {
-        testValidator._data = [];
-        testValidator._isValid = [];
-        testValidator._errorList = [];
+        testValidator.validatorData = [];
+        testValidator.isValidResult = [];
+        testValidator.errorList = [];
       },
     },
   };

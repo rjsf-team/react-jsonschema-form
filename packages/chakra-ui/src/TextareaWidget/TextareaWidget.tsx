@@ -28,10 +28,10 @@ export default function TextareaWidget<
   rawErrors,
   uiSchema,
 }: WidgetProps<T, S, F>) {
-  const _onChange = ({ target: { value: newValue } }: ChangeEvent<HTMLTextAreaElement>) =>
+  const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
-  const _onBlur = ({ target }: FocusEvent<HTMLTextAreaElement>) => onBlur(id, target && target.value);
-  const _onFocus = ({ target }: FocusEvent<HTMLTextAreaElement>) => onFocus(id, target && target.value);
+  const handleBlur = ({ target }: FocusEvent<HTMLTextAreaElement>) => onBlur(id, target && target.value);
+  const handleFocus = ({ target }: FocusEvent<HTMLTextAreaElement>) => onFocus(id, target && target.value);
 
   const chakraProps = getChakra({ uiSchema });
 
@@ -51,9 +51,9 @@ export default function TextareaWidget<
         value={value ?? ''}
         placeholder={placeholder}
         autoFocus={autofocus}
-        onChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         rows={options.rows}
         aria-describedby={ariaDescribedByIds(id)}
       />

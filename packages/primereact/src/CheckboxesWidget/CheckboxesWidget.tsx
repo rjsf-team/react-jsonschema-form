@@ -43,7 +43,7 @@ export default function CheckboxesWidget<
   const primeProps = (options.prime || {}) as object;
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
-  const _onChange = (index: number) => (e: CheckboxChangeEvent) => {
+  const handleChange = (index: number) => (e: CheckboxChangeEvent) => {
     if (e.checked) {
       onChange(enumOptionsSelectValue<S>(index, checkboxesValues, enumOptions));
     } else {
@@ -57,8 +57,8 @@ export default function CheckboxesWidget<
     options,
   );
 
-  const _onBlur = () => onBlur(id, value);
-  const _onFocus = () => onFocus(id, value);
+  const handleBlur = () => onBlur(id, value);
+  const handleFocus = () => onFocus(id, value);
 
   const description = options.description ?? schema.description;
 
@@ -81,7 +81,10 @@ export default function CheckboxesWidget<
           const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
           const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
           return (
-            <div key={index} style={{ display: 'flex', flexDirection: 'row', gap: '0.5rem', alignItems: 'center' }}>
+            <div
+              key={String(option.value)}
+              style={{ display: 'flex', flexDirection: 'row', gap: '0.5rem', alignItems: 'center' }}
+            >
               <Checkbox
                 inputId={optionId(id, index)}
                 name={htmlName || id}
@@ -90,9 +93,9 @@ export default function CheckboxesWidget<
                 checked={checked}
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={autofocus && index === 0}
-                onChange={_onChange(index)}
-                onBlur={_onBlur}
-                onFocus={_onFocus}
+                onChange={handleChange(index)}
+                onBlur={handleBlur}
+                onFocus={handleFocus}
                 aria-describedby={ariaDescribedByIds(id)}
               />
               <Label id={optionId(id, index)} text={option.label} />

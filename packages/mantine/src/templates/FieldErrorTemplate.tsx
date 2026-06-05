@@ -20,6 +20,7 @@ export default function FieldErrorTemplate<
     <Box id={id} c='red' display='none'>
       <List>
         {errors.map((error, index) => (
+          // oxlint-disable-next-line react/no-array-index-key
           <List.Item key={`field-error-${index}`}>{error}</List.Item>
         ))}
       </List>

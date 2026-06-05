@@ -84,7 +84,7 @@ export default function SelectWidget<
     [value, isMultiple, isEnumeratedObject, enumOptions, optEmptyVal, optionValueFormat, onChange],
   );
 
-  const _onBlur = useCallback(
+  const handleBlur = useCallback(
     ({ target }: FocusEvent<HTMLDivElement>) => {
       const dataValue = target?.getAttribute('data-value');
       if (dataValue !== null) {
@@ -94,7 +94,7 @@ export default function SelectWidget<
     [onBlur, id, enumOptions, optEmptyVal, optionValueFormat],
   );
 
-  const _onFocus = useCallback(
+  const handleFocus = useCallback(
     ({ target }: FocusEvent<HTMLDivElement>) => {
       const dataValue = target?.getAttribute('data-value');
       if (dataValue !== null) {
@@ -126,8 +126,8 @@ export default function SelectWidget<
           className={`btn btn-outline w-full text-left flex justify-between items-center ${
             disabled || readonly ? 'btn-disabled' : ''
           }`}
-          onBlur={_onBlur}
-          onFocus={_onFocus}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
         >
           <span className='truncate'>
             {selectedValues.length > 0
@@ -141,7 +141,7 @@ export default function SelectWidget<
             const encodedValue = enumOptionValueEncoder(optValue, i, optionValueFormat);
             return (
               <li
-                key={i}
+                key={String(optValue)}
                 role='button'
                 tabIndex={0}
                 className={`px-4 py-2 hover:bg-base-200 cursor-pointer ${

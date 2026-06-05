@@ -20,8 +20,8 @@ export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSche
         <div className='p-message-summary'>{translateString(TranslatableString.ErrorsLabel)}</div>
       </div>
       <ul className='p-message-list'>
-        {errors.map((error, index) => (
-          <li key={`error-${index}`}>{error.stack}</li>
+        {errors.map((error) => (
+          <li key={error.stack}>{error.stack}</li>
         ))}
       </ul>
     </div>

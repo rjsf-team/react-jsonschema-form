@@ -1,3 +1,4 @@
+// oxlint-disable no-console
 const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
@@ -28,6 +29,7 @@ dirs.forEach((dir) => {
       // the same value as the devDependency, so instead we extract out the major.minor versions
       const majorMinorMatch = devDeps[key].match(MAJOR_MINOR_REGEX);
       if (!majorMinorMatch) {
+
         console.log(`Can't find major.minor version in ${devDeps[key]} for ${key}`);
         process.exit(1);
       }

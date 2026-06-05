@@ -436,7 +436,7 @@ describe('uiSchema', () => {
         const { enumOptions, className } = options;
         return (
           <select className={className}>
-            {Array.isArray(enumOptions) && enumOptions.map(({ value }, i) => <option key={i}>{value}</option>)}
+            {Array.isArray(enumOptions) && enumOptions.map(({ value }) => <option key={String(value)}>{value}</option>)}
           </select>
         );
       };

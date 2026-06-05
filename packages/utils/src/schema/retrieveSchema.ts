@@ -803,45 +803,42 @@ export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
   let schemas = [resolvedSchema];
   // Process dependencies updating the local schema properties as appropriate.
   for (const dependencyKey in dependencies) {
-    // Skip this dependency if its trigger property is not present.
-    if (!expandAllBranches && get(formData, [dependencyKey]) === undefined) {
-      continue;
-    }
-    // Skip this dependency if it is not included in the schema (such as when dependencyKey is itself a hidden dependency.)
-    if (resolvedSchema.properties && !(dependencyKey in resolvedSchema.properties)) {
-      continue;
-    }
-    const [remainingDependencies, dependencyValue] = splitKeyElementFromObject(
-      dependencyKey,
-      dependencies as GenericObjectType,
-    );
-    if (Array.isArray(dependencyValue)) {
-      schemas[0] = withDependentProperties<S>(resolvedSchema, dependencyValue);
-    } else if (isObject(dependencyValue)) {
-      schemas = withDependentSchema<T, S, F>(
-        validator,
-        resolvedSchema,
-        rootSchema,
+    if (
+      (expandAllBranches || get(formData, [dependencyKey]) !== undefined) &&
+      (!resolvedSchema.properties || dependencyKey in resolvedSchema.properties)
+    ) {
+      const [remainingDependencies, dependencyValue] = splitKeyElementFromObject(
         dependencyKey,
-        dependencyValue as S,
-        expandAllBranches,
-        recurseList,
-        formData,
-        experimental_customMergeAllOf,
+        dependencies as GenericObjectType,
+      );
+      if (Array.isArray(dependencyValue)) {
+        schemas[0] = withDependentProperties<S>(resolvedSchema, dependencyValue);
+      } else if (isObject(dependencyValue)) {
+        schemas = withDependentSchema<T, S, F>(
+          validator,
+          resolvedSchema,
+          rootSchema,
+          dependencyKey,
+          dependencyValue as S,
+          expandAllBranches,
+          recurseList,
+          formData,
+          experimental_customMergeAllOf,
+        );
+      }
+      return schemas.flatMap((schema) =>
+        processDependencies<T, S, F>(
+          validator,
+          remainingDependencies,
+          schema,
+          rootSchema,
+          expandAllBranches,
+          recurseList,
+          formData,
+          experimental_customMergeAllOf,
+        ),
       );
     }
-    return schemas.flatMap((schema) =>
-      processDependencies<T, S, F>(
-        validator,
-        remainingDependencies,
-        schema,
-        rootSchema,
-        expandAllBranches,
-        recurseList,
-        formData,
-        experimental_customMergeAllOf,
-      ),
-    );
   }
   return schemas;
 }

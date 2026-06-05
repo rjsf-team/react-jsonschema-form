@@ -64,13 +64,13 @@ export default function ObjectFieldTemplate<
       )}
       <Flex fill column gap='gap.medium'>
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
-        {properties.map((element, index) =>
+        {properties.map((element) =>
           // Remove the <Grid> if the inner element is hidden as the <Grid>
           // itself would otherwise still take up space.
           element.hidden ? (
             element.content
           ) : (
-            <Flex column fill key={index} style={{ marginBottom: '10px' }}>
+            <Flex column fill key={element.name} style={{ marginBottom: '10px' }}>
               {element.content}
             </Flex>
           ),

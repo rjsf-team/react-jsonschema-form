@@ -400,6 +400,7 @@ describeRepeated('Form common', (createFormComponent) => {
           {rawErrors ? (
             <ul>
               {rawErrors.map((error, i) => (
+                // oxlint-disable-next-line react/no-array-index-key
                 <li key={i} className='raw-error'>
                   {error}
                 </li>
@@ -3213,8 +3214,8 @@ describeRepeated('Form common', (createFormComponent) => {
 
         // customValidate method to raise an error when Start is larger than End field.
         const customValidate = (formData: any, errors: FormValidation) => {
-          if (formData['Start'] > formData['End']) {
-            errors['Start']?.addError('Validate error: Test should be LE than End');
+          if (formData.Start > formData.End) {
+            errors.Start?.addError('Validate error: Test should be LE than End');
           }
           return errors;
         };

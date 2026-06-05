@@ -31,9 +31,9 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const { showButtons, buttonLayout, useGrouping, minFractionDigits, maxFractionDigits, locale, currency } = options;
   const primeProps = (options.prime || {}) as object;
 
-  const _onChange = (event: InputNumberChangeEvent) => onChange(event.value === null ? options.emptyValue : value);
-  const _onBlur = () => onBlur && onBlur(id, value);
-  const _onFocus = () => onFocus && onFocus(id, value);
+  const handleChange = (event: InputNumberChangeEvent) => onChange(event.value === null ? options.emptyValue : value);
+  const handleBlur = () => onBlur && onBlur(id, value);
+  const handleFocus = () => onFocus && onFocus(id, value);
 
   return (
     <InputNumber
@@ -56,9 +56,9 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
       currency={currency as string}
       value={Number.isNaN(Number(value)) ? null : Number(value)}
       invalid={rawErrors.length > 0}
-      onChange={onChangeOverride || _onChange}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
+      onChange={onChangeOverride || handleChange}
+      onBlur={handleBlur}
+      onFocus={handleFocus}
       aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
     />
   );

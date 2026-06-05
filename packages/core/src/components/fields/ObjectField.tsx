@@ -258,7 +258,8 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       let index = 0;
       let newKey = preferredKey;
       while (has(existingFormData, newKey)) {
-        newKey = `${preferredKey}${duplicateKeySuffixSeparator}${++index}`;
+        index += 1;
+        newKey = `${preferredKey}${duplicateKeySuffixSeparator}${index}`;
       }
       return newKey;
     },

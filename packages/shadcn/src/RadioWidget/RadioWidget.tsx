@@ -33,11 +33,11 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
 
-  const _onChange = (enumValue: string) =>
+  const handleChange = (enumValue: string) =>
     onChange(enumOptionValueDecoder<S>(enumValue, enumOptions, optionValueFormat, emptyValue));
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
 
   const inline = Boolean(options && options.inline);
@@ -49,10 +49,10 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         required={required}
         disabled={disabled || readonly}
         onValueChange={(e: string) => {
-          _onChange(e);
+          handleChange(e);
         }}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         aria-describedby={ariaDescribedByIds(id)}
         orientation={inline ? 'horizontal' : 'vertical'}
         className={cn('flex flex-wrap', { 'flex-col': !inline }, className)}

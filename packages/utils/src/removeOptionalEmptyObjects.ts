@@ -79,13 +79,10 @@ export default function removeOptionalEmptyObjects<
       // oxlint-disable-next-line @typescript-eslint/no-deprecated
       const cleaned = removeOptionalEmptyObjects<T, S, F>(validator, propertySchema, rootSchema, value as T);
 
-      if (!isRequired && isValueEmpty(cleaned)) {
-        // This is an optional property and the cleaned result is empty — omit it
-        continue;
+      if (isRequired || !isValueEmpty(cleaned)) {
+        result[key] = cleaned;
+        hasAnyValue = true;
       }
-
-      result[key] = cleaned;
-      hasAnyValue = true;
     } else if (isRequired || !isValueEmpty(value) || !properties[key]) {
       // Keep: required, non-empty, or not schema-defined; skip optional empty scalars silently
       result[key] = value;

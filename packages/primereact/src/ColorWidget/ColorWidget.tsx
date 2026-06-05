@@ -30,10 +30,10 @@ export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const { inline } = options;
   const primeProps = (options.prime || {}) as object;
 
-  const _onChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
+  const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
-  const _onBlur = () => onBlur && onBlur(id, value);
-  const _onFocus = () => onFocus && onFocus(id, value);
+  const handleBlur = () => onBlur && onBlur(id, value);
+  const handleFocus = () => onFocus && onFocus(id, value);
 
   return (
     <ColorPicker
@@ -47,9 +47,9 @@ export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       autoFocus={autofocus}
       disabled={disabled || readonly}
       value={value || ''}
-      onChange={onChangeOverride || _onChange}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
+      onChange={onChangeOverride || handleChange}
+      onBlur={handleBlur}
+      onFocus={handleFocus}
       aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
     />
   );

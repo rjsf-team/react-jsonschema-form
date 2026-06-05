@@ -29,6 +29,7 @@ const SliderMarks = forwardRef<HTMLDivElement, SliderMarksProps>((props, ref) =>
         const value = typeof mark === 'number' ? mark : mark.value;
         const label = typeof mark === 'number' ? undefined : mark.label;
         return (
+          // oxlint-disable-next-line react/no-array-index-key
           <ChakraSlider.Marker key={index} value={value}>
             <ChakraSlider.MarkerIndicator />
             {label}
@@ -91,6 +92,7 @@ function SliderThumbs(props: { value?: number[] }) {
   return (
     <>
       {value?.map((_, index) => (
+        // oxlint-disable-next-line react/no-array-index-key
         <ChakraSlider.Thumb key={index} index={index}>
           <ChakraSlider.HiddenInput />
         </ChakraSlider.Thumb>

@@ -81,6 +81,7 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       {rawErrors &&
         rawErrors?.length > 0 &&
         rawErrors.map((error: string, index: number) => (
+          // oxlint-disable-next-line react/no-array-index-key
           <Input.Error key={`range-widget-input-errors-${index}`}>{error}</Input.Error>
         ))}
     </>

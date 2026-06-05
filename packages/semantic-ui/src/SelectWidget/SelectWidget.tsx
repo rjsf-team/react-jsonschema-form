@@ -102,11 +102,11 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     placeholder,
     optionValueFormat,
   );
-  const _onChange = (_: SyntheticEvent<HTMLElement>, { value: enumValue }: DropdownProps) =>
+  const handleChange = (_: SyntheticEvent<HTMLElement>, { value: enumValue }: DropdownProps) =>
     onChange(enumOptionValueDecoder<S>(enumValue as string[], enumOptions, optionValueFormat, optEmptyVal));
-  const _onBlur = (_: FocusEvent<HTMLElement>, { target }: DropdownProps) =>
+  const handleBlur = (_: FocusEvent<HTMLElement>, { target }: DropdownProps) =>
     onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, optEmptyVal));
-  const _onFocus = (_: FocusEvent<HTMLElement>, { target }: DropdownProps) =>
+  const handleFocus = (_: FocusEvent<HTMLElement>, { target }: DropdownProps) =>
     onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, optEmptyVal));
   return (
     <Form.Dropdown
@@ -124,9 +124,9 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       autoFocus={autofocus}
       readOnly={readonly}
       options={dropdownOptions}
-      onChange={_onChange}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      onFocus={handleFocus}
       aria-describedby={ariaDescribedByIds(id)}
     />
   );

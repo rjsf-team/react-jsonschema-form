@@ -80,11 +80,11 @@ function CheckboxesWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
             </span>
           );
           return inline ? (
-            <label key={index} className={`checkbox-inline ${disabledCls}`}>
+            <label key={String(option.value)} className={`checkbox-inline ${disabledCls}`}>
               {checkbox}
             </label>
           ) : (
-            <div key={index} className={`checkbox ${disabledCls}`}>
+            <div key={String(option.value)} className={`checkbox ${disabledCls}`}>
               <label>{checkbox}</label>
             </div>
           );

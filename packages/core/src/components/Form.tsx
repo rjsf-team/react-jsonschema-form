@@ -319,7 +319,7 @@ export interface FormState<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   /** The registry (re)computed only when props changed */
   registry: Registry<T, S, F>;
   /** Tracks the previous `extraErrors` prop reference so that `getDerivedStateFromProps` can detect changes */
-  _prevExtraErrors?: ErrorSchema<T>;
+  prevExtraErrors?: ErrorSchema<T>;
 }
 
 /** The event data passed when changes have been made to the form, includes everything from the `FormState` except
@@ -384,7 +384,7 @@ export default class Form<
   /** Flag to track when we're processing a user-initiated field change.
    * This prevents componentDidUpdate from reverting oneOf/anyOf option switches.
    */
-  private _isProcessingUserChange = false;
+  private isProcessingUserChange = false;
 
   /** When the `extraErrors` prop changes, re-merges `schemaValidationErrors` + `extraErrors` + `customErrors` into
    * state before render, ensuring the updated errors are visible immediately in a single render cycle.
@@ -397,7 +397,7 @@ export default class Form<
     props: FormProps<T, S, F>,
     state: FormState<T, S, F>,
   ): Partial<FormState<T, S, F>> | null {
-    if (props.extraErrors !== state._prevExtraErrors) {
+    if (props.extraErrors !== state.prevExtraErrors) {
       const baseErrors: ValidationData<T> = {
         errors: state.schemaValidationErrors || [],
         errorSchema: state.schemaValidationErrorSchema || {},
@@ -413,7 +413,7 @@ export default class Form<
           true,
         ));
       }
-      return { _prevExtraErrors: props.extraErrors, errors, errorSchema };
+      return { prevExtraErrors: props.extraErrors, errors, errorSchema };
     }
     return null;
   }
@@ -435,7 +435,7 @@ export default class Form<
     const formData = propsFormData ?? initialFormData;
     this.state = {
       ...this.getStateFromProps(props, formData, undefined, undefined, undefined, true),
-      _prevExtraErrors: props.extraErrors,
+      prevExtraErrors: props.extraErrors,
     };
     if (onChange && !deepEquals(this.state.formData, formData)) {
       onChange(toIChangeEvent(this.state));
@@ -519,8 +519,8 @@ export default class Form<
       // Prevent oneOf/anyOf option switches from reverting when getStateFromProps
       // re-evaluates and produces stale formData.
       const nextStateDiffersFromProps = !deepEquals(nextState.formData, this.props.formData);
-      const wasProcessingUserChange = this._isProcessingUserChange;
-      this._isProcessingUserChange = false;
+      const wasProcessingUserChange = this.isProcessingUserChange;
+      this.isProcessingUserChange = false;
 
       if (wasProcessingUserChange && nextStateDiffersFromProps) {
         // Skip - the user's option switch is already applied via processPendingChange
@@ -530,6 +530,7 @@ export default class Form<
       if (nextStateDiffersFromProps && !deepEquals(nextState.formData, prevState.formData) && this.props.onChange) {
         this.props.onChange(toIChangeEvent(nextState));
       }
+      // oxlint-disable-next-line react/no-did-update-set-state -- guarded to prevent infinite loop
       this.setState(nextState);
     }
   }
@@ -600,7 +601,7 @@ export default class Form<
       defaultsFormData = state.formData;
     }
     let formData: T;
-    let _retrievedSchema: S;
+    let computedRetrievedSchema: S;
     let wasSanitized = false;
     const preventInfiniteSanitize: string[] = [];
     do {
@@ -612,18 +613,18 @@ export default class Form<
       ) as T;
       // Only hash when sanitizing, wrapping `formData` in an object to deal with a scalar/undefined value
       const formHash = shouldSanitize ? hashObject({ formData }) : '';
-      _retrievedSchema = this.updateRetrievedSchema(
+      computedRetrievedSchema = this.updateRetrievedSchema(
         retrievedSchema ?? schemaUtils.retrieveSchema(rootSchema, formData),
       );
       if (
         shouldSanitize &&
         !preventInfiniteSanitize.includes(formHash) &&
-        !deepEquals(_retrievedSchema, state.retrievedSchema)
+        !deepEquals(computedRetrievedSchema, state.retrievedSchema)
       ) {
         // Sanitize the form data if shouldSanitize is true, we haven't already processed this same formData AND
         // we have a different retrieved schema from when we last ran the state
         const sanitizedFormData = schemaUtils.sanitizeDataForNewSchema(
-          _retrievedSchema,
+          computedRetrievedSchema,
           state.retrievedSchema,
           formData,
         );
@@ -691,11 +692,12 @@ export default class Form<
           acc[key] = undefined;
           return acc;
         }, {});
-        errorSchema = schemaValidationErrorSchema = mergeObjects(
+        schemaValidationErrorSchema = mergeObjects(
           currentErrors.errorSchema,
           newErrorSchema,
           'preventDuplicates',
         ) as ErrorSchema<T>;
+        errorSchema = schemaValidationErrorSchema;
       }
       const mergedErrors = Form.mergeErrors<T>({ errorSchema, errors }, props.extraErrors, state.customErrors);
       errors = mergedErrors.errors;
@@ -722,7 +724,7 @@ export default class Form<
       errorSchema,
       schemaValidationErrors,
       schemaValidationErrorSchema,
-      retrievedSchema: _retrievedSchema,
+      retrievedSchema: computedRetrievedSchema,
       initialDefaultsGenerated: true,
       registry,
     };
@@ -926,7 +928,7 @@ export default class Form<
     }
     // Mark that we're processing a user-initiated change.
     // This prevents componentDidUpdate from reverting oneOf/anyOf option switches.
-    this._isProcessingUserChange = true;
+    this.isProcessingUserChange = true;
     const { newValue, path, id } = this.pendingChanges[0];
     const { newErrorSchema } = this.pendingChanges[0];
     const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, onChange, disabled, readonly } = this.props;
@@ -1430,7 +1432,7 @@ export default class Form<
     } = this.props;
 
     const { schema, uiSchema, formData, errorSchema, fieldPathId, registry } = this.state;
-    const { SchemaField: _SchemaField } = registry.fields;
+    const { SchemaField: SchemaFieldComponent } = registry.fields;
     const { SubmitButton } = registry.templates.ButtonTemplates;
     // The `semantic-ui` and `material-ui` themes have `_internalFormWrapper`s that take an `as` prop that is the
     // PropTypes.elementType to use for the inner tag, so we'll need to pass `tagName` along if it is provided.
@@ -1461,7 +1463,7 @@ export default class Form<
         ref={this.formElement}
       >
         {showErrorList === 'top' && this.renderErrors(registry)}
-        <_SchemaField
+        <SchemaFieldComponent
           name=''
           schema={schema}
           uiSchema={uiSchema}

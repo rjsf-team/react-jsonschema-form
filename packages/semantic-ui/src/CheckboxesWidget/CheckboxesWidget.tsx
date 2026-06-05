@@ -52,7 +52,7 @@ export default function CheckboxesWidget<
       inverted: 'false',
     },
   });
-  const _onChange =
+  const handleChange =
     (index: number) =>
     ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
       // oxlint-disable-next-line no-shadow
@@ -63,8 +63,8 @@ export default function CheckboxesWidget<
       }
     };
 
-  const _onBlur = () => onBlur(id, value);
-  const _onFocus = () => onFocus(id, value);
+  const handleBlur = () => onBlur(id, value);
+  const handleFocus = () => onFocus(id, value);
   const inlineOption = inline ? { inline: true } : { grouped: true };
   return (
     <>
@@ -80,16 +80,16 @@ export default function CheckboxesWidget<
               <Form.Checkbox
                 id={optionId(id, index)}
                 name={htmlName || id}
-                key={index}
+                key={String(option.value)}
                 label={option.label}
                 {...semanticProps}
                 checked={checked}
                 error={rawErrors.length > 0}
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={autofocus && index === 0}
-                onChange={_onChange(index)}
-                onBlur={_onBlur}
-                onFocus={_onFocus}
+                onChange={handleChange(index)}
+                onBlur={handleBlur}
+                onFocus={handleFocus}
                 aria-describedby={ariaDescribedByIds(id)}
               />
             );

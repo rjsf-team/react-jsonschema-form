@@ -58,7 +58,7 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
   );
   if (optionalDataControl) {
     heading = (
-      <Grid container={true} spacing={0} {...titleGridContainer}>
+      <Grid container spacing={0} {...titleGridContainer}>
         <Grid size='grow' {...titleGridItem}>
           {heading}
         </Grid>

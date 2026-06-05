@@ -88,7 +88,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         <Flex mt='xs' direction={inline ? 'row' : 'column'} gap='xs' wrap='wrap'>
           {enumOptions.map((option, i) => (
             <Radio
-              key={i}
+              key={String(option.value)}
               id={optionId(id, i)}
               value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
               label={option.label}

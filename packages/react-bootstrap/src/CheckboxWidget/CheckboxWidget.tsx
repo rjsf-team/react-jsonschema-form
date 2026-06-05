@@ -35,9 +35,9 @@ export default function CheckboxWidget<
     options,
   );
 
-  const _onChange = ({ target: { checked } }: FocusEvent<HTMLInputElement>) => onChange(checked);
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.checked);
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.checked);
+  const handleChange = ({ target: { checked } }: FocusEvent<HTMLInputElement>) => onChange(checked);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.checked);
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.checked);
 
   const description = options.description || schema.description;
   return (
@@ -59,10 +59,10 @@ export default function CheckboxWidget<
         required={required}
         disabled={disabled || readonly}
         autoFocus={autofocus}
-        onChange={_onChange}
+        onChange={handleChange}
         type='checkbox'
-        onBlur={_onBlur}
-        onFocus={_onFocus}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
       />
     </Form.Group>
   );

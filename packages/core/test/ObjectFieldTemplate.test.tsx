@@ -14,6 +14,7 @@ class ObjectFieldTemplate extends PureComponent<ObjectFieldTemplateProps> {
         <DescriptionFieldTemplate id='test-desc' description={description} registry={registry} schema={schema} />
         <div>
           {properties.map(({ content }, index) => (
+            // oxlint-disable-next-line react/no-array-index-key
             <div key={index} className='property'>
               {content}
             </div>
