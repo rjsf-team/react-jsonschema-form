@@ -75,7 +75,7 @@ function GridTemplateColumn(props: GridTemplateProps) {
 
   useEffect(() => {
     if (typeof window === 'undefined') {
-      return;
+      return () => {};
     }
 
     const handleResize = () => setBreakpoint(getBreakpoint(window.innerWidth));

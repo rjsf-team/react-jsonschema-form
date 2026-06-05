@@ -35,6 +35,7 @@
     "default-case": ["error", {"commentPattern": "^no default$"}],
     "default-case-last": "error",
     "default-param-last": "error",
+    "dot-notation": ["error", {"allowKeywords": true}],
     "eqeqeq": ["error", "always", {"null": "ignore"}],
     "for-direction": "error",
     "func-names": "warn",
@@ -265,6 +266,7 @@
     "symbol-description": "error",
     "typescript/await-thenable": "error",
     "typescript/ban-ts-comment": "error",
+    "typescript/consistent-return": "error",
     "typescript/no-deprecated": "error",
     "typescript/no-duplicate-enum-values": "error",
     "typescript/no-empty-object-type": "error",
@@ -353,7 +355,6 @@
         "typescript/prefer-find": "error",
         "typescript/prefer-function-type": "error",
         "typescript/prefer-includes": "warn",
-        "typescript/prefer-nullish-coalescing": "off",
         "typescript/prefer-reduce-type-parameter": "error",
         "typescript/prefer-string-starts-ends-with": "warn",
         "typescript/return-await": ["error", "in-try-catch"]
@@ -378,7 +379,6 @@
         "react/no-find-dom-node": "off",
         "react/rules-of-hooks": "error",
         "typescript/no-explicit-any": "off",
-        "typescript/no-non-null-assertion": "off",
         "typescript/no-require-imports": "off",
         "typescript/no-var-requires": "warn"
       },
