@@ -5246,7 +5246,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           });
         });
       });
-      it('should prefer parent default of ');
     });
     describe('defaults with allOf', () => {
       let schema: RJSFSchema;
