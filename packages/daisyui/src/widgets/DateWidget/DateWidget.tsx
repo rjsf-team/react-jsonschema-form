@@ -267,7 +267,7 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
   // Handle window resize to reposition the calendar
   useEffect(() => {
     if (!isOpen) {
-      return;
+      return () => {};
     }
 
     // Position initially
