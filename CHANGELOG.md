@@ -33,6 +33,10 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `sanitizeDataForNewSchema()` to preserve valid enum values while replacing or clearing stale values across enum, `oneOf`, and `anyOf` schema changes, fixing [#3838](https://github.com/rjsf-team/react-jsonschema-form/issues/3838)
 - Updated `sanitizeDataForNewSchema()` to filter out invalid enum values in arrays, fixing [#1357](https://github.com/rjsf-team/react-jsonschema-form/issues/1357) and [#2492](https://github.com/rjsf-team/react-jsonschema-form/issues/2492)
 
+## @rjsf/shadcn
+
+- Updated the single select trigger to use native button semantics with expanded and disabled state coverage, fixing [#4764](https://github.com/rjsf-team/react-jsonschema-form/issues/4764) ([#5117](https://github.com/rjsf-team/react-jsonschema-form/pull/5117))
+
 ## Dev / docs / playground
 
 - Upgraded `vitest` and `jsdom` to the latest to remove deprecated package warnings
