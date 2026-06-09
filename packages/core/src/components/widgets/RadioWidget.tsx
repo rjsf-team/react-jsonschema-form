@@ -33,13 +33,13 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
 
   const handleBlur = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) =>
-      onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue)),
+      onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue)),
     [onBlur, enumOptions, emptyValue, id, optionValueFormat],
   );
 
   const handleFocus = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) =>
-      onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue)),
+      onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue)),
     [onFocus, enumOptions, emptyValue, id, optionValueFormat],
   );
 

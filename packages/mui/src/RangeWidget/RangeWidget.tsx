@@ -31,8 +31,8 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const handleChange = (_: any, newValue?: number | number[]) => {
     onChange(newValue ?? options.emptyValue);
   };
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value);
 
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, RangeWidgetMuiProps>(options);
 

@@ -54,7 +54,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const handleBlur = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) => {
       if (onBlur) {
-        onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
+        onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
       }
     },
     [onBlur, id, enumOptions, emptyValue, optionValueFormat],
@@ -63,7 +63,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const handleFocus = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) => {
       if (onFocus) {
-        onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
+        onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
       }
     },
     [onFocus, id, enumOptions, emptyValue, optionValueFormat],

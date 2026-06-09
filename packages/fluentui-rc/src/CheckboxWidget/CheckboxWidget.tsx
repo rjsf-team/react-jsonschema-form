@@ -20,7 +20,7 @@ export default function CheckboxWidget<
     value,
     disabled,
     readonly,
-    label = '',
+    label,
     hideLabel,
     autofocus,
     onChange,
@@ -41,8 +41,8 @@ export default function CheckboxWidget<
   const required = schemaRequiresTrueValue<S>(schema);
 
   const handleChange = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => onChange(checked);
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.checked);
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.checked);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.checked);
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.checked);
   const description = options.description ?? schema.description;
 
   return (

@@ -100,7 +100,7 @@ export function FancyMultiSelect({
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>) => {
-      if (disabled || !inputRef.current || inputRef.current.value !== '') {
+      if (disabled || inputRef.current?.value !== '') {
         return;
       }
 

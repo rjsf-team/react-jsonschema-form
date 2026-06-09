@@ -19,8 +19,8 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const handleChange = (e: SliderChangeEvent) => {
     onChange(e.value ?? options.emptyValue);
   };
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value);
 
   return (
     <Slider

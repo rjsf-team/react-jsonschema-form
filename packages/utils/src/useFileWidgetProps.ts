@@ -40,7 +40,7 @@ function addNameToDataURL(dataURL: string, name: string) {
  * @param file - The `File` information to read
  * @returns - A promise that resolves to the read file.
  */
-function processFile(file: File): Promise<FileInfoType> {
+async function processFile(file: File): Promise<FileInfoType> {
   const { name, size, type } = file;
   return new Promise((resolve, reject) => {
     const reader = new window.FileReader();
@@ -71,7 +71,7 @@ function processFile(file: File): Promise<FileInfoType> {
  * @param files - The list of files to read
  * @returns - The list of read files
  */
-function processFiles(files: FileList) {
+async function processFiles(files: FileList) {
   return Promise.all(Array.from(files).map(processFile));
 }
 

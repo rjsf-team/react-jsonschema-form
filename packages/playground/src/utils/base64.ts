@@ -13,7 +13,7 @@ const base64 = (function base64() {
       if (typeof TextEncoder !== 'undefined') {
         encoder = new TextEncoder();
       } else {
-        // oxlint-disable-next-line typescript/no-var-requires
+        // oxlint-disable-next-line typescript/no-var-requires, no-require-imports
         const { TextEncoder } = require('util');
         encoder = new TextEncoder();
       }
@@ -24,7 +24,7 @@ const base64 = (function base64() {
       if (typeof TextDecoder !== 'undefined') {
         decoder = new TextDecoder();
       } else {
-        // oxlint-disable-next-line typescript/no-var-requires
+        // oxlint-disable-next-line typescript/no-var-requires, no-require-imports
         const { TextDecoder } = require('util');
         decoder = new TextDecoder();
       }

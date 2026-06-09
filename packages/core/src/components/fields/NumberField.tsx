@@ -64,7 +64,7 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       // <select>, due to an enum declaration etc) then, if the value ends in a
       // trailing decimal point or multiple zeroes, strip the trailing values
       const processed =
-        typeof normalizedValue === 'string' && normalizedValue.match(trailingCharMatcherWithPrefix)
+        typeof normalizedValue === 'string' && trailingCharMatcherWithPrefix.exec(normalizedValue)
           ? asNumber(normalizedValue.replace(trailingCharMatcher, ''))
           : asNumber(normalizedValue);
 

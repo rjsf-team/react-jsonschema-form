@@ -14,7 +14,7 @@ function UnsupportedField<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   const { translateString } = registry;
   let translateEnum: TranslatableString = TranslatableString.UnsupportedField;
   const translateParams: string[] = [];
-  if (fieldPathId && fieldPathId.$id) {
+  if (fieldPathId?.$id) {
     translateEnum = TranslatableString.UnsupportedFieldWithId;
     translateParams.push(fieldPathId.$id);
   }

@@ -28,7 +28,7 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
     }
 
     const control: HTMLLabelElement | null = document.querySelector(`[id="${id}"]`);
-    if (control && control.focus) {
+    if (control?.focus) {
       control.focus();
     }
   };

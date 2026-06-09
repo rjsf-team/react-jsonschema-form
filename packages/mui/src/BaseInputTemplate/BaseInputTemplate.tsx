@@ -92,8 +92,8 @@ export default function BaseInputTemplate<
   };
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value);
   const DisplayInputLabelProps = TYPES_THAT_SHRINK_LABEL.includes(type)
     ? { ...slotProps?.inputLabel, ...muiSlotProps?.inputLabel, ...InputLabelProps, shrink: true }
     : { ...slotProps?.inputLabel, ...muiSlotProps?.inputLabel, ...InputLabelProps };

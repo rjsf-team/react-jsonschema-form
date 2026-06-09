@@ -56,7 +56,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const handleBlur = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) => {
       if (onBlur) {
-        onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
+        onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
       }
     },
     [onBlur, id, enumOptions, emptyValue, optionValueFormat],
@@ -65,7 +65,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const handleFocus = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) => {
       if (onFocus) {
-        onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
+        onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
       }
     },
     [onFocus, id, enumOptions, emptyValue, optionValueFormat],
