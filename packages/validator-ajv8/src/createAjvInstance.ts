@@ -1,4 +1,9 @@
-import { ADDITIONAL_PROPERTY_FLAG, RJSF_ADDITIONAL_PROPERTIES_FLAG } from '@rjsf/utils';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  RJSF_ADDITIONAL_PROPERTIES_FLAG,
+  RJSF_REF_CYCLE_KEY,
+  RJSF_REF_KEY,
+} from '@rjsf/utils';
 import type { Options } from 'ajv';
 import Ajv from 'ajv';
 import type { FormatsPluginOptions } from 'ajv-formats';
@@ -56,6 +61,8 @@ export default function createAjvInstance(
   // Add RJSF-specific additional properties keywords so Ajv doesn't report errors if strict is enabled.
   ajv.addKeyword(ADDITIONAL_PROPERTY_FLAG);
   ajv.addKeyword(RJSF_ADDITIONAL_PROPERTIES_FLAG);
+  ajv.addKeyword(RJSF_REF_CYCLE_KEY);
+  ajv.addKeyword(RJSF_REF_KEY);
 
   // add more schemas to validate against
   if (Array.isArray(additionalMetaSchemas)) {

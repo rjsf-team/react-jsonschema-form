@@ -1,5 +1,5 @@
 import type { RJSFSchema } from '../src';
-import { hashForSchema, hashObject, hashString, sortedJSONStringify, RJSF_REF_KEY } from '../src';
+import { hashForSchema, hashObject, hashString, sortedJSONStringify, RJSF_PREFIX_KEY, RJSF_REF_KEY } from '../src';
 import { RECURSIVE_REF } from './testUtils/testData';
 
 const TINY_SCHEMA: RJSFSchema = {
@@ -35,7 +35,7 @@ describe('hashForSchema', () => {
   });
   it('ignores keys starting with RJSF_REF_KEY when computing the hash', () => {
     const schema: RJSFSchema = { type: 'object', title: 'test' };
-    const schemaWithRjsfKeys = { ...schema, [RJSF_REF_KEY]: '#/foo', [`${RJSF_REF_KEY}_extra`]: 'bar' };
+    const schemaWithRjsfKeys = { ...schema, [RJSF_REF_KEY]: '#/foo', [`${RJSF_PREFIX_KEY}_extra`]: 'bar' };
     expect(hashForSchema(schema)).toBe(hashForSchema(schemaWithRjsfKeys as RJSFSchema));
   });
 });

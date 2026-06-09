@@ -1,4 +1,4 @@
-import { RJSF_REF_KEY } from './constants';
+import { RJSF_PREFIX_KEY } from './constants';
 import type { RJSFSchema, StrictRJSFSchema } from './types';
 
 /** Hashes a string using the algorithm based on Java's hashing function.
@@ -61,7 +61,7 @@ export default function hashForSchema<S extends StrictRJSFSchema = RJSFSchema>(s
     return value;
   });
   const filteredKeys = Array.from(allKeys)
-    .filter((key) => !key.startsWith(RJSF_REF_KEY))
+    .filter((key) => !key.startsWith(RJSF_PREFIX_KEY))
     .sort();
   return hashString(JSON.stringify(schema, filteredKeys));
 }
