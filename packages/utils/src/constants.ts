@@ -25,7 +25,8 @@ export const READONLY_KEY = 'readonly';
 export const REQUIRED_KEY = 'required';
 export const SUBMIT_BTN_OPTIONS_KEY = 'submitButtonOptions';
 export const REF_KEY = '$ref';
-export const RJSF_REF_KEY = '__rjsf_ref';
+export const RJSF_PREFIX_KEY = '__rjsf';
+export const RJSF_REF_KEY = `${RJSF_PREFIX_KEY}_ref`;
 export const RJSF_REF_CYCLE_KEY = `${RJSF_REF_KEY}_cycle`;
 export const SCHEMA_KEY = '$schema';
 export const DEFAULT_ID_PREFIX = 'root';
@@ -41,8 +42,8 @@ export const FORM_CONTEXT_NAME = 'formContext';
 /** The name of the `layoutGridLookupMap` attribute in the form context
  */
 export const LOOKUP_MAP_NAME = 'layoutGridLookupMap';
-export const RJSF_ADDITIONAL_PROPERTIES_FLAG = '__rjsf_additionalProperties';
-export const ROOT_SCHEMA_PREFIX = '__rjsf_rootSchema';
+export const RJSF_ADDITIONAL_PROPERTIES_FLAG = `${RJSF_PREFIX_KEY}_additionalProperties`;
+export const ROOT_SCHEMA_PREFIX = `${RJSF_PREFIX_KEY}_rootSchema`;
 export const UI_FIELD_KEY = 'ui:field';
 export const UI_WIDGET_KEY = 'ui:widget';
 export const UI_OPTIONS_KEY = 'ui:options';
