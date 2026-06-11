@@ -28,6 +28,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 
+- Added a warning when a `select` widget schema default is not present in the enum options, fixing [#4494](https://github.com/rjsf-team/react-jsonschema-form/issues/4494)
 - Fixed [#3907](https://github.com/rjsf-team/react-jsonschema-form/issues/3907) and [#4262](https://github.com/rjsf-team/react-jsonschema-form/issues/4262) as follows:
   - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
   - Added `CyclicSchemaField` to the list of fields, that renders the `CyclicSchemaExpandTemplate` initially and, if expanded, will render the `SchemaField` with the `RJSF_REF_CYCLE_KEY` tag turned off  
@@ -68,6 +69,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/utils
 
+- Added `logUnsupportedDefaultForEnum()` helper for theme select widgets to warn when a schema default is not present in the enum options, fixing [#4494](https://github.com/rjsf-team/react-jsonschema-form/issues/4494)
 - Updated `types.ts` to add `CyclicSchemaExpandProps` type and `CyclicSchemaExpandTemplate` in the `TemplatesType`
 - Updated `resolveAllReferences()` to add a new `markCycleOnDetection` prop which adds `RJSF_REF_CYCLE_KEY` marker (from `constants.ts`) to a schema that has been detected to have a cycle, partially fixing [#3907](https://github.com/rjsf-team/react-jsonschema-form/issues/3907)
 - Updated `hashForSchema()` to filter keys to remove `RJSF_REF_KEY` prefixed keys before hashing the schema
@@ -75,6 +77,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## Dev / docs / playground
 
+- Updated `utility-functions.md` to document `logUnsupportedDefaultForEnum()`
 - Updated `@rjsf/snapshots` to add a test case to `formTests` that verifies the new Cycle detection UI
 - Updated the `custom-templates.md` and `custom-widgets-fields.md` for the new feature
 
