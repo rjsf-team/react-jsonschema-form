@@ -101,11 +101,19 @@ export function FancySelect({
       aria-describedby={ariaDescribedby}
       aria-placeholder={ariaPlaceholder}
     >
-      <div
-        role='button'
-        tabIndex={disabled ? -1 : 0}
+      <button
+        type='button'
+        disabled={disabled}
+        aria-expanded={open}
+        aria-haspopup='listbox'
         onClick={() => !disabled && setOpen(!open)}
-        onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && !disabled && setOpen(!open)}
+        onKeyDown={(e) => {
+          if ((e.key === 'Enter' || e.key === ' ') && !disabled) {
+            e.preventDefault();
+            e.stopPropagation();
+            setOpen(!open);
+          }
+        }}
         className={cn(
           'flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
           !selectedItem && required && 'border-red-500',
@@ -117,7 +125,7 @@ export function FancySelect({
           {selectedItem?.label || placeholder}
         </span>
         <ChevronDown className='h-4 w-4 opacity-50' />
-      </div>
+      </button>
       <div className='relative'>
         {open && items && items.length > 0 ? (
           <div
