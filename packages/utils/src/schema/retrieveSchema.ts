@@ -77,6 +77,10 @@ export default function retrieveSchema<
   )[0];
 }
 
+function normalizeBooleanSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S | boolean): S {
+  return (typeof schema === 'boolean' ? (schema ? {} : { not: {} }) : schema) as S;
+}
+
 /** Resolves a conditional block (if/else/then) by removing the condition and merging the appropriate conditional branch
  * with the rest of the schema. If `expandAllBranches` is true, then the `retrieveSchemaInteral()` results for both
  * conditions will be returned.
@@ -101,13 +105,6 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): S[] {
   const { if: expression, then, else: otherwise, ...resolvedSchemaLessConditional } = schema;
-
-  const convertBooleanSchema = (branch: S | boolean | undefined): S | undefined => {
-    if (branch === undefined) {
-      return undefined;
-    }
-    return (typeof branch === 'boolean' ? (branch ? {} : { not: {} }) : branch) as S;
-  };
 
   const conditionValue = validator.isValid(expression as S, formData || ({} as T), rootSchema);
   let resolvedSchemas = [resolvedSchemaLessConditional as S];
@@ -142,8 +139,9 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
       );
     }
   } else {
-    const conditionalSchema = convertBooleanSchema((conditionValue ? then : otherwise) as S | boolean | undefined);
-    if (conditionalSchema) {
+    const conditionalBranch = (conditionValue ? then : otherwise) as S | boolean | undefined;
+    if (conditionalBranch !== undefined) {
+      const conditionalSchema = normalizeBooleanSchema<S>(conditionalBranch);
       schemas = schemas.concat(
         retrieveSchemaInternal<T, S, F>(
           validator,
@@ -764,7 +762,7 @@ export function relaxOptionsForScoring<S extends StrictRJSFSchema = RJSFSchema>(
 ): S[] {
   return options.map((d) => {
     if (!isObject(d)) {
-      return (d ? {} : { not: {} }) as S;
+      return normalizeBooleanSchema<S>(d);
     }
     const schema = resolveRefs && rootSchema ? resolveAllReferences<S>(d, rootSchema, []) : d;
     return schema.additionalProperties === false ? { ...schema, additionalProperties: true } : schema;

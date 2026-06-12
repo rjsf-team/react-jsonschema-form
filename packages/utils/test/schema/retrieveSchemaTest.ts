@@ -160,6 +160,72 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         },
       });
     });
+    it('should resolve conditions in additionalProperties $ref using the additional property value', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        additionalProperties: {
+          $ref: '#/definitions/property',
+        },
+      };
+
+      const property: RJSFSchema = {
+        type: 'object',
+        properties: {
+          type: {
+            type: 'string',
+            enum: ['string', 'object'],
+          },
+        },
+        if: {
+          required: ['type'],
+          properties: {
+            type: {
+              const: 'object',
+            },
+          },
+        },
+        then: {
+          properties: {
+            properties: {
+              type: 'object',
+              additionalProperties: {
+                $ref: '#/definitions/property',
+              },
+            },
+          },
+        },
+      };
+
+      const rootSchema: RJSFSchema = { definitions: { property } };
+      const formData = {
+        newKey: {
+          type: 'object',
+        },
+      };
+
+      expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({
+        ...schema,
+        properties: {
+          newKey: {
+            type: 'object',
+            properties: {
+              type: {
+                type: 'string',
+                enum: ['string', 'object'],
+              },
+              properties: {
+                type: 'object',
+                additionalProperties: {
+                  $ref: '#/definitions/property',
+                },
+              },
+            },
+            __rjsf_ref: '#/definitions/property',
+            [ADDITIONAL_PROPERTY_FLAG]: true,
+          },
+        },
+      });
+    });
     it('should `resolve` and stub out a schema which contains an `additionalProperties` with a type and definition', () => {
       const schema: RJSFSchema = {
         type: 'string',
