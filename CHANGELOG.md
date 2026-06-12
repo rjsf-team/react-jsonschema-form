@@ -76,6 +76,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `enums.ts` to add `ExpandButton` and `CycleDetected` keys
 - Updated `isFixedItems()` to treat empty tuple `items` arrays as fixed items so `additionalItems` schemas are handled consistently, fixing [#3791](https://github.com/rjsf-team/react-jsonschema-form/issues/3791)
 - Added `logUnsupportedDefaultForEnum()` helper for theme select widgets to warn when a schema default is not present in the enum options, fixing [#4494](https://github.com/rjsf-team/react-jsonschema-form/issues/4494)
+- Fixed `retrieveSchema()` to preserve boolean conditional branches while resolving schemas, fixing [#4476](https://github.com/rjsf-team/react-jsonschema-form/issues/4476) ([#5101](https://github.com/rjsf-team/react-jsonschema-form/pull/5101))
 
 ## Dev / docs / playground
 

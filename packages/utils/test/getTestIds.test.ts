@@ -14,12 +14,16 @@ const uniqueIdMock = vi.mocked(uniqueIdFn);
 
 describe('getTestIds', () => {
   describe('process.env.NODE_ENV === "test"', () => {
+    let oldNodeEnv: string | undefined;
     let testIds: TestIdShape;
     let fooTestId: string;
     beforeAll(() => {
+      oldNodeEnv = process.env.NODE_ENV;
+      process.env.NODE_ENV = 'test';
       testIds = getTestIds();
     });
     afterAll(() => {
+      process.env.NODE_ENV = oldNodeEnv;
       uniqueIdMock.mockClear();
     });
     it('does not return an empty object', () => {

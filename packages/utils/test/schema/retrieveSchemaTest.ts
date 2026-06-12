@@ -160,6 +160,72 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         },
       });
     });
+    it('should resolve conditions in additionalProperties $ref using the additional property value', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        additionalProperties: {
+          $ref: '#/definitions/property',
+        },
+      };
+
+      const property: RJSFSchema = {
+        type: 'object',
+        properties: {
+          type: {
+            type: 'string',
+            enum: ['string', 'object'],
+          },
+        },
+        if: {
+          required: ['type'],
+          properties: {
+            type: {
+              const: 'object',
+            },
+          },
+        },
+        then: {
+          properties: {
+            properties: {
+              type: 'object',
+              additionalProperties: {
+                $ref: '#/definitions/property',
+              },
+            },
+          },
+        },
+      };
+
+      const rootSchema: RJSFSchema = { definitions: { property } };
+      const formData = {
+        newKey: {
+          type: 'object',
+        },
+      };
+
+      expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({
+        ...schema,
+        properties: {
+          newKey: {
+            type: 'object',
+            properties: {
+              type: {
+                type: 'string',
+                enum: ['string', 'object'],
+              },
+              properties: {
+                type: 'object',
+                additionalProperties: {
+                  $ref: '#/definitions/property',
+                },
+              },
+            },
+            [RJSF_REF_KEY]: '#/definitions/property',
+            [ADDITIONAL_PROPERTY_FLAG]: true,
+          },
+        },
+      });
+    });
     it('should `resolve` and stub out a schema which contains an `additionalProperties` with a type and definition', () => {
       const schema: RJSFSchema = {
         type: 'string',
@@ -1096,6 +1162,39 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             },
             postal_code: { pattern: '[A-Z][0-9][A-Z] [0-9][A-Z][0-9]' },
           },
+        });
+      });
+      it('should preserve a matched boolean false branch as an impossible schema', () => {
+        testValidator.setReturnValues({
+          isValid: [true],
+        });
+        const schema: RJSFSchema = {
+          type: 'number',
+          if: {
+            const: 13,
+          },
+          then: false,
+        };
+
+        expect(retrieveSchema(testValidator, schema, schema, 13)).toEqual({
+          type: 'number',
+          not: {},
+        });
+      });
+      it('should preserve a matched boolean true branch as an empty schema', () => {
+        testValidator.setReturnValues({
+          isValid: [true],
+        });
+        const schema: RJSFSchema = {
+          type: 'number',
+          if: {
+            const: 13,
+          },
+          then: true,
+        };
+
+        expect(retrieveSchema(testValidator, schema, schema, 13)).toEqual({
+          type: 'number',
         });
       });
       it('should resolve multiple conditions', () => {

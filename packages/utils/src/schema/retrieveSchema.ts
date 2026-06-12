@@ -77,6 +77,18 @@ export default function retrieveSchema<
   )[0];
 }
 
+/** Converts boolean schemas to equivalent object schemas for APIs that operate on `StrictRJSFSchema` objects.
+ *
+ * @param schema - The schema or boolean schema to normalize
+ * @returns - The original schema or an equivalent object schema
+ */
+function normalizeBooleanSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S | boolean): S {
+  if (typeof schema !== 'boolean') {
+    return schema;
+  }
+  return (schema ? {} : { not: {} }) as S;
+}
+
 /** Resolves a conditional block (if/else/then) by removing the condition and merging the appropriate conditional branch
  * with the rest of the schema. If `expandAllBranches` is true, then the `retrieveSchemaInteral()` results for both
  * conditions will be returned.
@@ -107,10 +119,11 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
   let schemas: S[] = [];
   if (expandAllBranches) {
     if (then && typeof then !== 'boolean') {
+      const thenSchema = then as unknown as S;
       schemas = schemas.concat(
         retrieveSchemaInternal<T, S, F>(
           validator,
-          then as S,
+          thenSchema,
           rootSchema,
           formData,
           expandAllBranches,
@@ -120,10 +133,11 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
       );
     }
     if (otherwise && typeof otherwise !== 'boolean') {
+      const otherwiseSchema = otherwise as unknown as S;
       schemas = schemas.concat(
         retrieveSchemaInternal<T, S, F>(
           validator,
-          otherwise as S,
+          otherwiseSchema,
           rootSchema,
           formData,
           expandAllBranches,
@@ -133,12 +147,13 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
       );
     }
   } else {
-    const conditionalSchema = conditionValue ? then : otherwise;
-    if (conditionalSchema && typeof conditionalSchema !== 'boolean') {
+    const conditionalBranch = (conditionValue ? then : otherwise) as S | boolean | undefined;
+    if (conditionalBranch !== undefined) {
+      const conditionalSchema = normalizeBooleanSchema<S>(conditionalBranch);
       schemas = schemas.concat(
         retrieveSchemaInternal<T, S, F>(
           validator,
-          conditionalSchema as S,
+          conditionalSchema,
           rootSchema,
           formData,
           expandAllBranches,
@@ -507,7 +522,7 @@ export function stubExistingAdditionalProperties<
             validator,
             { [REF_KEY]: get(schema.additionalProperties, [REF_KEY]) } as S,
             rootSchema,
-            formData as T,
+            get(formData, [key]) as T,
             experimental_customMergeAllOf,
           );
         } else if ('type' in schema.additionalProperties!) {
@@ -755,7 +770,7 @@ export function relaxOptionsForScoring<S extends StrictRJSFSchema = RJSFSchema>(
 ): S[] {
   return options.map((d) => {
     if (!isObject(d)) {
-      return (d ? {} : { not: {} }) as S;
+      return normalizeBooleanSchema<S>(d);
     }
     const schema = resolveRefs && rootSchema ? resolveAllReferences<S>(d, rootSchema, []) : d;
     return schema.additionalProperties === false ? { ...schema, additionalProperties: true } : schema;
