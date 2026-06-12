@@ -15,6 +15,7 @@ import {
   enumOptionValueEncoder,
   getOptionValueFormat,
   labelValue,
+  logUnsupportedDefaultForEnum,
 } from '@rjsf/utils';
 import map from 'lodash/map';
 import type { DropdownProps, DropdownItemProps } from 'semantic-ui-react';
@@ -95,6 +96,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const emptyValue = multiple ? [] : '';
   const optionValueFormat = getOptionValueFormat(options);
   const showPlaceholderOption = !multiple && schema.default === undefined;
+  logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
   const dropdownOptions = createDefaultValueOptionsForDropDown<S>(
     enumOptions,
     enumDisabled,

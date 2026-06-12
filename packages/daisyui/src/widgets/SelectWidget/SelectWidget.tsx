@@ -6,6 +6,7 @@ import {
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
+  logUnsupportedDefaultForEnum,
 } from '@rjsf/utils';
 
 /** The `SelectWidget` component renders a select input with DaisyUI styling
@@ -116,6 +117,7 @@ export default function SelectWidget<
   const optionsList =
     enumOptions ||
     (Array.isArray(schema.examples) ? schema.examples.map((example) => ({ value: example, label: example })) : []);
+  logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
 
   return (
     <div className='form-control w-full'>
