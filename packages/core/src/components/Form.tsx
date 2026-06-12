@@ -776,7 +776,7 @@ export default class Form<
     const options = getUiOptions<T, S, F>(uiSchema);
     const ErrorListTemplate = getTemplate<'ErrorListTemplate', T, S, F>('ErrorListTemplate', registry, options);
 
-    if (errors && errors.length) {
+    if (errors?.length) {
       return (
         <ErrorListTemplate
           errors={errors}
@@ -1125,7 +1125,7 @@ export default class Form<
       customErrors: undefined,
     } as FormState<T, S, F>;
 
-    this.setState(state, () => onChange && onChange(toIChangeEvent({ ...this.state, ...state })));
+    this.setState(state, () => onChange?.(toIChangeEvent({ ...this.state, ...state })));
   };
 
   /** Callback function to handle when a field on the form is blurred. Calls the `onBlur` callback for the `Form` if it
@@ -1335,7 +1335,7 @@ export default class Form<
       // some themes (e.g. shadcn) use button elements instead of native inputs for radio groups
       field = this.formElement.current.querySelector(`input[id^="${elementId}"], button[id^="${elementId}"]`);
     }
-    if (field && field.length) {
+    if (field?.length) {
       // If we got a list with length > 0
       // oxlint-disable-next-line prefer-destructuring
       field = field[0];

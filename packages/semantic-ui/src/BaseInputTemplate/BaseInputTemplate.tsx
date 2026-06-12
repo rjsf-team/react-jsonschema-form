@@ -49,8 +49,8 @@ export default function BaseInputTemplate<
   });
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
-  const handleBlur = () => onBlur && onBlur(id, value);
-  const handleFocus = () => onFocus && onFocus(id, value);
+  const handleBlur = () => onBlur?.(id, value);
+  const handleFocus = () => onFocus?.(id, value);
   const handleClear = useCallback(
     (e: MouseEvent) => {
       e.preventDefault();

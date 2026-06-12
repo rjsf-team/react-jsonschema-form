@@ -960,7 +960,7 @@ export function withExactlyOneSubschema<
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): S[] {
   const validSubschemas = oneOf!.filter((subschema) => {
-    if (typeof subschema === 'boolean' || !subschema || !subschema.properties) {
+    if (typeof subschema === 'boolean' || !subschema?.properties) {
       return false;
     }
     const { [dependencyKey]: conditionPropertySchema } = subschema.properties;

@@ -13,6 +13,6 @@ interface GetDaisyProps {
 }
 
 export function getDaisy({ uiSchema = {} }: GetDaisyProps): DaisyProps {
-  const daisyProps = (uiSchema['ui:options'] && uiSchema['ui:options'].daisy) || {};
+  const daisyProps = uiSchema['ui:options']?.daisy || {};
   return daisyProps;
 }

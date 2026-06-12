@@ -59,14 +59,14 @@ export default function BaseInputTemplate<
 
   const handleBlur = useCallback(
     (e: FocusEvent<HTMLInputElement>) => {
-      onBlur(id, e.target && e.target.value);
+      onBlur(id, e.target?.value);
     },
     [onBlur, id],
   );
 
   const handleFocus = useCallback(
     (e: FocusEvent<HTMLInputElement>) => {
-      onFocus(id, e.target && e.target.value);
+      onFocus(id, e.target?.value);
     },
     [onFocus, id],
   );

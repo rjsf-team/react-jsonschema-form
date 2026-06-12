@@ -22,7 +22,7 @@ export default function CheckboxWidget<
     value,
     disabled,
     readonly,
-    label = '',
+    label,
     hideLabel,
     autofocus,
     onChange,
@@ -52,9 +52,9 @@ export default function CheckboxWidget<
   // "const" or "enum" keywords
   const required = schemaRequiresTrueValue<S>(schema);
   const checked = value === 'true' || value === true;
-  const handleChange = (_: FormEvent<HTMLInputElement>, data: CheckboxProps) => onChange && onChange(data.checked);
-  const handleBlur: React.FocusEventHandler<HTMLInputElement> = () => onBlur && onBlur(id, value);
-  const handleFocus: React.FocusEventHandler<HTMLInputElement> = () => onFocus && onFocus(id, value);
+  const handleChange = (_: FormEvent<HTMLInputElement>, data: CheckboxProps) => onChange?.(data.checked);
+  const handleBlur: React.FocusEventHandler<HTMLInputElement> = () => onBlur?.(id, value);
+  const handleFocus: React.FocusEventHandler<HTMLInputElement> = () => onFocus?.(id, value);
   const description = options.description ?? schema.description;
 
   return (

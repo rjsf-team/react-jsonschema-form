@@ -37,9 +37,9 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const handleChange = (_: any, data: RadioGroupOnChangeData) =>
     onChange(enumOptionValueDecoder<S>(data.value, enumOptions, optionValueFormat, emptyValue));
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
+    onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
+    onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
 
   const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions) ?? undefined;
 

@@ -39,9 +39,9 @@ export default function CheckboxesWidget<
   const optionValueFormat = getOptionValueFormat(options);
 
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement | any>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
+    onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement | any>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
+    onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
 
   const row = options ? options.inline : false;
   const selectValue = enumOptionSelectedValue<S>(value, enumOptions, true, optionValueFormat, []) as string[];

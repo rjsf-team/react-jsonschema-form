@@ -35,13 +35,13 @@ function CheckboxesWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
 
   const handleBlur = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) =>
-      onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue)),
+      onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue)),
     [onBlur, id, enumOptions, emptyValue, optionValueFormat],
   );
 
   const handleFocus = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) =>
-      onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue)),
+      onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue)),
     [onFocus, id, enumOptions, emptyValue, optionValueFormat],
   );
 

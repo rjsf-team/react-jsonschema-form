@@ -47,7 +47,7 @@ export default function PasswordWidget<
   const handleBlur = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) => {
       if (onBlur) {
-        onBlur(id, target && target.value);
+        onBlur(id, target?.value);
       }
     },
     [onBlur, id],
@@ -56,7 +56,7 @@ export default function PasswordWidget<
   const handleFocus = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) => {
       if (onFocus) {
-        onFocus(id, target && target.value);
+        onFocus(id, target?.value);
       }
     },
     [onFocus, id],

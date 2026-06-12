@@ -83,10 +83,10 @@ export function getSemanticErrorProps<
   options = {},
   defaultProps = { size: 'small', pointing: 'above' },
 }: SemanticErrorPropsType<T, S, F>) {
-  const formContextProps = formContext.semantic && formContext.semantic.errorOptions;
+  const formContextProps = formContext.semantic?.errorOptions;
   const semanticOptions: GenericObjectType = getUiOptions<T, S, F>(uiSchema).semantic as GenericObjectType;
-  const schemaProps = semanticOptions && semanticOptions.errorOptions;
-  const optionProps = options.semantic && (options.semantic as GenericObjectType).errorOptions;
+  const schemaProps = semanticOptions?.errorOptions;
+  const optionProps = (options.semantic as GenericObjectType)?.errorOptions;
 
   return { ...defaultProps, ...schemaProps, ...optionProps, ...formContextProps };
 }

@@ -39,9 +39,9 @@ export default function TextareaWidget<
   });
   // oxlint-disable-next-line no-shadow
   const handleChange = ({ target: { value } }: ChangeEvent<HTMLTextAreaElement>) =>
-    onChange && onChange(value === '' ? options.emptyValue : value);
-  const handleBlur = () => onBlur && onBlur(id, value);
-  const handleFocus = () => onFocus && onFocus(id, value);
+    onChange?.(value === '' ? options.emptyValue : value);
+  const handleBlur = () => onBlur?.(id, value);
+  const handleFocus = () => onFocus?.(id, value);
   return (
     <Form.TextArea
       id={id}
