@@ -28,9 +28,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 
+- Fixed array fields with empty tuple `items` and schema-valued `additionalItems` so clicking add renders the additional item field, fixing [#3791](https://github.com/rjsf-team/react-jsonschema-form/issues/3791)
 - Fixed [#3907](https://github.com/rjsf-team/react-jsonschema-form/issues/3907) and [#4262](https://github.com/rjsf-team/react-jsonschema-form/issues/4262) as follows:
   - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
-  - Added `CyclicSchemaField` to the list of fields, that renders the `CyclicSchemaExpandTemplate` initially and, if expanded, will render the `SchemaField` with the `RJSF_REF_CYCLE_KEY` tag turned off  
+  - Added `CyclicSchemaField` to the list of fields, that renders the `CyclicSchemaExpandTemplate` initially and, if expanded, will render the `SchemaField` with the `RJSF_REF_CYCLE_KEY` tag turned off
   - Updated `SchemaForm` to render the `CyclicSchemaField` when the schema contains the `RJSF_REF_CYCLE_KEY` set to `true`
 
 ## @rjsf/daisyui
@@ -68,6 +69,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/utils
 
+- Updated `isFixedItems()` to treat empty tuple `items` arrays as fixed items so `additionalItems` schemas are handled consistently, fixing [#3791](https://github.com/rjsf-team/react-jsonschema-form/issues/3791)
 - Updated `types.ts` to add `CyclicSchemaExpandProps` type and `CyclicSchemaExpandTemplate` in the `TemplatesType`
 - Updated `resolveAllReferences()` to add a new `markCycleOnDetection` prop which adds `RJSF_REF_CYCLE_KEY` marker (from `constants.ts`) to a schema that has been detected to have a cycle, partially fixing [#3907](https://github.com/rjsf-team/react-jsonschema-form/issues/3907)
 - Updated `hashForSchema()` to filter keys to remove `RJSF_REF_KEY` prefixed keys before hashing the schema
