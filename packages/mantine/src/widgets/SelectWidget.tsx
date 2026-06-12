@@ -9,6 +9,7 @@ import {
   enumOptionValueEncoder,
   getOptionValueFormat,
   labelValue,
+  logUnsupportedDefaultForEnum,
 } from '@rjsf/utils';
 
 import { cleanupOptions } from '../utils';
@@ -34,6 +35,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     hideLabel,
     multiple,
     rawErrors,
+    schema,
     options,
     onChange,
     onBlur,
@@ -43,6 +45,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const themeProps = cleanupOptions(options);
+  logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
   const handleChange = useCallback(
     (nextValue: any) => {

@@ -10,6 +10,7 @@ import {
   enumOptionValueEncoder,
   getOptionValueFormat,
   labelValue,
+  logUnsupportedDefaultForEnum,
 } from '@rjsf/utils';
 import type { OptionsOrGroups } from 'chakra-react-select';
 
@@ -58,6 +59,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
 
   const showPlaceholderOption = !multiple && schema.default === undefined;
+  logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
   const displayEnumOptions = useMemo((): OptionsOrGroups<any, any> => {
     let computedOptions: OptionsOrGroups<any, any> = [];
     if (Array.isArray(enumOptions)) {

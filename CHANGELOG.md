@@ -95,6 +95,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/utils
 
+- Added `logUnsupportedDefaultForEnum()` helper for theme select widgets to warn when a schema default is not present in the enum options, fixing [#4494](https://github.com/rjsf-team/react-jsonschema-form/issues/4494)
 - Updated `sanitizeDataForNewSchema()` to preserve valid enum values while replacing or clearing stale values across enum, `oneOf`, and `anyOf` schema changes, fixing [#3838](https://github.com/rjsf-team/react-jsonschema-form/issues/3838)
 - Updated `sanitizeDataForNewSchema()` to filter out invalid enum values in arrays, fixing [#1357](https://github.com/rjsf-team/react-jsonschema-form/issues/1357) and [#2492](https://github.com/rjsf-team/react-jsonschema-form/issues/2492)
 
