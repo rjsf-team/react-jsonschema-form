@@ -77,8 +77,16 @@ export default function retrieveSchema<
   )[0];
 }
 
+/** Converts boolean schemas to equivalent object schemas for APIs that operate on `StrictRJSFSchema` objects.
+ *
+ * @param schema - The schema or boolean schema to normalize
+ * @returns - The original schema or an equivalent object schema
+ */
 function normalizeBooleanSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S | boolean): S {
-  return (typeof schema === 'boolean' ? (schema ? {} : { not: {} }) : schema) as S;
+  if (typeof schema !== 'boolean') {
+    return schema;
+  }
+  return (schema ? {} : { not: {} }) as S;
 }
 
 /** Resolves a conditional block (if/else/then) by removing the condition and merging the appropriate conditional branch
