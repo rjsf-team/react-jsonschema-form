@@ -18,6 +18,11 @@ import './jsonSchemaAugmentation';
  */
 export type GenericObjectType = Record<string, any>;
 
+/** The representation of any generic object type, usually used as an intersection on other types to make them more
+ * flexible in the properties they support (i.e. anything else) AND symbol markers with a value of string or boolean
+ */
+export type GenericSymbolObjectType = GenericObjectType & Record<symbol, boolean | string>;
+
 /** Map the JSONSchema7 to our own type so that we can easily bump to a more recent version at some future date and only
  * have to update this one type.
  */
@@ -30,7 +35,7 @@ export type RJSFSchema = StrictRJSFSchema & GenericObjectType;
 /** Allow for more flexible schemas (i.e. draft-2019) than the strict JSONSchema7 with special marking added by
  * `retrieveSchema()`
  */
-export type RJSFMarkedSchema = RJSFSchema & Record<symbol, boolean | string>;
+export type RJSFMarkedSchema = StrictRJSFSchema & GenericSymbolObjectType;
 
 /** Alias GenericObjectType as FormContextType to allow us to remap this at some future date
  */

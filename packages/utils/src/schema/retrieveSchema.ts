@@ -614,11 +614,19 @@ export function retrieveSchemaInternal<
       try {
         const withContainsSchemas = [] as S[];
         const withoutContainsSchemas = [] as S[];
+        // Collect Symbol-keyed properties from allOf subschemas before merging; shallowAllOfMerge
+        // (external library) only operates on string keys and will drop them.
+        const allOfSymbols: Record<symbol, unknown> = {};
         resolvedSchema.allOf?.forEach((allOfItem) => {
           if (typeof allOfItem === 'object' && allOfItem.contains) {
             withContainsSchemas.push(allOfItem as S);
           } else {
             withoutContainsSchemas.push(allOfItem as S);
+            for (const sym of Object.getOwnPropertySymbols(allOfItem)) {
+              if (!(sym in allOfSymbols)) {
+                allOfSymbols[sym] = (allOfItem as any)[sym];
+              }
+            }
           }
         });
         if (withContainsSchemas.length) {
@@ -627,6 +635,10 @@ export function retrieveSchemaInternal<
         resolvedSchema = experimental_customMergeAllOf
           ? experimental_customMergeAllOf(resolvedSchema)
           : mergeAllOf(resolvedSchema);
+        // Re-apply collected Symbol properties that the merge dropped.
+        for (const sym of Object.getOwnPropertySymbols(allOfSymbols)) {
+          (resolvedSchema as any)[sym] = allOfSymbols[sym];
+        }
         if (withContainsSchemas.length) {
           resolvedSchema.allOf = withContainsSchemas;
         }

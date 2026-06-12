@@ -32,7 +32,6 @@ import {
   TranslatableString,
   UI_OPTIONS_KEY,
 } from '@rjsf/utils';
-import get from 'lodash/get';
 import isObject from 'lodash/isObject';
 import omit from 'lodash/omit';
 

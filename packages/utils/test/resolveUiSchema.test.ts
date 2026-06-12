@@ -1,7 +1,7 @@
 import noop from 'lodash/noop';
 
 import type { Registry, RJSFSchema, TemplatesType, UiSchema, UiSchemaDefinitions } from '../src';
-import { resolveUiSchema } from '../src';
+import { resolveUiSchema, RJSF_REF_KEY } from '../src';
 
 beforeEach(() => {
   vi.spyOn(console, 'warn').mockImplementation(noop);
@@ -97,7 +97,7 @@ describe('resolveUiSchema() - oneOf/anyOf branch walking', () => {
     const resolvedSchema = {
       type: 'object',
       oneOf: [{ $ref: '#/$defs/optA' }, { $ref: '#/$defs/optB' }],
-      __rjsf_ref: '#/$defs/parent',
+      [RJSF_REF_KEY]: '#/$defs/parent',
     } as unknown as RJSFSchema;
     const definitions = {
       '#/$defs/parent': { 'ui:title': 'Parent' },
