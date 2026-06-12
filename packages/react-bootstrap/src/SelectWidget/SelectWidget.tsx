@@ -6,6 +6,7 @@ import {
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
+  logUnsupportedDefaultForEnum,
 } from '@rjsf/utils';
 import FormSelect from 'react-bootstrap/FormSelect';
 
@@ -46,6 +47,7 @@ export default function SelectWidget<
   }
   const selectValue = enumOptionSelectedValue<S>(value, enumOptions, !!multiple, optionValueFormat, emptyValue);
   const showPlaceholderOption = !multiple && schema.default === undefined;
+  logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
   return (
     <FormSelect

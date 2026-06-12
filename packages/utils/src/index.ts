@@ -52,6 +52,7 @@ import isObject from './isObject';
 import isRootSchema from './isRootSchema';
 import labelValue from './labelValue';
 import localToUTC from './localToUTC';
+import logUnsupportedDefaultForEnum from './logUnsupportedDefaultForEnum';
 import lookupFromFormContext from './lookupFromFormContext';
 import mergeDefaultsWithFormData from './mergeDefaultsWithFormData';
 import mergeObjects from './mergeObjects';
@@ -154,6 +155,7 @@ export {
   isRootSchema,
   labelValue,
   localToUTC,
+  logUnsupportedDefaultForEnum,
   lookupFromFormContext,
   mergeDefaultsWithFormData,
   mergeObjects,

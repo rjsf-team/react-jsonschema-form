@@ -32,6 +32,8 @@ should change the heading of the (upcoming) version to include a major version b
   - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
   - Added `CyclicSchemaField` to the list of fields, that renders the `CyclicSchemaExpandTemplate` initially and, if expanded, will render the `SchemaField` with the `RJSF_REF_CYCLE_KEY` tag turned off
   - Updated `SchemaForm` to render the `CyclicSchemaField` when the schema contains the `RJSF_REF_CYCLE_KEY` set to `true`
+- Fixed array fields with empty tuple `items` and schema-valued `additionalItems` so clicking add renders the additional item field, fixing [#3791](https://github.com/rjsf-team/react-jsonschema-form/issues/3791)
+- Added a warning when a `select` widget schema default is not present in the enum options, fixing [#4494](https://github.com/rjsf-team/react-jsonschema-form/issues/4494)
 
 ## @rjsf/daisyui
 
@@ -73,11 +75,14 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `resolveAllReferences()` to add a new `markCycleOnDetection` prop which adds `RJSF_REF_CYCLE_KEY` marker (from `constants.ts`) to a schema that has been detected to have a cycle, partially fixing [#3907](https://github.com/rjsf-team/react-jsonschema-form/issues/3907)
 - Updated `hashForSchema()` to filter keys to remove `RJSF_REF_KEY` prefixed keys before hashing the schema
 - Updated `enums.ts` to add `ExpandButton` and `CycleDetected` keys
+- Updated `isFixedItems()` to treat empty tuple `items` arrays as fixed items so `additionalItems` schemas are handled consistently, fixing [#3791](https://github.com/rjsf-team/react-jsonschema-form/issues/3791)
+- Added `logUnsupportedDefaultForEnum()` helper for theme select widgets to warn when a schema default is not present in the enum options, fixing [#4494](https://github.com/rjsf-team/react-jsonschema-form/issues/4494)
 
 ## Dev / docs / playground
 
 - Updated `@rjsf/snapshots` to add a test case to `formTests` that verifies the new Cycle detection UI
 - Updated the `custom-templates.md` and `custom-widgets-fields.md` for the new feature
+- Updated `utility-functions.md` to document `logUnsupportedDefaultForEnum()`
 
 # 6.6.2
 

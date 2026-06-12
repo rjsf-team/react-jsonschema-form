@@ -6,6 +6,7 @@ import {
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
+  logUnsupportedDefaultForEnum,
 } from '@rjsf/utils';
 import { Dropdown } from 'primereact/dropdown';
 import { MultiSelect } from 'primereact/multiselect';
@@ -55,6 +56,7 @@ function SingleSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   const isMultiple = typeof multiple === 'undefined' ? false : multiple;
 
   const emptyValue = isMultiple ? [] : '';
+  logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
 
   const handleChange = (e: { value: any }) =>
     onChange(enumOptionValueDecoder<S>(e.value, enumOptions, optionValueFormat, optEmptyVal));
