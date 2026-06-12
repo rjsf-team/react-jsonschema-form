@@ -8,6 +8,7 @@ import type {
   FormContextType,
   GenericObjectType,
   Registry,
+  RJSFMarkedSchema,
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
@@ -394,7 +395,9 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     title: uiOptions.label === false ? '' : templateTitle,
     description: uiOptions.label === false ? undefined : description,
     properties: orderedProperties.map((propertyName) => {
-      const addedByAdditionalProperties = has(schema, [PROPERTIES_KEY, propertyName, ADDITIONAL_PROPERTY_FLAG]);
+      const addedByAdditionalProperties = Boolean(
+        (schema.properties?.[propertyName] as RJSFMarkedSchema)?.[ADDITIONAL_PROPERTY_FLAG],
+      );
       const fieldUiSchema = addedByAdditionalProperties ? uiSchema.additionalProperties : uiSchema[propertyName];
       const hidden = getUiOptions<T, S, F>(fieldUiSchema).widget === 'hidden';
       const content = (

@@ -2273,6 +2273,77 @@ exports[`semantic-ui specific tests > field with special semantic options 1`] = 
 </DocumentFragment>
 `;
 
+exports[`single fields > Cyclic schema 1`] = `
+<DocumentFragment>
+  <form
+    class="ui form rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="grouped equal width fields"
+      >
+        <h5
+          class="ui dividing header"
+          id="root__title"
+        >
+          A registration form
+        </h5>
+        <p
+          class="sui-description"
+          id="root__description"
+        >
+          A simple form example.
+        </p>
+        <div
+          class="rjsf-field rjsf-field-object"
+        >
+          <div
+            class="grouped equal width fields"
+          >
+            <h5
+              class="ui dividing header"
+              id="root_child__title"
+            >
+              A registration form
+            </h5>
+            <p
+              class="sui-description"
+              id="root_child__description"
+            >
+              A simple form example.
+            </p>
+            <div
+              style="margin-top: 1rem; margin-bottom: 1rem;"
+            >
+              <p
+                style="color: red;"
+              >
+                Circular reference ($ref cycle) detected for field "child". You may choose to expand to the next cycle break
+              </p>
+              <button
+                class="ui mini button"
+                id="root_child_child-button"
+                type="button"
+              >
+                Expand Cycle
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ui primary button"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > checkbox field 1`] = `
 <DocumentFragment>
   <form

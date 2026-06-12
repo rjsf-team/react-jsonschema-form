@@ -1735,6 +1735,80 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
 </DocumentFragment>
 `;
 
+exports[`single fields > Cyclic schema 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="form-group rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <legend
+          id="root__title"
+        >
+          A registration form
+        </legend>
+        <div
+          class="field-description"
+          id="root__description"
+        >
+          A simple form example.
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-object"
+        >
+          <fieldset
+            id="root_child"
+          >
+            <legend
+              id="root_child__title"
+            >
+              A registration form
+            </legend>
+            <div
+              class="field-description"
+              id="root_child__description"
+            >
+              A simple form example.
+            </div>
+            <div
+              style="margin-top: 1rem;"
+            >
+              <div
+                class="text-danger"
+              >
+                Circular reference ($ref cycle) detected for field "child". You may choose to expand to the next cycle break
+              </div>
+              <div>
+                <button
+                  class="btn btn-sm btn-warning"
+                  id="root_child_child-button"
+                  type="button"
+                >
+                  Expand Cycle
+                </button>
+                 
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > checkbox field 1`] = `
 <DocumentFragment>
   <form

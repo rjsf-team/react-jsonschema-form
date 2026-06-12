@@ -16,6 +16,68 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.7.0
+
+## @rjsf/antd
+
+- Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+
+## @rjsf/chakra-ui
+
+- Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+
+## @rjsf/core
+
+- Fixed [#3907](https://github.com/rjsf-team/react-jsonschema-form/issues/3907) and [#4262](https://github.com/rjsf-team/react-jsonschema-form/issues/4262) as follows:
+  - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+  - Added `CyclicSchemaField` to the list of fields, that renders the `CyclicSchemaExpandTemplate` initially and, if expanded, will render the `SchemaField` with the `RJSF_REF_CYCLE_KEY` tag turned off  
+  - Updated `SchemaForm` to render the `CyclicSchemaField` when the schema contains the `RJSF_REF_CYCLE_KEY` set to `true`
+
+## @rjsf/daisyui
+
+- Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+
+## @rjsf/fluentui-rc
+
+- Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+
+## @rjsf/mantine
+
+- Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+
+## @rjsf/mui
+
+- Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+
+## @rjsf/primereact
+
+- Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+
+## @rjsf/react-bootstrap
+
+- Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+
+## @rjsf/semantic-ui
+
+- Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+
+## @rjsf/shadcn
+
+- Updated the single select trigger to use native button semantics with expanded and disabled state coverage, fixing [#4764](https://github.com/rjsf-team/react-jsonschema-form/issues/4764) ([#5117](https://github.com/rjsf-team/react-jsonschema-form/pull/5117))
+- Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+
+## @rjsf/utils
+
+- Updated `types.ts` to add `CyclicSchemaExpandProps` type and `CyclicSchemaExpandTemplate` in the `TemplatesType`
+- Updated `resolveAllReferences()` to add a new `markCycleOnDetection` prop which adds `RJSF_REF_CYCLE_KEY` marker (from `constants.ts`) to a schema that has been detected to have a cycle, partially fixing [#3907](https://github.com/rjsf-team/react-jsonschema-form/issues/3907)
+- Updated `hashForSchema()` to filter keys to remove `RJSF_REF_KEY` prefixed keys before hashing the schema
+- Updated `enums.ts` to add `ExpandButton` and `CycleDetected` keys
+
+## Dev / docs / playground
+
+- Updated `@rjsf/snapshots` to add a test case to `formTests` that verifies the new Cycle detection UI
+- Updated the `custom-templates.md` and `custom-widgets-fields.md` for the new feature
+
 # 6.6.2
 
 ## @rjsf/core
@@ -32,10 +94,6 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `sanitizeDataForNewSchema()` to preserve valid enum values while replacing or clearing stale values across enum, `oneOf`, and `anyOf` schema changes, fixing [#3838](https://github.com/rjsf-team/react-jsonschema-form/issues/3838)
 - Updated `sanitizeDataForNewSchema()` to filter out invalid enum values in arrays, fixing [#1357](https://github.com/rjsf-team/react-jsonschema-form/issues/1357) and [#2492](https://github.com/rjsf-team/react-jsonschema-form/issues/2492)
-
-## @rjsf/shadcn
-
-- Updated the single select trigger to use native button semantics with expanded and disabled state coverage, fixing [#4764](https://github.com/rjsf-team/react-jsonschema-form/issues/4764) ([#5117](https://github.com/rjsf-team/react-jsonschema-form/pull/5117))
 
 ## Dev / docs / playground
 

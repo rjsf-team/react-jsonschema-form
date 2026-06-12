@@ -1,5 +1,5 @@
 import type { RJSFSchema } from '../src';
-import { hashForSchema, hashObject, hashString, sortedJSONStringify } from '../src';
+import { hashForSchema, hashObject, hashString, sortedJSONStringify, RJSF_REF_CYCLE_KEY, RJSF_REF_KEY } from '../src';
 import { RECURSIVE_REF } from './testUtils/testData';
 
 const TINY_SCHEMA: RJSFSchema = {
@@ -32,6 +32,11 @@ describe('hashForSchema', () => {
     const schema1: RJSFSchema = { type: 'string', title: 'order' };
     const schema2: RJSFSchema = { title: 'order', type: 'string' };
     expect(hashForSchema(schema1)).toBe(hashForSchema(schema2));
+  });
+  it('ignores Symbol keys (RJSF_REF_KEY, RJSF_REF_CYCLE_KEY) when computing the hash', () => {
+    const schema: RJSFSchema = { type: 'object', title: 'test' };
+    const schemaWithSymbols = { ...schema, [RJSF_REF_KEY]: '#/foo', [RJSF_REF_CYCLE_KEY]: true };
+    expect(hashForSchema(schema)).toBe(hashForSchema(schemaWithSymbols as unknown as RJSFSchema));
   });
 });
 
