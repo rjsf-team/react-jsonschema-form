@@ -240,8 +240,10 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
   } = computeDefaultsProps;
   let formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
   const schema: S = isObject(rawSchema) ? rawSchema : ({} as S);
-  // Compute the defaults recursively: give highest priority to deepest nodes.
+  // Compute the defaults recursively: give highest priority to deepest nodes unless nestedDefaultsPrecedence is outermostWins.
   let defaults: T | T[] | undefined = parentDefaults;
+  const preferParentDefaults =
+    defaults && experimental_defaultFormStateBehavior?.nestedDefaultsPrecedence === 'outermostWins';
   // If we get a new schema, then we need to recompute defaults again for the new schema found.
   let schemaToCompute: S | null = null;
   let experimental_dfsb_to_compute = experimental_defaultFormStateBehavior;
@@ -259,12 +261,25 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     !schema[ONE_OF_KEY] &&
     !schema[REF_KEY]
   ) {
-    // For object defaults, only override parent defaults that are defined in
-    // schema.default. Skip this for anyOf/oneOf/$ref schemas - they need special handling.
-    defaults = mergeObjects(defaults, schema.default as GenericObjectType) as T;
-  } else if (DEFAULT_KEY in schema && !schema[ANY_OF_KEY] && !schema[ONE_OF_KEY] && !schema[REF_KEY]) {
-    // If the schema has a default value, then we should use it as the default.
-    // And if the schema does not have anyOf or oneOf, this is done because we need to merge the defaults with the formData.
+    // For object defaults, merge defaults by precedence setting.
+    // Skip this for anyOf/oneOf/$ref schemas - they need special handling.
+    if (preferParentDefaults) {
+      // Use schema.default as the base and only override values that are defined in parent defaults.
+      defaults = mergeObjects(schema.default as GenericObjectType, defaults) as T;
+    } else {
+      // Only override parent defaults that are defined in schema.default.
+      defaults = mergeObjects(defaults, schema.default as GenericObjectType) as T;
+    }
+  } else if (
+    DEFAULT_KEY in schema &&
+    !preferParentDefaults &&
+    !schema[ANY_OF_KEY] &&
+    !schema[ONE_OF_KEY] &&
+    !schema[REF_KEY]
+  ) {
+    // If the schema has a default value and parentDefaults does not have precedence
+    // And if the schema does not have anyOf or oneOf (since we need to merge the defaults with the formData)
+    // Then we should use it as the default.
     defaults = schema.default as unknown as T;
   } else if (REF_KEY in schema) {
     const refName = schema[REF_KEY];
@@ -305,7 +320,9 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       experimental_customMergeAllOf,
     );
     [schemaToCompute] = resolvedSchema; // pick the first element from resolve dependencies
-  } else if (isFixedItems(schema)) {
+  } else if (isFixedItems(schema) && !preferParentDefaults) {
+    // If the schema contains fixed items and parentDefaults does not have precedence
+    // Then construct defaults from defaults of array items.
     defaults = (schema.items! as S[]).map((itemSchema: S, idx: number) =>
       computeDefaults<T, S>(validator, itemSchema, {
         rootSchema,

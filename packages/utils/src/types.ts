@@ -123,6 +123,12 @@ export interface Experimental_DefaultFormStateBehavior {
    *
    */
   constAsDefaults?: 'always' | 'skipOneOf' | 'never';
+  /** Optional enumerated flag controlling how defaults defined on multiple levels are merged together, defaulting to
+   * `innermostWins`.
+   * - `innermostWins`: The innermost nested default has precedence over parent defaults.
+   * - `outermostWins`: The outermost default has precedence over deeper nested defaults.
+   */
+  nestedDefaultsPrecedence?: 'innermostWins' | 'outermostWins';
 }
 
 /** Optional function that allows for custom merging of `allOf` schemas

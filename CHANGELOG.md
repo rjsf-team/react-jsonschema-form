@@ -16,6 +16,17 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.7.0
+
+## @rjsf/utils
+
+- Updated `Experimental_DefaultFormStateBehavior` to add a new `nestedDefaultsPrecedence` option
+- Updated `getDefaultFormState()` to use the new `nestedDefaultsPrecedence` option to control how defaults defined on multiple levels are merged together, fixing [#5089](https://github.com/rjsf-team/react-jsonschema-form/issues/5089)
+
+## Dev / docs / playground
+
+- Updated the playground to add a selector for the `nestedDefaultsPrecedence` option
+
 # 6.6.2
 
 ## @rjsf/core
