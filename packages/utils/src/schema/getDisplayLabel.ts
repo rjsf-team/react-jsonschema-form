@@ -60,7 +60,7 @@ export default function getDisplayLabel<
     if (schemaType === 'boolean' && uiSchema && !uiSchema[UI_WIDGET_KEY]) {
       displayLabel = false;
     }
-    if (uiSchema && uiSchema[UI_FIELD_KEY]) {
+    if (uiSchema?.[UI_FIELD_KEY]) {
       displayLabel = false;
     }
   }

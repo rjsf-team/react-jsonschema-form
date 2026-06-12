@@ -79,26 +79,23 @@ export default function optionsList<T = any, S extends StrictRJSFSchema = RJSFSc
     const { optionsSchemaSelector = selectorField } = getUiOptions<T, S, F>(uiSchema);
     selectorField = optionsSchemaSelector;
   }
-  return (
-    altSchemas &&
-    altSchemas.map((aSchemaDef, index) => {
-      const { title } = getUiOptions<T, S, F>(altUiSchemas?.[index]);
-      const aSchema = aSchemaDef as S;
-      let value: EnumOptionsType<S>['value'];
-      let label = title;
-      if (selectorField) {
-        const innerSchema: S = get(aSchema, [PROPERTIES_KEY, selectorField], {}) as S;
-        value = get(innerSchema, DEFAULT_KEY, get(innerSchema, CONST_KEY));
-        label = label || innerSchema?.title || aSchema.title || String(value);
-      } else {
-        value = toConstant(aSchema);
-        label = label || aSchema.title || String(value);
-      }
-      return {
-        schema: aSchema,
-        label,
-        value,
-      };
-    })
-  );
+  return altSchemas?.map((aSchemaDef, index) => {
+    const { title } = getUiOptions<T, S, F>(altUiSchemas?.[index]);
+    const aSchema = aSchemaDef as S;
+    let value: EnumOptionsType<S>['value'];
+    let label = title;
+    if (selectorField) {
+      const innerSchema: S = get(aSchema, [PROPERTIES_KEY, selectorField], {}) as S;
+      value = get(innerSchema, DEFAULT_KEY, get(innerSchema, CONST_KEY));
+      label = label || innerSchema?.title || aSchema.title || String(value);
+    } else {
+      value = toConstant(aSchema);
+      label = label || aSchema.title || String(value);
+    }
+    return {
+      schema: aSchema,
+      label,
+      value,
+    };
+  });
 }

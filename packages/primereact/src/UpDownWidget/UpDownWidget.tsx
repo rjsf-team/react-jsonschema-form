@@ -32,8 +32,8 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const primeProps = (options.prime || {}) as object;
 
   const handleChange = (event: InputNumberChangeEvent) => onChange(event.value === null ? options.emptyValue : value);
-  const handleBlur = () => onBlur && onBlur(id, value);
-  const handleFocus = () => onFocus && onFocus(id, value);
+  const handleBlur = () => onBlur?.(id, value);
+  const handleFocus = () => onFocus?.(id, value);
 
   return (
     <InputNumber

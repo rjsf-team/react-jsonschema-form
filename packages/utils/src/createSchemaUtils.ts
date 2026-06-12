@@ -63,7 +63,7 @@ class SchemaUtils<
     experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior,
     experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
   ) {
-    if (rootSchema && rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
+    if (rootSchema?.[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
       this.rootSchema = makeAllReferencesAbsolute(rootSchema, get(rootSchema, ID_KEY, '#'));
     } else {
       this.rootSchema = rootSchema;

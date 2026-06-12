@@ -45,13 +45,13 @@ export default function NativeSelectWidget<
   const { enumOptions, enumDisabled, emptyValue } = options;
 
   const handleChange = ({ target }: ChangeEvent<HTMLSelectElement>) =>
-    onChange(enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
+    onChange(enumOptionsValueForIndex<S>(target?.value, enumOptions, emptyValue));
 
   const handleBlur = ({ target }: FocusEvent<HTMLSelectElement>) =>
-    onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
+    onBlur(id, enumOptionsValueForIndex<S>(target?.value, enumOptions, emptyValue));
 
   const handleFocus = ({ target }: FocusEvent<HTMLSelectElement>) =>
-    onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
+    onFocus(id, enumOptionsValueForIndex<S>(target?.value, enumOptions, emptyValue));
 
   const showPlaceholderOption = !multiple && schema.default === undefined;
   const { valueLabelMap, displayEnumOptions } = useMemo((): {

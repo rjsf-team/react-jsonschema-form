@@ -23,7 +23,7 @@ export default function getSubmitButtonOptions<
   F extends FormContextType = any,
 >(uiSchema: UiSchema<T, S, F> = {}): UISchemaSubmitButtonOptions {
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  if (uiOptions && uiOptions[SUBMIT_BTN_OPTIONS_KEY]) {
+  if (uiOptions?.[SUBMIT_BTN_OPTIONS_KEY]) {
     const options = uiOptions[SUBMIT_BTN_OPTIONS_KEY];
     return { ...DEFAULT_OPTIONS, ...options };
   }

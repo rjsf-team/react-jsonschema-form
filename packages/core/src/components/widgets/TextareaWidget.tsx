@@ -9,7 +9,7 @@ import { ariaDescribedByIds } from '@rjsf/utils';
  */
 function TextareaWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,
-  options = {},
+  options,
   placeholder,
   value,
   required,
@@ -28,12 +28,12 @@ function TextareaWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
   );
 
   const handleBlur = useCallback(
-    ({ target }: FocusEvent<HTMLTextAreaElement>) => onBlur(id, target && target.value),
+    ({ target }: FocusEvent<HTMLTextAreaElement>) => onBlur(id, target?.value),
     [onBlur, id],
   );
 
   const handleFocus = useCallback(
-    ({ target }: FocusEvent<HTMLTextAreaElement>) => onFocus(id, target && target.value),
+    ({ target }: FocusEvent<HTMLTextAreaElement>) => onFocus(id, target?.value),
     [id, onFocus],
   );
 

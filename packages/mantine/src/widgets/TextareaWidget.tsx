@@ -47,7 +47,7 @@ export default function TextareaWidget<
   const handleBlur = useCallback(
     ({ target }: FocusEvent<HTMLTextAreaElement>) => {
       if (onBlur) {
-        onBlur(id, target && target.value);
+        onBlur(id, target?.value);
       }
     },
     [onBlur, id],
@@ -56,7 +56,7 @@ export default function TextareaWidget<
   const handleFocus = useCallback(
     ({ target }: FocusEvent<HTMLTextAreaElement>) => {
       if (onFocus) {
-        onFocus(id, target && target.value);
+        onFocus(id, target?.value);
       }
     },
     [onFocus, id],

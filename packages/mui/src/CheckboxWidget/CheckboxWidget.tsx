@@ -35,7 +35,7 @@ export default function CheckboxWidget<
     value,
     disabled,
     readonly,
-    label = '',
+    label,
     hideLabel,
     autofocus,
     onChange,

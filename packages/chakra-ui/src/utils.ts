@@ -12,7 +12,7 @@ export interface ChakraUiSchema extends Omit<UiSchema, 'ui:options'> {
 type ChakraUiOptions = UiSchema['ui:options'] & { chakra?: ChakraField.RootProps };
 
 export function getChakra(uiSchema: ChakraUiSchema = {}): ChakraField.RootProps {
-  const chakraProps = (uiSchema['ui:options'] && uiSchema['ui:options'].chakra) || {};
+  const chakraProps = uiSchema['ui:options']?.chakra || {};
 
   Object.keys(chakraProps).forEach((key) => {
     /**

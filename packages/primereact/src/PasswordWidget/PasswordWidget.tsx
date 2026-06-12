@@ -34,8 +34,8 @@ export default function PasswordWidget<
 
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
-  const handleBlur = () => onBlur && onBlur(id, value);
-  const handleFocus = () => onFocus && onFocus(id, value);
+  const handleBlur = () => onBlur?.(id, value);
+  const handleFocus = () => onFocus?.(id, value);
 
   return (
     <Password
