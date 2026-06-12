@@ -220,7 +220,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
                 },
               },
             },
-            __rjsf_ref: '#/definitions/property',
+            [RJSF_REF_KEY]: '#/definitions/property',
             [ADDITIONAL_PROPERTY_FLAG]: true,
           },
         },

@@ -30,8 +30,10 @@ describe('Validation', () => {
 
         expect(onSubmit).not.toHaveBeenCalled();
         expect(onError).toHaveBeenCalledOnce();
-        expect(node.querySelectorAll('.errors li')).toHaveLength(1);
-        expect(node.querySelector('.errors li')).toHaveTextContent('must NOT be valid');
+        expect(Array.from(node.querySelectorAll('.errors li')).map((error) => error.textContent)).toEqual([
+          'boolean schema is false',
+          'must match "then" schema',
+        ]);
       });
 
       describe('Required fields', () => {
