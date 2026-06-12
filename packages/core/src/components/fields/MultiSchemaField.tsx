@@ -198,10 +198,19 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     let optionSchema: S | undefined | null;
 
     if (option) {
-      // merge top level required field
-      const { required: schemaRequired } = schema;
+      const { required: schemaRequired, type: schemaType } = schema;
+      const parentProps: Partial<S> = {};
+      if (schemaRequired) parentProps.required = schemaRequired as S['required'];
+      // Propagate the parent schema type to options that don't define their own.
+      // This is necessary when the parent constrains the type (e.g. { type: 'string',
+      // oneOf: [{ pattern: '...' }, { pattern: '...' }] }) but the option sub-schemas
+      // omit the type — without it, getSchemaType returns undefined and the option
+      // renders as FallbackField instead of the correct widget (e.g. StringField).
+      if (schemaType !== undefined && !('type' in option)) {
+        parentProps.type = schemaType;
+      }
       // Merge in all the non-oneOf/anyOf properties and also skip the special ADDITIONAL_PROPERTY_FLAG property
-      optionSchema = schemaRequired ? (mergeSchemas({ required: schemaRequired }, option) as S) : option;
+      optionSchema = Object.keys(parentProps).length > 0 ? (mergeSchemas(parentProps, option) as S) : option;
     }
 
     // First we will check to see if there is an anyOf/oneOf override for the UI schema

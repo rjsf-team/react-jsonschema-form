@@ -16,6 +16,13 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.7.0
+
+## @rjsf/core
+
+- Fixed `SchemaField` so that a schema with a primitive or array `type` alongside a non-select `oneOf`/`anyOf` no longer renders a spurious duplicate input above the option selector, fixing [#5119](https://github.com/rjsf-team/react-jsonschema-form/issues/5119)
+- Fixed `MultiSchemaField` to propagate the parent schema's `type` to option sub-schemas that don't define their own, so the correct widget (e.g. `StringField`) renders for the selected option instead of `FallbackField`, fixing [#5119](https://github.com/rjsf-team/react-jsonschema-form/issues/5119)
+
 # 6.6.2
 
 ## @rjsf/core

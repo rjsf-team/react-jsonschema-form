@@ -1916,4 +1916,40 @@ describe('anyOf', () => {
 
     expect(select).toHaveValue('1');
   });
+
+  describe('primitive type with non-select anyOf', () => {
+    const schema: RJSFSchema = {
+      type: 'string',
+      anyOf: [
+        { title: 'Short', maxLength: 10 },
+        { title: 'Long', minLength: 11 },
+      ],
+    };
+
+    it('should not render a spurious XxxOf-prefixed input alongside the anyOf selector', () => {
+      // Mirror of the oneOf regression: { type: 'string', anyOf: [...] } must not
+      // render an outer StringField input with id="root_XxxOf".
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelector('input#root_XxxOf')).not.toBeInTheDocument();
+    });
+
+    it('should render the option text input with the correct root id', () => {
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelector('input#root')).toBeInTheDocument();
+    });
+
+    it('should produce a plain string formData value when typing into the option input', async () => {
+      const { node, onChange } = createFormComponent({ schema });
+
+      const input = node.querySelector<HTMLInputElement>('input#root');
+      expect(input).toBeInTheDocument();
+
+      await user.clear(input!);
+      await user.type(input!, 'hello');
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 'hello' }), expect.any(String));
+    });
+  });
 });
