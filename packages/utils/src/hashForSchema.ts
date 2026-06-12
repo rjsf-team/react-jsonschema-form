@@ -54,5 +54,5 @@ export function hashObject(object: unknown): string {
  * @returns - The string obtained from the hash of the stringified schema
  */
 export default function hashForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S) {
-  return hashString(sortedJSONStringify(schema));
+  return hashObject(schema);
 }

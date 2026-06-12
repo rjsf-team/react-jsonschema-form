@@ -37,6 +37,8 @@ export default function mergeSchemas(obj1: GenericObjectType, obj2: GenericObjec
   }, acc);
   // Copy own Symbol-keyed properties from obj2 (Object.keys skips them).
   for (const sym of Object.getOwnPropertySymbols(obj2)) {
+    // To avoid issues with symbols, we cast them to GenericSymbolObjectType. If we make the mergeSchema function take
+    // in GenericSymbolObjectType rather than GenericObjectType, it causes a bunch of type errors downstream
     (result as GenericSymbolObjectType)[sym] = (obj2 as GenericSymbolObjectType)[sym];
   }
   return result;

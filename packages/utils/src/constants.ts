@@ -4,7 +4,7 @@
  * `retrieveSchema()` utility. Using Symbols keeps these internal markers invisible to JSON serialisation and
  * JSON Schema validators (AJV, ATA, etc.), which only enumerate string-keyed properties.
  */
-export const ADDITIONAL_PROPERTY_FLAG: unique symbol = Symbol('__additional_property');
+export const ADDITIONAL_PROPERTY_FLAG = Symbol('__additional_property');
 export const ADDITIONAL_PROPERTIES_KEY = 'additionalProperties';
 export const ALL_OF_KEY = 'allOf';
 export const ANY_OF_KEY = 'anyOf';
@@ -26,8 +26,8 @@ export const READONLY_KEY = 'readonly';
 export const REQUIRED_KEY = 'required';
 export const SUBMIT_BTN_OPTIONS_KEY = 'submitButtonOptions';
 export const REF_KEY = '$ref';
-export const RJSF_REF_KEY: unique symbol = Symbol('__rjsf_ref');
-export const RJSF_REF_CYCLE_KEY: unique symbol = Symbol('__rjsf_ref_cycle');
+export const RJSF_REF_KEY = Symbol('__rjsf_ref');
+export const RJSF_REF_CYCLE_KEY = Symbol('__rjsf_ref_cycle');
 export const SCHEMA_KEY = '$schema';
 export const DEFAULT_ID_PREFIX = 'root';
 export const DEFAULT_ID_SEPARATOR = '_';

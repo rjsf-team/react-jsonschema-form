@@ -527,12 +527,12 @@ export function stubExistingAdditionalProperties<
       // The type of our new key should match the additionalProperties value;
       schema.properties[key] = additionalProperties;
       // Set our additional property flag so we know it was dynamically added
-      set(schema.properties, [key, ADDITIONAL_PROPERTY_FLAG], true);
+      (schema.properties[key] as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
     } else {
       // Invalid property
       schema.properties[key] = { type: 'null' };
       // Set our additional property flag so we know it was dynamically added
-      set(schema.properties, [key, ADDITIONAL_PROPERTY_FLAG], true);
+      (schema.properties[key] as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
     }
   });
 
