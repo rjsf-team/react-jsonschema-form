@@ -9,6 +9,7 @@ import type {
   FieldTemplateProps,
   FormContextType,
   Registry,
+  RJSFMarkedSchema,
   RJSFSchema,
   StrictRJSFSchema,
   UIOptionsType,
@@ -129,7 +130,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
 
   // Stop $ref cycles: when resolveAllReferences detects a repeated property $ref it tags the schema with this flag.
   // The check must come after all hook calls to satisfy React's rules of hooks.
-  if (get(_schema, RJSF_REF_CYCLE_KEY, false)) {
+  if ((_schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]) {
     return <CyclicSchemaField {...props} />;
   }
 

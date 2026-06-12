@@ -27,6 +27,11 @@ export type StrictRJSFSchema = JSONSchema7;
  */
 export type RJSFSchema = StrictRJSFSchema & GenericObjectType;
 
+/** Allow for more flexible schemas (i.e. draft-2019) than the strict JSONSchema7 with special marking added by
+ * `retrieveSchema()`
+ */
+export type RJSFMarkedSchema = RJSFSchema & Record<symbol, boolean | string>;
+
 /** Alias GenericObjectType as FormContextType to allow us to remap this at some future date
  */
 export type FormContextType = GenericObjectType;

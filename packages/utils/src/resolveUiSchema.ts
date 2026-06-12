@@ -3,7 +3,15 @@ import isEmpty from 'lodash/isEmpty';
 import { ANY_OF_KEY, ONE_OF_KEY, REF_KEY, RJSF_REF_KEY } from './constants';
 import findSchemaDefinition from './findSchemaDefinition';
 import mergeObjects from './mergeObjects';
-import type { FormContextType, GenericObjectType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from './types';
+import type {
+  FormContextType,
+  GenericObjectType,
+  Registry,
+  RJSFMarkedSchema,
+  RJSFSchema,
+  StrictRJSFSchema,
+  UiSchema,
+} from './types';
 
 /** Resolves the uiSchema for a given schema, considering `ui:definitions` stored in the registry.
  *
@@ -26,7 +34,7 @@ export default function resolveUiSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(schema: S, localUiSchema: UiSchema<T, S, F> | undefined, registry: Registry<T, S, F>): UiSchema<T, S, F> {
-  const ref = ((schema as GenericObjectType)[RJSF_REF_KEY] ?? schema[REF_KEY]) as string | undefined;
+  const ref = ((schema as RJSFMarkedSchema)[RJSF_REF_KEY] ?? schema[REF_KEY]) as string | undefined;
   const definitions = registry.uiSchemaDefinitions;
   const definitionUiSchema = ref && definitions ? definitions[ref] : undefined;
 
@@ -47,7 +55,7 @@ export default function resolveUiSchema<
   // can read dropdown option titles at the parent level.
   if (definitions) {
     let resolvedSchema: S = schema;
-    if (ref && schema[REF_KEY] && !(schema as GenericObjectType)[RJSF_REF_KEY]) {
+    if (ref && schema[REF_KEY] && !(schema as RJSFMarkedSchema)[RJSF_REF_KEY]) {
       try {
         resolvedSchema = findSchemaDefinition<S>(ref, registry.rootSchema);
       } catch (e) {
@@ -66,7 +74,7 @@ export default function resolveUiSchema<
         let hasExpanded = false;
         for (let i = 0; i < schemaOptions.length; i++) {
           const option = schemaOptions[i] as GenericObjectType | undefined;
-          const optionRef = (option?.[RJSF_REF_KEY] ?? option?.[REF_KEY]) as string | undefined;
+          const optionRef = ((option as RJSFMarkedSchema)?.[RJSF_REF_KEY] ?? option?.[REF_KEY]) as string | undefined;
           if (optionRef && optionRef in definitions) {
             const optionUiSchema = (uiSchemaArray[i] || {}) as GenericObjectType;
             uiSchemaArray[i] = mergeObjects(definitions[optionRef] as GenericObjectType, optionUiSchema) as UiSchema<
