@@ -1,11 +1,14 @@
+import noop from 'lodash';
+import type { MockInstance } from 'vitest';
+
 import logUnsupportedDefaultForEnum from '../src/logUnsupportedDefaultForEnum';
 
 describe('logUnsupportedDefaultForEnum()', () => {
-  let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
+  let consoleErrorSpy: MockInstance;
 
   beforeEach(() => {
     // oxlint-disable-next-line no-empty-function
-    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(noop);
   });
 
   afterEach(() => {
