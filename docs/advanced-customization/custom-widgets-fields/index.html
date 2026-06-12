@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.10.1">
 <title data-rh="true">Custom Widgets and Fields | react-jsonschema-form</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://rjsf-team.github.io/react-jsonschema-form/docs/advanced-customization/custom-widgets-fields"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Custom Widgets and Fields | react-jsonschema-form"><meta data-rh="true" name="description" content="The API allows to specify your own custom widget and field components:"><meta data-rh="true" property="og:description" content="The API allows to specify your own custom widget and field components:"><link data-rh="true" rel="icon" href="/react-jsonschema-form/docs/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://rjsf-team.github.io/react-jsonschema-form/docs/advanced-customization/custom-widgets-fields"><link data-rh="true" rel="alternate" href="https://rjsf-team.github.io/react-jsonschema-form/docs/advanced-customization/custom-widgets-fields" hreflang="en"><link data-rh="true" rel="alternate" href="https://rjsf-team.github.io/react-jsonschema-form/docs/advanced-customization/custom-widgets-fields" hreflang="x-default"><link data-rh="true" rel="preconnect" href="https://LRQC6J0BO6-dsn.algolia.net" crossorigin="anonymous"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Advanced Customization","item":"https://rjsf-team.github.io/react-jsonschema-form/docs/advanced-customization/"},{"@type":"ListItem","position":2,"name":"Custom Widgets and Fields","item":"https://rjsf-team.github.io/react-jsonschema-form/docs/advanced-customization/custom-widgets-fields"}]}</script><link rel="search" type="application/opensearchdescription+xml" title="react-jsonschema-form" href="/react-jsonschema-form/docs/opensearch.xml"><link rel="stylesheet" href="/react-jsonschema-form/docs/assets/css/styles.5ff2e7b3.css">
-<script src="/react-jsonschema-form/docs/assets/js/runtime~main.4ff44a29.js" defer="defer"></script>
+<script src="/react-jsonschema-form/docs/assets/js/runtime~main.66d1213f.js" defer="defer"></script>
 <script src="/react-jsonschema-form/docs/assets/js/main.14e01da1.js" defer="defer"></script>
 </head>
 <body>
@@ -43,6 +43,7 @@ renders for boolean values. You can override any field and widget just by provid
 <li class=""><code>TitleField</code></li>
 <li class=""><code>UnsupportedField</code></li>
 <li class=""><code>FallbackField</code></li>
+<li class=""><code>CyclicSchemaField</code></li>
 </ul>
 <p>The default widgets you can override are:</p>
 <ul>
@@ -116,7 +117,7 @@ If you do set errors this way, you must also clear them this way by passing <cod
 <blockquote>
 <p>Note: This also applies to <a href="#custom-component-registration" class="">registered custom components</a>.</p>
 </blockquote>
-<h3 class="anchor anchorTargetStickyNavbar_SAay" id="customizing-widgets-text-input">Customizing widgets&#x27; text input<a href="#customizing-widgets-text-input" class="hash-link" aria-label="Direct link to Customizing widgets&#x27; text input" title="Direct link to Customizing widgets&#x27; text input" translate="no">  ​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_SAay" id="customizing-widgets-text-input">Customizing widgets&#x27; text input<a href="#customizing-widgets-text-input" class="hash-link" aria-label="Direct link to Customizing widgets&#x27; text input" title="Direct link to Customizing widgets&#x27; text input" translate="no">​</a></h3>
 <p>All the widgets that render a text input use the <code>BaseInputTemplate</code> component internally. If you need to customize all text inputs without customizing all widgets individually, you can provide a <code>BaseInputTemplate</code> component in the <code>templates</code> property of <code>Form</code> (see <a class="" href="/react-jsonschema-form/docs/advanced-customization/custom-templates#baseinputtemplate">Custom Templates</a>).</p>
 <h3 class="anchor anchorTargetStickyNavbar_SAay" id="wrapping-an-existing-widget-to-customize-it">Wrapping an existing widget to customize it<a href="#wrapping-an-existing-widget-to-customize-it" class="hash-link" aria-label="Direct link to Wrapping an existing widget to customize it" title="Direct link to Wrapping an existing widget to customize it" translate="no">​</a></h3>
 <p>Sometimes you just need to customize the properties that are passed to an existing widget.
