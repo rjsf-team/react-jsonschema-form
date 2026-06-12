@@ -33,6 +33,7 @@ import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
   GenericObjectType,
+  RJSFMarkedSchema,
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
@@ -494,7 +495,7 @@ export function stubExistingAdditionalProperties<
           get(formData, [key]) as T,
           experimental_customMergeAllOf,
         );
-        set(schema.properties, [key, ADDITIONAL_PROPERTY_FLAG], true);
+        (schema.properties[key] as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
         return;
       }
     }

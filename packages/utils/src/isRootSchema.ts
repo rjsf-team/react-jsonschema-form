@@ -1,6 +1,4 @@
-import omit from 'lodash/omit';
-
-import { REF_KEY, RJSF_REF_KEY } from './constants';
+import { REF_KEY } from './constants';
 import deepEquals from './deepEquals';
 import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema } from './types';
 
@@ -25,7 +23,7 @@ export default function isRootSchema<T = any, S extends StrictRJSFSchema = RJSFS
   }
   if (REF_KEY in rootSchema) {
     const resolvedSchema = schemaUtils.retrieveSchema(rootSchema);
-    return deepEquals(schemaToCompare, omit(resolvedSchema, RJSF_REF_KEY));
+    return deepEquals(schemaToCompare, resolvedSchema);
   }
   return false;
 }
