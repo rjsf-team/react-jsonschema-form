@@ -76,6 +76,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Updated `@rjsf/snapshots` to add a test case to `formTests` that verifies the new Cycle detection UI
+- Updated the `custom-templates.md` and `custom-widgets-fields.md` for the new feature
 
 # 6.6.2
 
