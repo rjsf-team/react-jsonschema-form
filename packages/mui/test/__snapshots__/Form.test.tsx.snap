@@ -5245,7 +5245,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                       aria-hidden="true"
                       aria-invalid="false"
                       class="MuiSelect-nativeInput emotion-8"
-                      id=":r6q:"
+                      id=":r6s:"
                       name="root[color]"
                       placeholder=""
                       tabindex="-1"
@@ -10767,7 +10767,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                       aria-hidden="true"
                       aria-invalid="false"
                       class="MuiSelect-nativeInput emotion-8"
-                      id=":r7v:"
+                      id=":r81:"
                       name="root.color"
                       placeholder=""
                       tabindex="-1"
@@ -11558,6 +11558,453 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
     >
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-26"
+        tabindex="0"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields > Cyclic schema 1`] = `
+<DocumentFragment>
+  .emotion-0 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  position: relative;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  vertical-align: top;
+  width: 100%;
+}
+
+.emotion-1 {
+  margin-bottom: 8px;
+  margin-top: 8px;
+}
+
+.emotion-2 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 1.5rem;
+  line-height: 1.334;
+  letter-spacing: 0em;
+}
+
+.emotion-3 {
+  margin: 0;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  border-width: 0;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.12);
+  border-bottom-width: thin;
+}
+
+.emotion-4 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.57;
+  letter-spacing: 0.00714em;
+  margin-top: 5px;
+}
+
+.emotion-5 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 16px;
+  --Grid-rowSpacing: 16px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
+  box-sizing: border-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  margin-top: 10px;
+}
+
+.emotion-5>* {
+  --Grid-parent-columns: 12;
+}
+
+.emotion-5>* {
+  --Grid-parent-columnSpacing: 16px;
+}
+
+.emotion-5>* {
+  --Grid-parent-rowSpacing: 16px;
+}
+
+.emotion-6 {
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
+  min-width: 0;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+.emotion-14 {
+  margin-top: 16px;
+}
+
+.emotion-15 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.43;
+  letter-spacing: 0.01071em;
+  color: #ed6c02;
+  margin-bottom: 8px;
+}
+
+.emotion-16 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.75;
+  letter-spacing: 0.02857em;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 16px;
+  border: 0;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  padding: 5px 15px;
+  border: 1px solid currentColor;
+  border-color: var(--variant-outlinedBorder, currentColor);
+  background-color: var(--variant-outlinedBg);
+  color: var(--variant-outlinedColor);
+  --variant-textColor: #ed6c02;
+  --variant-outlinedColor: #ed6c02;
+  --variant-outlinedBorder: rgba(237, 108, 2, 0.5);
+  --variant-containedColor: #fff;
+  --variant-containedBg: #ed6c02;
+  padding: 3px 9px;
+  font-size: 0.8125rem;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-16::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-16.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-16 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-16:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.emotion-16.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-16.Mui-disabled {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+@media (hover: hover) {
+  .emotion-16:hover {
+    --variant-containedBg: #e65100;
+    --variant-textBg: rgba(237, 108, 2, 0.04);
+    --variant-outlinedBorder: #ed6c02;
+    --variant-outlinedBg: rgba(237, 108, 2, 0.04);
+  }
+}
+
+.emotion-16.MuiButton-loading {
+  color: transparent;
+}
+
+.emotion-17 {
+  margin-top: 24px;
+}
+
+.emotion-18 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.75;
+  letter-spacing: 0.02857em;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 16px;
+  border: 0;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: var(--variant-containedColor);
+  background-color: var(--variant-containedBg);
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  --variant-textColor: #1976d2;
+  --variant-outlinedColor: #1976d2;
+  --variant-outlinedBorder: rgba(25, 118, 210, 0.5);
+  --variant-containedColor: #fff;
+  --variant-containedBg: #1976d2;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-18::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-18.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-18 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-18:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.emotion-18.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-18:hover {
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+}
+
+@media (hover: none) {
+  .emotion-18:hover {
+    box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  }
+}
+
+.emotion-18:active {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+}
+
+.emotion-18.Mui-focusVisible {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-18.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+@media (hover: hover) {
+  .emotion-18:hover {
+    --variant-containedBg: #1565c0;
+    --variant-textBg: rgba(25, 118, 210, 0.04);
+    --variant-outlinedBorder: #1976d2;
+    --variant-outlinedBg: rgba(25, 118, 210, 0.04);
+  }
+}
+
+.emotion-18.MuiButton-loading {
+  color: transparent;
+}
+
+<form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+      >
+        <div
+          class="MuiBox-root emotion-1"
+          id="root__title"
+        >
+          <h5
+            class="MuiTypography-root MuiTypography-h5 emotion-2"
+          >
+            A registration form
+          </h5>
+          <hr
+            class="MuiDivider-root MuiDivider-fullWidth emotion-3"
+          />
+        </div>
+        <h6
+          class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
+          id="root__description"
+        >
+          A simple form example.
+        </h6>
+        <div
+          class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
+        >
+          <div
+            class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-6"
+          >
+            <div
+              class="rjsf-field rjsf-field-object"
+            >
+              <div
+                class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+              >
+                <div
+                  class="MuiBox-root emotion-1"
+                  id="root_child__title"
+                >
+                  <h5
+                    class="MuiTypography-root MuiTypography-h5 emotion-2"
+                  >
+                    A registration form
+                  </h5>
+                  <hr
+                    class="MuiDivider-root MuiDivider-fullWidth emotion-3"
+                  />
+                </div>
+                <h6
+                  class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
+                  id="root_child__description"
+                >
+                  A simple form example.
+                </h6>
+                <div
+                  class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
+                >
+                  <div
+                    class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-6"
+                  >
+                    <div
+                      class="MuiBox-root emotion-14"
+                    >
+                      <p
+                        class="MuiTypography-root MuiTypography-body2 emotion-15"
+                      >
+                        Circular reference ($ref cycle) detected for field "child". You may choose to expand to the next cycle break
+                      </p>
+                      <button
+                        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-sizeSmall MuiButton-colorWarning emotion-16"
+                        id="root_child_child-button"
+                        tabindex="0"
+                        type="button"
+                      >
+                        Expand Cycle
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="MuiBox-root emotion-17"
+    >
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-18"
         tabindex="0"
         type="submit"
       >
@@ -22369,7 +22816,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                           aria-hidden="true"
                           aria-invalid="false"
                           class="MuiSelect-nativeInput emotion-129"
-                          id=":r3v:"
+                          id=":r41:"
                           name="root_optionalObjectWithOneofs__oneof_select"
                           tabindex="-1"
                           value="0"
@@ -22524,7 +22971,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                           aria-hidden="true"
                           aria-invalid="false"
                           class="MuiSelect-nativeInput emotion-129"
-                          id=":r43:"
+                          id=":r45:"
                           name="root_optionalArrayWithAnyofs__anyof_select"
                           tabindex="-1"
                           value="0"
@@ -24262,7 +24709,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                           aria-invalid="false"
                           class="MuiSelect-nativeInput emotion-129"
                           disabled=""
-                          id=":r58:"
+                          id=":r5a:"
                           name="root_optionalObjectWithOneofs__oneof_select"
                           tabindex="-1"
                           value="0"
@@ -24418,7 +24865,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                           aria-invalid="false"
                           class="MuiSelect-nativeInput emotion-129"
                           disabled=""
-                          id=":r5c:"
+                          id=":r5e:"
                           name="root_optionalArrayWithAnyofs__anyof_select"
                           tabindex="-1"
                           value="0"

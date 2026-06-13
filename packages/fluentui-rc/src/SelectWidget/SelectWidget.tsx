@@ -8,6 +8,7 @@ import {
   enumOptionsIndexForValue,
   getOptionValueFormat,
   labelValue,
+  logUnsupportedDefaultForEnum,
 } from '@rjsf/utils';
 
 function getValue(data: OptionOnSelectData, multiple: boolean) {
@@ -64,6 +65,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     return onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));
   };
   const showPlaceholderOption = !multiple && schema.default === undefined;
+  logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
   return (
     <Field

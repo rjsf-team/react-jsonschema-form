@@ -12,6 +12,7 @@ import {
   enumOptionValueEncoder,
   getOptionValueFormat,
   labelValue,
+  logUnsupportedDefaultForEnum,
 } from '@rjsf/utils';
 
 import { getMuiProps } from '../util';
@@ -79,6 +80,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
 
   const { InputLabelProps, SelectProps, autocomplete, ...textFieldRemainingProps } = textFieldProps;
   const showPlaceholderOption = !isMultiple && schema.default === undefined;
+  logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
 
   return (
     <TextField

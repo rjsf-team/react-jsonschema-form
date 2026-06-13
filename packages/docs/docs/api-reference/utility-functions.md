@@ -341,6 +341,18 @@ When `format` is `'indexed'` (the default), returns the index as a string.
 
 - string: The string to use as the DOM value attribute
 
+### logUnsupportedDefaultForEnum&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Logs a warning when a single-select enum widget has a schema default that is not one of its enum options.
+Multi-select widgets are ignored because they do not use the same single-value default handling.
+
+#### Parameters
+
+- id: string - The field id used in the warning message
+- schema: S - The schema whose default value is checked
+- [enumOptions]: EnumOptionsType&lt;S>[] - The enum options available to the widget
+- [multiple=false]: boolean - Whether the widget allows multiple selections
+
 ### errorId()
 
 Return a consistent `id` for the field error element.

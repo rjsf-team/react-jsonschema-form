@@ -2448,6 +2448,164 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
 </DocumentFragment>
 `;
 
+exports[`single fields > Cyclic schema 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+      >
+        <div
+          id="root__title"
+        >
+          <h5
+            style="margin: 0px; font-size: 1.5rem;"
+          >
+            A registration form 
+          </h5>
+          <div
+            aria-orientation="horizontal"
+            class="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+            data-pc-name="divider"
+            data-pc-section="root"
+            role="separator"
+            style="justify-content: center; margin-top: 0.5rem;"
+          >
+            <div
+              class="p-divider-content"
+              data-pc-section="content"
+            />
+          </div>
+        </div>
+        <div
+          style="margin-bottom: 1rem;"
+        >
+          <span
+            id="root__description"
+          >
+            A simple form example.
+          </span>
+        </div>
+        <div
+          class="rjsf-field rjsf-field-object"
+        >
+          <div
+            style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+          >
+            <div
+              id="root_child__title"
+            >
+              <h5
+                style="margin: 0px; font-size: 1.2rem;"
+              >
+                A registration form 
+              </h5>
+              <div
+                aria-orientation="horizontal"
+                class="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+                data-pc-name="divider"
+                data-pc-section="root"
+                role="separator"
+                style="justify-content: center; margin-top: 0.5rem;"
+              >
+                <div
+                  class="p-divider-content"
+                  data-pc-section="content"
+                />
+              </div>
+            </div>
+            <div
+              style="margin-bottom: 1rem;"
+            >
+              <span
+                id="root_child__description"
+              >
+                A simple form example.
+              </span>
+            </div>
+            <div
+              style="margin-top: 1rem;"
+            >
+              <div
+                aria-atomic="true"
+                aria-live="polite"
+                class="p-inline-message p-component p-inline-message-warn"
+                data-pc-name="message"
+                data-pc-section="root"
+                role="alert"
+                style="width: 100%; justify-content: start; margin-bottom: 0.5rem;"
+              >
+                <svg
+                  class="p-icon p-inline-message-icon"
+                  data-pc-section="icon"
+                  fill="none"
+                  height="14"
+                  viewBox="0 0 14 14"
+                  width="14"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13.4018 13.1893H0.598161C0.49329 13.189 0.390283 13.1615 0.299143 13.1097C0.208003 13.0578 0.131826 12.9832 0.0780112 12.8932C0.0268539 12.8015 0 12.6982 0 12.5931C0 12.4881 0.0268539 12.3848 0.0780112 12.293L6.47985 1.08982C6.53679 1.00399 6.61408 0.933574 6.70484 0.884867C6.7956 0.836159 6.897 0.810669 7 0.810669C7.103 0.810669 7.2044 0.836159 7.29516 0.884867C7.38592 0.933574 7.46321 1.00399 7.52015 1.08982L13.922 12.293C13.9731 12.3848 14 12.4881 14 12.5931C14 12.6982 13.9731 12.8015 13.922 12.8932C13.8682 12.9832 13.792 13.0578 13.7009 13.1097C13.6097 13.1615 13.5067 13.189 13.4018 13.1893ZM1.63046 11.989H12.3695L7 2.59425L1.63046 11.989Z"
+                    fill="currentColor"
+                  />
+                  <path
+                    d="M6.99996 8.78801C6.84143 8.78594 6.68997 8.72204 6.57787 8.60993C6.46576 8.49782 6.40186 8.34637 6.39979 8.18784V5.38703C6.39979 5.22786 6.46302 5.0752 6.57557 4.96265C6.68813 4.85009 6.84078 4.78686 6.99996 4.78686C7.15914 4.78686 7.31179 4.85009 7.42435 4.96265C7.5369 5.0752 7.60013 5.22786 7.60013 5.38703V8.18784C7.59806 8.34637 7.53416 8.49782 7.42205 8.60993C7.30995 8.72204 7.15849 8.78594 6.99996 8.78801Z"
+                    fill="currentColor"
+                  />
+                  <path
+                    d="M6.99996 11.1887C6.84143 11.1866 6.68997 11.1227 6.57787 11.0106C6.46576 10.8985 6.40186 10.7471 6.39979 10.5885V10.1884C6.39979 10.0292 6.46302 9.87658 6.57557 9.76403C6.68813 9.65147 6.84078 9.58824 6.99996 9.58824C7.15914 9.58824 7.31179 9.65147 7.42435 9.76403C7.5369 9.87658 7.60013 10.0292 7.60013 10.1884V10.5885C7.59806 10.7471 7.53416 10.8985 7.42205 11.0106C7.30995 11.1227 7.15849 11.1866 6.99996 11.1887Z"
+                    fill="currentColor"
+                  />
+                </svg>
+                <span
+                  class="p-inline-message-text"
+                  data-pc-section="text"
+                >
+                  Circular reference ($ref cycle) detected for field "child". You may choose to expand to the next cycle break
+                </span>
+              </div>
+              <button
+                aria-label="Expand Cycle"
+                class="p-button p-component p-button-outlined p-button-sm p-button-warning"
+                data-pc-name="button"
+                data-pc-section="root"
+                id="root_child_child-button"
+                type="button"
+              >
+                <span
+                  class="p-button-label p-c"
+                  data-pc-section="label"
+                >
+                  Expand Cycle
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      aria-label="Submit"
+      class="p-button p-component"
+      data-pc-name="button"
+      data-pc-section="root"
+      type="submit"
+    >
+      <span
+        class="p-button-label p-c"
+        data-pc-section="label"
+      >
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > checkbox field 1`] = `
 <DocumentFragment>
   <form
@@ -4603,13 +4761,13 @@ exports[`single fields > optional data controls > does not show optional control
               class="p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              id="pr_id_23"
+              id="pr_id_25"
             >
               <div
-                aria-labelledby="pr_id_23_header"
+                aria-labelledby="pr_id_25_header"
                 class="p-toggleable-content"
                 data-pc-section="toggleablecontent"
-                id="pr_id_23_content"
+                id="pr_id_25_content"
                 role="region"
               >
                 <div
@@ -4701,13 +4859,13 @@ exports[`single fields > optional data controls > does not show optional control
               class="p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              id="pr_id_24"
+              id="pr_id_26"
             >
               <div
-                aria-labelledby="pr_id_24_header"
+                aria-labelledby="pr_id_26_header"
                 class="p-toggleable-content"
                 data-pc-section="toggleablecontent"
-                id="pr_id_24_content"
+                id="pr_id_26_content"
                 role="region"
               >
                 <div
@@ -5376,13 +5534,13 @@ exports[`single fields > optional data controls > does not show optional control
               class="p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              id="pr_id_73"
+              id="pr_id_75"
             >
               <div
-                aria-labelledby="pr_id_73_header"
+                aria-labelledby="pr_id_75_header"
                 class="p-toggleable-content"
                 data-pc-section="toggleablecontent"
-                id="pr_id_73_content"
+                id="pr_id_75_content"
                 role="region"
               >
                 <div
@@ -5475,13 +5633,13 @@ exports[`single fields > optional data controls > does not show optional control
               class="p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              id="pr_id_74"
+              id="pr_id_76"
             >
               <div
-                aria-labelledby="pr_id_74_header"
+                aria-labelledby="pr_id_76_header"
                 class="p-toggleable-content"
                 data-pc-section="toggleablecontent"
-                id="pr_id_74_content"
+                id="pr_id_76_content"
                 role="region"
               >
                 <div
@@ -6268,13 +6426,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              id="pr_id_54"
+              id="pr_id_56"
             >
               <div
-                aria-labelledby="pr_id_54_header"
+                aria-labelledby="pr_id_56_header"
                 class="p-toggleable-content"
                 data-pc-section="toggleablecontent"
-                id="pr_id_54_content"
+                id="pr_id_56_content"
                 role="region"
               >
                 <div
@@ -6360,13 +6518,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              id="pr_id_55"
+              id="pr_id_57"
             >
               <div
-                aria-labelledby="pr_id_55_header"
+                aria-labelledby="pr_id_57_header"
                 class="p-toggleable-content"
                 data-pc-section="toggleablecontent"
-                id="pr_id_55_content"
+                id="pr_id_57_content"
                 role="region"
               >
                 <div
@@ -7051,13 +7209,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              id="pr_id_90"
+              id="pr_id_92"
             >
               <div
-                aria-labelledby="pr_id_90_header"
+                aria-labelledby="pr_id_92_header"
                 class="p-toggleable-content"
                 data-pc-section="toggleablecontent"
-                id="pr_id_90_content"
+                id="pr_id_92_content"
                 role="region"
               >
                 <div
@@ -7117,13 +7275,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              id="pr_id_91"
+              id="pr_id_93"
             >
               <div
-                aria-labelledby="pr_id_91_header"
+                aria-labelledby="pr_id_93_header"
                 class="p-toggleable-content"
                 data-pc-section="toggleablecontent"
-                id="pr_id_91_content"
+                id="pr_id_93_content"
                 role="region"
               >
                 <div
@@ -7484,13 +7642,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              id="pr_id_36"
+              id="pr_id_38"
             >
               <div
-                aria-labelledby="pr_id_36_header"
+                aria-labelledby="pr_id_38_header"
                 class="p-toggleable-content"
                 data-pc-section="toggleablecontent"
-                id="pr_id_36_content"
+                id="pr_id_38_content"
                 role="region"
               >
                 <div
@@ -7576,13 +7734,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              id="pr_id_37"
+              id="pr_id_39"
             >
               <div
-                aria-labelledby="pr_id_37_header"
+                aria-labelledby="pr_id_39_header"
                 class="p-toggleable-content"
                 data-pc-section="toggleablecontent"
-                id="pr_id_37_content"
+                id="pr_id_39_content"
                 role="region"
               >
                 <div
@@ -7919,13 +8077,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              id="pr_id_82"
+              id="pr_id_84"
             >
               <div
-                aria-labelledby="pr_id_82_header"
+                aria-labelledby="pr_id_84_header"
                 class="p-toggleable-content"
                 data-pc-section="toggleablecontent"
-                id="pr_id_82_content"
+                id="pr_id_84_content"
                 role="region"
               >
                 <div
@@ -7985,13 +8143,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="p-fieldset p-component"
               data-pc-name="fieldset"
               data-pc-section="root"
-              id="pr_id_83"
+              id="pr_id_85"
             >
               <div
-                aria-labelledby="pr_id_83_header"
+                aria-labelledby="pr_id_85_header"
                 class="p-toggleable-content"
                 data-pc-section="toggleablecontent"
-                id="pr_id_83_content"
+                id="pr_id_85_content"
                 role="region"
               >
                 <div

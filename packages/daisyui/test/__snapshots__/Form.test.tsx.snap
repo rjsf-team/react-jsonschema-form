@@ -3548,6 +3548,141 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
 </DocumentFragment>
 `;
 
+exports[`single fields > Cyclic schema 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-object"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-object"
+      >
+        <div
+          class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+        >
+          <div
+            class="title-field mb-6"
+            id="root__title"
+          >
+            <h2
+              class="text-3xl font-bold text-primary mb-2"
+            >
+              A registration form
+            </h2>
+            <div
+              class="divider divider-primary my-0"
+            />
+          </div>
+          <div
+            class="description-field my-4"
+            id="root__description"
+          >
+            <div
+              class="text-sm text-base-content/80"
+            >
+              A simple form example.
+            </div>
+          </div>
+          <div
+            class="grid grid-cols-1 gap-3 "
+          >
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-object"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                >
+                  <div
+                    class="form-control "
+                  >
+                    <div
+                      class="title-field mb-6"
+                      id="root_child__title"
+                    >
+                      <h2
+                        class="text-3xl font-bold text-primary mb-2"
+                      >
+                        A registration form
+                      </h2>
+                      <div
+                        class="divider divider-primary my-0"
+                      />
+                    </div>
+                    <div
+                      class="description-field my-4"
+                      id="root_child__description"
+                    >
+                      <div
+                        class="text-sm text-base-content/80"
+                      >
+                        A simple form example.
+                      </div>
+                    </div>
+                    <div
+                      class="grid grid-cols-1 gap-3 mb-4"
+                    >
+                      <div
+                        class=""
+                      >
+                        <div
+                          class="mt-4"
+                        >
+                          <div
+                            class="alert alert-warning mb-2"
+                          >
+                            <span>
+                              Circular reference ($ref cycle) detected for field "child". You may choose to expand to the next cycle break
+                            </span>
+                          </div>
+                          <button
+                            class="btn btn-sm btn-warning"
+                            id="root_child_child-button"
+                            type="button"
+                          >
+                            Expand Cycle
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      class="list-disc list-inside"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > checkbox field 1`] = `
 <DocumentFragment>
   <form

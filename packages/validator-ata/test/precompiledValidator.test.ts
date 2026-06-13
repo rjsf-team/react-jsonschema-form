@@ -1,5 +1,5 @@
 import type { ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
-import { ErrorSchemaBuilder, hashForSchema, JUNK_OPTION_ID, retrieveSchema } from '@rjsf/utils';
+import { ErrorSchemaBuilder, hashForSchema, JUNK_OPTION_ID, retrieveSchema, RJSF_REF_KEY } from '@rjsf/utils';
 import noop from 'lodash/noop';
 import type { Mock } from 'vitest';
 
@@ -74,7 +74,7 @@ describe('ATAPrecompiledValidator', () => {
               required: ['name'],
             },
           ],
-          __rjsf_ref: '#/definitions/foo',
+          [RJSF_REF_KEY]: '#/definitions/foo',
         } as RJSFSchema;
 
         expect(validator.isValid(schema, { name: 'bar' }, rootSchema)).toBe(true);
@@ -90,7 +90,7 @@ describe('ATAPrecompiledValidator', () => {
               required: ['name'],
             },
           ],
-          __rjsf_ref: '#/definitions/foo',
+          [RJSF_REF_KEY]: '#/definitions/foo',
         } as RJSFSchema;
 
         expect(validator.isValid(schema, { name: 12345 }, rootSchema)).toBe(false);

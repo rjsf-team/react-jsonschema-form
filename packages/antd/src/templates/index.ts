@@ -3,6 +3,7 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } fro
 import ArrayFieldItemTemplate from './ArrayFieldItemTemplate';
 import ArrayFieldTemplate from './ArrayFieldTemplate';
 import BaseInputTemplate from './BaseInputTemplate';
+import CyclicSchemaExpandTemplate from './CyclicSchemaExpandTemplate';
 import ErrorList from './ErrorList';
 import DescriptionField from './FieldDescriptionTemplate';
 import FieldErrorTemplate from './FieldErrorTemplate';
@@ -25,6 +26,7 @@ export function generateTemplates<
     ArrayFieldItemTemplate,
     ArrayFieldTemplate,
     BaseInputTemplate,
+    CyclicSchemaExpandTemplate,
     ButtonTemplates: {
       AddButton,
       CopyButton,
