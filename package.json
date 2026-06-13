@@ -48,7 +48,7 @@
     "@vitest/coverage-v8": "^4.1.8",
     "ajv": "^8.20.0",
     "cross-env": "^10.1.0",
-    "esbuild": "^0.28.0",
+    "esbuild": "^0.28.1",
     "husky": "^9.1.7",
     "is-ci": "^4.1.0",
     "jsdom": "^29.1.1",
