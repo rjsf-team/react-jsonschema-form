@@ -61,7 +61,7 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   registry: Registry<T, S, F>,
 ): ComponentType<FieldProps<T, S, F>> {
   const { field } = uiOptions;
-  const { fields } = registry;
+  const { fields, schemaUtils } = registry;
   if (typeof field === 'function') {
     return field;
   }
@@ -79,9 +79,13 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     componentName = schemaId;
   }
 
-  // If the type is not defined and the schema uses 'anyOf' or 'oneOf', don't
-  // render a field and let the MultiSchemaField component handle the form display
-  if (!componentName && (schema.anyOf || schema.oneOf)) {
+  // If the schema uses 'anyOf' or 'oneOf' and is not a pure select (all-constant options),
+  // let the MultiSchemaField component handle the form display entirely.
+  // ObjectField is excluded: it renders shared properties (defined at the parent schema
+  // level) alongside the XxxOfField option selector.
+  // All other field types — including primitives and arrays — have no shared renderable
+  // properties, so the outer FieldComponent would only produce a spurious duplicate input.
+  if ((schema.anyOf || schema.oneOf) && !schemaUtils.isSelect(schema) && componentName !== 'ObjectField') {
     return () => null;
   }
 

@@ -34,6 +34,9 @@ should change the heading of the (upcoming) version to include a major version b
   - Updated `SchemaForm` to render the `CyclicSchemaField` when the schema contains the `RJSF_REF_CYCLE_KEY` set to `true`
 - Fixed array fields with empty tuple `items` and schema-valued `additionalItems` so clicking add renders the additional item field, fixing [#3791](https://github.com/rjsf-team/react-jsonschema-form/issues/3791)
 - Added a warning when a `select` widget schema default is not present in the enum options, fixing [#4494](https://github.com/rjsf-team/react-jsonschema-form/issues/4494)
+- Fixed `SchemaField` so that a schema with a primitive or array `type` alongside a non-select `oneOf`/`anyOf` no longer renders a spurious duplicate input above the option selector, fixing [#5119](https://github.com/rjsf-team/react-jsonschema-form/issues/5119)
+- Fixed `MultiSchemaField` to propagate the parent schema's `type` to option sub-schemas that don't define their own, so the correct widget (e.g. `StringField`) renders for the selected option instead of `FallbackField`, fixing [#5119](https://github.com/rjsf-team/react-jsonschema-form/issues/5119)
+
 
 ## @rjsf/daisyui
 

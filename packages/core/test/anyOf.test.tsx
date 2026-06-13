@@ -1916,4 +1916,104 @@ describe('anyOf', () => {
 
     expect(select).toHaveValue('1');
   });
+
+  describe('primitive type with non-select anyOf', () => {
+    const schema: RJSFSchema = {
+      type: 'string',
+      anyOf: [
+        { title: 'Short', maxLength: 10 },
+        { title: 'Long', minLength: 11 },
+      ],
+    };
+
+    it('should not render a spurious XxxOf-prefixed input alongside the anyOf selector', () => {
+      // Mirror of the oneOf regression: { type: 'string', anyOf: [...] } must not
+      // render an outer StringField input with id="root_XxxOf".
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelector('input#root_XxxOf')).not.toBeInTheDocument();
+    });
+
+    it('should render the option text input with the correct root id', () => {
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelector('input#root')).toBeInTheDocument();
+    });
+
+    it('should produce a plain string formData value when typing into the option input', async () => {
+      const { node, onChange } = createFormComponent({ schema });
+
+      const input = node.querySelector<HTMLInputElement>('input#root');
+      expect(input).toBeInTheDocument();
+
+      await user.clear(input!);
+      await user.type(input!, 'hello');
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 'hello' }), expect.any(String));
+    });
+
+    it('should not render a spurious XxxOf input for type number with non-select anyOf', () => {
+      const numberSchema: RJSFSchema = {
+        type: 'number',
+        anyOf: [
+          { title: 'Positive', minimum: 0 },
+          { title: 'Negative', maximum: 0 },
+        ],
+      };
+      const { node } = createFormComponent({ schema: numberSchema });
+
+      expect(node.querySelector('input#root_XxxOf')).not.toBeInTheDocument();
+      expect(node.querySelector('input#root')).toBeInTheDocument();
+    });
+
+    it('should produce a number formData value when typing into a type:number anyOf option input', async () => {
+      const numberSchema: RJSFSchema = {
+        type: 'number',
+        anyOf: [
+          { title: 'Positive', minimum: 0 },
+          { title: 'Negative', maximum: 0 },
+        ],
+      };
+      const { node, onChange } = createFormComponent({ schema: numberSchema });
+
+      const input = node.querySelector<HTMLInputElement>('input#root');
+      expect(input).toBeInTheDocument();
+
+      await user.clear(input!);
+      await user.type(input!, '42');
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 42 }), expect.any(String));
+    });
+
+    it('should not render a spurious XxxOf input for type array with non-select anyOf', () => {
+      const arraySchema: RJSFSchema = {
+        type: 'array',
+        anyOf: [
+          { title: 'Strings', items: { type: 'string' } },
+          { title: 'Numbers', items: { type: 'number' } },
+        ],
+      };
+      const { node } = createFormComponent({ schema: arraySchema });
+
+      expect(node.querySelector('[id="root_XxxOf"]')).not.toBeInTheDocument();
+    });
+
+    it('should still render common object properties alongside the anyOf selector', () => {
+      // Regression guard: ObjectField must NOT be suppressed when type:object has an anyOf,
+      // because shared properties defined at the parent level still need to render.
+      const objectSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          shared: { type: 'string' },
+        },
+        anyOf: [{ properties: { foo: { type: 'string' } } }, { properties: { bar: { type: 'string' } } }],
+      };
+      const { node } = createFormComponent({ schema: objectSchema });
+
+      // Common property from ObjectField
+      expect(node.querySelector('input#root_shared')).toBeInTheDocument();
+      // AnyOf selector
+      expect(node.querySelector('select')).toBeInTheDocument();
+    });
+  });
 });
