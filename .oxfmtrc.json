@@ -17,7 +17,17 @@
       "react",
       ["builtin", "external", "type-builtin", "type-external"],
       { "newlinesBetween": true },
-      ["internal", "subpath", "parent", "sibling", "index", "type-internal", "type-parent", "type-sibling", "type-index"],
+      [
+        "internal",
+        "subpath",
+        "parent",
+        "sibling",
+        "index",
+        "type-internal",
+        "type-parent",
+        "type-sibling",
+        "type-index"
+      ],
       "style",
       "unknown"
     ]
