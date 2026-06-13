@@ -200,7 +200,9 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     if (option) {
       const { required: schemaRequired, type: schemaType } = schema;
       const parentProps: Partial<S> = {};
-      if (schemaRequired) parentProps.required = schemaRequired as S['required'];
+      if (schemaRequired) {
+        parentProps.required = schemaRequired as S['required'];
+      }
       // Propagate the parent schema type to options that don't define their own.
       // This is necessary when the parent constrains the type (e.g. { type: 'string',
       // oneOf: [{ pattern: '...' }, { pattern: '...' }] }) but the option sub-schemas

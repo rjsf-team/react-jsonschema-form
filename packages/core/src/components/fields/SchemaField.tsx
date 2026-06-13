@@ -61,7 +61,7 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   registry: Registry<T, S, F>,
 ): ComponentType<FieldProps<T, S, F>> {
   const { field } = uiOptions;
-  const { fields } = registry;
+  const { fields, schemaUtils } = registry;
   if (typeof field === 'function') {
     return field;
   }
@@ -85,7 +85,7 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   // level) alongside the XxxOfField option selector.
   // All other field types — including primitives and arrays — have no shared renderable
   // properties, so the outer FieldComponent would only produce a spurious duplicate input.
-  if ((schema.anyOf || schema.oneOf) && !registry.schemaUtils.isSelect(schema) && componentName !== 'ObjectField') {
+  if ((schema.anyOf || schema.oneOf) && !schemaUtils.isSelect(schema) && componentName !== 'ObjectField') {
     return () => null;
   }
 
