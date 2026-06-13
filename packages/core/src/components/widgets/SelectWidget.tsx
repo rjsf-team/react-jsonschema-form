@@ -7,6 +7,7 @@ import {
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
+  logUnsupportedDefaultForEnum,
 } from '@rjsf/utils';
 
 function getValue(event: SyntheticEvent<HTMLSelectElement>, multiple: boolean) {
@@ -70,6 +71,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
 
   const selectValue = enumOptionSelectedValue<S>(value, enumOptions, multiple, optionValueFormat, emptyValue);
   const showPlaceholderOption = !multiple && schema.default === undefined;
+  logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
   return (
     // oxlint-disable-next-line jsx-a11y/no-autofocus

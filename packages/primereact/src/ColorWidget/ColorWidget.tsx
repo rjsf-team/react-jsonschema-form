@@ -32,8 +32,8 @@ export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSc
 
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
-  const handleBlur = () => onBlur && onBlur(id, value);
-  const handleFocus = () => onFocus && onFocus(id, value);
+  const handleBlur = () => onBlur?.(id, value);
+  const handleFocus = () => onFocus?.(id, value);
 
   return (
     <ColorPicker

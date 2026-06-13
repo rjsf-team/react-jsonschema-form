@@ -57,6 +57,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
 
   const playGroundFormRef = useRef<any>(null);
 
+  // oxlint-disable-next-line react/hook-use-state
   const [FormComponent, setFormComponent] = useState<ComponentType<FormProps>>(withTheme({}));
 
   const onThemeSelected = useCallback(

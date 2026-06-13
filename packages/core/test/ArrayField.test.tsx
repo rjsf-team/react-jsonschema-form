@@ -1940,6 +1940,38 @@ describe('ArrayField', () => {
     });
 
     describe('operations for additional items', () => {
+      it('should add a field when clicking add button for empty fixed items', async () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          title: 'List of additional items',
+          items: [],
+          additionalItems: {
+            type: 'string',
+            title: 'Additional item',
+          },
+        };
+        const templates = {
+          ArrayFieldTemplate: ExposedArrayKeyTemplate,
+          ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate,
+        };
+        const { node, onChange, rerender } = createFormComponent({
+          schema,
+          templates,
+        });
+
+        const addBtn = node.querySelector('.rjsf-array-item-add button');
+
+        expect(addBtn).not.toBeNull();
+
+        await user.click(addBtn!);
+
+        expectToHaveBeenCalledWithFormData(onChange, [undefined], 'root');
+
+        rerender({ schema, formData: [undefined], templates });
+
+        expect(node.querySelectorAll('.rjsf-field-string')).toHaveLength(1);
+      });
+
       it('should add a field when clicking add button', async () => {
         const { node, onChange } = createFormComponent({
           schema: schemaAdditional,

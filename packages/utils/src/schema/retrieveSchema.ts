@@ -20,6 +20,7 @@ import {
   PATTERN_PROPERTIES_KEY,
   PROPERTIES_KEY,
   REF_KEY,
+  RJSF_REF_CYCLE_KEY,
   RJSF_REF_KEY,
 } from '../constants';
 import deepEquals from '../deepEquals';
@@ -32,6 +33,7 @@ import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
   GenericObjectType,
+  RJSFMarkedSchema,
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
@@ -75,6 +77,18 @@ export default function retrieveSchema<
   )[0];
 }
 
+/** Converts boolean schemas to equivalent object schemas for APIs that operate on `StrictRJSFSchema` objects.
+ *
+ * @param schema - The schema or boolean schema to normalize
+ * @returns - The original schema or an equivalent object schema
+ */
+function normalizeBooleanSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S | boolean): S {
+  if (typeof schema !== 'boolean') {
+    return schema;
+  }
+  return (schema ? {} : { not: {} }) as S;
+}
+
 /** Resolves a conditional block (if/else/then) by removing the condition and merging the appropriate conditional branch
  * with the rest of the schema. If `expandAllBranches` is true, then the `retrieveSchemaInteral()` results for both
  * conditions will be returned.
@@ -105,10 +119,11 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
   let schemas: S[] = [];
   if (expandAllBranches) {
     if (then && typeof then !== 'boolean') {
+      const thenSchema = then as unknown as S;
       schemas = schemas.concat(
         retrieveSchemaInternal<T, S, F>(
           validator,
-          then as S,
+          thenSchema,
           rootSchema,
           formData,
           expandAllBranches,
@@ -118,10 +133,11 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
       );
     }
     if (otherwise && typeof otherwise !== 'boolean') {
+      const otherwiseSchema = otherwise as unknown as S;
       schemas = schemas.concat(
         retrieveSchemaInternal<T, S, F>(
           validator,
-          otherwise as S,
+          otherwiseSchema,
           rootSchema,
           formData,
           expandAllBranches,
@@ -131,12 +147,13 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
       );
     }
   } else {
-    const conditionalSchema = conditionValue ? then : otherwise;
-    if (conditionalSchema && typeof conditionalSchema !== 'boolean') {
+    const conditionalBranch = (conditionValue ? then : otherwise) as S | boolean | undefined;
+    if (conditionalBranch !== undefined) {
+      const conditionalSchema = normalizeBooleanSchema<S>(conditionalBranch);
       schemas = schemas.concat(
         retrieveSchemaInternal<T, S, F>(
           validator,
-          conditionalSchema as S,
+          conditionalSchema,
           rootSchema,
           formData,
           expandAllBranches,
@@ -348,6 +365,10 @@ export function resolveReference<T = any, S extends StrictRJSFSchema = RJSFSchem
  * @param recurseList - List of $refs already resolved to prevent recursion
  * @param [baseURI] - The base URI to be used for resolving relative references
  * @param [resolveAnyOfOrOneOfRefs] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
+ * @param [markCycleOnDetection=false] - When true and a recursive $ref is detected, the returned schema is tagged
+ *   with `__rjsf_ref_cycle: true` so that `SchemaField` can render a cycle indicator instead of recursing.
+ *   Should only be `true` when called from an **object-property** context, because object properties are always
+ *   rendered (creating an infinite loop), whereas array items and anyOf/oneOf branches are data-driven.
  * @returns - given schema will all references resolved or the original schema if no internal `$refs` were resolved
  */
 export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
@@ -356,6 +377,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   recurseList: string[],
   baseURI?: string,
   resolveAnyOfOrOneOfRefs?: boolean,
+  markCycleOnDetection = false,
 ): S {
   if (!isObject(schema)) {
     return schema;
@@ -367,7 +389,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
     const { $ref, ...localSchema } = resolvedSchema;
     // Check for a recursive reference and stop the loop
     if (recurseList.includes($ref!)) {
-      return resolvedSchema;
+      return markCycleOnDetection ? ({ ...resolvedSchema, [RJSF_REF_CYCLE_KEY]: true } as S) : resolvedSchema;
     }
     recurseList.push($ref!);
     // Retrieve the referenced schema definition.
@@ -384,7 +406,18 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
       resolvedSchema[PROPERTIES_KEY]!,
       (acc, value, key: string) => {
         const childList: string[] = [...recurseList];
-        acc[key] = resolveAllReferences(value as S, rootSchema, childList, currentBaseURI, resolveAnyOfOrOneOfRefs);
+        // Mark cycles only when NOT in resolveAnyOfOrOneOfRefs mode. When resolveAnyOfOrOneOfRefs=true
+        // (e.g. from ObjectField), options are resolved against a shared recurseList that accumulates
+        // refs across branches, causing false positives. In simple (non-anyOf) resolution, a $ref cycle
+        // in an object property always causes an infinite render loop and must be caught.
+        acc[key] = resolveAllReferences(
+          value as S,
+          rootSchema,
+          childList,
+          baseURI,
+          resolveAnyOfOrOneOfRefs,
+          !resolveAnyOfOrOneOfRefs,
+        );
         childrenLists.push(childList);
       },
       {} as RJSFSchema,
@@ -400,6 +433,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   ) {
     resolvedSchema = {
       ...resolvedSchema,
+      // Array items are only rendered when data exists, so a $ref cycle here does NOT cause an infinite render.
       items: resolveAllReferences(
         resolvedSchema.items as S,
         rootSchema,
@@ -476,7 +510,7 @@ export function stubExistingAdditionalProperties<
           get(formData, [key]) as T,
           experimental_customMergeAllOf,
         );
-        set(schema.properties, [key, ADDITIONAL_PROPERTY_FLAG], true);
+        (schema.properties[key] as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
         return;
       }
     }
@@ -488,7 +522,7 @@ export function stubExistingAdditionalProperties<
             validator,
             { [REF_KEY]: get(schema.additionalProperties, [REF_KEY]) } as S,
             rootSchema,
-            formData as T,
+            get(formData, [key]) as T,
             experimental_customMergeAllOf,
           );
         } else if ('type' in schema.additionalProperties!) {
@@ -508,12 +542,12 @@ export function stubExistingAdditionalProperties<
       // The type of our new key should match the additionalProperties value;
       schema.properties[key] = additionalProperties;
       // Set our additional property flag so we know it was dynamically added
-      set(schema.properties, [key, ADDITIONAL_PROPERTY_FLAG], true);
+      (schema.properties[key] as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
     } else {
       // Invalid property
       schema.properties[key] = { type: 'null' };
       // Set our additional property flag so we know it was dynamically added
-      set(schema.properties, [key, ADDITIONAL_PROPERTY_FLAG], true);
+      (schema.properties[key] as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
     }
   });
 
@@ -595,11 +629,19 @@ export function retrieveSchemaInternal<
       try {
         const withContainsSchemas = [] as S[];
         const withoutContainsSchemas = [] as S[];
+        // Collect Symbol-keyed properties from allOf subschemas before merging; shallowAllOfMerge
+        // (external library) only operates on string keys and will drop them.
+        const allOfSymbols: Record<symbol, unknown> = {};
         resolvedSchema.allOf?.forEach((allOfItem) => {
           if (typeof allOfItem === 'object' && allOfItem.contains) {
             withContainsSchemas.push(allOfItem as S);
           } else {
             withoutContainsSchemas.push(allOfItem as S);
+            for (const sym of Object.getOwnPropertySymbols(allOfItem)) {
+              if (!(sym in allOfSymbols)) {
+                allOfSymbols[sym] = (allOfItem as any)[sym];
+              }
+            }
           }
         });
         if (withContainsSchemas.length) {
@@ -608,6 +650,10 @@ export function retrieveSchemaInternal<
         resolvedSchema = experimental_customMergeAllOf
           ? experimental_customMergeAllOf(resolvedSchema)
           : mergeAllOf(resolvedSchema);
+        // Re-apply collected Symbol properties that the merge dropped.
+        for (const sym of Object.getOwnPropertySymbols(allOfSymbols)) {
+          (resolvedSchema as any)[sym] = allOfSymbols[sym];
+        }
         if (withContainsSchemas.length) {
           resolvedSchema.allOf = withContainsSchemas;
         }
@@ -724,7 +770,7 @@ export function relaxOptionsForScoring<S extends StrictRJSFSchema = RJSFSchema>(
 ): S[] {
   return options.map((d) => {
     if (!isObject(d)) {
-      return (d ? {} : { not: {} }) as S;
+      return normalizeBooleanSchema<S>(d);
     }
     const schema = resolveRefs && rootSchema ? resolveAllReferences<S>(d, rootSchema, []) : d;
     return schema.additionalProperties === false ? { ...schema, additionalProperties: true } : schema;
@@ -960,7 +1006,7 @@ export function withExactlyOneSubschema<
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): S[] {
   const validSubschemas = oneOf!.filter((subschema) => {
-    if (typeof subschema === 'boolean' || !subschema || !subschema.properties) {
+    if (typeof subschema === 'boolean' || !subschema?.properties) {
       return false;
     }
     const { [dependencyKey]: conditionPropertySchema } = subschema.properties;

@@ -75,7 +75,7 @@ function mergeWidgetOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   // cache return value as property of widget for proper react reconciliation
   if (!MergedWidget) {
     // oxlint-disable-next-line typescript/no-deprecated
-    const defaultOptions = (AWidget.defaultProps && AWidget.defaultProps.options) || {};
+    const defaultOptions = AWidget.defaultProps?.options || {};
     MergedWidget = ({ options, ...props }) => <AWidget options={{ ...defaultOptions, ...options }} {...props} />;
     set(AWidget, 'MergedWidget', MergedWidget);
   }

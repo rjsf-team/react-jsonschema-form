@@ -12,6 +12,7 @@ import {
   enumOptionValueEncoder,
   getOptionValueFormat,
   labelValue,
+  logUnsupportedDefaultForEnum,
 } from '@rjsf/utils';
 
 import { getMuiProps } from '../util';
@@ -72,13 +73,14 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<{ value: string }>) =>
     onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, optEmptyVal));
+    onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, optEmptyVal));
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, optEmptyVal));
+    onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, optEmptyVal));
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, SelectWidgetMuiProps>(options);
 
   const { InputLabelProps, SelectProps, autocomplete, ...textFieldRemainingProps } = textFieldProps;
   const showPlaceholderOption = !isMultiple && schema.default === undefined;
+  logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
 
   return (
     <TextField

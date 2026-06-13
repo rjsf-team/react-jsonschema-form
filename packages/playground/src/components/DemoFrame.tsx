@@ -71,7 +71,7 @@ SOFTWARE.
 function AntdPopupPatcher({ frameDoc }: { frameDoc: Document }) {
   useEffect(() => {
     if (!frameDoc) {
-      return;
+      return () => {};
     }
 
     // Maps each popup element to the inset string we last wrote, so we can skip our own style changes.

@@ -3,7 +3,7 @@ import union from 'lodash/union';
 import { REQUIRED_KEY } from './constants';
 import getSchemaType from './getSchemaType';
 import isObject from './isObject';
-import type { GenericObjectType } from './types';
+import type { GenericObjectType, GenericSymbolObjectType } from './types';
 
 /** Recursively merge deeply nested schemas. The difference between `mergeSchemas` and `mergeObjects` is that
  * `mergeSchemas` only concats arrays for values under the 'required' keyword, and when it does, it doesn't include
@@ -15,7 +15,7 @@ import type { GenericObjectType } from './types';
  */
 export default function mergeSchemas(obj1: GenericObjectType, obj2: GenericObjectType) {
   const acc = { ...obj1 }; // Prevent mutation of source object.
-  return Object.keys(obj2).reduce((accumulator, key) => {
+  const result = Object.keys(obj2).reduce((accumulator, key) => {
     const left = obj1 ? obj1[key] : {},
       right = obj2[key];
     if (obj1 && key in obj1 && isObject(right)) {
@@ -35,4 +35,11 @@ export default function mergeSchemas(obj1: GenericObjectType, obj2: GenericObjec
     }
     return accumulator;
   }, acc);
+  // Copy own Symbol-keyed properties from obj2 (Object.keys skips them).
+  for (const sym of Object.getOwnPropertySymbols(obj2)) {
+    // To avoid issues with symbols, we cast them to GenericSymbolObjectType. If we make the mergeSchema function take
+    // in GenericSymbolObjectType rather than GenericObjectType, it causes a bunch of type errors downstream
+    (result as GenericSymbolObjectType)[sym] = (obj2 as GenericSymbolObjectType)[sym];
+  }
+  return result;
 }

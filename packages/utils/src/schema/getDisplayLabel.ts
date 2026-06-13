@@ -1,5 +1,3 @@
-import get from 'lodash/get';
-
 import { ADDITIONAL_PROPERTY_FLAG, UI_FIELD_KEY, UI_WIDGET_KEY } from '../constants';
 import getSchemaType from '../getSchemaType';
 import getUiOptions from '../getUiOptions';
@@ -7,6 +5,7 @@ import isCustomWidget from '../isCustomWidget';
 import type {
   FormContextType,
   GlobalUISchemaOptions,
+  RJSFMarkedSchema,
   RJSFSchema,
   StrictRJSFSchema,
   UiSchema,
@@ -44,7 +43,7 @@ export default function getDisplayLabel<
   let displayLabel = Boolean(label);
   if (displayLabel) {
     const schemaType = getSchemaType<S>(schema);
-    const addedByAdditionalProperty = get(schema, ADDITIONAL_PROPERTY_FLAG, false);
+    const addedByAdditionalProperty = Boolean((schema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG]);
 
     if (schemaType === 'array') {
       displayLabel =
@@ -60,7 +59,7 @@ export default function getDisplayLabel<
     if (schemaType === 'boolean' && uiSchema && !uiSchema[UI_WIDGET_KEY]) {
       displayLabel = false;
     }
-    if (uiSchema && uiSchema[UI_FIELD_KEY]) {
+    if (uiSchema?.[UI_FIELD_KEY]) {
       displayLabel = false;
     }
   }

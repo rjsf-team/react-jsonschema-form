@@ -36,8 +36,8 @@ export default function CheckboxWidget<
   );
 
   const handleChange = ({ target: { checked } }: FocusEvent<HTMLInputElement>) => onChange(checked);
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.checked);
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.checked);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.checked);
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.checked);
 
   const description = options.description || schema.description;
   return (

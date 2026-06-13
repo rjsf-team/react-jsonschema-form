@@ -5,6 +5,7 @@ import {
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
+  logUnsupportedDefaultForEnum,
 } from '@rjsf/utils';
 
 import { FancyMultiSelect } from '../components/ui/fancy-multi-select';
@@ -27,6 +28,7 @@ export default function SelectWidget<
   disabled,
   readonly,
   value,
+  schema,
   multiple,
   autofocus,
   onChange,
@@ -38,6 +40,7 @@ export default function SelectWidget<
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
   const handleFancyFocus = () => {
     onFocus(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, optEmptyValue));

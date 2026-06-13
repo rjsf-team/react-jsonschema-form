@@ -1549,10 +1549,11 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                         id="radix-:r1f:"
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
-                      <div
+                      <button
+                        aria-expanded="false"
+                        aria-haspopup="listbox"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                        role="button"
-                        tabindex="0"
+                        type="button"
                       >
                         <span
                           class="flex-1 line-clamp-1 text-muted-foreground"
@@ -1574,7 +1575,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                             d="m6 9 6 6 6-6"
                           />
                         </svg>
-                      </div>
+                      </button>
                       <div
                         class="relative"
                       />
@@ -3088,10 +3089,11 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                         id="radix-:r1k:"
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
-                      <div
+                      <button
+                        aria-expanded="false"
+                        aria-haspopup="listbox"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                        role="button"
-                        tabindex="0"
+                        type="button"
                       >
                         <span
                           class="flex-1 line-clamp-1 text-muted-foreground"
@@ -3113,7 +3115,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                             d="m6 9 6 6 6-6"
                           />
                         </svg>
-                      </div>
+                      </button>
                       <div
                         class="relative"
                       />
@@ -3271,6 +3273,167 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                       >
                         active
                       </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
+        data-slot="button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields > Cyclic schema 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="flex flex-col gap-2"
+      >
+        <div
+          class="my-1 flex flex-col gap-0.5"
+          id="root__title"
+        >
+          <h5>
+            A registration form
+          </h5>
+          <div
+            class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
+            data-orientation="horizontal"
+            data-slot="separator"
+            dir="horizontal"
+            role="none"
+            style="height: 1px;"
+          />
+        </div>
+        <div>
+          <div
+            class="text-sm text-muted-foreground"
+            id="root__description"
+          >
+            A simple form example.
+          </div>
+        </div>
+        <div
+          class="flex flex-col gap-2"
+        >
+          <div
+            class=" flex"
+          >
+            <div
+              class="w-full"
+            >
+              <div
+                class="rjsf-field rjsf-field-object"
+              >
+                <div
+                  class="flex flex-col gap-2"
+                >
+                  <div
+                    class="my-1 flex flex-col gap-0.5"
+                    id="root_child__title"
+                  >
+                    <h5>
+                      A registration form
+                    </h5>
+                    <div
+                      class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
+                      data-orientation="horizontal"
+                      data-slot="separator"
+                      dir="horizontal"
+                      role="none"
+                      style="height: 1px;"
+                    />
+                  </div>
+                  <div>
+                    <div
+                      class="text-sm text-muted-foreground"
+                      id="root_child__description"
+                    >
+                      A simple form example.
+                    </div>
+                  </div>
+                  <div
+                    class="flex flex-col gap-2"
+                  >
+                    <div
+                      class=" flex"
+                    >
+                      <div
+                        class="w-full"
+                      >
+                        <div
+                          class="mt-4"
+                        >
+                          <div
+                            class="relative w-full rounded-lg border px-4 py-3 text-sm grid has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current bg-card text-card-foreground mb-2"
+                            data-slot="alert"
+                            role="alert"
+                          >
+                            <svg
+                              aria-hidden="true"
+                              class="lucide lucide-circle-alert h-4 w-4"
+                              fill="none"
+                              height="24"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              viewBox="0 0 24 24"
+                              width="24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <circle
+                                cx="12"
+                                cy="12"
+                                r="10"
+                              />
+                              <line
+                                x1="12"
+                                x2="12"
+                                y1="8"
+                                y2="12"
+                              />
+                              <line
+                                x1="12"
+                                x2="12.01"
+                                y1="16"
+                                y2="16"
+                              />
+                            </svg>
+                            <div
+                              class="text-muted-foreground col-start-2 grid justify-items-start gap-1 text-sm [&_p]:leading-relaxed"
+                              data-slot="alert-description"
+                            >
+                              Circular reference ($ref cycle) detected for field "child". You may choose to expand to the next cycle break
+                            </div>
+                          </div>
+                          <button
+                            class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 my-1"
+                            data-slot="button"
+                            id="root_child_child-button"
+                            type="button"
+                          >
+                            Expand Cycle
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -5707,10 +5870,11 @@ exports[`single fields > optional data controls > does not show optional control
                             id="radix-:r13:"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
-                          <div
+                          <button
+                            aria-expanded="false"
+                            aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                            role="button"
-                            tabindex="0"
+                            type="button"
                           >
                             <span
                               class="flex-1 line-clamp-1"
@@ -5734,7 +5898,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 d="m6 9 6 6 6-6"
                               />
                             </svg>
-                          </div>
+                          </button>
                           <div
                             class="relative"
                           />
@@ -5852,10 +6016,11 @@ exports[`single fields > optional data controls > does not show optional control
                             id="radix-:r16:"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
-                          <div
+                          <button
+                            aria-expanded="false"
+                            aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                            role="button"
-                            tabindex="0"
+                            type="button"
                           >
                             <span
                               class="flex-1 line-clamp-1"
@@ -5879,7 +6044,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 d="m6 9 6 6 6-6"
                               />
                             </svg>
-                          </div>
+                          </button>
                           <div
                             class="relative"
                           />
@@ -6789,10 +6954,12 @@ exports[`single fields > optional data controls > does not show optional control
                             id="radix-:r19:"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
-                          <div
+                          <button
+                            aria-expanded="false"
+                            aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 opacity-50 cursor-not-allowed"
-                            role="button"
-                            tabindex="-1"
+                            disabled=""
+                            type="button"
                           >
                             <span
                               class="flex-1 line-clamp-1"
@@ -6816,7 +6983,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 d="m6 9 6 6 6-6"
                               />
                             </svg>
-                          </div>
+                          </button>
                           <div
                             class="relative"
                           />
@@ -6934,10 +7101,12 @@ exports[`single fields > optional data controls > does not show optional control
                             id="radix-:r1c:"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
-                          <div
+                          <button
+                            aria-expanded="false"
+                            aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 opacity-50 cursor-not-allowed"
-                            role="button"
-                            tabindex="-1"
+                            disabled=""
+                            type="button"
                           >
                             <span
                               class="flex-1 line-clamp-1"
@@ -6961,7 +7130,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 d="m6 9 6 6 6-6"
                               />
                             </svg>
-                          </div>
+                          </button>
                           <div
                             class="relative"
                           />
@@ -10578,10 +10747,11 @@ exports[`single fields > select field 1`] = `
               id="radix-:r1:"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
-            <div
+            <button
+              aria-expanded="false"
+              aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-              role="button"
-              tabindex="0"
+              type="button"
             >
               <span
                 class="flex-1 line-clamp-1 text-muted-foreground"
@@ -10603,7 +10773,7 @@ exports[`single fields > select field 1`] = `
                   d="m6 9 6 6 6-6"
                 />
               </svg>
-            </div>
+            </button>
             <div
               class="relative"
             />
@@ -11167,10 +11337,11 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
               id="radix-:ra:"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
-            <div
+            <button
+              aria-expanded="false"
+              aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-              role="button"
-              tabindex="0"
+              type="button"
             >
               <span
                 class="flex-1 line-clamp-1 text-muted-foreground"
@@ -11192,7 +11363,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
                   d="m6 9 6 6 6-6"
                 />
               </svg>
-            </div>
+            </button>
             <div
               class="relative"
             />
@@ -11474,10 +11645,11 @@ exports[`single fields > select field single choice formData 1`] = `
               id="radix-:rm:"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
-            <div
+            <button
+              aria-expanded="false"
+              aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-              role="button"
-              tabindex="0"
+              type="button"
             >
               <span
                 class="flex-1 line-clamp-1"
@@ -11501,7 +11673,7 @@ exports[`single fields > select field single choice formData 1`] = `
                   d="m6 9 6 6 6-6"
                 />
               </svg>
-            </div>
+            </button>
             <div
               class="relative"
             />
@@ -11672,10 +11844,11 @@ exports[`single fields > select widget with description in schema and FieldTempl
               id="radix-:ru:"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
-            <div
+            <button
+              aria-expanded="false"
+              aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-              role="button"
-              tabindex="0"
+              type="button"
             >
               <span
                 class="flex-1 line-clamp-1 text-muted-foreground"
@@ -11699,7 +11872,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
                   d="m6 9 6 6 6-6"
                 />
               </svg>
-            </div>
+            </button>
             <div
               class="relative"
             />

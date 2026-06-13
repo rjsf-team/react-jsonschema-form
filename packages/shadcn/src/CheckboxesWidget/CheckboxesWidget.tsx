@@ -42,9 +42,9 @@ export default function CheckboxesWidget<
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const handleBlur = ({ target }: FocusEvent<HTMLButtonElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target && (target as any).value, enumOptions, optionValueFormat, emptyValue));
+    onBlur(id, enumOptionValueDecoder<S>((target as any)?.value, enumOptions, optionValueFormat, emptyValue));
   const handleFocus = ({ target }: FocusEvent<HTMLButtonElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target && (target as any).value, enumOptions, optionValueFormat, emptyValue));
+    onFocus(id, enumOptionValueDecoder<S>((target as any)?.value, enumOptions, optionValueFormat, emptyValue));
 
   return (
     <div className={cn({ 'flex flex-col gap-2': !inline, 'flex flex-row gap-4 flex-wrap': inline })}>

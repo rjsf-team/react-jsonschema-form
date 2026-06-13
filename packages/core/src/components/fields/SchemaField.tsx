@@ -9,6 +9,7 @@ import type {
   FieldTemplateProps,
   FormContextType,
   Registry,
+  RJSFMarkedSchema,
   RJSFSchema,
   StrictRJSFSchema,
   UIOptionsType,
@@ -24,6 +25,7 @@ import {
   isFormDataAvailable,
   ONE_OF_KEY,
   resolveUiSchema,
+  RJSF_REF_CYCLE_KEY,
   shouldRender,
   shouldRenderOptionalField,
   toFieldPathId,
@@ -59,7 +61,7 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   registry: Registry<T, S, F>,
 ): ComponentType<FieldProps<T, S, F>> {
   const { field } = uiOptions;
-  const { fields } = registry;
+  const { fields, schemaUtils } = registry;
   if (typeof field === 'function') {
     return field;
   }
@@ -77,9 +79,13 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     componentName = schemaId;
   }
 
-  // If the type is not defined and the schema uses 'anyOf' or 'oneOf', don't
-  // render a field and let the MultiSchemaField component handle the form display
-  if (!componentName && (schema.anyOf || schema.oneOf)) {
+  // If the schema uses 'anyOf' or 'oneOf' and is not a pure select (all-constant options),
+  // let the MultiSchemaField component handle the form display entirely.
+  // ObjectField is excluded: it renders shared properties (defined at the parent schema
+  // level) alongside the XxxOfField option selector.
+  // All other field types — including primitives and arrays — have no shared renderable
+  // properties, so the outer FieldComponent would only produce a spurious duplicate input.
+  if ((schema.anyOf || schema.oneOf) && !schemaUtils.isSelect(schema) && componentName !== 'ObjectField') {
     return () => null;
   }
 
@@ -111,18 +117,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     wasPropertyKeyModified = false,
   } = props;
   const { schemaUtils, globalFormOptions, globalUiOptions, fields } = registry;
-  const { AnyOfField: _AnyOfField, OneOfField: _OneOfField } = fields;
-  const uiSchema = resolveUiSchema<T, S, F>(_schema, _uiSchema, registry);
-  const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
-  const FieldTemplate = getTemplate<'FieldTemplate', T, S, F>('FieldTemplate', registry, uiOptions);
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    uiOptions,
-  );
-  const FieldHelpTemplate = getTemplate<'FieldHelpTemplate', T, S, F>('FieldHelpTemplate', registry, uiOptions);
-  const FieldErrorTemplate = getTemplate<'FieldErrorTemplate', T, S, F>('FieldErrorTemplate', registry, uiOptions);
-  const schema = schemaUtils.retrieveSchema(_schema, formData);
+  const { AnyOfField: _AnyOfField, OneOfField: _OneOfField, CyclicSchemaField } = fields;
   const fieldId = fieldPathId[ID_KEY];
 
   /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the
@@ -135,6 +130,24 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     },
     [fieldId, onChange],
   );
+
+  // Stop $ref cycles: when resolveAllReferences detects a repeated property $ref it tags the schema with this flag.
+  // The check must come after all hook calls to satisfy React's rules of hooks.
+  if ((_schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]) {
+    return <CyclicSchemaField {...props} />;
+  }
+
+  const uiSchema = resolveUiSchema<T, S, F>(_schema, _uiSchema, registry);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
+  const FieldTemplate = getTemplate<'FieldTemplate', T, S, F>('FieldTemplate', registry, uiOptions);
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
+    'DescriptionFieldTemplate',
+    registry,
+    uiOptions,
+  );
+  const FieldHelpTemplate = getTemplate<'FieldHelpTemplate', T, S, F>('FieldHelpTemplate', registry, uiOptions);
+  const FieldErrorTemplate = getTemplate<'FieldErrorTemplate', T, S, F>('FieldErrorTemplate', registry, uiOptions);
+  const schema = schemaUtils.retrieveSchema(_schema, formData);
 
   const FieldComponent = getFieldComponent<T, S, F>(schema, uiOptions, registry);
 

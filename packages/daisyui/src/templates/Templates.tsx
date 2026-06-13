@@ -13,6 +13,7 @@ import {
   SubmitButton,
   ClearButton,
 } from './ButtonTemplates';
+import CyclicSchemaExpandTemplate from './CyclicSchemaExpandTemplate';
 import DescriptionField from './DescriptionField';
 import ErrorList from './ErrorList';
 import FieldErrorTemplate from './FieldErrorTemplate';
@@ -49,6 +50,7 @@ export function generateTemplates<
     ArrayFieldTemplate,
     ArrayFieldItemButtonsTemplate,
     BaseInputTemplate,
+    CyclicSchemaExpandTemplate,
     ButtonTemplates: {
       AddButton,
       SubmitButton,

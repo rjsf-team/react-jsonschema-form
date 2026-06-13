@@ -12,7 +12,8 @@
 import type { RJSFSchema } from '@rjsf/utils';
 import { getClosestMatchingOption, getFirstMatchingOption, omitExtraData, relaxOptionsForScoring } from '@rjsf/utils';
 
-import { createPrecompiledValidator, type ValidatorFunctions } from '../src';
+import type { ValidatorFunctions } from '../src';
+import { createPrecompiledValidator } from '../src';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators';
 
 /**
