@@ -47,7 +47,7 @@
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/chakra-ui.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/chakra-ui.esm.js --format=umd --file=dist/chakra-ui.umd.js --name=@rjsf/chakra-ui",
-    "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
+    "build": "pnpm run build:ts && pnpm run build:cjs && pnpm run build:esm && pnpm run build:umd",
     "cs-check": "oxfmt --check \"{src,test}/**/*.{ts,tsx}\"",
     "cs-format": "oxfmt \"{src,test}/**/*.{ts,tsx}\"",
     "lint": "oxlint src test",
@@ -77,10 +77,10 @@
     "react": ">=18"
   },
   "devDependencies": {
-    "@rjsf/core": "6.6.2",
-    "@rjsf/snapshot-tests": "6.6.2",
-    "@rjsf/utils": "6.6.2",
-    "@rjsf/validator-ajv8": "6.6.2",
+    "@rjsf/core": "workspace:^",
+    "@rjsf/snapshot-tests": "workspace:^",
+    "@rjsf/utils": "workspace:^",
+    "@rjsf/validator-ajv8": "workspace:^",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",

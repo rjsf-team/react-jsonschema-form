@@ -1,0 +1,18 @@
+packages:
+  - 'packages/*'
+
+overrides:
+  'sockjs>uuid': ^14.0.0
+
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - ata-validator
+  - core-js
+  - esbuild
+  - nx
+allowBuilds:
+  '@parcel/watcher': true
+  ata-validator: true
+  core-js: true
+  esbuild: true
+  nx: true
