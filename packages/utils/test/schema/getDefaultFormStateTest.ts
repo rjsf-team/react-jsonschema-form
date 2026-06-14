@@ -4287,7 +4287,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           foo: 42,
         });
       });
-      it('should prefer innermost default with a $ref', () => {
+      it("should prefer descendant's default with a $ref", () => {
         const schema: RJSFSchema = {
           definitions: {
             foo: {
@@ -4488,9 +4488,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           turtles: ['Raphael', 'Michaelangelo', 'Unknown', 'Unknown'],
         });
       });
-      describe('nestedDefaultsPrecedence is outermostWins', () => {
+      describe('nestedDefaultsPrecedence is ancestorWins', () => {
         const experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
-          nestedDefaultsPrecedence: 'outermostWins',
+          nestedDefaultsPrecedence: 'ancestorWins',
         };
         it('should default to empty object if no properties are defined', () => {
           expect(
@@ -4894,7 +4894,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             level1: [{ item: 'property-default-1' }, { item: 'additional-default' }],
           });
         });
-        it('should prefer outermost defaults over multiple levels with arrays', () => {
+        it("should prefer ancestor's defaults over multiple levels with arrays", () => {
           const schema: RJSFSchema = {
             type: 'object',
             default: {
@@ -4998,7 +4998,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             foo: 42,
           });
         });
-        it('should prefer outermost default with a $ref', () => {
+        it("should prefer ancestor's default with a $ref", () => {
           const schema: RJSFSchema = {
             definitions: {
               foo: {

@@ -41,7 +41,7 @@ This are the rules which are used when injecting the defaults:
 
 ### Merging of defaults within the schema
 
-In the schema itself, defaults of parent elements are propagated into children. So when you have a schema which defines a deeply nested object as default, these defaults will be applied to children of the current node. This also merges objects defined at different levels together, with the deeper (child) default taking precedence for any overlapping properties by default. You can change this behavior using the experimental [`nestedDefaultsPrecedence`](../api-reference/form-props.md#nesteddefaultsprecedence) flag. If the parent node defines properties which are not defined in the child, they will be merged so that the default for the child will be the merged defaults of parent and child.
+In the schema itself, defaults of parent elements are propagated into children. So when you have a schema which defines a deeply nested object as default, these defaults will be applied to children of the current node. This also merges objects defined at different levels together, with the deeper (descendant) default taking precedence for any overlapping properties by default. You can change this behavior using the experimental [`nestedDefaultsPrecedence`](../api-reference/form-props.md#nesteddefaultsprecedence) flag. If the parent node defines properties which are not defined in the child, they will be merged so that the default for the child will be the merged defaults of parent and child.
 
 For arrays this is not the case. Defining an array, when a parent also defines an array, will be overwritten. This is only true when arrays are used in the same level, for objects within these arrays, they will be deeply merged again.
 

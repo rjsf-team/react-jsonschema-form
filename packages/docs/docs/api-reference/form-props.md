@@ -284,12 +284,12 @@ NOTE: If there is a default for a field and the `formData` is unspecified, the d
 
 ### nestedDefaultsPrecedence
 
-Optional enumerated flag controlling how defaults defined on multiple levels are merged together, defaulting to `innermostWins`.
+Optional enumerated flag controlling how defaults defined on multiple levels are merged together for overlapping properties, defaulting to `descendantWins`.
 
-| Flag Value                      | Description                                                      |
-| ------------------------------- | -----------------------------------------------------------------|
-| `innermostWins`                 | The innermost nested default has precedence over parent defaults |
-| `outermostWins`                 | The outermost default has precedence over deeper nested defaults |
+| Flag Value       | Description                                                                                       |
+| -----------------| --------------------------------------------------------------------------------------------------|
+| `descendantWins` | The innermost (descendant) default value definition takes precedence over its ancestor's defaults |
+| `ancestorWins`   | The outermost (ancestor) default value definition takes precedence over any descendant's defaults |
 
 
 ## experimental_customMergeAllOf
