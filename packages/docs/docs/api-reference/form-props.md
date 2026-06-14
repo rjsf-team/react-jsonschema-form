@@ -291,6 +291,41 @@ Optional enumerated flag controlling how defaults defined on multiple levels are
 | `descendantWins` | The innermost (descendant) default value definition takes precedence over its ancestor's defaults |
 | `ancestorWins`   | The outermost (ancestor) default value definition takes precedence over any descendant's defaults |
 
+#### Example
+
+In the following example, the `animal` property is a descendant of the root schema and both define a default value for `animal`. By default, the `animal`'s default value `Cat` would take precedence over its ancestor's `Fish`. However, since `nestedDefaultsPrecedence` is set to `ancestorWins`, the root schema's default value takes precedence and `animal` is set to `Fish` by default.
+
+```tsx
+import { Form } from '@rjsf/core';
+import { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'object',
+  default: {
+    animal: 'Fish',
+  },
+  properties: {
+    animal: {
+      type: 'string',
+      default: 'Cat',
+      enum: ['Cat', 'Fish'],
+    },
+  },
+};
+
+render(
+  <Form
+    schema={schema}
+    validator={validator}
+    experimental_defaultFormStateBehavior={{
+      nestedDefaultsPrecedence: 'ancestorWins',
+    }}
+  />,
+  document.getElementById('app'),
+);
+```
+
 
 ## experimental_customMergeAllOf
 
