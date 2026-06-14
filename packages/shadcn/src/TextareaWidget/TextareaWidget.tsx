@@ -35,10 +35,10 @@ export default function TextareaWidget<
   options,
   className,
 }: CustomWidgetProps<T, S, F>) {
-  const _onChange = ({ target: { value: newValue } }: ChangeEvent<HTMLTextAreaElement>) =>
+  const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
-  const _onBlur = ({ target }: FocusEvent<HTMLTextAreaElement>) => onBlur(id, target && target.value);
-  const _onFocus = ({ target }: FocusEvent<HTMLTextAreaElement>) => onFocus(id, target && target.value);
+  const handleBlur = ({ target }: FocusEvent<HTMLTextAreaElement>) => onBlur(id, target?.value);
+  const handleFocus = ({ target }: FocusEvent<HTMLTextAreaElement>) => onFocus(id, target?.value);
 
   return (
     <div className='flex p-0.5'>
@@ -52,9 +52,9 @@ export default function TextareaWidget<
         required={required}
         autoFocus={autofocus}
         rows={options.rows || 5}
-        onChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         aria-describedby={ariaDescribedByIds(id)}
         className={className}
       />

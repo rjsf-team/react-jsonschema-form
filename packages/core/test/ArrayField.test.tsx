@@ -24,27 +24,27 @@ import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } f
 const user = userEvent.setup();
 
 const ArrayKeyDataAttr = 'data-rjsf-itemkey';
-const ExposedArrayKeyItemTemplate = function (props: ArrayFieldItemTemplateProps) {
+const ExposedArrayKeyItemTemplate = function ExposedArrayKeyItemTemplate(props: ArrayFieldItemTemplateProps) {
   return (
     <div className='rjsf-array-item' data-rjsf-itemkey={props.itemKey}>
       <div>{props.children}</div>
       {(props.buttonsProps.hasMoveUp || props.buttonsProps.hasMoveDown) && (
-        <button className='rjsf-array-item-move-down' onClick={props.buttonsProps.onMoveDownItem}>
+        <button type='button' className='rjsf-array-item-move-down' onClick={props.buttonsProps.onMoveDownItem}>
           Down
         </button>
       )}
       {(props.buttonsProps.hasMoveUp || props.buttonsProps.hasMoveDown) && (
-        <button className='rjsf-array-item-move-up' onClick={props.buttonsProps.onMoveUpItem}>
+        <button type='button' className='rjsf-array-item-move-up' onClick={props.buttonsProps.onMoveUpItem}>
           Up
         </button>
       )}
       {props.buttonsProps.hasCopy && (
-        <button className='rjsf-array-item-copy' onClick={props.buttonsProps.onCopyItem}>
+        <button type='button' className='rjsf-array-item-copy' onClick={props.buttonsProps.onCopyItem}>
           Copy
         </button>
       )}
       {props.buttonsProps.hasRemove && (
-        <button className='rjsf-array-item-remove' onClick={props.buttonsProps.onRemoveItem}>
+        <button type='button' className='rjsf-array-item-remove' onClick={props.buttonsProps.onRemoveItem}>
           Remove
         </button>
       )}
@@ -53,13 +53,13 @@ const ExposedArrayKeyItemTemplate = function (props: ArrayFieldItemTemplateProps
   );
 };
 
-const ExposedArrayKeyTemplate = function (props: ArrayFieldTemplateProps) {
+const ExposedArrayKeyTemplate = function ExposedArrayKeyTemplate(props: ArrayFieldTemplateProps) {
   return (
     <div className='array'>
       {props.items}
       {props.canAdd && (
         <div className='rjsf-array-item-add'>
-          <button onClick={props.onAddClick} type='button'>
+          <button type='button' onClick={props.onAddClick}>
             Add New
           </button>
         </div>
@@ -68,7 +68,7 @@ const ExposedArrayKeyTemplate = function (props: ArrayFieldTemplateProps) {
   );
 };
 
-const CustomOnAddClickItemTemplate = function (props: ArrayFieldItemTemplateProps) {
+const CustomOnAddClickItemTemplate = function CustomOnAddClickItemTemplate(props: ArrayFieldItemTemplateProps) {
   return (
     <div className='rjsf-array-item'>
       <div>{props.children}</div>
@@ -76,13 +76,13 @@ const CustomOnAddClickItemTemplate = function (props: ArrayFieldItemTemplateProp
   );
 };
 
-const CustomOnAddClickTemplate = function (props: ArrayFieldTemplateProps) {
+const CustomOnAddClickTemplate = function CustomOnAddClickTemplate(props: ArrayFieldTemplateProps) {
   return (
     <div className='array'>
       {props.items}
       {props.canAdd && (
         <div className='rjsf-array-item-add'>
-          <button onClick={() => props.onAddClick()} type='button'>
+          <button type='button' onClick={() => props.onAddClick()}>
             Add New
           </button>
         </div>
@@ -109,27 +109,27 @@ const ArrayFieldTestItemButtonsTemplate = (props: ArrayFieldItemButtonsTemplateP
   return (
     <>
       {hasMoveDown && (
-        <button title='move-down' style={style} disabled={disabled || readonly} onClick={onMoveDownItem}>
+        <button type='button' title='move-down' style={style} disabled={disabled || readonly} onClick={onMoveDownItem}>
           move down
         </button>
       )}
       {hasMoveUp && (
-        <button title='move-up' style={style} disabled={disabled || readonly} onClick={onMoveUpItem}>
+        <button type='button' title='move-up' style={style} disabled={disabled || readonly} onClick={onMoveUpItem}>
           move up
         </button>
       )}
       {hasCopy && (
-        <button title='copy' style={style} disabled={disabled || readonly} onClick={onCopyItem}>
+        <button type='button' title='copy' style={style} disabled={disabled || readonly} onClick={onCopyItem}>
           copy
         </button>
       )}
       {hasRemove && (
-        <button title='remove' style={style} disabled={disabled || readonly} onClick={onRemoveItem}>
+        <button type='button' title='remove' style={style} disabled={disabled || readonly} onClick={onRemoveItem}>
           remove
         </button>
       )}
       {hasMoveDown && (
-        <button title='insert' style={style} disabled={disabled || readonly} onClick={onAddItem}>
+        <button type='button' title='insert' style={style} disabled={disabled || readonly} onClick={onAddItem}>
           insert
         </button>
       )}
@@ -183,6 +183,7 @@ const mockFileReader = {
   set onload(fn: (event: { target: { result: string } }) => void) {
     fn({ target: { result: 'data:text/plain;base64,x=' } });
   },
+  // oxlint-disable-next-line no-empty-function
   readAsDataURL() {},
 } as unknown as FileReader;
 
@@ -192,6 +193,7 @@ describe('ArrayField', () => {
   const CustomSelectComponent = (props: WidgetProps) => (
     <select>
       {props.value.map((item: any, index: number) => (
+        // oxlint-disable-next-line react/no-array-index-key
         <option key={index} id='custom-select'>
           {item}
         </option>
@@ -200,7 +202,7 @@ describe('ArrayField', () => {
   );
   beforeAll(() => {
     // oxlint-disable-next-line prefer-arrow-callback -- arrow functions can't be constructors (new FileReader())
-    vi.spyOn(window, 'FileReader').mockImplementation(function () {
+    vi.spyOn(window, 'FileReader').mockImplementation(function mockFileReaderFactory() {
       return mockFileReader;
     });
   });
@@ -215,7 +217,7 @@ describe('ArrayField', () => {
     });
 
     it('should be able to be overwritten with a custom UnsupportedField component', () => {
-      const CustomUnsupportedField = function () {
+      const CustomUnsupportedField = function CustomUnsupportedField() {
         return <span id='custom'>Custom UnsupportedField</span>;
       };
 
@@ -1938,6 +1940,38 @@ describe('ArrayField', () => {
     });
 
     describe('operations for additional items', () => {
+      it('should add a field when clicking add button for empty fixed items', async () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          title: 'List of additional items',
+          items: [],
+          additionalItems: {
+            type: 'string',
+            title: 'Additional item',
+          },
+        };
+        const templates = {
+          ArrayFieldTemplate: ExposedArrayKeyTemplate,
+          ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate,
+        };
+        const { node, onChange, rerender } = createFormComponent({
+          schema,
+          templates,
+        });
+
+        const addBtn = node.querySelector('.rjsf-array-item-add button');
+
+        expect(addBtn).not.toBeNull();
+
+        await user.click(addBtn!);
+
+        expectToHaveBeenCalledWithFormData(onChange, [undefined], 'root');
+
+        rerender({ schema, formData: [undefined], templates });
+
+        expect(node.querySelectorAll('.rjsf-field-string')).toHaveLength(1);
+      });
+
       it('should add a field when clicking add button', async () => {
         const { node, onChange } = createFormComponent({
           schema: schemaAdditional,
@@ -3534,7 +3568,7 @@ describe('ArrayField', () => {
       let callCount = 0;
       const uiSchema: UiSchema = {
         items: (_: any, index) => {
-          callCount++;
+          callCount += 1;
           return {
             name: {
               'ui:widget': 'textarea',

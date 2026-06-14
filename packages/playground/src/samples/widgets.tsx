@@ -271,6 +271,7 @@ const widgets: Sample = {
             onChange={(event) => onChange(event.target.value)}
           >
             {enumOptions.map(({ label: enumLabel, value: enumValue }, i) => (
+              // oxlint-disable-next-line react/no-array-index-key
               <option key={i} value={enumValue}>
                 {enumLabel}
               </option>

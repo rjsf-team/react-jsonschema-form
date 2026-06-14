@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated
 import get from 'lodash/get';
 import isObject from 'lodash/isObject';
 import set from 'lodash/set';
@@ -51,16 +52,16 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): PathSchema<T> {
   if (REF_KEY in schema || DEPENDENCIES_KEY in schema || ALL_OF_KEY in schema || IF_KEY in schema) {
-    const _schema = retrieveSchema<T, S, F>(validator, schema, rootSchema, formData, experimental_customMergeAllOf);
-    const sameSchemaIndex = _recurseList.findIndex((item) => deepEquals(item, _schema));
+    const innerSchema = retrieveSchema<T, S, F>(validator, schema, rootSchema, formData, experimental_customMergeAllOf);
+    const sameSchemaIndex = _recurseList.findIndex((item) => deepEquals(item, innerSchema));
     if (sameSchemaIndex === -1) {
       return toPathSchemaInternal<T, S, F>(
         validator,
-        _schema,
+        innerSchema,
         name,
         rootSchema,
         formData,
-        _recurseList.concat(_schema),
+        _recurseList.concat(innerSchema),
         experimental_customMergeAllOf,
       );
     }
@@ -82,12 +83,12 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
       discriminator,
       experimental_customMergeAllOf,
     );
-    const _schema: S = xxxOf[index];
+    const innerSchema: S = xxxOf[index];
     pathSchema = {
       ...pathSchema,
       ...toPathSchemaInternal<T, S, F>(
         validator,
-        _schema,
+        innerSchema,
         name,
         rootSchema,
         formData,

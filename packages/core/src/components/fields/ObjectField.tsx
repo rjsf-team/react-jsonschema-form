@@ -8,6 +8,7 @@ import type {
   FormContextType,
   GenericObjectType,
   Registry,
+  RJSFMarkedSchema,
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
@@ -30,7 +31,7 @@ import get from 'lodash/get';
 import has from 'lodash/has';
 import isObject from 'lodash/isObject';
 import set from 'lodash/set';
-import { Markdown } from 'markdown-to-jsx';
+import { Markdown } from 'markdown-to-jsx/react';
 
 import { ADDITIONAL_PROPERTY_KEY_REMOVE } from '../constants';
 
@@ -258,7 +259,8 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       let index = 0;
       let newKey = preferredKey;
       while (has(existingFormData, newKey)) {
-        newKey = `${preferredKey}${duplicateKeySuffixSeparator}${++index}`;
+        index += 1;
+        newKey = `${preferredKey}${duplicateKeySuffixSeparator}${index}`;
       }
       return newKey;
     },
@@ -326,7 +328,8 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
         };
         const newKeys: GenericObjectType = { [oldKey]: actualNewKey };
         const keyValues = Object.keys(newFormData).map((key) => {
-          const mappedKey = newKeys[key] || key;
+          // `Object.hasOwn` so a falsy rename target (e.g. `""`) isn't dropped.
+          const mappedKey = Object.hasOwn(newKeys, key) ? newKeys[key] : key;
           return { [mappedKey]: newFormData[key] };
         });
         const renamedObj = Object.assign({}, ...keyValues);
@@ -392,7 +395,9 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     title: uiOptions.label === false ? '' : templateTitle,
     description: uiOptions.label === false ? undefined : description,
     properties: orderedProperties.map((propertyName) => {
-      const addedByAdditionalProperties = has(schema, [PROPERTIES_KEY, propertyName, ADDITIONAL_PROPERTY_FLAG]);
+      const addedByAdditionalProperties = Boolean(
+        (schema.properties?.[propertyName] as RJSFMarkedSchema)?.[ADDITIONAL_PROPERTY_FLAG],
+      );
       const fieldUiSchema = addedByAdditionalProperties ? uiSchema.additionalProperties : uiSchema[propertyName];
       const hidden = getUiOptions<T, S, F>(fieldUiSchema).widget === 'hidden';
       const content = (

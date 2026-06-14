@@ -1,5 +1,6 @@
 export * from './ArrayFieldDescriptionTemplate';
 export { default as ArrayFieldItemTemplate } from './ArrayFieldItemTemplate';
+export { default as CyclicSchemaExpandTemplate } from './CyclicSchemaExpandTemplate';
 export { default as ArrayFieldTemplate } from './ArrayFieldTemplate';
 export * from './ArrayFieldTitleTemplate';
 export { default as ArrayFieldItemButtonsTemplate } from './ArrayFieldItemButtonsTemplate';

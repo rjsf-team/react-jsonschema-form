@@ -29,7 +29,7 @@ export default function CopyLink({ shareURL, onShare }: CopyLinkProps) {
     <div className='input-group' style={style}>
       <input type='text' ref={input} className='form-control' defaultValue={shareURL} />
       <span className='input-group-btn'>
-        <button className='btn btn-default' type='button' onClick={onCopyClick}>
+        <button aria-label='Copy link' className='btn btn-default' type='button' onClick={onCopyClick}>
           <i className='glyphicon glyphicon-copy' />
         </button>
       </span>

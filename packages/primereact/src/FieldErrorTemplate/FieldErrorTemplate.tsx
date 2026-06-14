@@ -13,6 +13,7 @@ export default function FieldErrorTemplate<
 >({ errors, fieldPathId }: FieldErrorProps<T, S, F>) {
   if (errors && errors.length > 0) {
     const id = errorId(fieldPathId);
+    // oxlint-disable-next-line react/no-array-index-key
     const content = errors.map((error, i: number) => <div key={i}>{error}</div>);
 
     return (

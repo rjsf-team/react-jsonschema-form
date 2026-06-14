@@ -14,6 +14,7 @@ export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSche
       <Card.Body className='p-0'>
         <ListGroup>
           {errors.map((error, i: number) => (
+            // oxlint-disable-next-line react/no-array-index-key
             <ListGroup.Item key={i} className='border-0'>
               <span>{error.stack}</span>
             </ListGroup.Item>

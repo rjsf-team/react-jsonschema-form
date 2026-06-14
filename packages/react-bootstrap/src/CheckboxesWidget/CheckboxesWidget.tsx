@@ -32,7 +32,7 @@ export default function CheckboxesWidget<
   const optionValueFormat = getOptionValueFormat(options);
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
-  const _onChange =
+  const handleChange =
     (index: number) =>
     ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
       if (checked) {
@@ -42,10 +42,10 @@ export default function CheckboxesWidget<
       }
     };
 
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
+    onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
+    onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
 
   return (
     <Form.Group>
@@ -61,14 +61,14 @@ export default function CheckboxesWidget<
               required={required}
               checked={checked}
               className='bg-transparent border-0'
-              type={'checkbox'}
+              type='checkbox'
               id={optionId(id, index)}
               name={htmlName || id}
               label={option.label}
               autoFocus={autofocus && index === 0}
-              onChange={_onChange(index)}
-              onBlur={_onBlur}
-              onFocus={_onFocus}
+              onChange={handleChange(index)}
+              onBlur={handleBlur}
+              onFocus={handleFocus}
               disabled={disabled || itemDisabled || readonly}
               aria-describedby={ariaDescribedByIds(id)}
             />

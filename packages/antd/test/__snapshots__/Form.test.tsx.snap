@@ -2087,7 +2087,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                                   class="ant-form-item-control-input-content"
                                 >
                                   <div
-                                    class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow"
+                                    class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow ant-select-show-search"
                                     name="root[color]"
                                     style="width: 100%;"
                                   >
@@ -2106,7 +2106,6 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                                         autocomplete="off"
                                         class="ant-select-input"
                                         id="root_color"
-                                        readonly=""
                                         role="combobox"
                                         type="search"
                                         value=""
@@ -4197,7 +4196,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                                   class="ant-form-item-control-input-content"
                                 >
                                   <div
-                                    class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow"
+                                    class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow ant-select-show-search"
                                     name="root.color"
                                     style="width: 100%;"
                                   >
@@ -4216,7 +4215,6 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                                         autocomplete="off"
                                         class="ant-select-input"
                                         id="root_color"
-                                        readonly=""
                                         role="combobox"
                                         type="search"
                                         value=""
@@ -4529,6 +4527,195 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                     </div>
                   </div>
                 </fieldset>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-ypkju9 css-var-root ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields > Cyclic schema 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-ypkju9 ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-ypkju9 css-var-root"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ypkju9 css-var-root"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <fieldset
+                  id="root"
+                >
+                  <div
+                    class="ant-row css-dev-only-do-not-override-ypkju9 css-var-root"
+                    style="margin-inline: -12px;"
+                  >
+                    <div
+                      class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ypkju9 css-var-root"
+                      style="padding-inline: 12px;"
+                    >
+                      <label
+                        class=""
+                        for="root__title"
+                        title="A registration form"
+                      >
+                        A registration form
+                      </label>
+                      <div
+                        class="ant-divider css-dev-only-do-not-override-ypkju9 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
+                        role="separator"
+                        style="margin-block: 1px;"
+                      />
+                    </div>
+                    <div
+                      class="ant-col ant-col-24 css-dev-only-do-not-override-ypkju9 css-var-root"
+                      style="padding-inline: 12px;"
+                    >
+                      <div
+                        class="rjsf-field rjsf-field-object"
+                      >
+                        <div
+                          class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-ypkju9 ant-form-item-horizontal"
+                        >
+                          <div
+                            class="ant-row ant-form-item-row css-dev-only-do-not-override-ypkju9 css-var-root"
+                          >
+                            <div
+                              class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ypkju9 css-var-root"
+                            >
+                              <div
+                                class="ant-form-item-control-input"
+                              >
+                                <div
+                                  class="ant-form-item-control-input-content"
+                                >
+                                  <fieldset
+                                    id="root_child"
+                                  >
+                                    <div
+                                      class="ant-row css-dev-only-do-not-override-ypkju9 css-var-root"
+                                      style="margin-inline: -12px;"
+                                    >
+                                      <div
+                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ypkju9 css-var-root"
+                                        style="padding-inline: 12px;"
+                                      >
+                                        <label
+                                          class=""
+                                          for="root_child__title"
+                                          title="A registration form"
+                                        >
+                                          A registration form
+                                        </label>
+                                        <div
+                                          class="ant-divider css-dev-only-do-not-override-ypkju9 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
+                                          role="separator"
+                                          style="margin-block: 1px;"
+                                        />
+                                      </div>
+                                      <div
+                                        class="ant-col ant-col-24 css-dev-only-do-not-override-ypkju9 css-var-root"
+                                        style="padding-inline: 12px;"
+                                      >
+                                        <div
+                                          class="ant-alert ant-alert-warning ant-alert-outlined ant-alert-no-icon css-var-root css-dev-only-do-not-override-ypkju9"
+                                          data-show="true"
+                                          role="alert"
+                                        >
+                                          <div
+                                            class="ant-alert-section"
+                                          >
+                                            <div
+                                              class="ant-alert-title"
+                                            >
+                                              Circular reference ($ref cycle) detected for field "child". You may choose to expand to the next cycle break
+                                            </div>
+                                          </div>
+                                          <div
+                                            class="ant-alert-actions"
+                                          >
+                                            <div
+                                              class="ant-space css-dev-only-do-not-override-ypkju9 ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small css-var-root"
+                                            >
+                                              <div
+                                                class="ant-space-item"
+                                              >
+                                                <button
+                                                  class="ant-btn css-dev-only-do-not-override-ypkju9 css-var-root ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-sm"
+                                                  id="root_child_child-button"
+                                                  type="button"
+                                                >
+                                                  <span>
+                                                    Expand Cycle
+                                                  </span>
+                                                </button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </fieldset>
+                                </div>
+                              </div>
+                              <div
+                                class="ant-form-item-additional"
+                              >
+                                <div
+                                  class="ant-form-item-extra"
+                                >
+                                  <span
+                                    id="root_child__description"
+                                  >
+                                    A simple form example.
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+            <div
+              class="ant-form-item-additional"
+            >
+              <div
+                class="ant-form-item-extra"
+              >
+                <span
+                  id="root__description"
+                >
+                  A simple form example.
+                </span>
               </div>
             </div>
           </div>
@@ -7745,7 +7932,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   <div>
                                     <div>
                                       <div
-                                        class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow"
+                                        class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow ant-select-show-search"
                                         name="root_optionalObjectWithOneofs__oneof_select"
                                         style="width: 100%;"
                                       >
@@ -7762,7 +7949,6 @@ exports[`single fields > optional data controls > does not show optional control
                                             autocomplete="off"
                                             class="ant-select-input"
                                             id="root_optionalObjectWithOneofs__oneof_select"
-                                            readonly=""
                                             role="combobox"
                                             type="search"
                                             value=""
@@ -7945,7 +8131,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   <div>
                                     <div>
                                       <div
-                                        class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow"
+                                        class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow ant-select-show-search"
                                         name="root_optionalArrayWithAnyofs__anyof_select"
                                         style="width: 100%;"
                                       >
@@ -7962,7 +8148,6 @@ exports[`single fields > optional data controls > does not show optional control
                                             autocomplete="off"
                                             class="ant-select-input"
                                             id="root_optionalArrayWithAnyofs__anyof_select"
-                                            readonly=""
                                             role="combobox"
                                             type="search"
                                             value=""
@@ -9230,7 +9415,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   <div>
                                     <div>
                                       <div
-                                        class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow ant-select-disabled"
+                                        class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow ant-select-disabled ant-select-show-search"
                                         name="root_optionalObjectWithOneofs__oneof_select"
                                         style="width: 100%;"
                                       >
@@ -9248,7 +9433,6 @@ exports[`single fields > optional data controls > does not show optional control
                                             class="ant-select-input"
                                             disabled=""
                                             id="root_optionalObjectWithOneofs__oneof_select"
-                                            readonly=""
                                             role="combobox"
                                             type="search"
                                             value=""
@@ -9435,7 +9619,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   <div>
                                     <div>
                                       <div
-                                        class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow ant-select-disabled"
+                                        class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow ant-select-disabled ant-select-show-search"
                                         name="root_optionalArrayWithAnyofs__anyof_select"
                                         style="width: 100%;"
                                       >
@@ -9453,7 +9637,6 @@ exports[`single fields > optional data controls > does not show optional control
                                             class="ant-select-input"
                                             disabled=""
                                             id="root_optionalArrayWithAnyofs__anyof_select"
-                                            readonly=""
                                             role="combobox"
                                             type="search"
                                             value=""
@@ -14315,7 +14498,7 @@ exports[`single fields > select field 1`] = `
                 class="ant-form-item-control-input-content"
               >
                 <div
-                  class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow"
+                  class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow ant-select-show-search"
                   name="root"
                   style="width: 100%;"
                 >
@@ -14334,7 +14517,6 @@ exports[`single fields > select field 1`] = `
                       autocomplete="off"
                       class="ant-select-input"
                       id="root"
-                      readonly=""
                       role="combobox"
                       type="search"
                       value=""
@@ -15027,7 +15209,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
                 class="ant-form-item-control-input-content"
               >
                 <div
-                  class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow"
+                  class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow ant-select-show-search"
                   name="root"
                   style="width: 100%;"
                 >
@@ -15046,7 +15228,6 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
                       autocomplete="off"
                       class="ant-select-input"
                       id="root"
-                      readonly=""
                       role="combobox"
                       type="search"
                       value=""
@@ -15298,7 +15479,7 @@ exports[`single fields > select field single choice formData 1`] = `
                 class="ant-form-item-control-input-content"
               >
                 <div
-                  class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow"
+                  class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow ant-select-show-search"
                   name="root"
                   style="width: 100%;"
                 >
@@ -15315,7 +15496,6 @@ exports[`single fields > select field single choice formData 1`] = `
                       autocomplete="off"
                       class="ant-select-input"
                       id="root"
-                      readonly=""
                       role="combobox"
                       type="search"
                       value=""
@@ -15488,7 +15668,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
                 class="ant-form-item-control-input-content"
               >
                 <div
-                  class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow"
+                  class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow ant-select-show-search"
                   name="root"
                   style="width: 100%;"
                 >
@@ -15507,7 +15687,6 @@ exports[`single fields > select widget with description in schema and FieldTempl
                       autocomplete="off"
                       class="ant-select-input"
                       id="root"
-                      readonly=""
                       role="combobox"
                       type="search"
                       value=""

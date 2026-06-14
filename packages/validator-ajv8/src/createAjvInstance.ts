@@ -1,4 +1,4 @@
-import { ADDITIONAL_PROPERTY_FLAG, RJSF_ADDITIONAL_PROPERTIES_FLAG } from '@rjsf/utils';
+import { RJSF_ADDITIONAL_PROPERTIES_FLAG } from '@rjsf/utils';
 import type { Options } from 'ajv';
 import Ajv from 'ajv';
 import type { FormatsPluginOptions } from 'ajv-formats';
@@ -53,8 +53,9 @@ export default function createAjvInstance(
   ajv.addFormat('data-url', DATA_URL_FORMAT_REGEX);
   ajv.addFormat('color', COLOR_FORMAT_REGEX);
 
-  // Add RJSF-specific additional properties keywords so Ajv doesn't report errors if strict is enabled.
-  ajv.addKeyword(ADDITIONAL_PROPERTY_FLAG);
+  // Register the remaining string-keyed RJSF property so AJV strict mode doesn't reject it.
+  // ADDITIONAL_PROPERTY_FLAG, RJSF_REF_KEY, and RJSF_REF_CYCLE_KEY are now Symbols and
+  // invisible to AJV, so they no longer need to be registered as keywords.
   ajv.addKeyword(RJSF_ADDITIONAL_PROPERTIES_FLAG);
 
   // add more schemas to validate against

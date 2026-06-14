@@ -4,17 +4,17 @@ import type { FieldProps } from '@rjsf/utils';
 
 const COLORS = ['red', 'green', 'blue'];
 
-export default function SpecialInput({ onChange, formData }: PropsWithChildren<FieldProps>) {
+export default function SpecialInput({ id, fieldPathId, onChange, formData }: PropsWithChildren<FieldProps>) {
   const [text, setText] = useState<string>(formData || '');
 
   const inputBgColor = COLORS[text.length % COLORS.length];
 
   const handleOnChange = useCallback(
     ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-      onChange(value);
+      onChange(value, fieldPathId.path);
       setText(value);
     },
-    [onChange, setText],
+    [onChange, fieldPathId, setText],
   );
 
   return (
@@ -27,8 +27,9 @@ export default function SpecialInput({ onChange, formData }: PropsWithChildren<F
       </p>
       <div className='row'>
         <div className='col-sm-6'>
-          <label>SpecialInput</label>
+          <label htmlFor={`${id}-special-input`}>SpecialInput</label>
           <input
+            id={`${id}-special-input`}
             className='form-control'
             style={{ background: inputBgColor, color: 'white', fontSize: 14 }}
             value={text}

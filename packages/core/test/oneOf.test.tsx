@@ -1902,6 +1902,113 @@ describe('oneOf', () => {
       }
     });
   });
+  describe('primitive type with non-select oneOf', () => {
+    const ipSchema: RJSFSchema = {
+      type: 'string',
+      oneOf: [
+        { title: 'IPv4', pattern: '^(25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})(\\.(25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})){3}$' },
+        { title: 'IPv6', pattern: '^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|::1|::)$' },
+      ],
+    };
+
+    it('should not render a spurious XxxOf-prefixed input alongside the oneOf selector', () => {
+      // Regression: { type: 'string', oneOf: [...] } was rendering an outer StringField
+      // with id="root_XxxOf" in addition to the OneOfField selector. Typing into that
+      // input corrupted formData (e.g. set { XxxOf: value } instead of a plain string).
+      const { node } = createFormComponent({ schema: ipSchema });
+
+      expect(node.querySelector('input#root_XxxOf')).not.toBeInTheDocument();
+    });
+
+    it('should render the option text input with the correct root id after selecting an option', () => {
+      // Regression: option schemas without their own type rendered as FallbackField
+      // (no input) because the parent type was not propagated to the option schema.
+      const { node } = createFormComponent({ schema: ipSchema });
+
+      // The selected option's input should be at the root id, not a spurious XxxOf id
+      expect(node.querySelector('input#root')).toBeInTheDocument();
+    });
+
+    it('should produce a plain string formData value when typing into the option input', async () => {
+      const { node, onChange } = createFormComponent({ schema: ipSchema });
+
+      const input = node.querySelector<HTMLInputElement>('input#root');
+      expect(input).toBeInTheDocument();
+
+      await user.clear(input!);
+      await user.type(input!, '192.168.1.1');
+
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: '192.168.1.1' }),
+        expect.any(String),
+      );
+    });
+
+    it('should not render a spurious XxxOf input for type number with non-select oneOf', () => {
+      const schema: RJSFSchema = {
+        type: 'number',
+        oneOf: [
+          { title: 'Positive', minimum: 0 },
+          { title: 'Negative', maximum: 0 },
+        ],
+      };
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelector('input#root_XxxOf')).not.toBeInTheDocument();
+      expect(node.querySelector('input#root')).toBeInTheDocument();
+    });
+
+    it('should produce a number formData value when typing into a type:number oneOf option input', async () => {
+      const schema: RJSFSchema = {
+        type: 'number',
+        oneOf: [
+          { title: 'Positive', minimum: 0 },
+          { title: 'Negative', maximum: 0 },
+        ],
+      };
+      const { node, onChange } = createFormComponent({ schema });
+
+      const input = node.querySelector<HTMLInputElement>('input#root');
+      expect(input).toBeInTheDocument();
+
+      await user.clear(input!);
+      await user.type(input!, '42');
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 42 }), expect.any(String));
+    });
+
+    it('should not render a spurious XxxOf input for type array with non-select oneOf', () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        oneOf: [
+          { title: 'Strings', items: { type: 'string' } },
+          { title: 'Numbers', items: { type: 'number' } },
+        ],
+      };
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelector('[id="root_XxxOf"]')).not.toBeInTheDocument();
+    });
+
+    it('should still render common object properties alongside the oneOf selector', () => {
+      // Regression guard: ObjectField must NOT be suppressed when type:object has a oneOf,
+      // because shared properties defined at the parent level still need to render.
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          shared: { type: 'string' },
+        },
+        oneOf: [{ properties: { foo: { type: 'string' } } }, { properties: { bar: { type: 'string' } } }],
+      };
+      const { node } = createFormComponent({ schema });
+
+      // Common property from ObjectField
+      expect(node.querySelector('input#root_shared')).toBeInTheDocument();
+      // OneOf selector
+      expect(node.querySelector('select')).toBeInTheDocument();
+    });
+  });
+
   it('$ref objects pointing to objects with oneOf lists do not change (#3833)', async () => {
     const schema: RJSFSchema = {
       title: 'oneOf Example',

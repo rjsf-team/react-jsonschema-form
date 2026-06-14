@@ -24,6 +24,7 @@ export default function AltDateWidget<
         {elements.map((elemProps, i) => {
           const elemId = `${id}_${elemProps.type}`;
           return (
+            // oxlint-disable-next-line react/no-array-index-key
             <Box key={i}>
               <Select
                 id={elemId}
@@ -57,6 +58,7 @@ export default function AltDateWidget<
       {rawErrors &&
         rawErrors?.length > 0 &&
         rawErrors.map((error: string, index: number) => (
+          // oxlint-disable-next-line react/no-array-index-key
           <Input.Error key={`alt-date-widget-input-errors-${index}`}>{error}</Input.Error>
         ))}
     </>

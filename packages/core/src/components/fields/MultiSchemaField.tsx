@@ -40,7 +40,7 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
    * componentDidUpdate. This prevents the matching-option recalculation from overriding a user's explicit choice
    * when getDefaultFormState populates undefined properties that make deepEquals see a false formData change.
    */
-  private _skipNextOptionRecalculation = false;
+  private skipNextOptionRecalculation = false;
   /** Constructs an `AnyOfField` with the given `props` to initialize the initially selected option in state
    *
    * @param props - The `FieldProps` for this template
@@ -81,8 +81,8 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       newState = { selectedOption, retrievedOptions };
     }
     if (!deepEquals(formData, prevProps.formData) && fieldPathId.$id === prevProps.fieldPathId.$id) {
-      if (this._skipNextOptionRecalculation) {
-        this._skipNextOptionRecalculation = false;
+      if (this.skipNextOptionRecalculation) {
+        this.skipNextOptionRecalculation = false;
       } else {
         const { retrievedOptions } = newState;
         const matchingOption = this.getMatchingOption(selectedOption, formData, retrievedOptions);
@@ -93,6 +93,7 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       }
     }
     if (newState !== this.state) {
+      // oxlint-disable-next-line react/no-did-update-set-state -- guarded to prevent infinite loop
       this.setState(newState);
     }
   }
@@ -142,7 +143,7 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     }
 
     this.setState({ selectedOption: intOption }, () => {
-      this._skipNextOptionRecalculation = true;
+      this.skipNextOptionRecalculation = true;
       onChange(newFormData, fieldPathId.path, undefined, this.getFieldId());
     });
   };
@@ -170,7 +171,7 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     } = this.props;
 
     const { widgets, fields, translateString, globalUiOptions, schemaUtils } = registry;
-    const { SchemaField: _SchemaField } = fields;
+    const { SchemaField: SchemaFieldComponent } = fields;
     const MultiSchemaFieldTemplate = getTemplate<'MultiSchemaFieldTemplate', T, S, F>(
       'MultiSchemaFieldTemplate',
       registry,
@@ -197,10 +198,21 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     let optionSchema: S | undefined | null;
 
     if (option) {
-      // merge top level required field
-      const { required: schemaRequired } = schema;
+      const { required: schemaRequired, type: schemaType } = schema;
+      const parentProps: Partial<S> = {};
+      if (schemaRequired) {
+        parentProps.required = schemaRequired as S['required'];
+      }
+      // Propagate the parent schema type to options that don't define their own.
+      // This is necessary when the parent constrains the type (e.g. { type: 'string',
+      // oneOf: [{ pattern: '...' }, { pattern: '...' }] }) but the option sub-schemas
+      // omit the type — without it, getSchemaType returns undefined and the option
+      // renders as FallbackField instead of the correct widget (e.g. StringField).
+      if (schemaType !== undefined && !('type' in option)) {
+        parentProps.type = schemaType;
+      }
       // Merge in all the non-oneOf/anyOf properties and also skip the special ADDITIONAL_PROPERTY_FLAG property
-      optionSchema = schemaRequired ? (mergeSchemas({ required: schemaRequired }, option) as S) : option;
+      optionSchema = Object.keys(parentProps).length > 0 ? (mergeSchemas(parentProps, option) as S) : option;
     }
 
     // First we will check to see if there is an anyOf/oneOf override for the UI schema
@@ -266,7 +278,7 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
 
     const optionsSchemaField =
       (optionSchema && optionSchema.type !== 'null' && (
-        <_SchemaField {...this.props} schema={optionSchema} uiSchema={optionUiSchema} />
+        <SchemaFieldComponent {...this.props} schema={optionSchema} uiSchema={optionUiSchema} />
       )) ||
       null;
 

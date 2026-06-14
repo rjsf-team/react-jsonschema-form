@@ -21,15 +21,16 @@ Below is the table that lists all the `templates`, their props interface, their 
 
 | Template                                                        | Props Type                         | UiSchema name                    | Origin                                                                                                                                                               |
 | --------------------------------------------------------------- | ---------------------------------- | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [ArrayFieldTemplate](#arrayfieldtemplate)                       | ArrayFieldTemplateProps            | ui:ArrayFieldTemplate            | Formerly `Form.ArrayFieldTemplate` or `Registry.ArrayFieldTemplate`                                                                                                  |
-| [ArrayFieldDescriptionTemplate](#arrayfielddescriptiontemplate) | ArrayFieldDescriptionProps         | ui:ArrayFieldDescriptionTemplate | Formerly part of `@rjsf/core` ArrayField, refactored as a template, used in all `ArrayFieldTemplate` implementations                                                 |
-| [ArrayFieldItemTemplate](#arrayfielditemtemplate)               | ArrayFieldItemTemplateProps        | ui:ArrayFieldItemTemplate        | Formerly an internal class for `ArrayFieldTemplate`s in all themes, refactored as a template in each theme, used in all `ArrayFieldTemplate` implementations         |
-| [ArrayFieldItemButtonsTemplate](#arrayfielditembuttonstemplate) | ArrayFieldItemButtonsTemplateProps | ui:ArrayFieldItemButonsTemplate  | Formerly an internal class for `ArrayFieldItemTemplate`s in all themes, refactored as a template in the `core`, used in all `ArrayFieldItemTemplate` implementations |
-| [ArrayFieldTitleTemplate](#arrayfieldtitletemplate)             | ArrayFieldTitleProps               | ui:ArrayFieldTitleTemplate       | Formerly part of `@rjsf/core` ArrayField, refactored as a template, used in all `ArrayFieldTemplate` implementations.                                                |
-| [BaseInputTemplate](#baseinputtemplate)                         | WidgetProps                        | ui:BaseInputTemplate             | Formerly a `widget` in `@rjsf.core` moved to `templates` and newly implemented in each theme to maximize code reuse.                                                 |
-| [DescriptionFieldTemplate](#descriptionfieldtemplate)           | DescriptionFieldProps              | ui:DescriptionFieldTemplate      | Formerly a `field` in `@rjsf.core` moved to `templates` with the `Template` suffix. Previously implemented in each theme.                                            |
-| [ErrorListTemplate](#errorlisttemplate)                         | ErrorListProps                     | ui:ErrorListTemplate             | Formerly `Form.ErrorList` moved to `templates` with the `Templates` suffix. Previously implemented in each theme.                                                    |
-| [FallbackFieldTemplate](#fallbackfieldtemplate)                 | FallbackFieldTemplateProps         | ui:FallbackFieldTemplate         | Added in RJSF v6                                                                                                                                                     |
+| [ArrayFieldTemplate](#arrayfieldtemplate)                           | ArrayFieldTemplateProps            | ui:ArrayFieldTemplate            | Formerly `Form.ArrayFieldTemplate` or `Registry.ArrayFieldTemplate`                                                                                                  |
+| [ArrayFieldDescriptionTemplate](#arrayfielddescriptiontemplate)     | ArrayFieldDescriptionProps         | ui:ArrayFieldDescriptionTemplate | Formerly part of `@rjsf/core` ArrayField, refactored as a template, used in all `ArrayFieldTemplate` implementations                                                 |
+| [ArrayFieldItemTemplate](#arrayfielditemtemplate)                   | ArrayFieldItemTemplateProps        | ui:ArrayFieldItemTemplate        | Formerly an internal class for `ArrayFieldTemplate`s in all themes, refactored as a template in each theme, used in all `ArrayFieldTemplate` implementations         |
+| [ArrayFieldItemButtonsTemplate](#arrayfielditembuttonstemplate)     | ArrayFieldItemButtonsTemplateProps | ui:ArrayFieldItemButonsTemplate  | Formerly an internal class for `ArrayFieldItemTemplate`s in all themes, refactored as a template in the `core`, used in all `ArrayFieldItemTemplate` implementations |
+| [ArrayFieldTitleTemplate](#arrayfieldtitletemplate)                 | ArrayFieldTitleProps               | ui:ArrayFieldTitleTemplate       | Formerly part of `@rjsf/core` ArrayField, refactored as a template, used in all `ArrayFieldTemplate` implementations.                                                |
+| [BaseInputTemplate](#baseinputtemplate)                             | WidgetProps                        | ui:BaseInputTemplate             | Formerly a `widget` in `@rjsf.core` moved to `templates` and newly implemented in each theme to maximize code reuse.                                                 |
+| [CyclicSchemaExpandTemplate](#cyclicschemaexpandtemplate)           | CyclicSchemaExpandProps            | ui:CyclicSchemaExpandTemplate    | Added in RJSF v6 to support circular `$ref` cycle detection                                                                                                          |
+| [DescriptionFieldTemplate](#descriptionfieldtemplate)               | DescriptionFieldProps              | ui:DescriptionFieldTemplate      | Formerly a `field` in `@rjsf.core` moved to `templates` with the `Template` suffix. Previously implemented in each theme.                                            |
+| [ErrorListTemplate](#errorlisttemplate)                             | ErrorListProps                     | ui:ErrorListTemplate             | Formerly `Form.ErrorList` moved to `templates` with the `Templates` suffix. Previously implemented in each theme.                                                    |
+| [FallbackFieldTemplate](#fallbackfieldtemplate)                     | FallbackFieldTemplateProps         | ui:FallbackFieldTemplate         | Added in RJSF v6                                                                                                                                                     |
 | [FieldErrorTemplate](#fielderrortemplate)                       | FieldErrorProps                    | ui:FieldErrorTemplate            | Formerly internal `ErrorList` component accessible only to `SchemaField`                                                                                             |
 | [FieldHelpTemplate](#fieldhelptemplate)                         | FieldHelpProps                     | ui:FieldHelpTemplate             | Formerly internal `Help` component accessible only to `SchemaField`                                                                                                  |
 | [FieldTemplate](#fieldtemplate)                                 | FieldTemplateProps                 | ui:FieldTemplate                 | Formerly `Form.FieldTemplate` or `Registry.FieldTemplate`                                                                                                            |
@@ -483,6 +484,79 @@ The following props are passed to the `BaseInputTemplate`:
 - `options.enumOptions`: For enum fields, this property contains the list of options for the enum as an array of \{ label, value } objects. If the enum is defined using the oneOf/anyOf syntax, the entire schema object for each option is appended onto the \{ schema, label, value } object.
 - `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget.
 - `registry`: The `registry` object
+
+## CyclicSchemaExpandTemplate
+
+The `CyclicSchemaExpandTemplate` is the template rendered by `CyclicSchemaField` when a circular `$ref` cycle is detected in the schema.
+RJSF automatically detects when a `$ref` would recurse indefinitely (e.g. a schema whose property references its own root) and stops rendering at the cycle boundary.
+At that point `CyclicSchemaField` renders this template, which shows a warning message and an expand button that the user can click to render one additional level of the recursive structure.
+
+Each theme provides its own implementation.
+You can replace the template globally via the `templates` prop on `Form`, or per-field via `ui:CyclicSchemaExpandTemplate` in the `uiSchema`.
+
+```tsx
+import { CyclicSchemaExpandProps, RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+// A schema that is self-referencing
+const schema: RJSFSchema = {
+  $schema: 'http://json-schema.org/draft-07/schema#',
+  type: 'object',
+  title: 'Node',
+  properties: {
+    value: { type: 'string' },
+    child: { $ref: '#' },
+  },
+};
+
+function CyclicSchemaExpandTemplate<T = any>(props: CyclicSchemaExpandProps<T>) {
+  const { name, fieldPathId, onExpand } = props;
+  const buttonId = `${fieldPathId.$id}-button`;
+  return (
+    <div className='cyclic-expand'>
+      <span className='warning'>Circular reference detected for field &quot;{name}&quot;</span>
+      <button id={buttonId} type='button' onClick={() => onExpand(fieldPathId.$id)}>
+        Expand
+      </button>
+    </div>
+  );
+}
+
+render(
+  <Form schema={schema} validator={validator} templates={{ CyclicSchemaExpandTemplate }} />,
+  document.getElementById('app'),
+);
+```
+
+You can also provide a per-field template via `uiSchema`:
+
+```tsx
+import { UiSchema } from '@rjsf/utils';
+import CyclicSchemaExpandTemplate from './CyclicSchemaExpandTemplate';
+
+const uiSchema: UiSchema = {
+  'ui:CyclicSchemaExpandTemplate': CyclicSchemaExpandTemplate,
+};
+```
+
+or a string value from the `Registry`:
+
+```tsx
+import { UiSchema } from '@rjsf/utils';
+
+const uiSchema: UiSchema = {
+  'ui:CyclicSchemaExpandTemplate': 'CustomCyclicSchemaExpandTemplate',
+};
+```
+
+The following props are passed to the `CyclicSchemaExpandTemplate` as defined by `CyclicSchemaExpandProps` in `@rjsf/utils`:
+
+- `name`: The unique name of the field at the cycle boundary, usually the property name within its parent object.
+- `fieldPathId`: The `FieldPathId` of the field in the hierarchy; use `fieldPathId.$id` to get the HTML id string.
+- `onExpand`: Callback to call when the user wants to render one additional level; receives the field's id string.
+- `schema`: The schema object for the field at the cycle boundary.
+- `uiSchema`: The uiSchema object for this field.
+- `registry`: The `registry` object.
 
 ## DescriptionFieldTemplate
 

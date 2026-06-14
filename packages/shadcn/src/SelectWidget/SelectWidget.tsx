@@ -5,6 +5,7 @@ import {
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
+  logUnsupportedDefaultForEnum,
 } from '@rjsf/utils';
 
 import { FancyMultiSelect } from '../components/ui/fancy-multi-select';
@@ -27,6 +28,7 @@ export default function SelectWidget<
   disabled,
   readonly,
   value,
+  schema,
   multiple,
   autofocus,
   onChange,
@@ -38,12 +40,13 @@ export default function SelectWidget<
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
-  const _onFancyFocus = () => {
+  const handleFancyFocus = () => {
     onFocus(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, optEmptyValue));
   };
 
-  const _onFancyBlur = () => {
+  const handleFancyBlur = () => {
     onBlur(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, optEmptyValue));
   };
 
@@ -70,8 +73,8 @@ export default function SelectWidget<
           required={required}
           placeholder={placeholder}
           className={cnClassName}
-          onFocus={_onFancyFocus}
-          onBlur={_onFancyBlur}
+          onFocus={handleFancyFocus}
+          onBlur={handleFancyBlur}
           ariaDescribedby={ariaDescribedByIds(id)}
         />
       ) : (
@@ -86,8 +89,8 @@ export default function SelectWidget<
           onValueChange={(values) => {
             onChange(enumOptionValueDecoder<S>(values.map(String), enumOptions, optionValueFormat, optEmptyValue));
           }}
-          onFocus={_onFancyFocus}
-          onBlur={_onFancyBlur}
+          onFocus={handleFancyFocus}
+          onBlur={handleFancyBlur}
         />
       )}
     </div>

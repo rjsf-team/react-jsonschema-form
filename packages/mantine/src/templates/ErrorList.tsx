@@ -27,6 +27,7 @@ export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSche
     >
       <List>
         {errors.map((error, index) => (
+          // oxlint-disable-next-line react/no-array-index-key
           <List.Item key={`error-${index}`} c='red'>
             {error.stack}
           </List.Item>

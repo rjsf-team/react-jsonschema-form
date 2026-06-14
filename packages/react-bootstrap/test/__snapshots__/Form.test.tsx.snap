@@ -2631,6 +2631,120 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
 </DocumentFragment>
 `;
 
+exports[`single fields > Cyclic schema 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div>
+        <div
+          class="my-1"
+          id="root__title"
+        >
+          <h5>
+            A registration form
+          </h5>
+          <hr
+            class="border-0 bg-secondary mt-0"
+            style="height: 1px;"
+          />
+        </div>
+        <div>
+          <div
+            class="mb-3"
+            id="root__description"
+          >
+            A simple form example.
+          </div>
+        </div>
+        <div
+          class="p-0 container-fluid"
+        >
+          <div
+            class="row"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="col-12"
+            >
+               
+              <div
+                class="rjsf-field rjsf-field-object"
+              >
+                <div>
+                  <div
+                    class="my-1"
+                    id="root_child__title"
+                  >
+                    <h5>
+                      A registration form
+                    </h5>
+                    <hr
+                      class="border-0 bg-secondary mt-0"
+                      style="height: 1px;"
+                    />
+                  </div>
+                  <div>
+                    <div
+                      class="mb-3"
+                      id="root_child__description"
+                    >
+                      A simple form example.
+                    </div>
+                  </div>
+                  <div
+                    class="p-0 container-fluid"
+                  >
+                    <div
+                      class="row"
+                      style="margin-bottom: 10px;"
+                    >
+                      <div
+                        class="col-12"
+                      >
+                         
+                        <div
+                          class="mt-3"
+                        >
+                          <div
+                            class="fade alert alert-warning show"
+                            role="alert"
+                          >
+                            Circular reference ($ref cycle) detected for field "child". You may choose to expand to the next cycle break
+                          </div>
+                          <button
+                            class="btn btn-warning btn-sm"
+                            id="root_child_child-button"
+                            type="button"
+                          >
+                            Expand Cycle
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > checkbox field 1`] = `
 <DocumentFragment>
   <form

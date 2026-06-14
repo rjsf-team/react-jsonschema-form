@@ -1574,11 +1574,13 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                       </div>
                       <ul
                         class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                        role="listbox"
                       >
                         <li
+                          aria-selected="false"
                           class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                           data-value="0"
-                          role="button"
+                          role="option"
                           tabindex="0"
                         >
                           <div
@@ -1590,9 +1592,10 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                           </div>
                         </li>
                         <li
+                          aria-selected="false"
                           class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                           data-value="1"
-                          role="button"
+                          role="option"
                           tabindex="0"
                         >
                           <div
@@ -1604,9 +1607,10 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                           </div>
                         </li>
                         <li
+                          aria-selected="false"
                           class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                           data-value="2"
-                          role="button"
+                          role="option"
                           tabindex="0"
                         >
                           <div
@@ -3264,11 +3268,13 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                       </div>
                       <ul
                         class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                        role="listbox"
                       >
                         <li
+                          aria-selected="false"
                           class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                           data-value="0"
-                          role="button"
+                          role="option"
                           tabindex="0"
                         >
                           <div
@@ -3280,9 +3286,10 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                           </div>
                         </li>
                         <li
+                          aria-selected="false"
                           class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                           data-value="1"
-                          role="button"
+                          role="option"
                           tabindex="0"
                         >
                           <div
@@ -3294,9 +3301,10 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                           </div>
                         </li>
                         <li
+                          aria-selected="false"
                           class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                           data-value="2"
-                          role="button"
+                          role="option"
                           tabindex="0"
                         >
                           <div
@@ -3506,6 +3514,141 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                         active
                       </span>
                     </label>
+                  </div>
+                  <div
+                    class="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      class="list-disc list-inside"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields > Cyclic schema 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-object"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-object"
+      >
+        <div
+          class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+        >
+          <div
+            class="title-field mb-6"
+            id="root__title"
+          >
+            <h2
+              class="text-3xl font-bold text-primary mb-2"
+            >
+              A registration form
+            </h2>
+            <div
+              class="divider divider-primary my-0"
+            />
+          </div>
+          <div
+            class="description-field my-4"
+            id="root__description"
+          >
+            <div
+              class="text-sm text-base-content/80"
+            >
+              A simple form example.
+            </div>
+          </div>
+          <div
+            class="grid grid-cols-1 gap-3 "
+          >
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-object"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                >
+                  <div
+                    class="form-control "
+                  >
+                    <div
+                      class="title-field mb-6"
+                      id="root_child__title"
+                    >
+                      <h2
+                        class="text-3xl font-bold text-primary mb-2"
+                      >
+                        A registration form
+                      </h2>
+                      <div
+                        class="divider divider-primary my-0"
+                      />
+                    </div>
+                    <div
+                      class="description-field my-4"
+                      id="root_child__description"
+                    >
+                      <div
+                        class="text-sm text-base-content/80"
+                      >
+                        A simple form example.
+                      </div>
+                    </div>
+                    <div
+                      class="grid grid-cols-1 gap-3 mb-4"
+                    >
+                      <div
+                        class=""
+                      >
+                        <div
+                          class="mt-4"
+                        >
+                          <div
+                            class="alert alert-warning mb-2"
+                          >
+                            <span>
+                              Circular reference ($ref cycle) detected for field "child". You may choose to expand to the next cycle break
+                            </span>
+                          </div>
+                          <button
+                            class="btn btn-sm btn-warning"
+                            id="root_child_child-button"
+                            type="button"
+                          >
+                            Expand Cycle
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
@@ -4721,7 +4864,6 @@ exports[`single fields > format date 1`] = `
         >
           <div
             class="w-full"
-            tabindex="0"
           >
             <div
               aria-expanded="false"
@@ -4729,7 +4871,7 @@ exports[`single fields > format date 1`] = `
               class="input input-bordered w-full flex items-center justify-between cursor-pointer "
               id="root"
               role="button"
-              tabindex="-1"
+              tabindex="0"
             >
               <span
                 class="text-base-content/50"
@@ -4795,7 +4937,6 @@ exports[`single fields > format datetime 1`] = `
         >
           <div
             class="w-full"
-            tabindex="0"
           >
             <div
               aria-expanded="false"
@@ -4803,7 +4944,7 @@ exports[`single fields > format datetime 1`] = `
               class="input input-bordered w-full flex items-center justify-between cursor-pointer "
               id="root"
               role="button"
-              tabindex="-1"
+              tabindex="0"
             >
               <span
                 class="text-base-content/50"
@@ -6162,11 +6303,13 @@ exports[`single fields > optional data controls > does not show optional control
                           </div>
                           <ul
                             class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                            role="listbox"
                           >
                             <li
+                              aria-selected="true"
                               class="px-4 py-2 hover:bg-base-200 cursor-pointer bg-primary/10"
                               data-value="0"
-                              role="button"
+                              role="option"
                               tabindex="0"
                             >
                               <div
@@ -6178,9 +6321,10 @@ exports[`single fields > optional data controls > does not show optional control
                               </div>
                             </li>
                             <li
+                              aria-selected="false"
                               class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                               data-value="1"
-                              role="button"
+                              role="option"
                               tabindex="0"
                             >
                               <div
@@ -6192,9 +6336,10 @@ exports[`single fields > optional data controls > does not show optional control
                               </div>
                             </li>
                             <li
+                              aria-selected="false"
                               class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                               data-value="2"
-                              role="button"
+                              role="option"
                               tabindex="0"
                             >
                               <div
@@ -6356,11 +6501,13 @@ exports[`single fields > optional data controls > does not show optional control
                           </div>
                           <ul
                             class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                            role="listbox"
                           >
                             <li
+                              aria-selected="true"
                               class="px-4 py-2 hover:bg-base-200 cursor-pointer bg-primary/10"
                               data-value="0"
-                              role="button"
+                              role="option"
                               tabindex="0"
                             >
                               <div
@@ -6372,9 +6519,10 @@ exports[`single fields > optional data controls > does not show optional control
                               </div>
                             </li>
                             <li
+                              aria-selected="false"
                               class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                               data-value="1"
-                              role="button"
+                              role="option"
                               tabindex="0"
                             >
                               <div
@@ -6386,9 +6534,10 @@ exports[`single fields > optional data controls > does not show optional control
                               </div>
                             </li>
                             <li
+                              aria-selected="false"
                               class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                               data-value="2"
-                              role="button"
+                              role="option"
                               tabindex="0"
                             >
                               <div
@@ -7394,11 +7543,13 @@ exports[`single fields > optional data controls > does not show optional control
                           </div>
                           <ul
                             class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                            role="listbox"
                           >
                             <li
+                              aria-selected="true"
                               class="px-4 py-2 hover:bg-base-200 cursor-pointer bg-primary/10"
                               data-value="0"
-                              role="button"
+                              role="option"
                               tabindex="0"
                             >
                               <div
@@ -7410,9 +7561,10 @@ exports[`single fields > optional data controls > does not show optional control
                               </div>
                             </li>
                             <li
+                              aria-selected="false"
                               class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                               data-value="1"
-                              role="button"
+                              role="option"
                               tabindex="0"
                             >
                               <div
@@ -7424,9 +7576,10 @@ exports[`single fields > optional data controls > does not show optional control
                               </div>
                             </li>
                             <li
+                              aria-selected="false"
                               class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                               data-value="2"
-                              role="button"
+                              role="option"
                               tabindex="0"
                             >
                               <div
@@ -7588,11 +7741,13 @@ exports[`single fields > optional data controls > does not show optional control
                           </div>
                           <ul
                             class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                            role="listbox"
                           >
                             <li
+                              aria-selected="true"
                               class="px-4 py-2 hover:bg-base-200 cursor-pointer bg-primary/10"
                               data-value="0"
-                              role="button"
+                              role="option"
                               tabindex="0"
                             >
                               <div
@@ -7604,9 +7759,10 @@ exports[`single fields > optional data controls > does not show optional control
                               </div>
                             </li>
                             <li
+                              aria-selected="false"
                               class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                               data-value="1"
-                              role="button"
+                              role="option"
                               tabindex="0"
                             >
                               <div
@@ -7618,9 +7774,10 @@ exports[`single fields > optional data controls > does not show optional control
                               </div>
                             </li>
                             <li
+                              aria-selected="false"
                               class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                               data-value="2"
-                              role="button"
+                              role="option"
                               tabindex="0"
                             >
                               <div
@@ -11321,11 +11478,13 @@ exports[`single fields > select field 1`] = `
             </div>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              role="listbox"
             >
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="0"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -11337,9 +11496,10 @@ exports[`single fields > select field 1`] = `
                 </div>
               </li>
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="1"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -11417,11 +11577,13 @@ exports[`single fields > select field multiple choice 1`] = `
             </div>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              role="listbox"
             >
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="0"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -11438,9 +11600,10 @@ exports[`single fields > select field multiple choice 1`] = `
                 </div>
               </li>
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="1"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -11457,9 +11620,10 @@ exports[`single fields > select field multiple choice 1`] = `
                 </div>
               </li>
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="2"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -11476,9 +11640,10 @@ exports[`single fields > select field multiple choice 1`] = `
                 </div>
               </li>
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="3"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -11561,11 +11726,13 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
             </div>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              role="listbox"
             >
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="0"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -11582,9 +11749,10 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
                 </div>
               </li>
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="1"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -11601,9 +11769,10 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
                 </div>
               </li>
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="2"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -11620,9 +11789,10 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
                 </div>
               </li>
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="3"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -11821,11 +11991,13 @@ exports[`single fields > select field multiple choice formData 1`] = `
             </div>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              role="listbox"
             >
               <li
+                aria-selected="true"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer bg-primary/10"
                 data-value="0"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -11843,9 +12015,10 @@ exports[`single fields > select field multiple choice formData 1`] = `
                 </div>
               </li>
               <li
+                aria-selected="true"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer bg-primary/10"
                 data-value="1"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -11863,9 +12036,10 @@ exports[`single fields > select field multiple choice formData 1`] = `
                 </div>
               </li>
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="2"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -11882,9 +12056,10 @@ exports[`single fields > select field multiple choice formData 1`] = `
                 </div>
               </li>
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="3"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -11967,11 +12142,13 @@ exports[`single fields > select field multiple choice with labels 1`] = `
             </div>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              role="listbox"
             >
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="0"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -11988,9 +12165,10 @@ exports[`single fields > select field multiple choice with labels 1`] = `
                 </div>
               </li>
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="1"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -12007,9 +12185,10 @@ exports[`single fields > select field multiple choice with labels 1`] = `
                 </div>
               </li>
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="2"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -12092,11 +12271,13 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
             </div>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              role="listbox"
             >
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="0"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -12108,9 +12289,10 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
                 </div>
               </li>
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="1"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -12356,11 +12538,13 @@ exports[`single fields > select field single choice formData 1`] = `
             </div>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              role="listbox"
             >
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="0"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -12372,9 +12556,10 @@ exports[`single fields > select field single choice formData 1`] = `
                 </div>
               </li>
               <li
+                aria-selected="true"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer bg-primary/10"
                 data-value="1"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -12529,11 +12714,13 @@ exports[`single fields > select widget with description in schema and FieldTempl
             </div>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              role="listbox"
             >
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="0"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div
@@ -12545,9 +12732,10 @@ exports[`single fields > select widget with description in schema and FieldTempl
                 </div>
               </li>
               <li
+                aria-selected="false"
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="1"
-                role="button"
+                role="option"
                 tabindex="0"
               >
                 <div

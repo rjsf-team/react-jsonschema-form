@@ -10,10 +10,12 @@ import type { RJSFSchema, StrictRJSFSchema } from './types';
  */
 export function hashString(string: string): string {
   let hash = 0;
-  for (let i = 0; i < string.length; i += 1) {
+  for (let i = 0; i < string.length; i++) {
     const chr = string.charCodeAt(i);
+    // oxlint-disable-next-line no-bitwise
     hash = (hash << 5) - hash + chr;
-    hash = hash & hash; // Convert to 32bit integer
+    // oxlint-disable-next-line no-bitwise
+    hash &= hash; // Convert to 32bit integer
   }
   return hash.toString(16);
 }
@@ -45,10 +47,12 @@ export function hashObject(object: unknown): string {
 
 /** Stringifies the schema and returns the hash of the resulting string. Sorts schema fields
  * in consistent order before stringify to prevent different hash ids for the same schema.
+ * Symbol-keyed properties (RJSF_REF_KEY, RJSF_REF_CYCLE_KEY, ADDITIONAL_PROPERTY_FLAG) are
+ * automatically excluded by JSON.stringify, so no special filtering is needed.
  *
  * @param schema - The schema for which the hash is desired
  * @returns - The string obtained from the hash of the stringified schema
  */
 export default function hashForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S) {
-  return hashObject(schema);
+  return hashString(sortedJSONStringify(schema));
 }

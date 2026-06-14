@@ -38,10 +38,10 @@ export default function TextareaWidget<
     defaultSchemaProps: { inverted: 'false' },
   });
   // oxlint-disable-next-line no-shadow
-  const _onChange = ({ target: { value } }: ChangeEvent<HTMLTextAreaElement>) =>
-    onChange && onChange(value === '' ? options.emptyValue : value);
-  const _onBlur = () => onBlur && onBlur(id, value);
-  const _onFocus = () => onFocus && onFocus(id, value);
+  const handleChange = ({ target: { value } }: ChangeEvent<HTMLTextAreaElement>) =>
+    onChange?.(value === '' ? options.emptyValue : value);
+  const handleBlur = () => onBlur?.(id, value);
+  const handleFocus = () => onFocus?.(id, value);
   return (
     <Form.TextArea
       id={id}
@@ -56,9 +56,9 @@ export default function TextareaWidget<
       value={value || ''}
       error={rawErrors.length > 0}
       rows={options.rows || 5}
-      onChange={_onChange}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      onFocus={handleFocus}
       aria-describedby={ariaDescribedByIds(id)}
     />
   );

@@ -59,20 +59,17 @@ export default function BaseInputTemplate<
     inputValue = value == null ? '' : value;
   }
 
-  const _onChange = useCallback(
+  const handleChange = useCallback(
     ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
       onChange(newValue === '' ? options.emptyValue : newValue),
     [onChange, options],
   );
-  const _onBlur = useCallback(
-    ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value),
-    [onBlur, id],
-  );
-  const _onFocus = useCallback(
-    ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value),
+  const handleBlur = useCallback(({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value), [onBlur, id]);
+  const handleFocus = useCallback(
+    ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value),
     [onFocus, id],
   );
-  const _onClear = useCallback(
+  const handleClear = useCallback(
     (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
@@ -93,13 +90,13 @@ export default function BaseInputTemplate<
         value={inputValue}
         {...inputProps}
         list={schema.examples ? examplesId(id) : undefined}
-        onChange={onChangeOverride || _onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
+        onChange={onChangeOverride || handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
       {options.allowClearTextInputs && !readonly && !disabled && inputValue && (
-        <ClearButton registry={registry} onClick={_onClear} />
+        <ClearButton registry={registry} onClick={handleClear} />
       )}
       <SchemaExamples id={id} schema={schema} />
     </>

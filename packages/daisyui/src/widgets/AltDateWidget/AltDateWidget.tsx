@@ -19,17 +19,7 @@ export default function AltDateWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
-  const {
-    disabled = false,
-    readonly = false,
-    autofocus = false,
-    options = {},
-    id,
-    name,
-    registry,
-    onBlur,
-    onFocus,
-  } = props;
+  const { disabled = false, readonly = false, autofocus = false, options, id, name, registry, onBlur, onFocus } = props;
   const { translateString } = registry;
   const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
 
@@ -37,6 +27,7 @@ export default function AltDateWidget<
     <div className='space-y-3'>
       <div className='grid grid-cols-3 gap-2'>
         {elements.map((elemProps, i) => (
+          // oxlint-disable-next-line react/no-array-index-key
           <div key={i} className='form-control'>
             <label className='label'>
               <span className='label-text capitalize'>{elemProps.type}</span>

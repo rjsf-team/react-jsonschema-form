@@ -679,6 +679,21 @@ export function formTests(Form: ComponentType<FormProps>) {
       expect(asFragment()).toMatchSnapshot();
     });
 
+    test('Cyclic schema', async () => {
+      const schema: RJSFSchema = {
+        title: 'A registration form',
+        description: 'A simple form example.',
+        type: 'object',
+        properties: {
+          child: {
+            $ref: '#',
+          },
+        },
+      };
+      const { asFragment } = render(<Form schema={schema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
+    });
+
     describe('optional data controls', () => {
       let schema: RJSFSchema;
       let uiSchema: UiSchema;

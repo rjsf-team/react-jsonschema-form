@@ -30,7 +30,7 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
   return (
     <div id={id} className='title-field mb-6'>
       {heading}
-      <div className='divider divider-primary my-0'></div>
+      <div className='divider divider-primary my-0' />
     </div>
   );
 }

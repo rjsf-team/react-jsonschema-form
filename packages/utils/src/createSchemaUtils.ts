@@ -63,7 +63,7 @@ class SchemaUtils<
     experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior,
     experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
   ) {
-    if (rootSchema && rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
+    if (rootSchema?.[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
       this.rootSchema = makeAllReferencesAbsolute(rootSchema, get(rootSchema, ID_KEY, '#'));
     } else {
       this.rootSchema = rootSchema;
@@ -364,7 +364,9 @@ class SchemaUtils<
    * @param [formData] - The current formData, if any, onto which to provide any missing defaults
    * @returns - The `PathSchema` object for the `schema`
    */
+  // oxlint-disable-next-line typescript/no-deprecated
   toPathSchema(schema: S, name?: string, formData?: T): PathSchema<T> {
+    // oxlint-disable-next-line typescript/no-deprecated
     return toPathSchema<T, S, F>(
       this.validator,
       schema,

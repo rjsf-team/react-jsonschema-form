@@ -90,7 +90,7 @@ export default function WrapIfAdditionalTemplate<
       <Grid size={5.5} {...wrapKeyGridItem}>
         <TextField
           key={label}
-          fullWidth={true}
+          fullWidth
           required={required}
           label={displayLabel ? keyLabel : undefined}
           defaultValue={label}

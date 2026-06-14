@@ -25,14 +25,14 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
 
-  const _onChange = ({ target: { value: enumValue } }: ChangeEvent<HTMLInputElement>) =>
+  const handleChange = ({ target: { value: enumValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(enumOptionValueDecoder<S>(enumValue, enumOptions, optionValueFormat, emptyValue));
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue));
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
+    onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
+    onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
 
-  const inline = Boolean(options && options.inline);
+  const inline = Boolean(options?.inline);
 
   return (
     <Form.Group className='mb-0'>
@@ -46,16 +46,16 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
               inline={inline}
               label={option.label}
               id={optionId(id, index)}
-              key={index}
+              key={String(option.value)}
               name={htmlName || id}
               type='radio'
               disabled={disabled || itemDisabled || readonly}
               checked={checked}
               required={required}
               value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
-              onChange={_onChange}
-              onBlur={_onBlur}
-              onFocus={_onFocus}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              onFocus={handleFocus}
               aria-describedby={ariaDescribedByIds(id)}
             />
           );

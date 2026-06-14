@@ -30,6 +30,7 @@ export default function SchemaExamples<S extends StrictRJSFSchema = RJSFSchema>(
             : [],
         )
         .map((example: any) => (
+          // oxlint-disable-next-line jsx-a11y/control-has-associated-label
           <option key={String(example)} value={example} />
         ))}
     </datalist>

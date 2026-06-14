@@ -527,8 +527,11 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   id="radix-:rg:"
                                   style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                                 />
-                                <div
+                                <button
+                                  aria-expanded="false"
+                                  aria-haspopup="listbox"
                                   class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 border-red-500"
+                                  type="button"
                                 >
                                   <span
                                     class="flex-1 line-clamp-1 text-muted-foreground"
@@ -550,7 +553,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       d="m6 9 6 6 6-6"
                                     />
                                   </svg>
-                                </div>
+                                </button>
                                 <div
                                   class="relative"
                                 />
@@ -880,8 +883,11 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="radix-:rm:"
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
-                      <div
+                      <button
+                        aria-expanded="false"
+                        aria-haspopup="listbox"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 border-red-500"
+                        type="button"
                       >
                         <span
                           class="flex-1 line-clamp-1 text-muted-foreground"
@@ -903,7 +909,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             d="m6 9 6 6 6-6"
                           />
                         </svg>
-                      </div>
+                      </button>
                       <div
                         class="relative"
                       />
@@ -1456,8 +1462,11 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   id="radix-:rp:"
                                   style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                                 />
-                                <div
+                                <button
+                                  aria-expanded="false"
+                                  aria-haspopup="listbox"
                                   class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 border-red-500"
+                                  type="button"
                                 >
                                   <span
                                     class="flex-1 line-clamp-1 text-muted-foreground"
@@ -1479,7 +1488,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       d="m6 9 6 6 6-6"
                                     />
                                   </svg>
-                                </div>
+                                </button>
                                 <div
                                   class="relative"
                                 />
@@ -1841,8 +1850,11 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="radix-:rv:"
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
-                      <div
+                      <button
+                        aria-expanded="false"
+                        aria-haspopup="listbox"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 border-red-500"
+                        type="button"
                       >
                         <span
                           class="flex-1 line-clamp-1 text-muted-foreground"
@@ -1864,7 +1876,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             d="m6 9 6 6 6-6"
                           />
                         </svg>
-                      </div>
+                      </button>
                       <div
                         class="relative"
                       />
@@ -2417,8 +2429,11 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   id="radix-:r12:"
                                   style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                                 />
-                                <div
+                                <button
+                                  aria-expanded="false"
+                                  aria-haspopup="listbox"
                                   class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 border-red-500"
+                                  type="button"
                                 >
                                   <span
                                     class="flex-1 line-clamp-1 text-muted-foreground"
@@ -2440,7 +2455,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       d="m6 9 6 6 6-6"
                                     />
                                   </svg>
-                                </div>
+                                </button>
                                 <div
                                   class="relative"
                                 />
@@ -3216,8 +3231,11 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   id="radix-:r7:"
                                   style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                                 />
-                                <div
+                                <button
+                                  aria-expanded="false"
+                                  aria-haspopup="listbox"
                                   class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 border-red-500"
+                                  type="button"
                                 >
                                   <span
                                     class="flex-1 line-clamp-1 text-muted-foreground"
@@ -3239,7 +3257,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       d="m6 9 6 6 6-6"
                                     />
                                   </svg>
-                                </div>
+                                </button>
                                 <div
                                   class="relative"
                                 />
@@ -3569,8 +3587,11 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="radix-:rd:"
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
-                      <div
+                      <button
+                        aria-expanded="false"
+                        aria-haspopup="listbox"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 border-red-500"
+                        type="button"
                       >
                         <span
                           class="flex-1 line-clamp-1 text-muted-foreground"
@@ -3592,7 +3613,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             d="m6 9 6 6 6-6"
                           />
                         </svg>
-                      </div>
+                      </button>
                       <div
                         class="relative"
                       />
@@ -4115,8 +4136,11 @@ exports[`Three even column grid > renders person and address in three columns, n
                       id="radix-:r4:"
                       style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                     />
-                    <div
+                    <button
+                      aria-expanded="false"
+                      aria-haspopup="listbox"
                       class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 border-red-500"
+                      type="button"
                     >
                       <span
                         class="flex-1 line-clamp-1 text-muted-foreground"
@@ -4138,7 +4162,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                           d="m6 9 6 6 6-6"
                         />
                       </svg>
-                    </div>
+                    </button>
                     <div
                       class="relative"
                     />
@@ -4663,8 +4687,11 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       id="radix-:r1:"
                       style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                     />
-                    <div
+                    <button
+                      aria-expanded="false"
+                      aria-haspopup="listbox"
                       class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 border-red-500"
+                      type="button"
                     >
                       <span
                         class="flex-1 line-clamp-1 text-muted-foreground"
@@ -4686,7 +4713,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                           d="m6 9 6 6 6-6"
                         />
                       </svg>
-                    </div>
+                    </button>
                     <div
                       class="relative"
                     />

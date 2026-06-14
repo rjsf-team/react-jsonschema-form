@@ -14,7 +14,7 @@ describe('ArrayFieldTemplate', () => {
       const { classNames } = getUiOptions(props.uiSchema);
       return (
         <div className={classNames}>
-          {props.canAdd && <button className='custom-array-add' />}
+          {props.canAdd && <button type='button' aria-label='Add item' className='custom-array-add' />}
           {props.items}
         </div>
       );
@@ -22,8 +22,12 @@ describe('ArrayFieldTemplate', () => {
     function ArrayFieldItemTemplate(props: ArrayFieldItemTemplateProps) {
       return (
         <div className='custom-array-item'>
-          {props.buttonsProps.hasMoveUp && <button className='custom-array-item-move-up' />}
-          {props.buttonsProps.hasMoveDown && <button className='custom-array-item-move-down' />}
+          {props.buttonsProps.hasMoveUp && (
+            <button type='button' aria-label='Move up' className='custom-array-item-move-up' />
+          )}
+          {props.buttonsProps.hasMoveDown && (
+            <button type='button' aria-label='Move down' className='custom-array-item-move-down' />
+          )}
 
           {props.children}
         </div>
@@ -292,11 +296,12 @@ describe('ArrayFieldTemplate', () => {
         return (
           <div>
             {items.map((_, i) => (
+              // oxlint-disable-next-line react/no-array-index-key
               <span key={i} className='test-data'>
                 {formData[i]}
               </span>
             ))}
-            <button className='rjsf-array-item-add' onClick={onAddClick} />
+            <button type='button' aria-label='Add item' className='rjsf-array-item-add' onClick={onAddClick} />
           </div>
         );
       };

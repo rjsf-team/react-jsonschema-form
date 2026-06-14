@@ -232,8 +232,8 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     rootSchema = {} as S,
     includeUndefinedValues = false,
     _recurseList = [],
-    experimental_defaultFormStateBehavior = undefined,
-    experimental_customMergeAllOf = undefined,
+    experimental_defaultFormStateBehavior,
+    experimental_customMergeAllOf,
     required,
     shouldMergeDefaultsIntoFormData = false,
     initialDefaultsGenerated,
@@ -494,8 +494,8 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
     rootSchema = {} as S,
     includeUndefinedValues = false,
     _recurseList = [],
-    experimental_defaultFormStateBehavior = undefined,
-    experimental_customMergeAllOf = undefined,
+    experimental_defaultFormStateBehavior,
+    experimental_customMergeAllOf,
     required,
     shouldMergeDefaultsIntoFormData,
     initialDefaultsGenerated,
@@ -622,8 +622,8 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
     rawFormData,
     rootSchema = {} as S,
     _recurseList = [],
-    experimental_defaultFormStateBehavior = undefined,
-    experimental_customMergeAllOf = undefined,
+    experimental_defaultFormStateBehavior,
+    experimental_customMergeAllOf,
     required,
     requiredAsRoot = false,
     shouldMergeDefaultsIntoFormData,
@@ -750,8 +750,8 @@ export function getDefaultBasedOnSchemaType<
   validator: ValidatorType<T, S, F>,
   rawSchema: S,
   computeDefaultsProps: ComputeDefaultsProps<T, S> = {},
-  defaults?: T | T[] | undefined,
-): T | T[] | void {
+  defaults?: T | T[],
+): T | T[] | undefined {
   switch (getSchemaType<S>(rawSchema)) {
     // We need to recurse for object schema inner default values.
     case 'object': {

@@ -812,7 +812,6 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
             class="form-control"
             id="root_color"
             name="root[color]"
-            role="combobox"
           >
             <option
               value=""
@@ -1616,7 +1615,6 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
             class="form-control"
             id="root_color"
             name="root.color"
-            role="combobox"
           >
             <option
               value=""
@@ -1722,6 +1720,80 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
               </span>
             </label>
           </div>
+        </div>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields > Cyclic schema 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="form-group rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <legend
+          id="root__title"
+        >
+          A registration form
+        </legend>
+        <div
+          class="field-description"
+          id="root__description"
+        >
+          A simple form example.
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-object"
+        >
+          <fieldset
+            id="root_child"
+          >
+            <legend
+              id="root_child__title"
+            >
+              A registration form
+            </legend>
+            <div
+              class="field-description"
+              id="root_child__description"
+            >
+              A simple form example.
+            </div>
+            <div
+              style="margin-top: 1rem;"
+            >
+              <div
+                class="text-danger"
+              >
+                Circular reference ($ref cycle) detected for field "child". You may choose to expand to the next cycle break
+              </div>
+              <div>
+                <button
+                  class="btn btn-sm btn-warning"
+                  id="root_child_child-button"
+                  type="button"
+                >
+                  Expand Cycle
+                </button>
+                 
+              </div>
+            </div>
+          </fieldset>
         </div>
       </fieldset>
     </div>
@@ -3148,7 +3220,6 @@ exports[`single fields > optional data controls > does not show optional control
                 class="form-control"
                 id="root_optionalObjectWithOneofs__oneof_select"
                 name="root_optionalObjectWithOneofs__oneof_select"
-                role="combobox"
               >
                 <option
                   value="0"
@@ -3223,7 +3294,6 @@ exports[`single fields > optional data controls > does not show optional control
                 class="form-control"
                 id="root_optionalArrayWithAnyofs__anyof_select"
                 name="root_optionalArrayWithAnyofs__anyof_select"
-                role="combobox"
               >
                 <option
                   value="0"
@@ -3666,7 +3736,6 @@ exports[`single fields > optional data controls > does not show optional control
                 disabled=""
                 id="root_optionalObjectWithOneofs__oneof_select"
                 name="root_optionalObjectWithOneofs__oneof_select"
-                role="combobox"
               >
                 <option
                   value="0"
@@ -3742,7 +3811,6 @@ exports[`single fields > optional data controls > does not show optional control
                 disabled=""
                 id="root_optionalArrayWithAnyofs__anyof_select"
                 name="root_optionalArrayWithAnyofs__anyof_select"
-                role="combobox"
               >
                 <option
                   value="0"
@@ -5536,7 +5604,6 @@ exports[`single fields > select field 1`] = `
         class="form-control"
         id="root"
         name="root"
-        role="combobox"
       >
         <option
           value=""
@@ -5579,7 +5646,6 @@ exports[`single fields > select field multiple choice 1`] = `
         id="root"
         multiple=""
         name="root"
-        role="combobox"
       >
         <option
           value="0"
@@ -5629,7 +5695,6 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
         id="root"
         multiple=""
         name="root"
-        role="combobox"
       >
         <option
           value="0"
@@ -5779,7 +5844,6 @@ exports[`single fields > select field multiple choice formData 1`] = `
         id="root"
         multiple=""
         name="root"
-        role="combobox"
       >
         <option
           value="0"
@@ -5829,7 +5893,6 @@ exports[`single fields > select field multiple choice with labels 1`] = `
         id="root"
         multiple=""
         name="root"
-        role="combobox"
       >
         <option
           value="0"
@@ -5873,7 +5936,6 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
         class="form-control"
         id="root"
         name="root"
-        role="combobox"
       >
         <option
           value=""
@@ -6046,7 +6108,6 @@ exports[`single fields > select field single choice formData 1`] = `
         class="form-control"
         id="root"
         name="root"
-        role="combobox"
       >
         <option
           value=""
@@ -6165,7 +6226,6 @@ exports[`single fields > select widget with description in schema and FieldTempl
         class="form-control"
         id="root"
         name="root"
-        role="combobox"
       >
         <option
           value=""

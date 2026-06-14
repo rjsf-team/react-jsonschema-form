@@ -18,13 +18,76 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.7.0
 
+## @rjsf/antd
+
+- Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+
+## @rjsf/chakra-ui
+
+- Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+
+## @rjsf/core
+
+- Fixed [#3907](https://github.com/rjsf-team/react-jsonschema-form/issues/3907) and [#4262](https://github.com/rjsf-team/react-jsonschema-form/issues/4262) as follows:
+  - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+  - Added `CyclicSchemaField` to the list of fields, that renders the `CyclicSchemaExpandTemplate` initially and, if expanded, will render the `SchemaField` with the `RJSF_REF_CYCLE_KEY` tag turned off
+  - Updated `SchemaForm` to render the `CyclicSchemaField` when the schema contains the `RJSF_REF_CYCLE_KEY` set to `true`
+- Fixed array fields with empty tuple `items` and schema-valued `additionalItems` so clicking add renders the additional item field, fixing [#3791](https://github.com/rjsf-team/react-jsonschema-form/issues/3791)
+- Added a warning when a `select` widget schema default is not present in the enum options, fixing [#4494](https://github.com/rjsf-team/react-jsonschema-form/issues/4494)
+- Fixed `SchemaField` so that a schema with a primitive or array `type` alongside a non-select `oneOf`/`anyOf` no longer renders a spurious duplicate input above the option selector, fixing [#5119](https://github.com/rjsf-team/react-jsonschema-form/issues/5119)
+- Fixed `MultiSchemaField` to propagate the parent schema's `type` to option sub-schemas that don't define their own, so the correct widget (e.g. `StringField`) renders for the selected option instead of `FallbackField`, fixing [#5119](https://github.com/rjsf-team/react-jsonschema-form/issues/5119)
+
+
+## @rjsf/daisyui
+
+- Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+
+## @rjsf/fluentui-rc
+
+- Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+
+## @rjsf/mantine
+
+- Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+
+## @rjsf/mui
+
+- Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+
+## @rjsf/primereact
+
+- Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+
+## @rjsf/react-bootstrap
+
+- Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+
+## @rjsf/semantic-ui
+
+- Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+
+## @rjsf/shadcn
+
+- Updated the single select trigger to use native button semantics with expanded and disabled state coverage, fixing [#4764](https://github.com/rjsf-team/react-jsonschema-form/issues/4764) ([#5117](https://github.com/rjsf-team/react-jsonschema-form/pull/5117))
+- Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+
 ## @rjsf/utils
 
+- Updated `types.ts` to add `CyclicSchemaExpandProps` type and `CyclicSchemaExpandTemplate` in the `TemplatesType`
+- Updated `resolveAllReferences()` to add a new `markCycleOnDetection` prop which adds `RJSF_REF_CYCLE_KEY` marker (from `constants.ts`) to a schema that has been detected to have a cycle, partially fixing [#3907](https://github.com/rjsf-team/react-jsonschema-form/issues/3907)
+- Updated `hashForSchema()` to filter keys to remove `RJSF_REF_KEY` prefixed keys before hashing the schema
+- Updated `enums.ts` to add `ExpandButton` and `CycleDetected` keys
+- Updated `isFixedItems()` to treat empty tuple `items` arrays as fixed items so `additionalItems` schemas are handled consistently, fixing [#3791](https://github.com/rjsf-team/react-jsonschema-form/issues/3791)
+- Added `logUnsupportedDefaultForEnum()` helper for theme select widgets to warn when a schema default is not present in the enum options, fixing [#4494](https://github.com/rjsf-team/react-jsonschema-form/issues/4494)
+- Fixed `retrieveSchema()` to preserve boolean conditional branches while resolving schemas, fixing [#4476](https://github.com/rjsf-team/react-jsonschema-form/issues/4476) ([#5101](https://github.com/rjsf-team/react-jsonschema-form/pull/5101))
 - Updated `Experimental_DefaultFormStateBehavior` to add a new `nestedDefaultsPrecedence` option
 - Updated `getDefaultFormState()` to use the new `nestedDefaultsPrecedence` option to control how defaults defined on multiple levels are merged together, fixing [#5089](https://github.com/rjsf-team/react-jsonschema-form/issues/5089)
 
 ## Dev / docs / playground
 
+- Updated `@rjsf/snapshots` to add a test case to `formTests` that verifies the new Cycle detection UI
+- Updated the `custom-templates.md` and `custom-widgets-fields.md` for the new feature
+- Updated `utility-functions.md` to document `logUnsupportedDefaultForEnum()`
 - Updated the playground to add a selector for the `nestedDefaultsPrecedence` option
 
 # 6.6.2
@@ -37,6 +100,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `MultiSchemaField` by skipping next option recalculation when a user selects an option, fixing [#3833](https://github.com/rjsf-team/react-jsonschema-form/issues/3833)
 - Updated `Form`'s `validate()` function to pass the original schema to AJV when no pre-resolved schema is provided, fixing [#3368](https://github.com/rjsf-team/react-jsonschema-form/issues/3368)
 - Improved performance of `IconButtons` in all themes, `ArrayField` components and `ObjectField` components using memoization, partially fixing [#3183](https://github.com/rjsf-team/react-jsonschema-form/issues/3183)
+- Fixed `ObjectField` so renaming an `additionalProperties` key to an empty string is no longer silently dropped, using `Object.hasOwn` instead of a falsy check ([#5098](https://github.com/rjsf-team/react-jsonschema-form/pull/5098))
 
 ## @rjsf/utils
 

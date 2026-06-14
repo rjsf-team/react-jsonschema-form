@@ -75,6 +75,7 @@ The default fields you can override are:
 - `TitleField`
 - `UnsupportedField`
 - `FallbackField`
+- `CyclicSchemaField`
 
 The default widgets you can override are:
 

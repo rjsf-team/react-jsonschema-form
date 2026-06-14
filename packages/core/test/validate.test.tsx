@@ -12,6 +12,30 @@ const user = userEvent.setup();
 describe('Validation', () => {
   describe('Form integration, v8 validator', () => {
     describe('JSONSchema validation', () => {
+      it('should block submit when a matched if/then branch resolves to false', async () => {
+        const schema: RJSFSchema = {
+          type: 'number',
+          if: {
+            const: 13,
+          },
+          then: false,
+        };
+
+        const { node, onError, onSubmit } = createFormComponent({
+          schema,
+          formData: 13,
+        });
+
+        await submitForm(node, user, true);
+
+        expect(onSubmit).not.toHaveBeenCalled();
+        expect(onError).toHaveBeenCalledOnce();
+        expect(Array.from(node.querySelectorAll('.errors li')).map((error) => error.textContent)).toEqual([
+          'boolean schema is false',
+          'must match "then" schema',
+        ]);
+      });
+
       describe('Required fields', () => {
         const schema: RJSFSchema = {
           type: 'object',
@@ -404,9 +428,9 @@ describe('Validation', () => {
       }: ErrorListProps) => (
         <div>
           <div className='CustomErrorList'>{errors.length} custom</div>
-          <div className={'ErrorSchema'}>{errorSchema.__errors?.[0]}</div>
-          <div className={'Schema'}>{schema.type}</div>
-          <div className={'UiSchema'}>{uiSchema?.foo}</div>
+          <div className='ErrorSchema'>{errorSchema.__errors?.[0]}</div>
+          <div className='Schema'>{schema.type}</div>
+          <div className='UiSchema'>{uiSchema?.foo}</div>
           <div className={className} />
         </div>
       );

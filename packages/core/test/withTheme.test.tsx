@@ -241,7 +241,11 @@ describe('withTheme', () => {
       const themeTemplates = {
         ButtonTemplates: {
           SubmitButton() {
-            return <button className='with-theme-button-template'>ThemeSubmit</button>;
+            return (
+              <button type='button' className='with-theme-button-template'>
+                ThemeSubmit
+              </button>
+            );
           },
         },
       };
@@ -269,14 +273,22 @@ describe('withTheme', () => {
       const themeTemplates = {
         ButtonTemplates: {
           SubmitButton() {
-            return <button className='with-theme-button-template'>ThemeSubmit</button>;
+            return (
+              <button type='button' className='with-theme-button-template'>
+                ThemeSubmit
+              </button>
+            );
           },
         },
       };
       const userTemplates = {
         ButtonTemplates: {
           SubmitButton() {
-            return <button className='user-button-template'>UserSubmit</button>;
+            return (
+              <button type='button' className='user-button-template'>
+                UserSubmit
+              </button>
+            );
           },
         },
       };

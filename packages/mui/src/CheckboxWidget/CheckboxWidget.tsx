@@ -35,7 +35,7 @@ export default function CheckboxWidget<
     value,
     disabled,
     readonly,
-    label = '',
+    label,
     hideLabel,
     autofocus,
     onChange,
@@ -55,9 +55,9 @@ export default function CheckboxWidget<
   // "const" or "enum" keywords
   const required = schemaRequiresTrueValue<S>(schema);
 
-  const _onChange = (_: any, checked: boolean) => onChange(checked);
-  const _onBlur: React.FocusEventHandler<HTMLButtonElement> = () => onBlur(id, value);
-  const _onFocus: React.FocusEventHandler<HTMLButtonElement> = () => onFocus(id, value);
+  const handleChange = (_: any, checked: boolean) => onChange(checked);
+  const handleBlur: React.FocusEventHandler<HTMLButtonElement> = () => onBlur(id, value);
+  const handleFocus: React.FocusEventHandler<HTMLButtonElement> = () => onFocus(id, value);
   const description = options.description ?? schema.description;
 
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, CheckboxWidgetMuiProps>(options);
@@ -84,9 +84,9 @@ export default function CheckboxWidget<
             required={required}
             disabled={disabled || readonly}
             autoFocus={autofocus}
-            onChange={_onChange}
-            onBlur={_onBlur}
-            onFocus={_onFocus}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            onFocus={handleFocus}
             aria-describedby={ariaDescribedByIds(id)}
             {...muiSlotProps?.checkbox}
           />

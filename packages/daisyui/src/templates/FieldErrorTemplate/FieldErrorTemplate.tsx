@@ -16,7 +16,10 @@ export default function FieldErrorTemplate<
   const { errors } = props;
   return (
     <div className='rjsf-field-error-template text-red-600'>
-      <ul className='list-disc list-inside'>{errors?.map((error, index) => <li key={index}>{error}</li>) ?? []}</ul>
+      <ul className='list-disc list-inside'>
+        {/* oxlint-disable-next-line react/no-array-index-key */}
+        {errors?.map((error, index) => <li key={index}>{error}</li>) ?? []}
+      </ul>
     </div>
   );
 }

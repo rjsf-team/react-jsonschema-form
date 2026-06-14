@@ -90,14 +90,14 @@ export default function BaseInputTemplate<
     accept,
     ...(schema.examples ? { list: examplesId(id) } : undefined),
   };
-  const _onChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
+  const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value);
   const DisplayInputLabelProps = TYPES_THAT_SHRINK_LABEL.includes(type)
     ? { ...slotProps?.inputLabel, ...muiSlotProps?.inputLabel, ...InputLabelProps, shrink: true }
     : { ...slotProps?.inputLabel, ...muiSlotProps?.inputLabel, ...InputLabelProps };
-  const _onClear = useCallback(
+  const handleClear = useCallback(
     (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
@@ -109,7 +109,7 @@ export default function BaseInputTemplate<
   if (options.allowClearTextInputs && value && !readonly && !disabled) {
     const clearAdornment = (
       <InputAdornment position='end'>
-        <ClearButton registry={registry} onClick={_onClear} />
+        <ClearButton registry={registry} onClick={handleClear} />
       </InputAdornment>
     );
     inputProps.endAdornment = !inputProps.endAdornment ? (
@@ -142,9 +142,9 @@ export default function BaseInputTemplate<
         {...rest}
         value={value || value === 0 ? value : ''}
         error={rawErrors.length > 0}
-        onChange={onChangeOverride || _onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
+        onChange={onChangeOverride || handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         {...({ ...otherMuiProps, ...textFieldProps } as TextFieldProps)}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />

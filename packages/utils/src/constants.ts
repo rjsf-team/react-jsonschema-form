@@ -1,9 +1,10 @@
 /** Below are the list of all the keys into various elements of a RJSFSchema or UiSchema that are used by the various
- * utility functions. In addition to those keys, there are the special `ADDITIONAL_PROPERTY_FLAG` and
- * `RJSF_ADDITIONAL_PROPERTIES_FLAG` flags that is added to a schema under certain conditions by the `retrieveSchema()`
- * utility.
+ * utility functions. In addition to those keys, there are the special `ADDITIONAL_PROPERTY_FLAG`,
+ * `RJSF_REF_KEY`, and `RJSF_REF_CYCLE_KEY` Symbols that are added to a schema under certain conditions by the
+ * `retrieveSchema()` utility. Using Symbols keeps these internal markers invisible to JSON serialisation and
+ * JSON Schema validators (AJV, ATA, etc.), which only enumerate string-keyed properties.
  */
-export const ADDITIONAL_PROPERTY_FLAG = '__additional_property';
+export const ADDITIONAL_PROPERTY_FLAG = Symbol('__additional_property');
 export const ADDITIONAL_PROPERTIES_KEY = 'additionalProperties';
 export const ALL_OF_KEY = 'allOf';
 export const ANY_OF_KEY = 'anyOf';
@@ -25,7 +26,8 @@ export const READONLY_KEY = 'readonly';
 export const REQUIRED_KEY = 'required';
 export const SUBMIT_BTN_OPTIONS_KEY = 'submitButtonOptions';
 export const REF_KEY = '$ref';
-export const RJSF_REF_KEY = '__rjsf_ref';
+export const RJSF_REF_KEY = Symbol('__rjsf_ref');
+export const RJSF_REF_CYCLE_KEY = Symbol('__rjsf_ref_cycle');
 export const SCHEMA_KEY = '$schema';
 export const DEFAULT_ID_PREFIX = 'root';
 export const DEFAULT_ID_SEPARATOR = '_';
@@ -40,8 +42,9 @@ export const FORM_CONTEXT_NAME = 'formContext';
 /** The name of the `layoutGridLookupMap` attribute in the form context
  */
 export const LOOKUP_MAP_NAME = 'layoutGridLookupMap';
-export const RJSF_ADDITIONAL_PROPERTIES_FLAG = '__rjsf_additionalProperties';
-export const ROOT_SCHEMA_PREFIX = '__rjsf_rootSchema';
+export const RJSF_PREFIX_KEY = '__rjsf';
+export const RJSF_ADDITIONAL_PROPERTIES_FLAG = `${RJSF_PREFIX_KEY}_additionalProperties`;
+export const ROOT_SCHEMA_PREFIX = `${RJSF_PREFIX_KEY}_rootSchema`;
 export const UI_FIELD_KEY = 'ui:field';
 export const UI_WIDGET_KEY = 'ui:widget';
 export const UI_OPTIONS_KEY = 'ui:options';

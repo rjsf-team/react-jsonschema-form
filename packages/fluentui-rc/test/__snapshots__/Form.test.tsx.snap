@@ -41,7 +41,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                   />
                 </div>
                 <div
-                  class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                  class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                 >
                   <div
                     class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
@@ -522,7 +522,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                   />
                 </div>
                 <div
-                  class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                  class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                 >
                   <div
                     class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
@@ -1298,8 +1298,8 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-r9n__control"
-                    id="field-r9n__label"
+                    for="field-r9r__control"
+                    id="field-r9r__label"
                   >
                     color
                   </label>
@@ -1309,7 +1309,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                     <button
                       aria-describedby="root_color__error root_color__description root_color__help"
                       aria-expanded="false"
-                      aria-labelledby="field-r9n__label"
+                      aria-labelledby="field-r9r__label"
                       class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                       id="root_color"
                       name="root[color]"
@@ -1612,7 +1612,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                   />
                 </div>
                 <div
-                  class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                  class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                 >
                   <div
                     class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
@@ -2093,7 +2093,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                   />
                 </div>
                 <div
-                  class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                  class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                 >
                   <div
                     class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
@@ -2651,8 +2651,8 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-rb7__control"
-                    id="field-rb7__label"
+                    for="field-rbb__control"
+                    id="field-rbb__label"
                   >
                     color
                   </label>
@@ -2662,7 +2662,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                     <button
                       aria-describedby="root_color__error root_color__description root_color__help"
                       aria-expanded="false"
-                      aria-labelledby="field-rb7__label"
+                      aria-labelledby="field-rbb__label"
                       class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                       id="root_color"
                       name="root.color"
@@ -2842,6 +2842,124 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                     active
                   </label>
                 </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="___fko12g0_0000000 f1wswflg"
+    >
+      <button
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields > Cyclic schema 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+      >
+        <div
+          class="___12hmf4e_0000000 f2zxqi febqm8h"
+          id="root__title"
+        >
+          <h5
+            class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+            style="margin-block: 0px;"
+          >
+            A registration form
+          </h5>
+          <div
+            aria-orientation="horizontal"
+            class="fui-Divider ___14drqcq_z8b5q40 f122n59 f1ewtqcl f22iagw f1063pyq fqerorx f10pi13n fk6fouc fy9rknc figsok6 fwrc4pm f17mccla fyl8oag f16vkdww fhsnbul f1gw3sf2 f1ly5f7u f1s3tz6t f1wl9k8s f13zj6fq fkfq4zb f1vccso1 f1geml7w f1r7kh1m fjml6kk f16j7guv fx01ahm fl8d8yv fj1a37q fly5x3f f163fonl f51yk4v f13rof3u f8rth92 f6czdpx f1iyka9k fzynn9s fekrn8e f1kyqvp9 fesgyo"
+            role="separator"
+          />
+        </div>
+        <span
+          class="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
+          id="root__description"
+        >
+          A simple form example.
+        </span>
+        <div
+          class="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
+        >
+          <div
+            class="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="rjsf-field rjsf-field-object"
+            >
+              <div
+                class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+              >
+                <div
+                  class="___12hmf4e_0000000 f2zxqi febqm8h"
+                  id="root_child__title"
+                >
+                  <h5
+                    class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+                    style="margin-block: 0px;"
+                  >
+                    A registration form
+                  </h5>
+                  <div
+                    aria-orientation="horizontal"
+                    class="fui-Divider ___14drqcq_z8b5q40 f122n59 f1ewtqcl f22iagw f1063pyq fqerorx f10pi13n fk6fouc fy9rknc figsok6 fwrc4pm f17mccla fyl8oag f16vkdww fhsnbul f1gw3sf2 f1ly5f7u f1s3tz6t f1wl9k8s f13zj6fq fkfq4zb f1vccso1 f1geml7w f1r7kh1m fjml6kk f16j7guv fx01ahm fl8d8yv fj1a37q fly5x3f f163fonl f51yk4v f13rof3u f8rth92 f6czdpx f1iyka9k fzynn9s fekrn8e f1kyqvp9 fesgyo"
+                    role="separator"
+                  />
+                </div>
+                <span
+                  class="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
+                  id="root_child__description"
+                >
+                  A simple form example.
+                </span>
+                <div
+                  class="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
+                >
+                  <div
+                    class="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
+                    style="margin-bottom: 10px;"
+                  >
+                    <div
+                      class="fui-Card rfxo2k2 ___1pz5ta0_ancy340 f1vx9l62 f14k419y f1fgo9fz fvqmfsm f3am6yf f1r5wgso frsmuga fuldkky f13ftzij f1couhl3 f1tdmpj4 f1592yz1 f1u3wmb9 f1p4sqcs ftqa4ok f2hkw1w f8hki3x f1d2448m f1bjia2o ffh67wi f1j6vpng f1pniga2 f987i1v f1ffjurs f15bsgw9 f14e48fq f18yb2kv fd6o370 fpqizxz fnd8nzh f15fr7a0 fwsq40z f34ld9f fy0y4wt f1wswflg"
+                      role="group"
+                    >
+                      <span
+                        class="fui-Text ___c56hd20_1xy0w11 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+                      >
+                        Circular reference ($ref cycle) detected for field "child". You may choose to expand to the next cycle break
+                      </span>
+                      <div
+                        class="___1w5ctnz_0000000 frnwi6n"
+                      >
+                        <button
+                          class="fui-Button r1f29ykk"
+                          id="root_child_child-button"
+                          type="button"
+                        >
+                          Expand Cycle
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -4494,7 +4612,7 @@ exports[`single fields > optional data controls > does not show optional control
                           />
                         </div>
                         <div
-                          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                         >
                           <div
                             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
@@ -4556,7 +4674,7 @@ exports[`single fields > optional data controls > does not show optional control
                           />
                         </div>
                         <div
-                          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                         >
                           <div
                             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
@@ -4618,7 +4736,7 @@ exports[`single fields > optional data controls > does not show optional control
                           />
                         </div>
                         <div
-                          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                         >
                           <div
                             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
@@ -4684,7 +4802,7 @@ exports[`single fields > optional data controls > does not show optional control
                   />
                 </div>
                 <div
-                  class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                  class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                 >
                   <div
                     class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
@@ -4811,7 +4929,7 @@ exports[`single fields > optional data controls > does not show optional control
                   />
                 </div>
                 <div
-                  class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                  class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                 >
                   <div
                     class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
@@ -4865,8 +4983,8 @@ exports[`single fields > optional data controls > does not show optional control
                     >
                       <label
                         class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                        for="field-r4a__control"
-                        id="field-r4a__label"
+                        for="field-r4e__control"
+                        id="field-r4e__label"
                       >
                         optionalObjectWithOneofs
                       </label>
@@ -4876,7 +4994,7 @@ exports[`single fields > optional data controls > does not show optional control
                         <button
                           aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
                           aria-expanded="false"
-                          aria-labelledby="field-r4a__label"
+                          aria-labelledby="field-r4e__label"
                           class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                           id="root_optionalObjectWithOneofs__oneof_select"
                           name="root_optionalObjectWithOneofs__oneof_select"
@@ -5012,8 +5130,8 @@ exports[`single fields > optional data controls > does not show optional control
                     >
                       <label
                         class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                        for="field-r4g__control"
-                        id="field-r4g__label"
+                        for="field-r4k__control"
+                        id="field-r4k__label"
                       >
                         optionalArrayWithAnyofs
                       </label>
@@ -5023,7 +5141,7 @@ exports[`single fields > optional data controls > does not show optional control
                         <button
                           aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
                           aria-expanded="false"
-                          aria-labelledby="field-r4g__label"
+                          aria-labelledby="field-r4k__label"
                           class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                           id="root_optionalArrayWithAnyofs__anyof_select"
                           name="root_optionalArrayWithAnyofs__anyof_select"
@@ -5098,7 +5216,7 @@ exports[`single fields > optional data controls > does not show optional control
                         />
                       </div>
                       <div
-                        class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                        class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                       >
                         <div
                           class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
@@ -5404,7 +5522,7 @@ exports[`single fields > optional data controls > does not show optional control
                           />
                         </div>
                         <div
-                          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                         >
                           <div
                             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
@@ -5467,7 +5585,7 @@ exports[`single fields > optional data controls > does not show optional control
                           />
                         </div>
                         <div
-                          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                         >
                           <div
                             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
@@ -5530,7 +5648,7 @@ exports[`single fields > optional data controls > does not show optional control
                           />
                         </div>
                         <div
-                          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                         >
                           <div
                             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
@@ -5597,7 +5715,7 @@ exports[`single fields > optional data controls > does not show optional control
                   />
                 </div>
                 <div
-                  class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                  class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                 >
                   <div
                     class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
@@ -5726,7 +5844,7 @@ exports[`single fields > optional data controls > does not show optional control
                   />
                 </div>
                 <div
-                  class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                  class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                 >
                   <div
                     class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
@@ -5781,8 +5899,8 @@ exports[`single fields > optional data controls > does not show optional control
                     >
                       <label
                         class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                        for="field-r6s__control"
-                        id="field-r6s__label"
+                        for="field-r70__control"
+                        id="field-r70__label"
                       >
                         optionalObjectWithOneofs
                       </label>
@@ -5792,7 +5910,7 @@ exports[`single fields > optional data controls > does not show optional control
                         <button
                           aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
                           aria-expanded="false"
-                          aria-labelledby="field-r6s__label"
+                          aria-labelledby="field-r70__label"
                           class="fui-Dropdown__button ___b67tb00_4t2umz0 f122n59 f1c21dwh f3bhgqh f1ewtqcl f1s2aq7o f14mj54c fdrzuqr f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                           disabled=""
                           id="root_optionalObjectWithOneofs__oneof_select"
@@ -5928,8 +6046,8 @@ exports[`single fields > optional data controls > does not show optional control
                     >
                       <label
                         class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                        for="field-r72__control"
-                        id="field-r72__label"
+                        for="field-r76__control"
+                        id="field-r76__label"
                       >
                         optionalArrayWithAnyofs
                       </label>
@@ -5939,7 +6057,7 @@ exports[`single fields > optional data controls > does not show optional control
                         <button
                           aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
                           aria-expanded="false"
-                          aria-labelledby="field-r72__label"
+                          aria-labelledby="field-r76__label"
                           class="fui-Dropdown__button ___b67tb00_4t2umz0 f122n59 f1c21dwh f3bhgqh f1ewtqcl f1s2aq7o f14mj54c fdrzuqr f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                           disabled=""
                           id="root_optionalArrayWithAnyofs__anyof_select"
@@ -6014,7 +6132,7 @@ exports[`single fields > optional data controls > does not show optional control
                         />
                       </div>
                       <div
-                        class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                        class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                       >
                         <div
                           class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
@@ -6361,7 +6479,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           />
                         </div>
                         <div
-                          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                         >
                           <div
                             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
@@ -6461,7 +6579,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           />
                         </div>
                         <div
-                          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                         />
                       </div>
                     </div>
@@ -6493,7 +6611,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           />
                         </div>
                         <div
-                          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                         >
                           <div
                             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
@@ -6597,7 +6715,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   />
                 </div>
                 <div
-                  class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                  class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                 >
                   <div
                     class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
@@ -6797,7 +6915,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   />
                 </div>
                 <div
-                  class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                  class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                 >
                   <div
                     class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
@@ -6990,7 +7108,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         />
                       </div>
                       <div
-                        class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                        class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                       />
                     </div>
                   </div>
@@ -7238,7 +7356,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           />
                         </div>
                         <div
-                          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                         >
                           <div
                             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
@@ -7301,7 +7419,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           />
                         </div>
                         <div
-                          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                         >
                           <em
                             id="root_nestedObjectOptional_deepArrayOptional2__optionalMsg"
@@ -7339,7 +7457,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           />
                         </div>
                         <div
-                          class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                         >
                           <div
                             class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
@@ -7406,7 +7524,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   />
                 </div>
                 <div
-                  class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                  class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                 >
                   <div
                     class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
@@ -7610,7 +7728,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   />
                 </div>
                 <div
-                  class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                  class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                 >
                   <div
                     class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
@@ -7734,7 +7852,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         />
                       </div>
                       <div
-                        class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                        class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                       >
                         <em
                           id="root_optionalArrayWithAnyofs__optionalMsg"
@@ -7930,7 +8048,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   />
                 </div>
                 <div
-                  class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                  class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                 />
               </div>
             </div>
@@ -8027,7 +8145,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   />
                 </div>
                 <div
-                  class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                  class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                 >
                   <div
                     class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
@@ -8220,7 +8338,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         />
                       </div>
                       <div
-                        class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                        class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                       />
                     </div>
                   </div>
@@ -8340,7 +8458,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   />
                 </div>
                 <div
-                  class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                  class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                 >
                   <em
                     id="root_nestedArrayOptional__optionalMsg"
@@ -8444,7 +8562,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   />
                 </div>
                 <div
-                  class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                  class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                 >
                   <div
                     class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
@@ -8568,7 +8686,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         />
                       </div>
                       <div
-                        class="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+                        class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
                       >
                         <em
                           id="root_optionalArrayWithAnyofs__optionalMsg"

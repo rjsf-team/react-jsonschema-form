@@ -6,6 +6,7 @@ import {
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
+  logUnsupportedDefaultForEnum,
 } from '@rjsf/utils';
 import { Dropdown } from 'primereact/dropdown';
 import { MultiSelect } from 'primereact/multiselect';
@@ -55,13 +56,14 @@ function SingleSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   const isMultiple = typeof multiple === 'undefined' ? false : multiple;
 
   const emptyValue = isMultiple ? [] : '';
+  logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
 
-  const _onChange = (e: { value: any }) =>
+  const handleChange = (e: { value: any }) =>
     onChange(enumOptionValueDecoder<S>(e.value, enumOptions, optionValueFormat, optEmptyVal));
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, optEmptyVal));
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, optEmptyVal));
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
+    onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, optEmptyVal));
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
+    onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, optEmptyVal));
   const { ...dropdownRemainingProps } = dropdownProps;
 
   return (
@@ -75,9 +77,9 @@ function SingleSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
         value: enumOptionValueEncoder(enumValue, i, optionValueFormat),
         disabled: Array.isArray(enumDisabled) && enumDisabled.includes(enumValue),
       }))}
-      onChange={_onChange}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      onFocus={handleFocus}
       placeholder={placeholder}
       disabled={disabled || readonly}
       autoFocus={autofocus}
@@ -107,12 +109,12 @@ function MultiSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
 
   const emptyValue = multiple ? [] : '';
 
-  const _onChange = (e: { value: any }) =>
+  const handleChange = (e: { value: any }) =>
     onChange(enumOptionValueDecoder<S>(e.value, enumOptions, optionValueFormat, optEmptyVal));
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, optEmptyVal));
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, optEmptyVal));
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
+    onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, optEmptyVal));
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
+    onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, optEmptyVal));
 
   return (
     <MultiSelect
@@ -125,9 +127,9 @@ function MultiSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
         value: enumOptionValueEncoder(enumValue, i, optionValueFormat),
         disabled: Array.isArray(enumDisabled) && enumDisabled.includes(enumValue),
       }))}
-      onChange={_onChange}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      onFocus={handleFocus}
       placeholder={placeholder}
       disabled={disabled || readonly}
       autoFocus={autofocus}

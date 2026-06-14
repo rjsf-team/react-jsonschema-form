@@ -21,10 +21,10 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   id,
   uiSchema,
 }: WidgetProps<T, S, F>) {
-  const _onChange = ({ value: newValue }: SliderValueChangeDetails) =>
+  const handleChange = ({ value: newValue }: SliderValueChangeDetails) =>
     onChange(newValue === undefined ? options.emptyValue : newValue[0]);
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value);
 
   const chakraProps = getChakra({ uiSchema });
 
@@ -36,9 +36,9 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         name={id}
         disabled={disabled || readonly}
         value={[value]}
-        onValueChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
+        onValueChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         aria-describedby={ariaDescribedByIds(id)}
       />
     </Field>

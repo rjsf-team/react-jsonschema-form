@@ -34,10 +34,10 @@ export default function AutoCompleteWidget<
   } = props;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   const primeProps = (options.prime || {}) as object;
-  const _onChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
+  const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
-  const _onBlur = () => onBlur && onBlur(id, value);
-  const _onFocus = () => onFocus && onFocus(id, value);
+  const handleBlur = () => onBlur?.(id, value);
+  const handleFocus = () => onFocus?.(id, value);
 
   const examples = (schema.examples as string[]).concat(
     schema.default && !(schema.examples as string[]).includes(schema.default.toString())
@@ -58,7 +58,7 @@ export default function AutoCompleteWidget<
       placeholder={placeholder}
       {...primeProps}
       {...inputProps}
-      loadingIcon={<></>}
+      loadingIcon={null}
       required={required}
       autoFocus={autofocus}
       disabled={disabled || readonly}
@@ -67,9 +67,9 @@ export default function AutoCompleteWidget<
       value={value || value === 0 ? value : ''}
       dropdown
       invalid={rawErrors.length > 0}
-      onChange={onChangeOverride || _onChange}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
+      onChange={onChangeOverride || handleChange}
+      onBlur={handleBlur}
+      onFocus={handleFocus}
       aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       /* Make autocomplete look like a dropdown, which looks much nicer */
       pt={{

@@ -69,8 +69,9 @@ export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSche
         <Typography variant='h6' {...errorTypography}>
           {translateString(TranslatableString.ErrorsLabel)}
         </Typography>
-        <List dense={true} {...errorList}>
+        <List dense {...errorList}>
           {errors.map((error, i: number) => (
+            // oxlint-disable-next-line react/no-array-index-key
             <ListItem key={i} {...errorListItem}>
               <ListItemIcon {...errorListItemIcon}>
                 <ErrorIcon color='error' />

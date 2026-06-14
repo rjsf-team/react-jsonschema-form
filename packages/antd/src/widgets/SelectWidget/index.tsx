@@ -6,6 +6,7 @@ import {
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
+  logUnsupportedDefaultForEnum,
 } from '@rjsf/utils';
 import type { SelectProps } from 'antd';
 import { Select } from 'antd';
@@ -74,6 +75,7 @@ export default function SelectWidget<
   };
 
   const showPlaceholderOption = !multiple && schema.default === undefined;
+  logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
   const selectOptions: DefaultOptionType[] | undefined = useMemo(() => {
     if (Array.isArray(enumOptions)) {
@@ -111,7 +113,7 @@ export default function SelectWidget<
       {...extraProps}
       // When the open change is called, set the open state, needed so that the select opens properly in the playground
       onOpenChange={setOpen}
-      filterOption={filterOption}
+      showSearch={{ filterOption }}
       aria-describedby={ariaDescribedByIds(id)}
       options={selectOptions}
     />

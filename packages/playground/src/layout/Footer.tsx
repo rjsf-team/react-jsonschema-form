@@ -8,7 +8,7 @@ export default function Footer() {
         {import.meta.env.VITE_SHOW_NETLIFY_BADGE === 'true' && (
           <div style={{ position: 'absolute', right: DRAWER_WIDTH, bottom: 0 }}>
             <a href='https://www.netlify.com'>
-              <img src='https://www.netlify.com/img/global/badges/netlify-color-accent.svg' />
+              <img src='https://www.netlify.com/img/global/badges/netlify-color-accent.svg' alt='Netlify' />
             </a>
           </div>
         )}

@@ -48,6 +48,7 @@ export function getUsedFormData<T = any>(formData: T | undefined, fields: string
  * @param [formData] - The form data to use while checking for empty objects/arrays
  * @deprecated - To be removed as an exported `@rjsf/utils` function in a future release
  */
+// oxlint-disable-next-line typescript/no-deprecated
 export function getFieldNames<T = any>(pathSchema: PathSchema<T>, formData?: T): string[][] {
   const formValueHasData = (value: T, isLeaf: boolean) =>
     typeof value !== 'object' || isEmpty(value) || (isLeaf && !isEmpty(value));
@@ -232,15 +233,14 @@ export default function omitExtraData<
       ]);
       const knownProperties = new Set(Object.keys(properties ?? {}));
       for (const [key, value] of Object.entries(source)) {
-        if (knownProperties.has(key)) {
-          continue;
+        if (!knownProperties.has(key)) {
+          const matched = patterns.find(([re]) => re.test(key));
+          if (matched === undefined) {
+            patternPropertiesRest.push(key);
+          } else {
+            setProperty(key, matched[1], value);
+          }
         }
-        const matched = patterns.find(([re]) => re.test(key));
-        if (matched === undefined) {
-          patternPropertiesRest.push(key);
-          continue;
-        }
-        setProperty(key, matched[1], value);
       }
     }
 
@@ -255,10 +255,9 @@ export default function omitExtraData<
       } else {
         const knownProperties = new Set(Object.keys(properties ?? {}));
         for (const [key, value] of Object.entries(source)) {
-          if (knownProperties.has(key)) {
-            continue;
+          if (!knownProperties.has(key)) {
+            setProperty(key, addlSchema, value);
           }
-          setProperty(key, addlSchema, value);
         }
       }
     }
@@ -288,18 +287,18 @@ export default function omitExtraData<
     const { items, additionalItems } = childSchema;
     if (items !== undefined) {
       if (Array.isArray(items)) {
-        for (let i = 0; i < items.length; i++) {
+        for (let i = 0; i < items.length; i += 1) {
           target.push(omit(items[i] as S | boolean, source[i]));
         }
       } else {
-        for (let i = 0; i < source.length; i++) {
+        for (let i = 0; i < source.length; i += 1) {
           target.push(omit(items as S | boolean, source[i]));
         }
       }
     }
     // additionalItems covers tuple items beyond the items array length.
     if (additionalItems) {
-      for (let i = target.length; i < source.length; i++) {
+      for (let i = target.length; i < source.length; i += 1) {
         target.push(omit(additionalItems as S | boolean, source[i]));
       }
     }
@@ -416,10 +415,9 @@ export default function omitExtraData<
     let result = target;
     for (const [key, deps] of Object.entries(dependencies)) {
       // Skip property dependencies (string arrays); only process schema dependencies.
-      if (!(key in source) || Array.isArray(deps)) {
-        continue;
+      if (key in source && !Array.isArray(deps)) {
+        result = omit(deps as S | boolean, source, result);
       }
-      result = omit(deps as S | boolean, source, result);
     }
     return result;
   }

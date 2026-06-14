@@ -15,6 +15,7 @@ import {
   enumOptionValueEncoder,
   getOptionValueFormat,
   labelValue,
+  logUnsupportedDefaultForEnum,
 } from '@rjsf/utils';
 import map from 'lodash/map';
 import type { DropdownProps, DropdownItemProps } from 'semantic-ui-react';
@@ -95,6 +96,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const emptyValue = multiple ? [] : '';
   const optionValueFormat = getOptionValueFormat(options);
   const showPlaceholderOption = !multiple && schema.default === undefined;
+  logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
   const dropdownOptions = createDefaultValueOptionsForDropDown<S>(
     enumOptions,
     enumDisabled,
@@ -102,12 +104,12 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     placeholder,
     optionValueFormat,
   );
-  const _onChange = (_: SyntheticEvent<HTMLElement>, { value: enumValue }: DropdownProps) =>
+  const handleChange = (_: SyntheticEvent<HTMLElement>, { value: enumValue }: DropdownProps) =>
     onChange(enumOptionValueDecoder<S>(enumValue as string[], enumOptions, optionValueFormat, optEmptyVal));
-  const _onBlur = (_: FocusEvent<HTMLElement>, { target }: DropdownProps) =>
-    onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, optEmptyVal));
-  const _onFocus = (_: FocusEvent<HTMLElement>, { target }: DropdownProps) =>
-    onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, optEmptyVal));
+  const handleBlur = (_: FocusEvent<HTMLElement>, { target }: DropdownProps) =>
+    onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, optEmptyVal));
+  const handleFocus = (_: FocusEvent<HTMLElement>, { target }: DropdownProps) =>
+    onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, optEmptyVal));
   return (
     <Form.Dropdown
       key={id}
@@ -124,9 +126,9 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       autoFocus={autofocus}
       readOnly={readonly}
       options={dropdownOptions}
-      onChange={_onChange}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      onFocus={handleFocus}
       aria-describedby={ariaDescribedByIds(id)}
     />
   );

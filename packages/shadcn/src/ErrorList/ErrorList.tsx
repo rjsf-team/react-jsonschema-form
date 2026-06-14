@@ -19,6 +19,7 @@ export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSche
       <AlertTitle>{translateString(TranslatableString.ErrorsLabel)}</AlertTitle>
       <AlertDescription className='flex flex-col gap-1'>
         {errors.map((error, i: number) => (
+          // oxlint-disable-next-line react/no-array-index-key
           <span key={i}>&#x2022; {error.stack}</span>
         ))}
       </AlertDescription>

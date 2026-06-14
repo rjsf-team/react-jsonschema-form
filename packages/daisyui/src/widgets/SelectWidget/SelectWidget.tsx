@@ -6,6 +6,7 @@ import {
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
+  logUnsupportedDefaultForEnum,
 } from '@rjsf/utils';
 
 /** The `SelectWidget` component renders a select input with DaisyUI styling
@@ -84,7 +85,7 @@ export default function SelectWidget<
     [value, isMultiple, isEnumeratedObject, enumOptions, optEmptyVal, optionValueFormat, onChange],
   );
 
-  const _onBlur = useCallback(
+  const handleBlur = useCallback(
     ({ target }: FocusEvent<HTMLDivElement>) => {
       const dataValue = target?.getAttribute('data-value');
       if (dataValue !== null) {
@@ -94,7 +95,7 @@ export default function SelectWidget<
     [onBlur, id, enumOptions, optEmptyVal, optionValueFormat],
   );
 
-  const _onFocus = useCallback(
+  const handleFocus = useCallback(
     ({ target }: FocusEvent<HTMLDivElement>) => {
       const dataValue = target?.getAttribute('data-value');
       if (dataValue !== null) {
@@ -116,6 +117,7 @@ export default function SelectWidget<
   const optionsList =
     enumOptions ||
     (Array.isArray(schema.examples) ? schema.examples.map((example) => ({ value: example, label: example })) : []);
+  logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
 
   return (
     <div className='form-control w-full'>
@@ -126,8 +128,8 @@ export default function SelectWidget<
           className={`btn btn-outline w-full text-left flex justify-between items-center ${
             disabled || readonly ? 'btn-disabled' : ''
           }`}
-          onBlur={_onBlur}
-          onFocus={_onFocus}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
         >
           <span className='truncate'>
             {selectedValues.length > 0
@@ -136,18 +138,26 @@ export default function SelectWidget<
           </span>
           <span className='ml-2'>▼</span>
         </div>
-        <ul className='dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg'>
+        <ul
+          role='listbox'
+          className='dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg'
+        >
           {optionsList.map(({ value: optValue, label: enumLabel }, i) => {
             const encodedValue = enumOptionValueEncoder(optValue, i, optionValueFormat);
             return (
               <li
-                key={i}
-                role='button'
+                key={String(optValue)}
+                role='option'
+                aria-selected={selectedValues.includes(encodedValue)}
                 tabIndex={0}
                 className={`px-4 py-2 hover:bg-base-200 cursor-pointer ${
                   selectedValues.includes(encodedValue) ? 'bg-primary/10' : ''
                 }`}
                 onClick={handleOptionClick}
+                onKeyDown={(e) =>
+                  (e.key === 'Enter' || e.key === ' ') &&
+                  handleOptionClick(e as unknown as React.MouseEvent<HTMLLIElement>)
+                }
                 data-value={i}
               >
                 <div className='flex items-center gap-2'>

@@ -114,7 +114,7 @@ describe('SchemaField', () => {
     });
 
     it('should be able to be overwritten with a custom UnsupportedField component', () => {
-      const CustomUnsupportedField = function () {
+      const CustomUnsupportedField = function CustomUnsupportedField() {
         return <span id='custom'>Custom UnsupportedField</span>;
       };
 
@@ -130,7 +130,7 @@ describe('SchemaField', () => {
   });
 
   describe('Custom SchemaField component', () => {
-    const CustomSchemaField = function (props: FieldProps) {
+    const CustomSchemaField = function CustomSchemaField(props: FieldProps) {
       return (
         <div id='custom'>
           <SchemaField {...props} />
@@ -150,7 +150,7 @@ describe('SchemaField', () => {
   });
 
   describe('Custom type component', () => {
-    const CustomStringField = function () {
+    const CustomStringField = function CustomStringField() {
       return <div id='custom-type' />;
     };
 
@@ -166,7 +166,7 @@ describe('SchemaField', () => {
   });
 
   describe('Custom id component', () => {
-    const CustomIdField = function () {
+    const CustomIdField = function CustomIdField() {
       return <div id='custom-id' />;
     };
 
@@ -275,7 +275,7 @@ describe('SchemaField', () => {
     });
 
     it('should not pass ui:classNames or ui:style to child component', () => {
-      const CustomSchemaField = function (props: FieldProps) {
+      const CustomSchemaField = function CustomSchemaField(props: FieldProps) {
         return <SchemaField {...props} uiSchema={{ ...props.uiSchema, 'ui:field': undefined }} />;
       };
 
@@ -295,7 +295,7 @@ describe('SchemaField', () => {
       expect(node.querySelectorAll("[style*='red']")).toHaveLength(1);
     });
     it('should not pass ui:options { classNames or style } to child component', () => {
-      const CustomSchemaField = function (props: FieldProps) {
+      const CustomSchemaField = function CustomSchemaField(props: FieldProps) {
         return <SchemaField {...props} uiSchema={{ ...props.uiSchema, 'ui:field': undefined }} />;
       };
 
@@ -877,6 +877,33 @@ describe('SchemaField', () => {
       const { disabled } = node.querySelector('input')!;
 
       expect(disabled).toBe(true);
+    });
+  });
+
+  describe('cyclic $ref', () => {
+    const schema: RJSFSchema = {
+      title: 'A registration form',
+      description: 'A simple form example.',
+      type: 'object',
+      properties: {
+        child: {
+          $ref: '#',
+        },
+      },
+    };
+
+    it('clicking the expand button shows the next level of the cycle', async () => {
+      const { node } = createFormComponent({ schema });
+
+      // child is fully rendered (first $ref occurrence), but child.child hits the cycle
+      const expandButton = node.querySelector<HTMLButtonElement>('#root_child_child-button')!;
+      expect(expandButton).not.toBeNull();
+      expect(expandButton).toHaveTextContent('Expand Cycle');
+
+      await user.click(expandButton);
+
+      expect(node.querySelector('#root_child_child-button')).toBeNull();
+      expect(node.querySelector<HTMLButtonElement>('#root_child_child_child_child-button')).not.toBeNull();
     });
   });
 });

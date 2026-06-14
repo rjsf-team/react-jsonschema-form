@@ -35,13 +35,13 @@ function CheckboxesWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
 
   const handleBlur = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) =>
-      onBlur(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue)),
+      onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue)),
     [onBlur, id, enumOptions, emptyValue, optionValueFormat],
   );
 
   const handleFocus = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) =>
-      onFocus(id, enumOptionValueDecoder<S>(target && target.value, enumOptions, optionValueFormat, emptyValue)),
+      onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue)),
     [onFocus, id, enumOptions, emptyValue, optionValueFormat],
   );
 
@@ -80,11 +80,11 @@ function CheckboxesWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
             </span>
           );
           return inline ? (
-            <label key={index} className={`checkbox-inline ${disabledCls}`}>
+            <label key={String(option.value)} className={`checkbox-inline ${disabledCls}`}>
               {checkbox}
             </label>
           ) : (
-            <div key={index} className={`checkbox ${disabledCls}`}>
+            <div key={String(option.value)} className={`checkbox ${disabledCls}`}>
               <label>{checkbox}</label>
             </div>
           );

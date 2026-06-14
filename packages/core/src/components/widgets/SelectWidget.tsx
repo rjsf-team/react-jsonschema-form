@@ -7,6 +7,7 @@ import {
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
+  logUnsupportedDefaultForEnum,
 } from '@rjsf/utils';
 
 function getValue(event: SyntheticEvent<HTMLSelectElement>, multiple: boolean) {
@@ -70,13 +71,14 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
 
   const selectValue = enumOptionSelectedValue<S>(value, enumOptions, multiple, optionValueFormat, emptyValue);
   const showPlaceholderOption = !multiple && schema.default === undefined;
+  logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
   return (
+    // oxlint-disable-next-line jsx-a11y/no-autofocus
     <select
       id={id}
       name={htmlName || id}
       multiple={multiple}
-      role='combobox'
       className='form-control'
       value={selectValue}
       required={required}
@@ -92,7 +94,11 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
         enumOptions.map(({ value: enumValue, label: enumLabel }, i) => {
           const isDisabled = enumDisabled && enumDisabled.includes(enumValue);
           return (
-            <option key={i} value={enumOptionValueEncoder(enumValue, i, optionValueFormat)} disabled={isDisabled}>
+            <option
+              key={String(enumValue)}
+              value={enumOptionValueEncoder(enumValue, i, optionValueFormat)}
+              disabled={isDisabled}
+            >
               {enumLabel}
             </option>
           );
