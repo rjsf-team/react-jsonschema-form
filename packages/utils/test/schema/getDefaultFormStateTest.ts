@@ -4287,6 +4287,31 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           foo: 42,
         });
       });
+      it("should prefer descendant's default with a $ref", () => {
+        const schema: RJSFSchema = {
+          definitions: {
+            foo: {
+              type: 'number',
+              default: 1,
+            },
+            testdef: {
+              type: 'object',
+              properties: {
+                foo: {
+                  $ref: '#/definitions/foo',
+                },
+              },
+            },
+          },
+          $ref: '#/definitions/testdef',
+          default: { foo: 42 },
+        };
+        const schemaUtils = createSchemaUtils(testValidator, schema);
+
+        expect(schemaUtils.getDefaultFormState(schema)).toEqual({
+          foo: 1,
+        });
+      });
       it('should populate defaults for oneOf + ref', () => {
         const schema: RJSFSchema = {
           definitions: {
@@ -4461,6 +4486,764 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         };
         expect(getDefaultFormState(testValidator, schema, {})).toEqual({
           turtles: ['Raphael', 'Michaelangelo', 'Unknown', 'Unknown'],
+        });
+      });
+      describe('nestedDefaultsPrecedence is ancestorWins', () => {
+        const experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
+          nestedDefaultsPrecedence: 'ancestorWins',
+        };
+        it('should default to empty object if no properties are defined', () => {
+          expect(
+            getDefaultFormState(
+              testValidator,
+              {
+                type: 'object',
+              },
+              undefined,
+              undefined,
+              undefined,
+              experimental_defaultFormStateBehavior,
+            ),
+          ).toEqual({});
+        });
+        it('should recursively map schema object default to form state', () => {
+          expect(
+            getDefaultFormState(
+              testValidator,
+              {
+                type: 'object',
+                properties: {
+                  object: {
+                    type: 'object',
+                    properties: {
+                      string: {
+                        type: 'string',
+                        default: 'foo',
+                      },
+                    },
+                  },
+                },
+              },
+              undefined,
+              undefined,
+              undefined,
+              experimental_defaultFormStateBehavior,
+            ),
+          ).toEqual({ object: { string: 'foo' } });
+        });
+        it('should map schema array default to form state', () => {
+          expect(
+            getDefaultFormState(
+              testValidator,
+              {
+                type: 'object',
+                properties: {
+                  array: {
+                    type: 'array',
+                    default: ['foo', 'bar'],
+                    items: {
+                      type: 'string',
+                    },
+                  },
+                },
+              },
+              undefined,
+              undefined,
+              undefined,
+              experimental_defaultFormStateBehavior,
+            ),
+          ).toEqual({ array: ['foo', 'bar'] });
+        });
+        it('should recursively map schema array default to form state', () => {
+          expect(
+            getDefaultFormState(
+              testValidator,
+              {
+                type: 'object',
+                properties: {
+                  object: {
+                    type: 'object',
+                    properties: {
+                      array: {
+                        type: 'array',
+                        default: ['foo', 'bar'],
+                        items: {
+                          type: 'string',
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              undefined,
+              undefined,
+              undefined,
+              experimental_defaultFormStateBehavior,
+            ),
+          ).toEqual({ object: { array: ['foo', 'bar'] } });
+        });
+        it('should propagate nested defaults to resulting formData by default', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              object: {
+                type: 'object',
+                properties: {
+                  array: {
+                    type: 'array',
+                    default: ['foo', 'bar'],
+                    items: {
+                      type: 'string',
+                    },
+                  },
+                  bool: {
+                    type: 'boolean',
+                    default: true,
+                  },
+                },
+              },
+            },
+          };
+          expect(
+            getDefaultFormState(testValidator, schema, {}, undefined, undefined, experimental_defaultFormStateBehavior),
+          ).toEqual({
+            object: { array: ['foo', 'bar'], bool: true },
+          });
+        });
+        it('should keep parent defaults regardless of node level defaults', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              level1: {
+                type: 'object',
+                default: {
+                  level2: {
+                    leaf1: 1,
+                    leaf2: 1,
+                    leaf3: 1,
+                    leaf4: 1,
+                  },
+                },
+                properties: {
+                  level2: {
+                    type: 'object',
+                    default: {
+                      // No level2 default for leaf1
+                      leaf2: 2,
+                      leaf3: 2,
+                    },
+                    properties: {
+                      leaf1: { type: 'number' }, // No level2 default for leaf1
+                      leaf2: { type: 'number' }, // No level3 default for leaf2
+                      leaf3: { type: 'number', default: 3 },
+                      leaf4: { type: 'number' }, // Defined in formData.
+                    },
+                  },
+                },
+              },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              testValidator,
+              schema,
+              {
+                level1: { level2: { leaf4: 4 } },
+              },
+              undefined,
+              undefined,
+              experimental_defaultFormStateBehavior,
+            ),
+          ).toEqual({
+            level1: {
+              level2: { leaf1: 1, leaf2: 1, leaf3: 1, leaf4: 4 },
+            },
+          });
+        });
+        it('should support nested values in formData', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              level1: {
+                type: 'object',
+                properties: {
+                  level2: {
+                    oneOf: [
+                      {
+                        type: 'object',
+                        properties: {
+                          leaf1: {
+                            type: 'string',
+                          },
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            },
+          };
+          const formData = {
+            level1: {
+              level2: {
+                leaf1: 'a',
+              },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              testValidator,
+              schema,
+              formData,
+              undefined,
+              undefined,
+              experimental_defaultFormStateBehavior,
+            ),
+          ).toEqual({
+            level1: { level2: { leaf1: 'a' } },
+          });
+        });
+        it('should use parent defaults for ArrayFields', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              level1: {
+                type: 'array',
+                default: [1, 2, 3],
+                items: { type: 'number' },
+              },
+            },
+          };
+          expect(
+            getDefaultFormState(testValidator, schema, {}, undefined, undefined, experimental_defaultFormStateBehavior),
+          ).toEqual({
+            level1: [1, 2, 3],
+          });
+        });
+        it('should use parent defaults for ArrayFields if declared in parent', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            default: { level1: [1, 2, 3] },
+            properties: {
+              level1: {
+                type: 'array',
+                items: { type: 'number' },
+              },
+            },
+          };
+          expect(
+            getDefaultFormState(testValidator, schema, {}, undefined, undefined, experimental_defaultFormStateBehavior),
+          ).toEqual({
+            level1: [1, 2, 3],
+          });
+        });
+        it('should map item defaults to fixed array default', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              array: {
+                type: 'array',
+                items: [
+                  {
+                    type: 'string',
+                    default: 'foo',
+                  },
+                  {
+                    type: 'number',
+                  },
+                ],
+              },
+            },
+          };
+          expect(
+            getDefaultFormState(testValidator, schema, {}, undefined, undefined, experimental_defaultFormStateBehavior),
+          ).toEqual({
+            array: ['foo', undefined],
+          });
+        });
+        it('should prefer schema array item defaults from grandparent for overlapping default definitions', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            default: {
+              level1: { level2: ['root-default-1', 'root-default-2'] },
+            },
+            properties: {
+              level1: {
+                type: 'object',
+                properties: {
+                  level2: {
+                    type: 'array',
+                    items: [
+                      {
+                        type: 'string',
+                        default: 'child-default-1',
+                      },
+                      {
+                        type: 'string',
+                      },
+                    ],
+                  },
+                },
+              },
+            },
+          };
+
+          expect(
+            getDefaultFormState(testValidator, schema, {}, undefined, undefined, experimental_defaultFormStateBehavior),
+          ).toEqual({
+            level1: { level2: ['root-default-1', 'root-default-2'] },
+          });
+        });
+        it('should prefer schema array item defaults from parent for nested default definitions', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            default: {
+              level1: {
+                level2: [{ item: 'root-default-1' }, { item: 'root-default-2' }],
+              },
+            },
+            properties: {
+              level1: {
+                type: 'object',
+                default: { level2: [{ item: 'parent-default-1' }, {}] },
+                properties: {
+                  level2: {
+                    type: 'array',
+                    items: {
+                      type: 'object',
+                      properties: {
+                        item: {
+                          type: 'string',
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          };
+
+          expect(
+            getDefaultFormState(testValidator, schema, {}, undefined, undefined, experimental_defaultFormStateBehavior),
+          ).toEqual({
+            level1: { level2: [{ item: 'root-default-1' }, { item: 'root-default-2' }] },
+          });
+        });
+        it('should prefer schema array defaults for overlapping item default definitions', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              level1: {
+                type: 'array',
+                default: ['property-default-1', 'property-default-2'],
+                items: [
+                  {
+                    type: 'string',
+                    default: 'child-default-1',
+                  },
+                  // this falls back to an empty item when it is missing
+                ],
+              },
+            },
+          };
+
+          expect(
+            getDefaultFormState(testValidator, schema, {}, undefined, undefined, experimental_defaultFormStateBehavior),
+          ).toEqual({
+            level1: ['property-default-1', 'property-default-2'],
+          });
+        });
+        it('should merge schema from additionalItems defaults into property default', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              level1: {
+                type: 'array',
+                default: [
+                  {
+                    item: 'property-default-1',
+                  },
+                  {},
+                ],
+                additionalItems: {
+                  type: 'object',
+                  properties: {
+                    item: {
+                      type: 'string',
+                      default: 'additional-default',
+                    },
+                  },
+                },
+                items: [
+                  {
+                    type: 'object',
+                    properties: {
+                      item: {
+                        type: 'string',
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          };
+
+          expect(
+            getDefaultFormState(testValidator, schema, {}, undefined, undefined, experimental_defaultFormStateBehavior),
+          ).toEqual({
+            level1: [{ item: 'property-default-1' }, { item: 'additional-default' }],
+          });
+        });
+        it("should prefer ancestor's defaults over multiple levels with arrays", () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            default: {
+              level1: [
+                {
+                  item: 'root-default-1',
+                },
+                {
+                  item: 'root-default-2',
+                },
+                {
+                  item: 'root-default-3',
+                },
+                {
+                  item: 'root-default-4',
+                },
+              ],
+            },
+            properties: {
+              level1: {
+                type: 'array',
+                default: [
+                  {
+                    item: 'property-default-1',
+                  },
+                  {},
+                  {},
+                ],
+                additionalItems: {
+                  type: 'object',
+                  properties: {
+                    item: {
+                      type: 'string',
+                      default: 'additional-default',
+                    },
+                  },
+                },
+                items: [
+                  {
+                    type: 'object',
+                    properties: {
+                      item: {
+                        type: 'string',
+                      },
+                    },
+                  },
+                  {
+                    type: 'object',
+                    properties: {
+                      item: {
+                        type: 'string',
+                        default: 'child-default-2',
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          };
+
+          expect(
+            getDefaultFormState(testValidator, schema, {}, undefined, undefined, experimental_defaultFormStateBehavior),
+          ).toEqual({
+            level1: [
+              {
+                item: 'root-default-1',
+              },
+              {
+                item: 'root-default-2',
+              },
+              {
+                item: 'root-default-3',
+              },
+              {
+                item: 'root-default-4',
+              },
+            ],
+          });
+        });
+        it('should use schema default for referenced definitions', () => {
+          const schema: RJSFSchema = {
+            definitions: {
+              foo: {
+                type: 'number',
+              },
+              testdef: {
+                type: 'object',
+                properties: {
+                  foo: {
+                    $ref: '#/definitions/foo',
+                  },
+                },
+              },
+            },
+            $ref: '#/definitions/testdef',
+            default: { foo: 42 },
+          };
+          const schemaUtils = createSchemaUtils(testValidator, schema, experimental_defaultFormStateBehavior);
+
+          expect(schemaUtils.getDefaultFormState(schema)).toEqual({
+            foo: 42,
+          });
+        });
+        it("should prefer ancestor's default with a $ref", () => {
+          const schema: RJSFSchema = {
+            definitions: {
+              foo: {
+                type: 'number',
+                default: 1,
+              },
+              testdef: {
+                type: 'object',
+                properties: {
+                  foo: {
+                    $ref: '#/definitions/foo',
+                  },
+                },
+              },
+            },
+            $ref: '#/definitions/testdef',
+            default: { foo: 42 },
+          };
+          const schemaUtils = createSchemaUtils(testValidator, schema, experimental_defaultFormStateBehavior);
+
+          expect(schemaUtils.getDefaultFormState(schema)).toEqual({
+            foo: 42,
+          });
+        });
+        it('should populate defaults for oneOf + ref', () => {
+          const schema: RJSFSchema = {
+            definitions: {
+              foo: {
+                type: 'object',
+                properties: {
+                  fooProp: {
+                    type: 'string',
+                  },
+                  fooProp2: {
+                    type: 'string',
+                    default: 'fooProp2',
+                  },
+                },
+              },
+              bar: {
+                type: 'object',
+                properties: {
+                  barProp: {
+                    type: 'string',
+                  },
+                  barProp2: {
+                    type: 'string',
+                    default: 'barProp2',
+                  },
+                },
+              },
+            },
+            oneOf: [
+              {
+                $ref: '#/definitions/foo',
+              },
+              {
+                $ref: '#/definitions/bar',
+              },
+            ],
+          };
+          expect(
+            getDefaultFormState(
+              testValidator,
+              schema,
+              { fooProp: 'fooProp' },
+              schema,
+              undefined,
+              experimental_defaultFormStateBehavior,
+            ),
+          ).toEqual({
+            fooProp: 'fooProp',
+            fooProp2: 'fooProp2',
+          });
+          expect(
+            getDefaultFormState(
+              testValidator,
+              schema,
+              { barProp: 'barProp' },
+              schema,
+              undefined,
+              experimental_defaultFormStateBehavior,
+            ),
+          ).toEqual({
+            barProp: 'barProp',
+            barProp2: 'barProp2',
+          });
+        });
+        it('should fill array with additional items schema when items is empty', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              array: {
+                type: 'array',
+                minItems: 1,
+                additionalItems: {
+                  type: 'string',
+                  default: 'foo',
+                },
+                items: [],
+              },
+            },
+          };
+          expect(
+            getDefaultFormState(testValidator, schema, {}, undefined, undefined, experimental_defaultFormStateBehavior),
+          ).toEqual({
+            array: ['foo'],
+          });
+        });
+        it('should not fill array with additional items from schema when items is empty and form data contains partial array', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              array: {
+                type: 'array',
+                minItems: 2,
+                additionalItems: {
+                  type: 'string',
+                  default: 'foo',
+                },
+                items: [],
+              },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              testValidator,
+              schema,
+              { array: ['bar'] },
+              undefined,
+              undefined,
+              experimental_defaultFormStateBehavior,
+            ),
+          ).toEqual({
+            array: ['bar'],
+          });
+        });
+        it('should fill defaults in existing array items', () => {
+          const schema: RJSFSchema = {
+            type: 'array',
+            minItems: 2,
+            items: {
+              type: 'object',
+              properties: {
+                item: {
+                  type: 'string',
+                  default: 'foo',
+                },
+              },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              testValidator,
+              schema,
+              [{}],
+              undefined,
+              undefined,
+              experimental_defaultFormStateBehavior,
+            ),
+          ).toEqual([{ item: 'foo' }]);
+        });
+        it('defaults passed along for multiselect arrays when minItems is present', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              array: {
+                type: 'array',
+                minItems: 1,
+                uniqueItems: true,
+                default: ['foo', 'qux'],
+                items: {
+                  type: 'string',
+                  enum: ['foo', 'bar', 'fuzz', 'qux'],
+                },
+              },
+            },
+          };
+          expect(
+            getDefaultFormState(testValidator, schema, {}, undefined, undefined, experimental_defaultFormStateBehavior),
+          ).toEqual({
+            array: ['foo', 'qux'],
+          });
+        });
+        it('returns empty defaults when no item defaults are defined for required array', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              array: {
+                type: 'array',
+                minItems: 1,
+                uniqueItems: true,
+                items: {
+                  type: 'string',
+                  enum: ['foo', 'bar', 'fuzz', 'qux'],
+                },
+              },
+            },
+            required: ['array'],
+          };
+          expect(
+            getDefaultFormState(testValidator, schema, {}, undefined, undefined, experimental_defaultFormStateBehavior),
+          ).toEqual({
+            array: [],
+          });
+        });
+        it('returns undefined defaults when no item defaults are defined for optional array', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              array: {
+                type: 'array',
+                minItems: 1,
+                uniqueItems: true,
+                items: {
+                  type: 'string',
+                  enum: ['foo', 'bar', 'fuzz', 'qux'],
+                },
+              },
+            },
+          };
+          expect(
+            getDefaultFormState(testValidator, schema, {}, undefined, undefined, experimental_defaultFormStateBehavior),
+          ).toEqual({});
+        });
+        it('returns explicit defaults along with auto-fill when provided', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              turtles: {
+                type: 'array',
+                minItems: 4,
+                default: ['Raphael', 'Michaelangelo'],
+                items: {
+                  type: 'string',
+                  default: 'Unknown',
+                },
+              },
+            },
+          };
+          expect(
+            getDefaultFormState(testValidator, schema, {}, undefined, undefined, experimental_defaultFormStateBehavior),
+          ).toEqual({
+            turtles: ['Raphael', 'Michaelangelo', 'Unknown', 'Unknown'],
+          });
         });
       });
     });
