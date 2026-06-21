@@ -139,6 +139,7 @@ export default function SelectWidget<
           <span className='ml-2'>▼</span>
         </div>
         <ul
+          // oxlint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
           role='listbox'
           className='dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg'
         >
@@ -147,6 +148,7 @@ export default function SelectWidget<
             return (
               <li
                 key={String(optValue)}
+                // oxlint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
                 role='option'
                 aria-selected={selectedValues.includes(encodedValue)}
                 tabIndex={0}
