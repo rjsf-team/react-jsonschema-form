@@ -460,19 +460,44 @@ export function ensureFormDataMatchingSchema<
   experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior,
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): T | T[] | undefined {
+  const shouldRetrieveAllOf =
+    experimental_defaultFormStateBehavior?.allOf === 'populateDefaults' && ALL_OF_KEY in schema;
+  const schemaToMatch = shouldRetrieveAllOf
+    ? retrieveSchema<T, S, F>(validator, schema, rootSchema, formData, experimental_customMergeAllOf)
+    : schema;
   const isSelectField =
-    !isConstant<S>(schema) && isSelect<T, S, F>(validator, schema, rootSchema, experimental_customMergeAllOf);
+    !isConstant<S>(schemaToMatch) &&
+    isSelect<T, S, F>(validator, schemaToMatch, rootSchema, experimental_customMergeAllOf);
   let validFormData: T | T[] | undefined = formData;
   if (isSelectField) {
-    const getOptionsList = optionsList<T, S, F>(schema);
+    const getOptionsList = optionsList<T, S, F>(schemaToMatch);
     const isValid = getOptionsList?.some((option) => deepEquals(option.value, formData));
     validFormData = isValid ? formData : undefined;
   }
 
   // Override the formData with the const if the constAsDefaults is set to always
-  const constTakesPrecedence = schema[CONST_KEY] && experimental_defaultFormStateBehavior?.constAsDefaults === 'always';
+  const constTakesPrecedence =
+    schemaToMatch[CONST_KEY] && experimental_defaultFormStateBehavior?.constAsDefaults === 'always';
   if (constTakesPrecedence) {
-    validFormData = schema.const as T;
+    validFormData = schemaToMatch.const as T;
+  } else if (isObject(validFormData) && isObject(schemaToMatch.properties)) {
+    validFormData = Object.keys(schemaToMatch.properties).reduce(
+      (acc: GenericObjectType, key: string) => {
+        const propertySchema: S = get(schemaToMatch, [PROPERTIES_KEY, key], {}) as S;
+        if (key in acc && (shouldRetrieveAllOf || (isObject(propertySchema) && ALL_OF_KEY in propertySchema))) {
+          acc[key] = ensureFormDataMatchingSchema<T, S, F>(
+            validator,
+            propertySchema,
+            rootSchema,
+            get(acc, key),
+            experimental_defaultFormStateBehavior,
+            experimental_customMergeAllOf,
+          );
+        }
+        return acc;
+      },
+      { ...(validFormData as GenericObjectType) },
+    ) as T;
   }
 
   return validFormData;
@@ -825,9 +850,17 @@ export default function getDefaultFormState<
   if (isObject(formData) || Array.isArray(formData)) {
     const { mergeDefaultsIntoFormData } = experimental_defaultFormStateBehavior || {};
     const defaultSupercedesUndefined = mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined';
+    const matchingFormData = ensureFormDataMatchingSchema<T, S, F>(
+      validator,
+      schema,
+      rootSchema ?? schema,
+      formData,
+      experimental_defaultFormStateBehavior,
+      experimental_customMergeAllOf,
+    );
     const result = mergeDefaultsWithFormData<T | T[]>(
       defaults,
-      formData,
+      matchingFormData,
       true, // set to true to add any additional default array entries.
       defaultSupercedesUndefined,
       true, // set to true to override formData with defaults if they exist.

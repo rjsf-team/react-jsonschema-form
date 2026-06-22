@@ -5327,6 +5327,89 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             }),
           ).toEqual({ animalInfo: { animal: 'Cat', food: 'meat' } });
         });
+
+        it('should apply conditional const defaults consistently for root and nested allOf schemas', () => {
+          const experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
+            allOf: 'populateDefaults',
+            constAsDefaults: 'always',
+          };
+          const conditionalSchema = {
+            type: 'object',
+            properties: {
+              animal: {
+                enum: ['Cat', 'Fish'],
+              },
+              food: {
+                type: 'string',
+                enum: ['meat', 'grass', 'fish'],
+              },
+            },
+            allOf: [
+              {
+                if: {
+                  properties: {
+                    animal: {
+                      const: 'Cat',
+                    },
+                  },
+                },
+                then: {
+                  properties: {
+                    food: {
+                      const: 'fish',
+                    },
+                  },
+                  required: ['food'],
+                },
+              },
+              {
+                required: ['animal'],
+              },
+            ],
+          } satisfies RJSFSchema;
+          const formData = {
+            animal: 'Cat',
+            food: 'meat',
+          };
+
+          expect(
+            getDefaultFormState(
+              testValidator,
+              conditionalSchema,
+              formData,
+              conditionalSchema,
+              undefined,
+              experimental_defaultFormStateBehavior,
+            ),
+          ).toEqual({
+            animal: 'Cat',
+            food: 'fish',
+          });
+
+          const nestedSchema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              nested: conditionalSchema,
+            },
+            required: ['nested'],
+          };
+
+          expect(
+            getDefaultFormState(
+              testValidator,
+              nestedSchema,
+              { nested: formData },
+              nestedSchema,
+              undefined,
+              experimental_defaultFormStateBehavior,
+            ),
+          ).toEqual({
+            nested: {
+              animal: 'Cat',
+              food: 'fish',
+            },
+          });
+        });
       });
 
       describe('default form state behaviour: allOf = "skipDefaults"', () => {
