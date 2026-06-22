@@ -31,7 +31,18 @@
   "overrides": {
     "sockjs": {
       "uuid": "^14.0.0"
-    }
+    },
+    "form-data": "4.0.6",
+    "nx": {
+      "tmp": "0.2.7",
+      "axios": {
+        "form-data": "4.0.6"
+      }
+    },
+    "monaco-editor": {
+      "dompurify": "3.4.11"
+    },
+    "dompurify": "3.4.11"
   },
   "license": "Apache-2.0",
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
