@@ -75,7 +75,7 @@
   "devDependencies": {
     "@fluentui/react-combobox": "^9.16.12",
     "@fluentui/react-components": "^9.74.0",
-    "@fluentui/react-icons": "^2.0.328",
+    "@fluentui/react-icons": "^2.0.330",
     "@fluentui/react-migration-v0-v9": "^9.6.29",
     "@rjsf/core": "workspace:^",
     "@rjsf/snapshot-tests": "workspace:^",

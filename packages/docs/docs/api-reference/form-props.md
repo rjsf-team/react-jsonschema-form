@@ -77,12 +77,12 @@ Currently, this only affects the handling of optional array fields where `minIte
 
 The following subsections represent the different keys in this object, with the tables explaining the values and their meanings.
 
-### `arrayMinItems`
+### arrayMinItems
 
 This optional subsection is an object with two optional fields, `populate` and `mergeExtraDefaults`.
 When not specified, it defaults to `{ populate: 'all', mergeExtraDefaults: false }`.
 
-#### `arrayMinItems.populate`
+#### arrayMinItems.populate
 
 Optional enumerated flag controlling how array minItems are populated, defaulting to `all`:
 
@@ -92,7 +92,7 @@ Optional enumerated flag controlling how array minItems are populated, defaultin
 | `requiredOnly` | Ignore `minItems` on a field when calculating defaults unless the field is required.                                                               |
 | `never`        | Ignore `minItems` on a field when calculating defaults for required and non-required. Value will set only if defined `default` and from `formData` |
 
-#### `arrayMinItems.computeSkipPopulate`
+#### arrayMinItems.computeSkipPopulate
 
 The signature and documentation for this property is as follow:
 
@@ -155,14 +155,14 @@ render(
 );
 ```
 
-#### `arrayMinItems.mergeExtraDefaults`
+#### arrayMinItems.mergeExtraDefaults
 
 Optional boolean flag, defaulting to `false` when not specified.
 When `formData` is provided and does not contain `minItems` worth of data, this flag controls whether the extra data provided by the defaults is appended onto the existing `formData` items to ensure the `minItems` condition is met.
 When `false` (legacy behavior), only the `formData` provided is merged into the default form state, even if there are fewer than the `minItems`.
 When `true`, the defaults are appended onto the end of the `formData` until the `minItems` condition is met.
 
-### `emptyObjectFields`
+### emptyObjectFields
 
 Optional enumerated flag controlling how empty object fields are populated, defaulting to `populateAllDefaults`:
 
@@ -196,7 +196,7 @@ render(
 );
 ```
 
-### `allOf`
+### allOf
 
 Optional enumerated flag controlling how empty defaults are populated when `allOf` schemas are provided, defaulting to `skipDefaults`:
 
@@ -281,6 +281,51 @@ NOTE: If there is a default for a field and the `formData` is unspecified, the d
 | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | `useFormDataIfPresent`          | Legacy behavior - Do not merge defaults if there is a value for a field in `formData` even if that value is explicitly set to `undefined` |
 | `useDefaultIfFormDataUndefined` | If the value of a field within the `formData` is `undefined`, then use the default value instead                                          |
+
+### nestedDefaultsPrecedence
+
+Optional enumerated flag controlling how defaults defined on multiple levels are merged together for overlapping properties, defaulting to `descendantWins`.
+
+| Flag Value       | Description                                                                                       |
+| -----------------| --------------------------------------------------------------------------------------------------|
+| `descendantWins` | The innermost (descendant) default value definition takes precedence over its ancestor's defaults |
+| `ancestorWins`   | The outermost (ancestor) default value definition takes precedence over any descendant's defaults |
+
+#### Example
+
+In the following example, the `animal` property is a descendant of the root schema and both define a default value for `animal`. By default, the `animal`'s default value `Cat` would take precedence over its ancestor's `Fish`. However, since `nestedDefaultsPrecedence` is set to `ancestorWins`, the root schema's default value takes precedence and `animal` is set to `Fish` by default.
+
+```tsx
+import { Form } from '@rjsf/core';
+import { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'object',
+  default: {
+    animal: 'Fish',
+  },
+  properties: {
+    animal: {
+      type: 'string',
+      default: 'Cat',
+      enum: ['Cat', 'Fish'],
+    },
+  },
+};
+
+render(
+  <Form
+    schema={schema}
+    validator={validator}
+    experimental_defaultFormStateBehavior={{
+      nestedDefaultsPrecedence: 'ancestorWins',
+    }}
+  />,
+  document.getElementById('app'),
+);
+```
+
 
 ## experimental_customMergeAllOf
 
