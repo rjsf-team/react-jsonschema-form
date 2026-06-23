@@ -9,7 +9,6 @@ overrides:
   'dompurify': ^3.4.11
   'monaco-editor>dompurify': ^3.4.11
 
-
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - ata-validator

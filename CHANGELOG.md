@@ -88,7 +88,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated the `custom-templates.md` and `custom-widgets-fields.md` for the new feature
 - Updated `utility-functions.md` to document `logUnsupportedDefaultForEnum()`
 - Updated the playground to add a selector for the `nestedDefaultsPrecedence` option
-- Replaced npm with pnpm for development
+- Replaced npm with pnpm v10 for development
 
 # 6.6.2
 
