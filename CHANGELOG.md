@@ -37,7 +37,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `SchemaField` so that a schema with a primitive or array `type` alongside a non-select `oneOf`/`anyOf` no longer renders a spurious duplicate input above the option selector, fixing [#5119](https://github.com/rjsf-team/react-jsonschema-form/issues/5119)
 - Fixed `MultiSchemaField` to propagate the parent schema's `type` to option sub-schemas that don't define their own, so the correct widget (e.g. `StringField`) renders for the selected option instead of `FallbackField`, fixing [#5119](https://github.com/rjsf-team/react-jsonschema-form/issues/5119)
 
-
 ## @rjsf/daisyui
 
 - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
@@ -89,6 +88,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated the `custom-templates.md` and `custom-widgets-fields.md` for the new feature
 - Updated `utility-functions.md` to document `logUnsupportedDefaultForEnum()`
 - Updated the playground to add a selector for the `nestedDefaultsPrecedence` option
+- Replaced npm with pnpm v10 for development
 
 # 6.6.2
 
@@ -2441,7 +2441,7 @@ Move theme snapshot tests into separate package
 - However, if users of @rjsf/antd want to use v5 styling, they need to wrap your application with the `StyleProvider` from `@ant-design/cssinjs`. They need not have to install this package, its a transitive package coming from antd.
 
 ```tsx
-import { StyleProvider } from '@ant-design/cssinjs';
+import { StyleProvider } from "@ant-design/cssinjs";
 
 const Component = () => {
   return (

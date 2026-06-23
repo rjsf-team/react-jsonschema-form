@@ -1,0 +1,24 @@
+packages:
+  - 'packages/*'
+
+overrides:
+  'sockjs>uuid': ^14.0.0
+  'form-data': ^4.0.6
+  'nx>tmp': ^0.2.7
+  'axios>form-data': ^4.0.6
+  'dompurify': ^3.4.11
+  'monaco-editor>dompurify': ^3.4.11
+
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - ata-validator
+  - core-js
+  - esbuild
+  - nx
+
+allowBuilds:
+  '@parcel/watcher': true
+  ata-validator: true
+  core-js: true
+  esbuild: true
+  nx: true
