@@ -74,7 +74,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^9.1.1",
-    "@mui/material": "^9.1.1",
+    "@mui/material": "^9.1.2",
     "@rjsf/core": "6.6.2",
     "@rjsf/snapshot-tests": "6.6.2",
     "@rjsf/utils": "6.6.2",
