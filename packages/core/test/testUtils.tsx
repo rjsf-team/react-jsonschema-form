@@ -5,7 +5,7 @@ import '@testing-library/jest-dom';
 import { act, render, fireEvent } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import noop from 'lodash/noop';
-import type { MockInstance } from 'vitest';
+import type { Mock, MockInstance } from 'vitest';
 
 import type { FormProps } from '../src';
 import Form from '../src';
@@ -14,6 +14,17 @@ export type NoValFormProps = Omit<FormProps, 'validator'>;
 
 // oxlint-disable-next-line no-unused-vars
 export type RerenderType = (newProps: NoValFormProps, v?: ValidatorType) => void;
+export interface FormComponentResult {
+  container: HTMLElement;
+  node: Element;
+  onChange: Mock;
+  onError: Mock;
+  onSubmit: Mock;
+  rerender: RerenderType;
+}
+export interface ConsoleSuppressionResult {
+  readonly consoleSpy: MockInstance;
+}
 
 export function renderNode(Component: ComponentType<any>, props: GenericObjectType) {
   const { container } = render(<Component {...props} />);
@@ -21,7 +32,7 @@ export function renderNode(Component: ComponentType<any>, props: GenericObjectTy
   return { node };
 }
 
-export function createComponent(Component: ComponentType<FormProps>, theProps: FormProps) {
+export function createComponent(Component: ComponentType<FormProps>, theProps: FormProps): FormComponentResult {
   const onChange = vi.fn();
   const onError = vi.fn();
   const onSubmit = vi.fn();
@@ -42,7 +53,7 @@ export function createComponent(Component: ComponentType<FormProps>, theProps: F
   return { container, node, onChange, onError, onSubmit, rerender: rerenderFunction };
 }
 
-export function createFormComponent(props: NoValFormProps, v: ValidatorType = validator) {
+export function createFormComponent(props: NoValFormProps, v: ValidatorType = validator): FormComponentResult {
   return createComponent(Form, { validator: v, ...props });
 }
 
@@ -121,7 +132,7 @@ export function actWrappedDelayPromise(delay = 100) {
 //
 // Call this once at the top of a test file or describe block (not inside a test).
 // The returned object's `consoleSpy` getter is safe to access inside test bodies.
-export function setupConsoleErrorSuppression() {
+export function setupConsoleErrorSuppression(): ConsoleSuppressionResult {
   let spy: MockInstance;
 
   function handleWindowError(event: ErrorEvent): void {
@@ -155,7 +166,7 @@ export function setupConsoleErrorSuppression() {
 //
 // Call this once at the top of a test file or describe block (not inside a test).
 // The returned object's `consoleSpy` getter is safe to access inside test bodies.
-export function setupConsoleWarnSuppression() {
+export function setupConsoleWarnSuppression(): ConsoleSuppressionResult {
   let spy: MockInstance;
 
   beforeAll(() => {

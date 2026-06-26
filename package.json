@@ -11,38 +11,33 @@
     "lint": "nx run-many --target=lint",
     "cs-check": "nx run-many --target=cs-check",
     "cs-format": "nx run-many --target=cs-format",
-    "clean-build": "rimraf packages/*/tsconfig.tsbuildinfo && rimraf packages/*/lib && rimraf packages/*/dist && npm run build",
+    "clean-build": "rimraf packages/*/tsconfig.tsbuildinfo && rimraf packages/*/lib && rimraf packages/*/dist && pnpm run build",
     "build": "nx run-many --target=build",
     "build-serial": "nx run-many --target=build --parallel=1",
-    "start": "echo 'use \"npm run build\" from main directory and then \"npm start\" in the playground package'",
+    "start": "echo 'use \"pnpm run build\" from main directory and then \"pnpm start\" in the playground package'",
     "pre-commit:husky": "nx run-many --parallel=1 --target=precommit",
     "prepare": "is-ci || husky",
     "format": "oxfmt .",
     "format-check": "oxfmt --check .",
-    "bump-all-packages": "echo 'NOTE: Make sure to sanity check the playground locally before commiting changes' && npm update --save && npm install && npm run lint && npm run build && npm run test",
+    "bump-all-packages": "echo 'NOTE: Make sure to sanity check the playground locally before commiting changes' && pnpm update --latest && pnpm install && pnpm run lint && pnpm run build && pnpm run test",
     "bump-peer-deps": "node scripts/bump-peer-deps.js",
-    "refresh-node-modules": "rimraf packages/*/node_modules && rimraf node_modules && npm install",
-    "commit-package-changes": "git add package-lock.json packages/*/package*.json && cross-env CI=skipPrecommit git commit -m 'updated package*.json after versioning' && git push",
-    "post-versioning": "echo 'This will take a while...' && npm run bump-peer-deps && npm run refresh-node-modules && npm run commit-package-changes && npm run update-version-tags",
+    "refresh-node-modules": "rimraf packages/*/node_modules && rimraf node_modules && pnpm install",
+    "commit-package-changes": "git add pnpm-lock.yaml packages/*/package*.json && cross-env CI=skipPrecommit git commit -m 'updated package*.json after versioning' && git push",
+    "post-versioning": "echo 'This will take a while...' && pnpm run bump-peer-deps && pnpm run refresh-node-modules && pnpm run commit-package-changes && pnpm run update-version-tags",
     "update-version-tags": "git tag -f $(node scripts/get-version-tag.js) && git push -f origin $(node scripts/get-version-tag.js)",
-    "nuke-build-env": "rimraf .nx && rimraf package-lock.json",
-    "sanity-check": "npm run lint && npm run build && npm run test"
-  },
-  "overrides": {
-    "sockjs": {
-      "uuid": "^14.0.0"
-    }
+    "nuke-build-env": "rimraf .nx && rimraf pnpm-lock.yaml",
+    "sanity-check": "pnpm run lint && pnpm run build && pnpm run test"
   },
   "license": "Apache-2.0",
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "devDependencies": {
-    "@nx/js": "^23.0.0",
+    "@nx/js": "^23.0.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@types/estree": "^1.0.9",
     "@types/lodash": "^4.17.24",
-    "@types/node": "^24.12.4",
-    "@types/react": "^18.3.29",
+    "@types/node": "^24.13.2",
+    "@types/react": "^18.3.31",
     "@types/react-dom": "^18.3.7",
     "@types/react-test-renderer": "^18.3.1",
     "@vitest/coverage-v8": "^4.1.9",
@@ -55,7 +50,7 @@
     "jsdom-testing-mocks": "^1.16.0",
     "lint-staged": "^17.0.8",
     "move-file-cli": "^3.0.0",
-    "nx": "^23.0.0",
+    "nx": "^23.0.1",
     "oxfmt": "^0.55.0",
     "oxlint": "^1.70.0",
     "oxlint-tsgolint": "^0.23.0",
@@ -87,5 +82,6 @@
     "packages/validator-ata",
     "packages/snapshot-tests",
     "packages/shadcn"
-  ]
+  ],
+  "packageManager": "pnpm@10.17.1"
 }

@@ -6,45 +6,45 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
 
 # Build all packages (parallel)
-npm run build
+pnpm run build
 
 # Build all packages (sequential, use if parallel causes issues)
-npm run build-serial
+pnpm run build-serial
 
 # Run all tests
-npm test
+pnpm test
 
 # Lint
-npm run lint
+pnpm run lint
 
 # Prettier check / format
-npm run cs-check
-npm run cs-format
+pnpm run cs-check
+pnpm run cs-format
 
 # Run a single package's tests
-cd packages/core && npm test
+cd packages/core && pnpm test
 
 # Watch mode for a single package
-cd packages/core && npm run test:watch
+cd packages/core && pnpm run test:watch
 
 # Update snapshots
-cd packages/snapshot-tests && npm run test:update
+cd packages/snapshot-tests && pnpm run test:update
 
 # Start the playground (interactive demo)
-cd packages/playground && npm start
+cd packages/playground && pnpm start
 
 # Full sanity check (lint + build + test)
-npm run sanity-check
+pnpm run sanity-check
 ```
 
 Individual package builds output three module formats: `build:cjs`, `build:esm`, `build:umd`.
 
 ## Architecture
 
-This is an **npm workspaces + Nx** monorepo. All packages live under `packages/` and are scoped as `@rjsf/*`.
+This is an **pnpm workspaces + Nx** monorepo. All packages live under `packages/` and are scoped as `@rjsf/*`.
 
 ### Package roles
 
