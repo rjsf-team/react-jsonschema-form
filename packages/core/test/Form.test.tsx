@@ -6112,6 +6112,38 @@ describe('patternProperties with fixed properties (#4518)', () => {
   });
 });
 
+describe('clearing a field with a schema default does not re-apply the default (#5125)', () => {
+  it('field stays empty after the user clears a string field that has a default value', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        name: { type: 'string', default: 'Chuck' },
+      },
+    };
+
+    const { container, node, onSubmit, onError } = createFormComponent({ schema });
+
+    // Initial default is populated
+    const input = container.querySelector<HTMLInputElement>('#root_name');
+    expect(input).toBeInTheDocument();
+    expect(input!.value).toBe('Chuck');
+
+    // User clears the field
+    await user.clear(input!);
+    expect(input!.value).toBe('');
+
+    // After clearing, the field must NOT re-fill with the default
+    expect(input!.value).toBe('');
+
+    // Submitting should succeed and the cleared field must not carry the default
+    await submitForm(node, user);
+    expect(onError).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalled();
+    const { formData } = onSubmit.mock.calls[onSubmit.mock.calls.length - 1][0];
+    expect(formData).not.toHaveProperty('name', 'Chuck');
+  });
+});
+
 describe('enum-based array values do not update when dependencies change (#1357 and #2492)', () => {
   it('should remove enum values in array when dependency switches', async () => {
     const schema: RJSFSchema = {

@@ -960,12 +960,18 @@ export default class Form<
     const inputForDefaults = hasOnlyUndefinedValues && wasPreviouslyNull ? undefined : formData;
 
     if (isObject(formData) || Array.isArray(formData)) {
+      // Tracks if the user cleared a plain (non-oneOf/anyOf) leaf field.
+      // The key is removed twice: once before getStateFromProps so inputForDefaults
+      // reflects an empty field for conditional schema resolution, and once after so
+      // the user's clear overrides any schema default getStateFromProps re-applied (#5125)
+      // and AJV never receives { key: undefined } for type:"string" fields (#4518).
+      let plainLeafWasCleared = false;
+
       if (newValue === ADDITIONAL_PROPERTY_KEY_REMOVE) {
-        // For additional properties, we were given the special remove this key value, so unset it
+        // For additional properties, this key was explicitly removed, so unset it
         _unset(formData, path);
       } else if (!isRootPath) {
-        // If the newValue is not on the root path, then set it into the form data
-        let unsetPath = false;
+        // Set the new value at its path in the form data.
         let valueForPath: T | null | undefined = newValue;
 
         if (newValue === undefined) {
@@ -977,17 +983,16 @@ export default class Form<
             const { field } = schemaUtils.findFieldInSchema(schema, path, oldFormData);
             const leaf = field as RJSFSchema | undefined;
             const isOneOfOrAnyOfLeaf = leaf && (ONE_OF_KEY in leaf || ANY_OF_KEY in leaf);
-            // Plain leaves: omit the key instead of `{ key: undefined }`, which breaks `type: "string"` validation in
-            // AJV after clearing a text input (https://github.com/rjsf-team/react-jsonschema-form/issues/4518).
-            // oneOf/anyOf leaves and unresolved leaves: keep `valueForPath === newValue` (already `undefined`) so
-            // mergeDefaults does not immediately re-apply a branch default when clearing those widgets.
+            // oneOf/anyOf and unresolved leaves keep `undefined` so mergeDefaults doesn't
+            // re-apply a branch default when the user clears the widget.
+            // Plain resolved leaves use plainLeafWasCleared instead (see below).
             if (!isOneOfOrAnyOfLeaf && leaf !== undefined) {
-              unsetPath = true;
+              plainLeafWasCleared = true;
             }
           }
         }
 
-        if (unsetPath) {
+        if (plainLeafWasCleared) {
           _unset(formData, path);
         } else {
           _set(formData, path, valueForPath);
@@ -995,7 +1000,7 @@ export default class Form<
       }
       const shouldSanitize =
         retrievedSchema && !isRootPath && !isObject(newValue) && !Array.isArray(newValue) && !disabled && !readonly;
-      // Pass true to skip live validation in `getStateFromProps()` since we will do it a bit later
+      // Skip live validation here; it runs later in this function.
       const newState = this.getStateFromProps(
         this.props,
         inputForDefaults,
@@ -1007,6 +1012,12 @@ export default class Form<
       );
       formData = newState.formData;
       retrievedSchema = newState.retrievedSchema;
+
+      // Re-unset after merging defaults so the user's clear is preserved (#5125) and
+      // the validator never sees { [key]: undefined } (#4518).
+      if (plainLeafWasCleared) {
+        _unset(formData, path);
+      }
     }
 
     const mustValidate = !noValidate && (liveValidate === true || liveValidate === 'onChange');
