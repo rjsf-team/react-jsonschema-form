@@ -817,6 +817,38 @@ export default class Form<
     return { errors, errorSchema };
   }
 
+  /** Strips keys with `undefined` values from a form data object (recursively).
+   * Used to prevent AJV from receiving `{ [key]: undefined }` for fields such as
+   * `type: "string"` under `patternProperties`, which would cause a spurious type
+   * error (#4518), while still keeping the `undefined` key in state so that
+   * `mergeDefaultsWithFormData` does not re-apply schema defaults when the user has
+   * explicitly cleared a field (#5125 regression).
+   *
+   * @param formData - The form data to strip
+   * @returns - A copy of `formData` with all `undefined`-valued keys omitted
+   * @private
+   */
+  private static omitUndefinedLeaves<T>(formData: T): T {
+    // If the formData is not an object, return it as is (base case for recursion)
+    if (!isObject(formData)) {
+      return formData;
+    }
+
+    // If the formData is an object, create a new object to hold the result
+    const result: any = {};
+
+    for (const key of Object.keys(formData as object)) {
+      const value = (formData as any)[key];
+
+      if (value !== undefined) {
+        result[key] = Form.omitUndefinedLeaves(value);
+      }
+    }
+
+    // Return the result object with all `undefined`-valued keys omitted
+    return result as T;
+  }
+
   /** Performs live validation and then updates and returns the errors and error schemas by potentially merging in
    * `extraErrors` and `customErrors`.
    *
@@ -993,7 +1025,7 @@ export default class Form<
         }
 
         if (plainLeafWasCleared) {
-          _unset(formData, path);
+          _set(formData, path, undefined);
         } else {
           _set(formData, path, valueForPath);
         }
@@ -1013,10 +1045,13 @@ export default class Form<
       formData = newState.formData;
       retrievedSchema = newState.retrievedSchema;
 
-      // Re-unset after merging defaults so the user's clear is preserved (#5125) and
-      // the validator never sees { [key]: undefined } (#4518).
-      if (plainLeafWasCleared) {
-        _unset(formData, path);
+      // Re-set to undefined after merging defaults so the user's clear is preserved in
+      // state (#5125 regression: without this, clearing a second field re-applies the
+      // default to previously-cleared fields). The undefined key is stripped from the
+      // formData copy passed to AJV via omitUndefinedLeaves() so the validator never
+      // sees { [key]: undefined } for type:"string" or patternProperties fields (#4518).
+      if (plainLeafWasCleared && formData) {
+        _set(formData, path, undefined);
       }
     }
 
@@ -1068,7 +1103,7 @@ export default class Form<
         schema,
         schemaUtils,
         mergeBaseErrorSchema,
-        newFormData,
+        Form.omitUndefinedLeaves(newFormData),
         extraErrors,
         customErrors,
         retrievedSchema,
@@ -1365,7 +1400,7 @@ export default class Form<
   validateFormWithFormData = (formData?: T): boolean => {
     const { extraErrors, extraErrorsBlockSubmit, focusOnFirstError, onError } = this.props;
     const { errors: prevErrors } = this.state;
-    const schemaValidation = this.validate(formData);
+    const schemaValidation = this.validate(Form.omitUndefinedLeaves(formData));
     // Always merge extraErrors so they remain visible in state regardless of extraErrorsBlockSubmit.
     const { errors, errorSchema } = extraErrors ? Form.mergeErrors<T>(schemaValidation, extraErrors) : schemaValidation;
     // hasError gates submission: schema errors always block; extraErrors only block when

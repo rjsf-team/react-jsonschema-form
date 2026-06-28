@@ -38,6 +38,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `MultiSchemaField` to propagate the parent schema's `type` to option sub-schemas that don't define their own, so the correct widget (e.g. `StringField`) renders for the selected option instead of `FallbackField`, fixing [#5119](https://github.com/rjsf-team/react-jsonschema-form/issues/5119)
 - Fixed nested `constAsDefaults` values being skipped in matching conditional `allOf` schemas, fixing [#4963](https://github.com/rjsf-team/react-jsonschema-form/issues/4963)
 - Fixed `processPendingChange` so that clearing a string field that has a schema `default` value no longer re-applies the default, fixing [#5125](https://github.com/rjsf-team/react-jsonschema-form/issues/5125)
+- Fixed a regression introduced in [#5136](https://github.com/rjsf-team/react-jsonschema-form/pull/5136) where clearing a second field caused a previously-cleared field to be re-populated with its schema default; added `omitUndefinedLeaves()` to strip `undefined`-valued keys from formData before AJV validation so that the [#4518](https://github.com/rjsf-team/react-jsonschema-form/issues/4518) fix is preserved
 
 ## @rjsf/daisyui
 
