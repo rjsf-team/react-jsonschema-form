@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react';
-import { useCallback, Component } from 'react';
+import { useCallback, memo } from 'react';
 import type {
   ErrorSchema,
   Field,
@@ -17,6 +17,7 @@ import type {
 import {
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
+  deepEquals,
   descriptionId,
   getSchemaType,
   getTemplate,
@@ -26,7 +27,7 @@ import {
   ONE_OF_KEY,
   resolveUiSchema,
   RJSF_REF_CYCLE_KEY,
-  shouldRender,
+  shallowEquals,
   shouldRenderOptionalField,
   toFieldPathId,
   TranslatableString,
@@ -340,24 +341,30 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   );
 }
 
-/** The `SchemaField` component determines whether it is necessary to rerender the component based on any props changes
- * and if so, calls the `SchemaFieldRender` component with the props.
+/** The `SchemaField` component wraps `SchemaFieldRender` with a custom memoization comparator that mirrors the
+ * `shouldComponentUpdate` logic previously implemented in a class component.
+ *
+ * React.memo's comparator has INVERTED semantics relative to shouldComponentUpdate:
+ *   - return true  → props are equal → skip re-render  (≡ shouldComponentUpdate returning false)
+ *   - return false → props differ   → trigger re-render (≡ shouldComponentUpdate returning true)
+ *
+ * SchemaField has no local state, so only props are compared. The comparison strategy is controlled by
+ * `registry.globalFormOptions.experimental_componentUpdateStrategy`, matching the behaviour of the
+ * former class-based implementation that called `shouldRender()`.
+ *
+ * The cast to `typeof SchemaFieldRender` preserves the generic type signature (<T, S, F>) for consumers,
+ * since React.memo's return type erases generic parameters.
  */
-class SchemaField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> extends Component<
-  FieldProps<T, S, F>
-> {
-  shouldComponentUpdate(nextProps: Readonly<FieldProps<T, S, F>>) {
-    const {
-      registry: { globalFormOptions },
-    } = this.props;
-    const { experimental_componentUpdateStrategy = 'customDeep' } = globalFormOptions;
-
-    return shouldRender(this, nextProps, this.state, experimental_componentUpdateStrategy);
+const SchemaField = memo(SchemaFieldRender, (prevProps, nextProps) => {
+  const { experimental_componentUpdateStrategy = 'customDeep' } = nextProps.registry.globalFormOptions;
+  if (experimental_componentUpdateStrategy === 'always') {
+    return false; // always re-render — never consider props equal
   }
-
-  render() {
-    return <SchemaFieldRender<T, S, F> {...this.props} />;
+  if (experimental_componentUpdateStrategy === 'shallow') {
+    return shallowEquals(prevProps, nextProps);
   }
-}
+  // default: 'customDeep'
+  return deepEquals(prevProps, nextProps);
+}) as unknown as typeof SchemaFieldRender;
 
 export default SchemaField;
