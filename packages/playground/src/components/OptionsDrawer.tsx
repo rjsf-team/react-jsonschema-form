@@ -209,7 +209,7 @@ const liveSettingsBooleanSchema: RJSFSchema = {
           oneOf: [
             {
               type: 'string',
-              title: 'Innermost (descendant) default value value wins',
+              title: 'Innermost (descendant) default value wins',
               enum: ['descendantWins'],
             },
             {
