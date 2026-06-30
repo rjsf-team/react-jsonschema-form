@@ -205,17 +205,17 @@ const liveSettingsBooleanSchema: RJSFSchema = {
         nestedDefaultsPrecedence: {
           type: 'string',
           title: 'Nested defaults precedence',
-          default: 'innermostWins',
+          default: 'descendantWins',
           oneOf: [
             {
               type: 'string',
-              title: 'Innermost default value wins',
-              enum: ['innermostWins'],
+              title: 'Innermost (descendant) default value value wins',
+              enum: ['descendantWins'],
             },
             {
               type: 'string',
-              title: 'Outermost default value wins',
-              enum: ['outermostWins'],
+              title: 'Outermost (ancestor) default value wins',
+              enum: ['ancestorWins'],
             },
           ],
         },
