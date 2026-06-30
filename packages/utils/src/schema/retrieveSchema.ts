@@ -414,7 +414,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
           value as S,
           rootSchema,
           childList,
-          baseURI,
+          currentBaseURI,
           resolveAnyOfOrOneOfRefs,
           !resolveAnyOfOrOneOfRefs,
         );
