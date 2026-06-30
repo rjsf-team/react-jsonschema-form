@@ -1327,6 +1327,158 @@ describe('AJV8Validator', () => {
             expect(errorSchema.numberOfChildren!.__errors![0]).toEqual('must match pattern "\\d+"');
           });
         });
+        describe('title is in validation messages at the top level, with an allOf', () => {
+          beforeAll(() => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                animal: {
+                  title: 'My animal',
+                  enum: ['Cat', 'Fish'],
+                },
+              },
+              allOf: [
+                {
+                  required: ['animal'],
+                },
+              ],
+            };
+
+            const formData = {};
+            const result = validator.validateFormData(formData, schema);
+            errors = result.errors;
+            errorSchema = result.errorSchema;
+          });
+          it('should return an error list', () => {
+            expect(errors).toHaveLength(1);
+
+            const stack = errors.map((e) => e.stack);
+
+            expect(stack).toEqual(["must have required property 'My animal'"]);
+          });
+          it('should return an errorSchema', () => {
+            expect(errorSchema.animal!.__errors).toHaveLength(1);
+            expect(errorSchema.animal!.__errors![0]).toEqual("must have required property 'My animal'");
+          });
+        });
+        describe('title is in validation messages at the top level, with if-then-else', () => {
+          beforeAll(() => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                hasPet: { type: 'boolean' },
+                animal: {
+                  title: 'My animal',
+                  enum: ['Cat', 'Fish'],
+                },
+              },
+              if: {
+                properties: { hasPet: { const: true } },
+                required: ['hasPet'],
+              },
+              then: {
+                required: ['animal'],
+              },
+            };
+
+            const formData = { hasPet: true };
+            const result = validator.validateFormData(formData, schema);
+            errors = result.errors;
+            errorSchema = result.errorSchema;
+          });
+          it('should return an error list', () => {
+            expect(errors).toHaveLength(2);
+
+            const stack = errors.map((e) => e.stack);
+
+            expect(stack).toEqual(["must have required property 'My animal'", 'must match "then" schema']);
+          });
+          it('should return an errorSchema', () => {
+            expect(errorSchema.animal!.__errors).toHaveLength(1);
+            expect(errorSchema.animal!.__errors![0]).toEqual("must have required property 'My animal'");
+          });
+        });
+        describe('title is in validation messages at the top level, with an allOf, uiSchema title', () => {
+          beforeAll(() => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                animal: {
+                  title: 'My animal',
+                  enum: ['Cat', 'Fish'],
+                },
+              },
+              allOf: [
+                {
+                  required: ['animal'],
+                },
+              ],
+            };
+            const uiSchema: UiSchema = {
+              animal: {
+                title: 'My animal uiSchema',
+              },
+            };
+
+            const formData = {};
+            const result = validator.validateFormData(formData, schema, undefined, undefined, uiSchema);
+            errors = result.errors;
+            errorSchema = result.errorSchema;
+          });
+          it('should return an error list', () => {
+            expect(errors).toHaveLength(1);
+
+            const stack = errors.map((e) => e.stack);
+
+            expect(stack).toEqual(["must have required property 'My animal uiSchema'"]);
+          });
+          it('should return an errorSchema', () => {
+            expect(errorSchema.animal!.__errors).toHaveLength(1);
+            expect(errorSchema.animal!.__errors![0]).toEqual("must have required property 'My animal uiSchema'");
+          });
+        });
+        describe('title is in validation messages at the top level, with if-then-else', () => {
+          beforeAll(() => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                hasPet: { type: 'boolean' },
+                animal: {
+                  title: 'My animal',
+                  enum: ['Cat', 'Fish'],
+                },
+              },
+              if: {
+                properties: { hasPet: { const: true } },
+                required: ['hasPet'],
+              },
+              then: {
+                required: ['animal'],
+              },
+            };
+            const uiSchema: UiSchema = {
+              animal: {
+                title: 'My animal uiSchema',
+              },
+            };
+
+            const formData = { hasPet: true };
+            const result = validator.validateFormData(formData, schema, undefined, undefined, uiSchema);
+            errors = result.errors;
+            errorSchema = result.errorSchema;
+          });
+          it('should return an error list', () => {
+            expect(errors).toHaveLength(2);
+
+            const stack = errors.map((e) => e.stack);
+
+            expect(stack).toEqual(["must have required property 'My animal uiSchema'", 'must match "then" schema']);
+          });
+          it('should return an errorSchema', () => {
+            expect(errorSchema.animal!.__errors).toHaveLength(1);
+            expect(errorSchema.animal!.__errors![0]).toEqual("must have required property 'My animal uiSchema'");
+          });
+        });
         describe('title is in validation message with a nested child', () => {
           beforeAll(() => {
             const schema: RJSFSchema = {

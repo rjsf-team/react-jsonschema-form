@@ -138,6 +138,42 @@ describe('transformRJSFValidationErrors()', () => {
     expect(out[0].message).toContain('Schema Title');
   });
 
+  it('falls back to uiSchema title via instance path when schemaPath contains non-property segments (e.g. allOf)', () => {
+    const errors: ValidationError[] = [
+      ataError({
+        instancePath: '',
+        schemaPath: '#/allOf/0/required',
+        params: { missingProperty: 'animal' },
+        message: "must have required property 'animal'",
+        parentSchema: { required: ['animal'] },
+      }),
+    ];
+    const uiSchema: UiSchema = { animal: { title: 'My animal uiSchema' } };
+    const out = transformRJSFValidationErrors(errors, uiSchema);
+    expect(out[0].title).toBe('My animal uiSchema');
+    expect(out[0].message).toContain('My animal uiSchema');
+  });
+
+  it('falls back to root schema title when parentSchema lacks properties (e.g. allOf)', () => {
+    const errors: ValidationError[] = [
+      ataError({
+        instancePath: '',
+        schemaPath: '#/allOf/0/required',
+        params: { missingProperty: 'animal' },
+        message: "must have required property 'animal'",
+        parentSchema: { required: ['animal'] },
+      }),
+    ];
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { animal: { title: 'My animal', enum: ['Cat', 'Fish'] } },
+      allOf: [{ required: ['animal'] }],
+    };
+    const out = transformRJSFValidationErrors(errors, undefined, undefined, schema);
+    expect(out[0].title).toBe('My animal');
+    expect(out[0].message).toContain('My animal');
+  });
+
   it('uses uiSchema title at the property level when params has no property names', () => {
     const errors: ValidationError[] = [
       {
