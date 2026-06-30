@@ -341,16 +341,8 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   );
 }
 
-/** The `SchemaField` component wraps `SchemaFieldRender` with a custom memoization comparator that mirrors the
- * `shouldComponentUpdate` logic previously implemented in a class component.
- *
- * React.memo's comparator has INVERTED semantics relative to shouldComponentUpdate:
- *   - return true  → props are equal → skip re-render  (≡ shouldComponentUpdate returning false)
- *   - return false → props differ   → trigger re-render (≡ shouldComponentUpdate returning true)
- *
- * SchemaField has no local state, so only props are compared. The comparison strategy is controlled by
- * `registry.globalFormOptions.experimental_componentUpdateStrategy`, matching the behaviour of the
- * former class-based implementation that called `shouldRender()`.
+/** The `SchemaField` component wraps `SchemaFieldRender` with a custom memoization comparator that  determines whether it is necessary to rerender the component based on any props changes
+ * using `experimental_componentUpdateStrategy`.
  *
  * The cast to `typeof SchemaFieldRender` preserves the generic type signature (<T, S, F>) for consumers,
  * since React.memo's return type erases generic parameters.
