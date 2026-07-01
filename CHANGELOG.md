@@ -85,6 +85,14 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `Experimental_DefaultFormStateBehavior` to add a new `nestedDefaultsPrecedence` option
 - Updated `getDefaultFormState()` to use the new `nestedDefaultsPrecedence` option to control how defaults defined on multiple levels are merged together, fixing [#5089](https://github.com/rjsf-team/react-jsonschema-form/issues/5089)
 
+## @rjsf/validator-ajv8
+
+- Updated `transformRJSFValidationErrors()` to detect field name for `allOf` and `if-then-else` by falling back to the root schema to find the title, fixing [#5134](https://github.com/rjsf-team/react-jsonschema-form/issues/5134)
+
+## @rjsf/validator-ata
+
+- Updated `transformRJSFValidationErrors()` to detect field name for `allOf` and `if-then-else` by falling back to the root schema to find the title, fixing [#5134](https://github.com/rjsf-team/react-jsonschema-form/issues/5134)
+
 ## Dev / docs / playground
 
 - Updated `@rjsf/snapshots` to add a test case to `formTests` that verifies the new Cycle detection UI

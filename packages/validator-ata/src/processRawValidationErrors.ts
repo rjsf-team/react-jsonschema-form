@@ -75,6 +75,7 @@ export function transformRJSFValidationErrors<
   errors: ValidationError[] = [],
   uiSchema?: UiSchema<T, S, F>,
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType,
+  schema?: S,
 ): RJSFValidationError[] {
   const errorList = errors.map((e: ValidationError) => {
     const { instancePath, keyword, params, schemaPath, parentSchema } = e;
@@ -102,6 +103,13 @@ export function transformRJSFValidationErrors<
             .concat([currentProperty]);
           uiSchemaTitle = getUiOptions(get(uiSchema, uiSchemaPath)).title;
         }
+        if (uiSchemaTitle === undefined) {
+          // schemaPath may include non-property segments (e.g. allOf/if/then) that do
+          // not exist in the uiSchema; fall back to the instance path, the same way the
+          // root-schema title fallback does below.
+          const propParts = property.replace(/^\./, '').split('.').filter(Boolean);
+          uiSchemaTitle = get(uiSchema, [...propParts, currentProperty, 'title']) as string | undefined;
+        }
         if (uiSchemaTitle) {
           message = message.replace(`'${currentProperty}'`, `'${uiSchemaTitle}'`);
           uiTitle = uiSchemaTitle;
@@ -110,6 +118,20 @@ export function transformRJSFValidationErrors<
           if (parentSchemaTitle) {
             message = message.replace(`'${currentProperty}'`, `'${parentSchemaTitle}'`);
             uiTitle = parentSchemaTitle;
+          } else if (schema) {
+            // parentSchema may be an allOf/anyOf/oneOf entry that lacks `properties`;
+            // fall back to looking up the title from the root schema.
+            const propParts = property.replace(/^\./, '').split('.').filter(Boolean);
+            const aSchemaPath: (string | number)[] = [];
+            for (const part of propParts) {
+              aSchemaPath.push(PROPERTIES_KEY, part);
+            }
+            aSchemaPath.push(PROPERTIES_KEY, currentProperty, 'title');
+            const rootSchemaTitle = get(schema, aSchemaPath) as string | undefined;
+            if (rootSchemaTitle) {
+              message = message.replace(`'${currentProperty}'`, `'${rootSchemaTitle}'`);
+              uiTitle = rootSchemaTitle;
+            }
           }
         }
       });
@@ -167,7 +189,7 @@ export default function processRawValidationErrors<
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType,
 ) {
   const { validationError: invalidSchemaError } = rawErrors;
-  let errors = transformRJSFValidationErrors<T, S, F>(rawErrors.errors, uiSchema, suppressDuplicateFiltering);
+  let errors = transformRJSFValidationErrors<T, S, F>(rawErrors.errors, uiSchema, suppressDuplicateFiltering, schema);
 
   if (invalidSchemaError) {
     errors = [...errors, { stack: invalidSchemaError.message }];
