@@ -1,4 +1,4 @@
-import { useCallback, useReducer, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
@@ -17,38 +17,6 @@ import {
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import omit from 'lodash/omit';
-
-/** Type used for the state of the `AnyOfField` component */
-interface AnyOfFieldState<T = any, S extends StrictRJSFSchema = RJSFSchema> {
-  /** The currently selected option */
-  selectedOption: number;
-  /** The option schemas after retrieving all $refs */
-  retrievedOptions: S[];
-  /** Snapshot of the `options` prop — used to detect changes and re-cache retrievedOptions */
-  prevOptions: S[];
-  /** Snapshot of `formData` — used to detect changes and re-match the selected option */
-  prevFormData: T | undefined;
-  /** Snapshot of `fieldPathId.$id` — used to suppress option re-matching when the field itself changes */
-  prevFieldId: string;
-}
-
-type AnyOfFieldAction<T = any, S extends StrictRJSFSchema = RJSFSchema> =
-  | { type: 'SET_SELECTED_OPTION'; payload: number }
-  | { type: 'UPDATE_STATE'; payload: AnyOfFieldState<T, S> };
-
-function anyOfFieldReducer<T = any, S extends StrictRJSFSchema = RJSFSchema>(
-  state: AnyOfFieldState<T, S>,
-  action: AnyOfFieldAction<T, S>,
-): AnyOfFieldState<T, S> {
-  switch (action.type) {
-    case 'SET_SELECTED_OPTION':
-      return { ...state, selectedOption: action.payload };
-    case 'UPDATE_STATE':
-      return action.payload;
-    default:
-      return state;
-  }
-}
 
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It tracks
  * the currently selected option and cleans up any irrelevant data in `formData`.
@@ -76,66 +44,53 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
   } = props;
   const { schemaUtils } = registry;
 
+  // retrievedOptions is purely derived from options — useMemo handles re-derivation automatically
+  // when options, schemaUtils, or formData change, with no render-phase dispatch needed.
+  const retrievedOptions = useMemo(
+    () => options.map((opt: S) => schemaUtils.retrieveSchema(opt, formData)),
+    [options, schemaUtils, formData],
+  );
+
+  const [selectedOption, setSelectedOption] = useState<number>(() => {
+    const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
+    return schemaUtils.getClosestMatchingOption(formData, retrievedOptions, 0, discriminator);
+  });
+
   /** Flag to skip the formData-change-driven option recalculation when the user just selected an option.
-   * Set to true in onOptionChange (before onChange is called), consumed and reset during the next render.
+   * Set to true in onOptionChange (before onChange is called), consumed and reset in the update effect.
    * This prevents the matching-option recalculation from overriding a user's explicit choice when
    * getDefaultFormState populates undefined properties that make deepEquals see a false formData change.
    */
   const skipNextOptionRecalculation = useRef(false);
+  const prevFormDataRef = useRef<T | undefined>(formData);
+  const prevFieldIdRef = useRef(fieldPathId.$id);
 
-  const [state, dispatch] = useReducer(
-    anyOfFieldReducer as (state: AnyOfFieldState<T, S>, action: AnyOfFieldAction<T, S>) => AnyOfFieldState<T, S>,
-    null,
-    (_: null): AnyOfFieldState<T, S> => {
-      const retrievedOptions = options.map((opt: S) => schemaUtils.retrieveSchema(opt, formData));
-      const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
-      return {
-        retrievedOptions,
-        selectedOption: schemaUtils.getClosestMatchingOption(formData, retrievedOptions, 0, discriminator),
-        prevOptions: options,
-        prevFormData: formData,
-        prevFieldId: fieldPathId.$id,
-      };
-    },
-  );
+  // Mirrors componentDidUpdate: re-match selectedOption when formData changes on the same field.
+  // Runs after every render (no deps array) to compare against prev values stored in refs.
+  // oxlint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    const prevFormData = prevFormDataRef.current;
+    const prevFieldId = prevFieldIdRef.current;
+    prevFormDataRef.current = formData;
+    prevFieldIdRef.current = fieldPathId.$id;
 
-  // getDerivedStateFromProps pattern: compute any state updates during the render phase rather than in a
-  // useEffect. When dispatch is called here, React immediately re-renders with the new state and discards
-  // the current render's output before any DOM commit, so there is no visible flicker or extra paint.
-  let nextState = state;
-
-  if (!deepEquals(state.prevOptions, options)) {
-    const retrievedOptions = options.map((opt: S) => schemaUtils.retrieveSchema(opt, formData));
-    nextState = { ...nextState, retrievedOptions, prevOptions: options };
-  }
-
-  if (!deepEquals(formData, state.prevFormData)) {
-    if (fieldPathId.$id === state.prevFieldId) {
+    if (!deepEquals(formData, prevFormData) && fieldPathId.$id === prevFieldId) {
       if (skipNextOptionRecalculation.current) {
         skipNextOptionRecalculation.current = false;
-      } else {
-        const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
-        const matchingOption = schemaUtils.getClosestMatchingOption(
-          formData,
-          nextState.retrievedOptions,
-          nextState.selectedOption,
-          discriminator,
-        );
-        if (matchingOption !== nextState.selectedOption) {
-          nextState = { ...nextState, selectedOption: matchingOption };
-        }
+        return;
+      }
+      const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
+      const matchingOption = schemaUtils.getClosestMatchingOption(
+        formData,
+        retrievedOptions,
+        selectedOption,
+        discriminator,
+      );
+      if (matchingOption !== selectedOption) {
+        setSelectedOption(matchingOption);
       }
     }
-    nextState = { ...nextState, prevFormData: formData };
-  }
-
-  if (fieldPathId.$id !== state.prevFieldId) {
-    nextState = { ...nextState, prevFieldId: fieldPathId.$id };
-  }
-
-  if (nextState !== state) {
-    dispatch({ type: 'UPDATE_STATE', payload: nextState });
-  }
+  });
 
   const fieldId = `${fieldPathId.$id}${schema.oneOf ? '__oneof_select' : '__anyof_select'}`;
 
@@ -147,7 +102,6 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
    */
   const onOptionChange = useCallback(
     (option?: string) => {
-      const { selectedOption, retrievedOptions } = nextState;
       if (disabled || readonly) {
         return;
       }
@@ -165,12 +119,12 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         newFormData = schemaUtils.getDefaultFormState(newOption, newFormData, 'excludeObjectChildren') as T;
       }
 
-      dispatch({ type: 'SET_SELECTED_OPTION', payload: intOption });
+      setSelectedOption(intOption);
       skipNextOptionRecalculation.current = true;
       onChange(newFormData, fieldPathId.path, undefined, fieldId);
     },
-    // dispatch is stable (guaranteed by useReducer); skipNextOptionRecalculation is a ref (no re-render on write)
-    [nextState, disabled, readonly, schemaUtils, formData, fieldPathId, onChange, fieldId, dispatch],
+    // setSelectedOption is stable (guaranteed by useState); skipNextOptionRecalculation is a ref
+    [selectedOption, retrievedOptions, disabled, readonly, schemaUtils, formData, fieldPathId, onChange, fieldId],
   );
 
   const { widgets, fields, translateString, globalUiOptions } = registry;
@@ -183,7 +137,6 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
   const isOptionalRender = shouldRenderOptionalField<T, S, F>(registry, schema, required, uiSchema);
   const hasFormData = isFormDataAvailable<T>(formData);
 
-  const { selectedOption, retrievedOptions } = nextState;
   const {
     widget = 'select',
     placeholder,
