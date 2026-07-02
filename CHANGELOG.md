@@ -71,6 +71,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated the single select trigger to use native button semantics with expanded and disabled state coverage, fixing [#4764](https://github.com/rjsf-team/react-jsonschema-form/issues/4764) ([#5117](https://github.com/rjsf-team/react-jsonschema-form/pull/5117))
 - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+- Fixed a small visual bug that caused hovering over items of `FancySelect` and `FancyMultiSelect` that have the same label to incorrectly highlight more than one element, fixing [#5126](https://github.com/rjsf-team/react-jsonschema-form/issues/5126)
 
 ## @rjsf/utils
 
