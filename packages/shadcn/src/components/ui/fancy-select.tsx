@@ -142,6 +142,7 @@ export function FancySelect({
                       e.preventDefault();
                       e.stopPropagation();
                     }}
+                    value={item.value}
                     onSelect={() => {
                       if (!item.disabled) {
                         onValueChange?.(item.value);
