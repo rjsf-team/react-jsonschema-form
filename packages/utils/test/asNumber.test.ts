@@ -42,4 +42,38 @@ describe('asNumber()', () => {
   it('should return null if the input is null', () => {
     expect(asNumber(null)).toEqual(null);
   });
+
+  describe('with comma decimal separator locales (e.g. Polish)', () => {
+    beforeEach(() => {
+      vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['pl']);
+    });
+
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    it('should return a number out of a string representing a number', () => {
+      expect(asNumber('3')).toEqual(3);
+    });
+
+    it('should return a float out of a string representing a float using comma', () => {
+      expect(asNumber('3,14')).toEqual(3.14);
+    });
+
+    it('should return the raw value if the input ends with a comma', () => {
+      expect(asNumber('3,')).toEqual('3,');
+    });
+
+    it('should not convert the value to an integer if the input ends with a ,0', () => {
+      expect(asNumber('3,0')).toEqual('3,0');
+    });
+
+    it('should not convert the value to an integer if the input ends with a ,10', () => {
+      expect(asNumber('3,10')).toEqual('3,10');
+    });
+
+    it('should allow numbers with a 0 in the first decimal place', () => {
+      expect(asNumber('3,07')).toEqual(3.07);
+    });
+  });
 });

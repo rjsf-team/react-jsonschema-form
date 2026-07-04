@@ -578,4 +578,89 @@ describe('NumberField', () => {
       expect(options[0].innerHTML).toEqual('0');
     });
   });
+
+  describe('Comma decimal separator locales (e.g., Polish, German)', () => {
+    beforeEach(() => {
+      vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['pl']);
+    });
+
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    it('should assign a default value formatted with comma', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'number',
+          default: 2.3,
+        },
+        uiSchema: {
+          'ui:options': {
+            inputType: 'text',
+          },
+        },
+      });
+
+      expect(node.querySelector('.rjsf-field input')).toHaveAttribute('value', '2,3');
+    });
+
+    it('should handle a change event using comma decimal separator', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'number',
+        },
+        uiSchema: {
+          'ui:options': {
+            inputType: 'text',
+          },
+        },
+      });
+
+      await user.type(node.querySelector('input')!, '2,5');
+
+      expectToHaveBeenCalledWithFormData(onChange, 2.5, 'root');
+    });
+
+    it('should render with trailing zeroes using comma', async () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'number',
+        },
+        uiSchema: {
+          'ui:options': {
+            inputType: 'text',
+          },
+        },
+      });
+
+      const $input = node.querySelector('input')!;
+      await user.type($input, '2,');
+      expect($input).toHaveValue('2,');
+
+      await user.type($input, '0');
+      expect($input).toHaveValue('2,0');
+
+      await user.type($input, '0');
+      expect($input).toHaveValue('2,00');
+    });
+
+    it('should normalize values beginning with a comma', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'number',
+        },
+        uiSchema: {
+          'ui:options': {
+            inputType: 'text',
+          },
+        },
+      });
+
+      const $input = node.querySelector('input')!;
+      await user.type($input, ',05');
+
+      expectToHaveBeenCalledWithFormData(onChange, 0.05, 'root');
+      expect($input).toHaveValue('0,05');
+    });
+  });
 });
