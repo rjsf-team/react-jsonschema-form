@@ -8,6 +8,7 @@ import {
   getTemplate,
   getUiOptions,
   getWidget,
+  hashObject,
   isFormDataAvailable,
   mergeSchemas,
   ONE_OF_KEY,
@@ -44,11 +45,16 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
   } = props;
   const { schemaUtils } = registry;
 
+  // Hash formData by value so the memo only invalidates when data actually changes, not on every
+  // new object reference. hashObject(undefined) throws, so null is used as the fallback.
+  const formDataHash = hashObject(formData ?? null);
+
   // retrievedOptions is purely derived from options — useMemo handles re-derivation automatically
-  // when options, schemaUtils, or formData change, with no render-phase dispatch needed.
+  // when options, schemaUtils, or formData's value changes, with no render-phase dispatch needed.
   const retrievedOptions = useMemo(
     () => options.map((opt: S) => schemaUtils.retrieveSchema(opt, formData)),
-    [options, schemaUtils, formData],
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- formDataHash is the value-stable proxy for formData
+    [options, schemaUtils, formDataHash],
   );
 
   const [selectedOption, setSelectedOption] = useState<number>(() => {
