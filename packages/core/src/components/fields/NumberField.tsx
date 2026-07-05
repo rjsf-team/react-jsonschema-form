@@ -85,12 +85,12 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   }
 
   // Format value to use the locale separator for rendering if it is a number
-  let displayValue: typeof value | string = value;
+  let displayValue: T | undefined = value;
   if (typeof value === 'number') {
-    displayValue = String(value).replace('.', separator);
+    displayValue = String(value).replace('.', separator) as unknown as T;
   }
 
-  return <StringField {...props} formData={displayValue as unknown as T} onChange={handleChange} />;
+  return <StringField {...props} formData={displayValue} onChange={handleChange} />;
 }
 
 export default NumberField;
