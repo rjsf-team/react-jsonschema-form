@@ -817,38 +817,6 @@ export default class Form<
     return { errors, errorSchema };
   }
 
-  /** Strips keys with `undefined` values from a form data object (recursively).
-   * Used to prevent AJV from receiving `{ [key]: undefined }` for fields such as
-   * `type: "string"` under `patternProperties`, which would cause a spurious type
-   * error (#4518), while still keeping the `undefined` key in state so that
-   * `mergeDefaultsWithFormData` does not re-apply schema defaults when the user has
-   * explicitly cleared a field (#5125 regression).
-   *
-   * @param formData - The form data to strip
-   * @returns - A copy of `formData` with all `undefined`-valued keys omitted
-   * @private
-   */
-  private static omitUndefinedLeaves<T>(formData: T): T {
-    // If the formData is not an object, return it as is (base case for recursion)
-    if (!isObject(formData)) {
-      return formData;
-    }
-
-    // If the formData is an object, create a new object to hold the result
-    const result: any = {};
-
-    for (const key of Object.keys(formData as object)) {
-      const value = (formData as any)[key];
-
-      if (value !== undefined) {
-        result[key] = Form.omitUndefinedLeaves(value);
-      }
-    }
-
-    // Return the result object with all `undefined`-valued keys omitted
-    return result as T;
-  }
-
   /** Performs live validation and then updates and returns the errors and error schemas by potentially merging in
    * `extraErrors` and `customErrors`.
    *
@@ -1048,7 +1016,7 @@ export default class Form<
       // Re-set to undefined after merging defaults so the user's clear is preserved in
       // state (#5125 regression: without this, clearing a second field re-applies the
       // default to previously-cleared fields). The undefined key is stripped from the
-      // formData copy passed to AJV via omitUndefinedLeaves() so the validator never
+      // formData copy passed to AJV via JSON.parse(JSON.stringify(...)) so the validator never
       // sees { [key]: undefined } for type:"string" or patternProperties fields (#4518).
       if (plainLeafWasCleared && formData) {
         _set(formData, path, undefined);
@@ -1097,13 +1065,18 @@ export default class Form<
       // If we have custom errors and the path has an error, then we need to clear it
       customErrors.clearErrors(path);
     }
+
+    // JSON.stringify drops keys with `undefined` values; JSON.parse on the result gives AJV a clean
+    // object that avoids spurious type errors for `type: "string"` fields that were cleared (#4518).
+    const formDataForValidation = newFormData ? JSON.parse(JSON.stringify(newFormData)) : undefined;
+
     // If there are pending changes in the queue, skip live validation since it will happen with the last change
     if (mustValidate && this.pendingChanges.length === 1) {
       const liveValidation = this.liveValidate(
         schema,
         schemaUtils,
         mergeBaseErrorSchema,
-        Form.omitUndefinedLeaves(newFormData),
+        formDataForValidation,
         extraErrors,
         customErrors,
         retrievedSchema,
@@ -1400,7 +1373,12 @@ export default class Form<
   validateFormWithFormData = (formData?: T): boolean => {
     const { extraErrors, extraErrorsBlockSubmit, focusOnFirstError, onError } = this.props;
     const { errors: prevErrors } = this.state;
-    const schemaValidation = this.validate(Form.omitUndefinedLeaves(formData));
+
+    // JSON.stringify drops keys with `undefined` values; JSON.parse on the result gives AJV a clean
+    // object that avoids spurious type errors for `type: "string"` fields that were cleared (#4518).
+    const formDataForValidation = formData ? JSON.parse(JSON.stringify(formData)) : undefined;
+
+    const schemaValidation = this.validate(formDataForValidation);
     // Always merge extraErrors so they remain visible in state regardless of extraErrorsBlockSubmit.
     const { errors, errorSchema } = extraErrors ? Form.mergeErrors<T>(schemaValidation, extraErrors) : schemaValidation;
     // hasError gates submission: schema errors always block; extraErrors only block when
