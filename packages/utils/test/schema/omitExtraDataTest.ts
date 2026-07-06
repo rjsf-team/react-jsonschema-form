@@ -1034,6 +1034,52 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         expect(customMerge).toHaveBeenCalled();
         expect(result).toEqual({ foo: 'hi', bar: 1 });
       });
+
+      // Regression test for https://github.com/rjsf-team/react-jsonschema-form/issues/5142
+      // When allOf entries contain if/then/else, the merger can only hoist one triple to the
+      // parent level; subsequent entries remain in allOf after merging. Without the fix those
+      // remaining entries are never processed and their conditional properties are silently dropped.
+      it('preserves properties from if/then/else entries that remain in allOf after merging', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            prop1: { type: 'string', enum: ['without required', 'with required'] },
+          },
+          allOf: [
+            {
+              if: { properties: { prop1: { const: 'without required' } }, required: ['prop1'] },
+              then: {
+                properties: {
+                  prop3: { type: 'object', properties: { subprop1: { type: 'string' } } },
+                },
+              },
+            },
+            {
+              if: { properties: { prop1: { const: 'with required' } }, required: ['prop1'] },
+              then: {
+                required: ['prop2'],
+                properties: {
+                  prop2: {
+                    type: 'object',
+                    required: ['subprop1', 'subprop2'],
+                    properties: {
+                      subprop1: { type: 'string' },
+                      subprop2: { type: 'string' },
+                    },
+                  },
+                },
+              },
+            },
+          ],
+        };
+        const formData = { prop1: 'with required', prop2: { subprop1: '123', subprop2: '456' } };
+        // The merger hoists the first if/then to the top level; the second stays in allOf.
+        // isValid calls: (1) second allOf item's if-condition → true (prop1 matches "with required"),
+        //                (2) hoisted top-level if-condition → false (prop1 does not match "without required")
+        testValidator.setReturnValues({ isValid: [true, false] });
+        const result = omitExtraData(testValidator, schema, schema, formData);
+        expect(result).toEqual({ prop1: 'with required', prop2: { subprop1: '123', subprop2: '456' } });
+      });
     });
 
     describe('patternProperties support', () => {

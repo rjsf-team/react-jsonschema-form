@@ -84,6 +84,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `retrieveSchema()` to preserve boolean conditional branches while resolving schemas, fixing [#4476](https://github.com/rjsf-team/react-jsonschema-form/issues/4476) ([#5101](https://github.com/rjsf-team/react-jsonschema-form/pull/5101))
 - Updated `Experimental_DefaultFormStateBehavior` to add a new `nestedDefaultsPrecedence` option
 - Updated `getDefaultFormState()` to use the new `nestedDefaultsPrecedence` option to control how defaults defined on multiple levels are merged together, fixing [#5089](https://github.com/rjsf-team/react-jsonschema-form/issues/5089)
+- Updated `omitExtraData()` to better handle `allOf`s containing multiple `if/then/else` blocks, matching fix in `SJSF`, fixing [#5142](https://github.com/rjsf-team/react-jsonschema-form/issues/5142)
 
 ## @rjsf/validator-ajv8
 
