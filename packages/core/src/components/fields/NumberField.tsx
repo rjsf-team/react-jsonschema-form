@@ -7,7 +7,7 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { asNumber, getDecimalSeparator } from '@rjsf/utils';
+import { asNumber, getDecimalSeparator, getUiOptions, optionsList } from '@rjsf/utils';
 
 // Static matchers for standard '.' separator used during normalization inside handleChange
 const trailingCharMatcherWithPrefix = /\.([0-9]*0)*$/;
@@ -86,8 +86,16 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
 
   // Format value to use the locale separator for rendering if it is a number
   let displayValue: T | undefined = value;
-  if (typeof value === 'number') {
-    displayValue = String(value).replace('.', separator) as unknown as T;
+  if (typeof value === 'number' && separator !== '.') {
+    const { schema, uiSchema } = props;
+    const { schemaUtils } = registry;
+    const enumOptions = schemaUtils.isSelect(schema) ? optionsList(schema, uiSchema) : undefined;
+    const defaultWidget = enumOptions ? 'select' : 'text';
+    const { widget = defaultWidget } = getUiOptions(uiSchema);
+
+    if (widget !== 'radio' && widget !== 'select' && widget !== 'hidden') {
+      displayValue = String(value).replace('.', separator) as unknown as T;
+    }
   }
 
   return <StringField {...props} formData={displayValue} onChange={handleChange} />;
