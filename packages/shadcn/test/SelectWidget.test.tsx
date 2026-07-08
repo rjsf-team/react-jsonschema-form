@@ -78,4 +78,94 @@ describe('SelectWidget', () => {
     await user.tab();
     expect(screen.getByRole('button', { name: 'After select' })).toHaveFocus();
   });
+
+  test('hovering over elements with duplicate labels only highlights the correct one by value', async () => {
+    const user = userEvent.setup();
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          autofocus: false,
+          disabled: false,
+          readonly: false,
+          rawErrors: [],
+          value: undefined,
+          placeholder: 'Select a vehicle',
+          options: {
+            enumOptions: [
+              { label: 'Car', value: 'car1' },
+              { label: 'Car', value: 'car2' },
+              { label: 'Bike', value: 'bike' },
+            ],
+          },
+        })}
+      />,
+    );
+
+    const trigger = screen.getByRole('button', { name: /select a vehicle/i });
+    await user.click(trigger);
+
+    const carOptions = screen.getAllByRole('option', { name: 'Car' });
+    expect(carOptions).toHaveLength(2);
+
+    await user.hover(carOptions[0]);
+
+    expect(carOptions[0]).toHaveAttribute('aria-selected', 'true');
+    expect(carOptions[0]).toHaveAttribute('data-selected', 'true');
+
+    expect(carOptions[1]).toHaveAttribute('aria-selected', 'false');
+    expect(carOptions[1]).toHaveAttribute('data-selected', 'false');
+
+    await user.hover(carOptions[1]);
+
+    expect(carOptions[0]).toHaveAttribute('aria-selected', 'false');
+    expect(carOptions[0]).toHaveAttribute('data-selected', 'false');
+
+    expect(carOptions[1]).toHaveAttribute('aria-selected', 'true');
+    expect(carOptions[1]).toHaveAttribute('data-selected', 'true');
+  });
+
+  test('multi-select: hovering over elements with duplicate labels only highlights the correct one by value', async () => {
+    const user = userEvent.setup();
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          autofocus: false,
+          disabled: false,
+          readonly: false,
+          multiple: true,
+          rawErrors: [],
+          value: [],
+          options: {
+            enumOptions: [
+              { label: 'Car', value: 'car1' },
+              { label: 'Car', value: 'car2' },
+              { label: 'Bike', value: 'bike' },
+            ],
+          },
+        })}
+      />,
+    );
+
+    const input = screen.getByPlaceholderText('Select ...');
+    await user.click(input);
+
+    const carOptions = screen.getAllByRole('option', { name: 'Car' });
+    expect(carOptions).toHaveLength(2);
+
+    await user.hover(carOptions[0]);
+
+    expect(carOptions[0]).toHaveAttribute('aria-selected', 'true');
+    expect(carOptions[0]).toHaveAttribute('data-selected', 'true');
+
+    expect(carOptions[1]).toHaveAttribute('aria-selected', 'false');
+    expect(carOptions[1]).toHaveAttribute('data-selected', 'false');
+
+    await user.hover(carOptions[1]);
+
+    expect(carOptions[0]).toHaveAttribute('aria-selected', 'false');
+    expect(carOptions[0]).toHaveAttribute('data-selected', 'false');
+
+    expect(carOptions[1]).toHaveAttribute('aria-selected', 'true');
+    expect(carOptions[1]).toHaveAttribute('data-selected', 'true');
+  });
 });

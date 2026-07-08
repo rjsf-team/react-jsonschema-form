@@ -448,6 +448,17 @@ export default function omitExtraData<
     }
     if (allOf) {
       localSchema = doMergeAllOf<S>(localSchema, experimental_customMergeAllOf);
+      // Schemas whose allOf entries contain if/then/else keywords may not fully merge: the merger
+      // can only hoist one if/then/else triple to the parent level, so additional entries stay in
+      // allOf. Process any that remain so their conditional properties are not silently dropped.
+      // See: https://github.com/rjsf-team/react-jsonschema-form/issues/5142
+      const remainingAllOf = localSchema.allOf;
+      if (remainingAllOf) {
+        for (let i = 0; i < remainingAllOf.length; i++) {
+          // oxlint-disable-next-line no-param-reassign
+          target = omit(remainingAllOf[i] as S | boolean, source, target);
+        }
+      }
     }
 
     let filtered = handleAnyOf(localSchema, source, handleOneOf(localSchema.oneOf, localSchema, source, target));
