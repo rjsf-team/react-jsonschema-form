@@ -765,9 +765,14 @@ export default class Form<
     // When a pre-resolved schema is provided (e.g., from live validation), use it directly.
     // Otherwise validate against the original schema so AJV sees the full constraint set.
     const validationSchema = retrievedSchema ?? schema;
+
+    // JSON.stringify drops keys with `undefined` values; JSON.parse on the result gives AJV a clean
+    // object that avoids spurious type errors for `type: "string"` fields that were cleared (#4518).
+    const validationFormData = formData ? JSON.parse(JSON.stringify(formData)) : undefined;
+
     return schemaUtils
       .getValidator()
-      .validateFormData(formData, validationSchema, customValidate, transformErrors, uiSchema);
+      .validateFormData(validationFormData, validationSchema, customValidate, transformErrors, uiSchema);
   }
 
   /** Renders any errors contained in the `state` in using the `ErrorList`, if not disabled by `showErrorList`. */
@@ -1065,18 +1070,13 @@ export default class Form<
       // If we have custom errors and the path has an error, then we need to clear it
       customErrors.clearErrors(path);
     }
-
-    // JSON.stringify drops keys with `undefined` values; JSON.parse on the result gives AJV a clean
-    // object that avoids spurious type errors for `type: "string"` fields that were cleared (#4518).
-    const formDataForValidation = newFormData ? JSON.parse(JSON.stringify(newFormData)) : undefined;
-
     // If there are pending changes in the queue, skip live validation since it will happen with the last change
     if (mustValidate && this.pendingChanges.length === 1) {
       const liveValidation = this.liveValidate(
         schema,
         schemaUtils,
         mergeBaseErrorSchema,
-        formDataForValidation,
+        newFormData,
         extraErrors,
         customErrors,
         retrievedSchema,
@@ -1373,12 +1373,7 @@ export default class Form<
   validateFormWithFormData = (formData?: T): boolean => {
     const { extraErrors, extraErrorsBlockSubmit, focusOnFirstError, onError } = this.props;
     const { errors: prevErrors } = this.state;
-
-    // JSON.stringify drops keys with `undefined` values; JSON.parse on the result gives AJV a clean
-    // object that avoids spurious type errors for `type: "string"` fields that were cleared (#4518).
-    const formDataForValidation = formData ? JSON.parse(JSON.stringify(formData)) : undefined;
-
-    const schemaValidation = this.validate(formDataForValidation);
+    const schemaValidation = this.validate(formData);
     // Always merge extraErrors so they remain visible in state regardless of extraErrorsBlockSubmit.
     const { errors, errorSchema } = extraErrors ? Form.mergeErrors<T>(schemaValidation, extraErrors) : schemaValidation;
     // hasError gates submission: schema errors always block; extraErrors only block when
