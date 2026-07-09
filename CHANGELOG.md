@@ -75,7 +75,6 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/utils
 
-- Fixed `optionsList()` to preserve an explicitly empty string `title` on `oneOf`/`anyOf` options instead of falling back to the option's value, fixing [#4448](https://github.com/rjsf-team/react-jsonschema-form/issues/4448)
 - Updated `types.ts` to add `CyclicSchemaExpandProps` type and `CyclicSchemaExpandTemplate` in the `TemplatesType`
 - Updated `resolveAllReferences()` to add a new `markCycleOnDetection` prop which adds `RJSF_REF_CYCLE_KEY` marker (from `constants.ts`) to a schema that has been detected to have a cycle, partially fixing [#3907](https://github.com/rjsf-team/react-jsonschema-form/issues/3907)
 - Updated `hashForSchema()` to filter keys to remove `RJSF_REF_KEY` prefixed keys before hashing the schema
@@ -86,6 +85,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `Experimental_DefaultFormStateBehavior` to add a new `nestedDefaultsPrecedence` option
 - Updated `getDefaultFormState()` to use the new `nestedDefaultsPrecedence` option to control how defaults defined on multiple levels are merged together, fixing [#5089](https://github.com/rjsf-team/react-jsonschema-form/issues/5089)
 - Updated `omitExtraData()` to better handle `allOf`s containing multiple `if/then/else` blocks, matching fix in `SJSF`, fixing [#5142](https://github.com/rjsf-team/react-jsonschema-form/issues/5142)
+- Fixed `optionsList()` to preserve an explicitly empty string `title` on `oneOf`/`anyOf` options instead of falling back to the option's value, fixing [#4448](https://github.com/rjsf-team/react-jsonschema-form/issues/4448)
 
 ## @rjsf/validator-ajv8
 
