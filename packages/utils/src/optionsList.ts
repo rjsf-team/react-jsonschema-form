@@ -87,10 +87,11 @@ export default function optionsList<T = any, S extends StrictRJSFSchema = RJSFSc
     if (selectorField) {
       const innerSchema: S = get(aSchema, [PROPERTIES_KEY, selectorField], {}) as S;
       value = get(innerSchema, DEFAULT_KEY, get(innerSchema, CONST_KEY));
-      label = label || innerSchema?.title || aSchema.title || String(value);
+      // Use nullish coalescing so that an explicitly empty string title is preserved
+      label = label ?? innerSchema?.title ?? aSchema.title ?? String(value);
     } else {
       value = toConstant(aSchema);
-      label = label || aSchema.title || String(value);
+      label = label ?? aSchema.title ?? String(value);
     }
     return {
       schema: aSchema,
