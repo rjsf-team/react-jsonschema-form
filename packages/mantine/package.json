@@ -65,8 +65,8 @@
     "@mantine/core": ">=8",
     "@mantine/dates": ">=8",
     "@mantine/hooks": ">=8",
-    "@rjsf/core": "^6.6.x",
-    "@rjsf/utils": "^6.6.x",
+    "@rjsf/core": "workspace:^",
+    "@rjsf/utils": "workspace:^",
     "react": ">=18"
   },
   "devDependencies": {

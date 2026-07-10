@@ -62,8 +62,8 @@
     "node": ">=20"
   },
   "peerDependencies": {
-    "@rjsf/core": "^6.6.x",
-    "@rjsf/utils": "^6.6.x",
+    "@rjsf/core": "workspace:^",
+    "@rjsf/utils": "workspace:^",
     "primeicons": ">=6.0.0",
     "primereact": ">=8.0.0",
     "react": ">=18"
