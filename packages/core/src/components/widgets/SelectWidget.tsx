@@ -78,6 +78,14 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
 
   return (
     <>
+      <SelectedOptionDescription
+        id={id}
+        multiple={multiple}
+        options={options}
+        registry={registry}
+        uiSchema={uiSchema}
+        value={value}
+      />
       {/* oxlint-disable-next-line jsx-a11y/no-autofocus */}
       <select
         id={id}
@@ -108,14 +116,6 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
             );
           })}
       </select>
-      <SelectedOptionDescription
-        id={id}
-        multiple={multiple}
-        options={options}
-        registry={registry}
-        uiSchema={uiSchema}
-        value={value}
-      />
     </>
   );
 }

@@ -108,6 +108,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       position='relative'
       {...chakraProps}
     >
+      <SelectedOptionDescription {...props} />
       <SelectRoot
         collection={selectOptions}
         id={id}
@@ -138,7 +139,6 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
           </ChakraSelect.Content>
         </ChakraSelect.Positioner>
       </SelectRoot>
-      <SelectedOptionDescription {...props} />
     </Field>
   );
 }

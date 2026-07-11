@@ -112,6 +112,7 @@ export default function NativeSelectWidget<
       label={labelValue(label, hideLabel || !label)}
       {...chakraProps}
     >
+      <SelectedOptionDescription {...props} />
       <NativeSelect.Root>
         <NativeSelect.Field
           id={id}
@@ -135,7 +136,6 @@ export default function NativeSelectWidget<
         </NativeSelect.Field>
         <NativeSelect.Indicator />
       </NativeSelect.Root>
-      <SelectedOptionDescription {...props} />
     </Field>
   );
 }

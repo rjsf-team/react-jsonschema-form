@@ -9476,6 +9476,49 @@ exports[`single fields > select widget with description in schema and FieldTempl
 </DocumentFragment>
 `;
 
+exports[`single fields > select widget with selected oneOf option description 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+      >
+        <select
+          aria-describedby="root__error root__description root__help"
+          id="root"
+          name="root"
+          options="[object Object],[object Object]"
+          placeholder=""
+        />
+        <span
+          id="root__description"
+        >
+          Foo description
+        </span>
+      </div>
+    </div>
+    <button
+      aria-label="Submit"
+      class="p-button p-component"
+      data-pc-name="button"
+      data-pc-section="root"
+      type="submit"
+    >
+      <span
+        class="p-button-label p-c"
+        data-pc-section="label"
+      >
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > slider field 1`] = `
 <DocumentFragment>
   <form

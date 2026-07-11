@@ -32,15 +32,16 @@ const baseProps: Pick<WidgetProps, 'id' | 'multiple' | 'options' | 'registry' | 
 describe('SelectedOptionDescription', () => {
   it('renders the selected option description with its schema', () => {
     const { container } = render(<SelectedOptionDescription {...baseProps} />);
+    const description = container.querySelector('#root__description');
 
-    expect(container.querySelector('#root__description')).toHaveTextContent('Foo description');
-    expect(container.querySelector('#root__description')).toHaveAttribute('data-schema-title', 'Foo');
+    expect(description?.textContent).toBe('Foo description');
+    expect(description?.getAttribute('data-schema-title')).toBe('Foo');
   });
 
   it('does not render for multiple selects', () => {
     const { container } = render(<SelectedOptionDescription {...baseProps} multiple />);
 
-    expect(container).toBeEmptyDOMElement();
+    expect(container.innerHTML).toBe('');
   });
 
   it.each([
@@ -54,6 +55,6 @@ describe('SelectedOptionDescription', () => {
   ])('does not render with %s', (_, options) => {
     const { container } = render(<SelectedOptionDescription {...baseProps} options={options} />);
 
-    expect(container).toBeEmptyDOMElement();
+    expect(container.innerHTML).toBe('');
   });
 });

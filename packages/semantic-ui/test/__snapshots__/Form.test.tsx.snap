@@ -8018,6 +8018,107 @@ exports[`single fields > select widget with description in schema and FieldTempl
 </DocumentFragment>
 `;
 
+exports[`single fields > select widget with selected oneOf option description 1`] = `
+<DocumentFragment>
+  <form
+    class="ui form rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="grouped equal width fields"
+      >
+        <div
+          class="field"
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            aria-disabled="false"
+            aria-expanded="false"
+            aria-multiselectable="false"
+            class="ui fluid selection scrolling dropdown"
+            id="root"
+            inverted="false"
+            name="root"
+            role="listbox"
+            tabindex="0"
+          >
+            <div
+              aria-atomic="true"
+              aria-live="polite"
+              class="divider text"
+              role="alert"
+            >
+              Foo
+            </div>
+            <i
+              aria-hidden="true"
+              class="dropdown icon"
+            />
+            <div
+              class="menu transition"
+            >
+              <div
+                aria-checked="false"
+                aria-selected="false"
+                class="item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                />
+              </div>
+              <div
+                aria-checked="true"
+                aria-disabled="false"
+                aria-selected="true"
+                class="active selected item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                >
+                  Foo
+                </span>
+              </div>
+              <div
+                aria-checked="false"
+                aria-disabled="false"
+                aria-selected="false"
+                class="item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                >
+                  Bar
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p
+          class="sui-description"
+          id="root__description"
+        >
+          Foo description
+        </p>
+      </div>
+    </div>
+    <button
+      class="ui primary button"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > slider field 1`] = `
 <DocumentFragment>
   <form

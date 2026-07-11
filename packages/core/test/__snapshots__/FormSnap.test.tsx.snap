@@ -6254,6 +6254,53 @@ exports[`single fields > select widget with description in schema and FieldTempl
 </DocumentFragment>
 `;
 
+exports[`single fields > select widget with selected oneOf option description 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="form-group rjsf-field rjsf-field-string"
+    >
+      <div
+        class="field-description"
+        id="root__description"
+      >
+        Foo description
+      </div>
+      <select
+        aria-describedby="root__error root__description root__help"
+        class="form-control"
+        id="root"
+        name="root"
+      >
+        <option
+          value=""
+        />
+        <option
+          value="0"
+        >
+          Foo
+        </option>
+        <option
+          value="1"
+        >
+          Bar
+        </option>
+      </select>
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > slider field 1`] = `
 <DocumentFragment>
   <form
