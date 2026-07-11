@@ -20,14 +20,17 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/antd
 
+- Fix 4214: show selected option descriptions ([#5152](https://github.com/rjsf-team/react-jsonschema-form/pull/5152))
 - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
 
 ## @rjsf/chakra-ui
 
+- Fix 4214: show selected option descriptions ([#5152](https://github.com/rjsf-team/react-jsonschema-form/pull/5152))
 - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
 
 ## @rjsf/core
 
+- Fix 4214: show selected option descriptions ([#5152](https://github.com/rjsf-team/react-jsonschema-form/pull/5152))
 - Fixed [#3907](https://github.com/rjsf-team/react-jsonschema-form/issues/3907) and [#4262](https://github.com/rjsf-team/react-jsonschema-form/issues/4262) as follows:
   - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
   - Added `CyclicSchemaField` to the list of fields, that renders the `CyclicSchemaExpandTemplate` initially and, if expanded, will render the `SchemaField` with the `RJSF_REF_CYCLE_KEY` tag turned off
@@ -42,40 +45,49 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/daisyui
 
+- Fix 4214: show selected option descriptions ([#5152](https://github.com/rjsf-team/react-jsonschema-form/pull/5152))
 - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
 
 ## @rjsf/fluentui-rc
 
+- Fix 4214: show selected option descriptions ([#5152](https://github.com/rjsf-team/react-jsonschema-form/pull/5152))
 - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
 
 ## @rjsf/mantine
 
+- Fix 4214: show selected option descriptions ([#5152](https://github.com/rjsf-team/react-jsonschema-form/pull/5152))
 - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
 
 ## @rjsf/mui
 
+- Fix 4214: show selected option descriptions ([#5152](https://github.com/rjsf-team/react-jsonschema-form/pull/5152))
 - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
 
 ## @rjsf/primereact
 
+- Fix 4214: show selected option descriptions ([#5152](https://github.com/rjsf-team/react-jsonschema-form/pull/5152))
 - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
 
 ## @rjsf/react-bootstrap
 
+- Fix 4214: show selected option descriptions ([#5152](https://github.com/rjsf-team/react-jsonschema-form/pull/5152))
 - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
 
 ## @rjsf/semantic-ui
 
+- Fix 4214: show selected option descriptions ([#5152](https://github.com/rjsf-team/react-jsonschema-form/pull/5152))
 - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
 
 ## @rjsf/shadcn
 
+- Fix 4214: show selected option descriptions ([#5152](https://github.com/rjsf-team/react-jsonschema-form/pull/5152))
 - Updated the single select trigger to use native button semantics with expanded and disabled state coverage, fixing [#4764](https://github.com/rjsf-team/react-jsonschema-form/issues/4764) ([#5117](https://github.com/rjsf-team/react-jsonschema-form/pull/5117))
 - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
 - Fixed a small visual bug that caused hovering over items of `FancySelect` and `FancyMultiSelect` that have the same label to incorrectly highlight more than one element, fixing [#5126](https://github.com/rjsf-team/react-jsonschema-form/issues/5126)
 
 ## @rjsf/utils
 
+- Fix 4214: show selected option descriptions ([#5152](https://github.com/rjsf-team/react-jsonschema-form/pull/5152))
 - Updated `types.ts` to add `CyclicSchemaExpandProps` type and `CyclicSchemaExpandTemplate` in the `TemplatesType`
 - Updated `resolveAllReferences()` to add a new `markCycleOnDetection` prop which adds `RJSF_REF_CYCLE_KEY` marker (from `constants.ts`) to a schema that has been detected to have a cycle, partially fixing [#3907](https://github.com/rjsf-team/react-jsonschema-form/issues/3907)
 - Updated `hashForSchema()` to filter keys to remove `RJSF_REF_KEY` prefixed keys before hashing the schema
