@@ -716,7 +716,16 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
     }
   }
 
+  const defaultsLength = Array.isArray(defaults) ? defaults.length : 0;
+
   if (neverPopulate) {
+    if (shouldMergeDefaultsIntoFormData) {
+      if (schema.minItems && schema.minItems > defaultsLength) {
+        const fillerEntries = Array.from({ length: schema.minItems - defaultsLength }, () => null) as T[];
+        return (defaults ?? []).concat(fillerEntries);
+      }
+      return defaults;
+    }
     return defaults ?? emptyDefault;
   }
   if (ignoreMinItemsFlagSet && !required) {
@@ -726,7 +735,6 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
   }
 
   let arrayDefault: T[] | undefined;
-  const defaultsLength = Array.isArray(defaults) ? defaults.length : 0;
   if (
     !schema.minItems ||
     isMultiSelect<T, S, F>(validator, schema, rootSchema, experimental_customMergeAllOf) ||

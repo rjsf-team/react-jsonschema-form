@@ -101,6 +101,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `omitExtraData()` to better handle `allOf`s containing multiple `if/then/else` blocks, matching fix in `SJSF`, fixing [#5142](https://github.com/rjsf-team/react-jsonschema-form/issues/5142)
 - Fixed `optionsList()` to preserve an explicitly empty string `title` on `oneOf`/`anyOf` options instead of falling back to the option's value, fixing [#4448](https://github.com/rjsf-team/react-jsonschema-form/issues/4448)
 - Show selected option descriptions, fixing ([#4214](https://github.com/rjsf-team/react-jsonschema-form/issues/4214))
+- Fixed `getDefaultFormState()` so that optional array defaults are not initialized when `experimental_defaultFormStateBehavior.arrayMinItems.populate = never`, fixing [#5149](https://github.com/rjsf-team/react-jsonschema-form/issues/5149)
 
 ## @rjsf/validator-ajv8
 
