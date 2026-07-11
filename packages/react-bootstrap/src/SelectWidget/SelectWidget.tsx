@@ -7,6 +7,7 @@ import {
   enumOptionValueEncoder,
   getOptionValueFormat,
   logUnsupportedDefaultForEnum,
+  SelectedOptionDescription,
 } from '@rjsf/utils';
 import FormSelect from 'react-bootstrap/FormSelect';
 
@@ -30,6 +31,8 @@ export default function SelectWidget<
   onFocus,
   placeholder,
   rawErrors = [],
+  registry,
+  uiSchema,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyValue } = options;
 
@@ -50,49 +53,59 @@ export default function SelectWidget<
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
   return (
-    <FormSelect
-      id={id}
-      name={htmlName || id}
-      value={selectValue}
-      required={required}
-      multiple={multiple}
-      disabled={disabled || readonly}
-      autoFocus={autofocus}
-      className={rawErrors.length > 0 ? 'is-invalid' : ''}
-      onBlur={
-        onBlur &&
-        ((event: FocusEvent) => {
+    <>
+      <FormSelect
+        id={id}
+        name={htmlName || id}
+        value={selectValue}
+        required={required}
+        multiple={multiple}
+        disabled={disabled || readonly}
+        autoFocus={autofocus}
+        className={rawErrors.length > 0 ? 'is-invalid' : ''}
+        onBlur={
+          onBlur &&
+          ((event: FocusEvent) => {
+            const newValue = getValue(event, multiple);
+            onBlur(id, enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyValue));
+          })
+        }
+        onFocus={
+          onFocus &&
+          ((event: FocusEvent) => {
+            const newValue = getValue(event, multiple);
+            onFocus(id, enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyValue));
+          })
+        }
+        onChange={(event: ChangeEvent) => {
           const newValue = getValue(event, multiple);
-          onBlur(id, enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyValue));
-        })
-      }
-      onFocus={
-        onFocus &&
-        ((event: FocusEvent) => {
-          const newValue = getValue(event, multiple);
-          onFocus(id, enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyValue));
-        })
-      }
-      onChange={(event: ChangeEvent) => {
-        const newValue = getValue(event, multiple);
-        onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyValue));
-      }}
-      aria-describedby={ariaDescribedByIds(id)}
-    >
-      {showPlaceholderOption && <option value=''>{placeholder}</option>}
-      {enumOptions?.map(({ value: enumValue, label: enumLabel }: any, i: number) => {
-        const isDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(enumValue);
-        return (
-          <option
-            key={String(enumValue)}
-            id={enumLabel}
-            value={enumOptionValueEncoder(enumValue, i, optionValueFormat)}
-            disabled={isDisabled}
-          >
-            {enumLabel}
-          </option>
-        );
-      })}
-    </FormSelect>
+          onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyValue));
+        }}
+        aria-describedby={ariaDescribedByIds(id)}
+      >
+        {showPlaceholderOption && <option value=''>{placeholder}</option>}
+        {enumOptions?.map(({ value: enumValue, label: enumLabel }: any, i: number) => {
+          const isDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(enumValue);
+          return (
+            <option
+              key={String(enumValue)}
+              id={enumLabel}
+              value={enumOptionValueEncoder(enumValue, i, optionValueFormat)}
+              disabled={isDisabled}
+            >
+              {enumLabel}
+            </option>
+          );
+        })}
+      </FormSelect>
+      <SelectedOptionDescription
+        id={id}
+        multiple={multiple}
+        options={options}
+        registry={registry}
+        uiSchema={uiSchema}
+        value={value}
+      />
+    </>
   );
 }

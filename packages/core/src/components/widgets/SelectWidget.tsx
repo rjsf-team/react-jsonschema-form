@@ -8,6 +8,7 @@ import {
   enumOptionValueEncoder,
   getOptionValueFormat,
   logUnsupportedDefaultForEnum,
+  SelectedOptionDescription,
 } from '@rjsf/utils';
 
 function getValue(event: SyntheticEvent<HTMLSelectElement>, multiple: boolean) {
@@ -40,6 +41,8 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   onFocus,
   placeholder,
   htmlName,
+  registry,
+  uiSchema,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
   const emptyValue = multiple ? [] : '';
@@ -74,36 +77,46 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
   return (
-    // oxlint-disable-next-line jsx-a11y/no-autofocus
-    <select
-      id={id}
-      name={htmlName || id}
-      multiple={multiple}
-      className='form-control'
-      value={selectValue}
-      required={required}
-      disabled={disabled || readonly}
-      autoFocus={autofocus}
-      onBlur={handleBlur}
-      onFocus={handleFocus}
-      onChange={handleChange}
-      aria-describedby={ariaDescribedByIds(id)}
-    >
-      {showPlaceholderOption && <option value=''>{placeholder}</option>}
-      {Array.isArray(enumOptions) &&
-        enumOptions.map(({ value: enumValue, label: enumLabel }, i) => {
-          const isDisabled = enumDisabled && enumDisabled.includes(enumValue);
-          return (
-            <option
-              key={String(enumValue)}
-              value={enumOptionValueEncoder(enumValue, i, optionValueFormat)}
-              disabled={isDisabled}
-            >
-              {enumLabel}
-            </option>
-          );
-        })}
-    </select>
+    <>
+      {/* oxlint-disable-next-line jsx-a11y/no-autofocus */}
+      <select
+        id={id}
+        name={htmlName || id}
+        multiple={multiple}
+        className='form-control'
+        value={selectValue}
+        required={required}
+        disabled={disabled || readonly}
+        autoFocus={autofocus}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
+        onChange={handleChange}
+        aria-describedby={ariaDescribedByIds(id)}
+      >
+        {showPlaceholderOption && <option value=''>{placeholder}</option>}
+        {Array.isArray(enumOptions) &&
+          enumOptions.map(({ value: enumValue, label: enumLabel }, i) => {
+            const isDisabled = enumDisabled && enumDisabled.includes(enumValue);
+            return (
+              <option
+                key={String(enumValue)}
+                value={enumOptionValueEncoder(enumValue, i, optionValueFormat)}
+                disabled={isDisabled}
+              >
+                {enumLabel}
+              </option>
+            );
+          })}
+      </select>
+      <SelectedOptionDescription
+        id={id}
+        multiple={multiple}
+        options={options}
+        registry={registry}
+        uiSchema={uiSchema}
+        value={value}
+      />
+    </>
   );
 }
 

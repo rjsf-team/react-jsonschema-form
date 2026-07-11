@@ -416,6 +416,28 @@ describe('StringField', () => {
   });
 
   describe('SelectWidget', () => {
+    it('renders the selected oneOf option description', async () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          oneOf: [
+            { const: 'foo', title: 'Foo', description: 'Foo description' },
+            { const: 'bar', title: 'Bar', description: 'Bar description' },
+          ],
+        },
+        formData: 'foo',
+      });
+
+      expect(node).toHaveTextContent('Foo description');
+      expect(node).not.toHaveTextContent('Bar description');
+
+      const select = node.querySelector<HTMLSelectElement>('select')!;
+      await user.selectOptions(select, select.options[2]);
+
+      expect(node).not.toHaveTextContent('Foo description');
+      expect(node).toHaveTextContent('Bar description');
+    });
+
     it('should render a string field', () => {
       const { node } = createFormComponent({
         schema: {

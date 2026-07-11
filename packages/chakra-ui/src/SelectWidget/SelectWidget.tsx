@@ -11,6 +11,7 @@ import {
   getOptionValueFormat,
   labelValue,
   logUnsupportedDefaultForEnum,
+  SelectedOptionDescription,
 } from '@rjsf/utils';
 import type { OptionsOrGroups } from 'chakra-react-select';
 
@@ -137,6 +138,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
           </ChakraSelect.Content>
         </ChakraSelect.Positioner>
       </SelectRoot>
+      <SelectedOptionDescription {...props} />
     </Field>
   );
 }

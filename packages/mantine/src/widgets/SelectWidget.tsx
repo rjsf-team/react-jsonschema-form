@@ -10,6 +10,7 @@ import {
   getOptionValueFormat,
   labelValue,
   logUnsupportedDefaultForEnum,
+  SelectedOptionDescription,
 } from '@rjsf/utils';
 
 import { cleanupOptions } from '../utils';
@@ -105,15 +106,20 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     ...themeProps,
   };
 
-  return multiple ? (
-    <MultiSelect
-      {...sharedProps}
-      value={enumOptionSelectedValue<S>(value, enumOptions, true, optionValueFormat, []) as string[]}
-    />
-  ) : (
-    <Select
-      {...sharedProps}
-      value={enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat, null) as string | null}
-    />
+  return (
+    <>
+      {multiple ? (
+        <MultiSelect
+          {...sharedProps}
+          value={enumOptionSelectedValue<S>(value, enumOptions, true, optionValueFormat, []) as string[]}
+        />
+      ) : (
+        <Select
+          {...sharedProps}
+          value={enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat, null) as string | null}
+        />
+      )}
+      <SelectedOptionDescription {...props} />
+    </>
   );
 }

@@ -67,6 +67,7 @@ import removeOptionalEmptyObjects from './removeOptionalEmptyObjects';
 import replaceStringParameters from './replaceStringParameters';
 import resolveUiSchema from './resolveUiSchema';
 import schemaRequiresTrueValue from './schemaRequiresTrueValue';
+import SelectedOptionDescription from './SelectedOptionDescription';
 import shallowEquals from './shallowEquals';
 import type { ComponentUpdateStrategy } from './shouldRender';
 import shouldRender from './shouldRender';
@@ -172,6 +173,7 @@ export {
   replaceStringParameters,
   resolveUiSchema,
   schemaRequiresTrueValue,
+  SelectedOptionDescription,
   shallowEquals,
   shouldRender,
   shouldRenderOptionalField,

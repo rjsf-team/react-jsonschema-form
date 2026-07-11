@@ -8,6 +8,7 @@ import {
   enumOptionsValueForIndex,
   labelValue,
   logUnsupportedDefaultForEnum,
+  SelectedOptionDescription,
 } from '@rjsf/utils';
 import type { OptionsOrGroups } from 'chakra-react-select';
 
@@ -134,6 +135,7 @@ export default function NativeSelectWidget<
         </NativeSelect.Field>
         <NativeSelect.Indicator />
       </NativeSelect.Root>
+      <SelectedOptionDescription {...props} />
     </Field>
   );
 }
