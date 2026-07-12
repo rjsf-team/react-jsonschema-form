@@ -16,6 +16,7 @@ import {
   getOptionValueFormat,
   labelValue,
   logUnsupportedDefaultForEnum,
+  SelectedOptionDescription,
 } from '@rjsf/utils';
 import map from 'lodash/map';
 import type { DropdownProps, DropdownItemProps } from 'semantic-ui-react';
@@ -111,25 +112,28 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const handleFocus = (_: FocusEvent<HTMLElement>, { target }: DropdownProps) =>
     onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, optEmptyVal));
   return (
-    <Form.Dropdown
-      key={id}
-      id={id}
-      name={htmlName || id}
-      label={labelValue(label || undefined, hideLabel, false)}
-      multiple={typeof multiple === 'undefined' ? false : multiple}
-      value={enumOptionSelectedValue<S>(value, enumOptions, !!multiple, optionValueFormat, emptyValue)}
-      error={rawErrors.length > 0}
-      disabled={disabled}
-      placeholder={placeholder}
-      {...semanticProps}
-      required={required}
-      autoFocus={autofocus}
-      readOnly={readonly}
-      options={dropdownOptions}
-      onChange={handleChange}
-      onBlur={handleBlur}
-      onFocus={handleFocus}
-      aria-describedby={ariaDescribedByIds(id)}
-    />
+    <>
+      <Form.Dropdown
+        key={id}
+        id={id}
+        name={htmlName || id}
+        label={labelValue(label || undefined, hideLabel, false)}
+        multiple={typeof multiple === 'undefined' ? false : multiple}
+        value={enumOptionSelectedValue<S>(value, enumOptions, !!multiple, optionValueFormat, emptyValue)}
+        error={rawErrors.length > 0}
+        disabled={disabled}
+        placeholder={placeholder}
+        {...semanticProps}
+        required={required}
+        autoFocus={autofocus}
+        readOnly={readonly}
+        options={dropdownOptions}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
+        aria-describedby={ariaDescribedByIds(id)}
+      />
+      <SelectedOptionDescription {...props} />
+    </>
   );
 }

@@ -21,10 +21,12 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/antd
 
 - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+- Show selected option descriptions, fixing ([#4214](https://github.com/rjsf-team/react-jsonschema-form/issues/4214))
 
 ## @rjsf/chakra-ui
 
 - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+- Show selected option descriptions, fixing ([#4214](https://github.com/rjsf-team/react-jsonschema-form/issues/4214))
 
 ## @rjsf/core
 
@@ -39,40 +41,49 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed nested `constAsDefaults` values being skipped in matching conditional `allOf` schemas, fixing [#4963](https://github.com/rjsf-team/react-jsonschema-form/issues/4963)
 - Fixed `processPendingChange` so that clearing a string field that has a schema `default` value no longer re-applies the default, fixing [#5125](https://github.com/rjsf-team/react-jsonschema-form/issues/5125)
 - Fixed a regression introduced in [#5136](https://github.com/rjsf-team/react-jsonschema-form/pull/5136) where clearing a second field caused a previously-cleared field to be re-populated with its schema default; uses `JSON.parse(JSON.stringify(...))` to strip `undefined`-valued keys from formData before AJV validation so that the [#4518](https://github.com/rjsf-team/react-jsonschema-form/issues/4518) fix is preserved
+- Show selected option descriptions, fixing ([#4214](https://github.com/rjsf-team/react-jsonschema-form/issues/4214))
 
 ## @rjsf/daisyui
 
 - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+- Show selected option descriptions, fixing ([#4214](https://github.com/rjsf-team/react-jsonschema-form/issues/4214))
 
 ## @rjsf/fluentui-rc
 
 - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+- Show selected option descriptions, fixing ([#4214](https://github.com/rjsf-team/react-jsonschema-form/issues/4214))
 
 ## @rjsf/mantine
 
 - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+- Show selected option descriptions, fixing ([#4214](https://github.com/rjsf-team/react-jsonschema-form/issues/4214))
 
 ## @rjsf/mui
 
 - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+- Show selected option descriptions, fixing ([#4214](https://github.com/rjsf-team/react-jsonschema-form/issues/4214))
 
 ## @rjsf/primereact
 
 - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+- Show selected option descriptions, fixing ([#4214](https://github.com/rjsf-team/react-jsonschema-form/issues/4214))
 
 ## @rjsf/react-bootstrap
 
 - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+- Show selected option descriptions, fixing ([#4214](https://github.com/rjsf-team/react-jsonschema-form/issues/4214))
 
 ## @rjsf/semantic-ui
 
 - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
+- Show selected option descriptions, fixing ([#4214](https://github.com/rjsf-team/react-jsonschema-form/issues/4214))
 
 ## @rjsf/shadcn
 
 - Updated the single select trigger to use native button semantics with expanded and disabled state coverage, fixing [#4764](https://github.com/rjsf-team/react-jsonschema-form/issues/4764) ([#5117](https://github.com/rjsf-team/react-jsonschema-form/pull/5117))
 - Added `CyclicSchemaExpandTemplate` to the list of templates for the theme, updating snapshots accordingly
 - Fixed a small visual bug that caused hovering over items of `FancySelect` and `FancyMultiSelect` that have the same label to incorrectly highlight more than one element, fixing [#5126](https://github.com/rjsf-team/react-jsonschema-form/issues/5126)
+- Show selected option descriptions, fixing ([#4214](https://github.com/rjsf-team/react-jsonschema-form/issues/4214))
 
 ## @rjsf/utils
 
@@ -87,6 +98,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `getDefaultFormState()` to use the new `nestedDefaultsPrecedence` option to control how defaults defined on multiple levels are merged together, fixing [#5089](https://github.com/rjsf-team/react-jsonschema-form/issues/5089)
 - Updated `omitExtraData()` to better handle `allOf`s containing multiple `if/then/else` blocks, matching fix in `SJSF`, fixing [#5142](https://github.com/rjsf-team/react-jsonschema-form/issues/5142)
 - Fixed `optionsList()` to preserve an explicitly empty string `title` on `oneOf`/`anyOf` options instead of falling back to the option's value, fixing [#4448](https://github.com/rjsf-team/react-jsonschema-form/issues/4448)
+- Show selected option descriptions, fixing ([#4214](https://github.com/rjsf-team/react-jsonschema-form/issues/4214))
 
 ## @rjsf/validator-ajv8
 
