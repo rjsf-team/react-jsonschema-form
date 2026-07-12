@@ -138,6 +138,7 @@ export function FancySelect({
                   <CommandItem
                     ref={item.value === selected ? selectedRef : undefined}
                     key={item.value}
+                    value={String(item.value)} 
                     onMouseDown={(e) => {
                       e.preventDefault();
                       e.stopPropagation();

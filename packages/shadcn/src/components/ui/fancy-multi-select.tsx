@@ -201,6 +201,7 @@ export function FancyMultiSelect({
                   <CommandItem
                     disabled={item.disabled}
                     key={`${item.value}-command-item`}
+                    value={String(item.value)}
                     onMouseDown={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
