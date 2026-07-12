@@ -108,6 +108,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
 
   return (
     <>
+      <SelectedOptionDescription {...props} />
       {multiple ? (
         <MultiSelect
           {...sharedProps}
@@ -119,7 +120,6 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
           value={enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat, null) as string | null}
         />
       )}
-      <SelectedOptionDescription {...props} />
     </>
   );
 }

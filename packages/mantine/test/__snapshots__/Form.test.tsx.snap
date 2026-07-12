@@ -15399,6 +15399,13 @@ exports[`single fields > select widget with selected oneOf option description 1`
     <div
       class="rjsf-field rjsf-field-string"
     >
+      <p
+        class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+        id="root__description"
+        style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
+      >
+        Foo description
+      </p>
       <div
         class="m_46b77525 mantine-InputWrapper-root mantine-Select-root"
         data-size="sm"
@@ -15482,7 +15489,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
                       data-checked="true"
                       data-combobox-active="true"
                       data-combobox-option="true"
-                      id=":rhk:"
+                      id=":rhl:"
                       role="option"
                       value="0"
                     >
@@ -15508,7 +15515,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
                       aria-selected="false"
                       class="m_92253aa5 mantine-Select-option m_390b5f4"
                       data-combobox-option="true"
-                      id=":rhm:"
+                      id=":rhn:"
                       role="option"
                       value="1"
                     >
@@ -15542,13 +15549,6 @@ exports[`single fields > select widget with selected oneOf option description 1`
         type="hidden"
         value="0"
       />
-      <p
-        class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
-        id="root__description"
-        style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
-      >
-        Foo description
-      </p>
     </div>
     <button
       class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
