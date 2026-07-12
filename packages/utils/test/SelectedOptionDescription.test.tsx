@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 
-import type { DescriptionFieldProps, Registry, RJSFSchema, WidgetProps } from '../src';
+import type { DescriptionFieldProps, Registry, RJSFSchema, SelectedOptionDescriptionProps } from '../src';
 import { SelectedOptionDescription } from '../src';
 
 function DescriptionFieldTemplate({ id, description, schema }: DescriptionFieldProps) {
@@ -15,7 +15,7 @@ const registry = {
   templates: { DescriptionFieldTemplate },
 } as unknown as Registry;
 
-const baseProps: Pick<WidgetProps, 'id' | 'multiple' | 'options' | 'registry' | 'uiSchema' | 'value'> = {
+const baseProps: SelectedOptionDescriptionProps = {
   id: 'root',
   multiple: false,
   options: {

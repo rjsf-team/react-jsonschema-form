@@ -68,6 +68,7 @@ import replaceStringParameters from './replaceStringParameters';
 import resolveUiSchema from './resolveUiSchema';
 import schemaRequiresTrueValue from './schemaRequiresTrueValue';
 import SelectedOptionDescription from './SelectedOptionDescription';
+import type { SelectedOptionDescriptionProps } from './SelectedOptionDescription';
 import shallowEquals from './shallowEquals';
 import type { ComponentUpdateStrategy } from './shouldRender';
 import shouldRender from './shouldRender';
@@ -100,6 +101,7 @@ export type {
   DateElementProp,
   DateElementProps,
   FileInfoType,
+  SelectedOptionDescriptionProps,
   UseAltDateWidgetResult,
   UseFileWidgetPropsResult,
 };

@@ -4,7 +4,7 @@ import getUiOptions from './getUiOptions';
 import { descriptionId } from './idGenerators';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types';
 
-type SelectedOptionDescriptionProps<
+export type SelectedOptionDescriptionProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
