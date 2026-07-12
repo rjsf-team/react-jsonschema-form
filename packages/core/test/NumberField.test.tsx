@@ -662,5 +662,35 @@ describe('NumberField', () => {
       expectToHaveBeenCalledWithFormData(onChange, 0.05, 'root');
       expect($input).toHaveValue('0,05');
     });
+
+    it('should not format select widget options with comma (keep dot)', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'number',
+          enum: [2.3, 4.5],
+        },
+        formData: 2.3,
+      });
+
+      const $select = node.querySelector<HTMLSelectElement>('select')!;
+      expect(getSelectedOptionValue($select)).toEqual('2.3');
+    });
+
+    it('should not format radio widget options with comma (keep dot)', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'number',
+          enum: [2.3, 4.5],
+        },
+        uiSchema: {
+          'ui:widget': 'radio',
+        },
+        formData: 2.3,
+      });
+
+      const inputs = node.querySelectorAll<HTMLInputElement>('input[type="radio"]');
+      expect(inputs[0].checked).toBe(true);
+      expect(inputs[1].checked).toBe(false);
+    });
   });
 });

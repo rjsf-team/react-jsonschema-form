@@ -38,7 +38,7 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   const { StringField } = registry.fields;
 
   const separator = getDecimalSeparator();
-  const escapedSeparator = separator.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const escapedSeparator = separator === '.' ? '\\.' : separator;
 
   let value = formData;
 
