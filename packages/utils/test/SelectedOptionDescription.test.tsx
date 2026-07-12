@@ -44,6 +44,22 @@ describe('SelectedOptionDescription', () => {
     expect(container.innerHTML).toBe('');
   });
 
+  it('does not render when hideLabel is true', () => {
+    const { container } = render(<SelectedOptionDescription {...{ ...baseProps, hideLabel: true }} />);
+
+    expect(container.innerHTML).toBe('');
+  });
+
+  it.each([
+    ['ui:options label', { ...baseProps, uiSchema: { 'ui:options': { label: false } } }],
+    ['ui:label', { ...baseProps, uiSchema: { 'ui:label': false } }],
+    ['global ui options label', { ...baseProps, registry: { ...registry, globalUiOptions: { label: false } } }],
+  ])('does not render when %s is false', (_, props) => {
+    const { container } = render(<SelectedOptionDescription {...props} />);
+
+    expect(container.innerHTML).toBe('');
+  });
+
   it.each([
     ['no enum options', {}],
     ['no matching option', { enumOptions: [{ value: 'bar', label: 'Bar' }] }],

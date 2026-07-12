@@ -9876,6 +9876,51 @@ exports[`single fields > select widget with selected oneOf option description 1`
 </DocumentFragment>
 `;
 
+exports[`single fields > select widget with selected oneOf option description and hidden label 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div>
+        <select
+          aria-describedby="root__error root__description root__help"
+          class="form-select"
+          id="root"
+          name="root"
+        >
+          <option
+            value=""
+          />
+          <option
+            id="Foo"
+            value="0"
+          >
+            Foo
+          </option>
+          <option
+            id="Bar"
+            value="1"
+          >
+            Bar
+          </option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > slider field 1`] = `
 <DocumentFragment>
   <form

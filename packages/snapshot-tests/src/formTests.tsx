@@ -500,6 +500,22 @@ export function formTests(Form: ComponentType<FormProps>) {
       const { asFragment } = render(<Form schema={schema} formData='foo' validator={validator} />);
       expect(asFragment()).toMatchSnapshot();
     });
+    test('select widget with selected oneOf option description and hidden label', async () => {
+      const schema: RJSFSchema = {
+        type: 'string',
+        oneOf: [
+          { const: 'foo', title: 'Foo', description: 'Foo description' },
+          { const: 'bar', title: 'Bar', description: 'Bar description' },
+        ],
+      };
+      const uiSchema: UiSchema = {
+        'ui:options': {
+          label: false,
+        },
+      };
+      const { asFragment } = render(<Form schema={schema} formData='foo' uiSchema={uiSchema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
+    });
     test('checkboxes field', async () => {
       const schema: RJSFSchema = {
         type: 'array',
