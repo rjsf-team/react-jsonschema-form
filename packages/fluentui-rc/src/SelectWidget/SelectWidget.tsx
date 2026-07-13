@@ -9,6 +9,7 @@ import {
   getOptionValueFormat,
   labelValue,
   logUnsupportedDefaultForEnum,
+  SelectedOptionDescription,
 } from '@rjsf/utils';
 
 function getValue(data: OptionOnSelectData, multiple: boolean) {
@@ -41,6 +42,8 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   onFocus,
   schema,
   placeholder,
+  registry,
+  uiSchema,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -102,6 +105,14 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
             );
           })}
       </Dropdown>
+      <SelectedOptionDescription
+        id={id}
+        multiple={multiple}
+        options={options}
+        registry={registry}
+        uiSchema={uiSchema}
+        value={value}
+      />
     </Field>
   );
 }

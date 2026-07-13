@@ -209,6 +209,7 @@ export function FancyMultiSelect({
                     aria-controls={`${item.value}-command-item`}
                     aria-labelledby={`${item.value}-command-item`}
                     id={`${item.value}-command-item`}
+                    value={item.value}
                     onSelect={() => handleSelect(item)}
                     className='cursor-pointer'
                   >

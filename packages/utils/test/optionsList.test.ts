@@ -242,6 +242,44 @@ describe('optionsList()', () => {
         })),
       );
     });
+    it('should keep an empty string title for a oneOf option instead of falling back to the value', () => {
+      const oneOfSchema: RJSFSchema = {
+        type: 'string',
+        oneOf: [
+          {
+            const: 'empty',
+            title: '',
+          },
+          {
+            const: 'active',
+          },
+        ],
+      };
+      expect(optionsList(oneOfSchema)).toEqual([
+        { schema: oneOfSchema.oneOf![0], label: '', value: 'empty' },
+        { schema: oneOfSchema.oneOf![1], label: 'active', value: 'active' },
+      ]);
+    });
+    it('should keep an empty string title for a discriminator option instead of falling back to the value', () => {
+      const anyOfSchema: RJSFSchema = {
+        discriminator: {
+          propertyName: 'animal',
+        },
+        anyOf: [
+          {
+            type: 'object',
+            title: '',
+            properties: {
+              animal: {
+                type: 'string',
+                const: 'dog',
+              },
+            },
+          },
+        ],
+      };
+      expect(optionsList(anyOfSchema)).toEqual([{ schema: anyOfSchema.anyOf![0], label: '', value: 'dog' }]);
+    });
     it('should generate options for an anyOf object schema with a discriminator, titles in object', () => {
       const anyOfSchema: RJSFSchema = {
         title: 'string',

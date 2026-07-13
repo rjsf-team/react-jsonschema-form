@@ -765,9 +765,14 @@ export default class Form<
     // When a pre-resolved schema is provided (e.g., from live validation), use it directly.
     // Otherwise validate against the original schema so AJV sees the full constraint set.
     const validationSchema = retrievedSchema ?? schema;
+
+    // JSON.stringify drops keys with `undefined` values; JSON.parse on the result gives AJV a clean
+    // object that avoids spurious type errors for `type: "string"` fields that were cleared (#4518).
+    const validationFormData = formData ? JSON.parse(JSON.stringify(formData)) : undefined;
+
     return schemaUtils
       .getValidator()
-      .validateFormData(formData, validationSchema, customValidate, transformErrors, uiSchema);
+      .validateFormData(validationFormData, validationSchema, customValidate, transformErrors, uiSchema);
   }
 
   /** Renders any errors contained in the `state` in using the `ErrorList`, if not disabled by `showErrorList`. */
@@ -993,7 +998,7 @@ export default class Form<
         }
 
         if (plainLeafWasCleared) {
-          _unset(formData, path);
+          _set(formData, path, undefined);
         } else {
           _set(formData, path, valueForPath);
         }
@@ -1013,10 +1018,13 @@ export default class Form<
       formData = newState.formData;
       retrievedSchema = newState.retrievedSchema;
 
-      // Re-unset after merging defaults so the user's clear is preserved (#5125) and
-      // the validator never sees { [key]: undefined } (#4518).
-      if (plainLeafWasCleared) {
-        _unset(formData, path);
+      // Re-set to undefined after merging defaults so the user's clear is preserved in
+      // state (#5125 regression: without this, clearing a second field re-applies the
+      // default to previously-cleared fields). The undefined key is stripped from the
+      // formData copy passed to AJV via JSON.parse(JSON.stringify(...)) so the validator never
+      // sees { [key]: undefined } for type:"string" or patternProperties fields (#4518).
+      if (plainLeafWasCleared && formData) {
+        _set(formData, path, undefined);
       }
     }
 

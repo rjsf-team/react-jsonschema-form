@@ -130,6 +130,68 @@ describe('ATAValidator', () => {
       expect(customValidate).toHaveBeenCalled();
       expect(errorSchema.x?.__errors).toContain('custom error');
     });
+
+    it('uses the uiSchema title when required is inside allOf', () => {
+      const v = customizeValidator();
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { animal: { title: 'My animal', enum: ['Cat', 'Fish'] } },
+        allOf: [{ required: ['animal'] }],
+      };
+      const uiSchema = { animal: { title: 'My animal uiSchema' } };
+      const { errors, errorSchema } = v.validateFormData({}, schema, undefined, undefined, uiSchema);
+      expect(errors).toHaveLength(1);
+      expect(errors[0].stack).toBe("must have required property 'My animal uiSchema'");
+      expect(errorSchema.animal?.__errors).toEqual(["must have required property 'My animal uiSchema'"]);
+    });
+
+    it('uses the uiSchema title when required is inside if-then-else', () => {
+      const v = customizeValidator();
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          hasPet: { type: 'boolean' },
+          animal: { title: 'My animal', enum: ['Cat', 'Fish'] },
+        },
+        if: { properties: { hasPet: { const: true } }, required: ['hasPet'] },
+        then: { required: ['animal'] },
+      };
+      const uiSchema = { animal: { title: 'My animal uiSchema' } };
+      const { errors, errorSchema } = v.validateFormData({ hasPet: true }, schema, undefined, undefined, uiSchema);
+      expect(errors).toHaveLength(1);
+      expect(errors[0].stack).toBe("must have required property 'My animal uiSchema'");
+      expect(errorSchema.animal?.__errors).toEqual(["must have required property 'My animal uiSchema'"]);
+    });
+
+    it('uses the property title when required is inside allOf', () => {
+      const v = customizeValidator();
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { animal: { title: 'My animal', enum: ['Cat', 'Fish'] } },
+        allOf: [{ required: ['animal'] }],
+      };
+      const { errors, errorSchema } = v.validateFormData({}, schema);
+      expect(errors).toHaveLength(1);
+      expect(errors[0].stack).toBe("must have required property 'My animal'");
+      expect(errorSchema.animal?.__errors).toEqual(["must have required property 'My animal'"]);
+    });
+
+    it('uses the property title when required is inside if-then-else', () => {
+      const v = customizeValidator();
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          hasPet: { type: 'boolean' },
+          animal: { title: 'My animal', enum: ['Cat', 'Fish'] },
+        },
+        if: { properties: { hasPet: { const: true } }, required: ['hasPet'] },
+        then: { required: ['animal'] },
+      };
+      const { errors, errorSchema } = v.validateFormData({ hasPet: true }, schema);
+      expect(errors).toHaveLength(1);
+      expect(errors[0].stack).toBe("must have required property 'My animal'");
+      expect(errorSchema.animal?.__errors).toEqual(["must have required property 'My animal'"]);
+    });
   });
 
   describe('customFormats option', () => {

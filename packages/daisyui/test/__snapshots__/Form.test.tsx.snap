@@ -12780,6 +12780,206 @@ exports[`single fields > select widget with description in schema and FieldTempl
 </DocumentFragment>
 `;
 
+exports[`single fields > select widget with selected oneOf option description 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-string"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-string"
+      >
+        <label
+          class="label"
+          for="root"
+        >
+          <span
+            class="label-text font-medium"
+          />
+        </label>
+        <div
+          class="form-control w-full"
+        >
+          <div
+            class="dropdown w-full"
+          >
+            <div
+              class="btn btn-outline w-full text-left flex justify-between items-center "
+              role="button"
+              tabindex="0"
+            >
+              <span
+                class="truncate"
+              >
+                Foo
+              </span>
+              <span
+                class="ml-2"
+              >
+                ▼
+              </span>
+            </div>
+            <ul
+              class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              role="listbox"
+            >
+              <li
+                aria-selected="true"
+                class="px-4 py-2 hover:bg-base-200 cursor-pointer bg-primary/10"
+                data-value="0"
+                role="option"
+                tabindex="0"
+              >
+                <div
+                  class="flex items-center gap-2"
+                >
+                  <span>
+                    Foo
+                  </span>
+                </div>
+              </li>
+              <li
+                aria-selected="false"
+                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                data-value="1"
+                role="option"
+                tabindex="0"
+              >
+                <div
+                  class="flex items-center gap-2"
+                >
+                  <span>
+                    Bar
+                  </span>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div
+            class="description-field my-4"
+            id="root__description"
+          >
+            <div
+              class="text-sm text-base-content/80"
+            >
+              Foo description
+            </div>
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields > select widget with selected oneOf option description and hidden label 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-string"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-string"
+      >
+        <div
+          class="form-control w-full"
+        >
+          <div
+            class="dropdown w-full"
+          >
+            <div
+              class="btn btn-outline w-full text-left flex justify-between items-center "
+              role="button"
+              tabindex="0"
+            >
+              <span
+                class="truncate"
+              >
+                Foo
+              </span>
+              <span
+                class="ml-2"
+              >
+                ▼
+              </span>
+            </div>
+            <ul
+              class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              role="listbox"
+            >
+              <li
+                aria-selected="true"
+                class="px-4 py-2 hover:bg-base-200 cursor-pointer bg-primary/10"
+                data-value="0"
+                role="option"
+                tabindex="0"
+              >
+                <div
+                  class="flex items-center gap-2"
+                >
+                  <span>
+                    Foo
+                  </span>
+                </div>
+              </li>
+              <li
+                aria-selected="false"
+                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                data-value="1"
+                role="option"
+                tabindex="0"
+              >
+                <div
+                  class="flex items-center gap-2"
+                >
+                  <span>
+                    Bar
+                  </span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > slider field 1`] = `
 <DocumentFragment>
   <form

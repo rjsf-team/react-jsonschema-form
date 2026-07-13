@@ -6,6 +6,7 @@ import {
   enumOptionValueEncoder,
   getOptionValueFormat,
   logUnsupportedDefaultForEnum,
+  SelectedOptionDescription,
 } from '@rjsf/utils';
 
 import { FancyMultiSelect } from '../components/ui/fancy-multi-select';
@@ -37,6 +38,8 @@ export default function SelectWidget<
   placeholder,
   rawErrors = [],
   className,
+  registry,
+  uiSchema,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -93,6 +96,14 @@ export default function SelectWidget<
           onBlur={handleFancyBlur}
         />
       )}
+      <SelectedOptionDescription
+        id={id}
+        multiple={multiple}
+        options={options}
+        registry={registry}
+        uiSchema={uiSchema}
+        value={value}
+      />
     </div>
   );
 }

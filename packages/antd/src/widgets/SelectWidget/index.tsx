@@ -7,6 +7,7 @@ import {
   enumOptionValueEncoder,
   getOptionValueFormat,
   logUnsupportedDefaultForEnum,
+  SelectedOptionDescription,
 } from '@rjsf/utils';
 import type { SelectProps } from 'antd';
 import { Select } from 'antd';
@@ -41,6 +42,7 @@ export default function SelectWidget<
   readonly,
   value,
   schema,
+  uiSchema,
 }: WidgetProps<T, S, F>) {
   const [open, setOpen] = useState(false);
   const { formContext } = registry;
@@ -97,26 +99,36 @@ export default function SelectWidget<
   }, [enumDisabled, enumOptions, placeholder, showPlaceholderOption, optionValueFormat]);
 
   return (
-    <Select
-      open={open}
-      autoFocus={autofocus}
-      disabled={disabled || (readonlyAsDisabled && readonly)}
-      getPopupContainer={getPopupContainer}
-      id={id}
-      mode={multiple ? 'multiple' : undefined}
-      onBlur={!readonly ? handleBlur : undefined}
-      onChange={!readonly ? handleChange : undefined}
-      onFocus={!readonly ? handleFocus : undefined}
-      placeholder={placeholder}
-      style={SELECT_STYLE}
-      value={selectValue}
-      {...extraProps}
-      // When the open change is called, set the open state, needed so that the select opens properly in the playground
-      onOpenChange={setOpen}
-      showSearch={{ filterOption }}
-      aria-describedby={ariaDescribedByIds(id)}
-      options={selectOptions}
-    />
+    <>
+      <Select
+        open={open}
+        autoFocus={autofocus}
+        disabled={disabled || (readonlyAsDisabled && readonly)}
+        getPopupContainer={getPopupContainer}
+        id={id}
+        mode={multiple ? 'multiple' : undefined}
+        onBlur={!readonly ? handleBlur : undefined}
+        onChange={!readonly ? handleChange : undefined}
+        onFocus={!readonly ? handleFocus : undefined}
+        placeholder={placeholder}
+        style={SELECT_STYLE}
+        value={selectValue}
+        {...extraProps}
+        // When the open change is called, set the open state, needed so that the select opens properly in the playground
+        onOpenChange={setOpen}
+        showSearch={{ filterOption }}
+        aria-describedby={ariaDescribedByIds(id)}
+        options={selectOptions}
+      />
+      <SelectedOptionDescription
+        id={id}
+        multiple={multiple}
+        options={options}
+        registry={registry}
+        uiSchema={uiSchema}
+        value={value}
+      />
+    </>
   );
 }
 

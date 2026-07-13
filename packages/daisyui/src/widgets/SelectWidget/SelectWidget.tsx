@@ -7,6 +7,7 @@ import {
   enumOptionValueEncoder,
   getOptionValueFormat,
   logUnsupportedDefaultForEnum,
+  SelectedOptionDescription,
 } from '@rjsf/utils';
 
 /** The `SelectWidget` component renders a select input with DaisyUI styling
@@ -38,6 +39,8 @@ export default function SelectWidget<
   onChange,
   onBlur,
   onFocus,
+  registry,
+  uiSchema,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, emptyValue: optEmptyVal } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -178,6 +181,14 @@ export default function SelectWidget<
           })}
         </ul>
       </div>
+      <SelectedOptionDescription
+        id={id}
+        multiple={multiple}
+        options={options}
+        registry={registry}
+        uiSchema={uiSchema}
+        value={value}
+      />
     </div>
   );
 }

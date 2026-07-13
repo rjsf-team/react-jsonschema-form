@@ -6142,6 +6142,49 @@ describe('clearing a field with a schema default does not re-apply the default (
     const { formData } = onSubmit.mock.calls[onSubmit.mock.calls.length - 1][0];
     expect(formData).not.toHaveProperty('name', 'Chuck');
   });
+
+  it('clearing a second field does not re-apply the default to a previously-cleared field', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        someStrings: { type: 'string', default: 'Chuck' },
+        someNumbers: { type: 'number', default: 1 },
+      },
+    };
+
+    const { container, node, onSubmit, onError } = createFormComponent({ schema });
+    const stringsInput = container.querySelector<HTMLInputElement>('#root_someStrings');
+    const numbersInput = container.querySelector<HTMLInputElement>('#root_someNumbers');
+
+    expect(stringsInput).toBeInTheDocument();
+    expect(numbersInput).toBeInTheDocument();
+    expect(stringsInput!.value).toBe('Chuck');
+    expect(numbersInput!.value).toBe('1');
+
+    // Clear the first field
+    await user.clear(stringsInput!);
+    expect(stringsInput!.value).toBe('');
+
+    // Clear the second field — the first must NOT get its default re-applied
+    await user.clear(numbersInput!);
+    expect(stringsInput!.value).toBe('');
+    expect(numbersInput!.value).toBe('');
+
+    // Clear the first field again — the second must NOT get its default re-applied
+    await user.clear(stringsInput!);
+    expect(stringsInput!.value).toBe('');
+    expect(numbersInput!.value).toBe('');
+
+    // Submitting should succeed and the cleared field must not carry the default
+    await submitForm(node, user);
+    expect(onError).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalled();
+
+    // The formData must not contain the default values for either field
+    const { formData } = onSubmit.mock.calls[onSubmit.mock.calls.length - 1][0];
+    expect(formData).not.toHaveProperty('someStrings', 'Chuck');
+    expect(formData).not.toHaveProperty('someNumbers', 1);
+  });
 });
 
 describe('enum-based array values do not update when dependencies change (#1357 and #2492)', () => {
