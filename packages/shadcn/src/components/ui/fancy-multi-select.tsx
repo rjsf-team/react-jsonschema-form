@@ -201,6 +201,7 @@ export function FancyMultiSelect({
                   <CommandItem
                     disabled={item.disabled}
                     key={`${item.value}-command-item`}
+                    value={String(item.value)}
                     onMouseDown={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
@@ -208,7 +209,6 @@ export function FancyMultiSelect({
                     aria-controls={`${item.value}-command-item`}
                     aria-labelledby={`${item.value}-command-item`}
                     id={`${item.value}-command-item`}
-                    value={item.value}
                     onSelect={() => handleSelect(item)}
                     className='cursor-pointer'
                   >
