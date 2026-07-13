@@ -292,7 +292,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
           apSchema = schemaUtils.retrieveSchema({ [REF_KEY]: apSchema[REF_KEY] } as S, formData);
           type = apSchema.type;
           constValue = apSchema.const;
-          defaultValue = apSchema.default;
+          defaultValue = schemaUtils.getDefaultFormState(apSchema as S, defaultValue as T) as RJSFSchema['default'];
         }
         if (!type && (ANY_OF_KEY in apSchema || ONE_OF_KEY in apSchema)) {
           type = 'object';

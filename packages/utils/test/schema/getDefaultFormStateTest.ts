@@ -2165,6 +2165,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toEqual(expected);
         });
       });
+
       describe('an invalid array schema', () => {
         const schema: RJSFSchema = {
           type: 'array',
@@ -2346,6 +2347,90 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               }),
             ).toBeUndefined();
           });
+        });
+      });
+
+      describe('optional array with arrayMinItems.populate = never', () => {
+        test('optional array with arrayMinItems.populate = never, no form data', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              array: {
+                type: 'array',
+                items: {
+                  type: 'string',
+                },
+              },
+              minItemsArray: {
+                type: 'array',
+                minItems: 1,
+                items: {
+                  type: 'string',
+                },
+              },
+            },
+          };
+          const defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
+            arrayMinItems: { populate: 'never' },
+          };
+
+          expect(
+            getDefaultFormState(testValidator, schema, undefined, undefined, undefined, defaultFormStateBehavior),
+          ).toEqual({
+            minItemsArray: [null],
+          });
+        });
+
+        test('optional array with arrayMinItems.populate = never preserves short formData as-is', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              minItemsArray: {
+                type: 'array',
+                minItems: 2,
+                items: { type: 'string' },
+              },
+            },
+          };
+          const defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
+            arrayMinItems: { populate: 'never' },
+          };
+          expect(
+            getDefaultFormState(
+              testValidator,
+              schema,
+              { minItemsArray: ['foo'] },
+              undefined,
+              undefined,
+              defaultFormStateBehavior,
+            ),
+          ).toEqual({ minItemsArray: ['foo'] });
+        });
+
+        test('optional array with arrayMinItems.populate = never preserves formData that already meets minItems', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              minItemsArray: {
+                type: 'array',
+                minItems: 2,
+                items: { type: 'string' },
+              },
+            },
+          };
+          const defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
+            arrayMinItems: { populate: 'never' },
+          };
+          expect(
+            getDefaultFormState(
+              testValidator,
+              schema,
+              { minItemsArray: ['foo', 'bar'] },
+              undefined,
+              undefined,
+              defaultFormStateBehavior,
+            ),
+          ).toEqual({ minItemsArray: ['foo', 'bar'] });
         });
       });
     });

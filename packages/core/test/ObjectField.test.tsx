@@ -704,6 +704,48 @@ describe('ObjectField', () => {
       expect(node.querySelectorAll('.rjsf-field-string')).toHaveLength(1);
     });
 
+    it('should resolve if/then conditions for an existing additionalProperties entry that is a $ref (issue #4266)', () => {
+      const recursiveSchema: RJSFSchema = {
+        definitions: {
+          property: {
+            type: 'object',
+            properties: {
+              type: { type: 'string', enum: ['string', 'object'], default: 'string' },
+            },
+            required: ['type'],
+            if: { properties: { type: { const: 'object' } } },
+            then: {
+              properties: {
+                properties: { $ref: '#/definitions/properties' },
+              },
+            },
+          },
+          properties: {
+            type: 'object',
+            additionalProperties: {
+              default: { type: 'string' },
+              $ref: '#/definitions/property',
+            },
+          },
+        },
+        $ref: '#/definitions/property',
+      };
+
+      const { node } = createFormComponent({
+        schema: recursiveSchema,
+        formData: {
+          type: 'object',
+          properties: {
+            inner: { type: 'object', properties: {} },
+          },
+        },
+      });
+
+      // If the `if`/`then` condition on the $ref'd `property` definition was resolved, the nested
+      // `inner.properties` object field should be rendered.
+      expect(node.querySelector('#root_properties_inner_properties')).not.toBeNull();
+    });
+
     it('uiSchema title should not affect additionalProperties', () => {
       const { node } = createFormComponent({
         schema,
@@ -1498,6 +1540,35 @@ describe('ObjectField', () => {
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 1 }, 'root');
+    });
+
+    it('should add a new item with the fully-computed nested defaults when additionalProperties is a $ref (issue #4266)', async () => {
+      // The `default` sibling next to `$ref` should seed the computed defaults rather than being
+      // discarded in favor of the referenced schema's own top-level `default` (which doesn't exist here).
+      const customSchema: RJSFSchema = {
+        ...schema,
+        definitions: {
+          namedThing: {
+            type: 'object',
+            properties: {
+              // `name` has its own nested default that must be preserved alongside the sibling default.
+              name: { type: 'string', default: 'unnamed' },
+            },
+          },
+        },
+        additionalProperties: {
+          default: { active: true },
+          $ref: '#/definitions/namedThing',
+        },
+      };
+      const { node, onChange } = createFormComponent({
+        schema: customSchema,
+        formData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: { name: 'unnamed', active: true } }, 'root');
     });
 
     it('should generate the specified default key and value inputs if default is provided outside of additionalProperties schema', () => {
