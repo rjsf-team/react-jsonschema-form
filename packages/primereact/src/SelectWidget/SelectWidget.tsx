@@ -7,6 +7,7 @@ import {
   enumOptionValueEncoder,
   getOptionValueFormat,
   logUnsupportedDefaultForEnum,
+  SelectedOptionDescription,
 } from '@rjsf/utils';
 import { Dropdown } from 'primereact/dropdown';
 import { MultiSelect } from 'primereact/multiselect';
@@ -21,7 +22,12 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
 ) {
   const { multiple = false } = props;
 
-  return multiple ? <MultiSelectWidget {...props} /> : <SingleSelectWidget {...props} />;
+  return (
+    <>
+      {multiple ? <MultiSelectWidget {...props} /> : <SingleSelectWidget {...props} />}
+      <SelectedOptionDescription {...props} />
+    </>
+  );
 }
 
 function SingleSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
