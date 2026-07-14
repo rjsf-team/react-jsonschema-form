@@ -992,6 +992,28 @@ describe('ObjectField', () => {
       expectToHaveBeenCalledWithFormData(onChange, { first: 1, newSecond: 2, third: 3 }, 'root');
     });
 
+    it('should keep a numeric pattern property in place when renaming its key', async () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: {
+            '(.*?)': { type: 'string' },
+          },
+        },
+        formData: { first: 'one', second: 'two' },
+      });
+
+      const textNode = node.querySelector('#root_second-key')!;
+      await user.clear(textNode);
+      await user.type(textNode, '1');
+      await user.tab();
+
+      const propertyKeys = [...node.querySelectorAll<HTMLInputElement>('input[id$="-key"]')].map(
+        (input) => input.value,
+      );
+      expect(propertyKeys).toEqual(['first', '1']);
+    });
+
     it('should rename nested additionalProperties key when key input is blurred', async () => {
       const nestedSchema: RJSFSchema = {
         type: 'object',

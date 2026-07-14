@@ -238,6 +238,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
   // All the children will use childFieldPathId if present in the props, falling back to the fieldPathId
   const childFieldPathId = props.childFieldPathId ?? fieldPathId;
   const lastRenamedProperty = useRef({ previousKey: '', currentKey: undefined as string | undefined });
+  const additionalPropertyOrder = useRef<string[]>([]);
 
   const templateTitle = uiOptions.title ?? schema.title ?? title ?? name;
   const description = uiOptions.description ?? schema.description;
@@ -308,6 +309,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       lastRenamedProperty.current.currentKey = newKey;
       lastRenamedProperty.current.previousKey = getAvailableKey(newKey, newFormData);
     }
+    additionalPropertyOrder.current.push(newKey);
     onChange(newFormData, childFieldPathId.path);
   }, [formData, onChange, translateString, schemaUtils, childFieldPathId, getAvailableKey, schema]);
 
@@ -339,6 +341,9 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
           lastRenamedProperty.current.previousKey = oldKey;
         }
         lastRenamedProperty.current.currentKey = actualNewKey;
+        additionalPropertyOrder.current = additionalPropertyOrder.current.map((property) =>
+          property === oldKey ? actualNewKey : property,
+        );
         onChange(renamedObj, childFieldPathId.path);
       }
     },
@@ -350,6 +355,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
    */
   const handleRemoveProperty = useCallback(
     (key: string) => {
+      additionalPropertyOrder.current = additionalPropertyOrder.current.filter((property) => property !== key);
       onChange(ADDITIONAL_PROPERTY_KEY_REMOVE as T, [...childFieldPathId.path, key]);
     },
     [onChange, childFieldPathId],
@@ -370,7 +376,30 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
   if (!renderOptionalField || hasFormData) {
     try {
       const properties = Object.keys(schemaProperties);
-      orderedProperties = orderProperties(properties, uiOptions.order);
+      const definedProperties: string[] = [];
+      const currentAdditionalProperties: string[] = [];
+      properties.forEach((property) => {
+        const addedByAdditionalProperties = Boolean(
+          (schemaProperties[property] as RJSFMarkedSchema)?.[ADDITIONAL_PROPERTY_FLAG],
+        );
+        if (addedByAdditionalProperties) {
+          currentAdditionalProperties.push(property);
+        } else {
+          definedProperties.push(property);
+        }
+      });
+
+      const currentAdditionalPropertySet = new Set(currentAdditionalProperties);
+      const retainedAdditionalProperties = additionalPropertyOrder.current.filter((property) =>
+        currentAdditionalPropertySet.has(property),
+      );
+      const retainedAdditionalPropertySet = new Set(retainedAdditionalProperties);
+      const newAdditionalProperties = currentAdditionalProperties.filter(
+        (property) => !retainedAdditionalPropertySet.has(property),
+      );
+      additionalPropertyOrder.current = [...retainedAdditionalProperties, ...newAdditionalProperties];
+
+      orderedProperties = orderProperties([...definedProperties, ...additionalPropertyOrder.current], uiOptions.order);
     } catch (err) {
       return (
         <div>
