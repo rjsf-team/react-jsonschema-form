@@ -64,8 +64,8 @@
   },
   "peerDependencies": {
     "@ant-design/icons": "^6.0.0",
-    "@rjsf/core": "^6.6.x",
-    "@rjsf/utils": "^6.6.x",
+    "@rjsf/core": "workspace:^",
+    "@rjsf/utils": "workspace:^",
     "antd": "^5 || >6.3.5",
     "dayjs": "^1.8.0",
     "react": ">=18"

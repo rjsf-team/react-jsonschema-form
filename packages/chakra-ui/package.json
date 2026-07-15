@@ -65,8 +65,8 @@
   },
   "peerDependencies": {
     "@chakra-ui/react": ">=3.16.1",
-    "@rjsf/core": "^6.6.x",
-    "@rjsf/utils": "^6.6.x",
+    "@rjsf/core": "workspace:^",
+    "@rjsf/utils": "workspace:^",
     "chakra-react-select": ">=6",
     "react": ">=18"
   },
@@ -78,7 +78,7 @@
     "jzander <jeremy.zander@gmail.com>",
     "Rodrigo Fuentes <rodrigofuentes@users.noreply.github.com>",
     "U.M Andrew <me@andrewmiracle.com>",
-    "Heath Chiavettone <heath.chiavettone@freenome.com"
+    "Heath Chiavettone <heath.chiavettone@freenome.com>"
   ],
   "repository": {
     "type": "git",
