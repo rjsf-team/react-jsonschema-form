@@ -912,8 +912,8 @@ importers:
   packages/validator-ata:
     dependencies:
       ata-validator:
-        specifier: ^0.21.0
-        version: 0.21.0(yaml@2.9.0)
+        specifier: ^1.0.0
+        version: 1.0.0(yaml@2.9.0)
       lodash:
         specifier: ^4.18.1
         version: 4.18.1
@@ -5986,9 +5986,9 @@ packages:
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
-  ata-validator@0.21.0:
-    resolution: {integrity: sha512-cfsVpYxY2c7ZnKQg/eiImSkCFQob6OYgKeGidrBxy8/0W8GoTeiNqqFuqnTkJMDYODYaJmOCKYYWSBpuPClYIg==}
-    engines: {node: '>=18.0.0'}
+  ata-validator@1.0.0:
+    resolution: {integrity: sha512-oQBG4XDTuIasgGTyx7/C12PH1BFWeurF0uz6JRHmr0cwyO6oMRN8sllhirrSsKTkrXEyN7hpT9gQ58v62UhfTw==}
+    engines: {node: '>=20.0.0'}
     hasBin: true
     peerDependencies:
       yaml: ^2.0.0
@@ -18165,7 +18165,7 @@ snapshots:
 
   asynckit@0.4.0: {}
 
-  ata-validator@0.21.0(yaml@2.9.0):
+  ata-validator@1.0.0(yaml@2.9.0):
     dependencies:
       node-addon-api: 8.8.0
       node-api-headers: 1.9.0
