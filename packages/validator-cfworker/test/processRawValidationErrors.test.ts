@@ -48,7 +48,7 @@ describe('transformRJSFValidationErrors()', () => {
     );
     expect(errors[0]).toEqual(
       expect.objectContaining({
-        property: '.value',
+        property: 'value',
         message: "Instance does not have required property 'Schema value'.",
         title: 'Schema value',
         params: { missingProperty: 'value' },
@@ -106,7 +106,7 @@ describe('transformRJSFValidationErrors()', () => {
       }),
     ]);
     expect(errors[0]).toEqual(
-      expect.objectContaining({ property: '.value', title: '', message: expect.stringContaining('"value"') }),
+      expect.objectContaining({ property: 'value', title: '', message: expect.stringContaining('"value"') }),
     );
   });
 
