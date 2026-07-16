@@ -114,7 +114,7 @@ export function transformRJSFValidationErrors<
         message = message.replace(`"${missingProperty}"`, `'${title}'`);
         uiTitle = title;
       }
-      property = property ? `${property}.${missingProperty}` : `.${missingProperty}`;
+      property = property ? `${property}.${missingProperty}` : missingProperty;
       stack = message;
     } else {
       const propertyPath = property.replace(/^\./, '');
