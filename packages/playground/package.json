@@ -55,6 +55,7 @@
     "@rjsf/utils": "workspace:^",
     "@rjsf/validator-ajv8": "workspace:^",
     "@rjsf/validator-ata": "workspace:^",
+    "@rjsf/validator-cfworker": "workspace:^",
     "ajv": "^8.20.0",
     "ajv-i18n": "^4.2.0",
     "antd": "^6.4.3",
