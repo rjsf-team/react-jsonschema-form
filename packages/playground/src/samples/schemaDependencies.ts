@@ -6,8 +6,8 @@ const schemaDependencies: Sample = {
     description: 'These samples are best viewed without live validation.',
     type: 'object',
     properties: {
-      simple: {
-        title: 'Simple',
+      billingDetails: {
+        title: 'Billing details',
         type: 'object',
         properties: {
           name: {
@@ -29,19 +29,19 @@ const schemaDependencies: Sample = {
           },
         },
       },
-      conditional: {
-        title: 'Conditional',
+      petOwner: {
+        title: 'Pet owner',
         $ref: '#/definitions/person',
       },
-      arrayOfConditionals: {
-        title: 'Array of conditionals',
+      petOwners: {
+        title: 'Pet owners',
         type: 'array',
         items: {
           $ref: '#/definitions/person',
         },
       },
-      fixedArrayOfConditionals: {
-        title: 'Fixed array of conditionals',
+      householdMembers: {
+        title: 'Household members',
         type: 'array',
         items: [
           {
@@ -106,24 +106,24 @@ const schemaDependencies: Sample = {
     },
   },
   uiSchema: {
-    simple: {
+    billingDetails: {
       credit_card: {
         'ui:help': 'If you enter anything here then billing_address will be dynamically added to the form.',
       },
     },
-    conditional: {
+    petOwner: {
       'Do you want to get rid of any?': {
         'ui:widget': 'radio',
       },
     },
-    arrayOfConditionals: {
+    petOwners: {
       items: {
         'Do you want to get rid of any?': {
           'ui:widget': 'radio',
         },
       },
     },
-    fixedArrayOfConditionals: {
+    householdMembers: {
       items: {
         'Do you want to get rid of any?': {
           'ui:widget': 'radio',
@@ -137,13 +137,13 @@ const schemaDependencies: Sample = {
     },
   },
   formData: {
-    simple: {
+    billingDetails: {
       name: 'Randy',
     },
-    conditional: {
+    petOwner: {
       'Do you have any pets?': 'No',
     },
-    arrayOfConditionals: [
+    petOwners: [
       {
         'Do you have any pets?': 'Yes: One',
         'How old is your pet?': 6,
@@ -153,7 +153,7 @@ const schemaDependencies: Sample = {
         'Do you want to get rid of any?': false,
       },
     ],
-    fixedArrayOfConditionals: [
+    householdMembers: [
       {
         'Do you have any pets?': 'No',
       },
