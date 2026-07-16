@@ -110,6 +110,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/validator-ata
 
 - Updated `transformRJSFValidationErrors()` to detect field name for `allOf` and `if-then-else` by falling back to the root schema to find the title, fixing [#5134](https://github.com/rjsf-team/react-jsonschema-form/issues/5134)
+- Updated the `ata-validator` dependency to `^1.0.0`, its first stable release; no API changes for `@rjsf/validator-ata` consumers ([#5157](https://github.com/rjsf-team/react-jsonschema-form/pull/5157))
 
 ## Dev / docs / playground
 
