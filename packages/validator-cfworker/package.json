@@ -1,0 +1,101 @@
+{
+  "name": "@rjsf/validator-cfworker",
+  "version": "6.6.2",
+  "main": "dist/index.js",
+  "module": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "type": "module",
+  "description": "@cfworker/json-schema based validator for @rjsf/core",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./lib/index.js"
+    },
+    "./lib": {
+      "types": "./lib/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./lib/index.js"
+    },
+    "./lib/*.js": {
+      "types": "./lib/*.d.ts",
+      "require": "./dist/*.cjs",
+      "import": "./lib/*.js"
+    },
+    "./dist": {
+      "types": "./lib/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./lib/index.js"
+    },
+    "./dist/*.cjs": {
+      "types": "./lib/*.d.ts",
+      "require": "./dist/*.cjs",
+      "import": "./lib/*.js"
+    }
+  },
+  "files": [
+    "dist",
+    "lib",
+    "src",
+    "LICENSE"
+  ],
+  "engineStrict": false,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build:ts": "rimraf ./lib && tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
+    "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/validator-cfworker.esm.js --sourcemap --packages=external --format=esm",
+    "build:umd": "rollup dist/validator-cfworker.esm.js --format=umd --file=dist/validator-cfworker.umd.js --name=@rjsf/validator-cfworker",
+    "build": "pnpm run build:ts && pnpm run build:cjs && pnpm run build:esm && pnpm run build:umd",
+    "cs-check": "oxfmt --check \"{src,test}/**/*.{ts,tsx}\"",
+    "cs-format": "oxfmt \"{src,test}/**/*.{ts,tsx}\"",
+    "lint": "oxlint src test",
+    "precommit": "lint-staged",
+    "test": "vitest run",
+    "typecheck": "tsc -b tsconfig.json --pretty false"
+  },
+  "lint-staged": {
+    "{src,test}/**/*.{ts,tsx}": [
+      "oxlint --fix",
+      "oxfmt"
+    ]
+  },
+  "dependencies": {
+    "@cfworker/json-schema": "^4.1.1",
+    "lodash": "^4.18.1",
+    "lodash-es": "^4.18.1"
+  },
+  "peerDependencies": {
+    "@rjsf/utils": "workspace:^"
+  },
+  "devDependencies": {
+    "@rjsf/utils": "workspace:^",
+    "@types/json-schema": "^7.0.15"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Frank Fiegel <ahoy@punkpeye.com>",
+  "contributors": [
+    "Frank Fiegel <ahoy@punkpeye.com>"
+  ],
+  "keywords": [
+    "react-jsonschema-form",
+    "jsonschema",
+    "json-schema",
+    "json",
+    "schema",
+    "form",
+    "react",
+    "cfworker",
+    "cloudflare-workers",
+    "rjsf-validator"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
+  },
+  "license": "Apache-2.0"
+}

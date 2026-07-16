@@ -80,6 +80,7 @@
     "packages/utils",
     "packages/validator-ajv8",
     "packages/validator-ata",
+    "packages/validator-cfworker",
     "packages/snapshot-tests",
     "packages/shadcn"
   ],

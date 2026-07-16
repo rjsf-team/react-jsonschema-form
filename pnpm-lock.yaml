@@ -525,6 +525,9 @@ importers:
       '@rjsf/validator-ata':
         specifier: workspace:^
         version: link:../validator-ata
+      '@rjsf/validator-cfworker':
+        specifier: workspace:^
+        version: link:../validator-cfworker
       ajv:
         specifier: ^8.20.0
         version: 8.20.0
@@ -914,6 +917,25 @@ importers:
       ata-validator:
         specifier: ^1.0.0
         version: 1.0.0(yaml@2.9.0)
+      lodash:
+        specifier: ^4.18.1
+        version: 4.18.1
+      lodash-es:
+        specifier: ^4.18.1
+        version: 4.18.1
+    devDependencies:
+      '@rjsf/utils':
+        specifier: workspace:^
+        version: link:../utils
+      '@types/json-schema':
+        specifier: ^7.0.15
+        version: 7.0.15
+
+  packages/validator-cfworker:
+    dependencies:
+      '@cfworker/json-schema':
+        specifier: ^4.1.1
+        version: 4.1.1
       lodash:
         specifier: ^4.18.1
         version: 4.18.1
@@ -1667,6 +1689,9 @@ packages:
   '@bramus/specificity@2.4.2':
     resolution: {integrity: sha512-ctxtJ/eA+t+6q2++vj5j7FYX3nRu311q1wfYH3xjlLOsczhlhxAg2FWNUXhpGvAw3BWo1xBcvOV6/YLc2r5FJw==}
     hasBin: true
+
+  '@cfworker/json-schema@4.1.1':
+    resolution: {integrity: sha512-gAmrUZSGtKc3AiBL71iNWxDsyUC5uMaKKGdvzYsBoTW/xi42JQHl7eKV2OYzCUqvc+D2RCcf7EXY2iCyFIk6og==}
 
   '@chakra-ui/react@3.35.0':
     resolution: {integrity: sha512-qzfRNLwxKjxx2IXjBj6uz1nYI+pKsq6uwHxO619+hx1OzNNuwLIjEHJxnDfBzoynO7sPCBlubMwFWb1e1PrXzw==}
@@ -11973,6 +11998,8 @@ snapshots:
   '@bramus/specificity@2.4.2':
     dependencies:
       css-tree: 3.2.1
+
+  '@cfworker/json-schema@4.1.1': {}
 
   '@chakra-ui/react@3.35.0(@emotion/react@11.14.0(@types/react@18.3.31)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
