@@ -20,10 +20,9 @@
     "format": "oxfmt .",
     "format-check": "oxfmt --check .",
     "bump-all-packages": "echo 'NOTE: Make sure to sanity check the playground locally before commiting changes' && pnpm update --latest && pnpm install && pnpm run lint && pnpm run build && pnpm run test",
-    "bump-peer-deps": "node scripts/bump-peer-deps.js",
     "refresh-node-modules": "rimraf packages/*/node_modules && rimraf node_modules && pnpm install",
     "commit-package-changes": "git add pnpm-lock.yaml packages/*/package*.json && cross-env CI=skipPrecommit git commit -m 'updated package*.json after versioning' && git push",
-    "post-versioning": "echo 'This will take a while...' && pnpm run bump-peer-deps && pnpm run refresh-node-modules && pnpm run commit-package-changes && pnpm run update-version-tags",
+    "post-versioning": "echo 'This will take a while...' && pnpm run refresh-node-modules && pnpm run commit-package-changes && pnpm run update-version-tags",
     "update-version-tags": "git tag -f $(node scripts/get-version-tag.js) && git push -f origin $(node scripts/get-version-tag.js)",
     "nuke-build-env": "rimraf .nx && rimraf pnpm-lock.yaml",
     "sanity-check": "pnpm run lint && pnpm run build && pnpm run test"
