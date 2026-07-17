@@ -19,45 +19,45 @@ const widgets: Sample = {
           },
         },
       },
-      boolean: {
+      preferences: {
         type: 'object',
         title: 'Boolean field',
         properties: {
-          default: {
+          subscribeToNewsletter: {
             type: 'boolean',
-            title: 'checkbox (default)',
+            title: 'Subscribe to newsletter (checkbox, default)',
             description: 'This is the checkbox-description',
           },
-          radio: {
+          receiveProductUpdates: {
             type: 'boolean',
-            title: 'radio buttons',
+            title: 'Receive product updates (radio buttons)',
             description: 'This is the radio-description',
           },
-          select: {
+          shareUsageData: {
             type: 'boolean',
-            title: 'select box',
+            title: 'Share usage data (select box)',
             description: 'This is the select-description',
           },
         },
       },
-      string: {
+      contactDetails: {
         type: 'object',
         title: 'String field',
         properties: {
-          default: {
+          name: {
             type: 'string',
-            title: 'text input (default)',
+            title: 'Name (text input, default)',
           },
-          textarea: {
+          address: {
             type: 'string',
-            title: 'textarea',
+            title: 'Address (textarea)',
           },
-          placeholder: {
+          occupation: {
             type: 'string',
           },
-          color: {
+          favoriteColor: {
             type: 'string',
-            title: 'color picker',
+            title: 'Favorite color (color picker)',
             default: '#151ce6',
           },
         },
@@ -171,10 +171,10 @@ const widgets: Sample = {
     },
   },
   uiSchema: {
-    boolean: {
+    preferences: {
       'ui:widget': 'toggle',
     },
-    string: {
+    contactDetails: {
       'ui:widget': 'textarea',
     },
     customWidgets: {
@@ -289,14 +289,14 @@ const widgets: Sample = {
       email: 'chuck@norris.net',
       uri: 'http://chucknorris.com/',
     },
-    boolean: {
-      default: true,
-      radio: true,
-      select: true,
+    preferences: {
+      subscribeToNewsletter: true,
+      receiveProductUpdates: true,
+      shareUsageData: true,
     },
-    string: {
-      default: 'Hello...',
-      textarea: '... World',
+    contactDetails: {
+      name: 'Chuck Norris',
+      address: 'Roundhouse Lane',
     },
     customWidgets: {
       rating: 3,
