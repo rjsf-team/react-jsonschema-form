@@ -93,6 +93,8 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     const defaultWidget = enumOptions ? 'select' : 'text';
     const { widget = defaultWidget } = getUiOptions(uiSchema);
 
+    // Do not convert the value to a locale-specific string for radio, select,
+    // or hidden widgets because option matching relies on the original numeric value.
     if (widget !== 'radio' && widget !== 'select' && widget !== 'hidden') {
       displayValue = String(value).replace('.', separator) as unknown as T;
     }

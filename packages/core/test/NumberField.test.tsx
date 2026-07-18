@@ -692,5 +692,20 @@ describe('NumberField', () => {
       expect(inputs[0].checked).toBe(true);
       expect(inputs[1].checked).toBe(false);
     });
+
+    it('should not format hidden widget options with comma (keep dot)', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'number',
+        },
+        uiSchema: {
+          'ui:widget': 'hidden',
+        },
+        formData: 2.3,
+      });
+
+      const input = node.querySelector<HTMLInputElement>('input[type="hidden"]')!;
+      expect(input).toHaveAttribute('value', '2.3');
+    });
   });
 });
