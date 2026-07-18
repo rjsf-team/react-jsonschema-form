@@ -72,6 +72,16 @@ function getDefaultValue<T = any, S extends StrictRJSFSchema = RJSFSchema, F ext
   }
 }
 
+function isAdditionalPropertySchema(schema: unknown) {
+  return Boolean((schema as RJSFMarkedSchema)?.[ADDITIONAL_PROPERTY_FLAG]);
+}
+
+function getAdditionalPropertyOrder<S extends StrictRJSFSchema = RJSFSchema>(
+  schemaProperties: NonNullable<S['properties']>,
+) {
+  return Object.keys(schemaProperties).filter((property) => isAdditionalPropertySchema(schemaProperties[property]));
+}
+
 /** Props for the `ObjectFieldProperty` component */
 interface ObjectFieldPropertyProps<
   T = any,
@@ -239,6 +249,15 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
   const childFieldPathId = props.childFieldPathId ?? fieldPathId;
   const lastRenamedProperty = useRef({ previousKey: '', currentKey: undefined as string | undefined });
   const additionalPropertyOrder = useRef<string[]>([]);
+  const additionalPropertyOrderInitialized = useRef(false);
+  if (!additionalPropertyOrderInitialized.current) {
+    additionalPropertyOrder.current = getAdditionalPropertyOrder<S>(schemaProperties);
+    additionalPropertyOrderInitialized.current = true;
+  }
+  const definedPropertyOrder = useMemo(
+    () => Object.keys(schemaProperties).filter((property) => !isAdditionalPropertySchema(schemaProperties[property])),
+    [schemaProperties],
+  );
 
   const templateTitle = uiOptions.title ?? schema.title ?? title ?? name;
   const description = uiOptions.description ?? schema.description;
@@ -375,31 +394,10 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
 
   if (!renderOptionalField || hasFormData) {
     try {
-      const properties = Object.keys(schemaProperties);
-      const definedProperties: string[] = [];
-      const currentAdditionalProperties: string[] = [];
-      properties.forEach((property) => {
-        const addedByAdditionalProperties = Boolean(
-          (schemaProperties[property] as RJSFMarkedSchema)?.[ADDITIONAL_PROPERTY_FLAG],
-        );
-        if (addedByAdditionalProperties) {
-          currentAdditionalProperties.push(property);
-        } else {
-          definedProperties.push(property);
-        }
-      });
-
-      const currentAdditionalPropertySet = new Set(currentAdditionalProperties);
-      const retainedAdditionalProperties = additionalPropertyOrder.current.filter((property) =>
-        currentAdditionalPropertySet.has(property),
+      const currentAdditionalProperties = additionalPropertyOrder.current.filter((property) =>
+        Object.hasOwn(schemaProperties, property),
       );
-      const retainedAdditionalPropertySet = new Set(retainedAdditionalProperties);
-      const newAdditionalProperties = currentAdditionalProperties.filter(
-        (property) => !retainedAdditionalPropertySet.has(property),
-      );
-      additionalPropertyOrder.current = [...retainedAdditionalProperties, ...newAdditionalProperties];
-
-      orderedProperties = orderProperties([...definedProperties, ...additionalPropertyOrder.current], uiOptions.order);
+      orderedProperties = orderProperties([...definedPropertyOrder, ...currentAdditionalProperties], uiOptions.order);
     } catch (err) {
       return (
         <div>
@@ -424,9 +422,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     title: uiOptions.label === false ? '' : templateTitle,
     description: uiOptions.label === false ? undefined : description,
     properties: orderedProperties.map((propertyName) => {
-      const addedByAdditionalProperties = Boolean(
-        (schema.properties?.[propertyName] as RJSFMarkedSchema)?.[ADDITIONAL_PROPERTY_FLAG],
-      );
+      const addedByAdditionalProperties = isAdditionalPropertySchema(schema.properties?.[propertyName]);
       const fieldUiSchema = addedByAdditionalProperties ? uiSchema.additionalProperties : uiSchema[propertyName];
       const hidden = getUiOptions<T, S, F>(fieldUiSchema).widget === 'hidden';
       const content = (
