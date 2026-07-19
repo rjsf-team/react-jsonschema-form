@@ -15,6 +15,15 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 6.7.1
+
+## @rjsf/core
+
+- Support locale-specific decimal separators in `NumberField` (e.g. Polish/German comma decimal separators) without breaking non-text widgets like radio buttons and select dropdowns, fixing [#5148](https://github.com/rjsf-team/react-jsonschema-form/pull/5148)
+
+## @rjsf/utils
+
+- Added `getDecimalSeparator()` utility to detect locale-specific decimal separators and updated `asNumber()` to parse locale-specific decimal strings, partially fixing [#5148](https://github.com/rjsf-team/react-jsonschema-form/pull/5148)
 
 # 6.7.0
 
@@ -43,7 +52,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed a regression introduced in [#5136](https://github.com/rjsf-team/react-jsonschema-form/pull/5136) where clearing a second field caused a previously-cleared field to be re-populated with its schema default; uses `JSON.parse(JSON.stringify(...))` to strip `undefined`-valued keys from formData before AJV validation so that the [#4518](https://github.com/rjsf-team/react-jsonschema-form/issues/4518) fix is preserved
 - Show selected option descriptions, fixing ([#4214](https://github.com/rjsf-team/react-jsonschema-form/issues/4214))
 - Fixed `ObjectField`'s "Add" button for `additionalProperties` schemas containing a `$ref` so the new item's default value is computed via `getDefaultFormState()` against the fully-resolved referenced schema (recursively populating nested defaults) instead of only reading the resolved schema's own top-level `default`, which discarded the sibling `default` and any nested property defaults, fixing [#4266](https://github.com/rjsf-team/react-jsonschema-form/issues/4266)
-- Support locale-specific decimal separators in `NumberField` (e.g. Polish/German comma decimal separators) without breaking non-text widgets like radio buttons and select dropdowns, fixing [#5148](https://github.com/rjsf-team/react-jsonschema-form/pull/5148)
 
 ## @rjsf/daisyui
 
@@ -103,7 +111,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `optionsList()` to preserve an explicitly empty string `title` on `oneOf`/`anyOf` options instead of falling back to the option's value, fixing [#4448](https://github.com/rjsf-team/react-jsonschema-form/issues/4448)
 - Show selected option descriptions, fixing ([#4214](https://github.com/rjsf-team/react-jsonschema-form/issues/4214))
 - Fixed `getDefaultFormState()` so that optional array defaults are not initialized when `experimental_defaultFormStateBehavior.arrayMinItems.populate = never`, fixing [#5149](https://github.com/rjsf-team/react-jsonschema-form/issues/5149)
-- Added `getDecimalSeparator()` utility to detect locale-specific decimal separators and updated `asNumber()` to parse locale-specific decimal strings, partially fixing [#5148](https://github.com/rjsf-team/react-jsonschema-form/pull/5148)
 
 ## @rjsf/validator-ajv8
 
