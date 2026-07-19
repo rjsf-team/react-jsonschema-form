@@ -912,8 +912,8 @@ importers:
   packages/validator-ata:
     dependencies:
       ata-validator:
-        specifier: ^1.0.0
-        version: 1.0.0(yaml@2.9.0)
+        specifier: ^1.1.0
+        version: 1.1.0(yaml@2.9.0)
       lodash:
         specifier: ^4.18.1
         version: 4.18.1
@@ -1075,6 +1075,36 @@ packages:
 
   '@asamuzakjp/nwsapi@2.3.9':
     resolution: {integrity: sha512-n8GuYSrI9bF7FFZ/SjhwevlHc8xaVlb/7HmHelnc/PZXBD2ZR49NnN9sMMuDdEGPeeRQ5d0hqlSlEpgCX3Wl0Q==}
+
+  '@ata-validator/native-darwin-arm64@1.1.0':
+    resolution: {integrity: sha512-FLZxpdmEwyYEAFp4lp8jFfPVdPfel8JVqN2HZnebs6Mto7zoalJmb6xyPtezas8Qn4yfRtneG4P9NrhETKxASg==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@ata-validator/native-linux-arm64-gnu@1.1.0':
+    resolution: {integrity: sha512-+znJvO60K0UKuZ8CHVvnGy9Ug0wTm4WF6LUwiDPu9PzNZYyZwVbxFWpIQqgJnnvKZSmGbpCWG2mS05UpB3FUjA==}
+    cpu: [arm64]
+    os: [linux]
+
+  '@ata-validator/native-linux-arm64-musl@1.1.0':
+    resolution: {integrity: sha512-vN9e+0COb+LL+FJ/Wg2v8vEKyPfGOWdZSb6WR11tCrkEIanqmxxuhJWx6lnYqjpxLOxaaj2WCYQAyd0kAfh1dw==}
+    cpu: [arm64]
+    os: [linux]
+
+  '@ata-validator/native-linux-x64-gnu@1.1.0':
+    resolution: {integrity: sha512-YnqE3/JY7GhfGAoigsNFkhHSL6MLTCy5ijKhp57qTBkZYCq9qVie+9yA0QRNV6333wgFXkc8s4UNc5wJv/yadQ==}
+    cpu: [x64]
+    os: [linux]
+
+  '@ata-validator/native-linux-x64-musl@1.1.0':
+    resolution: {integrity: sha512-DHIJQtrx6WaPtUyXq/O5LqHsMY/N5dTvM4zPaKGuNEPvGOfOOd29zOsjtW6z+vkmavdiXrh5CurbjJ+EQXeEMA==}
+    cpu: [x64]
+    os: [linux]
+
+  '@ata-validator/native-win32-x64@1.1.0':
+    resolution: {integrity: sha512-2mScswxrqhCOyvcHtNJMCzKZdrgeNjcBRupi9Jx2zDsQmczGeH3MhecfnU03D8qBzSMeztpbWMqYZgJN/8JWnw==}
+    cpu: [x64]
+    os: [win32]
 
   '@babel/code-frame@7.29.7':
     resolution: {integrity: sha512-Aup7aUOfpbAUg2ROOJN6Iw5f9DMBlzu0mIkm/malLQFN/YQgO48wCj0Kxa3sEHJvPVFg7siR+qRInwXd2qhQKw==}
@@ -5986,8 +6016,8 @@ packages:
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
-  ata-validator@1.0.0:
-    resolution: {integrity: sha512-oQBG4XDTuIasgGTyx7/C12PH1BFWeurF0uz6JRHmr0cwyO6oMRN8sllhirrSsKTkrXEyN7hpT9gQ58v62UhfTw==}
+  ata-validator@1.1.0:
+    resolution: {integrity: sha512-xfp3VJyYuDhfvdUaRnBOhRHEUQBC4brK9fwkeyfb56KUcFmUMWkwYIvOLSpG1SppzMwx13qQdq7RmkNeU9mWVg==}
     engines: {node: '>=20.0.0'}
     hasBin: true
     peerDependencies:
@@ -8507,13 +8537,6 @@ packages:
   node-addon-api@7.1.1:
     resolution: {integrity: sha512-5m3bsyrjFWE1xf7nz7YXdN4udnVtXK6/Yfgn5qnahL6bCkf2yKt4k3nuTKAtT4r3IG8JNR2ncsIMdZuAzJjHQQ==}
 
-  node-addon-api@8.8.0:
-    resolution: {integrity: sha512-c5Ko1fZJIJmzhFIkhRN76WTq+fC6tWnGy9CXA0fA+XygsWZmEwG8vmbkNqxMyoaa0Tin4djul49NzdVcJJcjeA==}
-    engines: {node: ^18 || ^20 || >= 21}
-
-  node-api-headers@1.9.0:
-    resolution: {integrity: sha512-2oNILP4jXwRB4ywnYKjVk1YyJ96n2D4EOVJO6S3oYZ5PtbJrw3Yt9TpAuX3nBLMuzn74rnfGQrv13pS9vC+YiA==}
-
   node-emoji@2.2.0:
     resolution: {integrity: sha512-Z3lTE9pLaJF47NyMhd4ww1yFTAP8YhYI8SleJiHzM46Fgpm5cnNzSl9XfzFNqbaz+VlJrIj3fXQ4DeN1Rjm6cw==}
     engines: {node: '>=18'}
@@ -8800,11 +8823,6 @@ packages:
   pkg-dir@7.0.0:
     resolution: {integrity: sha512-Ie9z/WINcxxLp27BKOCHGde4ITq9UklYKDzVo1nhk5sqGEXU3FpkwP5GM2voTGJkGd9B3Otl+Q4uwSOeSUtOBA==}
     engines: {node: '>=14.16'}
-
-  pkg-prebuilds@1.0.0:
-    resolution: {integrity: sha512-D9wlkXZCmjxj2kBHTw3fGSyjoahr33breGBoJcoezpi7ouYS59DJVOHMZ+dgqacSrZiJo4qtkXxLQTE+BqXJmQ==}
-    engines: {node: '>= 14.15.0'}
-    hasBin: true
 
   pkijs@3.4.0:
     resolution: {integrity: sha512-emEcLuomt2j03vxD54giVB4SxTjnsqkU692xZOZXHDVoYyypEm+b3jpiTcc+Cf+myooc+/Ly0z01jqeNHVgJGw==}
@@ -11195,6 +11213,24 @@ snapshots:
   '@asamuzakjp/generational-cache@1.0.1': {}
 
   '@asamuzakjp/nwsapi@2.3.9': {}
+
+  '@ata-validator/native-darwin-arm64@1.1.0':
+    optional: true
+
+  '@ata-validator/native-linux-arm64-gnu@1.1.0':
+    optional: true
+
+  '@ata-validator/native-linux-arm64-musl@1.1.0':
+    optional: true
+
+  '@ata-validator/native-linux-x64-gnu@1.1.0':
+    optional: true
+
+  '@ata-validator/native-linux-x64-musl@1.1.0':
+    optional: true
+
+  '@ata-validator/native-win32-x64@1.1.0':
+    optional: true
 
   '@babel/code-frame@7.29.7':
     dependencies:
@@ -18165,12 +18201,14 @@ snapshots:
 
   asynckit@0.4.0: {}
 
-  ata-validator@1.0.0(yaml@2.9.0):
-    dependencies:
-      node-addon-api: 8.8.0
-      node-api-headers: 1.9.0
-      pkg-prebuilds: 1.0.0
+  ata-validator@1.1.0(yaml@2.9.0):
     optionalDependencies:
+      '@ata-validator/native-darwin-arm64': 1.1.0
+      '@ata-validator/native-linux-arm64-gnu': 1.1.0
+      '@ata-validator/native-linux-arm64-musl': 1.1.0
+      '@ata-validator/native-linux-x64-gnu': 1.1.0
+      '@ata-validator/native-linux-x64-musl': 1.1.0
+      '@ata-validator/native-win32-x64': 1.1.0
       yaml: 2.9.0
 
   atob@2.1.2: {}
@@ -21080,10 +21118,6 @@ snapshots:
 
   node-addon-api@7.1.1: {}
 
-  node-addon-api@8.8.0: {}
-
-  node-api-headers@1.9.0: {}
-
   node-emoji@2.2.0:
     dependencies:
       '@sindresorhus/is': 4.6.0
@@ -21515,10 +21549,6 @@ snapshots:
   pkg-dir@7.0.0:
     dependencies:
       find-up: 6.3.0
-
-  pkg-prebuilds@1.0.0:
-    dependencies:
-      yargs: 17.7.2
 
   pkijs@3.4.0:
     dependencies:
