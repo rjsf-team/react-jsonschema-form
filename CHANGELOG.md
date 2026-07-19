@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.7.1
+
+## @rjsf/core
+
+- Fixed `ObjectField` to preserve the insertion order of additional and pattern properties when keys are renamed to integers, fixing [#4631](https://github.com/rjsf-team/react-jsonschema-form/issues/4631) ([#5156](https://github.com/rjsf-team/react-jsonschema-form/pull/5156))
+
 # 6.7.0
 
 ## @rjsf/antd
@@ -43,7 +49,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed a regression introduced in [#5136](https://github.com/rjsf-team/react-jsonschema-form/pull/5136) where clearing a second field caused a previously-cleared field to be re-populated with its schema default; uses `JSON.parse(JSON.stringify(...))` to strip `undefined`-valued keys from formData before AJV validation so that the [#4518](https://github.com/rjsf-team/react-jsonschema-form/issues/4518) fix is preserved
 - Show selected option descriptions, fixing ([#4214](https://github.com/rjsf-team/react-jsonschema-form/issues/4214))
 - Fixed `ObjectField`'s "Add" button for `additionalProperties` schemas containing a `$ref` so the new item's default value is computed via `getDefaultFormState()` against the fully-resolved referenced schema (recursively populating nested defaults) instead of only reading the resolved schema's own top-level `default`, which discarded the sibling `default` and any nested property defaults, fixing [#4266](https://github.com/rjsf-team/react-jsonschema-form/issues/4266)
-- Fixed `ObjectField` to preserve the insertion order of additional and pattern properties when keys are renamed to integers, fixing [#4631](https://github.com/rjsf-team/react-jsonschema-form/issues/4631) ([#5156](https://github.com/rjsf-team/react-jsonschema-form/pull/5156))
 
 ## @rjsf/daisyui
 

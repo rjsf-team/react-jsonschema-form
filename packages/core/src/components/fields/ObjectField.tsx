@@ -244,20 +244,17 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     [schemaUtils, rawSchema, formData],
   );
   const uiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema, globalUiOptions), [uiSchema, globalUiOptions]);
-  const { properties: schemaProperties = {} } = schema;
+  const schemaProperties = useMemo(() => schema.properties ?? {}, [schema.properties]);
   // All the children will use childFieldPathId if present in the props, falling back to the fieldPathId
   const childFieldPathId = props.childFieldPathId ?? fieldPathId;
   const lastRenamedProperty = useRef({ previousKey: '', currentKey: undefined as string | undefined });
-  const additionalPropertyOrder = useRef<string[]>([]);
-  const additionalPropertyOrderInitialized = useRef(false);
-  if (!additionalPropertyOrderInitialized.current) {
-    additionalPropertyOrder.current = getAdditionalPropertyOrder<S>(schemaProperties);
-    additionalPropertyOrderInitialized.current = true;
-  }
-  const definedPropertyOrder = useMemo(
-    () => Object.keys(schemaProperties).filter((property) => !isAdditionalPropertySchema(schemaProperties[property])),
-    [schemaProperties],
+  const [additionalPropertyOrder, setAdditionalPropertyOrder] = useState(() =>
+    getAdditionalPropertyOrder<S>(schemaProperties),
   );
+  const definedPropertyOrder = useMemo(() => {
+    const additionalPropertySet = new Set(getAdditionalPropertyOrder<S>(schemaProperties));
+    return Object.keys(schemaProperties).filter((property) => !additionalPropertySet.has(property));
+  }, [schemaProperties]);
 
   const templateTitle = uiOptions.title ?? schema.title ?? title ?? name;
   const description = uiOptions.description ?? schema.description;
@@ -328,7 +325,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       lastRenamedProperty.current.currentKey = newKey;
       lastRenamedProperty.current.previousKey = getAvailableKey(newKey, newFormData);
     }
-    additionalPropertyOrder.current.push(newKey);
+    setAdditionalPropertyOrder((order) => [...order, newKey]);
     onChange(newFormData, childFieldPathId.path);
   }, [formData, onChange, translateString, schemaUtils, childFieldPathId, getAvailableKey, schema]);
 
@@ -360,9 +357,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
           lastRenamedProperty.current.previousKey = oldKey;
         }
         lastRenamedProperty.current.currentKey = actualNewKey;
-        additionalPropertyOrder.current = additionalPropertyOrder.current.map((property) =>
-          property === oldKey ? actualNewKey : property,
-        );
+        setAdditionalPropertyOrder((order) => order.map((property) => (property === oldKey ? actualNewKey : property)));
         onChange(renamedObj, childFieldPathId.path);
       }
     },
@@ -374,7 +369,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
    */
   const handleRemoveProperty = useCallback(
     (key: string) => {
-      additionalPropertyOrder.current = additionalPropertyOrder.current.filter((property) => property !== key);
+      setAdditionalPropertyOrder((order) => order.filter((property) => property !== key));
       onChange(ADDITIONAL_PROPERTY_KEY_REMOVE as T, [...childFieldPathId.path, key]);
     },
     [onChange, childFieldPathId],
@@ -394,8 +389,9 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
 
   if (!renderOptionalField || hasFormData) {
     try {
-      const currentAdditionalProperties = additionalPropertyOrder.current.filter((property) =>
-        Object.hasOwn(schemaProperties, property),
+      const definedPropertySet = new Set(definedPropertyOrder);
+      const currentAdditionalProperties = additionalPropertyOrder.filter(
+        (property) => Object.hasOwn(schemaProperties, property) && !definedPropertySet.has(property),
       );
       orderedProperties = orderProperties([...definedPropertyOrder, ...currentAdditionalProperties], uiOptions.order);
     } catch (err) {
