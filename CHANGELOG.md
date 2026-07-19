@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.7.1
+
+## @rjsf/validator-ata
+
+- Updated the `ata-validator` dependency to `^1.1.0`, which fixes a stack overflow in browser environments for schemas its JS engine cannot compile and shrinks the install footprint via per-platform optional packages ([#5162](https://github.com/rjsf-team/react-jsonschema-form/pull/5162))
+
 # 6.7.0
 
 ## @rjsf/antd
