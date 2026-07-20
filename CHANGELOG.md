@@ -33,6 +33,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `utility-functions.md` to document `getDecimalSeparator()`
 
+# 6.7.1
+
+## Dev / docs / playground
+
+- Removed bump-peer-deps script, pnpm workspaces now handles this for us.
+
 # 6.7.0
 
 ## @rjsf/antd
