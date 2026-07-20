@@ -420,6 +420,26 @@ const changedFields = getChangedFields(a, b);
 console.log(changedFields); // Output: ['age']
 ```
 
+### getDecimalSeparator(languages?: string | string[])
+
+Determines the locale-specific decimal separator.
+It uses the provided locale or the first locale in navigator.languages (if available) and falls back to "en".
+
+#### Parameters
+
+- languages?: string | string[] - Optional array of locales or a single locale string.
+
+#### Returns
+
+- string : The decimal separator character (typically '.' or ',').
+
+#### Example
+
+```typescript
+const separator = getDecimalSeparator('fr');
+console.log(separator); // Output: ','
+```
+
 ### getDiscriminatorFieldFromSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Returns the `discriminator.propertyName` when defined in the `schema` if it is a string. A warning is generated when it is not a string.

@@ -7,18 +7,10 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { asNumber } from '@rjsf/utils';
+import { asNumber, getDecimalSeparator, getUiOptions, optionsList } from '@rjsf/utils';
 
-// Matches a string that ends in a . character, optionally followed by a sequence of
-// digits followed by any number of 0 characters up until the end of the line.
-// Ensuring that there is at least one prefixed character is important so that
-// you don't incorrectly match against "0".
+// Static matchers for standard '.' separator used during normalization inside handleChange
 const trailingCharMatcherWithPrefix = /\.([0-9]*0)*$/;
-
-// This is used for trimming the trailing 0 and . characters without affecting
-// the rest of the string. Its possible to use one RegEx with groups for this
-// functionality, but it is fairly complex compared to simply defining two
-// different matchers.
 const trailingCharMatcher = /[0.]0*$/;
 
 /**
@@ -45,6 +37,9 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   const [lastValue, setLastValue] = useState(initialValue);
   const { StringField } = registry.fields;
 
+  const separator = getDecimalSeparator();
+  const escapedSeparator = separator === '.' ? '\\.' : separator;
+
   let value = formData;
 
   /** Handle the change from the `StringField` to properly convert to a number
@@ -56,9 +51,12 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       // Cache the original value in component state
       setLastValue(newValue);
 
+      // Convert locale separator to standard '.' first
+      const standardValue = typeof newValue === 'string' ? newValue.replace(separator, '.') : newValue;
+
       // Normalize decimals that don't start with a zero character in advance so
       // that the rest of the normalization logic is simpler
-      const normalizedValue = `${newValue}`.startsWith('.') ? `0${newValue}` : newValue;
+      const normalizedValue = `${standardValue}`.startsWith('.') ? `0${standardValue}` : standardValue;
 
       // Check that the value is a string (this can happen if the widget used is a
       // <select>, due to an enum declaration etc) then, if the value ends in a
@@ -70,14 +68,14 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
 
       onChange(processed as unknown as T, path, errorSchema, id);
     },
-    [onChange],
+    [onChange, separator],
   );
 
   if (typeof lastValue === 'string' && typeof value === 'number') {
     // Construct a regular expression that checks for a string that consists
-    // of the formData value suffixed with zero or one '.' characters and zero
+    // of the formData value suffixed with zero or one locale separator characters and zero
     // or more '0' characters
-    const re = new RegExp(`^(${String(value).replace('.', '\\.')})?\\.?0*$`);
+    const re = new RegExp(`^(${String(value).replace('.', escapedSeparator)})?${escapedSeparator}?0*$`);
 
     // If the cached "lastValue" is a match, use that instead of the formData
     // value to prevent the input value from changing in the UI
@@ -86,7 +84,23 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     }
   }
 
-  return <StringField {...props} formData={value} onChange={handleChange} />;
+  // Format value to use the locale separator for rendering if it is a number
+  let displayValue: T | undefined = value;
+  if (typeof value === 'number' && separator !== '.') {
+    const { schema, uiSchema } = props;
+    const { schemaUtils } = registry;
+    const enumOptions = schemaUtils.isSelect(schema) ? optionsList(schema, uiSchema) : undefined;
+    const defaultWidget = enumOptions ? 'select' : 'text';
+    const { widget = defaultWidget } = getUiOptions(uiSchema);
+
+    // Do not convert the value to a locale-specific string for radio, select,
+    // or hidden widgets because option matching relies on the original numeric value.
+    if (widget !== 'radio' && widget !== 'select' && widget !== 'hidden') {
+      displayValue = String(value).replace('.', separator) as unknown as T;
+    }
+  }
+
+  return <StringField {...props} formData={displayValue} onChange={handleChange} />;
 }
 
 export default NumberField;
