@@ -132,6 +132,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `@rjsf/snapshots` to add a test case to `formTests` that verifies the new Cycle detection UI
 - Updated the `custom-templates.md` and `custom-widgets-fields.md` for the new feature
 - Updated `utility-functions.md` to document `logUnsupportedDefaultForEnum()`
+- Updated `utility-functions.md` to document `getDecimalSeparator()`
 - Updated the playground to add a selector for the `nestedDefaultsPrecedence` option
 - Replaced npm with pnpm v10 for development
 
