@@ -25,17 +25,13 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Added `getDecimalSeparator()` utility to detect locale-specific decimal separators and updated `asNumber()` to parse locale-specific decimal strings, partially fixing [#5148](https://github.com/rjsf-team/react-jsonschema-form/pull/5148)
 
-# 6.7.1
-
 ## @rjsf/validator-ata
 
 - Updated the `ata-validator` dependency to `^1.1.0`, which fixes a stack overflow in browser environments for schemas its JS engine cannot compile and shrinks the install footprint via per-platform optional packages ([#5162](https://github.com/rjsf-team/react-jsonschema-form/pull/5162))
 
-# 6.7.1
+## Dev / docs / playground
 
-## @rjsf/validator-ata
-
-- Updated the `ata-validator` dependency to `^1.1.0`, which fixes a stack overflow in browser environments for schemas its JS engine cannot compile and shrinks the install footprint via per-platform optional packages ([#5162](https://github.com/rjsf-team/react-jsonschema-form/pull/5162))
+- Updated `utility-functions.md` to document `getDecimalSeparator()`
 
 # 6.7.0
 
@@ -138,7 +134,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `@rjsf/snapshots` to add a test case to `formTests` that verifies the new Cycle detection UI
 - Updated the `custom-templates.md` and `custom-widgets-fields.md` for the new feature
 - Updated `utility-functions.md` to document `logUnsupportedDefaultForEnum()`
-- Updated `utility-functions.md` to document `getDecimalSeparator()`
 - Updated the playground to add a selector for the `nestedDefaultsPrecedence` option
 - Replaced npm with pnpm v10 for development
 
