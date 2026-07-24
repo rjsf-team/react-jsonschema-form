@@ -89,11 +89,11 @@ There are functions in the `testSnap` directory: `arrayTests`, `formTests` and `
 Each theme will basically run these functions by creating a `Xxx.test.tsx` file (where `Xxx` is `Array`, `Form` or `Object`) that looks like the following:
 
 ```tsx
-import { arrayTests } from "@rjsf/snapshot-tests"; // OR
+import { arrayTests } from '@rjsf/snapshot-tests'; // OR
 // import { formTests } from '@rjsf/snapshot-tests';
 // import { objectTests } from '@rjsf/snapshot-tests';
 
-import Form from "../src";
+import Form from '../src';
 
 arrayTests(Form); // OR
 // formTests(Form);
@@ -105,31 +105,27 @@ If you add a theme-only feature, it is ok to update the appropriate `Xxx.test.ts
 For example:
 
 ```tsx
-import { RJSFSchema, UiSchema } from "@rjsf/utils";
-import { arrayTests } from "@rjsf/snapshot-tests";
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import { arrayTests } from '@rjsf/snapshot-tests';
 
-import Form from "../src";
+import Form from '../src';
 
 formTests(Form);
 
-describe("Theme specific tests", () => {
-  it("test a theme-specific option", () => {
+describe('Theme specific tests', () => {
+  it('test a theme-specific option', () => {
     const schema: RJSFSchema = {
-      type: "object",
+      type: 'object',
       properties: {
         name: {
-          type: "string",
+          type: 'string',
         },
       },
     };
     const uiSchema: UiSchema = {
       // Enable the theme specific feature
     };
-    const tree = renderer
-      .create(
-        <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
-      )
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 });
