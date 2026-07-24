@@ -719,11 +719,10 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
   const defaultsLength = Array.isArray(defaults) ? defaults.length : 0;
 
   if (neverPopulate) {
-    if (shouldMergeDefaultsIntoFormData) {
-      if (schema.minItems && schema.minItems > defaultsLength) {
-        const fillerEntries = Array.from({ length: schema.minItems - defaultsLength }, () => null) as T[];
-        return (defaults ?? []).concat(fillerEntries);
-      }
+    if (shouldMergeDefaultsIntoFormData && !required) {
+      // Optional arrays with no existing data should be omitted entirely rather than defaulted to `[]`.
+      // Required arrays still fall through to `defaults ?? emptyDefault` below so that `[]` is surfaced,
+      // letting the validator report `minItems` violations instead of a missing-required-property error.
       return defaults;
     }
     return defaults ?? emptyDefault;
