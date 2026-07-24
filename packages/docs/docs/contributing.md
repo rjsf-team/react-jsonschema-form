@@ -177,21 +177,6 @@ The package is published through an automation token belonging to the
 [rjsf-bot](https://www.npmjs.com/~rjsf-bot) user on npm. This token
 is stored as the `NPM_TOKEN` secret on GitHub Actions.
 
-### Updating the peer dependencies for new features in a minor release
-
-If a set of changes added new features or APIs that require updating downstream peer dependencies, then run the following
-command:
-
-```bash
-pnpm run post-versioning
-```
-
-The `pnpm run post-versioning` script will update the peer dependencies in all of the `packages/*/package.json` files if necessary.
-It will then clean up the `node_modules` directories and rerun `pnpm install` to update the `pnpm-lock.yaml` files.
-Finally, it creates and pushes a new commit with those `package.json` and `pnpm-lock.yaml` files up to GitHub.
-
-> NOTE: this command will take a while, be patient
-
 ### Releasing docs
 
 Docs are automatically published to GitHub Pages when the `main` branch is updated.
