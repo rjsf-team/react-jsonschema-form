@@ -33,6 +33,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `utility-functions.md` to document `getDecimalSeparator()`
 
+# 6.7.1
+
+## @rjsf/core
+
+- Fixed `ObjectField` to preserve the insertion order of additional and pattern properties when keys are renamed to integers, fixing [#4631](https://github.com/rjsf-team/react-jsonschema-form/issues/4631) ([#5156](https://github.com/rjsf-team/react-jsonschema-form/pull/5156))
+
 # 6.7.0
 
 ## @rjsf/antd
