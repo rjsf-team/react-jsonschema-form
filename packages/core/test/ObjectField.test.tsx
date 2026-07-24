@@ -992,6 +992,67 @@ describe('ObjectField', () => {
       expectToHaveBeenCalledWithFormData(onChange, { first: 1, newSecond: 2, third: 3 }, 'root');
     });
 
+    it('should keep a numeric pattern property in place when renaming its key', async () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: {
+            '(.*?)': { type: 'string' },
+          },
+        },
+        formData: { first: 'one', second: 'two' },
+      });
+
+      const textNode = node.querySelector('#root_second-key')!;
+      await user.clear(textNode);
+      await user.type(textNode, '1');
+      await user.tab();
+
+      const propertyKeys = [...node.querySelectorAll<HTMLInputElement>('input[id$="-key"]')].map(
+        (input) => input.value,
+      );
+      expect(propertyKeys).toEqual(['first', '1']);
+    });
+
+    it('should not duplicate an additional property that becomes schema-defined after rerender', () => {
+      const initialSchema: RJSFSchema = {
+        type: 'object',
+        additionalProperties: {
+          type: 'string',
+        },
+      };
+      const updatedSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          promoted: {
+            type: 'string',
+          },
+        },
+        additionalProperties: {
+          type: 'string',
+        },
+      };
+      const formData = { first: 'one', promoted: 'two' };
+      const { node, rerender } = createFormComponent({
+        schema: initialSchema,
+        formData,
+      });
+
+      rerender({
+        schema: updatedSchema,
+        formData,
+      });
+
+      const promotedInputs = node.querySelectorAll<HTMLInputElement>('input[id="root_promoted"]');
+      expect(promotedInputs).toHaveLength(1);
+      expect(promotedInputs[0]).toHaveValue('two');
+
+      const propertyKeys = [...node.querySelectorAll<HTMLInputElement>('input[id$="-key"]')].map(
+        (input) => input.value,
+      );
+      expect(propertyKeys).toEqual(['first']);
+    });
+
     it('should rename nested additionalProperties key when key input is blurred', async () => {
       const nestedSchema: RJSFSchema = {
         type: 'object',
