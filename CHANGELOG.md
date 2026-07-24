@@ -25,6 +25,8 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Added `getDecimalSeparator()` utility to detect locale-specific decimal separators and updated `asNumber()` to parse locale-specific decimal strings, partially fixing [#5148](https://github.com/rjsf-team/react-jsonschema-form/pull/5148)
+- Fixed a regression where `getDefaultFormState()` with `experimental_defaultFormStateBehavior.arrayMinItems.populate = 'never'` padded arrays with `null` entries up to `minItems`, fixing [#5163](https://github.com/rjsf-team/react-jsonschema-form/issues/5163)
+  - Optional arrays with no data are now omitted (unchanged) while required arrays with no data default to `[]`, letting the validator report the `minItems` violation instead of surfacing invalid `null` items
 
 ## @rjsf/validator-ata
 
@@ -2496,7 +2498,7 @@ Move theme snapshot tests into separate package
 - However, if users of @rjsf/antd want to use v5 styling, they need to wrap your application with the `StyleProvider` from `@ant-design/cssinjs`. They need not have to install this package, its a transitive package coming from antd.
 
 ```tsx
-import { StyleProvider } from "@ant-design/cssinjs";
+import { StyleProvider } from '@ant-design/cssinjs';
 
 const Component = () => {
   return (
