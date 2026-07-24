@@ -16,15 +16,24 @@ import type { RawValidationErrorsType } from './processRawValidationErrors';
 import processRawValidationErrors from './processRawValidationErrors';
 import type { CFWorkerValidationError, CustomValidatorOptionsType } from './types';
 
+/** Cached schema-bound validator and the schemas used to construct it. */
 interface CachedValidator {
+  /** The schema-bound validator instance. */
   validator: Validator;
+
+  /** The schema used to construct the validator. */
   schema: object;
+
+  /** The root schema registered for cross-schema `$ref` resolution. */
   rootSchema?: object;
 }
 
 /** Converts JavaScript `undefined` values into JSON-compatible input.
  * Object members with undefined values are omitted so a `required` keyword
  * sees them as missing; array entries and a top-level undefined become null.
+ *
+ * @param data - The form data to normalize
+ * @returns - The form data with `undefined` values converted to JSON-compatible values
  */
 export function normalizeFormDataForValidation<D>(data: D): D {
   if (data === undefined) {
@@ -50,20 +59,47 @@ export default class CFWorkerValidator<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 > implements ValidatorType<T, S, F> {
+  /** The resolved options used to configure this validator.
+   *
+   * @private
+   */
   readonly options: CustomValidatorOptionsType;
 
+  /** Per-schema-id cache of constructed `@cfworker/json-schema` validators. AJV uses a
+   * single instance with a schema registry; cfworker is schema-bound, so this
+   * class maintains the registry itself.
+   *
+   * @private
+   */
   private readonly validators = new Map<string, CachedValidator>();
 
+  /** The root schema registered under `ROOT_SCHEMA_PREFIX`, used to resolve prefixed `$ref` values.
+   *
+   * @private
+   */
   private cachedRootSchema?: object;
 
+  /** Most recent `rootSchema` reference processed by `handleSchemaUpdate`.
+   *
+   * @private
+   */
   private lastSeenRootSchema?: S;
 
+  /** True once a `rootSchema` has been registered with the engine in this lifecycle.
+   *
+   * @private
+   */
   private hasRegisteredRootSchema = false;
 
+  /** Constructs a `CFWorkerValidator` instance using the provided options.
+   *
+   * @param [options={}] - The options used to configure the cfworker validator
+   */
   constructor(options: CustomValidatorOptionsType = {}) {
     this.options = { draft: '2020-12', shortCircuit: false, ...options };
   }
 
+  /** Clears all cached schema-bound validators and root-schema state. */
   reset(): void {
     this.validators.clear();
     this.cachedRootSchema = undefined;
@@ -71,6 +107,12 @@ export default class CFWorkerValidator<
     this.hasRegisteredRootSchema = false;
   }
 
+  /** Returns a cached schema-bound validator or builds and caches a new one.
+   *
+   * @param id - The cache key for the schema
+   * @param schema - The schema to bind to the validator
+   * @returns - The cached or newly constructed validator
+   */
   private getOrBuild(id: string, schema: object): Validator {
     const rootSchema =
       this.cachedRootSchema && !deepEquals(this.cachedRootSchema, schema) ? this.cachedRootSchema : undefined;
@@ -88,6 +130,12 @@ export default class CFWorkerValidator<
     return validator;
   }
 
+  /** Runs validation without applying RJSF error transformation or custom validation.
+   *
+   * @param schema - The schema against which to validate the form data
+   * @param [formData] - The form data to validate
+   * @returns - The raw cfworker errors and any engine exception
+   */
   rawValidation<Result = any>(schema: S, formData?: T): RawValidationErrorsType<Result> {
     let validationError: Error | undefined;
     let errors: OutputUnit[] | undefined;
@@ -102,6 +150,15 @@ export default class CFWorkerValidator<
     return { errors: errors as Result[] | undefined, validationError };
   }
 
+  /** Validates form data and applies RJSF error transformation and custom validation.
+   *
+   * @param formData - The form data to validate
+   * @param schema - The schema against which to validate the form data
+   * @param [customValidate] - A function that adds application-specific validation errors
+   * @param [transformErrors] - A function that transforms errors before custom validation
+   * @param [uiSchema] - The uiSchema passed to error transformation and custom validation
+   * @returns - The processed validation errors and error schema
+   */
   validateFormData(
     formData: T | undefined,
     schema: S,
@@ -122,6 +179,10 @@ export default class CFWorkerValidator<
     );
   }
 
+  /** Registers a root schema when it changes so prefixed `$ref` values can be resolved.
+   *
+   * @param rootSchema - The root schema used to provide `$ref` resolutions
+   */
   handleSchemaUpdate(rootSchema: S): void {
     if (this.lastSeenRootSchema === rootSchema && this.hasRegisteredRootSchema) {
       return;
@@ -143,6 +204,13 @@ export default class CFWorkerValidator<
     this.hasRegisteredRootSchema = true;
   }
 
+  /** Validates data against a schema, returning false if the schema is invalid.
+   *
+   * @param schema - The schema against which to validate the form data
+   * @param formData - The form data to validate
+   * @param rootSchema - The root schema used to provide `$ref` resolutions
+   * @returns - Whether the form data is valid
+   */
   isValid(schema: S, formData: T | undefined, rootSchema: S): boolean {
     try {
       this.handleSchemaUpdate(rootSchema);

@@ -5,15 +5,22 @@ import cloneDeep from 'lodash/cloneDeep';
 
 import type { CFWorkerFormatChecker, CustomValidatorOptionsType } from './types';
 
+/** Regular expression used to validate RJSF's `color` format. */
 export const COLOR_FORMAT_REGEX =
   /^(#?([0-9A-Fa-f]{3}){1,2}\b|aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|teal|white|yellow|(rgb\(\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*\))|(rgb\(\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*\)))$/;
 
+/** Regular expression used to validate RJSF's `data-url` format. */
 export const DATA_URL_FORMAT_REGEX = /^data:([a-z]+\/[a-z0-9-+.]+)?;(?:name=(.*);)?base64,(.*)$/;
 
 interface FormatRegistryModule {
   format?: Record<string, CFWorkerFormatChecker>;
 }
 
+/** Converts a supported custom-format declaration into a format checker.
+ *
+ * @param spec - The custom-format function, regular expression, or regular-expression source
+ * @returns - A function that checks whether a string satisfies the format
+ */
 function asFormatChecker(spec: string | RegExp | CFWorkerFormatChecker): CFWorkerFormatChecker {
   if (typeof spec === 'function') {
     return spec;
@@ -22,6 +29,11 @@ function asFormatChecker(spec: string | RegExp | CFWorkerFormatChecker): CFWorke
   return (value: string) => regex.test(value);
 }
 
+/** Installs the built-in RJSF formats and any user-provided formats into the engine registry.
+ *
+ * @param customFormats - The custom formats to add after the built-in `color` and `data-url` formats
+ * @param [targetRegistry] - The format registry to update; defaults to the `@cfworker/json-schema` module registry
+ */
 export function installFormats(
   customFormats: CustomValidatorOptionsType['customFormats'],
   targetRegistry = (CFWorkerJsonSchema as unknown as FormatRegistryModule).format,
@@ -41,7 +53,13 @@ export function installFormats(
   }
 }
 
-/** Builds a schema-bound `@cfworker/json-schema` validator. */
+/** Builds a schema-bound `@cfworker/json-schema` validator.
+ *
+ * @param schema - The schema the validator will use
+ * @param [options={}] - The options used to configure formats, schemas, draft behavior, and engine extension
+ * @param [rootSchema] - The root schema to register for cross-schema `$ref` resolution
+ * @returns - The configured schema-bound validator
+ */
 export default function createCfworkerInstance(
   schema: Schema | boolean,
   options: CustomValidatorOptionsType = {},

@@ -1,6 +1,7 @@
 # @rjsf/validator-cfworker
 
-`@rjsf/validator-cfworker` is an additional validator option for CSP-constrained RJSF users. It uses [`@cfworker/json-schema`](https://github.com/cfworker/cfworker/tree/main/packages/json-schema) to interpret schemas without `eval` or `new Function`, and defaults to JSON Schema draft 2020-12.
+`@rjsf/validator-cfworker` is an additional validator option for CSP-constrained RJSF users.
+It uses [`@cfworker/json-schema`](https://github.com/cfworker/cfworker/tree/main/packages/json-schema) to interpret schemas without `eval` or `new Function`, and defaults to JSON Schema draft 2020-12.
 
 It is not an AJV replacement. Choose it when an eval-free runtime is more important than AJV-specific keywords, extensions, localization, or code generation.
 

@@ -1,7 +1,9 @@
 import type { OutputUnit, Schema, SchemaDraft, Validator } from '@cfworker/json-schema';
 
+/** The type describing a function that checks whether a string satisfies a custom format */
 export type CFWorkerFormatChecker = (value: string) => boolean;
 
+/** The type describing the value for the `suppressDuplicateFiltering` option */
 export type SuppressDuplicateFilteringType = 'anyOf' | 'oneOf' | 'all' | 'none';
 
 /** Options for the `@cfworker/json-schema` backed validator. */

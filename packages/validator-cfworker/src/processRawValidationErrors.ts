@@ -28,6 +28,11 @@ export interface RawValidationErrorsType<Result = any> {
   validationError?: Error;
 }
 
+/** Converts a cfworker instance location into RJSF's dot-separated property path.
+ *
+ * @param instanceLocation - The instance location emitted by `@cfworker/json-schema`
+ * @returns - The corresponding RJSF property path
+ */
 function instanceLocationToProperty(instanceLocation: string): string {
   if (!instanceLocation || instanceLocation === '#') {
     return '';
@@ -35,6 +40,11 @@ function instanceLocationToProperty(instanceLocation: string): string {
   return instanceLocation.replace(/^#?/, '').replace(/\//g, '.');
 }
 
+/** Extracts the missing property name from a cfworker `required` error.
+ *
+ * @param error - The cfworker validation error to inspect
+ * @returns - The missing property name when the error describes one
+ */
 function extractMissingProperty(error: CFWorkerValidationError): string | undefined {
   if (error.keyword !== 'required') {
     return undefined;
@@ -42,6 +52,12 @@ function extractMissingProperty(error: CFWorkerValidationError): string | undefi
   return error.error.match(/required property ["']([^"']+)["']/)?.[1];
 }
 
+/** Filters duplicate errors from `anyOf`/`oneOf` schema paths according to the `suppressDuplicateFiltering` flag.
+ *
+ * @param errorList - The list of RJSF validation errors to filter
+ * @param [suppressDuplicateFiltering='none'] - Controls which duplicate filtering is suppressed
+ * @returns - The filtered list of validation errors
+ */
 export function filterDuplicateErrors(
   errorList: RJSFValidationError[],
   suppressDuplicateFiltering: SuppressDuplicateFilteringType = 'none',
@@ -69,7 +85,14 @@ export function filterDuplicateErrors(
   }, []);
 }
 
-/** Converts `@cfworker/json-schema` output units into RJSF validation errors. */
+/** Converts `@cfworker/json-schema` output units into RJSF validation errors.
+ *
+ * @param errors - The cfworker errors to convert
+ * @param [uiSchema] - The uiSchema used to resolve field titles
+ * @param [suppressDuplicateFiltering] - Controls which duplicate filtering is suppressed
+ * @param [schema] - The schema used to resolve field titles
+ * @returns - The converted RJSF validation errors
+ */
 export function transformRJSFValidationErrors<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
@@ -149,6 +172,18 @@ export function transformRJSFValidationErrors<
   return filterDuplicateErrors(errorList, suppressDuplicateFiltering);
 }
 
+/** Processes raw validation errors and applies optional error transforms and custom validation.
+ *
+ * @param validator - The validator used to derive default form state for custom validation
+ * @param rawErrors - The raw cfworker errors and any engine exception
+ * @param formData - The form data being validated
+ * @param schema - The schema against which the form data is validated
+ * @param [customValidate] - A function that adds application-specific validation errors
+ * @param [transformErrors] - A function that transforms errors before custom validation
+ * @param [uiSchema] - The uiSchema passed to error transformation and custom validation
+ * @param [suppressDuplicateFiltering] - Controls which duplicate filtering is suppressed
+ * @returns - The processed validation errors and error schema
+ */
 export default function processRawValidationErrors<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,

@@ -67,6 +67,9 @@
     },
     {
       "path": "../validator-ata"
+    },
+    {
+      "path": "../validator-cfworker"
     }
   ]
 }

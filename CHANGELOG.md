@@ -16,6 +16,16 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.8.0
+
+## @rjsf/validator-cfworker
+
+- Added an eval-free, draft-2020-12 validator package backed by `@cfworker/json-schema`, including undefined form-data normalization and per-schema-id caching, fixing [#3269](https://github.com/rjsf-team/react-jsonschema-form/issues/3269) and contributing to [#4923](https://github.com/rjsf-team/react-jsonschema-form/issues/4923)
+
+## Dev / docs / playground
+
+- Added `@rjsf/validator-cfworker` to the playground validator selector and API documentation
+
 # 6.7.1
 
 ## @rjsf/core
@@ -134,10 +144,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `transformRJSFValidationErrors()` to detect field name for `allOf` and `if-then-else` by falling back to the root schema to find the title, fixing [#5134](https://github.com/rjsf-team/react-jsonschema-form/issues/5134)
 - Updated the `ata-validator` dependency to `^1.0.0`, its first stable release; no API changes for `@rjsf/validator-ata` consumers ([#5157](https://github.com/rjsf-team/react-jsonschema-form/pull/5157))
 
-## @rjsf/validator-cfworker
-
-- Added an eval-free, draft-2020-12 validator package backed by `@cfworker/json-schema`, including undefined form-data normalization and per-schema-id caching, fixing [#3269](https://github.com/rjsf-team/react-jsonschema-form/issues/3269) and contributing to [#4923](https://github.com/rjsf-team/react-jsonschema-form/issues/4923)
-
 ## Dev / docs / playground
 
 - Updated `@rjsf/snapshots` to add a test case to `formTests` that verifies the new Cycle detection UI
@@ -145,7 +151,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `utility-functions.md` to document `logUnsupportedDefaultForEnum()`
 - Updated the playground to add a selector for the `nestedDefaultsPrecedence` option
 - Replaced npm with pnpm v10 for development
-- Added `@rjsf/validator-cfworker` to the playground validator selector and API documentation
 
 # 6.6.2
 

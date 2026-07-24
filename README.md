@@ -43,6 +43,7 @@
 - [@rjsf/utils](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/utils)
 - [@rjsf/validator-ajv8](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/validator-ajv8)
 - [@rjsf/validator-ata](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/validator-ata)
+- [@rjsf/validator-cfworker](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/validator-cfworker)
 
 ## Documentation
 
