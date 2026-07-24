@@ -21,6 +21,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Support locale-specific decimal separators in `NumberField` (e.g. Polish/German comma decimal separators) without breaking non-text widgets like radio buttons and select dropdowns, fixing [#5148](https://github.com/rjsf-team/react-jsonschema-form/pull/5148)
+- Fixed `ObjectField` to preserve the insertion order of additional and pattern properties when keys are renamed to integers, fixing [#4631](https://github.com/rjsf-team/react-jsonschema-form/issues/4631) ([#5156](https://github.com/rjsf-team/react-jsonschema-form/pull/5156))
 
 ## @rjsf/utils
 
@@ -36,12 +37,6 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `utility-functions.md` to document `getDecimalSeparator()`
 - Removed bump-peer-deps script, pnpm workspaces now handles this for us.
-
-# 6.7.1
-
-## @rjsf/core
-
-- Fixed `ObjectField` to preserve the insertion order of additional and pattern properties when keys are renamed to integers, fixing [#4631](https://github.com/rjsf-team/react-jsonschema-form/issues/4631) ([#5156](https://github.com/rjsf-team/react-jsonschema-form/pull/5156))
 
 # 6.7.0
 
