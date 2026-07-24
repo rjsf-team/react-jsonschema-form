@@ -15,6 +15,23 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 6.7.1
+
+## @rjsf/core
+
+- Support locale-specific decimal separators in `NumberField` (e.g. Polish/German comma decimal separators) without breaking non-text widgets like radio buttons and select dropdowns, fixing [#5148](https://github.com/rjsf-team/react-jsonschema-form/pull/5148)
+
+## @rjsf/utils
+
+- Added `getDecimalSeparator()` utility to detect locale-specific decimal separators and updated `asNumber()` to parse locale-specific decimal strings, partially fixing [#5148](https://github.com/rjsf-team/react-jsonschema-form/pull/5148)
+
+## @rjsf/validator-ata
+
+- Updated the `ata-validator` dependency to `^1.1.0`, which fixes a stack overflow in browser environments for schemas its JS engine cannot compile and shrinks the install footprint via per-platform optional packages ([#5162](https://github.com/rjsf-team/react-jsonschema-form/pull/5162))
+
+## Dev / docs / playground
+
+- Updated `utility-functions.md` to document `getDecimalSeparator()`
 
 # 6.7.1
 
@@ -116,6 +133,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/validator-ata
 
 - Updated `transformRJSFValidationErrors()` to detect field name for `allOf` and `if-then-else` by falling back to the root schema to find the title, fixing [#5134](https://github.com/rjsf-team/react-jsonschema-form/issues/5134)
+- Updated the `ata-validator` dependency to `^1.0.0`, its first stable release; no API changes for `@rjsf/validator-ata` consumers ([#5157](https://github.com/rjsf-team/react-jsonschema-form/pull/5157))
 
 ## Dev / docs / playground
 

@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/validator-ajv8",
-  "version": "6.6.2",
+  "version": "6.7.0",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -84,7 +84,7 @@
     "lodash-es": "^4.18.1"
   },
   "peerDependencies": {
-    "@rjsf/utils": "^6.6.x"
+    "@rjsf/utils": "workspace:^"
   },
   "devDependencies": {
     "@rjsf/utils": "workspace:^",

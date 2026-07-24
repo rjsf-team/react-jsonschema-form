@@ -20,6 +20,7 @@ import findSchemaDefinition from './findSchemaDefinition';
 import getChangedFields from './getChangedFields';
 import type { DateElementFormat, DateElementProp } from './getDateElementProps';
 import getDateElementProps from './getDateElementProps';
+import getDecimalSeparator from './getDecimalSeparator';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema';
 import getInputProps from './getInputProps';
 import getOptionMatchingSimpleDiscriminator from './getOptionMatchingSimpleDiscriminator';
@@ -134,6 +135,7 @@ export {
   findSchemaDefinition,
   getChangedFields,
   getDateElementProps,
+  getDecimalSeparator,
   getDiscriminatorFieldFromSchema,
   getInputProps,
   getOptionMatchingSimpleDiscriminator,
