@@ -89,11 +89,11 @@ There are functions in the `testSnap` directory: `arrayTests`, `formTests` and `
 Each theme will basically run these functions by creating a `Xxx.test.tsx` file (where `Xxx` is `Array`, `Form` or `Object`) that looks like the following:
 
 ```tsx
-import { arrayTests } from '@rjsf/snapshot-tests'; // OR
+import { arrayTests } from "@rjsf/snapshot-tests"; // OR
 // import { formTests } from '@rjsf/snapshot-tests';
 // import { objectTests } from '@rjsf/snapshot-tests';
 
-import Form from '../src';
+import Form from "../src";
 
 arrayTests(Form); // OR
 // formTests(Form);
@@ -105,27 +105,31 @@ If you add a theme-only feature, it is ok to update the appropriate `Xxx.test.ts
 For example:
 
 ```tsx
-import { RJSFSchema, UiSchema } from '@rjsf/utils';
-import { arrayTests } from '@rjsf/snapshot-tests';
+import { RJSFSchema, UiSchema } from "@rjsf/utils";
+import { arrayTests } from "@rjsf/snapshot-tests";
 
-import Form from '../src';
+import Form from "../src";
 
 formTests(Form);
 
-describe('Theme specific tests', () => {
-  it('test a theme-specific option', () => {
+describe("Theme specific tests", () => {
+  it("test a theme-specific option", () => {
     const schema: RJSFSchema = {
-      type: 'object',
+      type: "object",
       properties: {
         name: {
-          type: 'string',
+          type: "string",
         },
       },
     };
     const uiSchema: UiSchema = {
       // Enable the theme specific feature
     };
-    const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
+    const tree = renderer
+      .create(
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
+      )
+      .toJSON();
     expect(tree).toMatchSnapshot();
   });
 });
@@ -176,21 +180,6 @@ This will trigger a GitHub Actions pipeline that will build and publish all pack
 The package is published through an automation token belonging to the
 [rjsf-bot](https://www.npmjs.com/~rjsf-bot) user on npm. This token
 is stored as the `NPM_TOKEN` secret on GitHub Actions.
-
-### Updating the peer dependencies for new features in a minor release
-
-If a set of changes added new features or APIs that require updating downstream peer dependencies, then run the following
-command:
-
-```bash
-pnpm run post-versioning
-```
-
-The `pnpm run post-versioning` script will update the peer dependencies in all of the `packages/*/package.json` files if necessary.
-It will then clean up the `node_modules` directories and rerun `pnpm install` to update the `pnpm-lock.yaml` files.
-Finally, it creates and pushes a new commit with those `package.json` and `pnpm-lock.yaml` files up to GitHub.
-
-> NOTE: this command will take a while, be patient
 
 ### Releasing docs
 
