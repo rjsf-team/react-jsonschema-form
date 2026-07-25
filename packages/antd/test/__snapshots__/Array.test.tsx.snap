@@ -2841,9 +2841,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                                             value=""
                                           />
                                         </span>
-                                        <span
-                                          class="ant-checkbox-label"
-                                        />
                                       </label>
                                     </div>
                                   </div>

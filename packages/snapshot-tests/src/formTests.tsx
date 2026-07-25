@@ -451,6 +451,21 @@ export function formTests(Form: ComponentType<FormProps>) {
       expect(asFragment()).toMatchSnapshot();
     });
 
+    test('required checkbox field', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        required: ['agree'],
+        properties: {
+          agree: {
+            type: 'boolean',
+            title: 'I Agree',
+          },
+        },
+      };
+      const { asFragment } = render(<Form schema={schema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
+    });
+
     test('checkbox field with description in schema and FieldTemplate', async () => {
       const schema: RJSFSchema = {
         type: 'boolean',

@@ -1723,6 +1723,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
                       id="root_2"
                       name="root[2]"
+                      required=""
                       type="checkbox"
                     />
                     <div
@@ -1747,7 +1748,14 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
                       for="root_2"
-                    />
+                    >
+                      <span
+                        aria-hidden="true"
+                        class="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
+                      >
+                        *
+                      </span>
+                    </label>
                   </span>
                 </div>
               </div>

@@ -1,8 +1,8 @@
 import type { FocusEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, GenericObjectType } from '@rjsf/utils';
-import { ariaDescribedByIds, labelValue } from '@rjsf/utils';
+import { ariaDescribedByIds } from '@rjsf/utils';
 import type { CheckboxProps } from 'antd';
-import { Checkbox } from 'antd';
+import { Checkbox, theme } from 'antd';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -14,10 +14,24 @@ export default function CheckboxWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
-  const { autofocus, disabled, registry, id, htmlName, label, hideLabel, onBlur, onChange, onFocus, readonly, value } =
-    props;
+  const {
+    autofocus,
+    disabled,
+    registry,
+    id,
+    htmlName,
+    label,
+    hideLabel,
+    onBlur,
+    onChange,
+    onFocus,
+    readonly,
+    value,
+    required,
+  } = props;
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
+  const { token } = theme.useToken();
 
   const handleChange: NonNullable<CheckboxProps['onChange']> = ({ target }) => onChange(target.checked);
 
@@ -42,7 +56,16 @@ export default function CheckboxWidget<
       {...extraProps}
       aria-describedby={ariaDescribedByIds(id)}
     >
-      {labelValue(label, hideLabel, '')}
+      {!hideLabel && label ? (
+        <>
+          {label}
+          {required && (
+            <span aria-hidden='true' style={{ color: token.colorError, marginLeft: 2 }}>
+              *
+            </span>
+          )}
+        </>
+      ) : undefined}
     </Checkbox>
   );
 }

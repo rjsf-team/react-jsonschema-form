@@ -83,7 +83,16 @@ export default function CheckboxWidget<
       <Checkbox
         id={id}
         name={htmlName || name}
-        label={labelValue(label || undefined, hideLabel, false)}
+        label={
+          !hideLabel && label ? (
+            <>
+              {label}
+              {required && <span className='required'>*</span>}
+            </>
+          ) : (
+            labelValue(label || undefined, hideLabel, false)
+          )
+        }
         disabled={disabled || readonly}
         required={required}
         autoFocus={autofocus}
