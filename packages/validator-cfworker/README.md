@@ -3,7 +3,7 @@
 `@rjsf/validator-cfworker` is an additional validator option for CSP-constrained RJSF users.
 It uses [`@cfworker/json-schema`](https://github.com/cfworker/cfworker/tree/main/packages/json-schema) to interpret schemas without `eval` or `new Function`, and defaults to JSON Schema draft 2020-12.
 
-It is not an AJV replacement. Choose it when an eval-free runtime is more important than AJV-specific keywords, extensions, localization, or code generation.
+**It is not an AJV replacement.** Choose it when an eval-free runtime is more important than AJV-specific keywords, extensions, localization, or code generation.
 
 ```tsx
 import Form from '@rjsf/core';
@@ -49,6 +49,9 @@ Precompiled-validator mode is intentionally outside this initial package. Runtim
 
 ## Upstream state and provenance
 
-This package is ported from [`glama-ai/rjsf-validator-cfworker`](https://github.com/glama-ai/rjsf-validator-cfworker), whose structure was intentionally kept compatible with RJSF. The original MIT copyright and license are preserved in [LICENSE](./LICENSE); the RJSF integration and subsequent changes are distributed under the monorepo's Apache-2.0 license.
+This package is ported from [`glama-ai/rjsf-validator-cfworker`](https://github.com/glama-ai/rjsf-validator-cfworker), whose structure was intentionally kept compatible with RJSF.
+The original MIT copyright and license are preserved in [LICENSE](./LICENSE); the RJSF integration and subsequent changes are distributed under the monorepo's Apache-2.0 license.
 
-The underlying `@cfworker/json-schema` package's latest release is from January 2025. Its tracker includes open correctness reports for duplicate schema URIs ([#335](https://github.com/cfworker/cfworker/issues/335)) and `additionalProperties` behavior ([#336](https://github.com/cfworker/cfworker/issues/336)), as well as the `$dynamicRef` gap above. This wrapper's per-schema cache avoids repeat registration on RJSF's `isValid` path, but it does not change the upstream engine's other semantics. The package is therefore presented as an additional option for CSP-constrained users.
+The underlying `@cfworker/json-schema` package's latest release is from January 2025. Its tracker includes open correctness reports for duplicate schema URIs ([#335](https://github.com/cfworker/cfworker/issues/335)) and `additionalProperties` behavior ([#336](https://github.com/cfworker/cfworker/issues/336)), as well as the `$dynamicRef` gap above.
+This wrapper's per-schema cache avoids repeat registration on RJSF's `isValid` path, but it does not change the upstream engine's other semantics.
+The package is therefore presented as an additional option for CSP-constrained users.

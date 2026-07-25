@@ -12,7 +12,9 @@ export const COLOR_FORMAT_REGEX =
 /** Regular expression used to validate RJSF's `data-url` format. */
 export const DATA_URL_FORMAT_REGEX = /^data:([a-z]+\/[a-z0-9-+.]+)?;(?:name=(.*);)?base64,(.*)$/;
 
+/** The shape of the `@cfworker/json-schema` module used to reach its runtime format registry. */
 interface FormatRegistryModule {
+  /** The engine's runtime format registry, when the module exposes it. */
   format?: Record<string, CFWorkerFormatChecker>;
 }
 
