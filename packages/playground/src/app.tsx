@@ -10,6 +10,7 @@ import { Theme as SuiTheme } from '@rjsf/semantic-ui';
 import { Theme as shadcnTheme } from '@rjsf/shadcn';
 import v8Validator, { customizeValidator } from '@rjsf/validator-ajv8';
 import ataValidator, { customizeValidator as customizeAtaValidator } from '@rjsf/validator-ata';
+import cfworkerValidator, { customizeValidator as customizeCfworkerValidator } from '@rjsf/validator-cfworker';
 import localize_es from 'ajv-i18n/localize/es';
 import Ajv2019 from 'ajv/dist/2019.js';
 import Ajv2020 from 'ajv/dist/2020.js';
@@ -24,16 +25,21 @@ const AJV8_2020 = customizeValidator({ AjvClass: Ajv2020 });
 const AJV8_DISC = customizeValidator({ ajvOptionsOverrides: { discriminator: true } });
 const AJV8_DATA_REF = customizeValidator({ ajvOptionsOverrides: { $data: true } });
 const ataCoerce = customizeAtaValidator({ ataOptionsOverrides: { coerceTypes: true } });
+const cfworkerDraft7 = customizeCfworkerValidator({ draft: '7' });
+const cfworkerDraft2019 = customizeCfworkerValidator({ draft: '2019-09' });
 
 const validators: PlaygroundProps['validators'] = {
   AJV8: v8Validator,
   'AJV8 $data reference': AJV8_DATA_REF,
   'AJV8 (discriminator)': AJV8_DISC,
   AJV8_es: esV8Validator,
-  'AJV8 (2019)': AJV8_2019,
-  'AJV8 (2020)': AJV8_2020,
+  'AJV8 (2019-09)': AJV8_2019,
+  'AJV8 (2020-12)': AJV8_2020,
   ATA: ataValidator,
   'ATA (coerceTypes)': ataCoerce,
+  'CFWorker (Draft 7)': cfworkerDraft7,
+  'CFWorker (2019-09)': cfworkerDraft2019,
+  'CFWorker (2020-12)': cfworkerValidator,
 };
 
 const themes: PlaygroundProps['themes'] = {

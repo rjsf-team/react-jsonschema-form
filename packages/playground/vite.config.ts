@@ -29,6 +29,7 @@ export default defineConfig({
       '@rjsf/utils': path.resolve(__dirname, '../utils/src'),
       '@rjsf/validator-ajv8': path.resolve(__dirname, '../validator-ajv8/src'),
       '@rjsf/validator-ata': path.resolve(__dirname, '../validator-ata/src'),
+      '@rjsf/validator-cfworker': path.resolve(__dirname, '../validator-cfworker/src'),
       '@rjsf/daisyui': path.resolve(__dirname, '../daisyui/src'),
     },
   },
