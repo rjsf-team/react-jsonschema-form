@@ -44,6 +44,23 @@ describe('BooleanField', () => {
     expect(node.querySelector('.rjsf-field label span')).toHaveTextContent('foo');
   });
 
+  it('should render a required asterisk when the boolean field is required', () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          foo: {
+            type: 'boolean',
+            title: 'Agree',
+          },
+        },
+        required: ['foo'],
+      },
+    });
+
+    expect(node.querySelector('.rjsf-field span.required')).toHaveTextContent('*');
+  });
+
   describe('HTML5 required attribute', () => {
     it('should not render a required attribute for simple required fields', () => {
       const { node } = createFormComponent({

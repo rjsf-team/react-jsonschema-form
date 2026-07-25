@@ -1,15 +1,8 @@
 import type { FocusEvent } from 'react';
 import type { CheckboxCheckedChangeDetails } from '@chakra-ui/react';
-import { Text } from '@chakra-ui/react';
+import { Field as ChakraField, Text } from '@chakra-ui/react';
 import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import {
-  ariaDescribedByIds,
-  descriptionId,
-  getTemplate,
-  labelValue,
-  schemaRequiresTrueValue,
-  getUiOptions,
-} from '@rjsf/utils';
+import { ariaDescribedByIds, descriptionId, getTemplate, getUiOptions } from '@rjsf/utils';
 
 import { Checkbox } from '../components/ui/checkbox';
 import { Field } from '../components/ui/field';
@@ -35,11 +28,8 @@ export default function CheckboxWidget<
     options,
     uiSchema,
     schema,
+    required,
   } = props;
-  // Because an unchecked checkbox will cause html5 validation to fail, only add
-  // the "required" attribute if the field value must be "true", due to the
-  // "const" or "enum" keywords
-  const required = schemaRequiresTrueValue<S>(schema);
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
     'DescriptionFieldTemplate',
     registry,
@@ -76,7 +66,12 @@ export default function CheckboxWidget<
         onFocus={handleFocus}
         aria-describedby={ariaDescribedByIds(id)}
       >
-        {labelValue(<Text>{label}</Text>, hideLabel || !label)}
+        {!hideLabel && label ? (
+          <Text>
+            {label}
+            {required && <ChakraField.RequiredIndicator />}
+          </Text>
+        ) : undefined}
       </Checkbox>
     </Field>
   );

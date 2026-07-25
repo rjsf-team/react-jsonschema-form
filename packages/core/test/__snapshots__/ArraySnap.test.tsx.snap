@@ -1084,7 +1084,13 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                       name="root[2]"
                       type="checkbox"
                     />
-                    <span />
+                    <span>
+                      <span
+                        class="required"
+                      >
+                        *
+                      </span>
+                    </span>
                   </label>
                 </div>
               </div>

@@ -8500,6 +8500,78 @@ exports[`single fields > radio widget with description in schema and FieldTempla
 </DocumentFragment>
 `;
 
+exports[`single fields > required checkbox field 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+      >
+        <div
+          class="rjsf-field rjsf-field-boolean"
+        >
+          <div
+            style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+          >
+            <div
+              style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;"
+            >
+              <div
+                aria-describedby="root_agree__error root_agree__description root_agree__help"
+                class="p-checkbox p-component"
+                data-p-disabled="false"
+                data-p-highlight="false"
+                data-pc-name="checkbox"
+                data-pc-section="root"
+              >
+                <input
+                  aria-describedby="root_agree__error root_agree__description root_agree__help"
+                  aria-invalid="false"
+                  class="p-checkbox-input"
+                  data-pc-section="input"
+                  id="root_agree"
+                  name="root_agree"
+                  type="checkbox"
+                />
+                <div
+                  class="p-checkbox-box"
+                  data-p-disabled="false"
+                  data-p-highlight="false"
+                  data-pc-section="box"
+                />
+              </div>
+              <label
+                for="root_agree"
+              >
+                I Agree *
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      aria-label="Submit"
+      class="p-button p-component"
+      data-pc-name="button"
+      data-pc-section="root"
+      type="submit"
+    >
+      <span
+        class="p-button-label p-c"
+        data-pc-section="label"
+      >
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > schema examples 1`] = `
 <DocumentFragment>
   <form

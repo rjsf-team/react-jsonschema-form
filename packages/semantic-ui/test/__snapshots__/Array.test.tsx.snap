@@ -1356,7 +1356,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                         class="grouped equal width fields"
                       >
                         <div
-                          class="field"
+                          class="required field"
                         >
                           <div
                             class="ui checked checkbox"
@@ -1369,6 +1369,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                               id="root_2"
                               name="root[2]"
                               readonly=""
+                              required=""
                               tabindex="0"
                               type="checkbox"
                               value=""
