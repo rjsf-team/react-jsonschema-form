@@ -33,7 +33,6 @@ const validators: PlaygroundProps['validators'] = {
   'AJV8 $data reference': AJV8_DATA_REF,
   'AJV8 (discriminator)': AJV8_DISC,
   AJV8_es: esV8Validator,
-  'AJV8 (2019)': AJV8_2019,
   'AJV8 (2019-09)': AJV8_2019,
   'AJV8 (2020-12)': AJV8_2020,
   ATA: ataValidator,
