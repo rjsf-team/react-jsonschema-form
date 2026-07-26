@@ -108,6 +108,13 @@ export default class AJV8Validator<
       compiledValidator(formData);
     } catch (err) {
       compilationError = err as Error;
+      // AJV registers a schema in its internal cache before running meta-schema
+      // validation. When that check throws, the broken schema stays cached so
+      // subsequent compile() calls skip revalidation and return silently. Remove
+      // the entry so every call with an invalid schema consistently produces a
+      // compilation error. For schemas with $id the cache key is the id string;
+      // for anonymous schemas AJV uses the object reference as the key.
+      this.ajv.removeSchema(schema[ID_KEY] !== undefined ? schema[ID_KEY] : (schema as object));
     }
 
     let errors;
@@ -228,13 +235,16 @@ export default class AJV8Validator<
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
   isValid(schema: S, formData: T | undefined, rootSchema: S) {
+    // schemaId is declared outside the try so the catch block can remove the
+    // broken schema from AJV's registry even when an error occurs during compilation.
+    let schemaId: string | undefined;
     try {
       this.handleSchemaUpdate(rootSchema);
       // then rewrite the schema ref's to point to the rootSchema
       // this accounts for the case where schema have references to models
       // that lives in the rootSchema but not in the schema in question.
       const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema) as S;
-      const schemaId = schemaWithIdRefPrefix[ID_KEY] ?? hashForSchema(schemaWithIdRefPrefix);
+      schemaId = schemaWithIdRefPrefix[ID_KEY] ?? hashForSchema(schemaWithIdRefPrefix);
       let compiledValidator: ValidateFunction | undefined;
       compiledValidator = this.ajv.getSchema(schemaId);
       if (compiledValidator === undefined) {
@@ -250,6 +260,12 @@ export default class AJV8Validator<
     } catch (e) {
       // oxlint-disable-next-line no-console
       console.warn('Error encountered compiling schema:', e);
+      // Remove the broken schema from AJV's registry so a subsequent rawValidation
+      // or isValid call does not silently reuse a cached entry that bypassed
+      // meta-schema validation.
+      if (schemaId !== undefined) {
+        this.ajv.removeSchema(schemaId);
+      }
       return false;
     }
   }
