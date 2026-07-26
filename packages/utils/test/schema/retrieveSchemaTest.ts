@@ -1054,6 +1054,24 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           expect.any(Error),
         );
       });
+      it('should preserve additionalProperties:false when an allOf merge throws', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          additionalProperties: false,
+          properties: { abc: { type: 'string' } },
+          allOf: [{ type: 'string' }, { type: 'boolean' }],
+        };
+        const rootSchema: RJSFSchema = { definitions: {} };
+        expect(retrieveSchema(testValidator, schema, rootSchema, {})).toEqual({
+          type: 'object',
+          additionalProperties: false,
+          properties: { abc: { type: 'string' } },
+        });
+        expect(consoleWarnSpy).toHaveBeenCalledWith(
+          expect.stringMatching(/could not merge subschemas in allOf/),
+          expect.any(Error),
+        );
+      });
       it('should return allOf and top level schemas when expand all', () => {
         const schema: RJSFSchema = {
           properties: { test: { type: 'string' } },

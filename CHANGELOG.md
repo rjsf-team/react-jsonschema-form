@@ -20,7 +20,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/utils
 
-- Fixed `retrieveSchema()` to keep properties introduced by a matching `allOf`/`if`/`then`/`else` branch instead of silently dropping them when the outer schema has `additionalProperties: false`, fixing [#3251](https://github.com/rjsf-team/react-jsonschema-form/issues/3251)
+- Fixed `retrieveSchema()` and `omitExtraData()` to keep properties introduced by an `allOf` branch (including a matching `if`/`then`/`else` result) instead of silently dropping them when the outer schema has `additionalProperties: false`, fixing [#3251](https://github.com/rjsf-team/react-jsonschema-form/issues/3251)
 
 ## @rjsf/validator-cfworker
 

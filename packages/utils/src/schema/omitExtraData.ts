@@ -20,7 +20,7 @@ import type {
 import getClosestMatchingOption from './getClosestMatchingOption';
 import isSelect from './isSelect';
 import { relaxOptionsForScoring, resolveAllReferences } from './retrieveSchema';
-import shallowAllOfMerge from './shallowAllOfMerge';
+import { mergeAllOfSchema } from './shallowAllOfMerge';
 
 /** Returns the `formData` with only the elements specified in the `fields` list
  *
@@ -101,20 +101,6 @@ export function isValueEmpty(value: unknown): boolean {
     return Object.values(value as GenericObjectType).every(isValueEmpty);
   }
   return false;
-}
-
-/** Merges an `allOf` schema into a single flat schema, delegating to `experimental_customMergeAllOf`
- * when provided or falling back to the module-level `shallowAllOfMerge` otherwise.
- *
- * @param schema - A schema containing an `allOf` array to be merged
- * @param [experimental_customMergeAllOf] - Optional custom merge function; see `Form` documentation
- * @returns - The merged schema with `allOf` resolved into a single schema object
- */
-function doMergeAllOf<S extends StrictRJSFSchema = RJSFSchema>(
-  schema: S,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
-): S {
-  return experimental_customMergeAllOf ? experimental_customMergeAllOf(schema) : (shallowAllOfMerge(schema) as S);
 }
 
 /** A recursive, schema-driven filter that walks `schema` and `formData` in lockstep, keeping only
@@ -447,7 +433,7 @@ export default function omitExtraData<
       return omit(findSchemaDefinition<S>(ref, rootSchema), source, target);
     }
     if (allOf) {
-      localSchema = doMergeAllOf<S>(localSchema, experimental_customMergeAllOf);
+      localSchema = mergeAllOfSchema<S>(localSchema, experimental_customMergeAllOf);
       // Schemas whose allOf entries contain if/then/else keywords may not fully merge: the merger
       // can only hoist one if/then/else triple to the parent level, so additional entries stay in
       // allOf. Process any that remain so their conditional properties are not silently dropped.

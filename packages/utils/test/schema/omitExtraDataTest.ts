@@ -985,6 +985,18 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({ foo: 'hello', bar: 42 });
       });
 
+      it('keeps an allOf-introduced property when the outer schema has additionalProperties:false', () => {
+        // https://github.com/rjsf-team/react-jsonschema-form/issues/3251
+        const schema: RJSFSchema = {
+          type: 'object',
+          additionalProperties: false,
+          properties: { foo: { type: 'string' } },
+          allOf: [{ properties: { bar: { type: 'number' } } }],
+        };
+        const formData = { foo: 'hello', bar: 42, extra: 'drop' };
+        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({ foo: 'hello', bar: 42 });
+      });
+
       it('treats every key as optional when a property schema is boolean true (no required list)', () => {
         // boolean true is a JSON Schema shorthand for "allow anything". It carries no required list,
         // so setProperty treats all keys in the object value as optional.
