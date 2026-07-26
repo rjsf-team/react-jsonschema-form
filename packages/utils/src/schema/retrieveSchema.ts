@@ -647,9 +647,24 @@ export function retrieveSchemaInternal<
         if (withContainsSchemas.length) {
           resolvedSchema = { ...resolvedSchema, allOf: withoutContainsSchemas };
         }
-        resolvedSchema = experimental_customMergeAllOf
-          ? experimental_customMergeAllOf(resolvedSchema)
-          : mergeAllOf(resolvedSchema);
+        if (experimental_customMergeAllOf) {
+          resolvedSchema = experimental_customMergeAllOf(resolvedSchema);
+        } else {
+          // JSON Schema evaluates `additionalProperties` against only its own schema's `properties`,
+          // not its allOf siblings, so a resolved `if`/`then`/`else` branch that introduces a new
+          // property would otherwise get silently dropped by the merge below whenever the outer
+          // schema has `additionalProperties: false`, fixing #3251. Widen it for the merge so the
+          // branch's property renders, then restore the original flag on the merged result so
+          // still-undeclared keys remain marked as disallowed.
+          const hadFalseAdditionalProperties = resolvedSchema.additionalProperties === false;
+          if (hadFalseAdditionalProperties) {
+            resolvedSchema = { ...resolvedSchema, additionalProperties: true };
+          }
+          resolvedSchema = mergeAllOf(resolvedSchema);
+          if (hadFalseAdditionalProperties) {
+            resolvedSchema = { ...resolvedSchema, additionalProperties: false };
+          }
+        }
         // Re-apply collected Symbol properties that the merge dropped.
         for (const sym of Object.getOwnPropertySymbols(allOfSymbols)) {
           (resolvedSchema as any)[sym] = allOfSymbols[sym];

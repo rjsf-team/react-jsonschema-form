@@ -18,6 +18,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.8.0
 
+## @rjsf/utils
+
+- Fixed `retrieveSchema()` to keep properties introduced by a matching `allOf`/`if`/`then`/`else` branch instead of silently dropping them when the outer schema has `additionalProperties: false`, fixing [#3251](https://github.com/rjsf-team/react-jsonschema-form/issues/3251)
+
 ## @rjsf/validator-cfworker
 
 - Added an eval-free, draft-2020-12 validator package backed by `@cfworker/json-schema`, including undefined form-data normalization and per-schema-id caching, fixing [#3269](https://github.com/rjsf-team/react-jsonschema-form/issues/3269) and contributing to [#4923](https://github.com/rjsf-team/react-jsonschema-form/issues/4923)

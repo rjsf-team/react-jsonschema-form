@@ -991,6 +991,57 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           ],
         });
       });
+      it('should merge properties from an if/then branch even when additionalProperties is false', () => {
+        // https://github.com/rjsf-team/react-jsonschema-form/issues/3251
+        const makeSchema = (): RJSFSchema => ({
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            abc: { type: 'string', enum: ['value1', 'value2'], default: 'value1' },
+          },
+          allOf: [
+            {
+              if: { properties: { abc: { enum: ['value1'] } } },
+              then: { properties: { def: { type: 'string' } }, required: ['def'] },
+            },
+            {
+              if: { properties: { abc: { enum: ['value2'] } } },
+              then: { properties: { ghj: { type: 'string' } }, required: ['ghj'] },
+            },
+          ],
+        });
+        const rootSchema: RJSFSchema = { definitions: {} };
+        testValidator.setReturnValues({
+          isValid: [
+            true, // First condition abc === value1 pass
+            false, // Second condition abc === value2 fail
+          ],
+        });
+        expect(retrieveSchema(testValidator, makeSchema(), rootSchema, { abc: 'value1' })).toEqual({
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            abc: { type: 'string', enum: ['value1', 'value2'], default: 'value1' },
+            def: { type: 'string' },
+          },
+          required: ['def'],
+        });
+        testValidator.setReturnValues({
+          isValid: [
+            false, // First condition abc === value1 fail
+            true, // Second condition abc === value2 pass
+          ],
+        });
+        expect(retrieveSchema(testValidator, makeSchema(), rootSchema, { abc: 'value2' })).toEqual({
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            abc: { type: 'string', enum: ['value1', 'value2'], default: 'value1' },
+            ghj: { type: 'string' },
+          },
+          required: ['ghj'],
+        });
+      });
       it('should not merge incompatible types', () => {
         const schema: RJSFSchema = {
           allOf: [{ type: 'string' }, { type: 'boolean' }],
