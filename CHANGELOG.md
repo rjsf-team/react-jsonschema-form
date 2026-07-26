@@ -18,6 +18,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.8.0
 
+## @rjsf/utils
+
+- Fixed an issue in `sortedJSONStringify` with regards to handling arrays containing `null` and `undefined` values.
+
 ## @rjsf/validator-ata
 
 - Raised the `ata-validator` requirement to `^1.3.0`, which fixes a `$ref` that could not be resolved being treated as vacuous rather than reported as an error ([#5181](https://github.com/rjsf-team/react-jsonschema-form/pull/5181))
