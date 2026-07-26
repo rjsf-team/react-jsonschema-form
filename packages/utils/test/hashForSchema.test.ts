@@ -40,12 +40,18 @@ describe('hashForSchema', () => {
   });
 });
 
+const TEST_ARRAY_WITH_UNDEFINED = [undefined];
+const TEST_ARRAY_WITH_NULL = [null];
+
 describe('sortedJSONStringify', () => {
   it('stringifies the object with keys already in order', () => {
     expect(sortedJSONStringify(IN_ORDER_SCHEMA)).toEqual(STRINGIFIED_IN_ORDER);
   });
   it('stringifies the object putting keys in order', () => {
     expect(sortedJSONStringify(OUT_OF_ORDER_SCHEMA)).toEqual(STRINGIFIED_IN_ORDER);
+  });
+  it('stringifies undefined and null items correctly', () => {
+    expect(sortedJSONStringify(TEST_ARRAY_WITH_NULL)).not.toEqual(sortedJSONStringify(TEST_ARRAY_WITH_UNDEFINED));
   });
 });
 
