@@ -114,7 +114,11 @@ export default class AJV8Validator<
       // the entry so every call with an invalid schema consistently produces a
       // compilation error. For schemas with $id the cache key is the id string;
       // for anonymous schemas AJV uses the object reference as the key.
-      this.ajv.removeSchema(schema[ID_KEY] !== undefined ? schema[ID_KEY] : (schema as object));
+      // Guard with compiledValidator === undefined so that a runtime error thrown
+      // by compiledValidator(formData) does not evict a correctly-compiled schema.
+      if (compiledValidator === undefined) {
+        this.ajv.removeSchema(schema[ID_KEY] !== undefined ? schema[ID_KEY] : (schema as object));
+      }
     }
 
     let errors;
@@ -235,9 +239,10 @@ export default class AJV8Validator<
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
   isValid(schema: S, formData: T | undefined, rootSchema: S) {
-    // schemaId is declared outside the try so the catch block can remove the
-    // broken schema from AJV's registry even when an error occurs during compilation.
+    // schemaId and compiled are declared outside the try so the catch block can
+    // conditionally remove the broken schema from AJV's registry.
     let schemaId: string | undefined;
+    let compiled = false;
     try {
       this.handleSchemaUpdate(rootSchema);
       // then rewrite the schema ref's to point to the rootSchema
@@ -255,6 +260,7 @@ export default class AJV8Validator<
           this.ajv.addSchema(schemaWithIdRefPrefix, schemaId).getSchema(schemaId) ||
           this.ajv.compile(schemaWithIdRefPrefix);
       }
+      compiled = true;
       const result = compiledValidator(formData);
       return result;
     } catch (e) {
@@ -262,8 +268,9 @@ export default class AJV8Validator<
       console.warn('Error encountered compiling schema:', e);
       // Remove the broken schema from AJV's registry so a subsequent rawValidation
       // or isValid call does not silently reuse a cached entry that bypassed
-      // meta-schema validation.
-      if (schemaId !== undefined) {
+      // meta-schema validation. Guard with !compiled so that a runtime error thrown
+      // by compiledValidator(formData) does not evict a correctly-compiled schema.
+      if (!compiled && schemaId !== undefined) {
         this.ajv.removeSchema(schemaId);
       }
       return false;

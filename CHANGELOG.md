@@ -31,13 +31,17 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Support locale-specific decimal separators in `NumberField` (e.g. Polish/German comma decimal separators) without breaking non-text widgets like radio buttons and select dropdowns, fixing [#5148](https://github.com/rjsf-team/react-jsonschema-form/pull/5148)
-- Fixed `ObjectField` to preserve the insertion order of additional and pattern properties when keys are renamed to integers, fixing [#4631](https://github.com/rjsf-team/react-jsonschema-form/issues/4631) ([#5156](https://github.com/rjsf-team/react-jsonschema-form/pull/5156))
+- Fixed `ObjectField` to preserve the insertion order of additional and pattern properties when keys are renamed to integers, fixing [#4631](https://github.com/rjsf-team/react-jsonschema-form/issues/4631)
 
 ## @rjsf/utils
 
 - Added `getDecimalSeparator()` utility to detect locale-specific decimal separators and updated `asNumber()` to parse locale-specific decimal strings, partially fixing [#5148](https://github.com/rjsf-team/react-jsonschema-form/pull/5148)
 - Fixed a regression where `getDefaultFormState()` with `experimental_defaultFormStateBehavior.arrayMinItems.populate = 'never'` padded arrays with `null` entries up to `minItems`, fixing [#5163](https://github.com/rjsf-team/react-jsonschema-form/issues/5163)
   - Optional arrays with no data are now omitted (unchanged) while required arrays with no data default to `[]`, letting the validator report the `minItems` violation instead of surfacing invalid `null` items
+
+## @rjsf/validator-ajv8
+
+- Updated `AJV8Validator` to remove broken schemas from AJV cache after compilation error, fixing [#3933](https://github.com/rjsf-team/react-jsonschema-form/issues/3933)
 
 ## @rjsf/validator-ata
 

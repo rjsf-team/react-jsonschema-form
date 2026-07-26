@@ -7,6 +7,7 @@ import type {
   ValidatorType,
 } from '@rjsf/utils';
 import { ErrorSchemaBuilder } from '@rjsf/utils';
+import type Ajv from 'ajv';
 import localize from 'ajv-i18n';
 import Ajv2019 from 'ajv/dist/2019';
 import Ajv2020 from 'ajv/dist/2020';
@@ -257,6 +258,64 @@ describe('AJV8Validator', () => {
         warnSpy.mockRestore();
         expect(result1).toBe(false);
         expect(result2).toBe(false);
+      });
+
+      it('rawValidation does not evict a correctly-compiled schema when data evaluation throws', () => {
+        // A keyword whose validate() throws during data evaluation (not compilation).
+        // The schema is valid and compiles fine; the throw happens when the compiled
+        // validator runs against formData.  The fix guards removeSchema with
+        // compiledValidator === undefined so only compile-phase failures evict.
+        const v = new AJV8Validator({
+          extenderFn: (ajv: Ajv) => {
+            ajv.addKeyword({
+              keyword: 'throwOnValidate',
+              schemaType: 'boolean',
+              validate: () => {
+                throw new Error('keyword threw during data evaluation');
+              },
+            });
+            return ajv;
+          },
+        });
+        const schema = { $id: 'test-exec-throw-raw', type: 'string', throwOnValidate: true } as unknown as RJSFSchema;
+
+        // First call — compiledValidator(formData) throws, so compilationError is set.
+        const result = v.rawValidation(schema, 'hello');
+        expect(result.validationError).toBeInstanceOf(Error);
+
+        // Schema must still be cached — the execution throw must not have evicted it.
+        expect(v.ajv.getSchema('test-exec-throw-raw')).toBeDefined();
+      });
+
+      it('isValid does not evict a correctly-compiled schema when data evaluation throws', () => {
+        const v = new AJV8Validator({
+          extenderFn: (ajv: Ajv) => {
+            ajv.addKeyword({
+              keyword: 'throwOnValidate',
+              schemaType: 'boolean',
+              validate: () => {
+                throw new Error('keyword threw during data evaluation');
+              },
+            });
+            return ajv;
+          },
+        });
+        const schema = {
+          $id: 'test-exec-throw-isvalid',
+          type: 'string',
+          throwOnValidate: true,
+        } as unknown as RJSFSchema;
+        const rootSchema: RJSFSchema = {};
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
+
+        // Execution throw — isValid should return false but NOT evict the schema.
+        const result = v.isValid(schema, 'hello', rootSchema);
+        expect(result).toBe(false);
+
+        // $id is preserved by withIdRefPrefix, so schemaId === schema.$id.
+        expect(v.ajv.getSchema('test-exec-throw-isvalid')).toBeDefined();
+
+        warnSpy.mockRestore();
       });
     });
     describe('validator.validateFormData()', () => {
