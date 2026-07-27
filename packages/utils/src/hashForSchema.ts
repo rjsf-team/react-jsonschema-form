@@ -20,12 +20,17 @@ export function hashString(string: string): string {
   return hash.toString(16);
 }
 
-/** Stringifies an `object`, sorts object fields in consistent order before stringifying it.
+/** Recursively serializes a value to JSON with object keys sorted alphabetically to produce
+ * a stable string representation.
  *
  * @param object - The object for which the sorted stringify is desired
  * @returns - The stringified object with keys sorted in a consistent order
  */
 export function sortedJSONStringify(object: unknown): string {
+  function shouldIncludeValue(value: unknown) {
+    return value !== undefined && typeof value !== 'function' && typeof value !== 'symbol';
+  }
+
   if (Array.isArray(object)) {
     return `[${object.map(sortedJSONStringify).join(',')}]`;
   }
@@ -36,6 +41,7 @@ export function sortedJSONStringify(object: unknown): string {
   const record = object as Record<string, unknown>;
   const sortedValues = Object.keys(record)
     .sort()
+    .filter((key) => shouldIncludeValue(record[key]))
     .map((key) => `${JSON.stringify(key)}:${sortedJSONStringify(record[key])}`);
   return `{${sortedValues.join(',')}}`;
 }
