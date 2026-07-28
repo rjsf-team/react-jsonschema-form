@@ -984,7 +984,60 @@ describe('StringField', () => {
       await user.click(input);
       await user.paste(newTime);
 
-      expect(input).toHaveValue(`${newTime}:00`);
+      expect(input).toHaveValue(newTime);
+    });
+
+    it('should preserve seconds precision changes in the dom', async () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          format: 'time',
+          multipleOf: 1,
+        },
+      });
+
+      const newTime = '11:10:12';
+      const input = node.querySelector<HTMLInputElement>('[type=time]')!;
+      fireEvent.change(input, { target: { value: newTime } });
+
+      expect(input).toHaveValue(newTime);
+    });
+
+    it('should render stored minute precision values without seconds', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          format: 'time',
+        },
+        formData: '13:10:00',
+      });
+
+      expect(node.querySelector<HTMLInputElement>('[type=time]')).toHaveValue('13:10');
+    });
+
+    it('should preserve seconds in the dom when the input precision includes seconds', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          format: 'time',
+          multipleOf: 1,
+        },
+        formData: '13:10:00',
+      });
+
+      expect(node.querySelector<HTMLInputElement>('[type=time]')).toHaveValue('13:10:00');
+    });
+
+    it('should preserve non-zero seconds in the dom', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          format: 'time',
+        },
+        formData: '13:10:30',
+      });
+
+      expect(node.querySelector<HTMLInputElement>('[type=time]')).toHaveValue('13:10:30');
     });
 
     it('should fill field with data', async () => {
