@@ -68,6 +68,20 @@ describe('CFWorkerValidator', () => {
     expect(validator.rawValidation(null as unknown as RJSFSchema, {}).validationError).toBeInstanceOf(Error);
   });
 
+  it('returns a validationError on every call for an invalid schema (no caching of errors)', () => {
+    const validator = customizeValidator();
+    // Verify that an invalid schema is not cached between rawValidation calls so
+    // each call consistently returns a validationError rather than silently
+    // succeeding after the first failure.
+    const schema = null as unknown as RJSFSchema;
+
+    const result1 = validator.rawValidation(schema, {});
+    expect(result1.validationError).toBeInstanceOf(Error);
+
+    const result2 = validator.rawValidation(schema, {});
+    expect(result2.validationError).toBeInstanceOf(Error);
+  });
+
   it('runs transformErrors and customValidate hooks', () => {
     const validator = customizeValidator<{ value?: string }>();
     const schema: RJSFSchema = { type: 'object', required: ['value'], properties: { value: { type: 'string' } } };
