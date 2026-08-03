@@ -88,6 +88,20 @@ describe('ATAValidator', () => {
       const { validationError } = v.rawValidation(null as unknown as RJSFSchema, {});
       expect(validationError).toBeInstanceOf(Error);
     });
+
+    it('returns a validationError on every call for an invalid schema (no caching of errors)', () => {
+      const v = customizeValidator();
+      // Verify that a schema that fails construction is not cached between calls –
+      // each rawValidation call with the same invalid schema must produce a
+      // validationError, not silently succeed after the first failure.
+      const schema = null as unknown as RJSFSchema;
+
+      const result1 = v.rawValidation(schema, {});
+      expect(result1.validationError).toBeInstanceOf(Error);
+
+      const result2 = v.rawValidation(schema, {});
+      expect(result2.validationError).toBeInstanceOf(Error);
+    });
   });
 
   describe('validateFormData()', () => {
