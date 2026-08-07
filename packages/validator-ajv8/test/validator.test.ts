@@ -7,6 +7,7 @@ import type {
   ValidatorType,
 } from '@rjsf/utils';
 import { ErrorSchemaBuilder } from '@rjsf/utils';
+import type Ajv from 'ajv';
 import localize from 'ajv-i18n';
 import Ajv2019 from 'ajv/dist/2019';
 import Ajv2020 from 'ajv/dist/2020';
@@ -193,6 +194,128 @@ describe('AJV8Validator', () => {
 
         addSchemaSpy.mockRestore();
         removeSchemaSpy.mockRestore();
+      });
+    });
+    describe('compilation error caching (issue #3933)', () => {
+      // AJV 8 registers a schema in its internal cache *before* running meta-schema
+      // validation (validateSchema: true by default). When that validation throws (e.g.
+      // anyOf: [] violates draft-07's minItems:1 requirement), the broken schema stays
+      // cached so subsequent compile calls skip revalidation and silently return no
+      // errors. The fix removes the schema from AJV's cache whenever a compilation
+      // error occurs so every call correctly produces a validationError.
+      it('rawValidation returns a validationError on repeated calls for a schema without $id', () => {
+        const v = new AJV8Validator({});
+        // Empty anyOf violates the draft-07 meta-schema (minItems: 1).
+        // The full-schema case from issue #3933 uses no $id, so AJV caches by object ref.
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { foo: { type: 'string', anyOf: [] } },
+        };
+
+        const result1 = v.rawValidation(schema, {});
+        expect(result1.validationError).toBeInstanceOf(Error);
+
+        const result2 = v.rawValidation(schema, {});
+        expect(result2.validationError).toBeInstanceOf(Error);
+      });
+
+      it('rawValidation returns a validationError on repeated calls for a schema with $id', () => {
+        const v = new AJV8Validator({});
+        const schema: RJSFSchema = { $id: 'test-caching-raw-$id', anyOf: [] };
+
+        const result1 = v.rawValidation(schema, {});
+        expect(result1.validationError).toBeInstanceOf(Error);
+
+        const result2 = v.rawValidation(schema, {});
+        expect(result2.validationError).toBeInstanceOf(Error);
+      });
+
+      it('rawValidation returns a validationError when the schema was previously cached by isValid', () => {
+        const v = new AJV8Validator({});
+        // isValid uses addSchema (no meta-schema validation) so the broken schema
+        // ends up in AJV's registry as a compiled always-false validator.  A
+        // subsequent rawValidation call must not silently reuse that cached entry.
+        const schema: RJSFSchema = { $id: 'test-caching-isvalid-cross', anyOf: [] };
+        const rootSchema: RJSFSchema = {};
+
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
+        v.isValid(schema, {}, rootSchema);
+        warnSpy.mockRestore();
+
+        const result = v.rawValidation(schema, {});
+        expect(result.validationError).toBeInstanceOf(Error);
+      });
+
+      it('isValid returns false consistently when a compilation error occurs', () => {
+        const v = new AJV8Validator({});
+        // null is not a valid schema – AJV will throw when it tries to compile it.
+        const schema = null as unknown as RJSFSchema;
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
+
+        const result1 = v.isValid(schema, {}, schema);
+        const result2 = v.isValid(schema, {}, schema);
+
+        warnSpy.mockRestore();
+        expect(result1).toBe(false);
+        expect(result2).toBe(false);
+      });
+
+      it('rawValidation does not evict a correctly-compiled schema when data evaluation throws', () => {
+        // A keyword whose validate() throws during data evaluation (not compilation).
+        // The schema is valid and compiles fine; the throw happens when the compiled
+        // validator runs against formData.  The fix guards removeSchema with
+        // compiledValidator === undefined so only compile-phase failures evict.
+        const v = new AJV8Validator({
+          extenderFn: (ajv: Ajv) => {
+            ajv.addKeyword({
+              keyword: 'throwOnValidate',
+              schemaType: 'boolean',
+              validate: () => {
+                throw new Error('keyword threw during data evaluation');
+              },
+            });
+            return ajv;
+          },
+        });
+        const schema = { $id: 'test-exec-throw-raw', type: 'string', throwOnValidate: true } as unknown as RJSFSchema;
+
+        // First call — compiledValidator(formData) throws, so compilationError is set.
+        const result = v.rawValidation(schema, 'hello');
+        expect(result.validationError).toBeInstanceOf(Error);
+
+        // Schema must still be cached — the execution throw must not have evicted it.
+        expect(v.ajv.getSchema('test-exec-throw-raw')).toBeDefined();
+      });
+
+      it('isValid does not evict a correctly-compiled schema when data evaluation throws', () => {
+        const v = new AJV8Validator({
+          extenderFn: (ajv: Ajv) => {
+            ajv.addKeyword({
+              keyword: 'throwOnValidate',
+              schemaType: 'boolean',
+              validate: () => {
+                throw new Error('keyword threw during data evaluation');
+              },
+            });
+            return ajv;
+          },
+        });
+        const schema = {
+          $id: 'test-exec-throw-isvalid',
+          type: 'string',
+          throwOnValidate: true,
+        } as unknown as RJSFSchema;
+        const rootSchema: RJSFSchema = {};
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
+
+        // Execution throw — isValid should return false but NOT evict the schema.
+        const result = v.isValid(schema, 'hello', rootSchema);
+        expect(result).toBe(false);
+
+        // $id is preserved by withIdRefPrefix, so schemaId === schema.$id.
+        expect(v.ajv.getSchema('test-exec-throw-isvalid')).toBeDefined();
+
+        warnSpy.mockRestore();
       });
     });
     describe('validator.validateFormData()', () => {
