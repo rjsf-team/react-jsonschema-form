@@ -1,4 +1,4 @@
-import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
+import { ChakraProvider, EnvironmentProvider, defaultSystem } from '@chakra-ui/react';
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import weakMemoize from '@emotion/weak-memoize';
@@ -23,12 +23,12 @@ const memoizedCreateCacheWithContainer = weakMemoize((container: HTMLElement) =>
   return newCache;
 });
 
-export const __createChakraFrameProvider =
-  (props: any) =>
-  ({ document }: any) => (
-    <div style={{ margin: 2 }}>
-      <CacheProvider value={memoizedCreateCacheWithContainer(document.head)}>
+export const __createChakraFrameProvider = (props: any) => ({ document }: any) => (
+  <div style={{ margin: 2 }}>
+    <CacheProvider value={memoizedCreateCacheWithContainer(document.head)}>
+      <EnvironmentProvider value={() => document}>
         <ChakraProvider value={defaultSystem}>{props.children}</ChakraProvider>
-      </CacheProvider>
-    </div>
-  );
+      </EnvironmentProvider>
+    </CacheProvider>
+  </div>
+);
