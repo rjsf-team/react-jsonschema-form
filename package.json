@@ -47,7 +47,7 @@
     "jsdom-testing-mocks": "^1.16.0",
     "lint-staged": "^17.0.8",
     "move-file-cli": "^3.0.0",
-    "nx": "^23.0.1",
+    "nx": "^23.0.2",
     "oxfmt": "^0.55.0",
     "oxlint": "^1.70.0",
     "oxlint-tsgolint": "^0.23.0",
