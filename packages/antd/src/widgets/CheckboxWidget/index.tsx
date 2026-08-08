@@ -1,6 +1,6 @@
 import type { FocusEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, GenericObjectType } from '@rjsf/utils';
-import { ariaDescribedByIds } from '@rjsf/utils';
+import { ariaDescribedByIds, schemaRequiresTrueValue } from '@rjsf/utils';
 import type { CheckboxProps } from 'antd';
 import { Checkbox, theme } from 'antd';
 
@@ -28,10 +28,12 @@ export default function CheckboxWidget<
     readonly,
     value,
     required,
+    schema,
   } = props;
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
   const { token } = theme.useToken();
+  const inputRequired = schemaRequiresTrueValue(schema) && required;
 
   const handleChange: NonNullable<CheckboxProps['onChange']> = ({ target }) => onChange(target.checked);
 
@@ -52,6 +54,7 @@ export default function CheckboxWidget<
       disabled={disabled || (readonlyAsDisabled && readonly)}
       id={id}
       name={htmlName || id}
+      required={required}
       onChange={!readonly ? handleChange : undefined}
       {...extraProps}
       aria-describedby={ariaDescribedByIds(id)}
@@ -59,7 +62,7 @@ export default function CheckboxWidget<
       {!hideLabel && label ? (
         <>
           {label}
-          {required && (
+          {inputRequired && (
             <span aria-hidden='true' style={{ color: token.colorError, marginLeft: 2 }}>
               *
             </span>

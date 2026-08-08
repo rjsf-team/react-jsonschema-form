@@ -2,7 +2,7 @@ import type { ReactElement, ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import { Checkbox } from '@mantine/core';
 import type { StrictRJSFSchema, RJSFSchema, FormContextType, WidgetProps } from '@rjsf/utils';
-import { descriptionId, getTemplate, labelValue, ariaDescribedByIds } from '@rjsf/utils';
+import { descriptionId, getTemplate, labelValue, ariaDescribedByIds, schemaRequiresTrueValue } from '@rjsf/utils';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -35,6 +35,7 @@ export default function CheckboxWidget<
     uiSchema,
   } = props;
 
+  const inputRequired = schemaRequiresTrueValue(schema) && required;
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
     'DescriptionFieldTemplate',
     registry,
@@ -87,14 +88,14 @@ export default function CheckboxWidget<
           !hideLabel && label ? (
             <>
               {label}
-              {required && <span className='required'>*</span>}
+              {inputRequired && <span className='required'>*</span>}
             </>
           ) : (
             labelValue(label || undefined, hideLabel, false)
           )
         }
         disabled={disabled || readonly}
-        required={required}
+        required={inputRequired}
         autoFocus={autofocus}
         checked={typeof value === 'undefined' ? false : value === 'true' || value}
         onChange={handleCheckboxChange}

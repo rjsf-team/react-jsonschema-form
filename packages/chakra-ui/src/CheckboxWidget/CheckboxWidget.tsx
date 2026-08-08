@@ -2,7 +2,7 @@ import type { FocusEvent } from 'react';
 import type { CheckboxCheckedChangeDetails } from '@chakra-ui/react';
 import { Field as ChakraField, Text } from '@chakra-ui/react';
 import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { ariaDescribedByIds, descriptionId, getTemplate, getUiOptions } from '@rjsf/utils';
+import { ariaDescribedByIds, descriptionId, getTemplate, getUiOptions, schemaRequiresTrueValue } from '@rjsf/utils';
 
 import { Checkbox } from '../components/ui/checkbox';
 import { Field } from '../components/ui/field';
@@ -38,6 +38,7 @@ export default function CheckboxWidget<
   const uiOptions = getUiOptions(uiSchema);
   const isCheckbox = uiOptions.widget === 'checkbox';
   const description = isCheckbox ? undefined : (options.description ?? schema.description);
+  const inputRequired = schemaRequiresTrueValue(schema) && required;
 
   const handleChange = ({ checked }: CheckboxCheckedChangeDetails) => onChange(checked);
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement | any>) => onBlur(id, target?.checked);
@@ -69,7 +70,7 @@ export default function CheckboxWidget<
         {!hideLabel && label ? (
           <Text>
             {label}
-            {required && <ChakraField.RequiredIndicator />}
+            {inputRequired && <ChakraField.RequiredIndicator />}
           </Text>
         ) : undefined}
       </Checkbox>
