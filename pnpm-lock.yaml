@@ -556,8 +556,8 @@ importers:
         specifier: ^3.1.3
         version: 3.1.3
       fast-uri:
-        specifier: ^4.1.1
-        version: 4.1.1
+        specifier: ^4.1.2
+        version: 4.1.2
       json-schema-traverse:
         specifier: ^1.0.0
         version: 1.0.0
@@ -859,8 +859,8 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
       fast-uri:
-        specifier: ^4.1.1
-        version: 4.1.1
+        specifier: ^4.1.2
+        version: 4.1.2
       jsonpointer:
         specifier: ^5.0.1
         version: 5.0.1
@@ -7289,8 +7289,8 @@ packages:
   fast-uri@3.1.2:
     resolution: {integrity: sha512-rVjf7ArG3LTk+FS6Yw81V1DLuZl1bRbNrev6Tmd/9RaroeeRRJhAt7jg/6YFxbvAQXUCavSoZhPPj6oOx+5KjQ==}
 
-  fast-uri@4.1.1:
-    resolution: {integrity: sha512-YPOs1zD5TG2+EZt+r88LwF6mclA7TPkpwMP7ZN3TO2HiHS8TXvq7QA/17iJsV9dubcLo/f8eEYqMBruyQV21hQ==}
+  fast-uri@4.1.2:
+    resolution: {integrity: sha512-TyGmBcbDTZXcb2cj5MV89DrF42DKvb3y5DDUNh95iO+IMeAzMkVSxK1PZRrRIpc9yg8U2GhGdbofNa0LS/a4Bw==}
 
   fastq@1.20.1:
     resolution: {integrity: sha512-GGToxJ/w1x32s/D2EKND7kTil4n8OVk/9mycTc4VDza13lOvpUZTGX3mFSCtV9ksdGBVzvsyAVLM6mHFThxXxw==}
@@ -19727,7 +19727,7 @@ snapshots:
 
   fast-uri@3.1.2: {}
 
-  fast-uri@4.1.1: {}
+  fast-uri@4.1.2: {}
 
   fastq@1.20.1:
     dependencies:
