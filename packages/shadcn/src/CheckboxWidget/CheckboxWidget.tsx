@@ -36,7 +36,7 @@ export default function CheckboxWidget<
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
-  const inputRequired = schemaRequiresTrueValue<S>(schema);
+  const inputRequired = schemaRequiresTrueValue<S>(schema) && required;
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
     'DescriptionFieldTemplate',
     registry,
@@ -67,7 +67,7 @@ export default function CheckboxWidget<
           id={id}
           name={htmlName || id}
           checked={typeof value === 'undefined' ? false : Boolean(value)}
-          required={inputRequired}
+          required={required}
           disabled={disabled || readonly}
           autoFocus={autofocus}
           onCheckedChange={handleChange}
@@ -77,7 +77,7 @@ export default function CheckboxWidget<
         />
         <Label className='leading-tight' htmlFor={id}>
           {labelValue(label, hideLabel || !label)}
-          {!hideLabel && label && required && <span className='text-destructive ml-1'>*</span>}
+          {!hideLabel && label && inputRequired && <span className='text-destructive ml-1'>*</span>}
         </Label>
       </div>
     </div>

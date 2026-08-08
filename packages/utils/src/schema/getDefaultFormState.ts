@@ -792,6 +792,14 @@ export function getDefaultBasedOnSchemaType<
     case 'array': {
       return getArrayDefaults(validator, rawSchema, computeDefaultsProps, defaults as T[]);
     }
+    case 'boolean': {
+      // A required boolean with no explicit default gets false — it must be
+      // present in the submitted data, and false is the natural zero-value.
+      if (computeDefaultsProps.required && defaults === undefined) {
+        return false as unknown as T;
+      }
+      return undefined;
+    }
     default:
       return undefined;
   }

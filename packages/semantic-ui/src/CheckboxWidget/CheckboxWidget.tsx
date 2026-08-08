@@ -1,6 +1,6 @@
 import type { FormEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, descriptionId, getTemplate, labelValue } from '@rjsf/utils';
+import { ariaDescribedByIds, descriptionId, getTemplate, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
 import type { CheckboxProps } from 'semantic-ui-react';
 import { Form } from 'semantic-ui-react';
 
@@ -53,6 +53,7 @@ export default function CheckboxWidget<
   const handleBlur: React.FocusEventHandler<HTMLInputElement> = () => onBlur?.(id, value);
   const handleFocus: React.FocusEventHandler<HTMLInputElement> = () => onFocus?.(id, value);
   const description = options.description ?? schema.description;
+  const inputRequired = schemaRequiresTrueValue(schema) && required;
 
   return (
     <>
@@ -76,7 +77,7 @@ export default function CheckboxWidget<
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        required={required}
+        required={inputRequired}
         label={labelValue(label, hideLabel, false)}
         aria-describedby={ariaDescribedByIds(id)}
       />
