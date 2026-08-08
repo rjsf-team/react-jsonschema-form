@@ -40,8 +40,6 @@ describe('hashForSchema', () => {
   });
 });
 
-const TEST_ARRAY_WITH_UNDEFINED = [undefined];
-const TEST_ARRAY_WITH_NULL = [null];
 const TEST_OBJECT_WITH_IGNORED_PROPERTIES = { a: 1, b: undefined, f: () => {} };
 
 describe('sortedJSONStringify', () => {
@@ -51,13 +49,18 @@ describe('sortedJSONStringify', () => {
   it('stringifies the object putting keys in order', () => {
     expect(sortedJSONStringify(OUT_OF_ORDER_SCHEMA)).toEqual(STRINGIFIED_IN_ORDER);
   });
-  it('stringifies undefined and null array items correctly', () => {
-    expect(sortedJSONStringify(TEST_ARRAY_WITH_NULL)).not.toEqual(sortedJSONStringify(TEST_ARRAY_WITH_UNDEFINED));
-  });
   it('stringifies objects the same as JSON.stringify', () => {
     expect(sortedJSONStringify(TEST_OBJECT_WITH_IGNORED_PROPERTIES)).toEqual(
       JSON.stringify(TEST_OBJECT_WITH_IGNORED_PROPERTIES),
     );
+  });
+  it.each([
+    ['[]', []],
+    ['[undefined]', [undefined]],
+    ['[null]', [null]],
+    ['[1,undefined,2]', [1, undefined, 2]],
+  ])('stringifies %s correctly', (expected, value) => {
+    expect(sortedJSONStringify(value)).toEqual(expected);
   });
 });
 

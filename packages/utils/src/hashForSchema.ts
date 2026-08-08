@@ -32,7 +32,7 @@ export function sortedJSONStringify(object: unknown): string {
   }
 
   if (Array.isArray(object)) {
-    return `[${object.map(sortedJSONStringify).join(',')}]`;
+    return `[${object.map((x) => (x === undefined ? 'undefined' : sortedJSONStringify(x))).join(',')}]`;
   }
   if (object === null || typeof object !== 'object') {
     return JSON.stringify(typeof object === 'function' ? null : object); // Normalise functions
