@@ -8998,11 +8998,6 @@ exports[`single fields > required checkbox field 1`] = `
                         title=""
                       >
                         I Agree
-                        <span
-                          class="required"
-                        >
-                          *
-                        </span>
                       </label>
                     </div>
                   </div>

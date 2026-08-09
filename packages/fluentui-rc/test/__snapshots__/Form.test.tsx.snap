@@ -8971,7 +8971,6 @@ exports[`single fields > required checkbox field 1`] = `
                     class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
                     id="root_agree"
                     name="root_agree"
-                    required=""
                     type="checkbox"
                   />
                   <div
@@ -8983,12 +8982,6 @@ exports[`single fields > required checkbox field 1`] = `
                     for="root_agree"
                   >
                     I Agree
-                    <span
-                      aria-hidden="true"
-                      class="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
-                    >
-                      *
-                    </span>
                   </label>
                 </span>
               </div>

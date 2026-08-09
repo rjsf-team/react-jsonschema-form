@@ -6798,7 +6798,7 @@ exports[`single fields > required checkbox field 1`] = `
             class="grouped equal width fields"
           >
             <div
-              class="required field"
+              class="field"
             >
               <div
                 class="ui checkbox"
@@ -6810,7 +6810,6 @@ exports[`single fields > required checkbox field 1`] = `
                   id="root_agree"
                   name="root_agree"
                   readonly=""
-                  required=""
                   tabindex="0"
                   type="checkbox"
                   value=""

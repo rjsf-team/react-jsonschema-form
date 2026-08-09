@@ -8535,6 +8535,7 @@ exports[`single fields > required checkbox field 1`] = `
                   data-pc-section="input"
                   id="root_agree"
                   name="root_agree"
+                  required=""
                   type="checkbox"
                 />
                 <div
@@ -8547,7 +8548,7 @@ exports[`single fields > required checkbox field 1`] = `
               <label
                 for="root_agree"
               >
-                I Agree *
+                I Agree 
               </label>
             </div>
           </div>

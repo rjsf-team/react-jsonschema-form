@@ -7848,15 +7848,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
   letter-spacing: 0.00938em;
 }
 
-.emotion-36.Mui-error {
-  color: #d32f2f;
-}
-
-.emotion-37 {
+.emotion-36 {
   margin-top: 24px;
 }
 
-.emotion-38 {
+.emotion-37 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -7913,57 +7909,57 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-38::-moz-focus-inner {
+.emotion-37::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-38.Mui-disabled {
+.emotion-37.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-38 {
+  .emotion-37 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-38:hover {
+.emotion-37:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
-.emotion-38.Mui-disabled {
+.emotion-37.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-38:hover {
+.emotion-37:hover {
   box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
 }
 
 @media (hover: none) {
-  .emotion-38:hover {
+  .emotion-37:hover {
     box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
   }
 }
 
-.emotion-38:active {
+.emotion-37:active {
   box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
 }
 
-.emotion-38.Mui-focusVisible {
+.emotion-37.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-38.Mui-disabled {
+.emotion-37.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
 }
 
 @media (hover: hover) {
-  .emotion-38:hover {
+  .emotion-37:hover {
     --variant-containedBg: #1565c0;
     --variant-textBg: rgba(25, 118, 210, 0.04);
     --variant-outlinedBorder: #1976d2;
@@ -7971,7 +7967,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
   }
 }
 
-.emotion-38.MuiButton-loading {
+.emotion-37.MuiButton-loading {
   color: transparent;
 }
 
@@ -8141,7 +8137,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                           class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                         >
                           <label
-                            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd Mui-required emotion-31"
+                            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-31"
                           >
                             <span
                               aria-describedby="root_2__error root_2__description root_2__help"
@@ -8153,7 +8149,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                                 data-indeterminate="false"
                                 id="root_2"
                                 name="root[2]"
-                                required=""
                                 type="checkbox"
                               />
                               <svg
@@ -8168,17 +8163,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                                 />
                               </svg>
                             </span>
-                            <div>
-                              <span
-                                class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-35"
-                              />
-                              <span
-                                aria-hidden="true"
-                                class="MuiFormControlLabel-asterisk emotion-36"
-                              >
-                                 *
-                              </span>
-                            </div>
+                            <span
+                              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-35"
+                            />
                           </label>
                         </div>
                       </div>
@@ -8192,10 +8179,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
       </div>
     </div>
     <div
-      class="MuiBox-root emotion-37"
+      class="MuiBox-root emotion-36"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-38"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-37"
         tabindex="0"
         type="submit"
       >

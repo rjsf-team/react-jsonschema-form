@@ -32665,15 +32665,11 @@ exports[`single fields > required checkbox field 1`] = `
   letter-spacing: 0.00938em;
 }
 
-.emotion-9.Mui-error {
-  color: #d32f2f;
-}
-
-.emotion-10 {
+.emotion-9 {
   margin-top: 24px;
 }
 
-.emotion-11 {
+.emotion-10 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -32730,57 +32726,57 @@ exports[`single fields > required checkbox field 1`] = `
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-11::-moz-focus-inner {
+.emotion-10::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-11.Mui-disabled {
+.emotion-10.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-11 {
+  .emotion-10 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-11:hover {
+.emotion-10:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
-.emotion-11.Mui-disabled {
+.emotion-10.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-11:hover {
+.emotion-10:hover {
   box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
 }
 
 @media (hover: none) {
-  .emotion-11:hover {
+  .emotion-10:hover {
     box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
   }
 }
 
-.emotion-11:active {
+.emotion-10:active {
   box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
 }
 
-.emotion-11.Mui-focusVisible {
+.emotion-10.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-11.Mui-disabled {
+.emotion-10.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
 }
 
 @media (hover: hover) {
-  .emotion-11:hover {
+  .emotion-10:hover {
     --variant-containedBg: #1565c0;
     --variant-textBg: rgba(25, 118, 210, 0.04);
     --variant-outlinedBorder: #1976d2;
@@ -32788,7 +32784,7 @@ exports[`single fields > required checkbox field 1`] = `
   }
 }
 
-.emotion-11.MuiButton-loading {
+.emotion-10.MuiButton-loading {
   color: transparent;
 }
 
@@ -32814,7 +32810,7 @@ exports[`single fields > required checkbox field 1`] = `
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <label
-                  class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd Mui-required emotion-4"
+                  class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-4"
                 >
                   <span
                     aria-describedby="root_agree__error root_agree__description root_agree__help"
@@ -32825,7 +32821,6 @@ exports[`single fields > required checkbox field 1`] = `
                       data-indeterminate="false"
                       id="root_agree"
                       name="root_agree"
-                      required=""
                       type="checkbox"
                     />
                     <svg
@@ -32840,19 +32835,11 @@ exports[`single fields > required checkbox field 1`] = `
                       />
                     </svg>
                   </span>
-                  <div>
-                    <span
-                      class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-8"
-                    >
-                      I Agree
-                    </span>
-                    <span
-                      aria-hidden="true"
-                      class="MuiFormControlLabel-asterisk emotion-9"
-                    >
-                       *
-                    </span>
-                  </div>
+                  <span
+                    class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-8"
+                  >
+                    I Agree
+                  </span>
                 </label>
               </div>
             </div>
@@ -32861,10 +32848,10 @@ exports[`single fields > required checkbox field 1`] = `
       </div>
     </div>
     <div
-      class="MuiBox-root emotion-10"
+      class="MuiBox-root emotion-9"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-11"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-10"
         tabindex="0"
         type="submit"
       >

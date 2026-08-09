@@ -5516,15 +5516,11 @@ exports[`single fields > required checkbox field 1`] = `
                 aria-describedby="root_agree__error root_agree__description root_agree__help"
                 id="root_agree"
                 name="root_agree"
+                required=""
                 type="checkbox"
               />
               <span>
                 I Agree
-                <span
-                  class="required"
-                >
-                  *
-                </span>
               </span>
             </label>
           </div>
