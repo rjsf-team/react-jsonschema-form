@@ -20,19 +20,30 @@ export function hashString(string: string): string {
   return hash.toString(16);
 }
 
-/** Stringifies an `object`, sorts object fields in consistent order before stringifying it.
+/** Recursively serializes a value to JSON with object keys sorted alphabetically to produce
+ * a stable string representation.
  *
  * @param object - The object for which the sorted stringify is desired
  * @returns - The stringified object with keys sorted in a consistent order
  */
 export function sortedJSONStringify(object: unknown): string {
-  const allKeys = new Set<string>();
-  // solution source: https://stackoverflow.com/questions/16167581/sort-object-properties-and-json-stringify/53593328#53593328
-  JSON.stringify(object, (key, value) => {
-    allKeys.add(key);
-    return value;
-  });
-  return JSON.stringify(object, Array.from(allKeys).sort());
+  function shouldIncludeValue(value: unknown) {
+    return value !== undefined && typeof value !== 'function' && typeof value !== 'symbol';
+  }
+
+  if (Array.isArray(object)) {
+    return `[${object.map((x) => (x === undefined ? 'undefined' : sortedJSONStringify(x))).join(',')}]`;
+  }
+  if (object === null || typeof object !== 'object') {
+    return JSON.stringify(typeof object === 'function' ? null : object); // Normalise functions
+  }
+
+  const record = object as Record<string, unknown>;
+  const sortedValues = Object.keys(record)
+    .sort()
+    .filter((key) => shouldIncludeValue(record[key]))
+    .map((key) => `${JSON.stringify(key)}:${sortedJSONStringify(record[key])}`);
+  return `{${sortedValues.join(',')}}`;
 }
 
 /** Stringifies an `object` and returns the hash of the resulting string. Sorts object fields
