@@ -18,6 +18,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.8.0
 
+## @rjsf/core
+
+- Fixed `TimeWidget` to respect schema `multipleOf` time precision, preserving second-precision values while keeping minute-precision native inputs synchronized with their displayed value ([#5174](https://github.com/rjsf-team/react-jsonschema-form/pull/5174))
+
 ## @rjsf/utils
 
 - Fixed an issue in `sortedJSONStringify` with regards to handling arrays containing `null` and `undefined` values.
