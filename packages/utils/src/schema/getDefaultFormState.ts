@@ -304,6 +304,22 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     if (shouldMergeDefaultsIntoFormData && schemaToCompute && !isObject(rawFormData)) {
       formData = rawFormData as T;
     }
+  } else if (
+    schema[ALL_OF_KEY]?.length === 1 &&
+    isObject(schema[ALL_OF_KEY][0]) &&
+    REF_KEY in schema[ALL_OF_KEY][0] &&
+    !_recurseList.includes(schema[ALL_OF_KEY][0][REF_KEY]!)
+  ) {
+    // A single referenced schema wrapped in allOf is equivalent to the resolved schema plus any sibling keywords.
+    // Resolve this transparent wrapper so defaults from the referenced schema are computed normally.
+    updatedRecurseList = _recurseList.concat(schema[ALL_OF_KEY][0][REF_KEY]!);
+    schemaToCompute = retrieveSchema<T, S, F>(
+      validator,
+      schema,
+      rootSchema,
+      rawFormData,
+      experimental_customMergeAllOf,
+    );
   } else if (DEPENDENCIES_KEY in schema) {
     // Get the default if set from properties to ensure the dependencies conditions are resolved based on it
     const defaultFormData: T = {
