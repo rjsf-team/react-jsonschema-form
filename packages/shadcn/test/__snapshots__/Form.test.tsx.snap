@@ -3476,7 +3476,6 @@ exports[`single fields > checkbox field 1`] = `
           >
             <button
               aria-checked="false"
-              aria-required="false"
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
@@ -3543,7 +3542,6 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
           >
             <button
               aria-checked="false"
-              aria-required="false"
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
@@ -3604,7 +3602,6 @@ exports[`single fields > checkbox field with label 1`] = `
           >
             <button
               aria-checked="false"
-              aria-required="false"
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
@@ -3673,7 +3670,6 @@ exports[`single fields > checkbox field with label and description 1`] = `
           >
             <button
               aria-checked="false"
-              aria-required="false"
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
@@ -3750,7 +3746,6 @@ exports[`single fields > checkbox field with label and rich text description 1`]
           >
             <button
               aria-checked="false"
-              aria-required="false"
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
@@ -10627,7 +10622,7 @@ exports[`single fields > required checkbox field 1`] = `
                     >
                       <button
                         aria-checked="false"
-                        aria-required="false"
+                        aria-required="true"
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
@@ -10639,6 +10634,7 @@ exports[`single fields > required checkbox field 1`] = `
                       <input
                         aria-hidden="true"
                         name="root_agree"
+                        required=""
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
@@ -10650,11 +10646,6 @@ exports[`single fields > required checkbox field 1`] = `
                         for="root_agree"
                       >
                         I Agree
-                        <span
-                          class="text-destructive ml-1"
-                        >
-                          *
-                        </span>
                       </label>
                     </div>
                   </div>

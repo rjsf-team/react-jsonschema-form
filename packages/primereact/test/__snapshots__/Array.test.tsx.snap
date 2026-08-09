@@ -1515,6 +1515,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                               data-pc-section="input"
                               id="root_2"
                               name="root[2]"
+                              required=""
                               type="checkbox"
                             />
                             <div

@@ -11315,11 +11315,6 @@ exports[`single fields > required checkbox field 1`] = `
                         class="label-text"
                       >
                         I Agree
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
                       </span>
                     </label>
                   </div>

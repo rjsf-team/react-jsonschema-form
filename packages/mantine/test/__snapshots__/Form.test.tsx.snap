@@ -12887,7 +12887,6 @@ exports[`single fields > required checkbox field 1`] = `
                       class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                       id="root_agree"
                       name="agree"
-                      required=""
                       type="checkbox"
                     />
                     <svg
@@ -12913,11 +12912,6 @@ exports[`single fields > required checkbox field 1`] = `
                       for="root_agree"
                     >
                       I Agree
-                      <span
-                        class="required"
-                      >
-                        *
-                      </span>
                     </label>
                   </div>
                 </div>

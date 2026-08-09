@@ -14323,6 +14323,7 @@ exports[`single fields > required checkbox field 1`] = `
                                         class="ant-checkbox-input"
                                         id="root_agree"
                                         name="root_agree"
+                                        required=""
                                         type="checkbox"
                                         value=""
                                       />
@@ -14331,12 +14332,6 @@ exports[`single fields > required checkbox field 1`] = `
                                       class="ant-checkbox-label"
                                     >
                                       I Agree
-                                      <span
-                                        aria-hidden="true"
-                                        style="color: rgb(255, 77, 79); margin-left: 2px;"
-                                      >
-                                        *
-                                      </span>
                                     </span>
                                   </label>
                                 </div>

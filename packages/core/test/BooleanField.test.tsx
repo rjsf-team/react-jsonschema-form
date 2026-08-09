@@ -44,7 +44,7 @@ describe('BooleanField', () => {
     expect(node.querySelector('.rjsf-field label span')).toHaveTextContent('foo');
   });
 
-  it('should render a required asterisk when the boolean field is required', () => {
+  it('should render a required asterisk when the boolean field is required and schema requires true', () => {
     const { node } = createFormComponent({
       schema: {
         type: 'object',
@@ -52,6 +52,7 @@ describe('BooleanField', () => {
           foo: {
             type: 'boolean',
             title: 'Agree',
+            const: true,
           },
         },
         required: ['foo'],
@@ -62,7 +63,7 @@ describe('BooleanField', () => {
   });
 
   describe('HTML5 required attribute', () => {
-    it('should not render a required attribute for simple required fields', () => {
+    it('should render a required attribute for simple required fields', () => {
       const { node } = createFormComponent({
         schema: {
           type: 'object',
@@ -75,7 +76,7 @@ describe('BooleanField', () => {
         },
       });
 
-      expect(node.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
+      expect(node.querySelector('input[type=checkbox]')).toHaveAttribute('required', '');
     });
 
     it('should add a required attribute if the schema uses const with a true value', () => {
@@ -88,6 +89,7 @@ describe('BooleanField', () => {
               const: true,
             },
           },
+          required: ['foo'],
         },
       });
 
@@ -104,6 +106,7 @@ describe('BooleanField', () => {
               enum: [true],
             },
           },
+          required: ['foo'],
         },
       });
 
@@ -124,6 +127,7 @@ describe('BooleanField', () => {
               ],
             },
           },
+          required: ['foo'],
         },
       });
 
@@ -144,6 +148,7 @@ describe('BooleanField', () => {
               ],
             },
           },
+          required: ['foo'],
         },
       });
 
@@ -164,6 +169,7 @@ describe('BooleanField', () => {
               ],
             },
           },
+          required: ['foo'],
         },
       });
 
@@ -262,8 +268,12 @@ describe('BooleanField', () => {
       schema: {
         type: 'object',
         properties: {
+          // Use a string enum so the field stays absent from initial formData —
+          // required booleans now default to false, which satisfies AJV's required
+          // constraint and would suppress the validation error this test relies on.
           bool: {
-            type: 'boolean',
+            type: 'string',
+            enum: ['a', 'b'],
           },
         },
         required: ['bool'],
@@ -297,8 +307,12 @@ describe('BooleanField', () => {
       schema: {
         type: 'object',
         properties: {
+          // Use a string enum so the field stays absent from initial formData —
+          // required booleans now default to false, which satisfies AJV's required
+          // constraint and would suppress the validation error this test relies on.
           bool: {
-            type: 'boolean',
+            type: 'string',
+            enum: ['a', 'b'],
           },
         },
         required: ['bool'],

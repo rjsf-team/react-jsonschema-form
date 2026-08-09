@@ -27141,19 +27141,12 @@ exports[`single fields > required checkbox field 1`] = `
   }
 }
 
-@layer recipes {
-  .emotion-10 {
-    color: var(--chakra-colors-fg-error);
-    line-height: 1;
-  }
-}
-
-.emotion-11 {
+.emotion-10 {
   margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-12 {
+  .emotion-11 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -27201,19 +27194,19 @@ exports[`single fields > required checkbox field 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-12:is(:focus-visible, [data-focus-visible]) {
+  .emotion-11:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-12 :where(svg) {
+  .emotion-11 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -27221,14 +27214,14 @@ exports[`single fields > required checkbox field 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-12:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-11:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-12:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-11:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -27322,12 +27315,6 @@ exports[`single fields > required checkbox field 1`] = `
                         >
                           <p>
                             I Agree
-                            <span
-                              aria-hidden="true"
-                              class="chakra-field__requiredIndicator emotion-10"
-                            >
-                              *
-                            </span>
                           </p>
                         </span>
                       </label>
@@ -27341,10 +27328,10 @@ exports[`single fields > required checkbox field 1`] = `
       </fieldset>
     </div>
     <div
-      class="emotion-11"
+      class="emotion-10"
     >
       <button
-        class="chakra-button emotion-12"
+        class="chakra-button emotion-11"
         type="submit"
       >
         Submit
