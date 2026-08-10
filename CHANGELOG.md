@@ -30,6 +30,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Raised the `ata-validator` requirement to `^1.3.0`, which fixes a `$ref` that could not be resolved being treated as vacuous rather than reported as an error ([#5181](https://github.com/rjsf-team/react-jsonschema-form/pull/5181))
 - Raised the `ata-validator` requirement to `^1.6.0`, so that validation runs correctly where `new Function` is refused, such as a page under a strict Content-Security-Policy ([#5184](https://github.com/rjsf-team/react-jsonschema-form/pull/5184))
+- Raised the `ata-validator` requirement to `^1.6.1`, which stops a `$ref` into another document from silently dropping the constraints behind it ([#5186](https://github.com/rjsf-team/react-jsonschema-form/pull/5186))
 
 ## @rjsf/validator-cfworker
 
