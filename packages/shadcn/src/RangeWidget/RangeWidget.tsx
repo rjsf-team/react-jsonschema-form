@@ -1,6 +1,5 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { ariaDescribedByIds, rangeSpec } from '@rjsf/utils';
-import _pick from 'lodash/pick';
 
 import { Slider } from '../components/ui/slider';
 
@@ -46,7 +45,11 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const handleChange = (newValue: number[]) => onChange(newValue[0]);
 
   const sliderProps = { value, label, id, ...rangeSpec<S>(schema) };
-  const uiProps = { id, ..._pick((options.props as object) || {}, allowedProps) };
+  const optionProps = new Map(Object.entries(options.props ?? {}));
+  const uiProps = {
+    id,
+    ...Object.fromEntries(allowedProps.filter((key) => optionProps.has(key)).map((key) => [key, optionProps.get(key)])),
+  };
   return (
     <>
       <Slider
