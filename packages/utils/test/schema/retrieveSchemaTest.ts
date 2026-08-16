@@ -52,6 +52,10 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     it('returns empty object when schema is not an object', () => {
       expect(retrieveSchema(testValidator, [] as RJSFSchema)).toEqual({});
     });
+    it('tolerates a schema with an explicitly undefined `properties`', () => {
+      const schema = { type: 'object', properties: undefined } as RJSFSchema;
+      expect(retrieveSchema(testValidator, schema)).toEqual({ type: 'object', properties: {} });
+    });
     it('should `resolve` a schema which contains definitions', () => {
       const schema: RJSFSchema = { $ref: '#/definitions/address' };
       const address: RJSFSchema = {

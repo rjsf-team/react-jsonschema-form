@@ -1,5 +1,4 @@
 import isObject from 'lodash/isObject';
-import uniq from 'lodash/uniq';
 
 import { ANY_OF_KEY, ONE_OF_KEY } from './constants';
 import getSchemaType from './getSchemaType';
@@ -13,12 +12,14 @@ import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema 
  * @returns - All of the unique types contained within the oneOf list
  */
 export function getSchemaTypesForXxxOf<S extends StrictRJSFSchema = RJSFSchema>(schemas: S[]): string | string[] {
-  const allTypes: string[] = uniq(
-    schemas
-      .map((s) => (isObject(s) ? getSchemaType(s) : undefined))
-      .flat()
-      .filter((t) => t !== undefined),
-  );
+  const allTypes: string[] = [
+    ...new Set(
+      schemas
+        .map((s) => (isObject(s) ? getSchemaType(s) : undefined))
+        .flat()
+        .filter((t) => t !== undefined),
+    ),
+  ];
   return allTypes.length === 1 ? allTypes[0] : allTypes;
 }
 

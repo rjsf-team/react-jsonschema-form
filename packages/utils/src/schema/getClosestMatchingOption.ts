@@ -1,9 +1,6 @@
 import get from 'lodash/get';
 import has from 'lodash/has';
-import isNumber from 'lodash/isNumber';
 import isObject from 'lodash/isObject';
-import isString from 'lodash/isString';
-import reduce from 'lodash/reduce';
 import times from 'lodash/times';
 
 import { ONE_OF_KEY, REF_KEY, JUNK_OPTION_ID, ANY_OF_KEY } from '../constants';
@@ -64,77 +61,73 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
   let totalScore = 0;
   if (schema) {
     if (isObject(schema.properties)) {
-      totalScore += reduce(
-        schema.properties,
-        (score, value, key) => {
-          const formValue = get(formData, key);
-          if (typeof value === 'boolean') {
-            return score;
-          }
-          if (has(value, REF_KEY)) {
-            const newSchema = retrieveSchema<T, S, F>(
+      totalScore += Object.entries(schema.properties).reduce((score, [key, value]) => {
+        const formValue = get(formData, key);
+        if (typeof value === 'boolean') {
+          return score;
+        }
+        if (has(value, REF_KEY)) {
+          const newSchema = retrieveSchema<T, S, F>(
+            validator,
+            value as S,
+            rootSchema,
+            formValue,
+            experimental_customMergeAllOf,
+          );
+          return (
+            score +
+            calculateIndexScore<T, S, F>(
               validator,
-              value as S,
+              rootSchema,
+              newSchema,
+              formValue || {},
+              experimental_customMergeAllOf,
+            )
+          );
+        }
+        if ((has(value, ONE_OF_KEY) || has(value, ANY_OF_KEY)) && formValue) {
+          const xxxOfKey = has(value, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
+          const discriminator = getDiscriminatorFieldFromSchema<S>(value as S);
+          return (
+            score +
+            getClosestMatchingOption<T, S, F>(
+              validator,
               rootSchema,
               formValue,
+              get(value, xxxOfKey) as S[],
+              -1,
+              discriminator,
               experimental_customMergeAllOf,
-            );
-            return (
-              score +
-              calculateIndexScore<T, S, F>(
-                validator,
-                rootSchema,
-                newSchema,
-                formValue || {},
-                experimental_customMergeAllOf,
-              )
-            );
+            )
+          );
+        }
+        if (value.type === 'object') {
+          // If the structure is matching then give it a little boost in score
+          const structureBoost = isObject(formValue) ? 1 : 0;
+          return (
+            score +
+            structureBoost +
+            calculateIndexScore<T, S, F>(validator, rootSchema, value as S, formValue, experimental_customMergeAllOf)
+          );
+        }
+        if (value.type === guessType(formValue)) {
+          // If the types match, then we bump the score by one
+          let newScore = score + 1;
+          if (value.default) {
+            // If the schema contains a readonly default value score the value that matches the default higher and
+            // any non-matching value lower
+            newScore += formValue === value.default ? 1 : -1;
+          } else if (value.const) {
+            // If the schema contains a const value score the value that matches the default higher and
+            // any non-matching value lower
+            newScore += formValue === value.const ? 1 : -1;
           }
-          if ((has(value, ONE_OF_KEY) || has(value, ANY_OF_KEY)) && formValue) {
-            const xxxOfKey = has(value, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
-            const discriminator = getDiscriminatorFieldFromSchema<S>(value as S);
-            return (
-              score +
-              getClosestMatchingOption<T, S, F>(
-                validator,
-                rootSchema,
-                formValue,
-                get(value, xxxOfKey) as S[],
-                -1,
-                discriminator,
-                experimental_customMergeAllOf,
-              )
-            );
-          }
-          if (value.type === 'object') {
-            // If the structure is matching then give it a little boost in score
-            const structureBoost = isObject(formValue) ? 1 : 0;
-            return (
-              score +
-              structureBoost +
-              calculateIndexScore<T, S, F>(validator, rootSchema, value as S, formValue, experimental_customMergeAllOf)
-            );
-          }
-          if (value.type === guessType(formValue)) {
-            // If the types match, then we bump the score by one
-            let newScore = score + 1;
-            if (value.default) {
-              // If the schema contains a readonly default value score the value that matches the default higher and
-              // any non-matching value lower
-              newScore += formValue === value.default ? 1 : -1;
-            } else if (value.const) {
-              // If the schema contains a const value score the value that matches the default higher and
-              // any non-matching value lower
-              newScore += formValue === value.const ? 1 : -1;
-            }
-            // TODO eventually, deal with enums/arrays
-            return newScore;
-          }
-          return score;
-        },
-        0,
-      );
-    } else if (isString(schema.type) && schema.type === guessType(formData)) {
+          // TODO eventually, deal with enums/arrays
+          return newScore;
+        }
+        return score;
+      }, 0);
+    } else if (typeof schema.type === 'string' && schema.type === guessType(formData)) {
       totalScore += 1;
     }
   }
@@ -181,7 +174,7 @@ export default function getClosestMatchingOption<
   const resolvedOptions = options.map((option) => resolveAllReferences<S>(option, rootSchema, []));
 
   const simpleDiscriminatorMatch = getOptionMatchingSimpleDiscriminator(formData, options, discriminatorField);
-  if (isNumber(simpleDiscriminatorMatch)) {
+  if (typeof simpleDiscriminatorMatch === 'number') {
     return simpleDiscriminatorMatch;
   }
 

@@ -1,11 +1,7 @@
-import flattenDeep from 'lodash/flattenDeep';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import merge from 'lodash/merge';
 import set from 'lodash/set';
 import times from 'lodash/times';
-import transform from 'lodash/transform';
-import uniq from 'lodash/uniq';
 
 import {
   ADDITIONAL_PROPERTIES_KEY,
@@ -402,27 +398,28 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
 
   if (PROPERTIES_KEY in resolvedSchema) {
     const childrenLists: string[][] = [];
-    const updatedProps = transform(
-      resolvedSchema[PROPERTIES_KEY]!,
-      (acc, value, key: string) => {
-        const childList: string[] = [...recurseList];
-        // Mark cycles only when NOT in resolveAnyOfOrOneOfRefs mode. When resolveAnyOfOrOneOfRefs=true
-        // (e.g. from ObjectField), options are resolved against a shared recurseList that accumulates
-        // refs across branches, causing false positives. In simple (non-anyOf) resolution, a $ref cycle
-        // in an object property always causes an infinite render loop and must be caught.
-        acc[key] = resolveAllReferences(
-          value as S,
-          rootSchema,
-          childList,
-          currentBaseURI,
-          resolveAnyOfOrOneOfRefs,
-          !resolveAnyOfOrOneOfRefs,
-        );
-        childrenLists.push(childList);
-      },
-      {} as RJSFSchema,
-    );
-    merge(recurseList, uniq(flattenDeep(childrenLists)));
+    const updatedProps: RJSFSchema = {};
+    for (const [key, value] of Object.entries(resolvedSchema[PROPERTIES_KEY] ?? {})) {
+      const childList: string[] = [...recurseList];
+      // Mark cycles only when NOT in resolveAnyOfOrOneOfRefs mode. When resolveAnyOfOrOneOfRefs=true
+      // (e.g. from ObjectField), options are resolved against a shared recurseList that accumulates
+      // refs across branches, causing false positives. In simple (non-anyOf) resolution, a $ref cycle
+      // in an object property always causes an infinite render loop and must be caught.
+      updatedProps[key] = resolveAllReferences(
+        value as S,
+        rootSchema,
+        childList,
+        currentBaseURI,
+        resolveAnyOfOrOneOfRefs,
+        !resolveAnyOfOrOneOfRefs,
+      );
+      childrenLists.push(childList);
+    }
+    for (const ref of new Set(childrenLists.flat())) {
+      if (!recurseList.includes(ref)) {
+        recurseList.push(ref);
+      }
+    }
     resolvedSchema = { ...resolvedSchema, [PROPERTIES_KEY]: updatedProps };
   }
 
