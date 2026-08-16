@@ -1,5 +1,3 @@
-import isNil from 'lodash/isNil';
-
 import enumOptionsValueForIndex from './enumOptionsValueForIndex';
 import type { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types';
 
@@ -17,7 +15,7 @@ export default function enumOptionsSelectValue<S extends StrictRJSFSchema = RJSF
   allEnumOptions: EnumOptionsType<S>[] = [],
 ) {
   const value = enumOptionsValueForIndex<S>(valueIndex, allEnumOptions);
-  if (!isNil(value)) {
+  if (value != null) {
     const index = allEnumOptions.findIndex((opt) => value === opt.value);
     const all = allEnumOptions.map(({ value: val }) => val);
     const updated = selected.slice(0, index).concat(value, selected.slice(index));

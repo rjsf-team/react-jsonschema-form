@@ -1,5 +1,4 @@
 import get from 'lodash/get';
-import isString from 'lodash/isString';
 
 import { DISCRIMINATOR_PATH } from './constants';
 import type { RJSFSchema, StrictRJSFSchema } from './types';
@@ -13,7 +12,7 @@ import type { RJSFSchema, StrictRJSFSchema } from './types';
 export default function getDiscriminatorFieldFromSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S) {
   let discriminator: string | undefined;
   const maybeString = get(schema, DISCRIMINATOR_PATH);
-  if (isString(maybeString)) {
+  if (typeof maybeString === 'string') {
     discriminator = maybeString;
   } else if (maybeString !== undefined) {
     // oxlint-disable-next-line no-console

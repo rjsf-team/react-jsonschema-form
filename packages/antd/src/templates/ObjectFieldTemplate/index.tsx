@@ -11,9 +11,6 @@ import type {
 import { canExpand, getTemplate, getUiOptions, titleId, buttonId } from '@rjsf/utils';
 import { Col, Row, ConfigProvider } from 'antd';
 import classNames from 'classnames';
-import isNumber from 'lodash/isNumber';
-import isObject from 'lodash/isObject';
-import isString from 'lodash/isString';
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
@@ -74,19 +71,18 @@ export default function ObjectFieldTemplate<
         ? 24
         : 12;
 
-    if (isObject(colSpan)) {
-      const colSpanObj: GenericObjectType = colSpan;
-      if (isString(widget)) {
-        return colSpanObj[widget];
+    if (typeof colSpan === 'object' && colSpan !== null) {
+      if (typeof widget === 'string') {
+        return colSpan[widget];
       }
-      if (isString(field)) {
-        return colSpanObj[field];
+      if (typeof field === 'string') {
+        return colSpan[field];
       }
-      if (isString(type)) {
-        return colSpanObj[type];
+      if (typeof type === 'string') {
+        return colSpan[type];
       }
     }
-    if (isNumber(colSpan)) {
+    if (typeof colSpan === 'number') {
       return colSpan;
     }
     return defaultColSpan;

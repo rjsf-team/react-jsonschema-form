@@ -1,5 +1,3 @@
-import isNil from 'lodash/isNil';
-
 import type { OptionValueFormat } from './types';
 
 /** Encodes an enum option value into a string for a DOM value attribute.
@@ -23,7 +21,7 @@ export default function enumOptionValueEncoder(
   if (format !== 'realValue') {
     return String(index);
   }
-  if (isNil(value)) {
+  if (value == null) {
     return '';
   }
   if (typeof value === 'object') {

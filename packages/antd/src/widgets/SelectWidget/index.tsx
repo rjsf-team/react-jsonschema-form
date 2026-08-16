@@ -12,7 +12,6 @@ import {
 import type { SelectProps } from 'antd';
 import { Select } from 'antd';
 import type { DefaultOptionType } from 'antd/es/select';
-import isString from 'lodash/isString';
 
 const SELECT_STYLE = {
   width: '100%',
@@ -59,7 +58,7 @@ export default function SelectWidget<
   const handleFocus = () => onFocus(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, emptyValue));
 
   const filterOption: SelectProps['filterOption'] = (input, option) => {
-    if (option && isString(option.label)) {
+    if (option && typeof option.label === 'string') {
       // labels are strings in this context
       return option.label.toLowerCase().includes(input.toLowerCase());
     }

@@ -1,5 +1,3 @@
-import isString from 'lodash/isString';
-
 import { ID_KEY } from './constants';
 import type { FieldPathId } from './types';
 
@@ -9,7 +7,7 @@ import type { FieldPathId } from './types';
  * @param suffix - The suffix to append to the id
  */
 function idGenerator(id: FieldPathId | string, suffix: string) {
-  const theId = isString(id) ? id : id[ID_KEY];
+  const theId = typeof id === 'string' ? id : id[ID_KEY];
   return `${theId}__${suffix}`;
 }
 /** Return a consistent `id` for the field description element
