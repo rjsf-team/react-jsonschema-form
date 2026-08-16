@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
+import type { ErrorSchema, FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
   deepEquals,
@@ -17,7 +17,6 @@ import {
 } from '@rjsf/utils';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import omit from 'lodash/omit';
 
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It tracks
  * the currently selected option and cleans up any irrelevant data in `formData`.
@@ -153,7 +152,8 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
   } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const Widget = getWidget<T, S, F>({ type: 'number' }, widget, widgets);
   const rawErrors = get(errorSchema, ERRORS_KEY, []);
-  const fieldErrorSchema = omit(errorSchema, [ERRORS_KEY]);
+  const fieldErrorSchema = { ...errorSchema } as ErrorSchema<T>;
+  delete fieldErrorSchema[ERRORS_KEY];
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
 
   const option = selectedOption >= 0 ? retrievedOptions[selectedOption] || null : null;

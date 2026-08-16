@@ -30,7 +30,6 @@ import {
   ID_KEY,
   TranslatableString,
 } from '@rjsf/utils';
-import cloneDeep from 'lodash/cloneDeep';
 import isObject from 'lodash/isObject';
 import set from 'lodash/set';
 import uniqueId from 'lodash/uniqueId';
@@ -952,7 +951,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
 
       const newKeyedFormDataRow: KeyedFormDataType<T> = {
         key: generateRowId(),
-        item: cloneDeep(keyedFormDataRef.current[index].item),
+        item: structuredClone(keyedFormDataRef.current[index].item),
       };
       const newKeyedFormData = [...keyedFormDataRef.current];
       if (index !== undefined) {
