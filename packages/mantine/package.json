@@ -73,13 +73,9 @@
     "@mantine/core": "^8.3.18",
     "@mantine/dates": "^8.3.18",
     "@mantine/hooks": "^8.3.18",
-    "@restart/hooks": "^0.6.2",
-    "@restart/ui": "^1.9.4",
     "@rjsf/core": "workspace:^",
     "@rjsf/snapshot-tests": "workspace:^",
-    "@rjsf/utils": "workspace:^",
-    "@rjsf/validator-ajv8": "workspace:^",
-    "uncontrollable": "^9.0.0"
+    "@rjsf/utils": "workspace:^"
   },
   "dependencies": {
     "dayjs": "^1.11.21"

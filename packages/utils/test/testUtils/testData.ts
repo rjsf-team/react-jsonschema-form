@@ -260,22 +260,6 @@ export const OPTIONAL_ONE_OF_SCHEMA: RJSFSchema = deepFreeze<RJSFSchema>({
 });
 export const OPTIONAL_ONE_OF_SCHEMA_ONEOF = OPTIONAL_ONE_OF_SCHEMA[ONE_OF_KEY] as RJSFSchema[];
 export const OPTIONAL_ONE_OF_DATA = { flag: true, inner_obj: { foo: 'bar' } };
-export const SIMPLE_ONE_OF_SCHEMA = {
-  oneOf: [
-    {}, // object with no type should take the type from its parent schema
-    { type: 'string' },
-    { type: 'array', items: { type: 'string' } },
-  ],
-} as RJSFSchema;
-export const FIRST_OPTION_ONE_OF_DATA = {
-  flag: true,
-  inner_spec: {
-    name: 'inner_spec_2',
-    special_spec: undefined,
-  },
-  name: 'first_option',
-  unique_to_second: undefined,
-};
 export const ONE_OF_SCHEMA_DATA = { ...oneOfData, unique_to_second: 5 };
 
 export const ALL_OPTIONS: EnumOptionsType[] = [

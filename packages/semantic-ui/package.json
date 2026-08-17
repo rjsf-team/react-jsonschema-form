@@ -72,7 +72,6 @@
     "@rjsf/snapshot-tests": "workspace:^",
     "@rjsf/utils": "workspace:^",
     "@rjsf/validator-ajv8": "workspace:^",
-    "atob": "^2.1.2",
     "semantic-ui-react": "^2.1.5"
   },
   "publishConfig": {
@@ -100,7 +99,6 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@fluentui/react-component-ref": "^0.63.1",
     "semantic-ui-css": "^2.5.0"
   }
 }

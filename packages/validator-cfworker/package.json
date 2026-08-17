@@ -71,8 +71,7 @@
     "@rjsf/utils": "workspace:^"
   },
   "devDependencies": {
-    "@rjsf/utils": "workspace:^",
-    "@types/json-schema": "^7.0.15"
+    "@rjsf/utils": "workspace:^"
   },
   "publishConfig": {
     "access": "public"
