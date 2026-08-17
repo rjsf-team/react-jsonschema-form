@@ -76,7 +76,6 @@
     "@rjsf/core": "workspace:^",
     "@rjsf/snapshot-tests": "workspace:^",
     "@rjsf/utils": "workspace:^",
-    "@rjsf/validator-ajv8": "workspace:^",
     "react-bootstrap": "^2.10.10"
   },
   "publishConfig": {

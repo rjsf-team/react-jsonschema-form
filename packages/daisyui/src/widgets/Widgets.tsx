@@ -14,22 +14,6 @@ import TextareaWidget from './TextareaWidget/TextareaWidget';
 import TimeWidget from './TimeWidget/TimeWidget';
 import ToggleWidget from './ToggleWidget/ToggleWidget';
 
-export {
-  AltDateTimeWidget,
-  AltDateWidget,
-  CheckboxesWidget,
-  CheckboxWidget,
-  DateTimeWidget,
-  DateWidget,
-  RadioWidget,
-  RangeWidget,
-  RatingWidget,
-  SelectWidget,
-  TextareaWidget,
-  TimeWidget,
-  ToggleWidget,
-};
-
 export function generateWidgets<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
@@ -51,5 +35,3 @@ export function generateWidgets<
     toggle: ToggleWidget,
   };
 }
-
-export default generateWidgets;

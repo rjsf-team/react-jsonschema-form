@@ -1,0 +1,36 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema-jsonc.json",
+  "workspaces": {
+    ".": {
+      // Invoked by tsc-alias through the `afterDeclarations` replacers in the
+      // per-package tsconfig.build.json files, which knip cannot follow.
+      "entry": ["tsc-alias-replacer/*.ts"]
+    },
+    "packages/daisyui": {
+      // Published stylesheet: consumers import it, nothing in the repo does.
+      "ignore": ["src/styles.css"],
+      // Imported by src/styles.css (`@import "tailwindcss/preflight"`).
+      // knip does not resolve imports inside CSS.
+      "ignoreDependencies": ["tailwindcss"]
+    },
+    "packages/docs": {
+      // Docusaurus scaffold kept for the homepage. It is also the only
+      // TypeScript under packages/docs/src, so removing it leaves that
+      // package's cs-check glob with no files to match.
+      "ignore": ["src/components/HomepageFeatures/**"]
+    },
+    "packages/semantic-ui": {
+      // CSS-only package. No source file imports it, but it is a runtime
+      // dependency consumers load for the default theme (see the README).
+      "ignoreDependencies": ["semantic-ui-css"]
+    },
+    "packages/shadcn": {
+      // Published theme presets for consumers to copy; no in-repo importer.
+      "ignore": ["resources/*.css"]
+    }
+  },
+  // Source imports `lodash/*`; tsc-alias-replacer/lodashReplacer.ts rewrites
+  // those to `lodash-es` at build time, so the dependency only ever appears in
+  // build output. Applies to all seven packages that ship it.
+  "ignoreDependencies": ["lodash-es"]
+}

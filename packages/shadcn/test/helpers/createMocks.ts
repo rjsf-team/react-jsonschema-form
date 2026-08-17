@@ -4,16 +4,16 @@ import type { WidgetProps, RJSFSchema } from '@rjsf/utils';
 import BaseInputTemplate from '../../src/BaseInputTemplate';
 import Templates from '../../src/Templates';
 
-export const mockSchema: RJSFSchema = {
+const mockSchema: RJSFSchema = {
   type: 'array',
   items: {
     type: 'string',
   },
 };
 
-export const mockEventHandlers = (): void => undefined;
+const mockEventHandlers = (): void => undefined;
 
-export function mockRegistry() {
+function mockRegistry() {
   return getTestRegistry({ templates: Templates, rootSchema: mockSchema, widgets: { TextWidget: BaseInputTemplate } });
 }
 

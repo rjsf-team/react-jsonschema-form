@@ -42,7 +42,7 @@ function ArrayFieldItemButtonsTemplate(props: ArrayFieldItemButtonsTemplateProps
   );
 }
 
-export const customArray: Sample = {
+const customArray: Sample = {
   schema: {
     title: 'Custom array of strings',
     type: 'array',

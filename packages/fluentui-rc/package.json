@@ -80,8 +80,7 @@
     "@fluentui/react-migration-v0-v9": "^9.6.29",
     "@rjsf/core": "workspace:^",
     "@rjsf/snapshot-tests": "workspace:^",
-    "@rjsf/utils": "workspace:^",
-    "@rjsf/validator-ajv8": "workspace:^"
+    "@rjsf/utils": "workspace:^"
   },
   "directories": {
     "test": "test"
@@ -101,9 +100,6 @@
     "rjsf-fluentui-rc"
   ],
   "license": "Apache-2.0",
-  "dependencies": {
-    "@griffel/react": "^1.7.4"
-  },
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "publishConfig": {
     "access": "public"
