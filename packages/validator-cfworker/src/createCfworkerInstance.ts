@@ -1,7 +1,6 @@
 import * as CFWorkerJsonSchema from '@cfworker/json-schema';
 import type { Schema } from '@cfworker/json-schema';
 import { Validator } from '@cfworker/json-schema';
-import cloneDeep from 'lodash/cloneDeep';
 
 import type { CFWorkerFormatChecker, CustomValidatorOptionsType } from './types';
 
@@ -72,13 +71,13 @@ export default function createCfworkerInstance(
   installFormats(customFormats);
   // The engine annotates schemas during dereferencing. Clone every user-owned
   // schema so frozen RJSF fixtures and application schemas remain untouched.
-  let validator = new Validator(cloneDeep(schema), draft, shortCircuit);
+  let validator = new Validator(structuredClone(schema), draft, shortCircuit);
 
   for (const additionalSchema of additionalMetaSchemas ?? []) {
-    validator.addSchema(cloneDeep(additionalSchema), additionalSchema.$id);
+    validator.addSchema(structuredClone(additionalSchema), additionalSchema.$id);
   }
   if (rootSchema && rootSchema !== schema) {
-    validator.addSchema(cloneDeep(rootSchema), rootSchema.$id);
+    validator.addSchema(structuredClone(rootSchema), rootSchema.$id);
   }
   if (typeof extenderFn === 'function') {
     validator = extenderFn(validator);
