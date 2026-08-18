@@ -193,3 +193,23 @@ If you need to manually publish the latest playground to [https://rjsf-team.gith
 cd packages/playground
 pnpm run publish-to-gh-pages
 ```
+
+### Releasing a new package
+
+Publishing a new `@rjsf/*` package requires additional setup. The package must first be published locally, then in the NPM web app, you must set up "Trusted Publishing" so future releases can be published via GitHub Actions. The steps to accomplish this are:
+
+1. Create the new release as described above. Existing packages will be published, but the jobs to publish new package(s) will fail.
+2. Locally, check out the release tag (e.g. `git checkout v6.8.0`). You may need to `git fetch --tags`. Make sure your `git status` is clean.
+3. `cd packages/new-package`
+4. `pnpm login` (login to an account with RJSF publishing privileges)
+5. `pnpm publish --no-git-checks`.
+
+The new package will be released. Then, set up Trusted Publishing:
+
+1. Navigate to the new package in NPM (e.g. `https://www.npmjs.com/package/@rjsf/new-package`)
+2. Go to Settings -> Trusted Publisher -> GitHub Actions
+3. Set up the fields to match an existing package (e.g. look at `@rjsf/core`).
+   1. Organization or user: `rjsf-team`
+   2. Repository: `react-jsonschema-form`
+   3. Workflow filename: `release.yml`
+   4. Allow `npm publish`
