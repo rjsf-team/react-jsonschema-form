@@ -1,6 +1,5 @@
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import isNil from 'lodash/isNil';
 import pick from 'lodash/pick';
 
 import { NAME_KEY, RJSF_ADDITIONAL_PROPERTIES_FLAG } from '../constants';
@@ -91,7 +90,7 @@ export function getFieldNames<T = any>(pathSchema: PathSchema<T>, formData?: T):
  * @returns - True if the value is considered empty, false otherwise
  */
 export function isValueEmpty(value: unknown): boolean {
-  if (isNil(value) || value === '') {
+  if (value == null || value === '') {
     return true;
   }
   if (Array.isArray(value)) {

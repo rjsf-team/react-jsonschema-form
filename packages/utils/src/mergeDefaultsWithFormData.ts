@@ -1,5 +1,4 @@
 import get from 'lodash/get';
-import isNil from 'lodash/isNil';
 
 import type { GenericObjectType } from '../src';
 import isObject from './isObject';
@@ -104,8 +103,8 @@ export default function mergeDefaultsWithFormData<T = any>(
    */
   if (
     (defaultSupercedesUndefined &&
-      ((!(defaults === undefined) && isNil(formData)) || (typeof formData === 'number' && Number.isNaN(formData)))) ||
-    (overrideFormDataWithDefaults && !isNil(formData))
+      ((!(defaults === undefined) && formData == null) || (typeof formData === 'number' && Number.isNaN(formData)))) ||
+    (overrideFormDataWithDefaults && formData != null)
   ) {
     return defaults;
   }

@@ -1,6 +1,5 @@
 import get from 'lodash/get';
 import has from 'lodash/has';
-import isNumber from 'lodash/isNumber';
 
 import { PROPERTIES_KEY } from '../constants';
 import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDiscriminator';
@@ -35,7 +34,7 @@ export default function getFirstMatchingOption<
   }
 
   const simpleDiscriminatorMatch = getOptionMatchingSimpleDiscriminator(formData, options, discriminatorField);
-  if (isNumber(simpleDiscriminatorMatch)) {
+  if (typeof simpleDiscriminatorMatch === 'number') {
     return simpleDiscriminatorMatch;
   }
 

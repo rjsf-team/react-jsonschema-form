@@ -1,5 +1,4 @@
 import type { JSONSchema7Type } from 'json-schema';
-import isString from 'lodash/isString';
 
 import { CONST_KEY, getSchemaType, isObject } from './';
 import type { RJSFSchema, StrictRJSFSchema } from './types';
@@ -14,5 +13,7 @@ import type { RJSFSchema, StrictRJSFSchema } from './types';
 export default function constIsAjvDataReference<S extends StrictRJSFSchema = RJSFSchema>(schema: S): boolean {
   const schemaConst = schema[CONST_KEY] as JSONSchema7Type & { $data: string };
   const schemaType = getSchemaType<S>(schema);
-  return isObject(schemaConst) && isString(schemaConst?.$data) && schemaType !== 'object' && schemaType !== 'array';
+  return (
+    isObject(schemaConst) && typeof schemaConst?.$data === 'string' && schemaType !== 'object' && schemaType !== 'array'
+  );
 }
