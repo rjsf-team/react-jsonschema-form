@@ -1,4 +1,3 @@
-import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
 import set from 'lodash/set';
 import setWith from 'lodash/setWith';
@@ -60,7 +59,7 @@ export default class ErrorSchemaBuilder<T = any> {
    * @returns - The `ErrorSchemaBuilder` object for chaining purposes
    */
   resetAllErrors(initialSchema?: ErrorSchema<T>) {
-    this.errorSchema = initialSchema ? cloneDeep(initialSchema) : {};
+    this.errorSchema = initialSchema ? structuredClone(initialSchema) : {};
     return this;
   }
 

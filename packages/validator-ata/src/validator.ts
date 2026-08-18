@@ -10,7 +10,6 @@ import type {
 } from '@rjsf/utils';
 import { deepEquals, hashForSchema, ID_KEY, ROOT_SCHEMA_PREFIX, withIdRefPrefix } from '@rjsf/utils';
 import type { ValidationError, Validator } from 'ata-validator';
-import cloneDeep from 'lodash/cloneDeep';
 
 import createAtaInstance from './createAtaInstance';
 import type { RawValidationErrorsType } from './processRawValidationErrors';
@@ -97,10 +96,7 @@ export default class ATAValidator<
     if (data === null || typeof data !== 'object') {
       return data;
     }
-    if (typeof globalThis.structuredClone === 'function') {
-      return globalThis.structuredClone(data);
-    }
-    return cloneDeep(data);
+    return structuredClone(data);
   }
 
   /** Returns the cached ata `Validator` for the given id, or builds and

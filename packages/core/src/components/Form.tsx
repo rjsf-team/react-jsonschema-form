@@ -51,7 +51,6 @@ import {
   ANY_OF_KEY,
   ONE_OF_KEY,
 } from '@rjsf/utils';
-import _cloneDeep from 'lodash/cloneDeep';
 import _get from 'lodash/get';
 import _isEmpty from 'lodash/isEmpty';
 import _pick from 'lodash/pick';
@@ -951,7 +950,7 @@ export default class Form<
     const rootPathId = fieldPathId.path[0] || '';
 
     const isRootPath = !path || path.length === 0 || (path.length === 1 && path[0] === rootPathId);
-    let formData = isRootPath ? newValue : _cloneDeep(oldFormData);
+    let formData = isRootPath ? newValue : structuredClone(oldFormData);
 
     // When switching from null to an object option in oneOf, MultiSchemaField sends
     // an object with property names but undefined values (e.g., {types: undefined, content: undefined}).
@@ -1047,7 +1046,7 @@ export default class Form<
         // Apply the user-supplied newErrorSchema onto a clone of the AJV-only base, so that
         // mergeErrors below sees the user's error at this path without mutating shared state.
         if (!isRootPath) {
-          mergeBaseErrorSchema = _cloneDeep(schemaValidationErrorSchema);
+          mergeBaseErrorSchema = structuredClone(schemaValidationErrorSchema);
           _set(mergeBaseErrorSchema, path, newErrorSchema);
         } else {
           mergeBaseErrorSchema = newErrorSchema;

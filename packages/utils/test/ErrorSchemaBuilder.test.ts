@@ -388,5 +388,12 @@ describe('ErrorSchemaBuilder', () => {
     it('resetting error restores things back to the INITIAL_SCHEMA', () => {
       expect(builder.resetAllErrors(INITIAL_SCHEMA).ErrorSchema).toEqual(INITIAL_SCHEMA);
     });
+    it('resetting errors deep clones the initial schema rather than aliasing it', () => {
+      const initial = structuredClone(INITIAL_SCHEMA);
+      const result = builder.resetAllErrors(initial).ErrorSchema;
+      builder.addErrors('added later', ARRAY_PATH);
+      expect(result).not.toBe(initial);
+      expect(initial[ARRAY_PATH[0]]?.[ARRAY_PATH[1]]?.[ERRORS_KEY]).toEqual([INITIAL_ARRAY]);
+    });
   });
 });

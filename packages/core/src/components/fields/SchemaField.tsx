@@ -34,7 +34,6 @@ import {
   UI_OPTIONS_KEY,
 } from '@rjsf/utils';
 import isObject from 'lodash/isObject';
-import omit from 'lodash/omit';
 
 /** The map of component type to FieldName */
 const COMPONENT_TYPES: Record<string, string> = {
@@ -202,9 +201,19 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
 
   const { __errors, ...fieldErrorSchema } = errorSchema || {};
   // See #439: uiSchema: Don't pass consumed class names or style to child components
-  const fieldUiSchema = omit(uiSchema, ['ui:classNames', 'classNames', 'ui:style']);
+  const {
+    'ui:classNames': consumedUiClassNames,
+    classNames: consumedClassNames,
+    'ui:style': consumedUiStyle,
+    ...fieldUiSchema
+  } = uiSchema;
   if (UI_OPTIONS_KEY in fieldUiSchema) {
-    fieldUiSchema[UI_OPTIONS_KEY] = omit(fieldUiSchema[UI_OPTIONS_KEY], ['classNames', 'style']);
+    const {
+      classNames: consumedOptionClassNames,
+      style: consumedOptionStyle,
+      ...fieldUiOptions
+    } = fieldUiSchema[UI_OPTIONS_KEY]!;
+    fieldUiSchema[UI_OPTIONS_KEY] = fieldUiOptions;
   }
 
   const field = (

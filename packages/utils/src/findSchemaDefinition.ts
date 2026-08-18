@@ -3,7 +3,6 @@ import jsonpointer from 'jsonpointer';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import isObject from 'lodash/isObject';
-import omit from 'lodash/omit';
 
 import {
   ALL_OF_KEY,
@@ -82,7 +81,7 @@ export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchem
  */
 export function splitKeyElementFromObject(key: string, object: GenericObjectType) {
   const value = object[key];
-  const remaining = omit(object, [key]);
+  const { [key]: removed, ...remaining } = object;
   return [remaining, value];
 }
 
