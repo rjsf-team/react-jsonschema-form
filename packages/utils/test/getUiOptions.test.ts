@@ -1,4 +1,3 @@
-import noop from 'lodash/noop';
 import type { MockInstance } from 'vitest';
 
 import type { GlobalUISchemaOptions, UIOptionsType, UiSchema } from '../src';
@@ -53,7 +52,7 @@ describe('getUiOptions()', () => {
   let consoleErrorSpy: MockInstance;
   beforeAll(() => {
     // spy on console.error() and make it do nothing to avoid making noise in the test
-    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(noop);
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
   afterAll(() => {
     consoleErrorSpy.mockRestore();

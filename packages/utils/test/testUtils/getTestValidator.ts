@@ -1,5 +1,3 @@
-import noop from 'lodash/noop';
-
 import type { RJSFValidationError, ValidationData } from '../../src';
 import type { TestValidatorParams, TestValidatorType } from '../schema/types';
 
@@ -41,7 +39,7 @@ export default function getTestValidator<T = any>({
         }
         return true;
       }),
-      rawValidation: vi.fn().mockImplementation(noop),
+      rawValidation: vi.fn().mockImplementation(() => {}),
       setReturnValues({ isValid, data, errorList }: TestValidatorParams) {
         if (isValid !== undefined) {
           testValidator.isValidResult = isValid;

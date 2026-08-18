@@ -4,11 +4,12 @@ import validator from '@rjsf/validator-ajv8';
 import '@testing-library/jest-dom';
 import { act, render, fireEvent } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
-import noop from 'lodash/noop';
 import type { Mock, MockInstance } from 'vitest';
 
 import type { FormProps } from '../src';
 import Form from '../src';
+
+const noop = () => {};
 
 export type NoValFormProps = Omit<FormProps, 'validator'>;
 

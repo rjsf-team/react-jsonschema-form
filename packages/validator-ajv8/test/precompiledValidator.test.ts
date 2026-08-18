@@ -1,6 +1,5 @@
 import type { ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
 import { ErrorSchemaBuilder, hashForSchema, JUNK_OPTION_ID, retrieveSchema, RJSF_REF_KEY } from '@rjsf/utils';
-import noop from 'lodash/noop';
 import type { Mock } from 'vitest';
 
 import type { Localizer, ValidatorFunctions } from '../src';
@@ -14,6 +13,7 @@ import superSchema from './harness/superSchema.json';
 import * as superSchemaOptionsFns from './harness/superSchemaOptions.cjs'; // oxlint-disable-line import/extensions
 
 const validateFns = superSchemaFns as unknown as ValidatorFunctions;
+
 const validateOptionsFns = superSchemaOptionsFns as unknown as ValidatorFunctions;
 const rootSchema = superSchema as unknown as RJSFSchema;
 
@@ -379,7 +379,7 @@ describe('AJV8PrecompiledValidator', () => {
     let validator: AJV8PrecompiledValidator;
     let localizer: Localizer;
     beforeAll(() => {
-      localizer = vi.fn().mockImplementation(noop);
+      localizer = vi.fn().mockImplementation(() => {});
       validator = new AJV8PrecompiledValidator(validateOptionsFns, rootSchema, localizer);
     });
     describe('validating using single custom meta schema', () => {

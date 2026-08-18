@@ -23,11 +23,12 @@ import {
   optionsList,
   PROPERTIES_KEY,
   getTemplate,
+  getPropertySchema,
   getUiOptions,
   getWidget,
 } from '@rjsf/utils';
-import isEmpty from 'lodash/isEmpty';
-import noop from 'lodash/noop';
+
+const noop = () => {};
 
 /** Gets the selected option from the list of `options`, using the `selectorField` to search inside each `option` for
  * the `properties[selectorField].default(or const)` that matches the given `value`.
@@ -139,7 +140,7 @@ export default function LayoutMultiSchemaField<
     throw new Error('No selector field provided for the LayoutMultiSchemaField');
   }
   const selectedOption = getByPath(formData, selectorField);
-  let optionSchema: S = (enumOptions[0]?.schema?.[PROPERTIES_KEY]?.[selectorField] ?? {}) as S;
+  let optionSchema = getPropertySchema<S>(enumOptions[0]?.schema, selectorField);
   const option = getSelectedOption<S>(enumOptions, selectorField, selectedOption);
   // If the subschema doesn't declare a type, infer the type from the parent schema
   optionSchema = optionSchema?.type ? optionSchema : ({ ...optionSchema, type: option?.type || baseType } as S);
@@ -192,7 +193,7 @@ export default function LayoutMultiSchemaField<
       id={id}
       schema={schema}
       label={(title || schema.title) ?? ''}
-      disabled={disabled || (Array.isArray(enumOptions) && isEmpty(enumOptions))}
+      disabled={disabled || (Array.isArray(enumOptions) && enumOptions.length === 0)}
       uiSchema={uiSchema}
       required={required}
       readonly={!!readonly}
@@ -209,7 +210,7 @@ export default function LayoutMultiSchemaField<
         name={name}
         schema={schema}
         label={(title || schema.title) ?? ''}
-        disabled={disabled || (Array.isArray(enumOptions) && isEmpty(enumOptions))}
+        disabled={disabled || (Array.isArray(enumOptions) && enumOptions.length === 0)}
         uiSchema={uiSchema}
         autofocus={autofocus}
         readonly={readonly}

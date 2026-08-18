@@ -1,4 +1,3 @@
-import noop from 'lodash/noop';
 import type { MockInstance } from 'vitest';
 
 import type { RJSFSchema } from '../src';
@@ -19,7 +18,7 @@ describe('getDiscriminatorFieldFromSchema()', () => {
     let consoleWarn: MockInstance;
     beforeAll(() => {
       // Spy and mock to be silent
-      consoleWarn = vi.spyOn(console, 'warn').mockImplementation(noop);
+      consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     });
     afterAll(() => {
       consoleWarn.mockRestore();

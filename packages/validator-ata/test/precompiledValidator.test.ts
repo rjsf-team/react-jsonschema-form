@@ -1,6 +1,5 @@
 import type { ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
 import { ErrorSchemaBuilder, hashForSchema, JUNK_OPTION_ID, retrieveSchema, RJSF_REF_KEY } from '@rjsf/utils';
-import noop from 'lodash/noop';
 import type { Mock } from 'vitest';
 
 import type { Localizer, ValidatorFunctions } from '../src';
@@ -357,7 +356,7 @@ describe('ATAPrecompiledValidator', () => {
     let validator: ATAPrecompiledValidator;
     let localizer: Localizer;
     beforeAll(() => {
-      localizer = vi.fn().mockImplementation(noop);
+      localizer = vi.fn().mockImplementation(() => {});
       validator = new ATAPrecompiledValidator(validateOptionsFns, rootSchema, localizer);
     });
     describe('validating using single custom meta schema', () => {

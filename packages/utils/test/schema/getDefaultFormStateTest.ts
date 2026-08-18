@@ -1,4 +1,3 @@
-import noop from 'lodash/noop';
 import type { MockInstance } from 'vitest';
 
 import type { Experimental_DefaultFormStateBehavior, RJSFSchema } from '../../src';
@@ -21,11 +20,36 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
   describe('getDefaultFormState()', () => {
     let consoleWarnSpy: MockInstance;
     beforeAll(() => {
-      consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop); // mock this to avoid actually warning in the tests
+      consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {}); // mock this to avoid actually warning in the tests
     });
     afterAll(() => {
       consoleWarnSpy.mockRestore();
     });
+    describe('an explicitly undefined property schema', () => {
+      // A JS-authored schema can conditionally omit a property with `{ properties: { foo: cond ? {...} : undefined } }`
+      const schema = {
+        type: 'object',
+        properties: { foo: undefined, bar: { type: 'string' } },
+      } as unknown as RJSFSchema;
+
+      test('getObjectDefaults treats it as an empty schema', () => {
+        expect(getObjectDefaults(testValidator, schema, { rootSchema: schema })).toEqual({});
+      });
+
+      test('ensureFormDataMatchingSchema treats it as an empty schema', () => {
+        const allOfSchema = {
+          allOf: [schema],
+          type: 'object',
+          properties: { foo: undefined },
+        } as unknown as RJSFSchema;
+        expect(
+          ensureFormDataMatchingSchema(testValidator, allOfSchema, allOfSchema, { foo: 'a value' }, {
+            allOf: 'populateDefaults',
+          } as Experimental_DefaultFormStateBehavior),
+        ).toEqual({ foo: 'a value' });
+      });
+    });
+
     it('throws error when schema is not an object', () => {
       expect(() => getDefaultFormState(testValidator, null as unknown as RJSFSchema)).toThrow('Invalid schema:');
     });

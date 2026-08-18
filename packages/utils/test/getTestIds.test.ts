@@ -1,16 +1,7 @@
-import uniqueIdFn from 'lodash/uniqueId';
-
 import type { TestIdShape } from '../src';
 import { getTestIds } from '../src';
 
-const TEST_UUID_BASE = 'test-uuid-';
-
-vi.mock('lodash/uniqueId', async (importOriginal) => {
-  const { default: realUniqueId } = await importOriginal<{ default: () => string }>();
-  return { default: vi.fn(() => `test-uuid-${realUniqueId()}`) };
-});
-
-const uniqueIdMock = vi.mocked(uniqueIdFn);
+const TEST_ID_BASE = 'test-id-';
 
 describe('getTestIds', () => {
   describe('process.env.NODE_ENV === "test"', () => {
@@ -24,32 +15,22 @@ describe('getTestIds', () => {
     });
     afterAll(() => {
       process.env.NODE_ENV = oldNodeEnv;
-      uniqueIdMock.mockClear();
     });
     it('does not return an empty object', () => {
       // it returns a Proxy object but since there isn't an easy way to test for it
       // the following tests will check for the Proxy functionality
       expect(testIds).not.toEqual({});
-      uniqueIdMock.mockClear(); // resetting the call count since the Proxy calls it during the initialization process
     });
     it('returns a generated test id when getting a property value', () => {
       fooTestId = testIds.foo;
-      expect(fooTestId).toEqual(expect.stringContaining(TEST_UUID_BASE));
-    });
-    it('called uuid once', () => {
-      expect(uniqueIdMock).toHaveBeenCalledTimes(1);
+      expect(fooTestId).toEqual(expect.stringContaining(TEST_ID_BASE));
     });
     it('returns the same id when getting the same property value', () => {
       expect(testIds.foo).toEqual(fooTestId);
     });
-    it('did not call uuid again', () => {
-      expect(uniqueIdMock).toHaveBeenCalledTimes(1);
-    });
     it('returns a different id when getting a different property value', () => {
+      expect(testIds.bar).toEqual(expect.stringContaining(TEST_ID_BASE));
       expect(testIds.bar).not.toEqual(fooTestId);
-    });
-    it('called uuid again', () => {
-      expect(uniqueIdMock).toHaveBeenCalledTimes(2);
     });
   });
   describe('process.env.NODE_ENV !== "test"', () => {
@@ -68,9 +49,6 @@ describe('getTestIds', () => {
     });
     it('returns undefined when trying to access a property of the object', () => {
       expect(testIds.foo).toBeUndefined();
-    });
-    it('did not call uuid', () => {
-      expect(uniqueIdMock).not.toHaveBeenCalled();
     });
   });
 });

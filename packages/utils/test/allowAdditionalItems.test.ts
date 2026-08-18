@@ -1,4 +1,3 @@
-import noop from 'lodash/noop';
 import type { MockInstance } from 'vitest';
 
 import type { RJSFSchema } from '../src';
@@ -18,7 +17,7 @@ describe('allowAdditionalItems()', () => {
   let consoleWarnSpy: MockInstance;
   beforeAll(() => {
     // spy on console.warn() and make it do nothing to avoid making noise in the test
-    consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
+    consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
   });
   afterAll(() => {
     consoleWarnSpy.mockRestore();

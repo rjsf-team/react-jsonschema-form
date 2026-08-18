@@ -1,4 +1,4 @@
-import { PROPERTIES_KEY } from './constants';
+import getPropertySchema from './getPropertySchema';
 import { getByPath } from './pathUtils';
 import type { RJSFSchema, StrictRJSFSchema } from './types';
 
@@ -26,7 +26,7 @@ export default function getOptionMatchingSimpleDiscriminator<T = any, S extends 
 
     for (let i = 0; i < options.length; i += 1) {
       const option = options[i];
-      const discriminator: S = (option[PROPERTIES_KEY]?.[discriminatorField] ?? {}) as S;
+      const discriminator = getPropertySchema<S>(option, discriminatorField);
 
       if (discriminator.type !== 'object' && discriminator.type !== 'array') {
         if (discriminator.const === value) {

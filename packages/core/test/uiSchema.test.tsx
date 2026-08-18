@@ -3,13 +3,14 @@ import type { GenericObjectType, RJSFSchema, UiSchema, Widget, WidgetProps } fro
 import validator from '@rjsf/validator-ajv8';
 import { render, fireEvent, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import noop from 'lodash/noop';
 import type { MockInstance } from 'vitest';
 
 import Form from '../src';
 import RadioWidget from '../src/components/widgets/RadioWidget';
 import SelectWidget from '../src/components/widgets/SelectWidget';
 import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils';
+
+const noop = () => {};
 
 const user = userEvent.setup();
 

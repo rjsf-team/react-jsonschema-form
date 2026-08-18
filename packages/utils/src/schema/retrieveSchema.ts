@@ -1,6 +1,3 @@
-import isEmpty from 'lodash/isEmpty';
-import times from 'lodash/times';
-
 import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
@@ -193,7 +190,7 @@ export function getAllPermutationsOfXxxOf<S extends StrictRJSFSchema = RJSFSchem
     (permutations, list) => {
       // When there are more than one set of schemas for a row, duplicate the set of permutations and add in the values
       if (list.length > 1) {
-        return list.flatMap((element) => times(permutations.length, (i) => [...permutations[i]].concat(element)));
+        return list.flatMap((element) => permutations.map((permutation) => [...permutation, element]));
       }
       // Otherwise just push in the single value into the current set of permutations
       permutations.forEach((permutation) => permutation.push(list[0]));
@@ -492,7 +489,7 @@ export function stubExistingAdditionalProperties<
     }
     if (PATTERN_PROPERTIES_KEY in schema) {
       const matchingProperties = getMatchingPatternProperties(schema, key);
-      if (!isEmpty(matchingProperties)) {
+      if (Object.keys(matchingProperties).length > 0) {
         schema.properties[key] = retrieveSchema<T, S, F>(
           validator,
           { [ALL_OF_KEY]: Object.values(matchingProperties) } as S,
@@ -658,7 +655,7 @@ export function retrieveSchemaInternal<
       resolvedSchema = Object.keys(resolvedSchema.properties!).reduce(
         (acc, key) => {
           const matchingProperties = getMatchingPatternProperties(acc, key);
-          if (!isEmpty(matchingProperties)) {
+          if (Object.keys(matchingProperties).length > 0) {
             acc.properties[key] = retrieveSchema<T, S, F>(
               validator,
               { allOf: [acc.properties[key], ...Object.values(matchingProperties)] } as S,

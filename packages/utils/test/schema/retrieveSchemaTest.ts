@@ -1,11 +1,10 @@
-import get from 'lodash/get';
-import noop from 'lodash/noop';
 import type { MockInstance } from 'vitest';
 
 import type { RJSFSchema } from '../../src';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   createSchemaUtils,
+  getByPath,
   PROPERTIES_KEY,
   retrieveSchema,
   RJSF_REF_CYCLE_KEY,
@@ -46,7 +45,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
   describe('retrieveSchema()', () => {
     let consoleWarnSpy: MockInstance;
     beforeAll(() => {
-      consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop); // mock this to avoid actually warning in the tests
+      consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {}); // mock this to avoid actually warning in the tests
     });
     afterAll(() => {
       consoleWarnSpy.mockRestore();
@@ -60,7 +59,10 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     });
     it('tolerates a schema with an explicitly undefined `properties`', () => {
       const schema = { type: 'object', properties: undefined } as RJSFSchema;
-      expect(retrieveSchema(testValidator, schema)).toEqual({ type: 'object', properties: {} });
+      expect(retrieveSchema(testValidator, schema)).toEqual({
+        type: 'object',
+        properties: {},
+      });
     });
     it('should `resolve` a schema which contains definitions', () => {
       const schema: RJSFSchema = { $ref: '#/definitions/address' };
@@ -372,7 +374,10 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             type: 'object',
             properties: {
               name: { type: 'string' },
-              children: { type: 'array', items: { $ref: '#/definitions/node' } },
+              children: {
+                type: 'array',
+                items: { $ref: '#/definitions/node' },
+              },
             },
           },
         },
@@ -390,7 +395,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     it('recursive allof ref should resolve once', () => {
       const result = retrieveSchema(
         testValidator,
-        get(RECURSIVE_REF_ALLOF, [PROPERTIES_KEY, 'value', 'items']),
+        getByPath(RECURSIVE_REF_ALLOF, [PROPERTIES_KEY, 'value', 'items']),
         RECURSIVE_REF_ALLOF,
       );
       expect(result).toEqual({
@@ -1087,12 +1092,18 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const formData = {};
         const customMergeAllOf = vi.fn().mockReturnValue({
           type: 'object',
-          properties: { string: { type: 'string' }, number: { type: 'number' } },
+          properties: {
+            string: { type: 'string' },
+            number: { type: 'number' },
+          },
         });
 
         expect(retrieveSchema(testValidator, schema, rootSchema, formData, customMergeAllOf)).toEqual({
           type: 'object',
-          properties: { string: { type: 'string' }, number: { type: 'number' } },
+          properties: {
+            string: { type: 'string' },
+            number: { type: 'number' },
+          },
         });
         expect(customMergeAllOf).toHaveBeenCalledWith(schema);
       });
@@ -1569,12 +1580,18 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           properties: {
             foo: {
               type: 'object',
-              properties: { isString: { type: 'boolean' }, value: { type: 'string' } },
+              properties: {
+                isString: { type: 'boolean' },
+                value: { type: 'string' },
+              },
             },
             bar: {
               [ADDITIONAL_PROPERTY_FLAG]: true,
               type: 'object',
-              properties: { isString: { type: 'boolean' }, value: { type: 'string' } },
+              properties: {
+                isString: { type: 'boolean' },
+                value: { type: 'string' },
+              },
             },
           },
         });
@@ -1591,12 +1608,18 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           properties: {
             foo: {
               type: 'object',
-              properties: { isString: { type: 'boolean' }, value: { type: 'number' } },
+              properties: {
+                isString: { type: 'boolean' },
+                value: { type: 'number' },
+              },
             },
             bar: {
               [ADDITIONAL_PROPERTY_FLAG]: true,
               type: 'object',
-              properties: { isString: { type: 'boolean' }, value: { type: 'number' } },
+              properties: {
+                isString: { type: 'boolean' },
+                value: { type: 'number' },
+              },
             },
           },
         });
@@ -2074,19 +2097,32 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           additionalProperties: false,
         };
         expect(relaxOptionsForScoring([schema])).toEqual([
-          { type: 'object', properties: { a: { type: 'string' } }, additionalProperties: true },
+          {
+            type: 'object',
+            properties: { a: { type: 'string' } },
+            additionalProperties: true,
+          },
         ]);
       });
       it('leaves schemas without additionalProperties unchanged', () => {
-        const schema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+        };
         expect(relaxOptionsForScoring([schema])).toEqual([schema]);
       });
       it('leaves schemas with additionalProperties:true unchanged', () => {
-        const schema: RJSFSchema = { type: 'object', additionalProperties: true };
+        const schema: RJSFSchema = {
+          type: 'object',
+          additionalProperties: true,
+        };
         expect(relaxOptionsForScoring([schema])).toEqual([schema]);
       });
       it('handles a mixed array of booleans and schemas', () => {
-        const schemaFalse: RJSFSchema = { type: 'object', additionalProperties: false };
+        const schemaFalse: RJSFSchema = {
+          type: 'object',
+          additionalProperties: false,
+        };
         expect(relaxOptionsForScoring([true, false, schemaFalse])).toEqual([
           {},
           { not: {} },
@@ -2097,7 +2133,11 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         it('resolves a $ref and widens additionalProperties:false to true', () => {
           const rootSchema: RJSFSchema = {
             definitions: {
-              Strict: { type: 'object', properties: { a: { type: 'string' } }, additionalProperties: false },
+              Strict: {
+                type: 'object',
+                properties: { a: { type: 'string' } },
+                additionalProperties: false,
+              },
             },
           };
           expect(relaxOptionsForScoring([{ $ref: '#/definitions/Strict' }], true, rootSchema)).toEqual([
@@ -2110,20 +2150,32 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         });
         it('resolves a $ref without additionalProperties constraint and leaves it unchanged', () => {
           const rootSchema: RJSFSchema = {
-            definitions: { Open: { type: 'object', properties: { b: { type: 'number' } } } },
+            definitions: {
+              Open: { type: 'object', properties: { b: { type: 'number' } } },
+            },
           };
           expect(relaxOptionsForScoring([{ $ref: '#/definitions/Open' }], true, rootSchema)).toEqual([
-            expect.objectContaining({ type: 'object', properties: { b: { type: 'number' } } }),
+            expect.objectContaining({
+              type: 'object',
+              properties: { b: { type: 'number' } },
+            }),
           ]);
         });
         it('leaves a plain schema (no $ref) unchanged when there is no additionalProperties:false', () => {
-          const schema: RJSFSchema = { type: 'object', properties: { c: { type: 'string' } } };
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { c: { type: 'string' } },
+          };
           expect(relaxOptionsForScoring([schema], true, {})).toEqual([schema]);
         });
         it('does not resolve refs when resolveRefs is false (default)', () => {
           const rootSchema: RJSFSchema = {
             definitions: {
-              Strict: { type: 'object', properties: { a: { type: 'string' } }, additionalProperties: false },
+              Strict: {
+                type: 'object',
+                properties: { a: { type: 'string' } },
+                additionalProperties: false,
+              },
             },
           };
           const ref: RJSFSchema = { $ref: '#/definitions/Strict' };

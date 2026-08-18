@@ -12,11 +12,12 @@ import localize from 'ajv-i18n';
 import Ajv2019 from 'ajv/dist/2019';
 import Ajv2020 from 'ajv/dist/2020';
 import metaSchemaDraft6 from 'ajv/lib/refs/json-schema-draft-06.json';
-import noop from 'lodash/noop';
 import type { Mock } from 'vitest';
 
 import type { Localizer } from '../src';
 import AJV8Validator from '../src/validator';
+
+const noop = () => {};
 
 const illFormedKey = "bar`'()=+*&^%$#@!";
 
@@ -235,7 +236,10 @@ describe('AJV8Validator', () => {
         // isValid uses addSchema (no meta-schema validation) so the broken schema
         // ends up in AJV's registry as a compiled always-false validator.  A
         // subsequent rawValidation call must not silently reuse that cached entry.
-        const schema: RJSFSchema = { $id: 'test-caching-isvalid-cross', anyOf: [] };
+        const schema: RJSFSchema = {
+          $id: 'test-caching-isvalid-cross',
+          anyOf: [],
+        };
         const rootSchema: RJSFSchema = {};
 
         const warnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
@@ -277,7 +281,11 @@ describe('AJV8Validator', () => {
             return ajv;
           },
         });
-        const schema = { $id: 'test-exec-throw-raw', type: 'string', throwOnValidate: true } as unknown as RJSFSchema;
+        const schema = {
+          $id: 'test-exec-throw-raw',
+          type: 'string',
+          throwOnValidate: true,
+        } as unknown as RJSFSchema;
 
         // First call — compiledValidator(formData) throws, so compilationError is set.
         const result = v.rawValidation(schema, 'hello');
@@ -3042,7 +3050,9 @@ describe('AJV8Validator', () => {
   });
   describe('with suppressDuplicateFiltering option', () => {
     it('should store the suppressDuplicateFiltering value on the instance', () => {
-      const validator = new AJV8Validator({ suppressDuplicateFiltering: 'all' });
+      const validator = new AJV8Validator({
+        suppressDuplicateFiltering: 'all',
+      });
       expect(validator.suppressDuplicateFiltering).toBe('all');
     });
   });

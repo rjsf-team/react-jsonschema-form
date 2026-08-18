@@ -14,12 +14,13 @@ import type {
   FormValidation,
 } from '@rjsf/utils';
 import userEvent from '@testing-library/user-event';
-import noop from 'lodash/noop';
 
 import ArrayField from '../src/components/fields/ArrayField';
 import SchemaField from '../src/components/fields/SchemaField';
 import { TextWidgetTest } from './StringField.test';
 import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils';
+
+const noop = () => {};
 
 const user = userEvent.setup();
 

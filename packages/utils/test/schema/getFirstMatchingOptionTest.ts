@@ -1,5 +1,3 @@
-import noop from 'lodash/noop';
-
 import type { RJSFSchema } from '../../src';
 import { createSchemaUtils, getFirstMatchingOption } from '../../src';
 import type { TestValidatorType } from './types';
@@ -171,7 +169,7 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
 
     // simple in the sense of getOptionMatchingSimpleDiscriminator
     it('should return Bar when schema has non-simple discriminator for bar', () => {
-      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       // Mock isValid to pass the second value
       testValidator.setReturnValues({ isValid: [false, true] });
       const schema: RJSFSchema = {

@@ -2,7 +2,6 @@ import { createRef } from 'react';
 import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import { act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import isEmpty from 'lodash/isEmpty';
 
 import type Form from '../src';
 import {
@@ -92,6 +91,8 @@ describe('NumberField', () => {
       },
     ];
     for (const uiSchema of uiSchemas) {
+      // an empty uiSchema renders a native number input, so the widget yields numbers rather than strings
+      const isNumberInput = Object.keys(uiSchema).length === 0;
       it('should render a string field with a label', () => {
         const { node } = createFormComponent({
           schema: {
@@ -258,7 +259,7 @@ describe('NumberField', () => {
             expectToHaveBeenCalledWithFormData(onChange, test.output, 'root');
             // "2." is not really a valid number in a input field of type number
             // so we need to use getAttribute("value") instead since .value outputs the empty string
-            expect($input).toHaveValue(isEmpty(uiSchema) ? test.output : test.input);
+            expect($input).toHaveValue(isNumberInput ? test.output : test.input);
           });
         });
       });
@@ -276,7 +277,7 @@ describe('NumberField', () => {
         await user.type($input!, '.00');
 
         expectToHaveBeenCalledWithFormData(onChange, 0, 'root');
-        const expected = isEmpty(uiSchema) ? 0 : '.00';
+        const expected = isNumberInput ? 0 : '.00';
         expect($input).toHaveValue(expected);
       });
 
@@ -319,14 +320,14 @@ describe('NumberField', () => {
 
         await user.type($input!, '231', { initialSelectionStart: 0, initialSelectionEnd: 1 });
 
-        expect($input).toHaveValue(isEmpty(uiSchema) ? 231 : '231');
+        expect($input).toHaveValue(isNumberInput ? 231 : '231');
         expectToHaveBeenCalledWithFormData(onChange, 231, 'root');
 
         act(() => {
           ref.current?.reset();
         });
 
-        expect($input).toHaveValue(isEmpty(uiSchema) ? 1 : '1');
+        expect($input).toHaveValue(isNumberInput ? 1 : '1');
         // No id on programmatic change
         expectToHaveBeenCalledWithFormData(onChange, 1);
       });
@@ -349,10 +350,9 @@ describe('NumberField', () => {
           },
           uiSchema,
         });
-        const isNumber = isEmpty(uiSchema);
         await user.type(node.querySelector('input')!, '2.');
 
-        if (isNumber) {
+        if (isNumberInput) {
           // "2." is not really a valid number in a input field of type number
           // so we need to use getAttribute("value") instead since .value outputs the empty string
           expect(node.querySelector('.rjsf-field input')).toHaveValue(2);
@@ -361,21 +361,21 @@ describe('NumberField', () => {
         }
 
         await user.type(node.querySelector('input')!, '0');
-        if (isNumber) {
+        if (isNumberInput) {
           expect(node.querySelector('.rjsf-field input')).toHaveValue(2.0);
         } else {
           expect(node.querySelector('.rjsf-field input')).toHaveValue('2.0');
         }
 
         await user.type(node.querySelector('input')!, '0');
-        if (isNumber) {
+        if (isNumberInput) {
           expect(node.querySelector('.rjsf-field input')).toHaveValue(2.0);
         } else {
           expect(node.querySelector('.rjsf-field input')).toHaveValue('2.00');
         }
 
         await user.type(node.querySelector('input')!, '0');
-        if (isNumber) {
+        if (isNumberInput) {
           expect(node.querySelector('.rjsf-field input')).toHaveValue(2.0);
         } else {
           expect(node.querySelector('.rjsf-field input')).toHaveValue('2.000');
@@ -391,7 +391,7 @@ describe('NumberField', () => {
         });
 
         await user.type(node.querySelector('input')!, '0');
-        const expected = isEmpty(uiSchema) ? 0 : '0';
+        const expected = isNumberInput ? 0 : '0';
         expect(node.querySelector('.rjsf-field input')).toHaveValue(expected);
       });
 

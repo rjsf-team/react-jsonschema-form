@@ -1,8 +1,6 @@
 {
   "extends": "../../../tsconfig.build.json",
-  "include": [
-    "./"
-  ],
+  "include": ["./"],
   "compilerOptions": {
     "rootDir": "./",
     "outDir": "../lib",
@@ -16,15 +14,5 @@
     {
       "path": "../../validator-ajv8"
     }
-  ],
-  "tsc-alias": {
-    "resolveFullPaths": true,
-    "verbose": true,
-    "replacers": {
-      "lodash": {
-        "enabled": true,
-        "file": "lodashReplacer.js"
-      }
-    }
-  }
+  ]
 }

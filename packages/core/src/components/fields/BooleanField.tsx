@@ -7,8 +7,7 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { getWidget, getUiOptions, optionsList, TranslatableString } from '@rjsf/utils';
-import isObject from 'lodash/isObject';
+import { getWidget, getUiOptions, isObject, optionsList, TranslatableString } from '@rjsf/utils';
 
 /** The `BooleanField` component is used to render a field in the schema is boolean. It constructs `enumOptions` for the
  * two boolean values based on the various alternatives in the schema.

@@ -1,5 +1,3 @@
-import isEmpty from 'lodash/isEmpty';
-
 import { NAME_KEY, RJSF_ADDITIONAL_PROPERTIES_FLAG } from '../constants';
 import findSchemaDefinition from '../findSchemaDefinition';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
@@ -56,8 +54,13 @@ export function getUsedFormData<T = any>(formData: T | undefined, fields: string
  */
 // oxlint-disable-next-line typescript/no-deprecated
 export function getFieldNames<T = any>(pathSchema: PathSchema<T>, formData?: T): string[][] {
-  const formValueHasData = (value: unknown, isLeaf: boolean) =>
-    typeof value !== 'object' || isEmpty(value) || (isLeaf && !isEmpty(value));
+  const formValueHasData = (value: unknown, isLeaf: boolean) => {
+    if (typeof value !== 'object' || value === null) {
+      return true;
+    }
+    const isEmptyValue = Array.isArray(value) ? value.length === 0 : Object.keys(value).length === 0;
+    return isEmptyValue || isLeaf;
+  };
   const getAllPaths = (_obj: GenericObjectType, acc: string[][] = [], paths: string[][] = [[]]) => {
     const objKeys = Object.keys(_obj);
     objKeys.forEach((key: string) => {
@@ -449,7 +452,7 @@ export default function omitExtraData<
     if (source === undefined || schemaDef === false) {
       return undefined;
     }
-    if (schemaDef === true || isEmpty(schemaDef as object)) {
+    if (schemaDef === true || !schemaDef || Object.keys(schemaDef).length === 0) {
       return target ?? (useSourceAsFallback ? source : undefined);
     }
 

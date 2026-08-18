@@ -1,6 +1,5 @@
-import isPlainObject from 'lodash/isPlainObject';
-
-import type { ErrorSchema, FormValidation, GenericObjectType } from './types';
+import isPlainObject from './isPlainObject';
+import type { ErrorSchema, FormValidation } from './types';
 
 /** Unwraps the `errorHandler` structure into the associated `ErrorSchema`, stripping the `addError()` functions from it
  *
@@ -8,15 +7,25 @@ import type { ErrorSchema, FormValidation, GenericObjectType } from './types';
  * @returns - The `ErrorSchema` resulting from the stripping of the `addError()` function
  */
 export default function unwrapErrorHandler<T = any>(errorHandler: FormValidation<T>): ErrorSchema<T> {
-  return Object.keys(errorHandler).reduce<ErrorSchema<T>>((acc, key) => {
+  return unwrapErrors<T>(errorHandler);
+}
+
+/** Does the actual unwrapping, working on the plain-object shape of a `FormValidation` so that the recursive call for
+ * a nested error handler does not need an assertion back to `FormValidation`.
+ *
+ * @param errors - The error handling structure, viewed as the plain object it is at runtime
+ * @returns - The `ErrorSchema` resulting from the stripping of the `addError()` function
+ */
+function unwrapErrors<T>(errors: Record<string, unknown>): ErrorSchema<T> {
+  return Object.keys(errors).reduce<ErrorSchema<T>>((acc, key) => {
     if (key === 'addError') {
       return acc;
     }
-    const childSchema = (errorHandler as GenericObjectType)[key];
+    const childSchema = errors[key];
     if (isPlainObject(childSchema)) {
       return {
         ...acc,
-        [key]: unwrapErrorHandler(childSchema),
+        [key]: unwrapErrors<T>(childSchema),
       };
     }
     return { ...acc, [key]: childSchema };

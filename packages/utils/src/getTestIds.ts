@@ -1,7 +1,7 @@
-import uniqueId from 'lodash/uniqueId';
-
 import { getByPath } from './pathUtils';
 import type { TestIdShape } from './types';
+
+let testIdCounter = 0;
 
 /** Returns an object of test IDs that can only be used in test mode. If the function is called in a test environment
  * (`NODE_ENV === 'test'`, this is set by vitest) then a Proxy object will be returned. If a key within the returned
@@ -32,7 +32,8 @@ export default function getTestIds(): TestIdShape {
     {
       get(_obj, prop) {
         if (!ids.has(prop)) {
-          ids.set(prop, uniqueId('test-id-'));
+          testIdCounter += 1;
+          ids.set(prop, `test-id-${testIdCounter}`);
         }
         return ids.get(prop);
       },

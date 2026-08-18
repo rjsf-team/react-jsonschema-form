@@ -1,4 +1,3 @@
-import noop from 'lodash/noop';
 import type { MockInstance } from 'vitest';
 
 import type { RJSFSchema } from '../../src';
@@ -27,7 +26,7 @@ describe('ParserValidator', () => {
   let consoleErrorSpy: MockInstance;
   beforeAll(() => {
     validator = new ParserValidator(RECURSIVE_REF);
-    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(noop);
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
   afterAll(() => {
     consoleErrorSpy.mockRestore();

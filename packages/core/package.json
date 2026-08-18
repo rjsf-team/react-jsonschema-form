@@ -3,8 +3,7 @@
   "version": "6.8.0",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
-    "compileReplacer": "tsc -p tsconfig.replacer.json && move-file lodashReplacer.js lodashReplacer.cjs",
-    "build:ts": "pnpm run compileReplacer && rimraf ./lib && tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+    "build:ts": "rimraf ./lib && tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/index.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/index.esm.js --format=umd --file=dist/core.umd.js --name=JSONSchemaForm",
@@ -72,8 +71,6 @@
     "react": ">=18"
   },
   "dependencies": {
-    "lodash": "^4.18.1",
-    "lodash-es": "^4.18.1",
     "markdown-to-jsx": "^9.8.2",
     "prop-types": "^15.8.1"
   },

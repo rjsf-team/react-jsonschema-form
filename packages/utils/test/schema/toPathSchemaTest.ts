@@ -1,5 +1,4 @@
 // oxlint-disable typescript/no-deprecated
-import noop from 'lodash/noop';
 import type { MockInstance } from 'vitest';
 
 import type { RJSFSchema } from '../../src';
@@ -13,7 +12,7 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
 
     beforeAll(() => {
       // spy on console.warn() and make it do nothing to avoid making noise in the test
-      consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
+      consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     });
 
     afterAll(() => {
@@ -24,6 +23,15 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
       const schema: RJSFSchema = { type: 'string' };
 
       expect(toPathSchema(testValidator, schema)).toEqual({ $name: '' });
+    });
+    it('should tolerate an explicitly undefined property schema', () => {
+      // A JS-authored schema can conditionally omit a property with `{ properties: { foo: cond ? {...} : undefined } }`
+      const schema = { type: 'object', properties: { foo: undefined } } as unknown as RJSFSchema;
+
+      expect(toPathSchema(testValidator, schema, '', schema, { foo: 'x' })).toEqual({
+        $name: '',
+        foo: { $name: 'foo' },
+      });
     });
     it('should return a pathSchema for root field, with additional properties', () => {
       const schema: RJSFSchema = { type: 'string', additionalProperties: true };
