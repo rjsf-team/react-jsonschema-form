@@ -1,8 +1,6 @@
 import difference from 'lodash/difference';
 import get from 'lodash/get';
 import isPlainObject from 'lodash/isPlainObject';
-import keys from 'lodash/keys';
-import pickBy from 'lodash/pickBy';
 
 import deepEquals from './deepEquals';
 
@@ -30,12 +28,14 @@ export default function getChangedFields(a: unknown, b: unknown): string[] {
     return [];
   }
   if (aIsPlainObject && !bIsPlainObject) {
-    return keys(a);
+    return Object.keys(a as object);
   }
   if (!aIsPlainObject && bIsPlainObject) {
-    return keys(b);
+    return Object.keys(b as object);
   }
-  const unequalFields = keys(pickBy(a as object, (value, key) => !deepEquals(value, get(b, key))));
-  const diffFields = difference(keys(b), keys(a));
+  const unequalFields = Object.entries(a as object)
+    .filter(([key, value]) => !deepEquals(value, get(b, key)))
+    .map(([key]) => key);
+  const diffFields = difference(Object.keys(b as object), Object.keys(a as object));
   return [...unequalFields, ...diffFields];
 }
