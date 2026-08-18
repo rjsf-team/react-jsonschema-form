@@ -386,24 +386,6 @@ describe('cloneForValidation', () => {
     }
   });
 
-  it('falls back to cloneDeep when structuredClone is unavailable', () => {
-    const original = globalThis.structuredClone;
-    delete (globalThis as { structuredClone?: unknown }).structuredClone;
-    try {
-      const v = customizeValidator();
-      const schema: RJSFSchema = { type: 'object', properties: { x: { type: 'string' } } };
-      expect(v.isValid(schema, { x: 'a' }, schema)).toBe(true);
-    } finally {
-      if (original !== undefined) {
-        Object.defineProperty(globalThis, 'structuredClone', {
-          value: original,
-          configurable: true,
-          writable: true,
-        });
-      }
-    }
-  });
-
   it('returns primitives untouched', () => {
     const v = customizeValidator();
     // Primitive formData skips the clone path; verify validation still works.

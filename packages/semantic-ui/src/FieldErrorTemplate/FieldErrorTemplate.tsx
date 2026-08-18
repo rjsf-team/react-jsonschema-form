@@ -1,6 +1,5 @@
 import type { FieldErrorProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { errorId } from '@rjsf/utils';
-import uniqueId from 'lodash/uniqueId';
 import { Label, List } from 'semantic-ui-react';
 
 import { getSemanticErrorProps } from '../util';
@@ -33,8 +32,9 @@ export default function FieldErrorTemplate<
     return (
       <Label id={id} color='red' pointing={pointing || 'above'} size={size || 'small'} basic>
         <List bulleted>
-          {errors.map((error) => (
-            <List.Item key={uniqueId('field-error-')}>{error}</List.Item>
+          {errors.map((error, i: number) => (
+            // oxlint-disable-next-line react/no-array-index-key
+            <List.Item key={i}>{error}</List.Item>
           ))}
         </List>
       </Label>

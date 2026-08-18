@@ -11,6 +11,7 @@ import type {
 } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
+  deepEquals,
   getDiscriminatorFieldFromSchema,
   getTemplate,
   getTestIds,
@@ -34,12 +35,8 @@ import has from 'lodash/has';
 import includes from 'lodash/includes';
 import intersection from 'lodash/intersection';
 import isEmpty from 'lodash/isEmpty';
-import isEqual from 'lodash/isEqual';
-import isFunction from 'lodash/isFunction';
 import isObject from 'lodash/isObject';
 import isPlainObject from 'lodash/isPlainObject';
-import isString from 'lodash/isString';
-import isUndefined from 'lodash/isUndefined';
 import last from 'lodash/last';
 import set from 'lodash/set';
 
@@ -177,7 +174,7 @@ export function computeFieldUiSchema<T = any, S extends StrictRJSFSchema = RJSFS
     set(fieldUiSchema, [UI_GLOBAL_OPTIONS_KEY], globalUiOptions);
   }
   let { readonly: uiReadonly } = getUiOptions<T, S, F>(fieldUiSchema);
-  if (forceReadonly === true || (isUndefined(uiReadonly) && schemaReadonly === true)) {
+  if (forceReadonly === true || (uiReadonly === undefined && schemaReadonly === true)) {
     // If we are forcing all widgets to be readonly, OR the schema indicates it is readonly AND the uiSchema does not
     // have an overriding value, then update the uiSchema to set readonly to true. Doing this will
     uiReadonly = true;
@@ -215,7 +212,7 @@ export function conditionMatches(
   const values = flatten([value]).sort();
   switch (operator) {
     case Operators.ALL:
-      return isEqual(data, values);
+      return deepEquals(data, values);
     case Operators.SOME:
       return intersection(data, values).length > 0;
     case Operators.NONE:
@@ -417,10 +414,10 @@ export function getCustomRenderComponent<
   F extends FormContextType = any,
 >(render: string | RenderComponent, registry: Registry<T, S, F>): RenderComponent | null {
   let customRenderer = render;
-  if (isString(customRenderer)) {
+  if (typeof customRenderer === 'string') {
     customRenderer = lookupFromFormContext<T, S, F>(registry, customRenderer);
   }
-  if (isFunction(customRenderer)) {
+  if (typeof customRenderer === 'function') {
     return customRenderer;
   }
   return null;
@@ -443,7 +440,7 @@ export function computeUIComponentPropsFromGridSchema<
   let UIComponent: RenderComponent | null = null;
   let uiProps: ConfigObject = {};
   let rendered: ReactNode | undefined;
-  if (isString(gridSchema) || isUndefined(gridSchema)) {
+  if (typeof gridSchema === 'string' || gridSchema === undefined) {
     name = gridSchema ?? '';
   } else {
     const { name: innerName = '', render, ...innerProps } = gridSchema;
@@ -452,7 +449,7 @@ export function computeUIComponentPropsFromGridSchema<
     if (!isEmpty(uiProps)) {
       // Transform any `$lookup=` in the uiProps props with the appropriate value
       each(uiProps, (prop: ConfigObject, key: string) => {
-        if (isString(prop)) {
+        if (typeof prop === 'string') {
           const match: string[] | null = LOOKUP_REGEX.exec(prop);
           if (Array.isArray(match) && match.length > 1) {
             const lookupName = match[1];
