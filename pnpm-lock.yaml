@@ -711,9 +711,6 @@ importers:
       '@fluentui/react-component-ref':
         specifier: ^0.63.1
         version: 0.63.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      lodash:
-        specifier: ^4.18.1
-        version: 4.18.1
       react:
         specifier: '>=18'
         version: 18.3.1
@@ -784,12 +781,6 @@ importers:
       cmdk:
         specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      lodash:
-        specifier: ^4.18.1
-        version: 4.18.1
-      lodash-es:
-        specifier: ^4.18.1
-        version: 4.18.1
       lucide-react:
         specifier: ^1.16.0
         version: 1.17.0(react@18.3.1)
