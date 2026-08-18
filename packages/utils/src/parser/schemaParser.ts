@@ -1,5 +1,3 @@
-import forEach from 'lodash/forEach';
-
 import { ITEMS_KEY, PROPERTIES_KEY } from '../constants';
 import deepEquals from '../deepEquals';
 import { resolveAnyOrOneOfSchemas, retrieveSchemaInternal } from '../schema/retrieveSchema';
@@ -31,9 +29,9 @@ function parseSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       const allOptions = resolveAnyOrOneOfSchemas<T, S, F>(validator, localSchema, rootSchema, true);
       allOptions.forEach((s) => {
         if (PROPERTIES_KEY in s && s[PROPERTIES_KEY]) {
-          forEach(localSchema[PROPERTIES_KEY], (value) => {
+          for (const value of Object.values(localSchema[PROPERTIES_KEY] ?? {})) {
             parseSchema<T, S, F>(validator, recurseList, rootSchema, value as S);
-          });
+          }
         }
       });
       if (ITEMS_KEY in localSchema && !Array.isArray(localSchema.items) && typeof localSchema.items !== 'boolean') {

@@ -1,5 +1,3 @@
-import union from 'lodash/union';
-
 import { REQUIRED_KEY } from './constants';
 import getSchemaType from './getSchemaType';
 import isObject from './isObject';
@@ -29,7 +27,7 @@ export default function mergeSchemas(obj1: GenericObjectType, obj2: GenericObjec
       Array.isArray(right)
     ) {
       // Don't include duplicate values when merging 'required' fields.
-      accumulator[key] = union(left, right);
+      accumulator[key] = [...new Set([...left, ...right])];
     } else {
       accumulator[key] = right;
     }

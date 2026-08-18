@@ -18,7 +18,6 @@ import {
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
 } from '@rjsf/utils';
-import map from 'lodash/map';
 import type { DropdownProps, DropdownItemProps } from 'semantic-ui-react';
 import { Form } from 'semantic-ui-react';
 
@@ -40,7 +39,7 @@ function createDefaultValueOptionsForDropDown<S extends StrictRJSFSchema = RJSFS
   format: OptionValueFormat = 'indexed',
 ) {
   const disabledOptions = enumDisabled || [];
-  const options: DropdownItemProps[] = map(enumOptions, ({ label, value }, index) => ({
+  const options: DropdownItemProps[] = (enumOptions ?? []).map(({ label, value }, index) => ({
     disabled: disabledOptions.includes(value),
     key: label,
     text: label,
