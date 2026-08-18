@@ -2,8 +2,8 @@
 
 import type { FocusEvent, FocusEventHandler, KeyboardEvent, ReactElement } from 'react';
 import { useCallback, useMemo, useRef, useState } from 'react';
+import { deepEquals } from '@rjsf/utils';
 import { Command as CommandPrimitive } from 'cmdk';
-import isEqual from 'lodash/isEqual';
 import { X } from 'lucide-react';
 
 import { cn } from '../../lib/utils';
@@ -78,12 +78,12 @@ export function FancyMultiSelect({
   const [inputValue, setInputValue] = useState('');
 
   const selectedItems = useMemo(
-    () => items.filter((item) => selected.some((selectedValue) => isEqual(item.value, selectedValue))),
+    () => items.filter((item) => selected.some((selectedValue) => deepEquals(item.value, selectedValue))),
     [items, selected],
   );
 
   const selectables = useMemo(
-    () => items.filter((framework) => !selectedItems.some((item) => isEqual(item.value, framework.value))),
+    () => items.filter((framework) => !selectedItems.some((item) => deepEquals(item.value, framework.value))),
     [items, selectedItems],
   );
 
@@ -92,7 +92,7 @@ export function FancyMultiSelect({
       if (disabled) {
         return;
       }
-      const newSelected = selectedItems.filter((s) => !isEqual(s.value, framework.value));
+      const newSelected = selectedItems.filter((s) => !deepEquals(s.value, framework.value));
       onValueChange?.(newSelected.map((item) => item.index));
     },
     [selectedItems, onValueChange, disabled],
