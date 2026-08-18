@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import type {
   EnumOptionsType,
+  ErrorSchema,
   FieldProps,
   FormContextType,
   RJSFSchema,
@@ -27,7 +28,6 @@ import get from 'lodash/get';
 import has from 'lodash/has';
 import isEmpty from 'lodash/isEmpty';
 import noop from 'lodash/noop';
-import omit from 'lodash/omit';
 import set from 'lodash/set';
 
 /** Gets the selected option from the list of `options`, using the `selectorField` to search inside each `option` for
@@ -109,7 +109,7 @@ export default function LayoutMultiSchemaField<
     autofocus,
     readonly,
     required,
-    errorSchema,
+    errorSchema = {},
     hideError = false,
   } = props;
   const { widgets, schemaUtils, globalUiOptions } = registry;
@@ -151,7 +151,8 @@ export default function LayoutMultiSchemaField<
   const hideFieldError = uiSchemaHideError === undefined ? hideError : Boolean(uiSchemaHideError);
 
   const rawErrors = get(errorSchema, [ERRORS_KEY], []) as string[];
-  const fieldErrorSchema = omit(errorSchema, [ERRORS_KEY]);
+  const fieldErrorSchema = { ...errorSchema } as ErrorSchema<T>;
+  delete fieldErrorSchema[ERRORS_KEY];
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
 
   /** Callback function that updates the selected option and adjusts the form data based on the structure of the new
