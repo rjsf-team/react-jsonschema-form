@@ -24,9 +24,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/daisyui
 
-- Removed unused internal exports found by `knip` ([#5194](https://github.com/rjsf-team/react-jsonschema-form/pull/5194)). Neither was part of the public API, but both were reachable through the unblessed `@rjsf/daisyui/lib/*.js` deep-import path:
+- Removed unused internal exports found by `knip` ([#5194](https://github.com/rjsf-team/react-jsonschema-form/pull/5194)). None were part of the public API, but all were reachable through the unblessed `@rjsf/daisyui/lib/*.js` deep-import path:
   - `ThemeContext` is now module-private; use the exported `useTheme()` hook instead
   - The per-widget barrels (`lib/widgets/<Widget>/index.js`) and the named widget re-exports from `lib/widgets/index.js` are gone; use `generateWidgets()`
+  - The template barrels (`lib/templates/index.js` and the `buttonTemplates` default export from `lib/templates/ButtonTemplates/index.js`) are gone; use `generateTemplates()` and destructure the template you need
 
 ## @rjsf/utils
 
