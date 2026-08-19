@@ -162,7 +162,7 @@ export default function omitExtraData<
   }
 
   /** Copies schema-defined properties from `source` into `target`, applying `omit` recursively for
-   * each value. Handles `properties`, `patternProperties`, `additionalProperties`, and `propertyNames`.
+   * each value. Handles `properties`, `patternProperties`, and `additionalProperties`.
    * Optional object-valued properties are pruned when every key in the filtered result is both
    * optional (per the inner schema's `required`) and empty (per `isValueEmpty`). This preserves
    * optional objects whose required children have empty values, while still dropping objects whose
@@ -176,7 +176,7 @@ export default function omitExtraData<
    * @returns - `target` after all schema-defined properties have been processed
    */
   function handleObject(childSchema: S, source: GenericObjectType, target: GenericObjectType): GenericObjectType {
-    const { properties, additionalProperties, patternProperties, propertyNames } = childSchema;
+    const { properties, additionalProperties, patternProperties } = childSchema;
     const requiredSet = new Set(childSchema.required ?? []);
 
     /** Recursively omits extra data from `value` via `omit`, then conditionally writes the result to
@@ -261,46 +261,51 @@ export default function omitExtraData<
       }
     }
 
-    // When propertyNames is present, the schema only constrains key names — all source keys are valid.
-    if (propertyNames !== undefined) {
-      for (const [key, value] of Object.entries(source)) {
-        // oxlint-disable-next-line no-param-reassign
-        target[key] = value;
-      }
-    }
-
     return target;
   }
 
   /** Filters array elements from `source` into `target` according to `schema.items` and
-   * `schema.additionalItems`. For tuple schemas (`items` is an array) each element is filtered by its
-   * per-index schema; elements beyond the tuple length are covered by `additionalItems` when present.
-   * For list schemas (`items` is a single schema) every element is filtered by that schema.
+   * `schema.additionalItems`. Only called when `items` is defined (guarded in `omit`). Uses index
+   * assignment (not push) so a pre-populated `target` from a prior branch is overwritten rather than
+   * appended to, preventing item duplication. For tuple schemas (`items` is an array) elements up to
+   * `min(items.length, source.length)` are filtered by their per-index schema; elements beyond the
+   * tuple are covered by `additionalItems` when present, or the target is truncated when absent.
+   * For list schemas (`items` is a single schema) every source element is filtered and `target.length`
+   * is set to `source.length`.
    *
    * @param childSchema - The array schema describing `items` and optionally `additionalItems`
    * @param source - The source array to read elements from
-   * @param target - The accumulator array to push filtered elements into
-   * @returns - `target` after all applicable source elements have been pushed
+   * @param target - The accumulator array to write filtered elements into
+   * @returns - `target` after all applicable source elements have been written
    */
   function handleArray(childSchema: S, source: unknown[], target: unknown[]): unknown[] {
     const { items, additionalItems } = childSchema;
-    if (items !== undefined) {
-      if (Array.isArray(items)) {
-        for (let i = 0; i < items.length; i += 1) {
-          target.push(omit(items[i] as S | boolean, source[i]));
-        }
-      } else {
-        for (let i = 0; i < source.length; i += 1) {
-          target.push(omit(items as S | boolean, source[i]));
-        }
+    if (Array.isArray(items)) {
+      const tupleLength = Math.min(items.length, source.length);
+      let i = 0;
+      for (; i < tupleLength; i += 1) {
+        // oxlint-disable-next-line no-param-reassign
+        target[i] = omit(items[i] as S | boolean, source[i]);
+      }
+      // Without additionalItems, truncate at the tuple boundary to drop any pre-existing items.
+      if (!additionalItems) {
+        // oxlint-disable-next-line no-param-reassign
+        target.length = tupleLength;
+        return target;
+      }
+      for (; i < source.length; i += 1) {
+        // oxlint-disable-next-line no-param-reassign
+        target[i] = omit(additionalItems as S | boolean, source[i]);
+      }
+    } else {
+      for (let i = 0; i < source.length; i += 1) {
+        // oxlint-disable-next-line no-param-reassign
+        target[i] = omit(items as S | boolean, source[i]);
       }
     }
-    // additionalItems covers tuple items beyond the items array length.
-    if (additionalItems) {
-      for (let i = target.length; i < source.length; i += 1) {
-        target.push(omit(additionalItems as S | boolean, source[i]));
-      }
-    }
+    // Truncate any pre-existing items beyond the source length.
+    // oxlint-disable-next-line no-param-reassign
+    target.length = source.length;
     return target;
   }
 
@@ -325,7 +330,7 @@ export default function omitExtraData<
       ? validator.isValid(condition as S, source as T, rootSchema)
       : condition;
     const branch = isThenBranch ? then : otherwise;
-    return branch === undefined ? target : omit(branch as S | boolean, source, target);
+    return branch === undefined ? target : omit(branch as S | boolean, source, target, false);
   }
 
   /** Applies the best-matching `oneOf` option to `source`, merging the result into `target`. When
@@ -363,7 +368,7 @@ export default function omitExtraData<
     const resolved: S = isObject(winning)
       ? resolveAllReferences<S>(winning, rootSchema, [])
       : scoringOptions[bestIndex];
-    return omit(resolved, source, target);
+    return omit(resolved, source, target, false);
   }
 
   /** Applies `anyOf` branches from `schema` to `source`, merging results into `target`. When `anyOf`
@@ -389,7 +394,7 @@ export default function omitExtraData<
     ) {
       let result = target;
       for (const branch of anyOf as (S | boolean)[]) {
-        result = omit(branch, source, result);
+        result = omit(branch, source, result, false);
       }
       return result;
     }
@@ -415,7 +420,7 @@ export default function omitExtraData<
     for (const [key, deps] of Object.entries(dependencies)) {
       // Skip property dependencies (string arrays); only process schema dependencies.
       if (key in source && !Array.isArray(deps)) {
-        result = omit(deps as S | boolean, source, result);
+        result = omit(deps as S | boolean, source, result, false);
       }
     }
     return result;
@@ -424,26 +429,30 @@ export default function omitExtraData<
   /** Core recursive filter. Resolves `$ref`s, merges `allOf`, then delegates to the type-specific
    * handlers (`handleObject`, `handleArray`) and keyword handlers (`handleAnyOf`, `handleOneOf`,
    * `handleConditions`, `handleDependencies`). Returns `undefined` when `source` is undefined or
-   * `schemaDef` is `false`; returns `source` unchanged when `schemaDef` is `true` or empty.
+   * `schemaDef` is `false`; when `schemaDef` is `true` or empty returns `target ?? source` (when
+   * `materializeSource` is true) or `target` (when false) to avoid aliasing `source` as the
+   * accumulator across multiple compositional branches.
    *
    * @param schemaDef - The schema (or boolean shorthand) to filter `source` against
    * @param source - The raw form data value to filter
    * @param [target] - An optional accumulator carrying results from prior oneOf/anyOf processing
+   * @param [materializeSource=true] - When false a permissive schema (`true`/`{}`) returns `target`
+   *   rather than `source`, preventing compositional branches from aliasing the accumulator to `source`
    * @returns - The filtered value, or `undefined` when the schema rejects the value
    */
-  function omit(schemaDef: S | boolean, source: unknown, target?: unknown): unknown {
+  function omit(schemaDef: S | boolean, source: unknown, target?: unknown, materializeSource = true): unknown {
     if (source === undefined || schemaDef === false) {
       return undefined;
     }
     if (schemaDef === true || isEmpty(schemaDef as object)) {
-      return source;
+      return target ?? (materializeSource ? source : undefined);
     }
 
     let localSchema = schemaDef;
     const { $ref: ref, allOf } = localSchema;
 
     if (ref !== undefined) {
-      return omit(findSchemaDefinition<S>(ref, rootSchema), source, target);
+      return omit(findSchemaDefinition<S>(ref, rootSchema), source, target, materializeSource);
     }
     if (allOf) {
       localSchema = doMergeAllOf<S>(localSchema, experimental_customMergeAllOf);
@@ -455,7 +464,7 @@ export default function omitExtraData<
       if (remainingAllOf) {
         for (let i = 0; i < remainingAllOf.length; i++) {
           // oxlint-disable-next-line no-param-reassign
-          target = omit(remainingAllOf[i] as S | boolean, source, target);
+          target = omit(remainingAllOf[i] as S | boolean, source, target, false);
         }
       }
     }
@@ -472,12 +481,13 @@ export default function omitExtraData<
       if (!Array.isArray(source)) {
         return undefined;
       }
-      filtered = handleArray(localSchema, source, Array.isArray(filtered) ? filtered : []);
-    } else if (filtered === undefined) {
-      filtered = source;
+      if (localSchema.items !== undefined) {
+        filtered = handleArray(localSchema, source, Array.isArray(filtered) ? filtered : []);
+      }
     }
 
-    return handleDependencies(localSchema, source, handleConditions(localSchema, source, filtered));
+    const result = handleDependencies(localSchema, source, handleConditions(localSchema, source, filtered));
+    return result ?? (materializeSource ? source : undefined);
   }
 
   return omit(schema, formData) as T | undefined;

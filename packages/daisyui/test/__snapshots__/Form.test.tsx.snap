@@ -11268,6 +11268,94 @@ exports[`single fields > radio widget with description in schema and FieldTempla
 </DocumentFragment>
 `;
 
+exports[`single fields > required checkbox field 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-object"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-object"
+      >
+        <div
+          class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+        >
+          <div
+            class="grid grid-cols-1 gap-4 "
+          >
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-boolean"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-boolean"
+                >
+                  <div
+                    class="form-control"
+                  >
+                    <label
+                      class="label cursor-pointer justify-start"
+                    >
+                      <div
+                        class="mr-2"
+                      >
+                        <input
+                          class="checkbox"
+                          id="root_agree"
+                          name="root_agree"
+                          required=""
+                          type="checkbox"
+                        />
+                      </div>
+                      <span
+                        class="label-text"
+                      >
+                        I Agree
+                        <span
+                          class="text-error ml-1"
+                        >
+                          *
+                        </span>
+                      </span>
+                    </label>
+                  </div>
+                  <div
+                    class="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      class="list-disc list-inside"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > schema examples 1`] = `
 <DocumentFragment>
   <form
