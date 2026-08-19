@@ -268,6 +268,9 @@ describe('BooleanField', () => {
       schema: {
         type: 'object',
         properties: {
+          // Use a string enum so the field stays absent from initial formData —
+          // required booleans now default to false, which satisfies AJV's required
+          // constraint and would suppress the validation error this test relies on.
           bool: {
             type: 'string',
             enum: ['a', 'b'],
@@ -304,6 +307,9 @@ describe('BooleanField', () => {
       schema: {
         type: 'object',
         properties: {
+          // Use a string enum so the field stays absent from initial formData —
+          // required booleans now default to false, which satisfies AJV's required
+          // constraint and would suppress the validation error this test relies on.
           bool: {
             type: 'string',
             enum: ['a', 'b'],

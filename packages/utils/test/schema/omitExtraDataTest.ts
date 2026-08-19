@@ -885,12 +885,11 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({ reqObj: { foo: '' } });
       });
 
-      it('returns an empty array when the array schema has no items definition', () => {
-        // removeOptionalEmptyObjects returns the array as-is (no items schema → skip processing).
-        // omitExtraData returns [] because handleArray finds no items schema and emits nothing.
+      it('returns source unchanged when the array schema has no items definition', () => {
+        // No items schema means there is no filtering rule — preserve the source as-is.
         const schema: RJSFSchema = { type: 'array' };
         const formData = [{ foo: 'bar' }];
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual([]);
+        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual([{ foo: 'bar' }]);
       });
     });
 
@@ -1128,13 +1127,15 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
     });
 
     describe('propertyNames support', () => {
-      it('keeps all source keys when propertyNames is defined', () => {
+      it('returns empty object when propertyNames is defined but no properties are declared', () => {
+        // propertyNames only constrains key names — it does not declare which properties are allowed.
+        // Without properties/patternProperties/additionalProperties, no keys survive filtering.
         const schema: RJSFSchema = {
           type: 'object',
           propertyNames: { pattern: '^[a-z]+$' },
         };
         const formData = { foo: 'bar', baz: 42 };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual(formData);
+        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({});
       });
     });
 
@@ -1199,6 +1200,55 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         const result = omitExtraData(testValidator, schema, schema, formData);
         expect(result).toEqual({ type: 'B' });
       });
+
+      it('preserves keys added by then-branch even when parent has additionalProperties:false', () => {
+        // then-branch properties are kept regardless of the parent's additionalProperties:false —
+        // omitExtraData does not post-prune branch-granted keys, matching pre-PR behaviour.
+        // 'p_field' matches patternProperties and is also retained.
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { type: { type: 'string' } },
+          patternProperties: { '^p_': { type: 'string' } },
+          additionalProperties: false,
+          if: { properties: { type: { const: 'A' } } },
+          then: { properties: { extra: { type: 'string' } } },
+        };
+        const formData = { type: 'A', p_field: 'keep', extra: 'keep' };
+        testValidator.setReturnValues({ isValid: [true] });
+        const result = omitExtraData(testValidator, schema, schema, formData);
+        expect(result).toEqual({ type: 'A', p_field: 'keep', extra: 'keep' });
+      });
+
+      it('preserves then-branch keys when parent has additionalProperties:false and no properties', () => {
+        // Without a parent `properties` key, handleObject writes nothing from source.
+        // The then-branch result is still merged in and preserved.
+        const schema: RJSFSchema = {
+          type: 'object',
+          additionalProperties: false,
+          if: { type: 'object' } as any,
+          then: { properties: { extra: { type: 'string' } } },
+        };
+        const formData = { extra: 'keep' };
+        testValidator.setReturnValues({ isValid: [true] });
+        const result = omitExtraData(testValidator, schema, schema, formData);
+        expect(result).toEqual({ extra: 'keep' });
+      });
+
+      it('returns existing filtered value when then-branch is permissive (true)', () => {
+        // Covers the `target ??` short-circuit in omit when schemaDef is `true` and target is truthy.
+        // handleConditions calls omit(true, source, filteredObj, false) — since filteredObj is
+        // non-null, `target ?? ...` returns target immediately without evaluating the RHS.
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { foo: { type: 'string' } },
+          if: { type: 'object' } as any,
+          then: true as any,
+        };
+        const formData = { foo: 'hello', extra: 'drop' };
+        testValidator.setReturnValues({ isValid: [true] });
+        const result = omitExtraData(testValidator, schema, schema, formData);
+        expect(result).toEqual({ foo: 'hello' });
+      });
     });
 
     describe('anyOf support', () => {
@@ -1217,6 +1267,17 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           type: 'object',
           anyOf: [{ properties: { foo: { type: 'string' } } }, { properties: { bar: { type: 'string' } } }],
           properties: { base: { type: 'string' } },
+        };
+        expect(omitExtraData(testValidator, schema, schema, {})).toEqual({});
+      });
+
+      it('returns source unchanged when anyOf contains a permissive (true) branch and source is empty object', () => {
+        // anyOf sees {} as empty → applies all branches including the `true` branch.
+        // `omit(true, {}, accum, false)` hits the `target ??` RHS with materializeSource=false,
+        // returning `undefined` (not the source) to avoid aliasing the accumulator.
+        // After all branches, result is still {}, and the outer omit returns {} via ?? source.
+        const schema: RJSFSchema = {
+          anyOf: [true as any, { properties: { foo: { type: 'string' } } }],
         };
         expect(omitExtraData(testValidator, schema, schema, {})).toEqual({});
       });
@@ -1246,12 +1307,13 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
       });
 
       it('reuses an array target already built by anyOf when outer schema is also type:array', () => {
-        // anyOf sees [] as empty → applies all branches → returns [] as target.
-        // The outer type:'array' branch then runs handleArray with that existing [] as target,
-        // hitting the Array.isArray(target) ? target : [] true-branch.
+        // anyOf sees [] as empty → applies all branches.
+        // The branch has type:'array' so omit() returns [] as the filtered value.
+        // The outer type:'array' block then runs handleArray with that existing [] as target,
+        // hitting the Array.isArray(filtered) ? filtered : [] true-branch (filtered is an array).
         const schema: RJSFSchema = {
           type: 'array',
-          anyOf: [{ items: { type: 'string' } }, { items: { type: 'number' } }],
+          anyOf: [{ type: 'array', items: { type: 'string' } }],
           items: { type: 'string' },
         };
         expect(omitExtraData(testValidator, schema, schema, [] as any)).toEqual([]);
@@ -1333,6 +1395,38 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         const result = omitExtraData(testValidator, schema, schema, formData);
         // The best-matching option is the resolved Strict schema; extra key is dropped.
         expect(result).toEqual({ name: 'Alice' });
+      });
+    });
+
+    describe('regression #5176 — allOf with repeated list property does not loop or duplicate items', () => {
+      it('merges two allOf branches defining the same list property without duplicating items', () => {
+        // Two allOf entries each declare `items` on the same `list` property. Before the fix,
+        // the push-based handleArray would append to an already-populated target array on the
+        // second branch, doubling entries on every render cycle and eventually crashing.
+        const schema: RJSFSchema = {
+          type: 'object',
+          allOf: [
+            {
+              properties: {
+                list: {
+                  type: 'array',
+                  items: { type: 'string' },
+                },
+              },
+            },
+            {
+              properties: {
+                list: {
+                  type: 'array',
+                  items: { type: 'string' },
+                },
+              },
+            },
+          ],
+        };
+        const formData = { list: ['a', 'b'] };
+        const result = omitExtraData(testValidator, schema, schema, formData);
+        expect(result).toEqual({ list: ['a', 'b'] });
       });
     });
 
