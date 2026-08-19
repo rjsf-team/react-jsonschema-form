@@ -68,13 +68,18 @@ export default function mergeDefaultsWithFormData<T = any>(
       const keyExistsInDefaults = isObject(defaults) && key in (defaults as GenericObjectType);
       const keyExistsInFormData = key in (formData as GenericObjectType);
       const keyDefault = get(defaults, key) ?? {};
-      const defaultValueIsNestedObject =
-        keyExistsInDefaults && isObject(keyDefault) && Object.values(keyDefault).some((v) => isObject(v));
+      // Anything below this key that is an object or an array has merge rules of its
+      // own, and the shallow spread below bypasses them, so those cases take the
+      // recursive path instead.
+      const defaultValueNeedsDeepMerge =
+        keyExistsInDefaults &&
+        isObject(keyDefault) &&
+        Object.values(keyDefault).some((v) => isObject(v) || Array.isArray(v));
 
       const keyDefaultIsObject = keyExistsInDefaults && isObject(get(defaults, key));
       const keyHasFormDataObject = keyExistsInFormData && isObject(keyValue);
 
-      if (keyDefaultIsObject && keyHasFormDataObject && !defaultValueIsNestedObject) {
+      if (keyDefaultIsObject && keyHasFormDataObject && !defaultValueNeedsDeepMerge) {
         accumulator[key as keyof T] = {
           ...get(defaults, key),
           ...keyValue,

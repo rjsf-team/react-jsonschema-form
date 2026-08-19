@@ -315,6 +315,15 @@ describe('mergeDefaultsWithFormData()', () => {
       expect(mergeDefaultsWithFormData<any>(obj1, obj2, undefined, undefined, true)).toEqual(expected);
     });
 
+    it('should deeply merge an array that sits under an object key', () => {
+      const defaults = { outer: { rows: [{ name: 'Name', grade: 'A' }] } };
+      const formData = { outer: { rows: [{ name: 'Name' }] } };
+      // oxlint-disable-next-line typescript/no-unnecessary-type-arguments
+      expect(mergeDefaultsWithFormData<any>(defaults, formData, true, false, true)).toEqual({
+        outer: { rows: [{ name: 'Name', grade: 'A' }] },
+      });
+    });
+
     it('should recursively merge File objects', () => {
       const file = new File(['test'], 'test.txt');
       const obj1 = {
