@@ -2363,6 +2363,67 @@ describeRepeated('Form common', (createFormComponent) => {
 
           expect(node.querySelectorAll('.rjsf-field-error')).toHaveLength(0);
         });
+
+        it('should only clear the error of the field that changed inside an array item (#5197)', async () => {
+          const altSchema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              foo: { type: 'string' },
+              bar: { type: 'string' },
+              baz: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    qux: { type: 'string' },
+                    corge: { type: 'string' },
+                  },
+                  required: ['qux', 'corge'],
+                },
+              },
+            },
+            required: ['foo', 'bar'],
+          };
+
+          // The form has to be controlled, since the errors are cleared by comparing the incoming
+          // `formData` prop against the previous one.
+          function Controlled() {
+            const [formData, setFormData] = useState<any>({ baz: [{}] });
+            return (
+              <Form
+                schema={altSchema}
+                validator={validator}
+                formData={formData}
+                noHtml5Validate
+                onChange={(e) => setFormData(e.formData)}
+              />
+            );
+          }
+
+          const { container } = render(<Controlled />);
+          const node = container.firstElementChild!;
+          const shownErrors = () => Array.from(node.querySelectorAll('.error-detail')).map((e) => e.textContent);
+
+          await submitForm(node, user);
+          expect(shownErrors()).toEqual([
+            "must have required property 'foo'",
+            "must have required property 'bar'",
+            "must have required property 'qux'",
+            "must have required property 'corge'",
+          ]);
+
+          // A top-level field clears only itself, which already worked
+          await user.type(node.querySelector('#root_foo')!, 'a');
+          expect(shownErrors()).toEqual([
+            "must have required property 'bar'",
+            "must have required property 'qux'",
+            "must have required property 'corge'",
+          ]);
+
+          // and so should a field inside an array item
+          await user.type(node.querySelector('#root_baz_0_qux')!, 'a');
+          expect(shownErrors()).toEqual(["must have required property 'bar'", "must have required property 'corge'"]);
+        });
       });
 
       describe('Live validation', () => {

@@ -4,6 +4,33 @@ import isPlainObject from 'lodash/isPlainObject';
 
 import deepEquals from './deepEquals';
 
+/** Returns the paths of the changed descendants of `a` relative to `b`, relative to the node itself. An empty list
+ * means the difference could not be narrowed any further, so the caller should report its own key instead.
+ *
+ * A key containing a `.` is never descended into, since the dotted path it would produce cannot be told apart from a
+ * path through a nested object.
+ *
+ * @param a - The first value, representing the original data to compare
+ * @param b - The second value, representing the updated data to compare
+ * @returns - An array of dotted paths, relative to `a`
+ */
+function getChangedDescendants(a: unknown, b: unknown): string[] {
+  if (isPlainObject(a) && isPlainObject(b)) {
+    return getChangedFields(a, b, true);
+  }
+  // Arrays of a different length shift their items around, so nothing below them can be matched up by index.
+  if (Array.isArray(a) && Array.isArray(b) && a.length === b.length) {
+    return a.flatMap((value, index) => {
+      if (deepEquals(value, b[index])) {
+        return [];
+      }
+      const descendants = getChangedDescendants(value, b[index]);
+      return descendants.length ? descendants.map((path) => `${index}.${path}`) : [String(index)];
+    });
+  }
+  return [];
+}
+
 /**
  * Compares two objects and returns the names of the fields that have changed.
  * This function iterates over each field of object `a`, using `_.isEqual` to compare the field value
@@ -12,6 +39,8 @@ import deepEquals from './deepEquals';
  *
  * @param a - The first object, representing the original data to compare.
  * @param b - The second object, representing the updated data to compare.
+ * @param [deep=false] - Optional flag that, when true, descends into nested objects and same-length arrays and returns
+ *          the dotted path of the deepest field that changed rather than the name of the top-level field holding it.
  * @returns - An array of field names that have changed.
  *
  * @example
@@ -19,8 +48,14 @@ import deepEquals from './deepEquals';
  * const b = { name: 'John', age: 31 };
  * const changedFields = getChangedFields(a, b);
  * console.log(changedFields); // Output: ['age']
+ *
+ * @example
+ * const a = { items: [{ qux: '', corge: '' }] };
+ * const b = { items: [{ qux: 'a', corge: '' }] };
+ * console.log(getChangedFields(a, b)); // Output: ['items']
+ * console.log(getChangedFields(a, b, true)); // Output: ['items.0.qux']
  */
-export default function getChangedFields(a: unknown, b: unknown): string[] {
+export default function getChangedFields(a: unknown, b: unknown, deep = false): string[] {
   const aIsPlainObject = isPlainObject(a);
   const bIsPlainObject = isPlainObject(b);
   // If strictly equal or neither of them is a plainObject returns an empty array
@@ -35,7 +70,13 @@ export default function getChangedFields(a: unknown, b: unknown): string[] {
   }
   const unequalFields = Object.entries(a as object)
     .filter(([key, value]) => !deepEquals(value, get(b, key)))
-    .map(([key]) => key);
+    .flatMap(([key, value]) => {
+      if (!deep || key.includes('.')) {
+        return [key];
+      }
+      const descendants = getChangedDescendants(value, get(b, key));
+      return descendants.length ? descendants.map((path) => `${key}.${path}`) : [key];
+    });
   const diffFields = difference(Object.keys(b as object), Object.keys(a as object));
   return [...unequalFields, ...diffFields];
 }

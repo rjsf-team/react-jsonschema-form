@@ -7,6 +7,7 @@ import type {
   FieldPathId,
   FieldPathList,
   FormContextType,
+  GenericObjectType,
   PathSchema,
   StrictRJSFSchema,
   Registry,
@@ -55,6 +56,7 @@ import _get from 'lodash/get';
 import _isEmpty from 'lodash/isEmpty';
 import _pick from 'lodash/pick';
 import _set from 'lodash/set';
+import _setWith from 'lodash/setWith';
 import _toPath from 'lodash/toPath';
 import _unset from 'lodash/unset';
 
@@ -468,7 +470,7 @@ export default class Form<
   ): { nextState: FormState<T, S, F>; shouldUpdate: true } | { shouldUpdate: false } {
     if (!deepEquals(this.props, prevProps)) {
       // Compare the previous props formData against the current props formData
-      const formDataChangedFields = getChangedFields(this.props.formData, prevProps.formData);
+      const formDataChangedFields = getChangedFields(this.props.formData, prevProps.formData, true);
       // Compare the current props formData against the current state's formData to determine if the new props were the
       // result of the onChange from the existing state formData
       const stateDataChangedFields = getChangedFields(this.props.formData, this.state.formData);
@@ -691,10 +693,13 @@ export default class Form<
       errorSchema = currentErrors.errorSchema;
       // We only update the error schema for changed fields if mustValidate is false
       if (formDataChangedFields.length > 0 && !mustValidate) {
-        const newErrorSchema = formDataChangedFields.reduce<Record<string, undefined>>((acc, key) => {
-          acc[key] = undefined;
-          return acc;
-        }, {});
+        // `formDataChangedFields` carries the path of each field that changed, so clearing has to follow that path
+        // instead of dropping the whole branch it starts in. `setWith` with `Object` keeps the numeric segment of an
+        // array item as an object key, which is how an `ErrorSchema` addresses array items.
+        const newErrorSchema = formDataChangedFields.reduce<GenericObjectType>(
+          (acc, path) => _setWith(acc, path, undefined, Object),
+          {},
+        );
         schemaValidationErrorSchema = mergeObjects(
           currentErrors.errorSchema,
           newErrorSchema,
