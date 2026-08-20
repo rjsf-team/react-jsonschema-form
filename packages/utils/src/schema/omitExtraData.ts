@@ -491,25 +491,25 @@ export default function omitExtraData<
       }
     }
 
-    const result = handleDependencies(localSchema, source, handleConditions(localSchema, source, filtered));
-
-    // Post-prune: when additionalProperties is false, delete any key that survived branch
-    // merging (oneOf/anyOf/if-then) but is not covered by the parent schema's own properties
-    // or patternProperties. Mirrors the SJSF implementation — branch-granted keys are still
-    // filtered through omit() above, but any that end up outside the schema's declared property
-    // set are removed here so the result honours additionalProperties:false.
-    if (localSchema.additionalProperties === false && isObjectValue(result)) {
+    // Post-prune after conditions (oneOf/anyOf/if-then) but BEFORE dependencies: keys added by
+    // dependency sub-schemas are legitimate extensions of the allowed property set and must not be
+    // pruned. Keys added only by winning conditional branches are still removed here so the result
+    // honours additionalProperties:false.
+    const afterConditions = handleConditions(localSchema, source, filtered);
+    if (localSchema.additionalProperties === false && isObjectValue(afterConditions)) {
       const knownKeys = new Set(Object.keys(localSchema.properties ?? {}));
       const patterns = localSchema.patternProperties
         ? Object.keys(localSchema.patternProperties).map((p) => new RegExp(p))
         : [];
-      for (const key of Object.keys(result)) {
+      for (const key of Object.keys(afterConditions)) {
         if (!knownKeys.has(key) && !patterns.some((re) => re.test(key))) {
           // oxlint-disable-next-line no-param-reassign
-          delete result[key];
+          delete afterConditions[key];
         }
       }
     }
+
+    const result = handleDependencies(localSchema, source, afterConditions);
 
     return result ?? (materializeSource ? source : undefined);
   }
