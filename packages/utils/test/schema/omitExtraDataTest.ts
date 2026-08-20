@@ -1352,6 +1352,24 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         expect(result).not.toHaveProperty('extra');
       });
 
+      it('preserves keys added by a dependency sub-schema even when parent has additionalProperties:false', () => {
+        // handleDependencies runs AFTER the post-prune step, so dependency-declared properties
+        // are never deleted by the additionalProperties:false sweep.
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { name: { type: 'string' } },
+          additionalProperties: false,
+          dependencies: {
+            name: {
+              properties: { age: { type: 'number' } },
+            },
+          },
+        };
+        const formData = { name: 'Alice', age: 30, extra: 'drop' };
+        const result = omitExtraData(testValidator, schema, schema, formData);
+        expect(result).toEqual({ name: 'Alice', age: 30 });
+      });
+
       it('skips property dependencies (string arrays) and schema dependencies for absent keys', () => {
         const schema: RJSFSchema = {
           type: 'object',
