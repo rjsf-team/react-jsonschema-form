@@ -40,6 +40,10 @@ describe('mergeDefaultsWithFormData()', () => {
     expect(mergeDefaultsWithFormData(undefined, undefined)).toBeUndefined();
   });
 
+  it('should return the formData object when defaults is undefined', () => {
+    expect(mergeDefaultsWithFormData(undefined, { a: 1 })).toEqual({ a: 1 });
+  });
+
   it('should merge two one-level deep objects', () => {
     expect(mergeDefaultsWithFormData({ a: 1 }, { b: 2 })).toEqual({
       a: 1,

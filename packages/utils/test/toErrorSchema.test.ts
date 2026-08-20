@@ -8,4 +8,7 @@ describe('toErrorSchema()', () => {
   it('returns the expected ErrorSchema when given a list of errors', () => {
     expect(toErrorSchema(TEST_ERROR_LIST)).toEqual(TEST_ERROR_SCHEMA);
   });
+  it('puts an error without a property at the root of the ErrorSchema', () => {
+    expect(toErrorSchema([{ message: 'err', stack: 'err' }])).toEqual({ __errors: ['err'] });
+  });
 });

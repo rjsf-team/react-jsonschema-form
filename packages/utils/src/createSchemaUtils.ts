@@ -1,5 +1,3 @@
-import get from 'lodash/get';
-
 import { ID_KEY, JSON_SCHEMA_DRAFT_2020_12, SCHEMA_KEY } from './constants';
 import deepEquals from './deepEquals';
 import { makeAllReferencesAbsolute } from './findSchemaDefinition';
@@ -64,7 +62,7 @@ class SchemaUtils<
     experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
   ) {
     if (rootSchema?.[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
-      this.rootSchema = makeAllReferencesAbsolute(rootSchema, get(rootSchema, ID_KEY, '#'));
+      this.rootSchema = makeAllReferencesAbsolute(rootSchema, rootSchema[ID_KEY] ?? '#');
     } else {
       this.rootSchema = rootSchema;
     }

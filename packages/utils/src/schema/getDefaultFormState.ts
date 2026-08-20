@@ -1,5 +1,4 @@
 import type { JSONSchema7Object } from 'json-schema';
-import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 
 import {
@@ -25,6 +24,7 @@ import mergeDefaultsWithFormData from '../mergeDefaultsWithFormData';
 import mergeObjects from '../mergeObjects';
 import mergeSchemas from '../mergeSchemas';
 import optionsList from '../optionsList';
+import { getByPath } from '../pathUtils';
 import type {
   Experimental_CustomMergeAllOf,
   Experimental_DefaultFormStateBehavior,
@@ -483,13 +483,13 @@ export function ensureFormDataMatchingSchema<
   } else if (isObject(validFormData) && isObject(schemaToMatch.properties)) {
     validFormData = Object.keys(schemaToMatch.properties).reduce(
       (acc: GenericObjectType, key: string) => {
-        const propertySchema: S = get(schemaToMatch, [PROPERTIES_KEY, key], {}) as S;
+        const propertySchema: S = schemaToMatch[PROPERTIES_KEY]?.[key] as S;
         if (key in acc && (shouldRetrieveAllOf || (isObject(propertySchema) && ALL_OF_KEY in propertySchema))) {
           acc[key] = ensureFormDataMatchingSchema<T, S, F>(
             validator,
             propertySchema,
             rootSchema,
-            get(acc, key),
+            acc[key],
             experimental_defaultFormStateBehavior,
             experimental_customMergeAllOf,
           );
@@ -543,7 +543,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
     const parentConst = retrievedSchema[CONST_KEY];
     const objectDefaults = Object.keys(retrievedSchema.properties || {}).reduce(
       (acc: GenericObjectType, key: string) => {
-        const propertySchema: S = get(retrievedSchema, [PROPERTIES_KEY, key], {}) as S;
+        const propertySchema: S = retrievedSchema[PROPERTIES_KEY]?.[key] as S;
         // Check if the parent schema has a const property defined AND we are supporting const as defaults, then we
         // should always return the computedDefault since it's coming from the const.
         const hasParentConst = isObject(parentConst) && (parentConst as JSONSchema7Object)[key] !== undefined;
@@ -559,8 +559,8 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
           experimental_defaultFormStateBehavior,
           experimental_customMergeAllOf,
           includeUndefinedValues: includeUndefinedValues === true,
-          parentDefaults: get(defaults, [key]),
-          rawFormData: get(formData, [key]),
+          parentDefaults: getByPath(defaults, [key]),
+          rawFormData: getByPath(formData, [key]),
           required: retrievedSchema.required?.includes(key),
           shouldMergeDefaultsIntoFormData,
           initialDefaultsGenerated,
@@ -611,8 +611,8 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
           experimental_defaultFormStateBehavior,
           experimental_customMergeAllOf,
           includeUndefinedValues: includeUndefinedValues === true,
-          parentDefaults: get(defaults, [key]),
-          rawFormData: get(formData, [key]),
+          parentDefaults: getByPath(defaults, [key]),
+          rawFormData: getByPath(formData, [key]),
           required: retrievedSchema.required?.includes(key),
           shouldMergeDefaultsIntoFormData,
           initialDefaultsGenerated,
@@ -702,7 +702,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
           experimental_defaultFormStateBehavior,
           experimental_customMergeAllOf,
           rawFormData: item,
-          parentDefaults: get(defaults, [idx]),
+          parentDefaults: getByPath(defaults, [idx]),
           required,
           shouldMergeDefaultsIntoFormData,
           initialDefaultsGenerated,
