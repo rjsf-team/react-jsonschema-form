@@ -61,7 +61,7 @@ describe('validationDataMerge()', () => {
         arrayLevel1: {
           0: { field1: { [ERRORS_KEY]: ['must NOT have fewer than 1 characters'] } },
         },
-      } as ErrorSchema,
+      } as unknown as ErrorSchema,
       errors: [
         { stack: '.arrayLevel1.0.field1 must NOT have fewer than 1 characters', name: 'foo', schemaPath: '.foo' },
       ],
