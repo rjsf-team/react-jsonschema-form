@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.8.1
+
+## @rjsf/utils
+
+- Fixed `validationDataMerge()` to normalize array-shaped `ErrorSchema` branches (such as the optimistic `newErrorSchema` built by `ArrayField`'s add/copy/remove/reorder handlers) into RJSF's own numeric-keyed-object convention before merging, fixing inline field errors that stopped rendering anywhere under an array once one of its items was added/copied/removed/reordered, while the top-level error list remained correct, fixing [#5201](https://github.com/rjsf-team/react-jsonschema-form/issues/5201)
+
 # 6.8.0
 
 ## @rjsf/core
