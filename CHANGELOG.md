@@ -20,14 +20,14 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 
-- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused modules; a consumer importing only `Form` no longer bundles the AJV validator chain pulled in by `getTestRegistry`, shrinking a minimal bundle by ~34kB gzipped
-- Fixed `validationDataMerge()` to normalize array-shaped `ErrorSchema` branches (such as the optimistic `newErrorSchema` built by `ArrayField`'s add/copy/remove/reorder handlers) into RJSF's own numeric-keyed-object convention before merging, fixing inline field errors that stopped rendering anywhere under an array once one of its items was added/copied/removed/reordered, while the top-level error list remained correct, fixing [#5201](https://github.com/rjsf-team/react-jsonschema-form/issues/5201)
-- Fixed `mergeDefaultsWithFormData()` to take the recursive path when the default under an object key holds an array, so a default that lives inside a `dependencies` subschema is no longer dropped when the owning array sits more than one object below the root, fixing part of [#5198](https://github.com/rjsf-team/react-jsonschema-form/issues/5198) ([#5202](https://github.com/rjsf-team/react-jsonschema-form/pull/5202))
 - Replaced all path-based `lodash` usage (`get`, `set`, `unset`, `toPath`, `pick`) with the new `@rjsf/utils` path utilities
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused modules; a consumer importing only `Form` no longer bundles the AJV validator chain pulled in by `getTestRegistry`, shrinking a minimal bundle by ~34kB gzipped
 
 ## @rjsf/utils
 
+- Fixed `validationDataMerge()` to normalize array-shaped `ErrorSchema` branches (such as the optimistic `newErrorSchema` built by `ArrayField`'s add/copy/remove/reorder handlers) into RJSF's own numeric-keyed-object convention before merging, fixing inline field errors that stopped rendering anywhere under an array once one of its items was added/copied/removed/reordered, while the top-level error list remained correct, fixing [#5201](https://github.com/rjsf-team/react-jsonschema-form/issues/5201)
 - Added new path utilities `getByPath`, `setByPath`, `hasByPath`, `unsetByPath` and `toPath`, and switched all path-based `lodash` usage (`get`, `set`, `setWith`, `has`, `unset`, `toPath`, `pick`) over to them. Unlike their lodash counterparts, these treat a bare string as a single literal key, lodash-style dotted path strings are parsed explicitly via `toPath()`, and `getByPath()`/`hasByPath()` resolve **own** properties only (inherited members and prototype internals such as `__proto__` never resolve)
+- Fixed `mergeDefaultsWithFormData()` to take the recursive path when the default under an object key holds an array, so a default that lives inside a `dependencies` subschema is no longer dropped when the owning array sits more than one object below the root, fixing part of [#5198](https://github.com/rjsf-team/react-jsonschema-form/issues/5198) ([#5202](https://github.com/rjsf-team/react-jsonschema-form/pull/5202))
 
 ## @rjsf/validator-ajv8
 
