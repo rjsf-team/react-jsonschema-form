@@ -8499,6 +8499,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
   </form>
 </DocumentFragment>
 `;
+
 exports[`single fields > schema examples 1`] = `
 <DocumentFragment>
   <form
