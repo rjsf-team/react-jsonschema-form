@@ -1201,10 +1201,11 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         expect(result).toEqual({ type: 'B' });
       });
 
-      it('preserves keys added by then-branch even when parent has additionalProperties:false', () => {
-        // then-branch properties are kept regardless of the parent's additionalProperties:false —
-        // omitExtraData does not post-prune branch-granted keys, matching pre-PR behaviour.
-        // 'p_field' matches patternProperties and is also retained.
+      it('prunes then-branch keys not in parent properties/patternProperties when additionalProperties:false', () => {
+        // Post-pruning mirrors the SJSF behaviour: after all branch merging, any key that is not
+        // in the parent schema's own `properties` or matched by `patternProperties` is deleted
+        // when additionalProperties is false. 'extra' is only declared in the then-branch, so it
+        // is pruned. 'p_field' matches '^p_' and is retained.
         const schema: RJSFSchema = {
           type: 'object',
           properties: { type: { type: 'string' } },
@@ -1216,12 +1217,12 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         const formData = { type: 'A', p_field: 'keep', extra: 'keep' };
         testValidator.setReturnValues({ isValid: [true] });
         const result = omitExtraData(testValidator, schema, schema, formData);
-        expect(result).toEqual({ type: 'A', p_field: 'keep', extra: 'keep' });
+        expect(result).toEqual({ type: 'A', p_field: 'keep' });
       });
 
-      it('preserves then-branch keys when parent has additionalProperties:false and no properties', () => {
-        // Without a parent `properties` key, handleObject writes nothing from source.
-        // The then-branch result is still merged in and preserved.
+      it('prunes then-branch keys when parent has additionalProperties:false and no properties', () => {
+        // Without a parent `properties` key the known-key set is empty, so all keys that survive
+        // branch merging are removed by the post-pruning step.
         const schema: RJSFSchema = {
           type: 'object',
           additionalProperties: false,
@@ -1231,7 +1232,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         const formData = { extra: 'keep' };
         testValidator.setReturnValues({ isValid: [true] });
         const result = omitExtraData(testValidator, schema, schema, formData);
-        expect(result).toEqual({ extra: 'keep' });
+        expect(result).toEqual({});
       });
 
       it('returns existing filtered value when then-branch is permissive (true)', () => {
