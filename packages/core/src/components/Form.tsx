@@ -55,6 +55,7 @@ import _get from 'lodash/get';
 import _isEmpty from 'lodash/isEmpty';
 import _pick from 'lodash/pick';
 import _set from 'lodash/set';
+import _setWith from 'lodash/setWith';
 import _toPath from 'lodash/toPath';
 import _unset from 'lodash/unset';
 
@@ -1047,7 +1048,9 @@ export default class Form<
         // mergeErrors below sees the user's error at this path without mutating shared state.
         if (!isRootPath) {
           mergeBaseErrorSchema = structuredClone(schemaValidationErrorSchema);
-          _set(mergeBaseErrorSchema, path, newErrorSchema);
+          // Use setWith(..., Object) rather than plain set() so a not-yet-existing numeric path segment
+          // vivifies a plain object (RJSF's own ErrorSchema convention), not a real array (see ErrorSchemaBuilder).
+          _setWith(mergeBaseErrorSchema, path, newErrorSchema, Object);
         } else {
           mergeBaseErrorSchema = newErrorSchema;
         }
@@ -1062,7 +1065,8 @@ export default class Form<
             customErrors.setErrors(pathErrors);
           }
         } else {
-          _set(customErrors.ErrorSchema, path, newErrorSchema);
+          // See the setWith(..., Object) comment above — same reasoning applies here.
+          _setWith(customErrors.ErrorSchema, path, newErrorSchema, Object);
         }
       }
     } else if (customErrors && _get(customErrors.ErrorSchema, [...path, ERRORS_KEY])) {

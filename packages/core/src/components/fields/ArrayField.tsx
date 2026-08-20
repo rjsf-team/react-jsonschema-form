@@ -150,6 +150,20 @@ function computeItemUiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   }
 }
 
+/** After reindexing `oldErrorSchema` into `newErrorSchema` for an array add/copy/remove/reorder, explicitly clears
+ * (sets to `undefined`) any key that existed in `oldErrorSchema` but wasn't assigned a value at that same key in
+ * `newErrorSchema`. Without this, an error that moved to a different index leaves a stale, duplicate copy of itself
+ * behind: `newErrorSchema` is later merged (not replaced) against the previous errorSchema, and that merge unions
+ * keys from the new tree into the old one without ever deleting keys unique to the old side.
+ */
+function clearStaleReindexedErrorSchemaKeys<T>(oldErrorSchema: ErrorSchema<T[]>, newErrorSchema: ErrorSchema<T>) {
+  for (const key of Object.keys(oldErrorSchema)) {
+    if (!(key in newErrorSchema)) {
+      set(newErrorSchema, [key], undefined);
+    }
+  }
+}
+
 /** Returns the default form information for an item based on the schema for that item. Deals with the possibility
  * that the schema is fixed and allows additional items.
  */
@@ -907,6 +921,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
             set(newErrorSchema, [i + 1], errorSchemaRef.current[i]);
           }
         }
+        clearStaleReindexedErrorSchemaKeys(errorSchemaRef.current, newErrorSchema);
       }
 
       const newKeyedFormDataRow: KeyedFormDataType<T> = {
@@ -947,6 +962,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
             set(newErrorSchema, [i + 1], errorSchemaRef.current[i]);
           }
         }
+        clearStaleReindexedErrorSchemaKeys(errorSchemaRef.current, newErrorSchema);
       }
 
       const newKeyedFormDataRow: KeyedFormDataType<T> = {
@@ -987,6 +1003,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
             set(newErrorSchema, [i - 1], errorSchemaRef.current[i]);
           }
         }
+        clearStaleReindexedErrorSchemaKeys(errorSchemaRef.current, newErrorSchema);
       }
       const newKeyedFormData = keyedFormDataRef.current.filter((_, i) => i !== index);
       onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema as ErrorSchema<T[]>);
@@ -1020,6 +1037,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
             set(newErrorSchema, [idx], errorSchemaRef.current[i]);
           }
         }
+        clearStaleReindexedErrorSchemaKeys(errorSchemaRef.current, newErrorSchema);
       }
 
       function reOrderArray() {
