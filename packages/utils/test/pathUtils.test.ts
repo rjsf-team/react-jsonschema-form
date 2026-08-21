@@ -49,10 +49,23 @@ describe('getByPath()', () => {
     expect(getByPath(null, 'a', 'fallback')).toBe('fallback');
     expect(getByPath(undefined, ['a', 'b'], 'fallback')).toBe('fallback');
   });
-  it('does not leak inherited prototype internals, while still reading them as own keys', () => {
+  it('reads own properties only, so inherited members and prototype internals never resolve', () => {
     expect(getByPath({}, ['__proto__'], 'fallback')).toBe('fallback');
     expect(getByPath({}, 'constructor', 'fallback')).toBe('fallback');
     expect(getByPath({ constructor: 'own' }, 'constructor')).toBe('own');
+    expect(getByPath({}, 'toString', 'fallback')).toBe('fallback');
+    expect(getByPath(Object.create({ x: 1 }), 'x', 'fallback')).toBe('fallback');
+  });
+  it('agrees with hasByPath, so the two work as a guard/read pair', () => {
+    const cases: [object, string][] = [
+      [{ a: 1 }, 'a'],
+      [{}, 'toString'],
+      [Object.create({ x: 1 }), 'x'],
+      [{}, 'constructor'],
+    ];
+    cases.forEach(([obj, key]) => {
+      expect(hasByPath(obj, key)).toBe(getByPath(obj, key) !== undefined);
+    });
   });
 });
 

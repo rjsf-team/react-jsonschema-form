@@ -20,7 +20,7 @@ Those types are exported for use by `@rjsf/core` and all the themes, as well as 
 
 These types can be found on GitHub [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/types.ts).
 
-**`ObjectPath`** — Used by the path utilities (`getByPath`, `setByPath`, `hasByPath`, `unsetByPath`) to address a value inside a plain object. It is `string | number | FieldPathList`. Unlike the equivalent `lodash` functions, a bare **string is always a single literal key**: `'a.b'` means the key `'a.b'`, never the nested path `a` → `b`. To walk a dotted path string, split it explicitly with [toPath()](#topath) first, or pass a `FieldPathList` (`(string | number)[]`) of segments.
+**`ObjectPath`** — Used by the path utilities (`getByPath`, `setByPath`, `hasByPath`, `unsetByPath`) to address a value inside a plain object. It is `string | number | FieldPathList`. Unlike the equivalent `lodash` functions, a bare **string is always a single literal key**: `'a.b'` means the key `'a.b'`, never the nested path `a` → `b`. To walk a dotted path string, split it explicitly with [toPath()](#topath) first, or pass a `FieldPathList` (`(string | number)[]`) of segments. Reads and existence checks resolve **own** properties only, so inherited members never appear as form data.
 
 **`SchemaFieldPath`** — Used when navigating a JSON Schema subtree (for example with `getFromSchema` and `findFieldInSchema` on `SchemaUtilsType`, documented under [Validator-based utility functions](#validator-based-utility-functions)). It is `string | FieldPathList`: either a dotted path or an array of segments with the same rules as `FieldPathList` (`(string | number)[]`). A numeric segment denotes an array index or an object key that is numeric. Navigation skips only `undefined` or empty-string segments, so segment **`0`** is always honored (this avoids the bug from treating `0` as a falsy path unit).
 
@@ -402,8 +402,8 @@ Otherwise, return the sub-schema. Also deals with nested `$ref`s in the sub-sche
 
 Gets the value at `path` of `obj`, returning `defaultValue` when the resolved value is `undefined`.
 A bare string `path` is a single literal key, not a dotted path; use [toPath()](#topath) to split a dotted path string into segments first.
-Like `lodash.get`, reads traverse the prototype chain, so `getByPath({}, 'toString')` resolves `Function.prototype.toString`; the `__proto__`, `constructor` and `prototype` segments are the exception and only resolve when they are genuine own data keys.
-Because [hasByPath()](#hasbypath) is own-property-only, the two functions are **not** a matching guard/read pair for inherited keys.
+Every segment must be an **own** property, matching [hasByPath()](#hasbypath), so the two can be used as a guard/read pair.
+This is deliberately stricter than `lodash.get`, which traverses the prototype chain: `getByPath({}, 'toString')` returns `defaultValue` rather than `Function.prototype.toString`. For the plain form data and schemas RJSF navigates, an inherited member is never data, and requiring own keys also makes prototype internals such as `__proto__` unreachable unless they are genuine own data keys.
 
 #### Parameters
 
@@ -422,6 +422,7 @@ getByPath({ a: { b: 1 } }, ['a', 'b']); // 1
 getByPath({ 'a.b': 1 }, 'a.b'); // 1, a bare string is one literal key
 getByPath({ a: { b: 1 } }, toPath('a.b')); // 1
 getByPath({ a: {} }, ['a', 'missing'], 'fallback'); // 'fallback'
+getByPath({}, 'toString', 'fallback'); // 'fallback', inherited members are not read
 ```
 
 ### getChangedFields(a: unknown, b: unknown)
@@ -644,7 +645,7 @@ on the schema type and `widget` name. If no widget component can be found an `Er
 
 Determines whether `obj` has an **own** property at `path`.
 A bare string `path` is a single literal key, not a dotted path; use [toPath()](#topath) to split a dotted path string into segments first.
-Like `lodash.has`, every segment is checked with `Object.hasOwn()`, so inherited properties report `false` — `hasByPath({}, 'toString')` is `false` even though [getByPath()](#getbypath) resolves that key.
+Like `lodash.has`, every segment is checked with `Object.hasOwn()`, so inherited properties report `false` — `hasByPath({}, 'toString')` is `false`. [getByPath()](#getbypath) applies the same own-property rule, so the two can be used as a guard/read pair.
 
 #### Parameters
 

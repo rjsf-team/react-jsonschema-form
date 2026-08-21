@@ -32,7 +32,9 @@ function normalizePath(path: ObjectPath): FieldPathList {
 /** Segments that could reach into an object's prototype chain and enable prototype pollution */
 const UNSAFE_SEGMENTS = new Set(['__proto__', 'constructor', 'prototype']);
 
-/** Determines whether a path segment could traverse or mutate the prototype chain */
+/** Determines whether a path segment could mutate the prototype chain. Only writes need this check;
+ * reads are already own-property-only
+ */
 function isUnsafeSegment(segment: string | number): boolean {
   return typeof segment === 'string' && UNSAFE_SEGMENTS.has(segment);
 }
@@ -49,12 +51,11 @@ function isSettable(value: unknown): boolean {
 
 /** Gets the value at `path` of `obj`, returning `defaultValue` when the resolved value is `undefined`
  *
- * Like `lodash.get`, reads traverse the prototype chain, so `getByPath({}, 'toString')` resolves
- * `Function.prototype.toString` rather than `undefined`. {@link hasByPath} is own-property-only, so the
- * two are NOT a matching guard/read pair for inherited keys: `hasByPath()` can report `false` for a key
- * that `getByPath()` still resolves to a non-`undefined` value. Only `__proto__`, `constructor` and
- * `prototype` are excluded unless they are genuine own data keys. This is harmless for the plain
- * form-data and schema objects RJSF passes here, but check for own keys explicitly when it matters
+ * Every segment must be an OWN property, matching {@link hasByPath}, so the two can be used as a
+ * guard/read pair. This is deliberately stricter than `lodash.get`, which traverses the prototype chain:
+ * `getByPath({}, 'toString')` resolves `defaultValue`, not `Function.prototype.toString`. For the plain
+ * form data and schemas RJSF navigates, an inherited member is never data, and requiring own keys also
+ * makes prototype internals such as `__proto__` unreachable unless they are genuine own data keys
  *
  * @param obj - The object to query
  * @param path - The single key or list of path segments at which to get the value
@@ -65,8 +66,8 @@ export function getByPath<R = any>(obj: unknown, path: ObjectPath, defaultValue?
   const segments = normalizePath(path);
   let current: any = obj;
   for (const segment of segments) {
-    // Prototype-chain segments only resolve when they are real own data keys, never leaking internals
-    if (current == null || (isUnsafeSegment(segment) && !Object.hasOwn(current, segment))) {
+    // Only own data keys resolve, so inherited members and prototype internals are never read
+    if (current == null || !Object.hasOwn(current, segment)) {
       return defaultValue as R;
     }
     current = current[segment];
@@ -113,8 +114,8 @@ export function setByPath<O = any>(obj: O, path: ObjectPath, value: unknown, cre
 /** Determines whether `obj` has an own property at `path`
  *
  * Like `lodash.has`, every segment is checked with `Object.hasOwn()`, so inherited properties report
- * `false` — `hasByPath({}, 'toString')` is `false`. {@link getByPath} does traverse the prototype
- * chain, so the two are NOT a matching guard/read pair for inherited keys
+ * `false` — `hasByPath({}, 'toString')` is `false`. {@link getByPath} applies the same own-property rule,
+ * so the two can be used as a guard/read pair
  *
  * @param obj - The object to query
  * @param path - The single key or list of path segments to check for

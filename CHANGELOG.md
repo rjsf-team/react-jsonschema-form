@@ -21,6 +21,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Added new path utilities `getByPath`, `setByPath`, `hasByPath`, `unsetByPath` and `toPath`, and switched all path-based `lodash` usage (`get`, `set`, `setWith`, `has`, `unset`, `toPath`, `pick`) over to them. Unlike their lodash counterparts, these treat a bare string as a single literal key; lodash-style dotted path strings are parsed explicitly via `toPath()`
+- `getByPath()` resolves **own** properties only, matching `hasByPath()` so the two work as a guard/read pair. This is stricter than `lodash.get`, which traverses the prototype chain: `getByPath({}, 'toString')` returns the default value instead of `Function.prototype.toString`. An inherited member is never form data, and the own-property rule also keeps prototype internals such as `__proto__` unreachable unless they are genuine own data keys
 
 ## @rjsf/core
 
