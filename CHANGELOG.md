@@ -16,17 +16,25 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.8.1
+
+## @rjsf/core
+
+- Fixed the clearing of errors on change so that only the field that actually changed loses its error, rather than every field under the top-level key holding it, fixing [#5197](https://github.com/rjsf-team/react-jsonschema-form/issues/5197) ([#5205](https://github.com/rjsf-team/react-jsonschema-form/pull/5205))
+
+## @rjsf/utils
+
+- Added an optional `deep` flag to `getChangedFields()` that descends into nested objects and same-length arrays and returns the dotted path of the field that changed ([#5205](https://github.com/rjsf-team/react-jsonschema-form/pull/5205))
+
 # 6.8.0
 
 ## @rjsf/core
 
 - Fixed `TimeWidget` to respect schema `multipleOf` time precision, preserving second-precision values while keeping minute-precision native inputs synchronized with their displayed value ([#5174](https://github.com/rjsf-team/react-jsonschema-form/pull/5174))
-- Fixed the clearing of errors on change so that only the field that actually changed loses its error, rather than every field under the top-level key holding it, fixing [#5197](https://github.com/rjsf-team/react-jsonschema-form/issues/5197) ([#5205](https://github.com/rjsf-team/react-jsonschema-form/pull/5205))
 
 ## @rjsf/utils
 
 - Fixed an issue in `sortedJSONStringify` with regards to handling arrays containing `null` and `undefined` values.
-- Added an optional `deep` flag to `getChangedFields()` that descends into nested objects and same-length arrays and returns the dotted path of the field that changed ([#5205](https://github.com/rjsf-team/react-jsonschema-form/pull/5205))
 
 ## @rjsf/validator-ata
 

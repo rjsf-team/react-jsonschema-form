@@ -186,6 +186,11 @@ describe('getChangedFields()', () => {
       const b = { items: [{ qux: '' }, { qux: '' }] };
       expect(getChangedFields(a, b, true)).toEqual(['items']);
     });
+    it('reports the index when the item that changed is not an object', () => {
+      const a = { items: ['one', 'two'] };
+      const b = { items: ['one', 'three'] };
+      expect(getChangedFields(a, b, true)).toEqual(['items.1']);
+    });
     it('stops where one side is no longer an object', () => {
       const a = { outer: { inner: 1 } };
       const b = { outer: 'gone' };
