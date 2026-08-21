@@ -17,3 +17,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           package_manager: pnpm
           build_script: build
+          # The base-branch pass runs against a checkout that may predate size-limit
+          # (e.g. while the PR introducing it is open); report no results there
+          # instead of crashing on the missing dependency/config.
+          script: sh -c "if [ -f .size-limit.json ]; then npx --no-install size-limit --json; else echo []; fi"
