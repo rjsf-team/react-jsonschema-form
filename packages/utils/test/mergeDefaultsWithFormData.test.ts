@@ -67,6 +67,15 @@ describe('mergeDefaultsWithFormData()', () => {
     expect(mergeDefaultsWithFormData([1, 2, 3], [4, 5], true)).toEqual([4, 5, 3]);
   });
 
+  it('should append extra array defaults under an object key, the same as at the root', () => {
+    expect(mergeDefaultsWithFormData({ config: { tags: ['a', 'b'] } }, { config: { tags: ['x'] } }, true)).toEqual({
+      config: { tags: ['x', 'b'] },
+    });
+    expect(mergeDefaultsWithFormData({ config: { tags: ['a', 'b'] } }, { config: { tags: ['x'] } })).toEqual({
+      config: { tags: ['x'] },
+    });
+  });
+
   it('should deeply merge arrays with overlapping entries', () => {
     expect(mergeDefaultsWithFormData([{ a: 1 }], [{ b: 2 }, { c: 3 }])).toEqual([{ a: 1, b: 2 }, { c: 3 }]);
   });
@@ -317,6 +326,15 @@ describe('mergeDefaultsWithFormData()', () => {
       };
       // oxlint-disable-next-line typescript/no-unnecessary-type-arguments
       expect(mergeDefaultsWithFormData<any>(obj1, obj2, undefined, undefined, true)).toEqual(expected);
+    });
+
+    it('should deeply merge an array that sits under an object key', () => {
+      const defaults = { outer: { rows: [{ name: 'Name', grade: 'A' }] } };
+      const formData = { outer: { rows: [{ name: 'Name' }] } };
+      // oxlint-disable-next-line typescript/no-unnecessary-type-arguments
+      expect(mergeDefaultsWithFormData<any>(defaults, formData, true, false, true)).toEqual({
+        outer: { rows: [{ name: 'Name', grade: 'A' }] },
+      });
     });
 
     it('should recursively merge File objects', () => {
