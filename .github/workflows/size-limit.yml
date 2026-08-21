@@ -1,0 +1,56 @@
+name: Size limit
+on: pull_request
+permissions:
+  contents: read
+concurrency:
+  group: size-limit-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  size:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          cache-dependency-path: 'pnpm-lock.yaml'
+      - name: Measure PR head
+        run: |
+          pnpm install --frozen-lockfile
+          # Only @rjsf/core (and its workspace deps, via nx dependsOn) is measured.
+          pnpm exec nx run-many --target=build --projects=@rjsf/core
+          # size-limit exits non-zero when a budget is exceeded but still emits
+          # JSON; record the outcome and enforce it at the end so the report
+          # comment is produced either way.
+          if pnpm exec size-limit --json > "$RUNNER_TEMP/head.json"; then
+            echo ok > "$RUNNER_TEMP/status"
+          else
+            echo fail > "$RUNNER_TEMP/status"
+          fi
+      - name: Measure base branch
+        run: |
+          git fetch --no-tags --depth 1 origin ${{ github.event.pull_request.base.sha }}
+          git checkout -f ${{ github.event.pull_request.base.sha }}
+          # The base branch may predate the size-limit setup, or fail to install
+          # or build; report no baseline in any of those cases. --skip-nx-cache
+          # because lib/ is not a declared nx output, so a cache hit here would
+          # leave the head build on disk and measure it as the baseline.
+          if [ -f .size-limit.json ] &&
+            pnpm install --frozen-lockfile &&
+            pnpm exec nx run-many --target=build --projects=@rjsf/core --skip-nx-cache; then
+            pnpm exec size-limit --json > "$RUNNER_TEMP/base.json" || echo '[]' > "$RUNNER_TEMP/base.json"
+          else
+            echo '[]' > "$RUNNER_TEMP/base.json"
+          fi
+      - uses: actions/upload-artifact@v7
+        with:
+          name: size-limit-report
+          path: |
+            ${{ runner.temp }}/head.json
+            ${{ runner.temp }}/base.json
+      - name: Enforce limits
+        run: test "$(cat "$RUNNER_TEMP/status")" = ok
