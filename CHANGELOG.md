@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.8.1
+
+## Dev / docs / playground
+
+- Added a `size-limit` CI check that measures the tree-shaken bundle size of importing only `Form` from `@rjsf/core` (with and without `@rjsf/utils`), enforces size budgets, and comments the size diff versus the base branch on every PR
+
 # 6.8.0
 
 ## @rjsf/core
@@ -39,7 +45,6 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Added `@rjsf/validator-cfworker` to the playground validator selector and API documentation
-- Added a `size-limit` CI check that measures the tree-shaken bundle size of importing only `Form` from `@rjsf/core` (with and without `@rjsf/utils`), enforces size budgets, and comments the size diff versus the base branch on every PR
 
 # 6.7.1
 

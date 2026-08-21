@@ -28,7 +28,8 @@ const fmt = (bytes) => `${(bytes / 1000).toFixed(2)} kB`;
 const rows = head.slice(0, 20).map((c) => {
   const b = base.get(c.name);
   const diff = b ? c.size - b.size : null;
-  const delta = diff === null ? 'new' : diff === 0 ? '=' : `${diff > 0 ? '+' : '-'}${fmt(Math.abs(diff))}`;
+  // Under 5 bytes the delta would render as a signed 0.00 kB; call it unchanged.
+  const delta = diff === null ? 'new' : Math.abs(diff) < 5 ? '=' : `${diff > 0 ? '+' : '-'}${fmt(Math.abs(diff))}`;
   const status = c.passed === false ? ' :x:' : '';
   // Code span so a name can never render as a mention or other live markdown.
   return `| \`${safe(c.name)}\`${status} | ${b ? fmt(b.size) : '—'} | ${fmt(c.size)} | ${delta} |`;
