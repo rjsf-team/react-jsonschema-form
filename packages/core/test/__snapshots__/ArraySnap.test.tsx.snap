@@ -1082,6 +1082,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                       checked=""
                       id="root_2"
                       name="root[2]"
+                      required=""
                       type="checkbox"
                     />
                     <span />

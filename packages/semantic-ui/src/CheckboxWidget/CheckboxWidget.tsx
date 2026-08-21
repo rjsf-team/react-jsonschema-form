@@ -33,6 +33,7 @@ export default function CheckboxWidget<
     uiSchema,
     rawErrors = [],
     registry,
+    required,
   } = props;
   const semanticProps = getSemanticProps<T, S, F>({
     options,
@@ -47,15 +48,12 @@ export default function CheckboxWidget<
     registry,
     options,
   );
-  // Because an unchecked checkbox will cause html5 validation to fail, only add
-  // the "required" attribute if the field value must be "true", due to the
-  // "const" or "enum" keywords
-  const required = schemaRequiresTrueValue<S>(schema);
   const checked = value === 'true' || value === true;
   const handleChange = (_: FormEvent<HTMLInputElement>, data: CheckboxProps) => onChange?.(data.checked);
   const handleBlur: React.FocusEventHandler<HTMLInputElement> = () => onBlur?.(id, value);
   const handleFocus: React.FocusEventHandler<HTMLInputElement> = () => onFocus?.(id, value);
   const description = options.description ?? schema.description;
+  const inputRequired = schemaRequiresTrueValue(schema) && required;
 
   return (
     <>
@@ -79,7 +77,7 @@ export default function CheckboxWidget<
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        required={required}
+        required={inputRequired}
         label={labelValue(label, hideLabel, false)}
         aria-describedby={ariaDescribedByIds(id)}
       />
