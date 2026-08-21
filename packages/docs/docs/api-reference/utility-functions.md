@@ -396,16 +396,20 @@ Otherwise, return the sub-schema. Also deals with nested `$ref`s in the sub-sche
 
 - Error indicating that no schema for that reference exists
 
-### getChangedFields(a: unknown, b: unknown)
+### getChangedFields(a: unknown, b: unknown, deep?: boolean)
 
 Compares two objects and returns the names of the fields that have changed.
 This function iterates over each field of object `a`, using `_.isEqual` to compare the field value with the corresponding field value in object `b`.
 If the values are different, the field name will be included in the returned array.
 
+When `deep` is true, a field holding a nested object or a same-length array is descended into and the dotted path of the deepest field that changed is returned instead of the name of the top-level field holding it.
+A key that contains a `.` is never descended into, since the path it would produce cannot be told apart from a path through a nested object.
+
 #### Parameters
 
 - a: unknown - The first object, representing the original data to compare.
 - b: unknown - The second object, representing the updated data to compare.
+- [deep=false]: boolean - Optional flag that, when true, returns the dotted path of the deepest field that changed.
 
 #### Returns
 
@@ -418,6 +422,15 @@ const a = { name: 'John', age: 30 };
 const b = { name: 'John', age: 31 };
 const changedFields = getChangedFields(a, b);
 console.log(changedFields); // Output: ['age']
+```
+
+#### Example (deep)
+
+```typescript
+const a = { items: [{ qux: '', corge: '' }] };
+const b = { items: [{ qux: 'a', corge: '' }] };
+console.log(getChangedFields(a, b)); // Output: ['items']
+console.log(getChangedFields(a, b, true)); // Output: ['items.0.qux']
 ```
 
 ### getDecimalSeparator(languages?: string | string[])
