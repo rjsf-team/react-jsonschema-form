@@ -6,29 +6,22 @@ import type { FieldPathList } from './types';
  */
 export type ObjectPath = string | number | FieldPathList;
 
-/** Matches one path segment in a dotted path string: either a run of characters between dots, or a
- * bracketed array index whose digits are captured. Only the grammar RJSF itself produces is supported —
- * quoted keys and negative/decimal indexes are not recognized; keys containing dots must be addressed
- * with a segment list instead of a string
- */
-const rePathSegment = /[^.[\]]+|\[(\d+)\]/g;
 /** Matches unsigned integer strings that represent valid array indexes */
 const reIsIndex = /^(?:0|[1-9]\d*)$/;
 
 /** Converts a dotted path string, such as produced for validation error properties, into its list of
- * path segments. Array indexes may be written bracketed (`'a[0].b'`) or dotted (`'a.0.b'`), and a
- * leading `.` is ignored
+ * path segments. Array indexes may be written bracketed (`'a[0].b'`) or dotted (`'a.0.b'`), and empty
+ * segments — from a leading `.`, a trailing `.` or a `..` run — are dropped.
+ *
+ * Only the grammar RJSF itself produces is supported: dots and brackets are always separators, so
+ * quoted keys are not recognized and keys containing dots must be addressed with a segment list
+ * instead of a string.
  *
  * @param path - The string path to convert, such as `'.level1.level2[2].level3'`
  * @returns - The list of path segments, such as `['level1', 'level2', '2', 'level3']`
  */
 export function toPath(path: string): string[] {
-  const result: string[] = [];
-  path.replace(rePathSegment, (match: string, index: string) => {
-    result.push(index ?? match);
-    return match;
-  });
-  return result;
+  return path.split(/[.[\]]+/).filter(Boolean);
 }
 
 /** Normalizes an `ObjectPath` into a list of path segments, wrapping a single key into a one-element list */
@@ -55,6 +48,13 @@ function isSettable(value: unknown): boolean {
 }
 
 /** Gets the value at `path` of `obj`, returning `defaultValue` when the resolved value is `undefined`
+ *
+ * Like `lodash.get`, reads traverse the prototype chain, so `getByPath({}, 'toString')` resolves
+ * `Function.prototype.toString` rather than `undefined`. {@link hasByPath} is own-property-only, so the
+ * two are NOT a matching guard/read pair for inherited keys: `hasByPath()` can report `false` for a key
+ * that `getByPath()` still resolves to a non-`undefined` value. Only `__proto__`, `constructor` and
+ * `prototype` are excluded unless they are genuine own data keys. This is harmless for the plain
+ * form-data and schema objects RJSF passes here, but check for own keys explicitly when it matters
  *
  * @param obj - The object to query
  * @param path - The single key or list of path segments at which to get the value
@@ -111,6 +111,10 @@ export function setByPath<O = any>(obj: O, path: ObjectPath, value: unknown, cre
 }
 
 /** Determines whether `obj` has an own property at `path`
+ *
+ * Like `lodash.has`, every segment is checked with `Object.hasOwn()`, so inherited properties report
+ * `false` — `hasByPath({}, 'toString')` is `false`. {@link getByPath} does traverse the prototype
+ * chain, so the two are NOT a matching guard/read pair for inherited keys
  *
  * @param obj - The object to query
  * @param path - The single key or list of path segments to check for

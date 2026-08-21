@@ -17,6 +17,11 @@ describe('toPath()', () => {
   it('splits array indexes written with dots', () => {
     expect(toPath('a.0.b')).toEqual(['a', '0', 'b']);
   });
+  it('drops empty segments from trailing dots and doubled separators', () => {
+    expect(toPath('a.')).toEqual(['a']);
+    expect(toPath('a..b')).toEqual(['a', 'b']);
+    expect(toPath('a[0][1]')).toEqual(['a', '0', '1']);
+  });
 });
 
 describe('getByPath()', () => {

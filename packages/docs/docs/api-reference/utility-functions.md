@@ -20,6 +20,8 @@ Those types are exported for use by `@rjsf/core` and all the themes, as well as 
 
 These types can be found on GitHub [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/types.ts).
 
+**`ObjectPath`** — Used by the path utilities (`getByPath`, `setByPath`, `hasByPath`, `unsetByPath`) to address a value inside a plain object. It is `string | number | FieldPathList`. Unlike the equivalent `lodash` functions, a bare **string is always a single literal key**: `'a.b'` means the key `'a.b'`, never the nested path `a` → `b`. To walk a dotted path string, split it explicitly with [toPath()](#topath) first, or pass a `FieldPathList` (`(string | number)[]`) of segments.
+
 **`SchemaFieldPath`** — Used when navigating a JSON Schema subtree (for example with `getFromSchema` and `findFieldInSchema` on `SchemaUtilsType`, documented under [Validator-based utility functions](#validator-based-utility-functions)). It is `string | FieldPathList`: either a dotted path or an array of segments with the same rules as `FieldPathList` (`(string | number)[]`). A numeric segment denotes an array index or an object key that is numeric. Navigation skips only `undefined` or empty-string segments, so segment **`0`** is always honored (this avoids the bug from treating `0` as a falsy path unit).
 
 ## Enums
@@ -396,6 +398,32 @@ Otherwise, return the sub-schema. Also deals with nested `$ref`s in the sub-sche
 
 - Error indicating that no schema for that reference exists
 
+### getByPath&lt;R = any>()
+
+Gets the value at `path` of `obj`, returning `defaultValue` when the resolved value is `undefined`.
+A bare string `path` is a single literal key, not a dotted path; use [toPath()](#topath) to split a dotted path string into segments first.
+Like `lodash.get`, reads traverse the prototype chain, so `getByPath({}, 'toString')` resolves `Function.prototype.toString`; the `__proto__`, `constructor` and `prototype` segments are the exception and only resolve when they are genuine own data keys.
+Because [hasByPath()](#hasbypath) is own-property-only, the two functions are **not** a matching guard/read pair for inherited keys.
+
+#### Parameters
+
+- obj: unknown - The object to query
+- path: ObjectPath - The single key or list of path segments at which to get the value
+- [defaultValue]: R - The value returned when the resolved value is `undefined`
+
+#### Returns
+
+- R: The resolved value, otherwise `defaultValue`
+
+#### Example
+
+```typescript
+getByPath({ a: { b: 1 } }, ['a', 'b']); // 1
+getByPath({ 'a.b': 1 }, 'a.b'); // 1, a bare string is one literal key
+getByPath({ a: { b: 1 } }, toPath('a.b')); // 1
+getByPath({ a: {} }, ['a', 'missing'], 'fallback'); // 'fallback'
+```
+
 ### getChangedFields(a: unknown, b: unknown)
 
 Compares two objects and returns the names of the fields that have changed.
@@ -611,6 +639,29 @@ on the schema type and `widget` name. If no widget component can be found an `Er
 #### Throws
 
 - An error if there is no `Widget` component that can be returned
+
+### hasByPath()
+
+Determines whether `obj` has an **own** property at `path`.
+A bare string `path` is a single literal key, not a dotted path; use [toPath()](#topath) to split a dotted path string into segments first.
+Like `lodash.has`, every segment is checked with `Object.hasOwn()`, so inherited properties report `false` — `hasByPath({}, 'toString')` is `false` even though [getByPath()](#getbypath) resolves that key.
+
+#### Parameters
+
+- obj: unknown - The object to query
+- path: ObjectPath - The single key or list of path segments to check for
+
+#### Returns
+
+- boolean: True if the own property exists at `path`, otherwise false
+
+#### Example
+
+```typescript
+hasByPath({ a: { b: undefined } }, ['a', 'b']); // true, the key exists
+hasByPath({ a: { b: 1 } }, 'a.b'); // false, there is no key named 'a.b'
+hasByPath({}, 'toString'); // false, inherited properties are not own properties
+```
 
 ### hashObject()
 
@@ -1038,6 +1089,33 @@ Check to see if a `schema` specifies that a value must be true. This happens whe
 
 - boolean: True if the schema specifies a value that must be true, false otherwise
 
+### setByPath&lt;O = any>()
+
+Sets `value` at `path` of `obj`, mutating and returning `obj`.
+A bare string `path` is a single literal key, not a dotted path; use [toPath()](#topath) to split a dotted path string into segments first.
+Missing intermediate containers are created: arrays when the next segment is a valid array index, plain objects otherwise, or always plain objects when `createIntermediateObjects` is true.
+Paths containing a `__proto__`, `constructor` or `prototype` segment are refused and `obj` is returned unmodified, preventing prototype pollution.
+
+#### Parameters
+
+- obj: O - The object to modify
+- path: ObjectPath - The single key or list of path segments at which to set the value
+- value: unknown - The value to set
+- [createIntermediateObjects=false]: boolean - When true, always create plain objects for missing intermediate containers, even for numeric path segments
+
+#### Returns
+
+- O: The mutated `obj`
+
+#### Example
+
+```typescript
+setByPath({}, ['a', 'b'], 1); // { a: { b: 1 } }
+setByPath({}, ['a', 0], 1); // { a: [1] }, a numeric next segment creates an array
+setByPath({}, ['a', 0], 1, true); // { a: { 0: 1 } }, createIntermediateObjects forces an object
+setByPath({}, 'a.b', 1); // { 'a.b': 1 }, a bare string is one literal key
+```
+
 ### shallowEquals()
 
 Implements a shallow equals comparison that uses `Object.is()` for comparing values.
@@ -1196,6 +1274,50 @@ generate the path from the `parentPath` (if provided) and the `idPrefix` and `id
 #### Returns
 
 - FieldPathId: The `FieldPathId` for the given `fieldPath` and the optional `parentPathId`
+
+### toPath()
+
+Converts a dotted path string, such as the `property` of a validation error, into its list of path segments.
+Array indexes may be written bracketed (`'a[0].b'`) or dotted (`'a.0.b'`), and empty segments — from a leading `.`, a trailing `.` or a `..` run — are dropped.
+Only the grammar RJSF itself produces is supported: dots and brackets are always separators, so quoted keys are not recognized and keys containing dots must be addressed with a segment list instead of a string.
+
+#### Parameters
+
+- path: string - The string path to convert, such as `'.level1.level2[2].level3'`
+
+#### Returns
+
+- string[]: The list of path segments, such as `['level1', 'level2', '2', 'level3']`
+
+#### Example
+
+```typescript
+toPath('.level1.level2[2].level3'); // ['level1', 'level2', '2', 'level3']
+toPath('a.0.b'); // ['a', '0', 'b']
+getByPath(formData, toPath(error.property)); // the usual pairing with the path utilities
+```
+
+### unsetByPath()
+
+Removes the own property at `path` of `obj`, mutating `obj`.
+A bare string `path` is a single literal key, not a dotted path; use [toPath()](#topath) to split a dotted path string into segments first.
+
+#### Parameters
+
+- obj: unknown - The object to modify
+- path: ObjectPath - The single key or list of path segments at which to remove the property
+
+#### Returns
+
+- boolean: True if the property was removed or did not exist, otherwise false. Unlike `lodash.unset`, a non-configurable property returns false instead of throwing in strict mode
+
+#### Example
+
+```typescript
+const obj = { a: { b: 1 } };
+unsetByPath(obj, ['a', 'b']); // true, obj is now { a: {} }
+unsetByPath(obj, ['a', 'missing']); // true, nothing to remove
+```
 
 ### unwrapErrorHandler&lt;T = any>()
 
