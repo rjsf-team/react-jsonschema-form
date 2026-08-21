@@ -16,7 +16,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-# 6.8.0
+# 6.8.1
 
 ## @rjsf/antd
 
@@ -28,7 +28,6 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 
-- Fixed `TimeWidget` to respect schema `multipleOf` time precision, preserving second-precision values while keeping minute-precision native inputs synchronized with their displayed value ([#5174](https://github.com/rjsf-team/react-jsonschema-form/pull/5174))
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
 
 ## @rjsf/daisyui
@@ -61,8 +60,17 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/utils
 
-- Fixed an issue in `sortedJSONStringify` with regards to handling arrays containing `null` and `undefined` values.
 - Made the default value of a required boolean field be false if a `default` is not present in the schema
+
+# 6.8.0
+
+## @rjsf/core
+
+- Fixed `TimeWidget` to respect schema `multipleOf` time precision, preserving second-precision values while keeping minute-precision native inputs synchronized with their displayed value ([#5174](https://github.com/rjsf-team/react-jsonschema-form/pull/5174))
+
+## @rjsf/utils
+
+- Fixed an issue in `sortedJSONStringify` with regards to handling arrays containing `null` and `undefined` values.
 
 ## @rjsf/validator-ata
 
