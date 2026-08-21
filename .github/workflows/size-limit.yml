@@ -1,7 +1,7 @@
 name: Size limit
 on: pull_request
 permissions:
-  pull-requests: write
+  contents: read
 jobs:
   size:
     runs-on: ubuntu-latest
@@ -12,12 +12,42 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
-      - uses: andresz1/size-limit-action@v1.8.0
+      - name: Measure PR head
+        run: |
+          pnpm install
+          pnpm run build
+          # size-limit exits non-zero when a budget is exceeded but still emits
+          # JSON; record the outcome and enforce it at the end so the report
+          # comment is produced either way.
+          if pnpm exec size-limit --json > "$RUNNER_TEMP/head.json"; then
+            echo ok > "$RUNNER_TEMP/status"
+          else
+            echo fail > "$RUNNER_TEMP/status"
+          fi
+          # Preserve the report script before the base checkout replaces the tree.
+          cp .size-limit/report.mjs "$RUNNER_TEMP/report.mjs"
+      - name: Measure base branch
+        run: |
+          git fetch --no-tags --depth 1 origin ${{ github.event.pull_request.base.sha }}
+          git checkout -f ${{ github.event.pull_request.base.sha }}
+          # The base branch may predate the size-limit setup (while the PR
+          # introducing it is open); report no baseline in that case.
+          if [ -f .size-limit.json ]; then
+            pnpm install
+            pnpm run build
+            pnpm exec size-limit --json > "$RUNNER_TEMP/base.json" || true
+          else
+            echo '[]' > "$RUNNER_TEMP/base.json"
+          fi
+      - name: Build report
+        run: |
+          node "$RUNNER_TEMP/report.mjs" "$RUNNER_TEMP"
+          echo '${{ github.event.pull_request.number }}' > "$RUNNER_TEMP/pr-number"
+      - uses: actions/upload-artifact@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          package_manager: pnpm
-          build_script: build
-          # The base-branch pass runs against a checkout that may predate size-limit
-          # (e.g. while the PR introducing it is open); report no results there
-          # instead of crashing on the missing dependency/config.
-          script: sh -c "if [ -f .size-limit.json ]; then npx --no-install size-limit --json; else echo []; fi"
+          name: size-limit-report
+          path: |
+            ${{ runner.temp }}/size-limit-report.md
+            ${{ runner.temp }}/pr-number
+      - name: Enforce limits
+        run: test "$(cat "$RUNNER_TEMP/status")" = ok

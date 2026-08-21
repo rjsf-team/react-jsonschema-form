@@ -1,0 +1,54 @@
+# Posts the size report produced by the "Size limit" workflow as a PR comment.
+# Split into a separate workflow_run job so it works for PRs from forks: the
+# pull_request job runs fork code with a read-only token, while this job has a
+# write token but only reads the uploaded artifact and never executes PR code.
+name: Size limit comment
+on:
+  workflow_run:
+    workflows: ['Size limit']
+    types: [completed]
+permissions:
+  pull-requests: write
+  actions: read
+jobs:
+  comment:
+    if: github.event.workflow_run.event == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: size-limit-report
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const prNumber = parseInt(fs.readFileSync('pr-number', 'utf8').trim(), 10);
+            if (!Number.isInteger(prNumber) || prNumber <= 0) {
+              core.warning('No valid PR number in artifact; skipping comment.');
+              return;
+            }
+            // The artifact contents come from the PR's code: verify the claimed
+            // PR actually corresponds to the run that produced the artifact.
+            const { owner, repo } = context.repo;
+            const { data: pr } = await github.rest.pulls.get({ owner, repo, pull_number: prNumber });
+            if (pr.head.sha !== context.payload.workflow_run.head_sha) {
+              core.warning('Artifact PR number does not match the workflow head SHA; skipping comment.');
+              return;
+            }
+            const body = fs.readFileSync('size-limit-report.md', 'utf8');
+            const marker = '<!-- size-limit-report -->';
+            if (!body.startsWith(marker) || body.length > 60000) {
+              core.warning('Unexpected report format; skipping comment.');
+              return;
+            }
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner, repo, issue_number: prNumber, per_page: 100,
+            });
+            const existing = comments.find((c) => c.body.startsWith(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number: prNumber, body });
+            }
