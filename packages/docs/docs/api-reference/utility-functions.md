@@ -20,7 +20,7 @@ Those types are exported for use by `@rjsf/core` and all the themes, as well as 
 
 These types can be found on GitHub [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/types.ts).
 
-**`ObjectPath`** — Used by the path utilities (`getByPath`, `setByPath`, `hasByPath`, `unsetByPath`) to address a value inside a plain object. It is `string | number | FieldPathList`. Unlike the equivalent `lodash` functions, a bare **string is always a single literal key**: `'a.b'` means the key `'a.b'`, never the nested path `a` → `b`. To walk a dotted path string, split it explicitly with [toPath()](#topath) first, or pass a `FieldPathList` (`(string | number)[]`) of segments. Reads and existence checks resolve **own** properties only, so inherited members never appear as form data.
+**`ObjectPath`** — Used by the path utilities (`getByPath`, `setByPath`, `hasByPath`, `unsetByPath`) to address a value inside a plain object. It is `string | number | FieldPathList`. A bare **string is always a single literal key**: `'a.b'` means the key `'a.b'`, never the nested path `a` → `b`. To walk a dotted path string, split it explicitly with [toPath()](#topath) first, or pass a `FieldPathList` (`(string | number)[]`) of segments. Reads and existence checks resolve **own** properties only, so inherited members never appear as form data.
 
 **`SchemaFieldPath`** — Used when navigating a JSON Schema subtree (for example with `getFromSchema` and `findFieldInSchema` on `SchemaUtilsType`, documented under [Validator-based utility functions](#validator-based-utility-functions)). It is `string | FieldPathList`: either a dotted path or an array of segments with the same rules as `FieldPathList` (`(string | number)[]`). A numeric segment denotes an array index or an object key that is numeric. Navigation skips only `undefined` or empty-string segments, so segment **`0`** is always honored (this avoids the bug from treating `0` as a falsy path unit).
 
@@ -162,7 +162,7 @@ If `start` and `stop` are negative numbers (or zero), then they will be treated 
 
 ### deepEquals()
 
-Implements a deep equals using the `lodash.isEqualWith` function, that provides a customized comparator that assumes all functions are equivalent.
+Implements a deep equals that treats all functions as equivalent and tracks circular references, so self-referential inputs do not recurse infinitely.
 
 #### Parameters
 
@@ -403,7 +403,7 @@ Otherwise, return the sub-schema. Also deals with nested `$ref`s in the sub-sche
 Gets the value at `path` of `obj`, returning `defaultValue` when the resolved value is `undefined`.
 A bare string `path` is a single literal key, not a dotted path; use [toPath()](#topath) to split a dotted path string into segments first.
 Every segment must be an **own** property, matching [hasByPath()](#hasbypath), so the two can be used as a guard/read pair.
-This is deliberately stricter than `lodash.get`, which traverses the prototype chain: `getByPath({}, 'toString')` returns `defaultValue` rather than `Function.prototype.toString`. For the plain form data and schemas RJSF navigates, an inherited member is never data, and requiring own keys also makes prototype internals such as `__proto__` unreachable unless they are genuine own data keys.
+Inherited members are never resolved: `getByPath({}, 'toString')` returns `defaultValue` rather than `Function.prototype.toString`. For the plain form data and schemas RJSF navigates, an inherited member is never data, and the own-property rule also makes prototype internals such as `__proto__` unreachable unless they are genuine own data keys.
 
 #### Parameters
 
@@ -645,7 +645,7 @@ on the schema type and `widget` name. If no widget component can be found an `Er
 
 Determines whether `obj` has an **own** property at `path`.
 A bare string `path` is a single literal key, not a dotted path; use [toPath()](#topath) to split a dotted path string into segments first.
-Like `lodash.has`, every segment is checked with `Object.hasOwn()`, so inherited properties report `false` — `hasByPath({}, 'toString')` is `false`. [getByPath()](#getbypath) applies the same own-property rule, so the two can be used as a guard/read pair.
+Every segment is checked with `Object.hasOwn()`, so inherited properties report `false` — `hasByPath({}, 'toString')` is `false`. [getByPath()](#getbypath) applies the same own-property rule, so the two can be used as a guard/read pair.
 
 #### Parameters
 
@@ -1310,7 +1310,7 @@ A bare string `path` is a single literal key, not a dotted path; use [toPath()](
 
 #### Returns
 
-- boolean: True if the property was removed or did not exist, otherwise false. Unlike `lodash.unset`, a non-configurable property returns false instead of throwing in strict mode
+- boolean: True if the property was removed or did not exist, otherwise false. A non-configurable property returns false rather than throwing in strict mode
 
 #### Example
 
@@ -1529,7 +1529,7 @@ Determines whether the combination of `schema` and `uiSchema` properties indicat
 
 ### getFromSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
-Helper that acts like lodash's `get` but additionally retrieves `$ref`s as needed to get the path for schemas containing potentially nested `$ref`s.
+Reads the value at `path` within a schema, additionally retrieving `$ref`s as needed to resolve schemas containing potentially nested `$ref`s.
 The `path` accepts a [`SchemaFieldPath`](#types) (dotted string or `FieldPathList`-style segment array).
 
 #### Parameters
@@ -1812,7 +1812,7 @@ Resets all errors in the `ErrorSchemaBuilder` back to the `initialSchema` if pro
 ### addErrors()
 
 Adds the `errorOrList` to the list of errors in the `ErrorSchema` at either the root level or the location within the schema described by the `pathOfError`.
-For more information about how to specify the path see the [eslint lodash plugin docs](https://github.com/wix/eslint-plugin-lodash/blob/master/docs/rules/path-style.md).
+The path is either a dotted string, with optional bracketed array indexes such as `'level1.level2[2]'`, or a list of segments; see [toPath()](#topath) for the grammar a string path accepts.
 
 #### Parameters
 
@@ -1826,7 +1826,7 @@ For more information about how to specify the path see the [eslint lodash plugin
 ### setErrors()
 
 Sets/replaces the `errorOrList` as the error(s) in the `ErrorSchema` at either the root level or the location within the schema described by the `pathOfError`.
-For more information about how to specify the path see the [eslint lodash plugin docs](https://github.com/wix/eslint-plugin-lodash/blob/master/docs/rules/path-style.md).
+The path is either a dotted string, with optional bracketed array indexes such as `'level1.level2[2]'`, or a list of segments; see [toPath()](#topath) for the grammar a string path accepts.
 
 #### Parameters
 
@@ -1840,7 +1840,7 @@ For more information about how to specify the path see the [eslint lodash plugin
 ### clearErrors()
 
 Clears the error(s) in the `ErrorSchema` at either the root level or the location within the schema described by the `pathOfError`.
-For more information about how to specify the path see the [eslint lodash plugin docs](https://github.com/wix/eslint-plugin-lodash/blob/master/docs/rules/path-style.md).
+The path is either a dotted string, with optional bracketed array indexes such as `'level1.level2[2]'`, or a list of segments; see [toPath()](#topath) for the grammar a string path accepts.
 
 #### Parameters
 

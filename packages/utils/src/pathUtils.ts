@@ -52,10 +52,10 @@ function isSettable(value: unknown): boolean {
 /** Gets the value at `path` of `obj`, returning `defaultValue` when the resolved value is `undefined`
  *
  * Every segment must be an OWN property, matching {@link hasByPath}, so the two can be used as a
- * guard/read pair. This is deliberately stricter than `lodash.get`, which traverses the prototype chain:
- * `getByPath({}, 'toString')` resolves `defaultValue`, not `Function.prototype.toString`. For the plain
- * form data and schemas RJSF navigates, an inherited member is never data, and requiring own keys also
- * makes prototype internals such as `__proto__` unreachable unless they are genuine own data keys
+ * guard/read pair. Inherited members are never resolved: `getByPath({}, 'toString')` returns
+ * `defaultValue`, not `Function.prototype.toString`. For the plain form data and schemas RJSF navigates,
+ * an inherited member is never data, and the own-property rule also makes prototype internals such as
+ * `__proto__` unreachable unless they are genuine own data keys
  *
  * @param obj - The object to query
  * @param path - The single key or list of path segments at which to get the value
@@ -113,9 +113,9 @@ export function setByPath<O = any>(obj: O, path: ObjectPath, value: unknown, cre
 
 /** Determines whether `obj` has an own property at `path`
  *
- * Like `lodash.has`, every segment is checked with `Object.hasOwn()`, so inherited properties report
- * `false` — `hasByPath({}, 'toString')` is `false`. {@link getByPath} applies the same own-property rule,
- * so the two can be used as a guard/read pair
+ * Every segment is checked with `Object.hasOwn()`, so inherited properties report `false` —
+ * `hasByPath({}, 'toString')` is `false`. {@link getByPath} applies the same own-property rule, so the
+ * two can be used as a guard/read pair
  *
  * @param obj - The object to query
  * @param path - The single key or list of path segments to check for

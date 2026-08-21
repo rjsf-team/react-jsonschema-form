@@ -251,8 +251,8 @@ class SchemaUtils<
     return getFirstMatchingOption<T, S, F>(this.validator, formData, options, this.rootSchema, discriminatorField);
   }
 
-  /** Helper that acts like lodash's `get` but additionally retrieves `$ref`s as needed to get the path for schemas
-   * containing potentially nested `$ref`s.
+  /** Reads the value at `path` within a schema, additionally retrieving `$ref`s as needed to resolve
+   * schemas containing potentially nested `$ref`s.
    *
    * @param schema - The current node within the JSON schema recursion
    * @param path - The remaining keys in the path to the desired property
