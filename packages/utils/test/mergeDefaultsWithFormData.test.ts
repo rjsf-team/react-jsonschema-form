@@ -63,6 +63,15 @@ describe('mergeDefaultsWithFormData()', () => {
     expect(mergeDefaultsWithFormData([1, 2, 3], [4, 5], true)).toEqual([4, 5, 3]);
   });
 
+  it('should append extra array defaults under an object key, the same as at the root', () => {
+    expect(mergeDefaultsWithFormData({ config: { tags: ['a', 'b'] } }, { config: { tags: ['x'] } }, true)).toEqual({
+      config: { tags: ['x', 'b'] },
+    });
+    expect(mergeDefaultsWithFormData({ config: { tags: ['a', 'b'] } }, { config: { tags: ['x'] } })).toEqual({
+      config: { tags: ['x'] },
+    });
+  });
+
   it('should deeply merge arrays with overlapping entries', () => {
     expect(mergeDefaultsWithFormData([{ a: 1 }], [{ b: 2 }, { c: 3 }])).toEqual([{ a: 1, b: 2 }, { c: 3 }]);
   });
