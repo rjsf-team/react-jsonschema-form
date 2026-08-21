@@ -4,19 +4,38 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const dir = process.argv[2];
-const read = (f) => JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
+// size-limit prints `{"error": "..."}` (not an array) when it fails internally,
+// and a crashed run can leave an empty file; treat both as "no data".
+const read = (f) => {
+  try {
+    const data = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
+    return Array.isArray(data) ? data : [];
+  } catch {
+    return [];
+  }
+};
 const head = read('head.json');
 const base = new Map(read('base.json').map((c) => [c.name, c]));
 
-const fmt = (bytes) => `${(bytes / 1024).toFixed(2)} kB`;
-const rows = head.map((c) => {
+// The json is produced by the PR's own build: keep names inert as markdown and
+// the row count bounded, since this text is posted by a write-token workflow.
+const safe = (name) =>
+  String(name)
+    .replace(/[^\w ()@/+.,:-]/g, '')
+    .slice(0, 80);
+// size-limit budgets ("90 kB") are decimal via bytes-iec, so format with 1000.
+const fmt = (bytes) => `${(bytes / 1000).toFixed(2)} kB`;
+const rows = head.slice(0, 20).map((c) => {
   const b = base.get(c.name);
   const diff = b ? c.size - b.size : null;
-  const delta =
-    diff === null ? 'new' : diff === 0 ? '=' : `${diff > 0 ? '+' : '-'}${fmt(Math.abs(diff))}`;
+  const delta = diff === null ? 'new' : diff === 0 ? '=' : `${diff > 0 ? '+' : '-'}${fmt(Math.abs(diff))}`;
   const status = c.passed === false ? ' :x:' : '';
-  return `| ${c.name}${status} | ${b ? fmt(b.size) : '—'} | ${fmt(c.size)} | ${delta} |`;
+  // Code span so a name can never render as a mention or other live markdown.
+  return `| \`${safe(c.name)}\`${status} | ${b ? fmt(b.size) : '—'} | ${fmt(c.size)} | ${delta} |`;
 });
+if (rows.length === 0) {
+  rows.push('| _no size data produced_ | — | — | — |');
+}
 
 const body = [
   '<!-- size-limit-report -->',
