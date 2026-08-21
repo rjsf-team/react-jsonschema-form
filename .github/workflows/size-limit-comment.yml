@@ -3,6 +3,8 @@
 # pull_request job runs fork code with a read-only token, while this job has a
 # write token but only reads size numbers from the uploaded artifact and never
 # executes PR code — the markdown is rendered here, from the trusted checkout.
+# This job never fails on a budget overrun; branch protection must require the
+# "Size limit / size" job from size-limit.yml, not this one.
 name: Size limit comment
 on:
   workflow_run:
@@ -11,6 +13,11 @@ on:
 permissions:
   pull-requests: write
   actions: read
+# The list-then-create/update of the sticky comment is a check-then-act race if
+# two runs overlap (e.g. a double re-run); serialize them. No cancel-in-progress
+# so the newest run still lands its update.
+concurrency:
+  group: size-limit-comment
 jobs:
   comment:
     # success = budgets pass, failure = budgets exceeded; both upload a report.

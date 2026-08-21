@@ -1,3 +1,8 @@
+# Hand-rolled rather than andresz1/size-limit-action so PRs from forks are
+# handled safely: this read-only job builds untrusted PR code, and
+# size-limit-comment.yml (write token, never executes PR code) posts the report.
+# Branch protection must require THIS job ("Size limit / size") — the comment
+# workflow never fails on a budget overrun, it only annotates the report.
 name: Size limit
 on: pull_request
 permissions:
@@ -22,7 +27,9 @@ jobs:
         run: |
           pnpm install --frozen-lockfile
           # Only @rjsf/core (and its workspace deps, via nx dependsOn) is measured.
-          pnpm exec nx run-many --target=build --projects=@rjsf/core
+          # --skip-nx-cache because lib/ is not a declared nx output, so a cache
+          # hit would report success without restoring lib/ to disk.
+          pnpm exec nx run-many --target=build --projects=@rjsf/core --skip-nx-cache
           # size-limit exits non-zero when a budget is exceeded but still emits
           # JSON; record the outcome and enforce it at the end so the report
           # comment is produced either way.
@@ -33,13 +40,14 @@ jobs:
           fi
       - name: Measure base branch
         run: |
-          git fetch --no-tags --depth 1 origin ${{ github.event.pull_request.base.sha }}
-          git checkout -f ${{ github.event.pull_request.base.sha }}
-          # The base branch may predate the size-limit setup, or fail to install
-          # or build; report no baseline in any of those cases. --skip-nx-cache
-          # because lib/ is not a declared nx output, so a cache hit here would
-          # leave the head build on disk and measure it as the baseline.
-          if [ -f .size-limit.json ] &&
+          # The base sha may be unfetchable (force-pushed away), predate the
+          # size-limit setup, or fail to install or build; report no baseline in
+          # any of those cases instead of failing the check without an artifact.
+          # --skip-nx-cache because a cache hit would leave the head build on
+          # disk and measure it as the baseline.
+          if git fetch --no-tags --depth 1 origin ${{ github.event.pull_request.base.sha }} &&
+            git checkout -f ${{ github.event.pull_request.base.sha }} &&
+            [ -f .size-limit.json ] &&
             pnpm install --frozen-lockfile &&
             pnpm exec nx run-many --target=build --projects=@rjsf/core --skip-nx-cache; then
             pnpm exec size-limit --json > "$RUNNER_TEMP/base.json" || echo '[]' > "$RUNNER_TEMP/base.json"
