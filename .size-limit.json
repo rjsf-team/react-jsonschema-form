@@ -10,11 +10,5 @@
     "path": ".size-limit/form-only.js",
     "ignore": ["react", "react-dom"],
     "limit": "110 kB"
-  },
-  {
-    "name": "Full @rjsf/core surface",
-    "path": "packages/core/lib/index.js",
-    "ignore": ["react", "react-dom", "@rjsf/utils"],
-    "limit": "90 kB"
   }
 ]
