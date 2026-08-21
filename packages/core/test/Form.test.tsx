@@ -2424,6 +2424,50 @@ describeRepeated('Form common', (createFormComponent) => {
           await user.type(node.querySelector('#root_baz_0_qux')!, 'a');
           expect(shownErrors()).toEqual(["must have required property 'bar'", "must have required property 'corge'"]);
         });
+
+        it('should clear the error of a field whose name contains a dot', async () => {
+          const altSchema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              'foo.bar': { type: 'string' },
+              baz: { type: 'string' },
+            },
+            required: ['foo.bar', 'baz'],
+          };
+          const formRef = createRef<Form>();
+
+          function Controlled() {
+            const [formData, setFormData] = useState<any>({});
+            return (
+              <Form
+                ref={formRef}
+                schema={altSchema}
+                validator={validator}
+                formData={formData}
+                noHtml5Validate
+                onChange={(e) => setFormData(e.formData)}
+              />
+            );
+          }
+
+          const { container } = render(<Controlled />);
+          const node = container.firstElementChild!;
+
+          await submitForm(node, user);
+          // `toErrorSchema` runs the property name through `toPath`, so the error of a name holding a dot lands at
+          // the path that name spells out, not under the name itself
+          expect(formRef.current!.state.errorSchema).toEqual({
+            foo: { bar: { __errors: ["must have required property 'foo.bar'"] } },
+            baz: { __errors: ["must have required property 'baz'"] },
+          });
+
+          // Clearing has to reach the same place, and leave the field that was not touched alone
+          await user.type(node.querySelector('[id="root_foo.bar"]')!, 'a');
+          expect(formRef.current!.state.errorSchema).toEqual({
+            foo: { bar: undefined },
+            baz: { __errors: ["must have required property 'baz'"] },
+          });
+        });
       });
 
       describe('Live validation', () => {
