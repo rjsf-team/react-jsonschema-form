@@ -1,5 +1,3 @@
-import get from 'lodash/get';
-import has from 'lodash/has';
 import isObject from 'lodash/isObject';
 import times from 'lodash/times';
 
@@ -7,6 +5,7 @@ import { ONE_OF_KEY, REF_KEY, JUNK_OPTION_ID, ANY_OF_KEY } from '../constants';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
 import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDiscriminator';
 import guessType from '../guessType';
+import { getByPath, hasByPath } from '../pathUtils';
 import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
@@ -62,11 +61,11 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
   if (schema) {
     if (isObject(schema.properties)) {
       totalScore += Object.entries(schema.properties).reduce((score, [key, value]) => {
-        const formValue = get(formData, key);
+        const formValue = formData?.[key];
         if (typeof value === 'boolean') {
           return score;
         }
-        if (has(value, REF_KEY)) {
+        if (hasByPath(value, REF_KEY)) {
           const newSchema = retrieveSchema<T, S, F>(
             validator,
             value as S,
@@ -85,8 +84,8 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
             )
           );
         }
-        if ((has(value, ONE_OF_KEY) || has(value, ANY_OF_KEY)) && formValue) {
-          const xxxOfKey = has(value, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
+        if ((hasByPath(value, ONE_OF_KEY) || hasByPath(value, ANY_OF_KEY)) && formValue) {
+          const xxxOfKey = hasByPath(value, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
           const discriminator = getDiscriminatorFieldFromSchema<S>(value as S);
           return (
             score +
@@ -94,7 +93,7 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
               validator,
               rootSchema,
               formValue,
-              get(value, xxxOfKey) as S[],
+              getByPath<S[]>(value, xxxOfKey),
               -1,
               discriminator,
               experimental_customMergeAllOf,

@@ -14,6 +14,7 @@ import type {
   UIOptionsType,
 } from '@rjsf/utils';
 import {
+  setByPath,
   allowAdditionalItems,
   getTemplate,
   getUiOptions,
@@ -31,7 +32,6 @@ import {
   TranslatableString,
 } from '@rjsf/utils';
 import isObject from 'lodash/isObject';
-import set from 'lodash/set';
 import uniqueId from 'lodash/uniqueId';
 
 /** Type used to represent the keyed form data used in the state */
@@ -902,9 +902,9 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         for (const idx of Object.keys(errorSchemaRef.current)) {
           const i = parseInt(idx, 10);
           if (index === undefined || i < index) {
-            set(newErrorSchema, [i], errorSchemaRef.current[i]);
+            setByPath(newErrorSchema, [i], errorSchemaRef.current[i]);
           } else if (i >= index) {
-            set(newErrorSchema, [i + 1], errorSchemaRef.current[i]);
+            setByPath(newErrorSchema, [i + 1], errorSchemaRef.current[i]);
           }
         }
       }
@@ -942,9 +942,9 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         for (const idx of Object.keys(errorSchemaRef.current)) {
           const i = parseInt(idx, 10);
           if (i <= index) {
-            set(newErrorSchema, [i], errorSchemaRef.current[i]);
+            setByPath(newErrorSchema, [i], errorSchemaRef.current[i]);
           } else if (i > index) {
-            set(newErrorSchema, [i + 1], errorSchemaRef.current[i]);
+            setByPath(newErrorSchema, [i + 1], errorSchemaRef.current[i]);
           }
         }
       }
@@ -982,9 +982,9 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         for (const idx of Object.keys(errorSchemaRef.current)) {
           const i = parseInt(idx, 10);
           if (i < index) {
-            set(newErrorSchema, [i], errorSchemaRef.current[i]);
+            setByPath(newErrorSchema, [i], errorSchemaRef.current[i]);
           } else if (i > index) {
-            set(newErrorSchema, [i - 1], errorSchemaRef.current[i]);
+            setByPath(newErrorSchema, [i - 1], errorSchemaRef.current[i]);
           }
         }
       }
@@ -1013,11 +1013,11 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         for (const idx of Object.keys(errorSchemaRef.current)) {
           const i = parseInt(idx, 10);
           if (i === index) {
-            set(newErrorSchema, [newIndex], errorSchemaRef.current[index]);
+            setByPath(newErrorSchema, [newIndex], errorSchemaRef.current[index]);
           } else if (i === newIndex) {
-            set(newErrorSchema, [index], errorSchemaRef.current[newIndex]);
+            setByPath(newErrorSchema, [index], errorSchemaRef.current[newIndex]);
           } else {
-            set(newErrorSchema, [idx], errorSchemaRef.current[i]);
+            setByPath(newErrorSchema, [idx], errorSchemaRef.current[i]);
           }
         }
       }

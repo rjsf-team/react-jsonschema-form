@@ -1,8 +1,7 @@
-import get from 'lodash/get';
-
 import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY } from './constants';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema';
 import getUiOptions from './getUiOptions';
+import { getByPath } from './pathUtils';
 import toConstant from './toConstant';
 import type { RJSFSchema, EnumOptionsType, EnumValue, StrictRJSFSchema, FormContextType, UiSchema } from './types';
 
@@ -85,8 +84,8 @@ export default function optionsList<T = any, S extends StrictRJSFSchema = RJSFSc
     let value: EnumOptionsType<S>['value'];
     let label = title;
     if (selectorField) {
-      const innerSchema: S = get(aSchema, [PROPERTIES_KEY, selectorField], {}) as S;
-      value = get(innerSchema, DEFAULT_KEY, get(innerSchema, CONST_KEY));
+      const innerSchema: S = (aSchema[PROPERTIES_KEY]?.[selectorField] ?? {}) as S;
+      value = getByPath(innerSchema, DEFAULT_KEY, getByPath(innerSchema, CONST_KEY));
       // Use nullish coalescing so that an explicitly empty string title is preserved
       label = label ?? innerSchema?.title ?? aSchema.title ?? String(value);
     } else {

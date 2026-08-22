@@ -11,16 +11,17 @@ import type {
 import {
   ANY_OF_KEY,
   createErrorHandler,
+  getByPath,
   getDefaultFormState,
   getUiOptions,
   ONE_OF_KEY,
   PROPERTIES_KEY,
   toErrorSchema,
+  toPath,
   unwrapErrorHandler,
   validationDataMerge,
 } from '@rjsf/utils';
 import type { ErrorObject } from 'ajv';
-import get from 'lodash/get';
 
 import type { SuppressDuplicateFilteringType } from './types';
 
@@ -101,7 +102,7 @@ export function transformRJSFValidationErrors<
     if (rawPropertyNames.length > 0) {
       rawPropertyNames.forEach((currentProperty) => {
         const path = property ? `${property}.${currentProperty}` : currentProperty;
-        let uiSchemaTitle = getUiOptions(get(uiSchema, path.replace(/^\./, ''))).title;
+        let uiSchemaTitle = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(path))).title;
         if (uiSchemaTitle === undefined) {
           // To retrieve a title from UI schema, construct a path to UI schema from `schemaPath` and `currentProperty`.
           // For example, when `#/properties/A/properties/B/required` and `C` are given, they are converted into `['A', 'B', 'C']`.
@@ -110,20 +111,24 @@ export function transformRJSFValidationErrors<
             .split('/')
             .slice(1, -1)
             .concat([currentProperty]);
-          uiSchemaTitle = getUiOptions(get(uiSchema, uiSchemaPath)).title;
+          uiSchemaTitle = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, uiSchemaPath)).title;
         }
         if (uiSchemaTitle === undefined) {
           // schemaPath may include non-property segments (e.g. allOf/if/then) that do
           // not exist in the uiSchema; fall back to the instance path, the same way the
           // root-schema title fallback does below.
           const propParts = property.replace(/^\./, '').split('.').filter(Boolean);
-          uiSchemaTitle = get(uiSchema, [...propParts, currentProperty, 'title']) as string | undefined;
+          uiSchemaTitle = getByPath<string | undefined>(uiSchema, [...propParts, currentProperty, 'title']);
         }
         if (uiSchemaTitle) {
           message = message.replace(`'${currentProperty}'`, `'${uiSchemaTitle}'`);
           uiTitle = uiSchemaTitle;
         } else {
-          const parentSchemaTitle = get(parentSchema, [PROPERTIES_KEY, currentProperty, 'title']);
+          const parentSchemaTitle = getByPath<string | undefined>(parentSchema, [
+            PROPERTIES_KEY,
+            currentProperty,
+            'title',
+          ]);
           if (parentSchemaTitle) {
             message = message.replace(`'${currentProperty}'`, `'${parentSchemaTitle}'`);
             uiTitle = parentSchemaTitle;
@@ -136,7 +141,7 @@ export function transformRJSFValidationErrors<
               aSchemaPath.push(PROPERTIES_KEY, part);
             }
             aSchemaPath.push(PROPERTIES_KEY, currentProperty, 'title');
-            const rootSchemaTitle = get(schema, aSchemaPath) as string | undefined;
+            const rootSchemaTitle = getByPath<string | undefined>(schema, aSchemaPath);
             if (rootSchemaTitle) {
               message = message.replace(`'${currentProperty}'`, `'${rootSchemaTitle}'`);
               uiTitle = rootSchemaTitle;
@@ -147,7 +152,9 @@ export function transformRJSFValidationErrors<
 
       stack = message;
     } else {
-      const uiSchemaTitle = getUiOptions<T, S, F>(get(uiSchema, property.replace(/^\./, ''))).title;
+      const uiSchemaTitle = getUiOptions<T, S, F>(
+        getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(property)),
+      ).title;
 
       if (uiSchemaTitle) {
         stack = `'${uiSchemaTitle}' ${message}`.trim();

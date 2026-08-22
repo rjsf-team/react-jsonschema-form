@@ -16,6 +16,28 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.9.0
+
+## @rjsf/utils
+
+- Added new path utilities `getByPath`, `setByPath`, `hasByPath`, `unsetByPath` and `toPath`, and switched all path-based `lodash` usage (`get`, `set`, `setWith`, `has`, `unset`, `toPath`, `pick`) over to them. Unlike their lodash counterparts, these treat a bare string as a single literal key, lodash-style dotted path strings are parsed explicitly via `toPath()`, and `getByPath()`/`hasByPath()` resolve **own** properties only (inherited members and prototype internals such as `__proto__` never resolve)
+
+## @rjsf/core
+
+- Replaced all path-based `lodash` usage (`get`, `set`, `unset`, `toPath`, `pick`) with the new `@rjsf/utils` path utilities
+
+## @rjsf/validator-ajv8
+
+- Replaced all `lodash/get` usage with the new `@rjsf/utils` path utilities
+
+## @rjsf/validator-ata
+
+- Replaced all `lodash/get` usage with the new `@rjsf/utils` path utilities
+
+## @rjsf/validator-cfworker
+
+- Replaced all `lodash/get` usage with the new `@rjsf/utils` path utilities and dropped the `lodash`/`lodash-es` dependencies entirely
+
 # 6.8.1
 
 ## @rjsf/utils

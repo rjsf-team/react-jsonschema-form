@@ -1,5 +1,3 @@
-import get from 'lodash/get';
-
 import { ID_KEY, JSON_SCHEMA_DRAFT_2020_12, SCHEMA_KEY } from './constants';
 import deepEquals from './deepEquals';
 import { makeAllReferencesAbsolute } from './findSchemaDefinition';
@@ -64,7 +62,7 @@ class SchemaUtils<
     experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
   ) {
     if (rootSchema?.[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
-      this.rootSchema = makeAllReferencesAbsolute(rootSchema, get(rootSchema, ID_KEY, '#'));
+      this.rootSchema = makeAllReferencesAbsolute(rootSchema, rootSchema[ID_KEY] ?? '#');
     } else {
       this.rootSchema = rootSchema;
     }
@@ -253,8 +251,8 @@ class SchemaUtils<
     return getFirstMatchingOption<T, S, F>(this.validator, formData, options, this.rootSchema, discriminatorField);
   }
 
-  /** Helper that acts like lodash's `get` but additionally retrieves `$ref`s as needed to get the path for schemas
-   * containing potentially nested `$ref`s.
+  /** Reads the value at `path` within a schema, additionally retrieving `$ref`s as needed to resolve
+   * schemas containing potentially nested `$ref`s.
    *
    * @param schema - The current node within the JSON schema recursion
    * @param path - The remaining keys in the path to the desired property

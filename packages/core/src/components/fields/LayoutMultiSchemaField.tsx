@@ -10,6 +10,8 @@ import type {
   UiSchema,
 } from '@rjsf/utils';
 import {
+  getByPath,
+  setByPath,
   ANY_OF_KEY,
   CONST_KEY,
   DEFAULT_KEY,
@@ -24,11 +26,8 @@ import {
   getUiOptions,
   getWidget,
 } from '@rjsf/utils';
-import get from 'lodash/get';
-import has from 'lodash/has';
 import isEmpty from 'lodash/isEmpty';
 import noop from 'lodash/noop';
-import set from 'lodash/set';
 
 /** Gets the selected option from the list of `options`, using the `selectorField` to search inside each `option` for
  * the `properties[selectorField].default(or const)` that matches the given `value`.
@@ -45,8 +44,8 @@ export function getSelectedOption<S extends StrictRJSFSchema = RJSFSchema>(
   const defaultValue = '!@#!@$@#$!@$#';
   const schemaOptions: S[] = options.map(({ schema }) => schema!);
   return schemaOptions.find((option) => {
-    const selector = get(option, [PROPERTIES_KEY, selectorField]);
-    const result = get(selector, DEFAULT_KEY, get(selector, CONST_KEY, defaultValue));
+    const selector = option[PROPERTIES_KEY]?.[selectorField];
+    const result = getByPath(selector, DEFAULT_KEY, getByPath(selector, CONST_KEY, defaultValue));
     return result === value;
   });
 }
@@ -70,9 +69,9 @@ export function computeEnumOptions<T = any, S extends StrictRJSFSchema = RJSFSch
 ): EnumOptionsType<S>[] {
   const realOptions = options.map((opt: S) => schemaUtils.retrieveSchema(opt, formData));
   let tempSchema = schema;
-  if (has(schema, ONE_OF_KEY)) {
+  if (ONE_OF_KEY in schema) {
     tempSchema = { ...schema, [ONE_OF_KEY]: realOptions };
-  } else if (has(schema, ANY_OF_KEY)) {
+  } else if (ANY_OF_KEY in schema) {
     tempSchema = { ...schema, [ANY_OF_KEY]: realOptions };
   }
   const enumOptions = optionsList<T, S, F>(tempSchema, uiSchema);
@@ -109,12 +108,12 @@ export default function LayoutMultiSchemaField<
     autofocus,
     readonly,
     required,
-    errorSchema = {},
+    errorSchema,
     hideError = false,
   } = props;
   const { widgets, schemaUtils, globalUiOptions } = registry;
   const [enumOptions, setEnumOptions] = useState(computeEnumOptions(schema, options, schemaUtils, uiSchema, formData));
-  const id = get(fieldPathId, ID_KEY);
+  const id = fieldPathId[ID_KEY];
   const discriminator = getDiscriminatorFieldFromSchema(schema);
   const FieldErrorTemplate = getTemplate<'FieldErrorTemplate', T, S, F>('FieldErrorTemplate', registry, options);
   const FieldTemplate = getTemplate<'FieldTemplate', T, S, F>('FieldTemplate', registry, options);
@@ -139,8 +138,8 @@ export default function LayoutMultiSchemaField<
   if (!selectorField) {
     throw new Error('No selector field provided for the LayoutMultiSchemaField');
   }
-  const selectedOption = get(formData, selectorField);
-  let optionSchema: S = get(enumOptions[0]?.schema, [PROPERTIES_KEY, selectorField], {}) as S;
+  const selectedOption = getByPath(formData, selectorField);
+  let optionSchema: S = (enumOptions[0]?.schema?.[PROPERTIES_KEY]?.[selectorField] ?? {}) as S;
   const option = getSelectedOption<S>(enumOptions, selectorField, selectedOption);
   // If the subschema doesn't declare a type, infer the type from the parent schema
   optionSchema = optionSchema?.type ? optionSchema : ({ ...optionSchema, type: option?.type || baseType } as S);
@@ -150,7 +149,7 @@ export default function LayoutMultiSchemaField<
   // Set hideError to the value provided in the uiSchema, otherwise stick with the prop to propagate to children
   const hideFieldError = uiSchemaHideError === undefined ? hideError : Boolean(uiSchemaHideError);
 
-  const rawErrors = get(errorSchema, [ERRORS_KEY], []) as string[];
+  const rawErrors = errorSchema?.[ERRORS_KEY] ?? [];
   const fieldErrorSchema = { ...errorSchema } as ErrorSchema<T>;
   delete fieldErrorSchema[ERRORS_KEY];
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
@@ -174,7 +173,7 @@ export default function LayoutMultiSchemaField<
       newFormData = schemaUtils.getDefaultFormState(newOption, newFormData, 'excludeObjectChildren') as T;
     }
     if (newFormData) {
-      set(newFormData, selectorField, opt);
+      setByPath(newFormData, selectorField, opt);
     }
     // Pass the component name in the path
     onChange(newFormData, fieldPathId.path, undefined, id);

@@ -11,15 +11,16 @@ import type {
 import {
   ANY_OF_KEY,
   createErrorHandler,
+  getByPath,
   getDefaultFormState,
   getUiOptions,
   ONE_OF_KEY,
   PROPERTIES_KEY,
   toErrorSchema,
+  toPath,
   unwrapErrorHandler,
   validationDataMerge,
 } from '@rjsf/utils';
-import get from 'lodash/get';
 
 import type { CFWorkerValidationError, SuppressDuplicateFilteringType } from './types';
 
@@ -118,7 +119,7 @@ export function transformRJSFValidationErrors<
 
     if (missingProperty) {
       const path = property ? `${property}.${missingProperty}` : missingProperty;
-      const { title: directTitle } = getUiOptions(get(uiSchema, path.replace(/^\./, '')));
+      const { title: directTitle } = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(path)));
       let title = directTitle;
       if (title === undefined) {
         const uiSchemaPath = keywordLocation
@@ -126,7 +127,7 @@ export function transformRJSFValidationErrors<
           .split('/')
           .slice(1, -1)
           .concat([missingProperty]);
-        title = getUiOptions(get(uiSchema, uiSchemaPath)).title;
+        title = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, uiSchemaPath)).title;
       }
       if (title === undefined && schema) {
         const propertyParts = property.replace(/^\./, '').split('.').filter(Boolean);
@@ -135,7 +136,7 @@ export function transformRJSFValidationErrors<
           schemaPath.push(PROPERTIES_KEY, part);
         }
         schemaPath.push(PROPERTIES_KEY, missingProperty, 'title');
-        title = get(schema, schemaPath) as string | undefined;
+        title = getByPath<string | undefined>(schema, schemaPath);
       }
       if (title) {
         message = message.replace(`"${missingProperty}"`, `'${title}'`);
@@ -145,16 +146,18 @@ export function transformRJSFValidationErrors<
       stack = message;
     } else {
       const propertyPath = property.replace(/^\./, '');
-      const uiSchemaTitle = getUiOptions<T, S, F>(get(uiSchema, propertyPath)).title;
+      const uiSchemaTitle = getUiOptions<T, S, F>(
+        getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(propertyPath)),
+      ).title;
       const schemaTitle = schema
-        ? (get(
+        ? getByPath<string | undefined>(
             schema,
             propertyPath
               .split('.')
               .filter(Boolean)
               .flatMap((part) => [PROPERTIES_KEY, part])
               .concat(['title']),
-          ) as string | undefined)
+          )
         : undefined;
       const title = uiSchemaTitle ?? schemaTitle;
       if (title) {

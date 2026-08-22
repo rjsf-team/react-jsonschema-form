@@ -1,12 +1,12 @@
 import difference from 'lodash/difference';
-import get from 'lodash/get';
 import isPlainObject from 'lodash/isPlainObject';
 
 import deepEquals from './deepEquals';
+import { getByPath } from './pathUtils';
 
 /**
  * Compares two objects and returns the names of the fields that have changed.
- * This function iterates over each field of object `a`, using `_.isEqual` to compare the field value
+ * This function iterates over each field of object `a`, using `deepEquals` to compare the field value
  * with the corresponding field value in object `b`. If the values are different, the field name will
  * be included in the returned array.
  *
@@ -34,7 +34,7 @@ export default function getChangedFields(a: unknown, b: unknown): string[] {
     return Object.keys(b as object);
   }
   const unequalFields = Object.entries(a as object)
-    .filter(([key, value]) => !deepEquals(value, get(b, key)))
+    .filter(([key, value]) => !deepEquals(value, getByPath(b, key)))
     .map(([key]) => key);
   const diffFields = difference(Object.keys(b as object), Object.keys(a as object));
   return [...unequalFields, ...diffFields];
