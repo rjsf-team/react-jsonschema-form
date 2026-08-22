@@ -47,7 +47,7 @@ interface ThemeContextType {
 }
 
 /** React context for sharing theme information throughout the application */
-export const ThemeContext = createContext<ThemeContextType>({
+const ThemeContext = createContext<ThemeContextType>({
   theme: 'night',
   setTheme: () => {
     /* empty */

@@ -15,7 +15,6 @@
     "precommit": "lint-staged",
     "publish-to-npm": "pnpm run build && pnpm publish",
     "test": "vitest run",
-    "test:debug": "node --inspect-brk ../../node_modules/.bin/jest",
     "test:update": "vitest run --update",
     "test:watch": "vitest",
     "test-coverage": "vitest run --coverage"
@@ -74,8 +73,7 @@
   "dependencies": {
     "lodash": "^4.18.1",
     "lodash-es": "^4.18.1",
-    "markdown-to-jsx": "^9.8.2",
-    "prop-types": "^15.8.1"
+    "markdown-to-jsx": "^9.8.2"
   },
   "devDependencies": {
     "@rjsf/snapshot-tests": "workspace:^",
@@ -87,7 +85,6 @@
     "@types/json-schema": "^7.0.15",
     "@types/react-portal": "^4.0.7",
     "ajv": "^8.20.0",
-    "atob": "^2.1.2",
     "react-portal": "^4.3.0"
   },
   "directories": {

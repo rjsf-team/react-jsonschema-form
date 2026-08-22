@@ -29,6 +29,13 @@ should change the heading of the (upcoming) version to include a major version b
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused modules; a consumer importing only `Form` no longer bundles the AJV validator chain pulled in by `getTestRegistry`, shrinking a minimal bundle by ~34kB gzipped
 - Fixed `TimeWidget` to respect schema `multipleOf` time precision, preserving second-precision values while keeping minute-precision native inputs synchronized with their displayed value ([#5174](https://github.com/rjsf-team/react-jsonschema-form/pull/5174))
 
+## @rjsf/daisyui
+
+- Removed unused internal exports found by `knip` ([#5194](https://github.com/rjsf-team/react-jsonschema-form/pull/5194)). None were part of the public API, but all were reachable through the unblessed `@rjsf/daisyui/lib/*.js` deep-import path:
+  - `ThemeContext` is now module-private; use the exported `useTheme()` hook instead
+  - The per-widget barrels (`lib/widgets/<Widget>/index.js`) and the named widget re-exports from `lib/widgets/index.js` are gone; use `generateWidgets()`
+  - The template barrels (`lib/templates/index.js` and the `buttonTemplates` default export from `lib/templates/ButtonTemplates/index.js`) are gone; use `generateTemplates()` and destructure the template you need
+
 ## @rjsf/utils
 
 - Fixed an issue in `sortedJSONStringify` with regards to handling arrays containing `null` and `undefined` values.
@@ -46,6 +53,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Added `@rjsf/validator-cfworker` to the playground validator selector and API documentation
+- Added `knip` and removed the unused code, exports and dependencies it reported ([#5194](https://github.com/rjsf-team/react-jsonschema-form/pull/5194))
 
 # 6.7.1
 
