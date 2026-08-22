@@ -66,15 +66,21 @@ function isSettable(value: unknown): value is Record<PropertyKey, unknown> {
  * @returns - The resolved value, otherwise `defaultValue`
  */
 export function getByPath<R = unknown>(obj: unknown, path: ObjectPath, defaultValue?: R): R {
-  const segments = normalizePath(path);
-  let current: unknown = obj;
-  for (const segment of segments) {
-    // Only own data keys resolve, so inherited members and prototype internals are never read
-    if (!isSettable(current) || !Object.hasOwn(current, segment)) {
-      current = undefined;
-      break;
+  let current: unknown;
+  if (!Array.isArray(path)) {
+    // Fast path for the most common call shape, a single constant key, avoiding the segment-list allocation
+    current = isSettable(obj) && Object.hasOwn(obj, path) ? obj[path] : undefined;
+  } else {
+    current = obj;
+    for (let i = 0; i < path.length; i++) {
+      const segment = path[i];
+      // Only own data keys resolve, so inherited members and prototype internals are never read
+      if (!isSettable(current) || !Object.hasOwn(current, segment)) {
+        current = undefined;
+        break;
+      }
+      current = current[segment];
     }
-    current = current[segment];
   }
   // The single deliberate cast in these utilities: the resolved value is trusted to be the `R` the caller declared
   return (current === undefined ? defaultValue : current) as R;
@@ -133,15 +139,18 @@ export function setByPath<O>(obj: O, path: ObjectPath, value: unknown, createInt
  * @returns - True if the own property exists at `path`, otherwise false
  */
 export function hasByPath(obj: unknown, path: ObjectPath): boolean {
-  const segments = normalizePath(path);
+  // Fast path for a single constant key, avoiding the segment-list allocation
+  if (!Array.isArray(path)) {
+    return isSettable(obj) && Object.hasOwn(obj, path);
+  }
   let current: unknown = obj;
-  for (const segment of segments) {
-    if (!isSettable(current) || !Object.hasOwn(current, segment)) {
+  for (let i = 0; i < path.length; i++) {
+    if (!isSettable(current) || !Object.hasOwn(current, path[i])) {
       return false;
     }
-    current = current[segment];
+    current = current[path[i]];
   }
-  return segments.length > 0;
+  return path.length > 0;
 }
 
 /** Removes the own property at `path` of `obj`, mutating `obj`
