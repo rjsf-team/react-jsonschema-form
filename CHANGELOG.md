@@ -26,6 +26,18 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Replaced all path-based `lodash` usage (`get`, `set`, `unset`, `toPath`, `pick`) with the new `@rjsf/utils` path utilities
 
+## @rjsf/validator-ajv8
+
+- Replaced all `lodash/get` usage with the new `@rjsf/utils` path utilities
+
+## @rjsf/validator-ata
+
+- Replaced all `lodash/get` usage with the new `@rjsf/utils` path utilities
+
+## @rjsf/validator-cfworker
+
+- Replaced all `lodash/get` usage with the new `@rjsf/utils` path utilities and dropped the `lodash`/`lodash-es` dependencies entirely
+
 # 6.8.1
 
 ## @rjsf/utils

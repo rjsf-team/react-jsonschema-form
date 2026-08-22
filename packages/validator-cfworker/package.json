@@ -63,9 +63,7 @@
     ]
   },
   "dependencies": {
-    "@cfworker/json-schema": "^4.1.1",
-    "lodash": "^4.18.1",
-    "lodash-es": "^4.18.1"
+    "@cfworker/json-schema": "^4.1.1"
   },
   "peerDependencies": {
     "@rjsf/utils": "workspace:^"
