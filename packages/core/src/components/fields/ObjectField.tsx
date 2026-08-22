@@ -294,8 +294,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     const newFormData = { ...formData } as T;
     const newKey = getAvailableKey('newKey', newFormData);
     if (schema.patternProperties) {
-      // Cast this to make the `set` work properly
-      setByPath(newFormData as GenericObjectType, newKey, null);
+      setByPath(newFormData, newKey, null);
     } else {
       let type: RJSFSchema['type'] = undefined;
       let constValue: RJSFSchema['const'] = undefined;
@@ -317,8 +316,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       }
 
       const newValue = constValue ?? defaultValue ?? getDefaultValue<T, S, F>(translateString, type);
-      // Cast this to make the `set` work properly
-      setByPath(newFormData as GenericObjectType, newKey, newValue);
+      setByPath(newFormData, newKey, newValue);
     }
 
     if (lastRenamedProperty.current.previousKey === newKey) {
