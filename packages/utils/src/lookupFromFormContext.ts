@@ -15,7 +15,7 @@ export default function lookupFromFormContext<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->(regOrFc: Registry<T, S, F> | Registry<T, S, F>['formContext'], toLookup: string, fallback?: any) {
+>(regOrFc: Registry<T, S, F> | Registry<T, S, F>['formContext'], toLookup: string, fallback?: unknown) {
   const lookupPath = [LOOKUP_MAP_NAME];
   if (hasByPath(regOrFc, FORM_CONTEXT_NAME)) {
     lookupPath.unshift(FORM_CONTEXT_NAME);
