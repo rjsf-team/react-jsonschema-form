@@ -44,8 +44,8 @@ function isIndex(segment: string | number): boolean {
   return typeof segment === 'number' ? Number.isInteger(segment) && segment >= 0 : reIsIndex.test(segment);
 }
 
-/** Determines whether `value` can hold properties, i.e. is an object or a function */
-function isSettable(value: unknown): value is object {
+/** Determines whether `value` can hold properties, i.e. is an object (arrays included) or a function */
+function isSettable(value: unknown): value is Record<PropertyKey, unknown> {
   return value != null && (typeof value === 'object' || typeof value === 'function');
 }
 
@@ -70,11 +70,11 @@ export function getByPath<R = unknown>(obj: unknown, path: ObjectPath, defaultVa
   let current: unknown = obj;
   for (const segment of segments) {
     // Only own data keys resolve, so inherited members and prototype internals are never read
-    if (current == null || !Object.hasOwn(current, segment)) {
+    if (!isSettable(current) || !Object.hasOwn(current, segment)) {
       current = undefined;
       break;
     }
-    current = Reflect.get(current, segment);
+    current = current[segment];
   }
   // The single deliberate cast in these utilities: the resolved value is trusted to be the `R` the caller declared
   return (current === undefined ? defaultValue : current) as R;
@@ -100,19 +100,22 @@ export function setByPath<O>(obj: O, path: ObjectPath, value: unknown, createInt
   if (segments.some(isUnsafeSegment)) {
     return obj;
   }
-  let current: object = obj;
+  let current: Record<PropertyKey, unknown> = obj;
   for (let i = 0; i < segments.length; i++) {
     const segment = segments[i];
     if (i === segments.length - 1) {
-      Reflect.set(current, segment, value);
+      current[segment] = value;
     } else {
-      const existing: unknown = Reflect.get(current, segment);
+      const existing = current[segment];
       if (isSettable(existing)) {
         current = existing;
       } else {
-        const next: object = createIntermediateObjects || !isIndex(segments[i + 1]) ? {} : [];
-        Reflect.set(current, segment, next);
-        current = next;
+        const next = createIntermediateObjects || !isIndex(segments[i + 1]) ? {} : [];
+        current[segment] = next;
+        /* v8 ignore next -- a fresh {} or [] is always settable; the guard exists only to narrow the type */
+        if (isSettable(next)) {
+          current = next;
+        }
       }
     }
   }
@@ -133,10 +136,10 @@ export function hasByPath(obj: unknown, path: ObjectPath): boolean {
   const segments = normalizePath(path);
   let current: unknown = obj;
   for (const segment of segments) {
-    if (current == null || !Object.hasOwn(current, segment)) {
+    if (!isSettable(current) || !Object.hasOwn(current, segment)) {
       return false;
     }
-    current = Reflect.get(current, segment);
+    current = current[segment];
   }
   return segments.length > 0;
 }
