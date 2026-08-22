@@ -57,6 +57,10 @@ function isSettable(value: unknown): value is Record<PropertyKey, unknown> {
  * an inherited member is never data, and the own-property rule also makes prototype internals such as
  * `__proto__` unreachable unless they are genuine own data keys
  *
+ * An empty segment list resolves to nothing, so `defaultValue` is returned. This matches {@link hasByPath},
+ * which is `false` for an empty path, and keeps a computed-but-empty path (`toPath('')` for a root-level
+ * validation error, say) from resolving to the whole object
+ *
  * The value at a runtime-computed path cannot be known statically, so `R` is the CALLER'S declaration of
  * the expected type (like `Map.get()`); it defaults to `unknown`, which forces narrowing when no type is given
  *
@@ -70,6 +74,9 @@ export function getByPath<R = unknown>(obj: unknown, path: ObjectPath, defaultVa
   if (!Array.isArray(path)) {
     // Fast path for the most common call shape, a single constant key, avoiding the segment-list allocation
     current = isSettable(obj) && Object.hasOwn(obj, path) ? obj[path] : undefined;
+  } else if (path.length === 0) {
+    // An empty path resolves to nothing, mirroring `hasByPath()`
+    current = undefined;
   } else {
     current = obj;
     for (let i = 0; i < path.length; i++) {
@@ -170,6 +177,10 @@ export function hasByPath(obj: unknown, path: ObjectPath): boolean {
  */
 export function unsetByPath(obj: unknown, path: ObjectPath): boolean {
   const segments = normalizePath(path);
+  // An empty path names no property, so there is nothing to remove
+  if (segments.length === 0) {
+    return true;
+  }
   const parent = segments.length > 1 ? getByPath(obj, segments.slice(0, -1)) : obj;
   if (parent == null) {
     return true;

@@ -49,6 +49,11 @@ describe('getByPath()', () => {
     expect(getByPath(null, 'a', 'fallback')).toBe('fallback');
     expect(getByPath(undefined, ['a', 'b'], 'fallback')).toBe('fallback');
   });
+  it('returns the default for an empty path instead of the object itself', () => {
+    expect(getByPath(obj, [], 'fallback')).toBe('fallback');
+    expect(getByPath(obj, toPath(''))).toBeUndefined();
+    expect(hasByPath(obj, [])).toBe(false);
+  });
   it('reads own properties only, so inherited members and prototype internals never resolve', () => {
     expect(getByPath({}, ['__proto__'], 'fallback')).toBe('fallback');
     expect(getByPath({}, 'constructor', 'fallback')).toBe('fallback');
@@ -164,6 +169,12 @@ describe('unsetByPath()', () => {
   it('returns true when the path does not exist', () => {
     expect(unsetByPath({}, ['a', 'b'])).toBe(true);
     expect(unsetByPath(null, 'a')).toBe(true);
+  });
+  it('leaves the object untouched for an empty path', () => {
+    const obj = { a: 1 };
+    expect(unsetByPath(obj, [])).toBe(true);
+    expect(obj).toEqual({ a: 1 });
+    expect(Object.keys(obj)).toEqual(['a']);
   });
   it('returns false instead of throwing when the property cannot be deleted', () => {
     expect(unsetByPath({ a: 'str' }, ['a', 'length'])).toBe(false);

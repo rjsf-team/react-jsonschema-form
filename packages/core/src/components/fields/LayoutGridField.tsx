@@ -358,7 +358,7 @@ export function getSchemaDetailsForField<
       fieldPathId = result.fieldPathId;
     }
     // Now drill into the innerData for the part, returning an empty object by default if it doesn't exist
-    innerData = getByPath<T>(innerData, part);
+    innerData = getByPath<T>(innerData, part, {} as T);
     // Resolve any `$ref`s for the current rawSchema
     schema = schemaUtils.retrieveSchema(rawSchema, innerData);
     isReadonly = getNonNullishValue(schema.readOnly, isReadonly);
