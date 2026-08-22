@@ -101,7 +101,16 @@ export function setByPath<O>(obj: O, path: ObjectPath, value: unknown, createInt
   if (!isSettable(obj)) {
     return obj;
   }
-  const segments = normalizePath(path);
+  // Fast path for a single constant key, avoiding the segment-list allocation
+  if (!Array.isArray(path)) {
+    // Refuse a segment that could mutate the prototype chain (prototype pollution)
+    if (!isUnsafeSegment(path)) {
+      const target: Record<PropertyKey, unknown> = obj;
+      target[path] = value;
+    }
+    return obj;
+  }
+  const segments = path;
   // Refuse paths that could mutate the prototype chain (prototype pollution)
   if (segments.some(isUnsafeSegment)) {
     return obj;

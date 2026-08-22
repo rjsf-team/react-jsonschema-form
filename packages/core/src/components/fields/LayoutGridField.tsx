@@ -681,6 +681,7 @@ function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSche
     // the `Form` via the prop passed to `LayoutGridField` we need to make sure the uiSchema always has a true value
     // when it is needed
     const { fieldUiSchema, uiReadonly } = computeFieldUiSchema<T, S, F>(name, uiProps, uiSchema, isReadonly, readonly);
+    const namePath = toPath(name);
 
     return (
       <Field
@@ -695,9 +696,9 @@ function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSche
         readonly={uiReadonly}
         schema={schema}
         uiSchema={fieldUiSchema}
-        errorSchema={getByPath(errorSchema, toPath(name))}
+        errorSchema={getByPath(errorSchema, namePath)}
         fieldPathId={memoFieldPathId}
-        formData={getByPath(formData, toPath(name))}
+        formData={getByPath(formData, namePath)}
         onChange={onChange}
         onBlur={onBlur}
         onFocus={onFocus}
