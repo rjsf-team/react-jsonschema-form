@@ -1439,6 +1439,85 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
       });
     });
 
+    describe('regression #5196 — patternProperties empty schema over array inside dependencies does not infinite-loop', () => {
+      it('terminates and returns the correct filtered data when patternProperties:{} covers an array-holding key also described by a dependencies oneOf branch', () => {
+        // patternProperties: { "mux": {} } matches the "mux" key with an empty schema, which omit()
+        // passes through by returning `source` directly. handleObject writes that reference to
+        // target["mux"], aliasing target["mux"] to source["mux"]. When the dependencies oneOf branch
+        // later calls handleObject again with mux's schema, handleArray runs with target === source
+        // for the p2s array. The old push-based handleArray fed itself and never terminated; the fix
+        // uses index assignment so the loop stays bounded by source.length.
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            route: {
+              type: 'object',
+              title: 'Routing',
+              properties: {
+                mode: {
+                  title: 'Routing mode',
+                  type: 'integer',
+                  default: 0,
+                  oneOf: [
+                    { title: 'Mux', enum: [0] },
+                    { title: 'Direct', enum: [1] },
+                  ],
+                },
+              },
+              additionalProperties: false,
+              patternProperties: { mux: {} },
+              required: ['mode'],
+              dependencies: {
+                mode: {
+                  oneOf: [
+                    {
+                      properties: {
+                        mode: { enum: [0] },
+                        mux: {
+                          title: 'Mux',
+                          type: 'object',
+                          properties: {
+                            p2s: {
+                              title: 'Messages',
+                              type: 'array',
+                              items: {
+                                type: 'object',
+                                properties: {
+                                  id_format: {
+                                    title: 'ID format',
+                                    type: 'integer',
+                                    default: 0,
+                                    oneOf: [
+                                      { title: 'Standard (11-bit)', enum: [0] },
+                                      { title: 'Extended (29-bit)', enum: [1] },
+                                    ],
+                                  },
+                                  id: { title: 'ID (hex)', type: 'string', default: '11' },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                    { properties: { mode: { enum: [1] } } },
+                  ],
+                },
+              },
+            },
+          },
+        };
+        const formData = { route: { mode: 0, mux: { p2s: [{ id_format: 0, id: '11' }] } } };
+        // getClosestMatchingOption checks [JUNK, option] for each oneOf entry:
+        //   [false (JUNK), true (option0 matches mode=0), false (JUNK), false (option1 rejects mode=0)]
+        testValidator.setReturnValues({ isValid: [false, true, false, false] });
+        const result = omitExtraData(testValidator, schema, schema, formData);
+        expect(result).toEqual({ route: { mode: 0, mux: { p2s: [{ id_format: 0, id: '11' }] } } });
+        // The original p2s array must not have grown (the old bug caused it to grow unboundedly).
+        expect(formData.route.mux.p2s).toHaveLength(1);
+      });
+    });
+
     describe('getFieldNames() — array formValue branch', () => {
       it('includes path when formValue is a non-empty array of scalars and the node is not a leaf', () => {
         // isLeaf is false when the pathSchema node has keys beyond NAME_KEY (here '0').
