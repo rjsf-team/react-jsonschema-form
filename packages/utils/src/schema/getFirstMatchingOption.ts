@@ -44,7 +44,7 @@ export default function getFirstMatchingOption<
       ? (option[PROPERTIES_KEY]?.[discriminatorField] as S | undefined)
       : undefined;
     if (discriminatorField && discriminator !== undefined) {
-      const value = getByPath(formData, [discriminatorField]);
+      const value = getByPath<T>(formData, [discriminatorField]);
       if (validator.isValid(discriminator, value, rootSchema)) {
         return i;
       }

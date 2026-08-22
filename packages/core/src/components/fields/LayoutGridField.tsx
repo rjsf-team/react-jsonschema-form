@@ -162,7 +162,7 @@ export function computeFieldUiSchema<T = any, S extends StrictRJSFSchema = RJSFS
   forceReadonly?: boolean,
 ) {
   const globalUiOptions = uiSchema?.[UI_GLOBAL_OPTIONS_KEY] ?? {};
-  const localUiSchema = getByPath(uiSchema, toPath(field));
+  const localUiSchema = getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(field));
   const localUiOptions = { ...(localUiSchema?.[UI_OPTIONS_KEY] ?? {}), ...uiProps, ...globalUiOptions };
   const fieldUiSchema = { ...localUiSchema };
   if (!isEmpty(localUiOptions)) {
@@ -177,9 +177,10 @@ export function computeFieldUiSchema<T = any, S extends StrictRJSFSchema = RJSFS
     // If we are forcing all widgets to be readonly, OR the schema indicates it is readonly AND the uiSchema does not
     // have an overriding value, then update the uiSchema to set readonly to true. Doing this will
     uiReadonly = true;
-    if (READONLY_KEY in localUiOptions) {
+    const fieldUiOptions = fieldUiSchema[UI_OPTIONS_KEY];
+    if (fieldUiOptions && READONLY_KEY in fieldUiOptions) {
       // If the local options has the key value provided in it, then set that one to true
-      fieldUiSchema[UI_OPTIONS_KEY][READONLY_KEY] = true;
+      fieldUiOptions[READONLY_KEY] = true;
     } else {
       // otherwise set the `ui:` version
       fieldUiSchema[`ui:${READONLY_KEY}`] = true;
@@ -357,7 +358,7 @@ export function getSchemaDetailsForField<
       fieldPathId = result.fieldPathId;
     }
     // Now drill into the innerData for the part, returning an empty object by default if it doesn't exist
-    innerData = getByPath(innerData, part, {}) as T;
+    innerData = getByPath<T>(innerData, part);
     // Resolve any `$ref`s for the current rawSchema
     schema = schemaUtils.retrieveSchema(rawSchema, innerData);
     isReadonly = getNonNullishValue(schema.readOnly, isReadonly);
@@ -413,9 +414,9 @@ export function getCustomRenderComponent<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(render: string | RenderComponent, registry: Registry<T, S, F>): RenderComponent | null {
-  let customRenderer = render;
+  let customRenderer: string | RenderComponent | undefined = render;
   if (typeof customRenderer === 'string') {
-    customRenderer = lookupFromFormContext<T, S, F>(registry, customRenderer);
+    customRenderer = lookupFromFormContext<T, S, F, string | RenderComponent | undefined>(registry, customRenderer);
   }
   if (typeof customRenderer === 'function') {
     return customRenderer;

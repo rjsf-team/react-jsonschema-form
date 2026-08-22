@@ -93,7 +93,7 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
               validator,
               rootSchema,
               formValue,
-              getByPath(value, xxxOfKey),
+              getByPath<S[]>(value, xxxOfKey),
               -1,
               discriminator,
               experimental_customMergeAllOf,

@@ -663,7 +663,7 @@ export function retrieveSchemaInternal<
               validator,
               { allOf: [acc.properties[key], ...Object.values(matchingProperties)] } as S,
               rootSchema,
-              getByPath(rawFormData, [key]),
+              getByPath<T>(rawFormData, [key]),
               experimental_customMergeAllOf,
             );
           }

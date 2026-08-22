@@ -1025,7 +1025,12 @@ export interface WidgetProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F
 /** The definition of a React-based Widget component */
 export type Widget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = ComponentType<
   WidgetProps<T, S, F>
->;
+> & {
+  /** A cached wrapper component that merges the widget's `defaultProps.options` into its props, stamped onto the
+   * widget by `getWidget()` so that repeated lookups return the same component for proper React reconciliation
+   */
+  MergedWidget?: Widget<T, S, F>;
+};
 
 /** The properties that are passed to the BaseInputTemplate */
 export interface BaseInputTemplateProps<

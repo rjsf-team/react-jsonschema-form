@@ -15,10 +15,11 @@ export default function lookupFromFormContext<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->(regOrFc: Registry<T, S, F> | Registry<T, S, F>['formContext'], toLookup: string, fallback?: unknown) {
+  R = unknown,
+>(regOrFc: Registry<T, S, F> | Registry<T, S, F>['formContext'], toLookup: string, fallback?: R): R {
   const lookupPath = [LOOKUP_MAP_NAME];
   if (hasByPath(regOrFc, FORM_CONTEXT_NAME)) {
     lookupPath.unshift(FORM_CONTEXT_NAME);
   }
-  return getByPath(regOrFc, [...lookupPath, toLookup], fallback);
+  return getByPath<R>(regOrFc, [...lookupPath, toLookup], fallback);
 }

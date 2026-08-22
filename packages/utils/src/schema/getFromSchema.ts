@@ -40,7 +40,7 @@ function getFromSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema,
   const pathList = Array.isArray(path) ? [...path] : path.split('.');
   const [part, ...nestedPath] = pathList;
   if (part !== undefined && part !== '' && hasByPath(fieldSchema, part)) {
-    fieldSchema = getByPath(fieldSchema, [part]) as S;
+    fieldSchema = getByPath<S>(fieldSchema, [part]);
     return getFromSchemaInternal<T, S, F>(
       validator,
       rootSchema,

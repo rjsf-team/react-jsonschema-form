@@ -398,12 +398,14 @@ Otherwise, return the sub-schema. Also deals with nested `$ref`s in the sub-sche
 
 - Error indicating that no schema for that reference exists
 
-### getByPath&lt;R = any>()
+### getByPath&lt;R = unknown>()
 
 Gets the value at `path` of `obj`, returning `defaultValue` when the resolved value is `undefined`.
 A bare string `path` is a single literal key, not a dotted path; use [toPath()](#topath) to split a dotted path string into segments first.
 Every segment must be an **own** property, matching [hasByPath()](#hasbypath), so the two can be used as a guard/read pair.
 Inherited members are never resolved: `getByPath({}, 'toString')` returns `defaultValue` rather than `Function.prototype.toString`. For the plain form data and schemas RJSF navigates, an inherited member is never data, and the own-property rule also makes prototype internals such as `__proto__` unreachable unless they are genuine own data keys.
+
+The value at a runtime-computed path cannot be known statically, so `R` is the caller's declaration of the expected type (like `Map.get()`); it defaults to `unknown`, which forces narrowing when no type is given.
 
 #### Parameters
 
@@ -861,7 +863,7 @@ Converts a local Date string into a UTC date string
 
 - string | undefined: A UTC date string if `dateString` is truthy, otherwise undefined
 
-### lookupFromFormContext&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### lookupFromFormContext&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any, R = unknown>()
 
 Given a React JSON Schema Form registry or formContext object, return the value associated with `toLookup`.
 This might be contained within the lookup map in the formContext.
@@ -871,11 +873,11 @@ If no such value exists, return the `fallback` value.
 
 - regOrFc: Registry&lt;T, S, F> | Registry&lt;T, S, F>['formContext'] - The @rjsf registry or form context in which the lookup will occur
 - toLookup: string - The name of the field in the lookup map in the form context to get the value for
-- [fallback]: unknown - The fallback value to use if the form context does not contain a value for `toLookup`
+- [fallback]: R - The fallback value to use if the form context does not contain a value for `toLookup`
 
 #### Returns
 
-- any: The value associated with `toLookup` in the form context or `fallback`
+- R: The value associated with `toLookup` in the form context or `fallback`
 
 ### mergeDefaultsWithFormData&lt;T = any>()
 
@@ -1090,7 +1092,7 @@ Check to see if a `schema` specifies that a value must be true. This happens whe
 
 - boolean: True if the schema specifies a value that must be true, false otherwise
 
-### setByPath&lt;O = any>()
+### setByPath&lt;O>()
 
 Sets `value` at `path` of `obj`, mutating and returning `obj`.
 A bare string `path` is a single literal key, not a dotted path; use [toPath()](#topath) to split a dotted path string into segments first.

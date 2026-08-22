@@ -32,7 +32,8 @@ export default function getOptionMatchingSimpleDiscriminator<T = any, S extends 
         if (discriminator.const === value) {
           return i;
         }
-        if (discriminator.enum?.includes(value)) {
+        const enumValues: readonly unknown[] | undefined = discriminator.enum;
+        if (enumValues?.includes(value)) {
           return i;
         }
       }

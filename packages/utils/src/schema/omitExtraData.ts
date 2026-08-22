@@ -56,7 +56,7 @@ export function getUsedFormData<T = any>(formData: T | undefined, fields: string
  */
 // oxlint-disable-next-line typescript/no-deprecated
 export function getFieldNames<T = any>(pathSchema: PathSchema<T>, formData?: T): string[][] {
-  const formValueHasData = (value: T, isLeaf: boolean) =>
+  const formValueHasData = (value: unknown, isLeaf: boolean) =>
     typeof value !== 'object' || isEmpty(value) || (isLeaf && !isEmpty(value));
   const getAllPaths = (_obj: GenericObjectType, acc: string[][] = [], paths: string[][] = [[]]) => {
     const objKeys = Object.keys(_obj);
@@ -77,7 +77,7 @@ export function getFieldNames<T = any>(pathSchema: PathSchema<T>, formData?: T):
           // adds path to fieldNames if it points to a value or an empty object/array which is not a leaf
           if (
             formValueHasData(formValue, isLeaf) ||
-            (Array.isArray(formValue) && formValue.every((val) => formValueHasData(val, isLeaf)))
+            (Array.isArray(formValue) && formValue.every((val: unknown) => formValueHasData(val, isLeaf)))
           ) {
             acc.push(path);
           }

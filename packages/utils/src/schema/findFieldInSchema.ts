@@ -66,7 +66,7 @@ export default function findFieldInSchema<
           parentField,
           fieldNameKey,
           ONE_OF_KEY,
-          getByPath(formData, [subPath]),
+          getByPath<T>(formData, [subPath]),
           experimental_customMergeAllOf,
         )!;
       } else if (hasByPath(parentField, ANY_OF_KEY)) {
@@ -77,7 +77,7 @@ export default function findFieldInSchema<
           parentField,
           fieldNameKey,
           ANY_OF_KEY,
-          getByPath(formData, [subPath]),
+          getByPath<T>(formData, [subPath]),
           experimental_customMergeAllOf,
         )!;
       }

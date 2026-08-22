@@ -45,7 +45,7 @@ function isIndex(segment: string | number): boolean {
 }
 
 /** Determines whether `value` can hold properties, i.e. is an object or a function */
-function isSettable(value: unknown): boolean {
+function isSettable(value: unknown): value is object {
   return value != null && (typeof value === 'object' || typeof value === 'function');
 }
 
@@ -57,22 +57,27 @@ function isSettable(value: unknown): boolean {
  * an inherited member is never data, and the own-property rule also makes prototype internals such as
  * `__proto__` unreachable unless they are genuine own data keys
  *
+ * The value at a runtime-computed path cannot be known statically, so `R` is the CALLER'S declaration of
+ * the expected type (like `Map.get()`); it defaults to `unknown`, which forces narrowing when no type is given
+ *
  * @param obj - The object to query
  * @param path - The single key or list of path segments at which to get the value
  * @param [defaultValue] - The value returned when the resolved value is `undefined`
  * @returns - The resolved value, otherwise `defaultValue`
  */
-export function getByPath<R = any>(obj: unknown, path: ObjectPath, defaultValue?: R): R {
+export function getByPath<R = unknown>(obj: unknown, path: ObjectPath, defaultValue?: R): R {
   const segments = normalizePath(path);
-  let current: any = obj;
+  let current: unknown = obj;
   for (const segment of segments) {
     // Only own data keys resolve, so inherited members and prototype internals are never read
     if (current == null || !Object.hasOwn(current, segment)) {
-      return defaultValue as R;
+      current = undefined;
+      break;
     }
-    current = current[segment];
+    current = Reflect.get(current, segment);
   }
-  return current === undefined ? (defaultValue as R) : current;
+  // The single deliberate cast in these utilities: the resolved value is trusted to be the `R` the caller declared
+  return (current === undefined ? defaultValue : current) as R;
 }
 
 /** Sets `value` at `path` of `obj`, mutating and returning `obj`. Missing intermediate containers are
@@ -86,7 +91,7 @@ export function getByPath<R = any>(obj: unknown, path: ObjectPath, defaultValue?
  *        containers, even for numeric path segments
  * @returns - The mutated `obj`
  */
-export function setByPath<O = any>(obj: O, path: ObjectPath, value: unknown, createIntermediateObjects = false): O {
+export function setByPath<O>(obj: O, path: ObjectPath, value: unknown, createIntermediateObjects = false): O {
   if (!isSettable(obj)) {
     return obj;
   }
@@ -95,17 +100,20 @@ export function setByPath<O = any>(obj: O, path: ObjectPath, value: unknown, cre
   if (segments.some(isUnsafeSegment)) {
     return obj;
   }
-  let current: any = obj;
+  let current: object = obj;
   for (let i = 0; i < segments.length; i++) {
     const segment = segments[i];
     if (i === segments.length - 1) {
-      current[segment] = value;
+      Reflect.set(current, segment, value);
     } else {
-      const existing = current[segment];
-      if (!isSettable(existing)) {
-        current[segment] = createIntermediateObjects || !isIndex(segments[i + 1]) ? {} : [];
+      const existing: unknown = Reflect.get(current, segment);
+      if (isSettable(existing)) {
+        current = existing;
+      } else {
+        const next: object = createIntermediateObjects || !isIndex(segments[i + 1]) ? {} : [];
+        Reflect.set(current, segment, next);
+        current = next;
       }
-      current = current[segment];
     }
   }
   return obj;
@@ -123,12 +131,12 @@ export function setByPath<O = any>(obj: O, path: ObjectPath, value: unknown, cre
  */
 export function hasByPath(obj: unknown, path: ObjectPath): boolean {
   const segments = normalizePath(path);
-  let current: any = obj;
+  let current: unknown = obj;
   for (const segment of segments) {
     if (current == null || !Object.hasOwn(current, segment)) {
       return false;
     }
-    current = current[segment];
+    current = Reflect.get(current, segment);
   }
   return segments.length > 0;
 }
@@ -146,9 +154,10 @@ export function unsetByPath(obj: unknown, path: ObjectPath): boolean {
     return true;
   }
   try {
-    return delete parent[segments[segments.length - 1]];
+    // Returns false for a non-configurable property instead of throwing like `delete` in strict mode
+    return Reflect.deleteProperty(parent, segments[segments.length - 1]);
   } catch {
-    // Deleting a non-configurable property, or a property of a primitive, throws in strict mode
+    // Reflect.deleteProperty throws when the target is a primitive
     return false;
   }
 }
