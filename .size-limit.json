@@ -3,12 +3,12 @@
     "name": "Form only (@rjsf/core, utils external)",
     "path": ".size-limit/form-only.js",
     "ignore": ["react", "react-dom", "@rjsf/utils"],
-    "limit": "90 kB"
+    "limit": "53 kB"
   },
   {
     "name": "Form only (core + utils)",
     "path": ".size-limit/form-only.js",
     "ignore": ["react", "react-dom"],
-    "limit": "110 kB"
+    "limit": "78 kB"
   }
 ]
