@@ -663,7 +663,7 @@ export function retrieveSchemaInternal<
               validator,
               { allOf: [acc.properties[key], ...Object.values(matchingProperties)] } as S,
               rootSchema,
-              getByPath<T>(rawFormData, [key]),
+              getByPath<T>(rawFormData, key),
               experimental_customMergeAllOf,
             );
           }
@@ -840,7 +840,7 @@ export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
   // Process dependencies updating the local schema properties as appropriate.
   for (const dependencyKey in dependencies) {
     if (
-      (expandAllBranches || getByPath(formData, [dependencyKey]) !== undefined) &&
+      (expandAllBranches || getByPath(formData, dependencyKey) !== undefined) &&
       (!resolvedSchema.properties || dependencyKey in resolvedSchema.properties)
     ) {
       const [remainingDependencies, dependencyValue] = splitKeyElementFromObject(

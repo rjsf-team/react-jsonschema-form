@@ -12,12 +12,22 @@ export default function isObject(thing: unknown): thing is GenericObjectType {
   }
   // lastModified is guaranteed to be a number on a File instance
   // as per https://w3c.github.io/FileAPI/#dfn-lastModified
-  if ('lastModified' in thing && typeof thing.lastModified === 'number' && typeof File !== 'undefined' && thing instanceof File) {
+  if (
+    'lastModified' in thing &&
+    typeof thing.lastModified === 'number' &&
+    typeof File !== 'undefined' &&
+    thing instanceof File
+  ) {
     return false;
   }
   // getMonth is guaranteed to be a method on a Date instance
   // as per https://tc39.es/ecma262/multipage/numbers-and-dates.html#sec-date.prototype.getmonth
-  if ('getMonth' in thing && typeof thing.getMonth === 'function' && typeof Date !== 'undefined' && thing instanceof Date) {
+  if (
+    'getMonth' in thing &&
+    typeof thing.getMonth === 'function' &&
+    typeof Date !== 'undefined' &&
+    thing instanceof Date
+  ) {
     return false;
   }
   return !Array.isArray(thing);

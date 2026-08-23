@@ -902,7 +902,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         for (const idx of Object.keys(errorSchemaRef.current)) {
           const i = parseInt(idx, 10);
           if (index === undefined || i < index) {
-            setByPath(newErrorSchema, [i], errorSchemaRef.current[i]);
+            setByPath(newErrorSchema, i, errorSchemaRef.current[i]);
           } else if (i >= index) {
             setByPath(newErrorSchema, [i + 1], errorSchemaRef.current[i]);
           }
@@ -942,7 +942,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         for (const idx of Object.keys(errorSchemaRef.current)) {
           const i = parseInt(idx, 10);
           if (i <= index) {
-            setByPath(newErrorSchema, [i], errorSchemaRef.current[i]);
+            setByPath(newErrorSchema, i, errorSchemaRef.current[i]);
           } else if (i > index) {
             setByPath(newErrorSchema, [i + 1], errorSchemaRef.current[i]);
           }
@@ -982,7 +982,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         for (const idx of Object.keys(errorSchemaRef.current)) {
           const i = parseInt(idx, 10);
           if (i < index) {
-            setByPath(newErrorSchema, [i], errorSchemaRef.current[i]);
+            setByPath(newErrorSchema, i, errorSchemaRef.current[i]);
           } else if (i > index) {
             setByPath(newErrorSchema, [i - 1], errorSchemaRef.current[i]);
           }
@@ -1013,11 +1013,11 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         for (const idx of Object.keys(errorSchemaRef.current)) {
           const i = parseInt(idx, 10);
           if (i === index) {
-            setByPath(newErrorSchema, [newIndex], errorSchemaRef.current[index]);
+            setByPath(newErrorSchema, newIndex, errorSchemaRef.current[index]);
           } else if (i === newIndex) {
-            setByPath(newErrorSchema, [index], errorSchemaRef.current[newIndex]);
+            setByPath(newErrorSchema, index, errorSchemaRef.current[newIndex]);
           } else {
-            setByPath(newErrorSchema, [idx], errorSchemaRef.current[i]);
+            setByPath(newErrorSchema, idx, errorSchemaRef.current[i]);
           }
         }
       }

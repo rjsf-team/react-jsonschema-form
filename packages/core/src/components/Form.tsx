@@ -1054,7 +1054,8 @@ export default class Form<
         // mergeErrors below sees the user's error at this path without mutating shared state.
         if (!isRootPath) {
           mergeBaseErrorSchema = structuredClone(schemaValidationErrorSchema);
-          setByPath(mergeBaseErrorSchema, path, newErrorSchema);
+          // An `ErrorSchema` nests plain objects even at numeric segments, so never auto-vivify arrays
+          setByPath(mergeBaseErrorSchema, path, newErrorSchema, true);
         } else {
           mergeBaseErrorSchema = newErrorSchema;
         }
@@ -1069,7 +1070,8 @@ export default class Form<
             customErrors.setErrors(pathErrors);
           }
         } else {
-          setByPath(customErrors.ErrorSchema, path, newErrorSchema);
+          // An `ErrorSchema` nests plain objects even at numeric segments, so never auto-vivify arrays
+          setByPath(customErrors.ErrorSchema, path, newErrorSchema, true);
         }
       }
     } else if (customErrors && getByPath(customErrors.ErrorSchema, [...path, ERRORS_KEY])) {

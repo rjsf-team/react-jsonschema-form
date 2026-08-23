@@ -1,5 +1,5 @@
 import { ERRORS_KEY } from './constants';
-import { setByPath, toPath } from './pathUtils';
+import { getByPath, setByPath, toPath } from './pathUtils';
 import type { ErrorSchema, FieldPathList } from './types';
 
 /** Represents the type of the path which can be a string of dotted path values or a list of string or numbers where
@@ -45,16 +45,12 @@ export default class ErrorSchemaBuilder<T = any> {
     if (path.length === 0) {
       return this.errorSchema;
     }
-    // An `ErrorSchema` only ever nests `ErrorSchema` blocks, so walk it with typed reads, creating
-    // missing blocks along the way. `setByPath` guards the write against prototype-polluting segments
-    let errorBlock: ErrorSchema = this.errorSchema;
-    for (const segment of path) {
-      let next = Object.hasOwn(errorBlock, segment) ? errorBlock[segment] : undefined;
-      if (!next) {
-        next = {};
-        setByPath(errorBlock, segment, next);
-      }
-      errorBlock = next;
+    // An `ErrorSchema` only ever nests `ErrorSchema` blocks, so create any missing block along the path,
+    // always as a plain object since an `ErrorSchema` is never an array
+    let errorBlock = getByPath<ErrorSchema | undefined>(this.errorSchema, path);
+    if (!errorBlock) {
+      errorBlock = {};
+      setByPath(this.errorSchema, path, errorBlock, true);
     }
     return errorBlock;
   }

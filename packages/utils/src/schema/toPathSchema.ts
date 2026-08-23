@@ -110,7 +110,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
           additionalSchema,
           `${name}.${key}`,
           rootSchema,
-          getByPath<T>(formData, [key]),
+          getByPath<T>(formData, key),
           _recurseList,
           experimental_customMergeAllOf,
         );
@@ -173,7 +173,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
         rootSchema,
         // It's possible that formData is not an object -- this can happen if an
         // array item has just been added, but not populated with data yet
-        getByPath<T>(formData, [property]),
+        getByPath<T>(formData, property),
         _recurseList,
         experimental_customMergeAllOf,
       );

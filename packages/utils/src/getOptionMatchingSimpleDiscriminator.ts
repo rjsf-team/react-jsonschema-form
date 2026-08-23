@@ -18,7 +18,7 @@ export default function getOptionMatchingSimpleDiscriminator<T = any, S extends 
   discriminatorField?: string,
 ): number | undefined {
   if (formData && discriminatorField) {
-    const value = getByPath(formData, [discriminatorField]);
+    const value = getByPath(formData, discriminatorField);
 
     if (value === undefined) {
       return undefined;

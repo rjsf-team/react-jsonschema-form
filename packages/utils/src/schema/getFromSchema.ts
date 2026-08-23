@@ -1,7 +1,7 @@
 import isEmpty from 'lodash/isEmpty';
 
 import { REF_KEY } from '../constants';
-import { getByPath, hasByPath } from '../pathUtils';
+import { getByPath, hasByPath, toPath } from '../pathUtils';
 import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
@@ -37,10 +37,10 @@ function getFromSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema,
   if (isEmpty(path)) {
     return fieldSchema;
   }
-  const pathList = Array.isArray(path) ? [...path] : path.split('.');
+  const pathList = Array.isArray(path) ? [...path] : toPath(path);
   const [part, ...nestedPath] = pathList;
   if (part !== undefined && part !== '' && hasByPath(fieldSchema, part)) {
-    fieldSchema = getByPath<S>(fieldSchema, [part]);
+    fieldSchema = getByPath<S>(fieldSchema, part);
     return getFromSchemaInternal<T, S, F>(
       validator,
       rootSchema,

@@ -120,14 +120,39 @@ describe('setByPath()', () => {
     expect(obj.fn).toBe(inner);
     expect(inner.flag).toBe(true);
   });
-  it('refuses paths containing __proto__, constructor or prototype to prevent prototype pollution', () => {
+  it('refuses a __proto__ segment in any position to prevent prototype pollution', () => {
     const target = {};
     expect(setByPath(target, ['__proto__', 'polluted'], 'x')).toBe(target);
     expect(({} as { polluted?: string }).polluted).toBeUndefined();
-    setByPath(target, ['constructor', 'prototype', 'polluted2'], 'x');
+    setByPath(target, '__proto__', { polluted2: 'x' });
     expect(({} as { polluted2?: string }).polluted2).toBeUndefined();
-    setByPath(target, 'prototype', 'x');
     expect(target).toEqual({});
+  });
+  it('writes constructor and prototype as own properties without reaching the prototype chain', () => {
+    const target: Record<string, unknown> = {};
+    setByPath(target, ['constructor', 'prototype', 'polluted'], 'x');
+    expect(({} as { polluted?: string }).polluted).toBeUndefined();
+    expect(target.constructor).toEqual({ prototype: { polluted: 'x' } });
+    setByPath(target, 'prototype', 'y');
+    expect(Object.hasOwn(target, 'prototype')).toBe(true);
+    expect(target.prototype).toBe('y');
+  });
+  it('never traverses into an inherited member when creating intermediates', () => {
+    const target: Record<string, unknown> = {};
+    setByPath(target, ['toString', 'polluted'], 'x');
+    expect(target.toString).toEqual({ polluted: 'x' });
+    expect(Object.prototype.toString).toBeInstanceOf(Function);
+  });
+});
+
+describe('unsetByPath() prototype safety', () => {
+  it('cannot reach the prototype chain through a __proto__ segment', () => {
+    const target = { keep: 1 };
+    expect(unsetByPath(target, ['__proto__', 'toString'])).toBe(true);
+    expect(Object.prototype.toString).toBeInstanceOf(Function);
+    expect(unsetByPath(target, '__proto__')).toBe(true);
+    expect(Object.getPrototypeOf(target)).toBe(Object.prototype);
+    expect(target).toEqual({ keep: 1 });
   });
 });
 

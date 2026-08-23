@@ -396,4 +396,13 @@ describe('ErrorSchemaBuilder', () => {
       expect(initial[ARRAY_PATH[0]]?.[ARRAY_PATH[1]]?.[ERRORS_KEY]).toEqual([INITIAL_ARRAY]);
     });
   });
+
+  describe('paths that collide with prototype keys', () => {
+    it('stores errors under a field literally named constructor', () => {
+      const builder = new ErrorSchemaBuilder();
+      builder.addErrors('nope', 'constructor.prototype');
+      expect(builder.ErrorSchema).toEqual({ constructor: { prototype: { __errors: ['nope'] } } });
+      expect(({} as { __errors?: string[] }).__errors).toBeUndefined();
+    });
+  });
 });

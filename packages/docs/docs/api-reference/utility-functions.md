@@ -405,6 +405,8 @@ A bare string `path` is a single literal key, not a dotted path; use [toPath()](
 Every segment must be an **own** property, matching [hasByPath()](#hasbypath), so the two can be used as a guard/read pair.
 Inherited members are never resolved: `getByPath({}, 'toString')` returns `defaultValue` rather than `Function.prototype.toString`. For the plain form data and schemas RJSF navigates, an inherited member is never data, and the own-property rule also makes prototype internals such as `__proto__` unreachable unless they are genuine own data keys.
 
+An empty segment list resolves to nothing, so `defaultValue` is returned rather than `obj` itself; this matches [hasByPath()](#hasbypath), which is `false` for an empty path.
+
 The value at a runtime-computed path cannot be known statically, so `R` is the caller's declaration of the expected type (like `Map.get()`); it defaults to `unknown`, which forces narrowing when no type is given.
 
 #### Parameters
@@ -425,6 +427,7 @@ getByPath({ 'a.b': 1 }, 'a.b'); // 1, a bare string is one literal key
 getByPath({ a: { b: 1 } }, toPath('a.b')); // 1
 getByPath({ a: {} }, ['a', 'missing'], 'fallback'); // 'fallback'
 getByPath({}, 'toString', 'fallback'); // 'fallback', inherited members are not read
+getByPath({ a: 1 }, [], 'fallback'); // 'fallback', an empty path resolves to nothing
 ```
 
 ### getChangedFields(a: unknown, b: unknown)
@@ -1097,7 +1100,7 @@ Check to see if a `schema` specifies that a value must be true. This happens whe
 Sets `value` at `path` of `obj`, mutating and returning `obj`.
 A bare string `path` is a single literal key, not a dotted path; use [toPath()](#topath) to split a dotted path string into segments first.
 Missing intermediate containers are created: arrays when the next segment is a valid array index, plain objects otherwise, or always plain objects when `createIntermediateObjects` is true.
-Paths containing a `__proto__`, `constructor` or `prototype` segment are refused and `obj` is returned unmodified, preventing prototype pollution.
+A path containing a `__proto__` segment is refused and `obj` is returned unmodified, preventing prototype pollution. `constructor` and `prototype` are legal JSON Schema property names and are written normally: intermediate containers are read as own properties only, so `['constructor', 'prototype', 'x']` shadows `constructor` with a fresh object instead of reaching `Object.prototype`.
 
 #### Parameters
 

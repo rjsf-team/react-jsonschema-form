@@ -44,7 +44,7 @@ export default function findSelectedOptionInXxxOf<
     const xxxOfs = schema[xxx].map((xxxOf) =>
       retrieveSchema<T, S, F>(validator, xxxOf as S, rootSchema, formData, experimental_customMergeAllOf),
     );
-    const data = getByPath(formData, [selectorField]);
+    const data = getByPath(formData, selectorField);
     if (data !== undefined) {
       return xxxOfs.find((xxxOfOption) =>
         deepEquals(
