@@ -1089,6 +1089,99 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         const result = omitExtraData(testValidator, schema, schema, formData);
         expect(result).toEqual({ prop1: 'with required', prop2: { subprop1: '123', subprop2: '456' } });
       });
+
+      // Regression test for https://github.com/rjsf-team/react-jsonschema-form/issues/3920
+      // When there are ≥2 if/then entries in allOf and the merger can only hoist one, the
+      // remainingAllOf loop previously returned `source` as the accumulated target (because the
+      // allOf entry has no top-level type), aliasing source as the accumulator and causing
+      // handleArray to push items onto the same array it was iterating — an infinite growth loop
+      // that corrupted the list and dropped the conditional props with numeric-string keys.
+      it('preserves numeric-string property keys from multiple if/then allOf conditions (issue #3920)', () => {
+        const rankingDetails = {
+          type: 'object' as const,
+          properties: {
+            promotionPeriod: { type: 'integer' as const, minimum: 1, maximum: 12, default: 3 },
+            threshold: { type: 'number' as const },
+          },
+        };
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            list: {
+              type: 'array',
+              items: { type: 'integer', enum: [0, 1, 2, 3] },
+              uniqueItems: true,
+            },
+          },
+          allOf: [
+            {
+              if: { properties: { list: { contains: { const: 1 } } } },
+              then: { properties: { '1': { title: 'Level 1', ...rankingDetails } } },
+            },
+            {
+              if: { properties: { list: { contains: { const: 2 } } } },
+              then: { properties: { '2': { title: 'Level 2', ...rankingDetails } } },
+            },
+            {
+              if: { properties: { list: { contains: { const: 3 } } } },
+              then: { properties: { '3': { title: 'Level 3', ...rankingDetails } } },
+            },
+          ],
+        };
+        const formData = {
+          list: [1, 2],
+          '1': { promotionPeriod: 5, threshold: 0.8 },
+          '2': { promotionPeriod: 7, threshold: 0.5 },
+        };
+        // Merger hoists the first if/then; the remaining two stay in allOf.
+        // isValid calls (in order):
+        //   (1) allOf[1] if-condition (list contains 2) → true
+        //   (2) allOf[2] if-condition (list contains 3) → false
+        //   (3) hoisted top-level if-condition (list contains 1) → true
+        testValidator.setReturnValues({ isValid: [true, false, true] });
+        const result = omitExtraData(testValidator, schema, schema, formData);
+        expect(result).toEqual({
+          list: [1, 2],
+          '1': { promotionPeriod: 5, threshold: 0.8 },
+          '2': { promotionPeriod: 7, threshold: 0.5 },
+        });
+      });
+
+      it('preserves oneOf-filtered array content for type:array schemas with no top-level items', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          oneOf: [
+            { type: 'array', items: { type: 'object', properties: { a: { type: 'string' } } } },
+            { type: 'array', items: { type: 'object', properties: { b: { type: 'number' } } } },
+          ],
+        };
+        const formData = [
+          { a: 'hello', extra: true },
+          { a: 'world', extra: false },
+        ];
+        // isValid called once to pick the winning oneOf branch (index 0)
+        testValidator.setReturnValues({ isValid: [true] });
+        const result = omitExtraData(testValidator, schema, schema, formData);
+        // extra keys are dropped; array is preserved, not collapsed to []
+        expect(result).toEqual([{ a: 'hello' }, { a: 'world' }]);
+      });
+
+      it('preserves anyOf-filtered array content for type:array schemas with no top-level items', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          anyOf: [
+            { type: 'array', items: { type: 'object', properties: { x: { type: 'number' } } } },
+            { type: 'array', items: { type: 'object', properties: { y: { type: 'number' } } } },
+          ],
+        };
+        const formData = [
+          { x: 1, extra: true },
+          { x: 2, extra: false },
+        ];
+        testValidator.setReturnValues({ isValid: [true] });
+        const result = omitExtraData(testValidator, schema, schema, formData);
+        expect(result).toEqual([{ x: 1 }, { x: 2 }]);
+      });
     });
 
     describe('patternProperties support', () => {
