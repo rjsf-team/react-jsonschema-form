@@ -280,6 +280,15 @@ describe('optionsList()', () => {
       };
       expect(optionsList(anyOfSchema)).toEqual([{ schema: anyOfSchema.anyOf![0], label: '', value: 'dog' }]);
     });
+    it('should generate an option with an undefined value when a discriminator option has no properties', () => {
+      const anyOfSchema: RJSFSchema = {
+        discriminator: {
+          propertyName: 'animal',
+        },
+        anyOf: [{ type: 'object', title: 'NoProps' }],
+      };
+      expect(optionsList(anyOfSchema)).toEqual([{ schema: anyOfSchema.anyOf![0], label: 'NoProps', value: undefined }]);
+    });
     it('should generate options for an anyOf object schema with a discriminator, titles in object', () => {
       const anyOfSchema: RJSFSchema = {
         title: 'string',

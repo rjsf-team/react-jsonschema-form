@@ -1,12 +1,11 @@
-import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import pick from 'lodash/pick';
 
 import { NAME_KEY, RJSF_ADDITIONAL_PROPERTIES_FLAG } from '../constants';
 import findSchemaDefinition from '../findSchemaDefinition';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
 import getSchemaType from '../getSchemaType';
 import isObject from '../isObject';
+import { getByPath, hasByPath, setByPath, toPath } from '../pathUtils';
 import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
@@ -33,7 +32,15 @@ export function getUsedFormData<T = any>(formData: T | undefined, fields: string
     return formData;
   }
 
-  const data: GenericObjectType = pick(formData, fields);
+  // Keep only the values at the given field paths; `fields` contains either dotted strings or the
+  // deep path lists produced by `getFieldNames()`
+  const data: GenericObjectType = {};
+  fields.forEach((field) => {
+    const path = Array.isArray(field) ? field : toPath(field);
+    if (hasByPath(formData, path)) {
+      setByPath(data, path, getByPath(formData, path));
+    }
+  });
   if (Array.isArray(formData)) {
     return Object.keys(data).map((key: string) => data[key]) as unknown as T;
   }
@@ -49,7 +56,7 @@ export function getUsedFormData<T = any>(formData: T | undefined, fields: string
  */
 // oxlint-disable-next-line typescript/no-deprecated
 export function getFieldNames<T = any>(pathSchema: PathSchema<T>, formData?: T): string[][] {
-  const formValueHasData = (value: T, isLeaf: boolean) =>
+  const formValueHasData = (value: unknown, isLeaf: boolean) =>
     typeof value !== 'object' || isEmpty(value) || (isLeaf && !isEmpty(value));
   const getAllPaths = (_obj: GenericObjectType, acc: string[][] = [], paths: string[][] = [[]]) => {
     const objKeys = Object.keys(_obj);
@@ -65,12 +72,12 @@ export function getFieldNames<T = any>(pathSchema: PathSchema<T>, formData?: T):
         }
       } else if (key === NAME_KEY && data !== '') {
         paths.forEach((path) => {
-          const formValue = get(formData, path);
+          const formValue = getByPath(formData, path);
           const isLeaf = objKeys.length === 1;
           // adds path to fieldNames if it points to a value or an empty object/array which is not a leaf
           if (
             formValueHasData(formValue, isLeaf) ||
-            (Array.isArray(formValue) && formValue.every((val) => formValueHasData(val, isLeaf)))
+            (Array.isArray(formValue) && formValue.every((val: unknown) => formValueHasData(val, isLeaf)))
           ) {
             acc.push(path);
           }
@@ -97,7 +104,7 @@ export function isValueEmpty(value: unknown): boolean {
     return value.length === 0;
   }
   if (isObject(value)) {
-    return Object.values(value as GenericObjectType).every(isValueEmpty);
+    return Object.values(value).every(isValueEmpty);
   }
   return false;
 }
@@ -203,9 +210,7 @@ export default function omitExtraData<
         const innerRequired = new Set(sd.required ?? []);
         // Drop this optional object when every key in v is both optional in the inner schema
         // and has an empty value. Vacuously true for {} so empty objects are always dropped.
-        const shouldDrop = Object.entries(v as GenericObjectType).every(
-          ([k, val]) => !innerRequired.has(k) && isValueEmpty(val),
-        );
+        const shouldDrop = Object.entries(v).every(([k, val]) => !innerRequired.has(k) && isValueEmpty(val));
         if (shouldDrop) {
           return;
         }

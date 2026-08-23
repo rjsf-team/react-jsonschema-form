@@ -19,6 +19,13 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       const newSchema = schemaUtils.retrieveSchema(SECOND_ONE_OF, oneOfSchema);
       expect(sanitizeDataForNewSchema(testValidator, oneOfSchema, newSchema, undefined, oneOfData)).toEqual(oneOfData);
     });
+    it('handles boolean property schemas without crashing', () => {
+      const oldSchema: RJSFSchema = { type: 'object', properties: { foo: true } };
+      const newSchema: RJSFSchema = { type: 'object', properties: { foo: false } };
+      expect(sanitizeDataForNewSchema(testValidator, oneOfSchema, newSchema, oldSchema, { foo: 'x' })).toEqual({
+        foo: 'x',
+      });
+    });
     it('returns input formData when the old schema does not contain a "property" object', () => {
       const newSchema = schemaUtils.retrieveSchema(SECOND_ONE_OF, oneOfSchema);
       expect(sanitizeDataForNewSchema(testValidator, oneOfSchema, newSchema, {}, oneOfData)).toEqual(oneOfData);

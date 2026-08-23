@@ -148,3 +148,4 @@ out/
 
 .nx/cache
 .nx/workspace-data
+.claude/

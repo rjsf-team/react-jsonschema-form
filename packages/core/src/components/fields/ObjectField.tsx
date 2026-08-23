@@ -13,6 +13,9 @@ import type {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import {
+  getByPath,
+  hasByPath,
+  setByPath,
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
   getTemplate,
@@ -27,10 +30,7 @@ import {
   REF_KEY,
   TranslatableString,
 } from '@rjsf/utils';
-import get from 'lodash/get';
-import has from 'lodash/has';
 import isObject from 'lodash/isObject';
-import set from 'lodash/set';
 import { Markdown } from 'markdown-to-jsx/react';
 
 import { ADDITIONAL_PROPERTY_KEY_REMOVE } from '../constants';
@@ -275,7 +275,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
 
       let index = 0;
       let newKey = preferredKey;
-      while (has(existingFormData, newKey)) {
+      while (hasByPath(existingFormData, newKey)) {
         index += 1;
         newKey = `${preferredKey}${duplicateKeySuffixSeparator}${index}`;
       }
@@ -294,8 +294,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     const newFormData = { ...formData } as T;
     const newKey = getAvailableKey('newKey', newFormData);
     if (schema.patternProperties) {
-      // Cast this to make the `set` work properly
-      set(newFormData as GenericObjectType, newKey, null);
+      setByPath(newFormData, newKey, null);
     } else {
       let type: RJSFSchema['type'] = undefined;
       let constValue: RJSFSchema['const'] = undefined;
@@ -317,8 +316,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       }
 
       const newValue = constValue ?? defaultValue ?? getDefaultValue<T, S, F>(translateString, type);
-      // Cast this to make the `set` work properly
-      set(newFormData as GenericObjectType, newKey, newValue);
+      setByPath(newFormData, newKey, newValue);
     }
 
     if (lastRenamedProperty.current.previousKey === newKey) {
@@ -426,11 +424,11 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
           key={getStableKey(propertyName)}
           propertyName={propertyName}
           required={isRequired<S>(schema, propertyName)}
-          schema={get(schema, [PROPERTIES_KEY, propertyName], {}) as S}
+          schema={(schema[PROPERTIES_KEY]?.[propertyName] ?? {}) as S}
           uiSchema={fieldUiSchema}
-          errorSchema={get(errorSchema, [propertyName])}
+          errorSchema={getByPath(errorSchema, propertyName)}
           fieldPathId={childFieldPathId}
-          formData={get(formData, [propertyName])}
+          formData={getByPath(formData, propertyName)}
           handleKeyRename={handleKeyRename}
           handleRemoveProperty={handleRemoveProperty}
           addedByAdditionalProperties={addedByAdditionalProperties}

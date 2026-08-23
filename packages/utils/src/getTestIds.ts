@@ -1,6 +1,6 @@
-import get from 'lodash/get';
 import uniqueId from 'lodash/uniqueId';
 
+import { getByPath } from './pathUtils';
 import type { TestIdShape } from './types';
 
 /** Returns an object of test IDs that can only be used in test mode. If the function is called in a test environment
@@ -20,9 +20,9 @@ import type { TestIdShape } from './types';
  */
 export default function getTestIds(): TestIdShape {
   // For some reason, even though process.env contains the value of `test` for NODE_ENV, accessing it directly returns
-  // 'development'. Using `get()` does, in fact, return test so sticking with it.
+  // 'development'. Using `getByPath()` does, in fact, return test so sticking with it.
   // Use globalThis to access process without requiring @types/node (TS6 compatibility).
-  if (get(globalThis, 'process.env.NODE_ENV') !== 'test') {
+  if (getByPath(globalThis, ['process', 'env', 'NODE_ENV']) !== 'test') {
     return {};
   }
 

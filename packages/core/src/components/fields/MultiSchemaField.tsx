@@ -15,7 +15,6 @@ import {
   shouldRenderOptionalField,
   TranslatableString,
 } from '@rjsf/utils';
-import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It tracks
@@ -29,7 +28,7 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
   const {
     name,
     disabled = false,
-    errorSchema = {},
+    errorSchema,
     formData,
     fieldPathId,
     onBlur,
@@ -151,7 +150,7 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     ...uiOptions
   } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const Widget = getWidget<T, S, F>({ type: 'number' }, widget, widgets);
-  const rawErrors = get(errorSchema, ERRORS_KEY, []);
+  const rawErrors = errorSchema?.[ERRORS_KEY] ?? [];
   const fieldErrorSchema = { ...errorSchema } as ErrorSchema<T>;
   delete fieldErrorSchema[ERRORS_KEY];
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);

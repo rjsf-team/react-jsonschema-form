@@ -56,6 +56,10 @@ export default function findFieldInSchemaTest(testValidator: TestValidatorType) 
     it('return NOT_FOUND when field does not exist in the schema', () => {
       expect(schemaUtils.findFieldInSchema(simpleSchema, 'foo')).toEqual(NOT_FOUND);
     });
+    it('returns NOT_FOUND when the path traverses a boolean subschema', () => {
+      const booleanPropSchema: RJSFSchema = { type: 'object', properties: { a: false } };
+      expect(schemaUtils.findFieldInSchema(booleanPropSchema, 'a.b')).toEqual(NOT_FOUND);
+    });
     it('returns field as required', () => {
       const path = ['name'];
       const expectedField = get(simpleSchema, [PROPERTIES_KEY, path[0]]);

@@ -46,6 +46,17 @@ describe('createSchemaUtils()', () => {
         },
       });
     });
+
+    it('getRootSchema() falls back to `#` as the base URI when the schema has no $id', () => {
+      const noIdSchema: RJSFSchema = {
+        [SCHEMA_KEY]: JSON_SCHEMA_DRAFT_2020_12,
+        type: 'object',
+        $defs: { example: { type: 'integer' } },
+        [PROPERTIES_KEY]: { ref: { [REF_KEY]: '#/$defs/example' } },
+      };
+      const schemaUtilsNoId: SchemaUtilsType = createSchemaUtils(testValidator, noIdSchema, defaultFormStateBehavior);
+      expect(schemaUtilsNoId.getRootSchema()).toEqual(noIdSchema);
+    });
   });
 
   describe('doesSchemaUtilsDiffer()', () => {
