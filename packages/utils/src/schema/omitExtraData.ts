@@ -467,12 +467,23 @@ export default function omitExtraData<
       if (!isObjectValue(source)) {
         return undefined;
       }
-      filtered = handleObject(localSchema, source, isObjectValue(filtered) ? filtered : {});
+      // Guard against source/target aliasing: when filtered === source (caused by the remainingAllOf
+      // loop returning source when an allOf entry has no top-level type), passing source as both source
+      // and target into handleObject causes any nested array to receive the same reference for both
+      // arguments, triggering an infinite push-loop in handleArray. Use a fresh {} instead so that
+      // handleObject builds the filtered result independently of source.
+      // See: https://github.com/rjsf-team/react-jsonschema-form/issues/3920
+      filtered = handleObject(localSchema, source, isObjectValue(filtered) && filtered !== source ? filtered : {});
     } else if (type === 'array') {
       if (!Array.isArray(source)) {
         return undefined;
       }
-      filtered = handleArray(localSchema, source, Array.isArray(filtered) ? filtered : []);
+      // Guard against source/target aliasing (same reason as the object branch above): when
+      // filtered === source, seeding handleArray with it would push source elements onto the same
+      // array being iterated, causing duplicates or an infinite loop. Reuse filtered when it is
+      // already a distinct (non-aliased) array so that oneOf/anyOf-filtered content is preserved.
+      // See: https://github.com/rjsf-team/react-jsonschema-form/issues/3920
+      filtered = handleArray(localSchema, source, Array.isArray(filtered) && filtered !== source ? filtered : []);
     } else if (filtered === undefined) {
       filtered = source;
     }

@@ -21,6 +21,8 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Fixed `mergeDefaultsWithFormData()` to take the recursive path when the default under an object key holds an array, so a default that lives inside a `dependencies` subschema is no longer dropped when the owning array sits more than one object below the root, fixing part of [#5198](https://github.com/rjsf-team/react-jsonschema-form/issues/5198) ([#5202](https://github.com/rjsf-team/react-jsonschema-form/pull/5202))
+- Fixed `omitExtraData()` to guard against source/target aliasing when a schema has multiple `if/then` `allOf` entries; previously `shallowAllOfMerge` could only hoist one entry, leaving the rest processed by the `remainingAllOf` loop which aliased `source` as the accumulator, causing `handleArray` to push onto the array it was iterating (infinite growth) and dropping conditional properties with numeric-string keys (e.g. `"1"`, `"2"`, `"3"`), fixing [#3920](https://github.com/rjsf-team/react-jsonschema-form/issues/3920)
+  - Fixed `omitExtraData()` array branch to reuse a non-aliased filtered array already built by `handleOneOf`/`handleAnyOf` rather than always seeding `handleArray` with `[]`; previously a `type:'array'` schema with `oneOf`/`anyOf` but no top-level `items` would return `[]` instead of the oneOf-filtered content
 
 # 6.8.0
 
