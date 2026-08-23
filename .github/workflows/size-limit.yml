@@ -20,16 +20,16 @@ jobs:
           run_install: false
       - uses: actions/setup-node@v7
         with:
-          node-version: 22
+          node-version-file: '.nvmrc'
           cache: 'pnpm'
           cache-dependency-path: 'pnpm-lock.yaml'
       - name: Measure PR head
         run: |
           pnpm install --frozen-lockfile
-          # Only @rjsf/core (and its workspace deps, via nx dependsOn) is measured.
-          # --skip-nx-cache because lib/ is not a declared nx output, so a cache
-          # hit would report success without restoring lib/ to disk.
-          pnpm exec nx run-many --target=build --projects=@rjsf/core --skip-nx-cache
+          # Only @rjsf/core (and its workspace deps, via nx dependsOn) is built and
+          # measured. Safe to let nx cache: lib/ is a declared build output in
+          # nx.json, so a cache hit restores it to disk.
+          pnpm exec nx run-many --target=build --projects=@rjsf/core
           # size-limit exits non-zero when a budget is exceeded but still emits
           # JSON; record the outcome and enforce it at the end so the report
           # comment is produced either way.
@@ -43,13 +43,15 @@ jobs:
           # The base sha may be unfetchable (force-pushed away), predate the
           # size-limit setup, or fail to install or build; report no baseline in
           # any of those cases instead of failing the check without an artifact.
-          # --skip-nx-cache because a cache hit would leave the head build on
-          # disk and measure it as the baseline.
+          # An nx cache hit here is fine: a hit means the build inputs are
+          # identical to the head build, so restoring its lib/ IS the baseline.
+          # This leaves the tree and node_modules at the base sha — steps after
+          # this one must only touch $RUNNER_TEMP.
           if git fetch --no-tags --depth 1 origin ${{ github.event.pull_request.base.sha }} &&
             git checkout -f ${{ github.event.pull_request.base.sha }} &&
             [ -f .size-limit.json ] &&
             pnpm install --frozen-lockfile &&
-            pnpm exec nx run-many --target=build --projects=@rjsf/core --skip-nx-cache; then
+            pnpm exec nx run-many --target=build --projects=@rjsf/core; then
             pnpm exec size-limit --json > "$RUNNER_TEMP/base.json" || echo '[]' > "$RUNNER_TEMP/base.json"
           else
             echo '[]' > "$RUNNER_TEMP/base.json"

@@ -3,7 +3,9 @@
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build"],
-      "cache": true
+      "cache": true,
+      "//": "outputs = nx's defaults (dist/build/public) plus lib/, which the packages' build:ts emits; without it a cache hit reports success without restoring lib/ to disk",
+      "outputs": ["{projectRoot}/lib", "{projectRoot}/dist", "{projectRoot}/build", "{projectRoot}/public"]
     },
     "cs-check": {
       "cache": true
