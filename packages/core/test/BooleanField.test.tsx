@@ -268,8 +268,11 @@ describe('BooleanField', () => {
       schema: {
         type: 'object',
         properties: {
+          // string enum keeps the field absent from initial formData; required booleans
+          // default to false (PR #5170), which satisfies AJV and suppresses the error.
           bool: {
-            type: 'boolean',
+            type: 'string',
+            enum: ['a', 'b'],
           },
         },
         required: ['bool'],
@@ -303,8 +306,11 @@ describe('BooleanField', () => {
       schema: {
         type: 'object',
         properties: {
+          // string enum keeps the field absent from initial formData; required booleans
+          // default to false (PR #5170), which satisfies AJV and suppresses the error.
           bool: {
-            type: 'boolean',
+            type: 'string',
+            enum: ['a', 'b'],
           },
         },
         required: ['bool'],

@@ -1307,7 +1307,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           if: { properties: { type: { const: 'A' } } },
           then: { properties: { extra: { type: 'string' } } },
         };
-        const formData = { type: 'A', p_field: 'keep', extra: 'keep' };
+        const formData = { type: 'A', p_field: 'keep', extra: 'drop' };
         testValidator.setReturnValues({ isValid: [true] });
         const result = omitExtraData(testValidator, schema, schema, formData);
         expect(result).toEqual({ type: 'A', p_field: 'keep' });
@@ -1392,9 +1392,11 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
 
       it('applies all anyOf branches when source is an empty array', () => {
         // An empty array is an empty collection — all branches are applied so defaults flow through.
+        // Neither branch declares type:'array' so both return undefined; the outer type:'array'
+        // block creates a fresh [] as the initial target for handleArray.
         const schema: RJSFSchema = {
           type: 'array',
-          anyOf: [{ items: { type: 'string' } }],
+          anyOf: [{ items: { type: 'string' } }, { items: { type: 'number' } }],
           items: { type: 'string' },
         };
         expect(omitExtraData(testValidator, schema, schema, [] as any)).toEqual([]);

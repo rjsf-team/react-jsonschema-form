@@ -435,29 +435,29 @@ export default function omitExtraData<
    * handlers (`handleObject`, `handleArray`) and keyword handlers (`handleAnyOf`, `handleOneOf`,
    * `handleConditions`, `handleDependencies`). Returns `undefined` when `source` is undefined or
    * `schemaDef` is `false`; when `schemaDef` is `true` or empty returns `target ?? source` (when
-   * `materializeSource` is true) or `target` (when false) to avoid aliasing `source` as the
+   * `useSourceAsFallback` is true) or `target` (when false) to avoid aliasing `source` as the
    * accumulator across multiple compositional branches.
    *
    * @param schemaDef - The schema (or boolean shorthand) to filter `source` against
    * @param source - The raw form data value to filter
    * @param [target] - An optional accumulator carrying results from prior oneOf/anyOf processing
-   * @param [materializeSource=true] - When false a permissive schema (`true`/`{}`) returns `target`
+   * @param [useSourceAsFallback=true] - When false a permissive schema (`true`/`{}`) returns `target`
    *   rather than `source`, preventing compositional branches from aliasing the accumulator to `source`
    * @returns - The filtered value, or `undefined` when the schema rejects the value
    */
-  function omit(schemaDef: S | boolean, source: unknown, target?: unknown, materializeSource = true): unknown {
+  function omit(schemaDef: S | boolean, source: unknown, target?: unknown, useSourceAsFallback = true): unknown {
     if (source === undefined || schemaDef === false) {
       return undefined;
     }
     if (schemaDef === true || isEmpty(schemaDef as object)) {
-      return target ?? (materializeSource ? source : undefined);
+      return target ?? (useSourceAsFallback ? source : undefined);
     }
 
     let localSchema = schemaDef;
     const { $ref: ref, allOf } = localSchema;
 
     if (ref !== undefined) {
-      return omit(findSchemaDefinition<S>(ref, rootSchema), source, target, materializeSource);
+      return omit(findSchemaDefinition<S>(ref, rootSchema), source, target, useSourceAsFallback);
     }
     if (allOf) {
       localSchema = doMergeAllOf<S>(localSchema, experimental_customMergeAllOf);
@@ -511,7 +511,7 @@ export default function omitExtraData<
 
     const result = handleDependencies(localSchema, source, afterConditions);
 
-    return result ?? (materializeSource ? source : undefined);
+    return result ?? (useSourceAsFallback ? source : undefined);
   }
 
   return omit(schema, formData) as T | undefined;
