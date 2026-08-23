@@ -38,7 +38,7 @@ export default function CheckboxWidget<
   const uiOptions = getUiOptions(uiSchema);
   const isCheckbox = uiOptions.widget === 'checkbox';
   const description = isCheckbox ? undefined : (options.description ?? schema.description);
-  const inputRequired = schemaRequiresTrueValue(schema) && required;
+  const trueValueRequired = schemaRequiresTrueValue(schema) && required;
 
   const handleChange = ({ checked }: CheckboxCheckedChangeDetails) => onChange(checked);
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement | any>) => onBlur(id, target?.checked);
@@ -70,7 +70,7 @@ export default function CheckboxWidget<
         {!hideLabel && label ? (
           <Text>
             {label}
-            {inputRequired && <ChakraField.RequiredIndicator />}
+            {trueValueRequired && <ChakraField.RequiredIndicator />}
           </Text>
         ) : undefined}
       </Checkbox>

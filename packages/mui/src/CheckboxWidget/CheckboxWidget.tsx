@@ -54,7 +54,7 @@ export default function CheckboxWidget<
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
-  const inputRequired = schemaRequiresTrueValue<S>(schema) && required;
+  const trueValueRequired = schemaRequiresTrueValue<S>(schema) && required;
 
   const handleChange = (_: any, checked: boolean) => onChange(checked);
   const handleBlur: React.FocusEventHandler<HTMLButtonElement> = () => onBlur(id, value);
@@ -77,13 +77,13 @@ export default function CheckboxWidget<
       <FormControlLabel
         {...otherMuiProps}
         {...muiSlotProps?.formControlLabel}
-        required={inputRequired}
+        required={trueValueRequired}
         control={
           <Checkbox
             id={id}
             name={htmlName || id}
             checked={typeof value === 'undefined' ? false : Boolean(value)}
-            required={inputRequired}
+            required={trueValueRequired}
             disabled={disabled || readonly}
             autoFocus={autofocus}
             onChange={handleChange}

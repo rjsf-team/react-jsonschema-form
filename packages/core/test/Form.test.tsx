@@ -3757,6 +3757,36 @@ describeRepeated('Form common', (createFormComponent) => {
   });
 });
 
+describe('Error paths that collide with prototype keys', () => {
+  it('renders the inline error for a field literally named "constructor"', async () => {
+    // An explicit own-property string value (rather than an absent/required one) is used deliberately:
+    // formData.constructor otherwise resolves to the inherited Object constructor function via normal JS
+    // property access, which is a pre-existing, unrelated quirk of validating plain objects against
+    // JSON Schema and not what this test is pinning down.
+    // Typed separately: a literal `constructor:` key inline gets contextually typed against
+    // Object.prototype.constructor instead of RJSFSchema's index signature.
+    const constructorFieldSchema: RJSFSchema = { type: 'string', minLength: 5 };
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        constructor: constructorFieldSchema,
+      },
+    };
+    const formRef = createRef<Form>();
+    const { node } = createFormComponent({ ref: formRef, schema, formData: { constructor: 'ab' } });
+
+    await submitForm(node, user);
+
+    expect(node.querySelectorAll('.error-detail')).toHaveLength(1);
+    expect(node.querySelector('.error-detail')).toHaveTextContent('must NOT have fewer than 5 characters');
+    expect(formRef.current!.state.errorSchema).toEqual({
+      constructor: { __errors: ['must NOT have fewer than 5 characters'] },
+    });
+    // No actual prototype pollution occurred while building the error schema.
+    expect(({} as { __errors?: string[] }).__errors).toBeUndefined();
+  });
+});
+
 describe('Live validation onBlur', () => {
   const schema: RJSFSchema = {
     type: 'string',

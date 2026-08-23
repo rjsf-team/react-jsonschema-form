@@ -53,7 +53,7 @@ export default function CheckboxWidget<
   const handleBlur: React.FocusEventHandler<HTMLInputElement> = () => onBlur?.(id, value);
   const handleFocus: React.FocusEventHandler<HTMLInputElement> = () => onFocus?.(id, value);
   const description = options.description ?? schema.description;
-  const inputRequired = schemaRequiresTrueValue(schema) && required;
+  const trueValueRequired = schemaRequiresTrueValue(schema) && required;
 
   return (
     <>
@@ -77,7 +77,7 @@ export default function CheckboxWidget<
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        required={inputRequired}
+        required={trueValueRequired}
         label={labelValue(label, hideLabel, false)}
         aria-describedby={ariaDescribedByIds(id)}
       />

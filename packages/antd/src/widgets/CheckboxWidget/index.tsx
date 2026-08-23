@@ -33,7 +33,7 @@ export default function CheckboxWidget<
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
   const { token } = theme.useToken();
-  const inputRequired = schemaRequiresTrueValue(schema) && required;
+  const trueValueRequired = schemaRequiresTrueValue(schema) && required;
 
   const handleChange: NonNullable<CheckboxProps['onChange']> = ({ target }) => onChange(target.checked);
 
@@ -62,7 +62,7 @@ export default function CheckboxWidget<
       {!hideLabel && label ? (
         <>
           {label}
-          {inputRequired && (
+          {trueValueRequired && (
             <span aria-hidden='true' style={{ color: token.colorError, marginLeft: 2 }}>
               *
             </span>

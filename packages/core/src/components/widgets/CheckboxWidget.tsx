@@ -41,7 +41,7 @@ function CheckboxWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
-  const inputRequired = schemaRequiresTrueValue<S>(schema) && required;
+  const trueValueRequired = schemaRequiresTrueValue<S>(schema) && required;
 
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => onChange(event.target.checked),
@@ -89,7 +89,7 @@ function CheckboxWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
         {labelValue(
           <span>
             {label}
-            {inputRequired && <span className='required'>*</span>}
+            {trueValueRequired && <span className='required'>*</span>}
           </span>,
           hideLabel,
         )}

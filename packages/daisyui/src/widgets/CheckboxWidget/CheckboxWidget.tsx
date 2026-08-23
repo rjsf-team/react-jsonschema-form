@@ -41,7 +41,7 @@ export default function CheckboxWidget<
     options,
   );
   const description = options.description || schema.description;
-  const inputRequired = schemaRequiresTrueValue(schema) && required;
+  const trueValueRequired = schemaRequiresTrueValue(schema) && required;
 
   /** Handle focus events
    */
@@ -103,7 +103,7 @@ export default function CheckboxWidget<
           <div className='mr-2'>{input}</div>
           <span className='label-text'>
             {label}
-            {inputRequired && <span className='text-error ml-1'>*</span>}
+            {trueValueRequired && <span className='text-error ml-1'>*</span>}
           </span>
         </label>
       )}

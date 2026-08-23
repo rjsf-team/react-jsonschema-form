@@ -35,7 +35,7 @@ export default function CheckboxWidget<
     uiSchema,
   } = props;
 
-  const inputRequired = schemaRequiresTrueValue(schema) && required;
+  const trueValueRequired = schemaRequiresTrueValue(schema) && required;
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
     'DescriptionFieldTemplate',
     registry,
@@ -88,14 +88,14 @@ export default function CheckboxWidget<
           !hideLabel && label ? (
             <>
               {label}
-              {inputRequired && <span className='required'>*</span>}
+              {trueValueRequired && <span className='required'>*</span>}
             </>
           ) : (
             labelValue(label || undefined, hideLabel, false)
           )
         }
         disabled={disabled || readonly}
-        required={inputRequired}
+        required={trueValueRequired}
         autoFocus={autofocus}
         checked={typeof value === 'undefined' ? false : value === 'true' || value}
         onChange={handleCheckboxChange}
