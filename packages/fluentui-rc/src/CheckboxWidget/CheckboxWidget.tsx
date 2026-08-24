@@ -29,21 +29,18 @@ export default function CheckboxWidget<
     registry,
     options,
     uiSchema,
+    required,
   } = props;
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
     'DescriptionFieldTemplate',
     registry,
     options,
   );
-  // Because an unchecked checkbox will cause html5 validation to fail, only add
-  // the "required" attribute if the field value must be "true", due to the
-  // "const" or "enum" keywords
-  const required = schemaRequiresTrueValue<S>(schema);
-
   const handleChange = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => onChange(checked);
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.checked);
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.checked);
   const description = options.description ?? schema.description;
+  const trueValueRequired = schemaRequiresTrueValue(schema) && required;
 
   return (
     <>
@@ -61,7 +58,7 @@ export default function CheckboxWidget<
         name={htmlName || id}
         label={label}
         checked={typeof value === 'undefined' ? false : Boolean(value)}
-        required={required}
+        required={trueValueRequired}
         disabled={disabled || readonly}
         autoFocus={autofocus}
         onChange={handleChange}

@@ -31,6 +31,7 @@ function CheckboxWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
   onChange,
   registry,
   htmlName,
+  required,
 }: WidgetProps<T, S, F>) {
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
     'DescriptionFieldTemplate',
@@ -40,7 +41,7 @@ function CheckboxWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
-  const required = schemaRequiresTrueValue<S>(schema);
+  const trueValueRequired = schemaRequiresTrueValue<S>(schema) && required;
 
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => onChange(event.target.checked),
@@ -85,7 +86,13 @@ function CheckboxWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
           onFocus={handleFocus}
           aria-describedby={ariaDescribedByIds(id)}
         />
-        {labelValue(<span>{label}</span>, hideLabel)}
+        {labelValue(
+          <span>
+            {label}
+            {trueValueRequired && <span className='required'>*</span>}
+          </span>,
+          hideLabel,
+        )}
       </label>
     </div>
   );

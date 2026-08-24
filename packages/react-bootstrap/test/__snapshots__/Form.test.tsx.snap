@@ -8955,6 +8955,137 @@ exports[`single fields > radio widget with description in schema and FieldTempla
 </DocumentFragment>
 `;
 
+exports[`single fields > required checkbox field 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div>
+        <div
+          class="p-0 container-fluid"
+        >
+          <div
+            class="row"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="col-12"
+            >
+               
+              <div
+                class="rjsf-field rjsf-field-boolean"
+              >
+                <div>
+                  <div
+                    aria-describedby="root_agree__error root_agree__description root_agree__help"
+                    class=""
+                  >
+                    <div
+                      class="form-check"
+                    >
+                      <input
+                        class="form-check-input"
+                        id="root_agree"
+                        name="root_agree"
+                        type="checkbox"
+                      />
+                      <label
+                        class="form-check-label"
+                        for="root_agree"
+                        title=""
+                      >
+                        I Agree
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields > required checkbox field, default true 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div>
+        <div
+          class="p-0 container-fluid"
+        >
+          <div
+            class="row"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="col-12"
+            >
+               
+              <div
+                class="rjsf-field rjsf-field-boolean"
+              >
+                <div>
+                  <div
+                    aria-describedby="root_agree__error root_agree__description root_agree__help"
+                    class=""
+                  >
+                    <div
+                      class="form-check"
+                    >
+                      <input
+                        checked=""
+                        class="form-check-input"
+                        id="root_agree"
+                        name="root_agree"
+                        type="checkbox"
+                      />
+                      <label
+                        class="form-check-label"
+                        for="root_agree"
+                        title=""
+                      >
+                        I Agree
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > schema examples 1`] = `
 <DocumentFragment>
   <form
