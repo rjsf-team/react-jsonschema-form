@@ -75,6 +75,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/validator-ata
 
 - Replaced all `lodash/get` usage with the new `@rjsf/utils` path utilities
+- Updated `ata-validator` dependency to `^1.7.1`, picking up lazily materialized errors and the closure-tree interpreted engine ([#5211](https://github.com/rjsf-team/react-jsonschema-form/pull/5211))
 
 ## @rjsf/validator-cfworker
 
