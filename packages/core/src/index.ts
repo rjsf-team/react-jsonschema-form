@@ -21,5 +21,8 @@ export type {
   SchemaExamplesProps,
 };
 
+// The bundle size of the `Form`-only import path is guarded by the size-limit check.
+// An export added here that pulls in a heavy dependency goes unmeasured until it gets
+// its own check in .size-limit.json.
 export { withTheme, getDefaultRegistry, getTestRegistry, RichDescription, RichHelp, SchemaExamples };
 export default Form;
