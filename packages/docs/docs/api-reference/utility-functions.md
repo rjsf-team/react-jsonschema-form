@@ -437,7 +437,7 @@ This function iterates over each field of object `a`, using `_.isEqual` to compa
 If the values are different, the field name will be included in the returned array.
 
 When `deep` is true, a field holding a nested object or a same-length array is descended into and the dotted path of the deepest field that changed is returned instead of the name of the top-level field holding it.
-A key that contains a `.` is never descended into, since the path it would produce cannot be told apart from a path through a nested object.
+A key that contains a `.` or a `[` is descended into like any other: the path it produces cannot be told apart from a path through nested keys, and neither can the entry an `ErrorSchema` keeps for it, since [toErrorSchema()](#toerrorschema) spells such a name out as a path in the same way.
 
 #### Parameters
 

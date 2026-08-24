@@ -2468,6 +2468,62 @@ describeRepeated('Form common', (createFormComponent) => {
             baz: { __errors: ["must have required property 'baz'"] },
           });
         });
+
+        it('should only clear the error of the field that changed under a name containing a dot', async () => {
+          const altSchema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              'has.dot': {
+                type: 'object',
+                properties: {
+                  inner: { type: 'string' },
+                  other: { type: 'string' },
+                },
+                required: ['inner', 'other'],
+              },
+            },
+          };
+          const formRef = createRef<Form>();
+
+          function Controlled() {
+            const [formData, setFormData] = useState<any>({ 'has.dot': {} });
+            return (
+              <Form
+                ref={formRef}
+                schema={altSchema}
+                validator={validator}
+                formData={formData}
+                noHtml5Validate
+                onChange={(e) => setFormData(e.formData)}
+              />
+            );
+          }
+
+          const { container } = render(<Controlled />);
+          const node = container.firstElementChild!;
+
+          await submitForm(node, user);
+          // The name is spelled out as a path here too, so the errors of the two fields it holds sit side by side
+          // under it and clearing one has to leave the other where it is
+          expect(formRef.current!.state.errorSchema).toEqual({
+            has: {
+              dot: {
+                inner: { __errors: ["must have required property 'inner'"] },
+                other: { __errors: ["must have required property 'other'"] },
+              },
+            },
+          });
+
+          await user.type(node.querySelector('[id="root_has.dot_inner"]')!, 'a');
+          expect(formRef.current!.state.errorSchema).toEqual({
+            has: {
+              dot: {
+                inner: undefined,
+                other: { __errors: ["must have required property 'other'"] },
+              },
+            },
+          });
+        });
       });
 
       describe('Live validation', () => {

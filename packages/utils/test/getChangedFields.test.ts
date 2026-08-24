@@ -196,9 +196,20 @@ describe('getChangedFields()', () => {
       const b = { outer: 'gone' };
       expect(getChangedFields(a, b, true)).toEqual(['outer']);
     });
-    it('does not descend into a key holding a dot', () => {
-      const a = { 'has.dot': { inner: 1 } };
-      const b = { 'has.dot': { inner: 2 } };
+    it('descends into a key holding a dot, spelling the name out as part of the path', () => {
+      const a = { 'has.dot': { inner: 1, other: 2 } };
+      const b = { 'has.dot': { inner: 3, other: 2 } };
+      expect(getChangedFields(a, b)).toEqual(['has.dot']);
+      expect(getChangedFields(a, b, true)).toEqual(['has.dot.inner']);
+    });
+    it('descends into a key holding a bracket', () => {
+      const a = { 'has[0]': { inner: 1, other: 2 } };
+      const b = { 'has[0]': { inner: 3, other: 2 } };
+      expect(getChangedFields(a, b, true)).toEqual(['has[0].inner']);
+    });
+    it('reports a key holding a dot whole when the difference cannot be narrowed', () => {
+      const a = { 'has.dot': 1 };
+      const b = { 'has.dot': 2 };
       expect(getChangedFields(a, b, true)).toEqual(['has.dot']);
     });
     it('leaves the shallow result alone', () => {

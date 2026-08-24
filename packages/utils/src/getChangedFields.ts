@@ -7,9 +7,6 @@ import { getByPath } from './pathUtils';
 /** Returns the paths of the changed descendants of `a` relative to `b`, relative to the node itself. An empty list
  * means the difference could not be narrowed any further, so the caller should report its own key instead.
  *
- * A key containing a `.` is never descended into, since the dotted path it would produce cannot be told apart from a
- * path through a nested object.
- *
  * @param a - The first value, representing the original data to compare
  * @param b - The second value, representing the updated data to compare
  * @returns - An array of dotted paths, relative to `a`
@@ -71,9 +68,12 @@ export default function getChangedFields(a: unknown, b: unknown, deep = false): 
   const unequalFields = Object.entries(a as object)
     .filter(([key, value]) => !deepEquals(value, getByPath(b, key)))
     .flatMap(([key, value]) => {
-      if (!deep || key.includes('.')) {
+      if (!deep) {
         return [key];
       }
+      // A key holding a `.` or a `[` is descended into like any other. The path it produces cannot be told apart from
+      // a path through nested keys, but neither can the entry an `ErrorSchema` keeps for it, since `toErrorSchema()`
+      // spells such a name out as a path in the same way, so the two agree on where the field lives.
       const descendants = getChangedDescendants(value, getByPath(b, key));
       return descendants.length ? descendants.map((path) => `${key}.${path}`) : [key];
     });
