@@ -6780,6 +6780,117 @@ exports[`single fields > radio widget with description in schema and FieldTempla
 </DocumentFragment>
 `;
 
+exports[`single fields > required checkbox field 1`] = `
+<DocumentFragment>
+  <form
+    class="ui form rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="grouped equal width fields"
+      >
+        <div
+          class="rjsf-field rjsf-field-boolean"
+        >
+          <div
+            class="grouped equal width fields"
+          >
+            <div
+              class="field"
+            >
+              <div
+                class="ui checkbox"
+                inverted="false"
+              >
+                <input
+                  aria-describedby="root_agree__error root_agree__description root_agree__help"
+                  class="hidden"
+                  id="root_agree"
+                  name="root_agree"
+                  readonly=""
+                  tabindex="0"
+                  type="checkbox"
+                  value=""
+                />
+                <label
+                  for="root_agree"
+                >
+                  I Agree
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ui primary button"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields > required checkbox field, default true 1`] = `
+<DocumentFragment>
+  <form
+    class="ui form rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="grouped equal width fields"
+      >
+        <div
+          class="rjsf-field rjsf-field-boolean"
+        >
+          <div
+            class="grouped equal width fields"
+          >
+            <div
+              class="field"
+            >
+              <div
+                class="ui checked checkbox"
+                inverted="false"
+              >
+                <input
+                  aria-describedby="root_agree__error root_agree__description root_agree__help"
+                  checked=""
+                  class="hidden"
+                  id="root_agree"
+                  name="root_agree"
+                  readonly=""
+                  tabindex="0"
+                  type="checkbox"
+                  value=""
+                />
+                <label
+                  for="root_agree"
+                >
+                  I Agree
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ui primary button"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > schema examples 1`] = `
 <DocumentFragment>
   <form

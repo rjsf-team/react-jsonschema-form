@@ -4772,9 +4772,6 @@ exports[`single fields > checkbox field 1`] = `
                       value=""
                     />
                   </span>
-                  <span
-                    class="ant-checkbox-label"
-                  />
                 </label>
               </div>
             </div>
@@ -14245,6 +14242,209 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                 >
                   This is a radio description
                 </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-ypkju9 css-var-root ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields > required checkbox field 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-ypkju9 ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-ypkju9 css-var-root"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ypkju9 css-var-root"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <fieldset
+                  id="root"
+                >
+                  <div
+                    class="ant-row css-dev-only-do-not-override-ypkju9 css-var-root"
+                    style="margin-inline: -12px;"
+                  >
+                    <div
+                      class="ant-col ant-col-24 css-dev-only-do-not-override-ypkju9 css-var-root"
+                      style="padding-inline: 12px;"
+                    >
+                      <div
+                        class="rjsf-field rjsf-field-boolean"
+                      >
+                        <div
+                          class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-ypkju9 ant-form-item-horizontal"
+                        >
+                          <div
+                            class="ant-row ant-form-item-row css-dev-only-do-not-override-ypkju9 css-var-root"
+                          >
+                            <div
+                              class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ypkju9 css-var-root"
+                            >
+                              <div
+                                class="ant-form-item-control-input"
+                              >
+                                <div
+                                  class="ant-form-item-control-input-content"
+                                >
+                                  <label
+                                    class="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-var-root ant-checkbox-css-var css-dev-only-do-not-override-ypkju9"
+                                  >
+                                    <span
+                                      class="ant-checkbox ant-wave-target css-dev-only-do-not-override-ypkju9"
+                                    >
+                                      <input
+                                        aria-describedby="root_agree__error root_agree__description root_agree__help"
+                                        class="ant-checkbox-input"
+                                        id="root_agree"
+                                        name="root_agree"
+                                        required=""
+                                        type="checkbox"
+                                        value=""
+                                      />
+                                    </span>
+                                    <span
+                                      class="ant-checkbox-label"
+                                    >
+                                      I Agree
+                                    </span>
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-ypkju9 css-var-root ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields > required checkbox field, default true 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-ypkju9 ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-ypkju9 css-var-root"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ypkju9 css-var-root"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <fieldset
+                  id="root"
+                >
+                  <div
+                    class="ant-row css-dev-only-do-not-override-ypkju9 css-var-root"
+                    style="margin-inline: -12px;"
+                  >
+                    <div
+                      class="ant-col ant-col-24 css-dev-only-do-not-override-ypkju9 css-var-root"
+                      style="padding-inline: 12px;"
+                    >
+                      <div
+                        class="rjsf-field rjsf-field-boolean"
+                      >
+                        <div
+                          class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-ypkju9 ant-form-item-horizontal"
+                        >
+                          <div
+                            class="ant-row ant-form-item-row css-dev-only-do-not-override-ypkju9 css-var-root"
+                          >
+                            <div
+                              class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ypkju9 css-var-root"
+                            >
+                              <div
+                                class="ant-form-item-control-input"
+                              >
+                                <div
+                                  class="ant-form-item-control-input-content"
+                                >
+                                  <label
+                                    class="ant-checkbox-wrapper ant-checkbox-wrapper-checked ant-checkbox-wrapper-in-form-item css-var-root ant-checkbox-css-var css-dev-only-do-not-override-ypkju9"
+                                  >
+                                    <span
+                                      class="ant-checkbox ant-wave-target css-dev-only-do-not-override-ypkju9 ant-checkbox-checked"
+                                    >
+                                      <input
+                                        aria-describedby="root_agree__error root_agree__description root_agree__help"
+                                        checked=""
+                                        class="ant-checkbox-input"
+                                        id="root_agree"
+                                        name="root_agree"
+                                        required=""
+                                        type="checkbox"
+                                        value=""
+                                      />
+                                    </span>
+                                    <span
+                                      class="ant-checkbox-label"
+                                    >
+                                      I Agree
+                                    </span>
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
               </div>
             </div>
           </div>

@@ -44,8 +44,26 @@ describe('BooleanField', () => {
     expect(node.querySelector('.rjsf-field label span')).toHaveTextContent('foo');
   });
 
+  it('should render a required asterisk when the boolean field is required and schema requires true', () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          foo: {
+            type: 'boolean',
+            title: 'Agree',
+            const: true,
+          },
+        },
+        required: ['foo'],
+      },
+    });
+
+    expect(node.querySelector('.rjsf-field span.required')).toHaveTextContent('*');
+  });
+
   describe('HTML5 required attribute', () => {
-    it('should not render a required attribute for simple required fields', () => {
+    it('should render a required attribute for simple required fields', () => {
       const { node } = createFormComponent({
         schema: {
           type: 'object',
@@ -58,7 +76,7 @@ describe('BooleanField', () => {
         },
       });
 
-      expect(node.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
+      expect(node.querySelector('input[type=checkbox]')).toHaveAttribute('required', '');
     });
 
     it('should add a required attribute if the schema uses const with a true value', () => {
@@ -71,6 +89,7 @@ describe('BooleanField', () => {
               const: true,
             },
           },
+          required: ['foo'],
         },
       });
 
@@ -87,6 +106,7 @@ describe('BooleanField', () => {
               enum: [true],
             },
           },
+          required: ['foo'],
         },
       });
 
@@ -107,6 +127,7 @@ describe('BooleanField', () => {
               ],
             },
           },
+          required: ['foo'],
         },
       });
 
@@ -127,6 +148,7 @@ describe('BooleanField', () => {
               ],
             },
           },
+          required: ['foo'],
         },
       });
 
@@ -147,6 +169,7 @@ describe('BooleanField', () => {
               ],
             },
           },
+          required: ['foo'],
         },
       });
 
@@ -246,7 +269,8 @@ describe('BooleanField', () => {
         type: 'object',
         properties: {
           bool: {
-            type: 'boolean',
+            type: 'string',
+            enum: ['a', 'b'],
           },
         },
         required: ['bool'],
@@ -281,7 +305,8 @@ describe('BooleanField', () => {
         type: 'object',
         properties: {
           bool: {
-            type: 'boolean',
+            type: 'string',
+            enum: ['a', 'b'],
           },
         },
         required: ['bool'],

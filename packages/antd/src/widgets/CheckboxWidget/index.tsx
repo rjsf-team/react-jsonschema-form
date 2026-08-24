@@ -1,8 +1,8 @@
 import type { FocusEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, GenericObjectType } from '@rjsf/utils';
-import { ariaDescribedByIds, labelValue } from '@rjsf/utils';
+import { ariaDescribedByIds, schemaRequiresTrueValue } from '@rjsf/utils';
 import type { CheckboxProps } from 'antd';
-import { Checkbox } from 'antd';
+import { Checkbox, theme } from 'antd';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -14,10 +14,26 @@ export default function CheckboxWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
-  const { autofocus, disabled, registry, id, htmlName, label, hideLabel, onBlur, onChange, onFocus, readonly, value } =
-    props;
+  const {
+    autofocus,
+    disabled,
+    registry,
+    id,
+    htmlName,
+    label,
+    hideLabel,
+    onBlur,
+    onChange,
+    onFocus,
+    readonly,
+    value,
+    required,
+    schema,
+  } = props;
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
+  const { token } = theme.useToken();
+  const trueValueRequired = schemaRequiresTrueValue(schema) && required;
 
   const handleChange: NonNullable<CheckboxProps['onChange']> = ({ target }) => onChange(target.checked);
 
@@ -38,11 +54,21 @@ export default function CheckboxWidget<
       disabled={disabled || (readonlyAsDisabled && readonly)}
       id={id}
       name={htmlName || id}
+      required={required}
       onChange={!readonly ? handleChange : undefined}
       {...extraProps}
       aria-describedby={ariaDescribedByIds(id)}
     >
-      {labelValue(label, hideLabel, '')}
+      {!hideLabel && label ? (
+        <>
+          {label}
+          {trueValueRequired && (
+            <span aria-hidden='true' style={{ color: token.colorError, marginLeft: 2 }}>
+              *
+            </span>
+          )}
+        </>
+      ) : undefined}
     </Checkbox>
   );
 }
