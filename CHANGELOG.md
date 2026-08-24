@@ -116,6 +116,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Removed the last `lodash` usage from the playground and the test suites, so no package declares `lodash`/`lodash-es` as a direct dependency any more (both remain in the lockfile as transitive dependencies of third-party tooling). The `lodashReplacer` `tsc-alias` machinery that rewrote `lodash` imports to `lodash-es` for the ESM builds has been deleted along with it
 
+## @rjsf/shadcn
+
+- Fixed `FancySelect` showing a red error border on required empty enum fields before validation runs, fixing [#5187](https://github.com/rjsf-team/react-jsonschema-form/issues/5187) ([#5209](https://github.com/rjsf-team/react-jsonschema-form/pull/5209))
+
 # 6.8.0
 
 ## @rjsf/core
