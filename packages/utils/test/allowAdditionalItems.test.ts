@@ -1,7 +1,7 @@
 import type { MockInstance } from 'vitest';
 
 import type { RJSFSchema } from '../src';
-import { allowAdditionalItems } from '../src';
+import { allowAdditionalItems, noop } from '../src';
 
 const schema1: RJSFSchema = {
   type: 'string',
@@ -17,7 +17,7 @@ describe('allowAdditionalItems()', () => {
   let consoleWarnSpy: MockInstance;
   beforeAll(() => {
     // spy on console.warn() and make it do nothing to avoid making noise in the test
-    consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
   });
   afterAll(() => {
     consoleWarnSpy.mockRestore();

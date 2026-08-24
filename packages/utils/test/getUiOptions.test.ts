@@ -1,7 +1,7 @@
 import type { MockInstance } from 'vitest';
 
 import type { GlobalUISchemaOptions, UIOptionsType, UiSchema } from '../src';
-import { getUiOptions } from '../src';
+import { getUiOptions, noop } from '../src';
 
 const uiSchema: UiSchema = {
   widgetText: {
@@ -52,7 +52,7 @@ describe('getUiOptions()', () => {
   let consoleErrorSpy: MockInstance;
   beforeAll(() => {
     // spy on console.error() and make it do nothing to avoid making noise in the test
-    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(noop);
   });
   afterAll(() => {
     consoleErrorSpy.mockRestore();

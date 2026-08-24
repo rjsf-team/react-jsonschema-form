@@ -1,7 +1,7 @@
 import type { MockInstance } from 'vitest';
 
 import type { RJSFSchema } from '../src';
-import { getDiscriminatorFieldFromSchema } from '../src';
+import { getDiscriminatorFieldFromSchema, noop } from '../src';
 
 const PROPERTY_NAME = 'testProp';
 const BAD_DISCRIMINATOR: RJSFSchema = { discriminator: { propertyName: 5 } };
@@ -18,7 +18,7 @@ describe('getDiscriminatorFieldFromSchema()', () => {
     let consoleWarn: MockInstance;
     beforeAll(() => {
       // Spy and mock to be silent
-      consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      consoleWarn = vi.spyOn(console, 'warn').mockImplementation(noop);
     });
     afterAll(() => {
       consoleWarn.mockRestore();

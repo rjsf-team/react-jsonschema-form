@@ -6,7 +6,7 @@ import type {
   UiSchema,
   ValidatorType,
 } from '@rjsf/utils';
-import { ErrorSchemaBuilder } from '@rjsf/utils';
+import { ErrorSchemaBuilder, noop } from '@rjsf/utils';
 import type Ajv from 'ajv';
 import localize from 'ajv-i18n';
 import Ajv2019 from 'ajv/dist/2019';
@@ -16,8 +16,6 @@ import type { Mock } from 'vitest';
 
 import type { Localizer } from '../src';
 import AJV8Validator from '../src/validator';
-
-const noop = () => {};
 
 const illFormedKey = "bar`'()=+*&^%$#@!";
 

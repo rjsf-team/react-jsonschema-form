@@ -1,5 +1,6 @@
 import type { MockInstance } from 'vitest';
 
+import { noop } from '../src';
 import logUnsupportedDefaultForEnum from '../src/logUnsupportedDefaultForEnum';
 
 describe('logUnsupportedDefaultForEnum()', () => {
@@ -7,7 +8,7 @@ describe('logUnsupportedDefaultForEnum()', () => {
 
   beforeEach(() => {
     // oxlint-disable-next-line no-empty-function
-    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(noop);
   });
 
   afterEach(() => {

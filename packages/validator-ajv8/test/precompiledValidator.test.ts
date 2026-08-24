@@ -1,5 +1,5 @@
 import type { ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
-import { ErrorSchemaBuilder, hashForSchema, JUNK_OPTION_ID, retrieveSchema, RJSF_REF_KEY } from '@rjsf/utils';
+import { ErrorSchemaBuilder, JUNK_OPTION_ID, RJSF_REF_KEY, hashForSchema, noop, retrieveSchema } from '@rjsf/utils';
 import type { Mock } from 'vitest';
 
 import type { Localizer, ValidatorFunctions } from '../src';
@@ -379,7 +379,7 @@ describe('AJV8PrecompiledValidator', () => {
     let validator: AJV8PrecompiledValidator;
     let localizer: Localizer;
     beforeAll(() => {
-      localizer = vi.fn().mockImplementation(() => {});
+      localizer = vi.fn().mockImplementation(noop);
       validator = new AJV8PrecompiledValidator(validateOptionsFns, rootSchema, localizer);
     });
     describe('validating using single custom meta schema', () => {

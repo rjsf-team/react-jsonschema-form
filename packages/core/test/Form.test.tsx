@@ -17,6 +17,7 @@ import {
   getTemplate,
   getUiOptions,
   optionalControlsId,
+  noop,
 } from '@rjsf/utils';
 import validator, { customizeValidator } from '@rjsf/validator-ajv8';
 import { act, render, waitFor } from '@testing-library/react';
@@ -40,8 +41,6 @@ import {
   submitForm,
 } from './testUtils';
 import widgetsSchema from './widgets_schema.json';
-
-const noop = () => {};
 
 const TWO_BUTTONS = (
   <>

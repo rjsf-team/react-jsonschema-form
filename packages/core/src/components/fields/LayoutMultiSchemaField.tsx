@@ -26,9 +26,8 @@ import {
   getPropertySchema,
   getUiOptions,
   getWidget,
+  noop,
 } from '@rjsf/utils';
-
-const noop = () => {};
 
 /** Gets the selected option from the list of `options`, using the `selectorField` to search inside each `option` for
  * the `properties[selectorField].default(or const)` that matches the given `value`.

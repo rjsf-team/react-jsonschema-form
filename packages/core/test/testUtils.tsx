@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react';
 import type { GenericObjectType, ValidatorType } from '@rjsf/utils';
+import { noop } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import '@testing-library/jest-dom';
 import { act, render, fireEvent } from '@testing-library/react';
@@ -8,8 +9,6 @@ import type { Mock, MockInstance } from 'vitest';
 
 import type { FormProps } from '../src';
 import Form from '../src';
-
-const noop = () => {};
 
 export type NoValFormProps = Omit<FormProps, 'validator'>;
 

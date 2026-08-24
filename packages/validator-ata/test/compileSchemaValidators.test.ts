@@ -1,3 +1,4 @@
+import { noop } from '@rjsf/utils';
 import type { RJSFSchema } from '@rjsf/utils';
 import { writeFileSync } from 'fs';
 import type { MockInstance } from 'vitest';
@@ -21,7 +22,7 @@ describe('compileSchemaValidators()', () => {
   let consoleLogSpy: MockInstance;
   let expectedCode: string;
   beforeAll(() => {
-    consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(noop);
   });
   afterAll(() => {
     consoleLogSpy.mockRestore();

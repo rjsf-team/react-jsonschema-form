@@ -61,6 +61,7 @@ import mergeDefaultsWithFormData from './mergeDefaultsWithFormData';
 import mergeObjects from './mergeObjects';
 import mergeSchemas from './mergeSchemas';
 import { bracketNameGenerator, dotNotationNameGenerator } from './nameGenerators';
+import noop from './noop';
 import optionsList from './optionsList';
 import orderProperties from './orderProperties';
 import pad from './pad';
@@ -174,6 +175,7 @@ export {
   mergeDefaultsWithFormData,
   mergeObjects,
   mergeSchemas,
+  noop,
   optionalControlsId,
   optionId,
   optionsList,

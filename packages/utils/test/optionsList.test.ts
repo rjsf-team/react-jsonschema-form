@@ -1,14 +1,14 @@
 import type { MockInstance } from 'vitest';
 
 import type { RJSFSchema, UiSchema } from '../src';
-import { CONST_KEY, getByPath, optionsList, PROPERTIES_KEY } from '../src';
+import { CONST_KEY, PROPERTIES_KEY, getByPath, noop, optionsList } from '../src';
 
 describe('optionsList()', () => {
   let consoleWarnSpy: MockInstance;
   let oldProcessEnv: string | undefined;
   beforeAll(() => {
     oldProcessEnv = process.env.NODE_ENV;
-    consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
   });
   afterAll(() => {
     consoleWarnSpy.mockRestore();

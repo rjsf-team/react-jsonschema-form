@@ -2,7 +2,7 @@
 import type { MockInstance } from 'vitest';
 
 import type { RJSFSchema } from '../../src';
-import { toPathSchema, createSchemaUtils } from '../../src';
+import { createSchemaUtils, noop, toPathSchema } from '../../src';
 import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData';
 import type { TestValidatorType } from './types';
 
@@ -12,7 +12,7 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
 
     beforeAll(() => {
       // spy on console.warn() and make it do nothing to avoid making noise in the test
-      consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
     });
 
     afterAll(() => {

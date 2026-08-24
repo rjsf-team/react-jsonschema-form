@@ -1,5 +1,5 @@
 import type { RJSFSchema } from '@rjsf/utils';
-import { ErrorSchemaBuilder, ID_KEY, ROOT_SCHEMA_PREFIX } from '@rjsf/utils';
+import { ErrorSchemaBuilder, ID_KEY, ROOT_SCHEMA_PREFIX, noop } from '@rjsf/utils';
 
 // Static import of the package surface so its top-level evaluation
 // (`export default customizeValidator()`) is included in coverage.
@@ -272,7 +272,7 @@ describe('ATAValidator', () => {
       // `null` as a schema body throws at ata's compile step. The catch in
       // isValid swallows it and returns false rather than propagating to RJSF.
       const broken = null as unknown as RJSFSchema;
-      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const warn = vi.spyOn(console, 'warn').mockImplementation(noop);
       expect(v.isValid(broken, {}, broken)).toBe(false);
       expect(warn).toHaveBeenCalled();
       warn.mockRestore();

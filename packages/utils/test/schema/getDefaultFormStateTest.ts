@@ -1,7 +1,7 @@
 import type { MockInstance } from 'vitest';
 
 import type { Experimental_DefaultFormStateBehavior, RJSFSchema } from '../../src';
-import { createSchemaUtils, getDefaultFormState } from '../../src';
+import { createSchemaUtils, getDefaultFormState, noop } from '../../src';
 import {
   AdditionalItemsHandling,
   computeDefaultBasedOnSchemaTypeAndDefaults,
@@ -20,7 +20,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
   describe('getDefaultFormState()', () => {
     let consoleWarnSpy: MockInstance;
     beforeAll(() => {
-      consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {}); // mock this to avoid actually warning in the tests
+      consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop); // mock this to avoid actually warning in the tests
     });
     afterAll(() => {
       consoleWarnSpy.mockRestore();

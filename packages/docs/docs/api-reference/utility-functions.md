@@ -986,6 +986,14 @@ Return a consistent `id` for the `optionIndex`s of a `Radio` or `Checkboxes` wid
 
 - string: An id for the option index based on the parent `id`
 
+### noop()
+
+A function that does nothing and returns `undefined`, useful as a placeholder for an optional callback or as the implementation of a mocked function.
+
+#### Returns
+
+- void
+
 ### optionsList&lt;T = any, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = any>()
 
 Gets the list of options from the `schema`. If the schema has an enum list, then those enum values are returned.

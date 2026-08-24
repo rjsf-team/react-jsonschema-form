@@ -9,6 +9,7 @@ import {
   retrieveSchema,
   RJSF_REF_CYCLE_KEY,
   RJSF_REF_KEY,
+  noop,
 } from '../../src';
 import {
   getAllPermutationsOfXxxOf,
@@ -45,7 +46,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
   describe('retrieveSchema()', () => {
     let consoleWarnSpy: MockInstance;
     beforeAll(() => {
-      consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {}); // mock this to avoid actually warning in the tests
+      consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop); // mock this to avoid actually warning in the tests
     });
     afterAll(() => {
       consoleWarnSpy.mockRestore();
