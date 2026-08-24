@@ -1,6 +1,5 @@
-import get from 'lodash/get';
-
 import { PROPERTIES_KEY } from './constants';
+import { getByPath } from './pathUtils';
 import type { RJSFSchema, StrictRJSFSchema } from './types';
 
 /** Compares the value of `discriminatorField` within `formData` against the value of `discriminatorField` within schema for each `option`.
@@ -19,7 +18,7 @@ export default function getOptionMatchingSimpleDiscriminator<T = any, S extends 
   discriminatorField?: string,
 ): number | undefined {
   if (formData && discriminatorField) {
-    const value = get(formData, discriminatorField);
+    const value = getByPath(formData, discriminatorField);
 
     if (value === undefined) {
       return undefined;
@@ -27,13 +26,14 @@ export default function getOptionMatchingSimpleDiscriminator<T = any, S extends 
 
     for (let i = 0; i < options.length; i += 1) {
       const option = options[i];
-      const discriminator: S = get(option, [PROPERTIES_KEY, discriminatorField], {}) as S;
+      const discriminator: S = (option[PROPERTIES_KEY]?.[discriminatorField] ?? {}) as S;
 
       if (discriminator.type !== 'object' && discriminator.type !== 'array') {
         if (discriminator.const === value) {
           return i;
         }
-        if (discriminator.enum?.includes(value)) {
+        const enumValues: readonly unknown[] | undefined = discriminator.enum;
+        if (enumValues?.includes(value)) {
           return i;
         }
       }

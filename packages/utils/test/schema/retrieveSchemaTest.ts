@@ -13,6 +13,7 @@ import {
 } from '../../src';
 import {
   getAllPermutationsOfXxxOf,
+  getMatchingPatternProperties,
   relaxOptionsForScoring,
   resolveAnyOrOneOfSchemas,
   resolveCondition,
@@ -37,6 +38,11 @@ import {
 import type { TestValidatorType } from './types';
 
 export default function retrieveSchemaTest(testValidator: TestValidatorType) {
+  describe('getMatchingPatternProperties()', () => {
+    it('returns an empty object when the schema has no patternProperties', () => {
+      expect(getMatchingPatternProperties({ type: 'object' }, 'key')).toEqual({});
+    });
+  });
   describe('retrieveSchema()', () => {
     let consoleWarnSpy: MockInstance;
     beforeAll(() => {

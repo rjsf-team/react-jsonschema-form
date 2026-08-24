@@ -1,8 +1,7 @@
-import get from 'lodash/get';
-
 import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY } from '../constants';
 import deepEquals from '../deepEquals';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
+import { getByPath } from '../pathUtils';
 import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
@@ -45,14 +44,14 @@ export default function findSelectedOptionInXxxOf<
     const xxxOfs = schema[xxx].map((xxxOf) =>
       retrieveSchema<T, S, F>(validator, xxxOf as S, rootSchema, formData, experimental_customMergeAllOf),
     );
-    const data = get(formData, selectorField);
+    const data = getByPath(formData, selectorField);
     if (data !== undefined) {
       return xxxOfs.find((xxxOfOption) =>
         deepEquals(
-          get(
+          getByPath(
             xxxOfOption,
             [PROPERTIES_KEY, selectorField, DEFAULT_KEY],
-            get(xxxOfOption, [PROPERTIES_KEY, selectorField, CONST_KEY]),
+            getByPath(xxxOfOption, [PROPERTIES_KEY, selectorField, CONST_KEY]),
           ),
           data,
         ),

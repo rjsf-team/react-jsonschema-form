@@ -38,6 +38,10 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
       ];
       expect(getFirstMatchingOption(testValidator, undefined, options, rootSchema)).toEqual(0);
     });
+    it('should handle undefined formData when a discriminator field is present in an option', () => {
+      const options: RJSFSchema[] = [{ type: 'object', properties: { id: { const: 'a' } } }];
+      expect(getFirstMatchingOption(testValidator, undefined, options, rootSchema, 'id')).toEqual(0);
+    });
     it('should infer correct anyOf schema with properties also having anyOf/allOf', () => {
       // Mock isValid to iterate through both options by failing the first
       testValidator.setReturnValues({ isValid: [false, false] });

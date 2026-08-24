@@ -1,6 +1,4 @@
-import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import set from 'lodash/set';
 import times from 'lodash/times';
 
 import {
@@ -25,6 +23,7 @@ import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema'
 import guessType from '../guessType';
 import isObject from '../isObject';
 import mergeSchemas from '../mergeSchemas';
+import { getByPath } from '../pathUtils';
 import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
@@ -216,16 +215,10 @@ export function getMatchingPatternProperties<S extends StrictRJSFSchema = RJSFSc
   schema: S,
   key: string,
 ): Required<S['patternProperties']> {
-  return Object.keys(schema.patternProperties!)
-    .filter((pattern: string) => RegExp(pattern).test(key))
-    .reduce(
-      (obj, pattern) => {
-        // Pass the pattern using the `[]` index notation so that any `.` in the pattern are not used as a dotted path
-        set(obj, [pattern], schema.patternProperties![pattern]);
-        return obj;
-      },
-      {} as Required<S['patternProperties']>,
-    );
+  const patternProperties = schema.patternProperties ?? {};
+  return Object.fromEntries(
+    Object.entries(patternProperties).filter(([pattern]) => RegExp(pattern).test(key)),
+  ) as Required<S['patternProperties']>;
 }
 
 /** Resolves references and dependencies within a schema and its 'allOf' children. Passes the `expandAllBranches` flag
@@ -504,7 +497,7 @@ export function stubExistingAdditionalProperties<
           validator,
           { [ALL_OF_KEY]: Object.values(matchingProperties) } as S,
           rootSchema,
-          get(formData, [key]) as T,
+          formData[key],
           experimental_customMergeAllOf,
         );
         (schema.properties[key] as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
@@ -517,9 +510,9 @@ export function stubExistingAdditionalProperties<
         if (REF_KEY in schema.additionalProperties!) {
           additionalProperties = retrieveSchema<T, S, F>(
             validator,
-            { [REF_KEY]: get(schema.additionalProperties, [REF_KEY]) } as S,
+            { [REF_KEY]: (schema.additionalProperties as S)[REF_KEY] } as S,
             rootSchema,
-            get(formData, [key]) as T,
+            formData[key],
             experimental_customMergeAllOf,
           );
         } else if ('type' in schema.additionalProperties!) {
@@ -530,10 +523,10 @@ export function stubExistingAdditionalProperties<
             ...schema.additionalProperties,
           };
         } else {
-          additionalProperties = { type: guessType(get(formData, [key])) };
+          additionalProperties = { type: guessType(formData[key]) };
         }
       } else {
-        additionalProperties = { type: guessType(get(formData, [key])) };
+        additionalProperties = { type: guessType(formData[key]) };
       }
 
       // The type of our new key should match the additionalProperties value;
@@ -670,7 +663,7 @@ export function retrieveSchemaInternal<
               validator,
               { allOf: [acc.properties[key], ...Object.values(matchingProperties)] } as S,
               rootSchema,
-              get(rawFormData, [key]) as T,
+              getByPath<T>(rawFormData, key),
               experimental_customMergeAllOf,
             );
           }
@@ -847,7 +840,7 @@ export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
   // Process dependencies updating the local schema properties as appropriate.
   for (const dependencyKey in dependencies) {
     if (
-      (expandAllBranches || get(formData, [dependencyKey]) !== undefined) &&
+      (expandAllBranches || getByPath(formData, dependencyKey) !== undefined) &&
       (!resolvedSchema.properties || dependencyKey in resolvedSchema.properties)
     ) {
       const [remainingDependencies, dependencyValue] = splitKeyElementFromObject(

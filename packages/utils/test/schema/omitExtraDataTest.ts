@@ -250,6 +250,16 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         });
       });
 
+      it('supports path lists from getFieldNames() as fields', () => {
+        const formData = { foo: 'bar', list: [{ title: 'title0' }] };
+        const fields = [['foo'], ['list', '0', 'title']] as unknown as string[];
+        expect(getUsedFormData(formData, fields)).toEqual(formData);
+      });
+
+      it('skips fields that are missing from the form data', () => {
+        expect(getUsedFormData({ foo: 'bar' }, ['foo', 'missing'])).toEqual({ foo: 'bar' });
+      });
+
       it('should handle array formData', () => {
         const formData = ['a', 'b', 'c'];
         const fields = ['0', '2'];

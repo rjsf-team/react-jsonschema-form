@@ -921,12 +921,6 @@ importers:
       '@cfworker/json-schema':
         specifier: ^4.1.1
         version: 4.1.1
-      lodash:
-        specifier: ^4.18.1
-        version: 4.18.1
-      lodash-es:
-        specifier: ^4.18.1
-        version: 4.18.1
     devDependencies:
       '@rjsf/utils':
         specifier: workspace:^

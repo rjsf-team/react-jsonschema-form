@@ -63,6 +63,8 @@ import optionsList from './optionsList';
 import orderProperties from './orderProperties';
 import pad from './pad';
 import parseDateString from './parseDateString';
+import { getByPath, hasByPath, setByPath, toPath, unsetByPath } from './pathUtils';
+import type { ObjectPath } from './pathUtils';
 import rangeSpec from './rangeSpec';
 import removeOptionalEmptyObjects from './removeOptionalEmptyObjects';
 import replaceStringParameters from './replaceStringParameters';
@@ -102,6 +104,7 @@ export type {
   DateElementProp,
   DateElementProps,
   FileInfoType,
+  ObjectPath,
   SelectedOptionDescriptionProps,
   UseAltDateWidgetResult,
   UseFileWidgetPropsResult,
@@ -141,12 +144,14 @@ export {
   getOptionMatchingSimpleDiscriminator,
   getOptionValueFormat,
   getSchemaType,
+  getByPath,
   getSubmitButtonOptions,
   getTemplate,
   getTestIds,
   getUiOptions,
   getWidget,
   guessType,
+  hasByPath,
   hasWidget,
   hashForSchema,
   hashObject,
@@ -177,6 +182,7 @@ export {
   replaceStringParameters,
   resolveUiSchema,
   schemaRequiresTrueValue,
+  setByPath,
   SelectedOptionDescription,
   shallowEquals,
   shouldRender,
@@ -188,6 +194,8 @@ export {
   toErrorList,
   toErrorSchema,
   toFieldPathId,
+  toPath,
+  unsetByPath,
   unwrapErrorHandler,
   useAltDateWidgetProps,
   useDeepCompareMemo,

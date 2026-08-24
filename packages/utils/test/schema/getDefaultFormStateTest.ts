@@ -6142,6 +6142,56 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         ]);
       });
+      it('should populate defaults for nested dependencies in arrays that sit below another object', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            outer: {
+              type: 'object',
+              properties: {
+                rows: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      name: {
+                        type: 'string',
+                      },
+                    },
+                    dependencies: {
+                      name: {
+                        oneOf: [
+                          {
+                            properties: {
+                              name: {
+                                type: 'string',
+                              },
+                              grade: {
+                                type: 'string',
+                                default: 'A',
+                              },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        };
+        expect(getDefaultFormState(testValidator, schema, { outer: { rows: [{ name: 'Name' }] } })).toEqual({
+          outer: {
+            rows: [
+              {
+                name: 'Name',
+                grade: 'A',
+              },
+            ],
+          },
+        });
+      });
       it('should populate defaults for nested dependencies in arrays when matching enum values in oneOf', () => {
         // Mock isValid so that withExactlyOneSubschema works as expected
         testValidator.setReturnValues({

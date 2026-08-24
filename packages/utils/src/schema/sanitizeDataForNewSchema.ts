@@ -1,8 +1,6 @@
-import get from 'lodash/get';
-import has from 'lodash/has';
-
 import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY, REF_KEY } from '../constants';
 import deepEquals from '../deepEquals';
+import { getByPath, hasByPath } from '../pathUtils';
 import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
@@ -43,7 +41,7 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
     return NO_VALUE;
   }
 
-  const defaultValue = get(schema, DEFAULT_KEY, NO_VALUE);
+  const defaultValue = getByPath(schema, DEFAULT_KEY, NO_VALUE);
   if (defaultValue !== NO_VALUE && enumValues.some((value) => deepEquals(value, defaultValue))) {
     return defaultValue;
   }
@@ -113,27 +111,28 @@ export default function sanitizeDataForNewSchema<
 ): T {
   // By default, we will clear the form data
   let newFormData;
+  const newProperties = newSchema?.[PROPERTIES_KEY];
   // If the new schema is of type object and that object contains a list of properties
-  if (has(newSchema, PROPERTIES_KEY)) {
+  if (newProperties) {
     // Create an object containing root-level keys in the old schema, setting each key to undefined to remove the data
     const removeOldSchemaData: GenericObjectType = {};
-    if (has(oldSchema, PROPERTIES_KEY)) {
-      const properties = get(oldSchema, PROPERTIES_KEY, {});
-      Object.keys(properties).forEach((key) => {
-        if (has(data, key)) {
+    const oldProperties = oldSchema?.[PROPERTIES_KEY];
+    if (oldProperties) {
+      Object.keys(oldProperties).forEach((key) => {
+        if (hasByPath(data, key)) {
           removeOldSchemaData[key] = undefined;
         }
       });
     }
-    const keys: string[] = Object.keys(get(newSchema, PROPERTIES_KEY, {}));
+    const keys: string[] = Object.keys(newProperties);
     // Create a place to store nested data that will be a side-effect of the filter
     const nestedData: GenericObjectType = {};
     keys.forEach((key) => {
-      const formValue = get(data, key);
-      let oldKeyedSchema: S = get(oldSchema, [PROPERTIES_KEY, key], {}) as S;
-      let newKeyedSchema: S = get(newSchema, [PROPERTIES_KEY, key], {}) as S;
+      const formValue = data?.[key];
+      let oldKeyedSchema: S = (oldProperties?.[key] ?? {}) as S;
+      let newKeyedSchema: S = newProperties[key] as S;
       // Resolve the refs if they exist
-      if (has(oldKeyedSchema, REF_KEY)) {
+      if (hasByPath(oldKeyedSchema, REF_KEY)) {
         oldKeyedSchema = retrieveSchema<T, S, F>(
           validator,
           oldKeyedSchema,
@@ -142,7 +141,7 @@ export default function sanitizeDataForNewSchema<
           experimental_customMergeAllOf,
         );
       }
-      if (has(newKeyedSchema, REF_KEY)) {
+      if (hasByPath(newKeyedSchema, REF_KEY)) {
         newKeyedSchema = retrieveSchema<T, S, F>(
           validator,
           newKeyedSchema,
@@ -152,11 +151,11 @@ export default function sanitizeDataForNewSchema<
         );
       }
       // Now get types and see if they are the same
-      const oldSchemaTypeForKey = get(oldKeyedSchema, 'type');
-      const newSchemaTypeForKey = get(newKeyedSchema, 'type');
+      const oldSchemaTypeForKey = oldKeyedSchema.type;
+      const newSchemaTypeForKey = newKeyedSchema.type;
       // Check if the old option has the same key with the same type
       if (!oldSchemaTypeForKey || oldSchemaTypeForKey === newSchemaTypeForKey) {
-        if (has(removeOldSchemaData, key)) {
+        if (key in removeOldSchemaData) {
           // SIDE-EFFECT: remove the undefined value for a key that has the same type between the old and new schemas
           delete removeOldSchemaData[key];
         }
@@ -179,26 +178,26 @@ export default function sanitizeDataForNewSchema<
           // Ok, the non-object types match, let's make sure that a default or a const of a different value is replaced
           // with the new default or const. This allows the case where two schemas differ that only by the default/const
           // value to be properly selected
-          const newOptionDefault = get(newKeyedSchema, DEFAULT_KEY, NO_VALUE);
-          const oldOptionDefault = get(oldKeyedSchema, DEFAULT_KEY, NO_VALUE);
+          const newOptionDefault = getByPath(newKeyedSchema, DEFAULT_KEY, NO_VALUE);
+          const oldOptionDefault = getByPath(oldKeyedSchema, DEFAULT_KEY, NO_VALUE);
           if (newOptionDefault !== NO_VALUE && newOptionDefault !== formValue) {
             if (oldOptionDefault === formValue) {
               // If the old default matches the formValue, we'll update the new value to match the new default
               removeOldSchemaData[key] = newOptionDefault;
-            } else if (get(newKeyedSchema, 'readOnly') === true) {
+            } else if (newKeyedSchema.readOnly === true) {
               // If the new schema has the default set to read-only, treat it like a const and remove the value
               removeOldSchemaData[key] = undefined;
             }
           }
 
-          const newOptionConst = get(newKeyedSchema, CONST_KEY, NO_VALUE);
-          const oldOptionConst = get(oldKeyedSchema, CONST_KEY, NO_VALUE);
+          const newOptionConst = getByPath(newKeyedSchema, CONST_KEY, NO_VALUE);
+          const oldOptionConst = getByPath(oldKeyedSchema, CONST_KEY, NO_VALUE);
           if (newOptionConst !== NO_VALUE && newOptionConst !== formValue) {
             // Since this is a const, if the old value matches, replace the value with the new const otherwise clear it
             removeOldSchemaData[key] = oldOptionConst === formValue ? newOptionConst : undefined;
           }
 
-          if (has(data, key)) {
+          if (hasByPath(data, key)) {
             const enumReplacement = replacementForInvalidEnumValue(newKeyedSchema, formValue);
             if (enumReplacement !== NO_VALUE) {
               removeOldSchemaData[key] = enumReplacement;
@@ -214,9 +213,9 @@ export default function sanitizeDataForNewSchema<
       ...nestedData,
     };
     // First apply removing the old schema data, then apply the nested data, then apply the old data keys to keep
-  } else if (get(oldSchema, 'type') === 'array' && get(newSchema, 'type') === 'array' && Array.isArray(data)) {
-    let oldSchemaItems = get(oldSchema, 'items');
-    let newSchemaItems = get(newSchema, 'items');
+  } else if (oldSchema?.type === 'array' && newSchema?.type === 'array' && Array.isArray(data)) {
+    let oldSchemaItems = oldSchema.items;
+    let newSchemaItems = newSchema.items;
     // If any of the array types `items` are arrays (remember arrays are objects) then we'll just drop the data
     // Eventually, we may want to deal with when either of the `items` are arrays since those tuple validations
     if (
@@ -225,7 +224,7 @@ export default function sanitizeDataForNewSchema<
       !Array.isArray(oldSchemaItems) &&
       !Array.isArray(newSchemaItems)
     ) {
-      if (has(oldSchemaItems, REF_KEY)) {
+      if (hasByPath(oldSchemaItems, REF_KEY)) {
         oldSchemaItems = retrieveSchema<T, S, F>(
           validator,
           oldSchemaItems as S,
@@ -234,7 +233,7 @@ export default function sanitizeDataForNewSchema<
           experimental_customMergeAllOf,
         );
       }
-      if (has(newSchemaItems, REF_KEY)) {
+      if (hasByPath(newSchemaItems, REF_KEY)) {
         newSchemaItems = retrieveSchema<T, S, F>(
           validator,
           newSchemaItems as S,
@@ -244,11 +243,11 @@ export default function sanitizeDataForNewSchema<
         );
       }
       // Now get types and see if they are the same
-      const oldSchemaType = get(oldSchemaItems, 'type');
-      const newSchemaType = get(newSchemaItems, 'type');
+      const oldSchemaType = getByPath(oldSchemaItems, 'type');
+      const newSchemaType = getByPath(newSchemaItems, 'type');
       // Check if the old option has the same key with the same type
       if (!oldSchemaType || oldSchemaType === newSchemaType) {
-        const maxItems = get(newSchema, 'maxItems', -1);
+        const maxItems = newSchema.maxItems ?? -1;
         if (newSchemaType === 'object') {
           newFormData = data.reduce((newValue, aValue) => {
             const itemValue = sanitizeDataForNewSchema<T, S, F>(

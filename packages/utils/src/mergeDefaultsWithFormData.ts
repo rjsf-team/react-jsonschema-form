@@ -1,5 +1,3 @@
-import get from 'lodash/get';
-
 import type { GenericObjectType } from '../src';
 import isObject from './isObject';
 
@@ -63,27 +61,34 @@ export default function mergeDefaultsWithFormData<T = any>(
   if (isObject(formData)) {
     // oxlint-disable-next-line prefer-object-spread -- spread loses T type, Object.assign preserves it
     const acc: { [key in keyof T]: any } = Object.assign({}, defaults); // Prevent mutation of source object.
-    return Object.keys(formData as GenericObjectType).reduce((accumulator, key) => {
-      const keyValue = get(formData, key);
-      const keyExistsInDefaults = isObject(defaults) && key in (defaults as GenericObjectType);
-      const keyExistsInFormData = key in (formData as GenericObjectType);
-      const keyDefault = get(defaults, key) ?? {};
-      const defaultValueIsNestedObject =
-        keyExistsInDefaults && isObject(keyDefault) && Object.values(keyDefault).some((v) => isObject(v));
+    const formDataObj: GenericObjectType = formData;
+    const defaultsObj: GenericObjectType | undefined = isObject(defaults) ? defaults : undefined;
+    return Object.keys(formDataObj).reduce((accumulator, key) => {
+      const keyValue = formDataObj[key];
+      const keyExistsInDefaults = defaultsObj !== undefined && key in defaultsObj;
+      const keyExistsInFormData = key in formDataObj;
+      const keyDefault = defaultsObj?.[key] ?? {};
+      // If any direct child of this key's default is itself an object or array,
+      // the shallow spread below would bypass its merge rules. Route those cases
+      // to the recursive path; the recursive call repeats this check one level deeper.
+      const defaultValueNeedsDeepMerge =
+        keyExistsInDefaults &&
+        isObject(keyDefault) &&
+        Object.values(keyDefault).some((v) => isObject(v) || Array.isArray(v));
 
-      const keyDefaultIsObject = keyExistsInDefaults && isObject(get(defaults, key));
+      const keyDefaultIsObject = keyExistsInDefaults && isObject(defaultsObj?.[key]);
       const keyHasFormDataObject = keyExistsInFormData && isObject(keyValue);
 
-      if (keyDefaultIsObject && keyHasFormDataObject && !defaultValueIsNestedObject) {
+      if (keyDefaultIsObject && keyHasFormDataObject && !defaultValueNeedsDeepMerge) {
         accumulator[key as keyof T] = {
-          ...get(defaults, key),
+          ...defaultsObj?.[key],
           ...keyValue,
         };
         return accumulator;
       }
 
       accumulator[key as keyof T] = mergeDefaultsWithFormData<T>(
-        get(defaults, key),
+        defaultsObj?.[key],
         keyValue,
         mergeExtraArrayDefaults,
         defaultSupercedesUndefined,

@@ -1,6 +1,5 @@
 import UriResolver from 'fast-uri';
 import jsonpointer from 'jsonpointer';
-import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import isObject from 'lodash/isObject';
 
@@ -51,7 +50,7 @@ function findEmbeddedSchemaRecursive<S extends StrictRJSFSchema = RJSFSchema>(sc
  * @param baseURI - The base URI to be used for resolving relative references
  */
 export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchema>(schema: S, baseURI: string): S {
-  const currentURI = get(schema, ID_KEY, baseURI);
+  const currentURI = schema[ID_KEY] ?? baseURI;
   let result = schema;
   // Make all other references absolute
   if (REF_KEY in result) {
@@ -101,7 +100,7 @@ export function findSchemaDefinitionRecursive<S extends StrictRJSFSchema = RJSFS
   $ref?: string,
   rootSchema: S = {} as S,
   recurseList: string[] = [],
-  baseURI: string | undefined = get(rootSchema, [ID_KEY]),
+  baseURI: string | undefined = rootSchema[ID_KEY],
 ): S {
   const ref = $ref || '';
   let current: S | undefined = undefined;
@@ -172,7 +171,7 @@ export function findSchemaDefinitionRecursive<S extends StrictRJSFSchema = RJSFS
 export default function findSchemaDefinition<S extends StrictRJSFSchema = RJSFSchema>(
   $ref?: string,
   rootSchema: S = {} as S,
-  baseURI: string | undefined = get(rootSchema, [ID_KEY]),
+  baseURI: string | undefined = rootSchema[ID_KEY],
 ): S {
   const recurseList: string[] = [];
   return findSchemaDefinitionRecursive($ref, rootSchema, recurseList, baseURI);

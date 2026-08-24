@@ -1025,7 +1025,12 @@ export interface WidgetProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F
 /** The definition of a React-based Widget component */
 export type Widget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = ComponentType<
   WidgetProps<T, S, F>
->;
+> & {
+  /** A cached wrapper component that merges the widget's `defaultProps.options` into its props, stamped onto the
+   * widget by `getWidget()` so that repeated lookups return the same component for proper React reconciliation
+   */
+  MergedWidget?: Widget<T, S, F>;
+};
 
 /** The properties that are passed to the BaseInputTemplate */
 export interface BaseInputTemplateProps<
@@ -1435,8 +1440,8 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    * @returns - The firstindex of the matched option or 0 if none is available
    */
   getFirstMatchingOption(formData: T | undefined, options: S[], discriminatorField?: string): number;
-  /** Helper that acts like lodash's `get` but additionally retrieves `$ref`s as needed to get the path for schemas
-   * containing potentially nested `$ref`s.
+  /** Reads the value at `path` within a schema, additionally retrieving `$ref`s as needed to resolve
+   * schemas containing potentially nested `$ref`s.
    *
    * @param schema - The current node within the JSON schema recursion
    * @param path - The remaining keys in the path to the desired property

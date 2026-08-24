@@ -1,8 +1,8 @@
 import difference from 'lodash/difference';
-import get from 'lodash/get';
 import isPlainObject from 'lodash/isPlainObject';
 
 import deepEquals from './deepEquals';
+import { getByPath } from './pathUtils';
 
 /** Returns the paths of the changed descendants of `a` relative to `b`, relative to the node itself. An empty list
  * means the difference could not be narrowed any further, so the caller should report its own key instead.
@@ -33,7 +33,7 @@ function getChangedDescendants(a: unknown, b: unknown): string[] {
 
 /**
  * Compares two objects and returns the names of the fields that have changed.
- * This function iterates over each field of object `a`, using `_.isEqual` to compare the field value
+ * This function iterates over each field of object `a`, using `deepEquals` to compare the field value
  * with the corresponding field value in object `b`. If the values are different, the field name will
  * be included in the returned array.
  *
@@ -69,12 +69,12 @@ export default function getChangedFields(a: unknown, b: unknown, deep = false): 
     return Object.keys(b as object);
   }
   const unequalFields = Object.entries(a as object)
-    .filter(([key, value]) => !deepEquals(value, get(b, key)))
+    .filter(([key, value]) => !deepEquals(value, getByPath(b, key)))
     .flatMap(([key, value]) => {
       if (!deep || key.includes('.')) {
         return [key];
       }
-      const descendants = getChangedDescendants(value, get(b, key));
+      const descendants = getChangedDescendants(value, getByPath(b, key));
       return descendants.length ? descendants.map((path) => `${key}.${path}`) : [key];
     });
   const diffFields = difference(Object.keys(b as object), Object.keys(a as object));

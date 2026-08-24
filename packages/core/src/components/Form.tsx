@@ -26,6 +26,10 @@ import type {
   NameGeneratorFunction,
 } from '@rjsf/utils';
 import {
+  getByPath,
+  setByPath,
+  toPath,
+  unsetByPath,
   createSchemaUtils,
   deepEquals,
   ErrorSchemaBuilder,
@@ -52,13 +56,7 @@ import {
   ANY_OF_KEY,
   ONE_OF_KEY,
 } from '@rjsf/utils';
-import _get from 'lodash/get';
 import _isEmpty from 'lodash/isEmpty';
-import _pick from 'lodash/pick';
-import _set from 'lodash/set';
-import _setWith from 'lodash/setWith';
-import _toPath from 'lodash/toPath';
-import _unset from 'lodash/unset';
 
 import getDefaultRegistry from '../getDefaultRegistry';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE, IS_RESET } from './constants';
@@ -351,7 +349,14 @@ function toIChangeEvent<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
   status?: IChangeEvent['status'],
 ): IChangeEvent<T, S, F> {
   return {
-    ..._pick(state, ['schema', 'uiSchema', 'fieldPathId', 'schemaUtils', 'formData', 'edit', 'errors', 'errorSchema']),
+    schema: state.schema,
+    uiSchema: state.uiSchema,
+    fieldPathId: state.fieldPathId,
+    schemaUtils: state.schemaUtils,
+    formData: state.formData,
+    edit: state.edit,
+    errors: state.errors,
+    errorSchema: state.errorSchema,
     ...(status !== undefined && { status }),
   };
 }
@@ -699,10 +704,12 @@ export default class Form<
         const formDataChangedFields = getFormDataChangedFields();
         if (formDataChangedFields.length > 0) {
           // `formDataChangedFields` carries the path of each field that changed, so clearing has to follow that path
-          // instead of dropping the whole branch it starts in. `setWith` with `Object` keeps the numeric segment of an
-          // array item as an object key, which is how an `ErrorSchema` addresses array items.
+          // instead of dropping the whole branch it starts in. The path is split with `toPath()`, the same way
+          // `toErrorSchema()` splits a validation error property, so the two address the same entry. Intermediate
+          // objects are forced so the numeric segment of an array item stays an object key, which is how an
+          // `ErrorSchema` addresses array items.
           const newErrorSchema = formDataChangedFields.reduce<GenericObjectType>(
-            (acc, path) => _setWith(acc, path, undefined, Object),
+            (acc, path) => setByPath(acc, toPath(path), undefined, true),
             {},
           );
           schemaValidationErrorSchema = mergeObjects(
@@ -984,7 +991,7 @@ export default class Form<
 
       if (newValue === ADDITIONAL_PROPERTY_KEY_REMOVE) {
         // For additional properties, this key was explicitly removed, so unset it
-        _unset(formData, path);
+        unsetByPath(formData, path);
       } else if (!isRootPath) {
         // Set the new value at its path in the form data.
         let valueForPath: T | null | undefined = newValue;
@@ -1008,9 +1015,9 @@ export default class Form<
         }
 
         if (plainLeafWasCleared) {
-          _set(formData, path, undefined);
+          setByPath(formData, path, undefined);
         } else {
-          _set(formData, path, valueForPath);
+          setByPath(formData, path, valueForPath);
         }
       }
       const shouldSanitize =
@@ -1034,7 +1041,7 @@ export default class Form<
       // formData copy passed to AJV via JSON.parse(JSON.stringify(...)) so the validator never
       // sees { [key]: undefined } for type:"string" or patternProperties fields (#4518).
       if (plainLeafWasCleared && formData) {
-        _set(formData, path, undefined);
+        setByPath(formData, path, undefined);
       }
     }
 
@@ -1050,15 +1057,17 @@ export default class Form<
 
     if (newErrorSchema) {
       // First check to see if there is an existing validation error on this path...
-      // @ts-expect-error TS2590, because getting from the error schema is confusing TS
-      const oldValidationError = !isRootPath ? _get(schemaValidationErrorSchema, path) : schemaValidationErrorSchema;
+      const oldValidationError = !isRootPath
+        ? getByPath(schemaValidationErrorSchema, path)
+        : schemaValidationErrorSchema;
       // If there is an old validation error for this path, assume we are updating it directly
       if (!_isEmpty(oldValidationError)) {
         // Apply the user-supplied newErrorSchema onto a clone of the AJV-only base, so that
         // mergeErrors below sees the user's error at this path without mutating shared state.
         if (!isRootPath) {
           mergeBaseErrorSchema = structuredClone(schemaValidationErrorSchema);
-          _set(mergeBaseErrorSchema, path, newErrorSchema);
+          // An `ErrorSchema` nests plain objects even at numeric segments, so never auto-vivify arrays
+          setByPath(mergeBaseErrorSchema, path, newErrorSchema, true);
         } else {
           mergeBaseErrorSchema = newErrorSchema;
         }
@@ -1067,16 +1076,17 @@ export default class Form<
           customErrors = new ErrorSchemaBuilder<T>();
         }
         if (isRootPath) {
-          const pathErrors = _get(newErrorSchema, ERRORS_KEY);
+          const pathErrors = newErrorSchema[ERRORS_KEY];
           if (pathErrors) {
             // only set errors when there are some
             customErrors.setErrors(pathErrors);
           }
         } else {
-          _set(customErrors.ErrorSchema, path, newErrorSchema);
+          // An `ErrorSchema` nests plain objects even at numeric segments, so never auto-vivify arrays
+          setByPath(customErrors.ErrorSchema, path, newErrorSchema, true);
         }
       }
-    } else if (customErrors && _get(customErrors.ErrorSchema, [...path, ERRORS_KEY])) {
+    } else if (customErrors && getByPath(customErrors.ErrorSchema, [...path, ERRORS_KEY])) {
       // If we have custom errors and the path has an error, then we need to clear it
       customErrors.clearErrors(path);
     }
@@ -1196,8 +1206,8 @@ export default class Form<
         // Filter out `schemaValidationErrors` and `schemaValidationErrorSchema` since they aren't IChangeEvent props
         .filter((key) => !key.startsWith('schemaValidation'))
         .some((key) => {
-          const oldData = _get(this.state, key);
-          const newData = _get(state, key);
+          const oldData = this.state[key as keyof FormState<T, S, F>];
+          const newData = state[key as keyof FormState<T, S, F>];
           return !deepEquals(oldData, newData);
         });
       this.setState(state as FormState<T, S, F>, () => {
@@ -1348,14 +1358,9 @@ export default class Form<
   focusOnError(error: RJSFValidationError) {
     const { idPrefix = 'root', idSeparator = '_' } = this.props;
     const { property } = error;
-    const path = _toPath(property);
-    if (path[0] === '') {
-      // Most of the time the `.foo` property results in the first element being empty, so replace it with the idPrefix
-      path[0] = idPrefix;
-    } else {
-      // Otherwise insert the idPrefix into the first location using unshift
-      path.unshift(idPrefix);
-    }
+    const path = toPath(property ?? '');
+    // The id of the root element is the idPrefix, so prepend it to the path
+    path.unshift(idPrefix);
 
     const elementId = path.join(idSeparator);
     let field = this.formElement.current.elements[elementId];
