@@ -66,6 +66,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `mergeDefaultsWithFormData()` to take the recursive path when the default under an object key holds an array, so a default that lives inside a `dependencies` subschema is no longer dropped when the owning array sits more than one object below the root, fixing part of [#5198](https://github.com/rjsf-team/react-jsonschema-form/issues/5198) ([#5202](https://github.com/rjsf-team/react-jsonschema-form/pull/5202))
 - Added new path utilities `getByPath`, `setByPath`, `hasByPath`, `unsetByPath` and `toPath`, and switched all path-based `lodash` usage (`get`, `set`, `setWith`, `has`, `unset`, `toPath`, `pick`) over to them. Unlike their lodash counterparts, these treat a bare string as a single literal key, lodash-style dotted path strings are parsed explicitly via `toPath()`, and `getByPath()`/`hasByPath()` resolve **own** properties only (inherited members and prototype internals such as `__proto__` never resolve)
 - Made the default value of a required boolean field be false if a `default` is not present in the schema
+- Fixed `omitExtraData()` by removing the over-reaching `additionalProperties: false` post-processing block introduced in [#5147](https://github.com/rjsf-team/react-jsonschema-form/pull/5147) that incorrectly stripped keys written by winning `oneOf`/`anyOf` and `if/then/else` branches, fixing [#5194](https://github.com/rjsf-team/react-jsonschema-form/issues/5194)
 
 ## @rjsf/validator-ajv8
 
@@ -78,7 +79,6 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/validator-cfworker
 
 - Replaced all `lodash/get` usage with the new `@rjsf/utils` path utilities and dropped the `lodash`/`lodash-es` dependencies entirely
-
 
 # 6.8.0
 
