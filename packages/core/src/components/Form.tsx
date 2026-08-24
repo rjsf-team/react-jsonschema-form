@@ -708,10 +708,16 @@ export default class Form<
           // `toErrorSchema()` splits a validation error property, so the two address the same entry. Intermediate
           // objects are forced so the numeric segment of an array item stays an object key, which is how an
           // `ErrorSchema` addresses array items.
-          const newErrorSchema = formDataChangedFields.reduce<GenericObjectType>(
-            (acc, path) => setByPath(acc, toPath(path), undefined, true),
-            {},
-          );
+          const newErrorSchema = formDataChangedFields.reduce<GenericObjectType>((acc, path) => {
+            const pathOfField = toPath(path);
+            // Every container holding the field changed along with it, so an error of their own, such as the
+            // `uniqueItems` of the array the field sits in, is cleared too. Only their own errors go: the other
+            // fields they hold did not change and keep theirs.
+            for (let i = 1; i < pathOfField.length; i++) {
+              setByPath(acc, [...pathOfField.slice(0, i), ERRORS_KEY], undefined, true);
+            }
+            return setByPath(acc, pathOfField, undefined, true);
+          }, {});
           schemaValidationErrorSchema = mergeObjects(
             currentErrors.errorSchema,
             newErrorSchema,

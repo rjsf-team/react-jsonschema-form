@@ -2524,6 +2524,87 @@ describeRepeated('Form common', (createFormComponent) => {
             },
           });
         });
+
+        it('should clear the error of the container holding the field that changed', async () => {
+          const altSchema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              tags: { type: 'array', uniqueItems: true, items: { type: 'string' } },
+            },
+          };
+
+          function Controlled() {
+            const [formData, setFormData] = useState<any>({ tags: ['a', 'a'] });
+            return (
+              <Form
+                schema={altSchema}
+                validator={validator}
+                formData={formData}
+                noHtml5Validate
+                onChange={(e) => setFormData(e.formData)}
+              />
+            );
+          }
+
+          const { container } = render(<Controlled />);
+          const node = container.firstElementChild!;
+          const shownErrors = () => Array.from(node.querySelectorAll('.error-detail')).map((e) => e.textContent);
+
+          await submitForm(node, user);
+          expect(shownErrors()).toEqual(['must NOT have duplicate items (items ## 1 and 0 are identical)']);
+
+          // The error belongs to the array rather than to the item that was edited, and the array changed too
+          await user.type(node.querySelectorAll('input[type=text]')[1], 'b');
+          expect(shownErrors()).toEqual([]);
+        });
+
+        it('should keep the errors that a reorder of the array items left standing', async () => {
+          const altSchema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              baz: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    qux: { type: 'string' },
+                    corge: { type: 'string' },
+                  },
+                  required: ['qux', 'corge'],
+                },
+              },
+            },
+          };
+
+          function Controlled() {
+            const [formData, setFormData] = useState<any>({ baz: [{}, { corge: 'z' }] });
+            return (
+              <Form
+                schema={altSchema}
+                validator={validator}
+                formData={formData}
+                noHtml5Validate
+                onChange={(e) => setFormData(e.formData)}
+              />
+            );
+          }
+
+          const { container } = render(<Controlled />);
+          const node = container.firstElementChild!;
+          const shownErrors = () => Array.from(node.querySelectorAll('.error-detail')).map((e) => e.textContent);
+
+          await submitForm(node, user);
+          expect(shownErrors()).toEqual([
+            "must have required property 'qux'",
+            "must have required property 'corge'",
+            "must have required property 'qux'",
+          ]);
+
+          // Moving the first item down leaves neither item holding a `qux`, so both of those errors are still the
+          // errors of the values sitting at those paths and only the `corge` that moved loses its own
+          await user.click(node.querySelector<HTMLButtonElement>('.rjsf-array-item-move-down')!);
+          expect(shownErrors()).toEqual(["must have required property 'qux'", "must have required property 'qux'"]);
+        });
       });
 
       describe('Live validation', () => {
