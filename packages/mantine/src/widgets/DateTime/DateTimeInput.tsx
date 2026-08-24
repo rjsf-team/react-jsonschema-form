@@ -3,6 +3,10 @@ import { DateInput } from '@mantine/dates';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { ariaDescribedByIds, labelValue } from '@rjsf/utils';
 import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat.js';
+
+// This plugin is needed to support the parsing of date and time values in the `DateWidget` and `DateTimeWidget`
+dayjs.extend(customParseFormat);
 
 const dateParser = (input: string, format: string) => {
   if (!input) {
