@@ -17,6 +17,7 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 
 # 6.9.0
+
 ## @rjsf/antd
 
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
@@ -74,7 +75,8 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/shadcn
 
-- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+- Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
+- - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 
 ## @rjsf/utils
 
@@ -104,7 +106,6 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 
-- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused modules; a consumer importing only `Form` no longer bundles the AJV validator chain pulled in by `getTestRegistry`, shrinking a minimal bundle by ~34kB gzipped
 - Fixed `TimeWidget` to respect schema `multipleOf` time precision, preserving second-precision values while keeping minute-precision native inputs synchronized with their displayed value ([#5174](https://github.com/rjsf-team/react-jsonschema-form/pull/5174))
 
 ## @rjsf/utils
