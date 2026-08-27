@@ -5,6 +5,18 @@ import type { TestValidatorType } from './types';
 
 export default function sanitizeDataForNewSchemaTest(testValidator: TestValidatorType) {
   describe('sanitizeDataForNewSchema', () => {
+    const oldDisjointSchema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        idCode: { type: 'string' },
+      },
+    };
+    const newArraySchema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        values: { type: 'array', default: [], items: { type: 'string' } },
+      },
+    };
     let schemaUtils: SchemaUtilsType;
     beforeAll(() => {
       schemaUtils = createSchemaUtils(testValidator, oneOfSchema);
@@ -40,6 +52,67 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
     it('returns input formData when the old schema does not contain a "property" object', () => {
       const newSchema = schemaUtils.retrieveSchema(SECOND_ONE_OF, oneOfSchema);
       expect(sanitizeDataForNewSchema(testValidator, oneOfSchema, newSchema, {}, oneOfData)).toEqual(oneOfData);
+    });
+    it('restores the default for an undefined property that is newly defined by the new schema', () => {
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          firstName: { type: 'string', default: 'Chuck' },
+        },
+      };
+
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(newSchema, oldDisjointSchema, {
+          firstName: undefined,
+          idCode: undefined,
+        }),
+      ).toEqual({ firstName: 'Chuck', idCode: undefined });
+    });
+    it('restores an empty array default for an undefined property newly defined by the new schema', () => {
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(newArraySchema, oldDisjointSchema, {
+          values: undefined,
+          idCode: undefined,
+        }),
+      ).toEqual({ values: [], idCode: undefined });
+    });
+    it('preserves an empty array already present for a property newly defined by the new schema', () => {
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(newArraySchema, oldDisjointSchema, {
+          values: [],
+          idCode: undefined,
+        }),
+      ).toEqual({ values: [], idCode: undefined });
+    });
+    it('continues sanitizing an existing array when the old schema omits its type', () => {
+      const oldSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          values: { items: { type: 'string' } },
+        },
+      };
+
+      expect(schemaUtils.sanitizeDataForNewSchema(newArraySchema, oldSchema, { values: ['existing'] })).toEqual({
+        values: undefined,
+      });
+    });
+    it('preserves explicit undefined data for a property shared by both schemas', () => {
+      const oldSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          firstName: { type: 'string' },
+        },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          firstName: { type: 'string', default: 'Chuck' },
+        },
+      };
+
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { firstName: undefined })).toEqual({
+        firstName: undefined,
+      });
     });
     it('returns input formData when the new schema matches the data for the new schema rather than the old', () => {
       const newSchema = schemaUtils.retrieveSchema(SECOND_ONE_OF, oneOfSchema);
