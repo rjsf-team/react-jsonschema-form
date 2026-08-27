@@ -1,7 +1,5 @@
-import difference from 'lodash/difference';
-import isPlainObject from 'lodash/isPlainObject';
-
 import deepEquals from './deepEquals';
+import isPlainObject from './isPlainObject';
 import { getByPath } from './pathUtils';
 
 /**
@@ -21,21 +19,19 @@ import { getByPath } from './pathUtils';
  * console.log(changedFields); // Output: ['age']
  */
 export default function getChangedFields(a: unknown, b: unknown): string[] {
-  const aIsPlainObject = isPlainObject(a);
-  const bIsPlainObject = isPlainObject(b);
-  // If strictly equal or neither of them is a plainObject returns an empty array
-  if (a === b || (!aIsPlainObject && !bIsPlainObject)) {
+  if (a === b) {
     return [];
   }
-  if (aIsPlainObject && !bIsPlainObject) {
-    return Object.keys(a as object);
+  // If only one of them is a plainObject all of its fields changed; if neither is, nothing did
+  if (!isPlainObject(a)) {
+    return isPlainObject(b) ? Object.keys(b) : [];
   }
-  if (!aIsPlainObject && bIsPlainObject) {
-    return Object.keys(b as object);
+  if (!isPlainObject(b)) {
+    return Object.keys(a);
   }
-  const unequalFields = Object.entries(a as object)
-    .filter(([key, value]) => !deepEquals(value, getByPath(b, key)))
-    .map(([key]) => key);
-  const diffFields = difference(Object.keys(b as object), Object.keys(a as object));
+  const aKeys = Object.keys(a);
+  const aKeySet = new Set(aKeys);
+  const unequalFields = aKeys.filter((key) => !deepEquals(a[key], getByPath(b, key)));
+  const diffFields = Object.keys(b).filter((key) => !aKeySet.has(key));
   return [...unequalFields, ...diffFields];
 }

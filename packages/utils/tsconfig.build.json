@@ -9,17 +9,9 @@
       "path": "./src"
     }
   ],
-  "exclude": [
-    "./test"
-  ],
+  "exclude": ["./test"],
   "tsc-alias": {
     "resolveFullPaths": true,
-    "verbose": true,
-    "replacers": {
-      "lodash": {
-        "enabled": true,
-        "file": "lodashReplacer.cjs"
-      }
-    }
+    "verbose": true
   }
 }

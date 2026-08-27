@@ -30,10 +30,10 @@ import {
   shallowEquals,
   shouldRenderOptionalField,
   toFieldPathId,
+  isObject,
   TranslatableString,
   UI_OPTIONS_KEY,
 } from '@rjsf/utils';
-import isObject from 'lodash/isObject';
 
 /** The map of component type to FieldName */
 const COMPONENT_TYPES: Record<string, string> = {

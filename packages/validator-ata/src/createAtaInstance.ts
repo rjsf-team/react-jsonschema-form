@@ -1,6 +1,6 @@
+import { isObject } from '@rjsf/utils';
 import type { ValidatorOptions } from 'ata-validator';
 import { Validator } from 'ata-validator';
-import isObject from 'lodash/isObject';
 
 import type { AtaFormatChecker, CustomValidatorOptionsType } from './types';
 

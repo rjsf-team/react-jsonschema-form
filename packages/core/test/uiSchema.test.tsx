@@ -1,9 +1,9 @@
 import type { CSSProperties } from 'react';
 import type { GenericObjectType, RJSFSchema, UiSchema, Widget, WidgetProps } from '@rjsf/utils';
+import { noop } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, fireEvent, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import noop from 'lodash/noop';
 import type { MockInstance } from 'vitest';
 
 import Form from '../src';

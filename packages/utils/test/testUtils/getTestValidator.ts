@@ -1,5 +1,4 @@
-import noop from 'lodash/noop';
-
+import { noop } from '../../src';
 import type { RJSFValidationError, ValidationData } from '../../src';
 import type { TestValidatorParams, TestValidatorType } from '../schema/types';
 

@@ -1,6 +1,5 @@
 import type { ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
-import { ErrorSchemaBuilder, hashForSchema, JUNK_OPTION_ID, retrieveSchema, RJSF_REF_KEY } from '@rjsf/utils';
-import noop from 'lodash/noop';
+import { ErrorSchemaBuilder, JUNK_OPTION_ID, RJSF_REF_KEY, hashForSchema, noop, retrieveSchema } from '@rjsf/utils';
 import type { Mock } from 'vitest';
 
 import type { Localizer, ValidatorFunctions } from '../src';

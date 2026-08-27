@@ -25,6 +25,7 @@ import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema';
 import getInputProps from './getInputProps';
 import getOptionMatchingSimpleDiscriminator from './getOptionMatchingSimpleDiscriminator';
 import getOptionValueFormat from './getOptionValueFormat';
+import getPropertySchema from './getPropertySchema';
 import getSchemaType from './getSchemaType';
 import getSubmitButtonOptions from './getSubmitButtonOptions';
 import getTemplate from './getTemplate';
@@ -50,6 +51,7 @@ import isCustomWidget from './isCustomWidget';
 import isFixedItems from './isFixedItems';
 import isFormDataAvailable from './isFormDataAvailable';
 import isObject from './isObject';
+import isPlainObject from './isPlainObject';
 import isRootSchema from './isRootSchema';
 import labelValue from './labelValue';
 import localToUTC from './localToUTC';
@@ -59,6 +61,7 @@ import mergeDefaultsWithFormData from './mergeDefaultsWithFormData';
 import mergeObjects from './mergeObjects';
 import mergeSchemas from './mergeSchemas';
 import { bracketNameGenerator, dotNotationNameGenerator } from './nameGenerators';
+import noop from './noop';
 import optionsList from './optionsList';
 import orderProperties from './orderProperties';
 import pad from './pad';
@@ -142,6 +145,7 @@ export {
   getDiscriminatorFieldFromSchema,
   getInputProps,
   getOptionMatchingSimpleDiscriminator,
+  getPropertySchema,
   getOptionValueFormat,
   getSchemaType,
   getByPath,
@@ -162,6 +166,7 @@ export {
   isFixedItems,
   isFormDataAvailable,
   isObject,
+  isPlainObject,
   isRootSchema,
   labelValue,
   localToUTC,
@@ -170,6 +175,7 @@ export {
   mergeDefaultsWithFormData,
   mergeObjects,
   mergeSchemas,
+  noop,
   optionalControlsId,
   optionId,
   optionsList,

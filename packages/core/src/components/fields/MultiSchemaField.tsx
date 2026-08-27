@@ -15,7 +15,6 @@ import {
   shouldRenderOptionalField,
   TranslatableString,
 } from '@rjsf/utils';
-import isEmpty from 'lodash/isEmpty';
 
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It tracks
  * the currently selected option and cleans up any irrelevant data in `formData`.
@@ -220,7 +219,7 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         onChange={onOptionChange}
         onBlur={onBlur}
         onFocus={onFocus}
-        disabled={disabled || isEmpty(enumOptions)}
+        disabled={disabled || enumOptions.length === 0}
         multiple={false}
         rawErrors={rawErrors}
         errorSchema={fieldErrorSchema}

@@ -4,14 +4,8 @@
     "target": "es2017",
     "rootDir": "../../tsc-alias-replacer",
     "outDir": "./",
-    "skipLibCheck": true,
+    "skipLibCheck": true
   },
-  "files": [
-    "../../tsc-alias-replacer/lodashReplacer.ts",
-    "../../tsc-alias-replacer/ajvReplacer.ts"
-  ],
-  "exclude": [
-    "./src",
-    "./test"
-  ]
+  "files": ["../../tsc-alias-replacer/ajvReplacer.ts"],
+  "exclude": ["./src", "./test"]
 }

@@ -1,5 +1,4 @@
 import type { JSONSchema7Object } from 'json-schema';
-import isEmpty from 'lodash/isEmpty';
 
 import {
   ALL_OF_KEY,
@@ -9,13 +8,13 @@ import {
   DEPENDENCIES_KEY,
   IF_KEY,
   ONE_OF_KEY,
-  PROPERTIES_KEY,
   REF_KEY,
 } from '../constants';
 import constIsAjvDataReference from '../constIsAjvDataReference';
 import deepEquals from '../deepEquals';
 import findSchemaDefinition from '../findSchemaDefinition';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
+import getPropertySchema from '../getPropertySchema';
 import getSchemaType from '../getSchemaType';
 import isConstant from '../isConstant';
 import isFixedItems from '../isFixedItems';
@@ -85,6 +84,22 @@ export function getInnerSchemaForArrayItem<S extends StrictRJSFSchema = RJSFSche
   return {} as S;
 }
 
+/** Determines whether `value` holds anything: a non-empty string or array, or an object with at least one own key.
+ * Everything else — including numbers, booleans, `null` and `undefined` — has no content.
+ *
+ * @param value - The value to inspect
+ * @returns - True if the value holds content, otherwise false
+ */
+function hasContent(value: unknown): boolean {
+  if (typeof value === 'string' || Array.isArray(value)) {
+    return value.length > 0;
+  }
+  if (typeof value === 'object' && value !== null) {
+    return Object.keys(value).length > 0;
+  }
+  return false;
+}
+
 /** Checks if the given `schema` contains the `null` type along with another type AND if the `default` contained within
  * the schema is `null` AND the `computedDefault` is empty. If all of those conditions are true, then the `schema`'s
  * default should be `null` rather than `computedDefault`.
@@ -99,7 +114,7 @@ export function computeDefaultBasedOnSchemaTypeAndDefaults<T = any, S extends St
 ) {
   const { default: schemaDefault, type } = schema;
   const shouldReturnNullAsDefault =
-    Array.isArray(type) && type.includes('null') && isEmpty(computedDefault) && schemaDefault === null;
+    Array.isArray(type) && type.includes('null') && !hasContent(computedDefault) && schemaDefault === null;
   return shouldReturnNullAsDefault ? (null as T) : computedDefault;
 }
 
@@ -144,7 +159,11 @@ function maybeAddDefaultToObject<T = any>(
   } else if (includeUndefinedValues === 'excludeObjectChildren') {
     // Fix for Issue #4709: When in 'excludeObjectChildren' mode, don't set primitive fields to empty objects
     // Only add the computed default if it's not an empty object placeholder for a primitive field
-    if ((isNullType && computedDefault !== undefined) || !isObject(computedDefault) || !isEmpty(computedDefault)) {
+    if (
+      (isNullType && computedDefault !== undefined) ||
+      !isObject(computedDefault) ||
+      Object.keys(computedDefault).length > 0
+    ) {
       acc[key] = computedDefault;
     }
     // If computedDefault is an empty object {}, don't add it - let the field stay undefined
@@ -156,14 +175,14 @@ function maybeAddDefaultToObject<T = any>(
     if (isObject(computedDefault)) {
       // If emptyObjectFields 'skipEmptyDefaults' store computedDefault if it's a non-empty object(e.g. not {})
       if (emptyObjectFields === 'skipEmptyDefaults') {
-        if (!isEmpty(computedDefault)) {
+        if (Object.keys(computedDefault).length > 0) {
           acc[key] = computedDefault;
         }
       } // Else store computedDefault if it's a non-empty object(e.g. not {}) and satisfies certain conditions
       // Condition 1: If computedDefault is not empty or if the key is a required field
       // Condition 2: If the parent object is required or emptyObjectFields is not 'populateRequiredDefaults'
       else if (
-        (!isEmpty(computedDefault) || requiredFields.includes(key)) &&
+        (Object.keys(computedDefault).length > 0 || requiredFields.includes(key)) &&
         (isSelfOrParentRequired || emptyObjectFields !== 'populateRequiredDefaults')
       ) {
         acc[key] = computedDefault;
@@ -293,7 +312,8 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     // Then set the defaults from the current schema for the referenced schema.
     // Only do this if rawFormData has no meaningful data - we don't want to override user's existing values.
     // Check for undefined OR empty object - rawFormData may be coerced to {} when not an object.
-    const hasNoExistingData = rawFormData === undefined || (isObject(rawFormData) && isEmpty(rawFormData));
+    const hasNoExistingData =
+      rawFormData === undefined || (isObject(rawFormData) && Object.keys(rawFormData).length === 0);
     if (schemaToCompute && !defaults && hasNoExistingData) {
       defaults = schema.default as T | undefined;
     }
@@ -483,7 +503,7 @@ export function ensureFormDataMatchingSchema<
   } else if (isObject(validFormData) && isObject(schemaToMatch.properties)) {
     validFormData = Object.keys(schemaToMatch.properties).reduce(
       (acc: GenericObjectType, key: string) => {
-        const propertySchema: S = schemaToMatch[PROPERTIES_KEY]?.[key] as S;
+        const propertySchema = getPropertySchema<S>(schemaToMatch, key);
         if (key in acc && (shouldRetrieveAllOf || (isObject(propertySchema) && ALL_OF_KEY in propertySchema))) {
           acc[key] = ensureFormDataMatchingSchema<T, S, F>(
             validator,
@@ -543,7 +563,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
     const parentConst = retrievedSchema[CONST_KEY];
     const objectDefaults = Object.keys(retrievedSchema.properties || {}).reduce(
       (acc: GenericObjectType, key: string) => {
-        const propertySchema: S = retrievedSchema[PROPERTIES_KEY]?.[key] as S;
+        const propertySchema = getPropertySchema<S>(retrievedSchema, key);
         // Check if the parent schema has a const property defined AND we are supporting const as defaults, then we
         // should always return the computedDefault since it's coming from the const.
         const hasParentConst = isObject(parentConst) && (parentConst as JSONSchema7Object)[key] !== undefined;

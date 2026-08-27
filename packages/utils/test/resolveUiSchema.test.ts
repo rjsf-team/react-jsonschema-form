@@ -1,7 +1,5 @@
-import noop from 'lodash/noop';
-
 import type { Registry, RJSFSchema, TemplatesType, UiSchema, UiSchemaDefinitions } from '../src';
-import { resolveUiSchema, RJSF_REF_KEY } from '../src';
+import { RJSF_REF_KEY, noop, resolveUiSchema } from '../src';
 
 beforeEach(() => {
   vi.spyOn(console, 'warn').mockImplementation(noop);

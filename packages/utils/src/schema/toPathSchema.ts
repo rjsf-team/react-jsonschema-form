@@ -1,5 +1,4 @@
 // oxlint-disable typescript/no-deprecated
-import isObject from 'lodash/isObject';
 
 import {
   ADDITIONAL_PROPERTIES_KEY,
@@ -16,6 +15,8 @@ import {
 } from '../constants';
 import deepEquals from '../deepEquals';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
+import getPropertySchema from '../getPropertySchema';
+import isObject from '../isObject';
 import { getByPath, setByPath } from '../pathUtils';
 import type {
   Experimental_CustomMergeAllOf,
@@ -165,7 +166,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
     // This is a deprecated function that is no longer used by RJSF
     // oxlint-disable-next-line guard-for-in
     for (const property in schema.properties) {
-      const field: S = schema[PROPERTIES_KEY]?.[property] as S;
+      const field = getPropertySchema<S>(schema, property);
       (pathSchema as PathSchema<GenericObjectType>)[property] = toPathSchemaInternal<T, S, F>(
         validator,
         field,

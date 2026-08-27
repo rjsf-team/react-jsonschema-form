@@ -1,5 +1,3 @@
-import isEmpty from 'lodash/isEmpty';
-
 import mergeObjects from './mergeObjects';
 import toErrorList from './toErrorList';
 import type { ErrorSchema, ValidationData } from './types';
@@ -25,7 +23,7 @@ export default function validationDataMerge<T = any>(
   const { errors: oldErrors, errorSchema: oldErrorSchema } = validationData;
   let errors = toErrorList(additionalErrorSchema);
   let errorSchema = additionalErrorSchema;
-  if (!isEmpty(oldErrorSchema)) {
+  if (oldErrorSchema && Object.keys(oldErrorSchema).length > 0) {
     errorSchema = mergeObjects(
       oldErrorSchema,
       additionalErrorSchema,

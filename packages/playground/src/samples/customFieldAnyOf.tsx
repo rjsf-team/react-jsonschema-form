@@ -1,6 +1,5 @@
 import type { FieldProps, FieldTemplateProps, FieldPathId, RJSFSchema } from '@rjsf/utils';
-import { ID_KEY, getTemplate } from '@rjsf/utils';
-import noop from 'lodash/noop';
+import { ID_KEY, getTemplate, noop } from '@rjsf/utils';
 
 import type { Sample } from './Sample';
 

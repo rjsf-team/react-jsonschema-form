@@ -1,5 +1,6 @@
 import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY, REF_KEY } from '../constants';
 import deepEquals from '../deepEquals';
+import getPropertySchema from '../getPropertySchema';
 import { getByPath, hasByPath } from '../pathUtils';
 import type {
   Experimental_CustomMergeAllOf,
@@ -129,8 +130,8 @@ export default function sanitizeDataForNewSchema<
     const nestedData: GenericObjectType = {};
     keys.forEach((key) => {
       const formValue = data?.[key];
-      let oldKeyedSchema: S = (oldProperties?.[key] ?? {}) as S;
-      let newKeyedSchema: S = newProperties[key] as S;
+      let oldKeyedSchema = getPropertySchema<S>(oldSchema, key);
+      let newKeyedSchema = getPropertySchema<S>(newSchema, key);
       // Resolve the refs if they exist
       if (hasByPath(oldKeyedSchema, REF_KEY)) {
         oldKeyedSchema = retrieveSchema<T, S, F>(

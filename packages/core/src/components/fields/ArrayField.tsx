@@ -23,6 +23,7 @@ import {
   isCustomWidget,
   isFixedItems,
   isFormDataAvailable,
+  isObject,
   optionsList,
   shouldRenderOptionalField,
   toFieldPathId,
@@ -31,8 +32,6 @@ import {
   ID_KEY,
   TranslatableString,
 } from '@rjsf/utils';
-import isObject from 'lodash/isObject';
-import uniqueId from 'lodash/uniqueId';
 
 /** Type used to represent the keyed form data used in the state */
 interface KeyedFormDataType<T> {
@@ -41,8 +40,11 @@ interface KeyedFormDataType<T> {
 }
 
 /** Used to generate a unique ID for an element in a row */
+let rowIdCounter = 0;
+
 function generateRowId() {
-  return uniqueId('rjsf-array-item-');
+  rowIdCounter += 1;
+  return `rjsf-array-item-${rowIdCounter}`;
 }
 
 /** Converts the `formData` into `KeyedFormDataType` data, using the `generateRowId()` function to create the key
@@ -709,10 +711,7 @@ function FixedArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
   const { OptionalDataControlsField } = fields;
   const renderOptionalField = shouldRenderOptionalField<T[], S, F>(registry, schema, required, uiSchema);
   const hasFormData = isFormDataAvailable<T[]>(formData);
-  const schemaItems: S[] = useMemo(
-    () => (isObject(schema.items) ? (schema.items as S[]) : ([] as S[])),
-    [schema.items],
-  );
+  const schemaItems = useMemo<S[]>(() => (Array.isArray(schema.items) ? (schema.items as S[]) : []), [schema.items]);
   const hasAdditionalItems = isObject(schema.additionalItems);
   // All the children will use childFieldPathId if present in the props, falling back to the fieldPathId
   const childFieldPathId = props.childFieldPathId ?? fieldPathId;
@@ -904,7 +903,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
           if (index === undefined || i < index) {
             setByPath(newErrorSchema, i, errorSchemaRef.current[i]);
           } else if (i >= index) {
-            setByPath(newErrorSchema, [i + 1], errorSchemaRef.current[i]);
+            setByPath(newErrorSchema, i + 1, errorSchemaRef.current[i]);
           }
         }
       }
@@ -944,7 +943,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
           if (i <= index) {
             setByPath(newErrorSchema, i, errorSchemaRef.current[i]);
           } else if (i > index) {
-            setByPath(newErrorSchema, [i + 1], errorSchemaRef.current[i]);
+            setByPath(newErrorSchema, i + 1, errorSchemaRef.current[i]);
           }
         }
       }
@@ -984,7 +983,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
           if (i < index) {
             setByPath(newErrorSchema, i, errorSchemaRef.current[i]);
           } else if (i > index) {
-            setByPath(newErrorSchema, [i - 1], errorSchemaRef.current[i]);
+            setByPath(newErrorSchema, i - 1, errorSchemaRef.current[i]);
           }
         }
       }

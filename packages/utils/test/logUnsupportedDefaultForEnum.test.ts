@@ -1,6 +1,6 @@
-import noop from 'lodash';
 import type { MockInstance } from 'vitest';
 
+import { noop } from '../src';
 import logUnsupportedDefaultForEnum from '../src/logUnsupportedDefaultForEnum';
 
 describe('logUnsupportedDefaultForEnum()', () => {

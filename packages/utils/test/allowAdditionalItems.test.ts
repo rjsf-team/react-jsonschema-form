@@ -1,8 +1,7 @@
-import noop from 'lodash/noop';
 import type { MockInstance } from 'vitest';
 
 import type { RJSFSchema } from '../src';
-import { allowAdditionalItems } from '../src';
+import { allowAdditionalItems, noop } from '../src';
 
 const schema1: RJSFSchema = {
   type: 'string',

@@ -1,7 +1,5 @@
-import get from 'lodash/get';
-
 import type { RJSFSchema } from '../../src';
-import { createSchemaUtils, PROPERTIES_KEY } from '../../src';
+import { createSchemaUtils, getByPath, PROPERTIES_KEY } from '../../src';
 import { ANSWER_1, CHOICES, testAnyOfSchema, testOneOfSchema } from '../testUtils/testData';
 import type { TestValidatorType } from './types';
 
@@ -44,7 +42,7 @@ const nestedAnyOf: RJSFSchema = {
 export default function findFieldInSchemaTest(testValidator: TestValidatorType) {
   // Root schema is not needed for these tests
   const schemaUtils = createSchemaUtils(testValidator, {});
-  const expectedAnswerField = get(CHOICES[0], [PROPERTIES_KEY, 'answer']);
+  const expectedAnswerField = getByPath(CHOICES[0], [PROPERTIES_KEY, 'answer']);
 
   describe('findFieldInSchema', () => {
     it('returns NOT_FOUND when path is empty', () => {
@@ -57,12 +55,15 @@ export default function findFieldInSchemaTest(testValidator: TestValidatorType) 
       expect(schemaUtils.findFieldInSchema(simpleSchema, 'foo')).toEqual(NOT_FOUND);
     });
     it('returns NOT_FOUND when the path traverses a boolean subschema', () => {
-      const booleanPropSchema: RJSFSchema = { type: 'object', properties: { a: false } };
+      const booleanPropSchema: RJSFSchema = {
+        type: 'object',
+        properties: { a: false },
+      };
       expect(schemaUtils.findFieldInSchema(booleanPropSchema, 'a.b')).toEqual(NOT_FOUND);
     });
     it('returns field as required', () => {
       const path = ['name'];
-      const expectedField = get(simpleSchema, [PROPERTIES_KEY, path[0]]);
+      const expectedField = getByPath(simpleSchema, [PROPERTIES_KEY, path[0]]);
       expect(schemaUtils.findFieldInSchema(simpleSchema, path)).toEqual({
         field: expectedField,
         isRequired: true,
@@ -70,7 +71,7 @@ export default function findFieldInSchemaTest(testValidator: TestValidatorType) 
     });
     it('returns field as not required', () => {
       const path = ['age'];
-      const expectedField = get(simpleSchema, [PROPERTIES_KEY, path[0]]);
+      const expectedField = getByPath(simpleSchema, [PROPERTIES_KEY, path[0]]);
       expect(schemaUtils.findFieldInSchema(simpleSchema, path)).toEqual({
         field: expectedField,
         isRequired: false,
@@ -78,7 +79,7 @@ export default function findFieldInSchemaTest(testValidator: TestValidatorType) 
     });
     it('returns nested field as required', () => {
       const path = ['nested', 'name'];
-      const expectedField = get(simpleSchema, [PROPERTIES_KEY, path[1]]);
+      const expectedField = getByPath(simpleSchema, [PROPERTIES_KEY, path[1]]);
       expect(schemaUtils.findFieldInSchema(nestedSimpleSchema, path)).toEqual({
         field: expectedField,
         isRequired: true,
@@ -86,7 +87,7 @@ export default function findFieldInSchemaTest(testValidator: TestValidatorType) 
     });
     it('returns nested field as not required', () => {
       const path = ['nested', 'age'];
-      const expectedField = get(simpleSchema, [PROPERTIES_KEY, path[1]]);
+      const expectedField = getByPath(simpleSchema, [PROPERTIES_KEY, path[1]]);
       expect(schemaUtils.findFieldInSchema(nestedSimpleSchema, path)).toEqual({
         field: expectedField,
         isRequired: false,

@@ -19,6 +19,7 @@ import {
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
   getTemplate,
+  getPropertySchema,
   getUiOptions,
   isFormDataAvailable,
   orderProperties,
@@ -28,9 +29,9 @@ import {
   ONE_OF_KEY,
   PROPERTIES_KEY,
   REF_KEY,
+  isObject,
   TranslatableString,
 } from '@rjsf/utils';
-import isObject from 'lodash/isObject';
 import { Markdown } from 'markdown-to-jsx/react';
 
 import { ADDITIONAL_PROPERTY_KEY_REMOVE } from '../constants';
@@ -424,7 +425,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
           key={getStableKey(propertyName)}
           propertyName={propertyName}
           required={isRequired<S>(schema, propertyName)}
-          schema={(schema[PROPERTIES_KEY]?.[propertyName] ?? {}) as S}
+          schema={getPropertySchema<S>(schema, propertyName)}
           uiSchema={fieldUiSchema}
           errorSchema={getByPath(errorSchema, propertyName)}
           fieldPathId={childFieldPathId}

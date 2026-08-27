@@ -1,8 +1,6 @@
-import cloneDeep from 'lodash/cloneDeep';
-
 import { getChangedFields } from '../src';
 
-const complexObject = {
+const makeComplexObject = () => ({
   a: 1,
   b: '2',
   c: { c1: {}, c2: [] },
@@ -10,7 +8,8 @@ const complexObject = {
   e() {
     /* empty */
   },
-};
+});
+const complexObject = makeComplexObject();
 const complexObjectKeys = ['a', 'b', 'c', 'd', 'e'];
 
 describe('getChangedFields()', () => {
@@ -55,11 +54,11 @@ describe('getChangedFields()', () => {
   });
   it('Deep equal', () => {
     expect(getChangedFields(complexObject, complexObject)).toEqual([]);
-    expect(getChangedFields(complexObject, cloneDeep(complexObject))).toEqual([]);
+    expect(getChangedFields(complexObject, makeComplexObject())).toEqual([]);
   });
   it('Change one field', () => {
-    expect(getChangedFields(complexObject, { ...cloneDeep(complexObject), a: 2 })).toEqual(['a']);
-    expect(getChangedFields({ ...cloneDeep(complexObject), a: 2 }, complexObject)).toEqual(['a']);
+    expect(getChangedFields(complexObject, { ...makeComplexObject(), a: 2 })).toEqual(['a']);
+    expect(getChangedFields({ ...makeComplexObject(), a: 2 }, complexObject)).toEqual(['a']);
   });
   it('Change some fields', () => {
     expect(
