@@ -2,7 +2,11 @@
   {
     "name": "1. @rjsf/core",
     "path": "packages/core/lib/index.js",
-    "ignore": ["react", "react-dom", "@rjsf/utils"],
+    "ignore": [
+      "react",
+      "react-dom",
+      "@rjsf/utils"
+    ],
     "limit": "92 kB"
   },
   {
@@ -26,13 +30,20 @@
     "name": "3. @rjsf/core: Form",
     "path": "packages/core/lib/index.js",
     "import": "Form",
-    "ignore": ["react", "react-dom", "@rjsf/utils"],
+    "ignore": [
+      "react",
+      "react-dom",
+      "@rjsf/utils"
+    ],
     "limit": "53 kB"
   },
   {
     "name": "4. @rjsf/utils",
     "path": "packages/utils/lib/index.js",
-    "ignore": ["react", "react-dom"],
+    "ignore": [
+      "react",
+      "react-dom"
+    ],
     "limit": "34 kB"
   },
   {
@@ -55,19 +66,34 @@
     "name": "6. @rjsf/utils: getUiOptions",
     "path": "packages/utils/lib/index.js",
     "import": "{ getUiOptions }",
-    "ignore": ["react", "react-dom"],
-    "limit": "13 kB"
+    "ignore": [
+      "react",
+      "react-dom"
+    ],
+    "limit": "1 kB"
   },
   {
     "name": "7. @rjsf/validator-ajv8",
     "path": "packages/validator-ajv8/lib/index.js",
-    "ignore": ["react", "react-dom", "@rjsf/utils"],
+    "ignore": [
+      "react",
+      "react-dom",
+      "@rjsf/utils"
+    ],
     "limit": "39 kB"
   },
   {
     "name": "8. @rjsf/validator-ajv8 (without dependencies)",
     "path": "packages/validator-ajv8/lib/index.js",
-    "ignore": ["react", "react-dom", "@rjsf/utils", "ajv", "ajv-formats", "lodash", "lodash-es"],
+    "ignore": [
+      "react",
+      "react-dom",
+      "@rjsf/utils",
+      "ajv",
+      "ajv-formats",
+      "lodash",
+      "lodash-es"
+    ],
     "limit": "3 kB"
   }
 ]
