@@ -840,16 +840,10 @@ importers:
       react:
         specifier: '>=18'
         version: 18.3.1
-      react-is:
-        specifier: ^18.3.1
-        version: 18.3.1
     devDependencies:
       '@types/json-schema':
         specifier: ^7.0.15
         version: 7.0.15
-      '@types/react-is':
-        specifier: ^18.3.1
-        version: 18.3.1
       deep-freeze-es6:
         specifier: ^5.0.0
         version: 5.0.0
@@ -5438,9 +5432,6 @@ packages:
 
   '@types/react-frame-component@4.1.6':
     resolution: {integrity: sha512-Q99Hv1ky8sdoTIZw5YLGDbbWOcCdwRemxQ7BUU/ypLw2LZ6maov3EuztH5cyBUB4Lnd4MXF/6zwBYQhD/C+Vrg==}
-
-  '@types/react-is@18.3.1':
-    resolution: {integrity: sha512-zts4lhQn5ia0cF/y2+3V6Riu0MAfez9/LJYavdM8TvcVl+S91A/7VWxyBT8hbRuWspmuCaiGI0F41OJYGrKhRA==}
 
   '@types/react-portal@4.0.7':
     resolution: {integrity: sha512-3zQJL6Pqcq7d73+cakVkZDqAYGFBo37XXPfahjhdScr9EdYPlf9evYilL38Fpzs1YGWz7F2SkPtN6+ygTO7ymg==}
@@ -17354,10 +17345,6 @@ snapshots:
       '@types/react': 18.3.31
 
   '@types/react-frame-component@4.1.6':
-    dependencies:
-      '@types/react': 18.3.29
-
-  '@types/react-is@18.3.1':
     dependencies:
       '@types/react': 18.3.29
 

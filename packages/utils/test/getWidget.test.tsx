@@ -1,5 +1,5 @@
 import type { ForwardedRef } from 'react';
-import { forwardRef, memo } from 'react';
+import { forwardRef, lazy, memo, Suspense } from 'react';
 import { render } from '@testing-library/react';
 
 import type { FieldPathId, Registry, RJSFSchema, WidgetProps, Widget } from '../src';
@@ -137,8 +137,34 @@ describe('getWidget()', () => {
   });
 
   it('should not fail on memo component', () => {
-    const TheWidget = memo(TestWidget);
+    const TheWidget = getWidget(schema, memo(TestWidget));
     const { asFragment } = render(<TheWidget {...widgetProps} />);
     expect(asFragment()).toMatchSnapshot();
+  });
+
+  it('should not fail on memoized forwarded ref component', () => {
+    const TheWidget = getWidget(schema, memo(TestRefWidget));
+    const { asFragment } = render(<TheWidget {...widgetProps} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+
+  it('should render a lazy component once resolved', async () => {
+    const TheWidget = getWidget(
+      schema,
+      lazy(() => Promise.resolve({ default: TestWidget })),
+    );
+    const { findByText, asFragment } = render(
+      <Suspense>
+        <TheWidget {...widgetProps} />
+      </Suspense>,
+    );
+    await findByText('test');
+    expect(asFragment()).toMatchSnapshot();
+  });
+
+  it('should fail on a React element rather than a component', () => {
+    expect(() => getWidget(schema, (<TestWidget {...widgetProps} />) as unknown as Widget)).toThrow(
+      `Unsupported widget definition: object in schema: ${schemaStr}`,
+    );
   });
 });

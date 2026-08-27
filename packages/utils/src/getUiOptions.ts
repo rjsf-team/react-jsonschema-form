@@ -1,5 +1,6 @@
 import { UI_OPTIONS_KEY, UI_WIDGET_KEY } from './constants';
 import isObject from './isObject';
+import isWidgetComponent from './isWidgetComponent';
 import type {
   FormContextType,
   GlobalUISchemaOptions,
@@ -29,7 +30,7 @@ export default function getUiOptions<T = any, S extends StrictRJSFSchema = RJSFS
     .reduce(
       (options, key) => {
         const value = uiSchema[key];
-        if (key === UI_WIDGET_KEY && isObject(value)) {
+        if (key === UI_WIDGET_KEY && isObject(value) && !isWidgetComponent(value)) {
           // oxlint-disable-next-line no-console
           console.error('Setting options via ui:widget object is no longer supported, use ui:options instead');
           return options;

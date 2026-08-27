@@ -28,6 +28,22 @@ exports[`getWidget() > should not fail on memo component 1`] = `
 </DocumentFragment>
 `;
 
+exports[`getWidget() > should not fail on memoized forwarded ref component 1`] = `
+<DocumentFragment>
+  <span>
+    test
+  </span>
+</DocumentFragment>
+`;
+
+exports[`getWidget() > should render a lazy component once resolved 1`] = `
+<DocumentFragment>
+  <div>
+    test
+  </div>
+</DocumentFragment>
+`;
+
 exports[`getWidget() > should return \`SelectWidget\` for boolean type 1`] = `
 <DocumentFragment>
   <div

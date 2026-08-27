@@ -53,6 +53,7 @@ import isFormDataAvailable from './isFormDataAvailable';
 import isObject from './isObject';
 import isPlainObject from './isPlainObject';
 import isRootSchema from './isRootSchema';
+import isWidgetComponent from './isWidgetComponent';
 import labelValue from './labelValue';
 import localToUTC from './localToUTC';
 import logUnsupportedDefaultForEnum from './logUnsupportedDefaultForEnum';
@@ -168,6 +169,7 @@ export {
   isObject,
   isPlainObject,
   isRootSchema,
+  isWidgetComponent,
   labelValue,
   localToUTC,
   logUnsupportedDefaultForEnum,

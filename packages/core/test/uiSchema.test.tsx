@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+import { lazy, memo, Suspense } from 'react';
 import type { GenericObjectType, RJSFSchema, UiSchema, Widget, WidgetProps } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -129,6 +130,33 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
         expect(node.querySelectorAll('.custom')).toHaveLength(1);
+      });
+
+      it('should render a memoized custom widget', () => {
+        const MemoWidget = memo((props: WidgetProps) => (
+          <input type='text' className='custom-memo' value={props.value} onChange={noop} />
+        ));
+        const { node } = createFormComponent({ schema, uiSchema: { 'ui:widget': MemoWidget } });
+
+        expect(node.querySelectorAll('.custom-memo')).toHaveLength(1);
+      });
+
+      it('should render a lazy custom widget once resolved', async () => {
+        const LazyWidget = lazy(() =>
+          Promise.resolve({
+            default: (props: WidgetProps) => (
+              <input type='text' className='custom-lazy' value={props.value} onChange={noop} />
+            ),
+          }),
+        );
+        const { container, findByRole } = render(
+          <Suspense>
+            <Form schema={schema} uiSchema={{ 'ui:widget': LazyWidget }} validator={validator} />
+          </Suspense>,
+        );
+
+        await findByRole('textbox');
+        expect(container.querySelectorAll('.custom-lazy')).toHaveLength(1);
       });
     });
 

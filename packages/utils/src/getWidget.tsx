@@ -1,7 +1,5 @@
-import { createElement } from 'react';
-import ReactIs from 'react-is';
-
 import getSchemaType from './getSchemaType';
+import isWidgetComponent from './isWidgetComponent';
 import type { FormContextType, RJSFSchema, Widget, RegistryWidgetsType, StrictRJSFSchema } from './types';
 
 /** The map of schema types to widget type to widget name
@@ -100,12 +98,8 @@ export default function getWidget<T = any, S extends StrictRJSFSchema = RJSFSche
 ): Widget<T, S, F> {
   const type = getSchemaType(schema);
 
-  if (
-    typeof widget === 'function' ||
-    (widget && ReactIs.isForwardRef(createElement(widget))) ||
-    ReactIs.isMemo(widget)
-  ) {
-    return mergeWidgetOptions<T, S, F>(widget as Widget<T, S, F>);
+  if (isWidgetComponent<T, S, F>(widget)) {
+    return mergeWidgetOptions<T, S, F>(widget);
   }
 
   if (typeof widget !== 'string') {
