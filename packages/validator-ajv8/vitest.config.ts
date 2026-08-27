@@ -3,6 +3,7 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     globals: true,
+    globalSetup: ['./test/harness/globalSetup.ts'],
     environment: 'jsdom',
     coverage: {
       provider: 'v8',
