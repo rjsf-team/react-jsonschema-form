@@ -1,6 +1,4 @@
 import type { FormContextType, RegistryWidgetsType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 import CheckboxesWidget from './CheckboxesWidget';
 import CheckboxWidget from './CheckboxWidget';
@@ -12,9 +10,6 @@ import RadioWidget from './RadioWidget';
 import RangeWidget from './RangeWidget';
 import SelectWidget from './SelectWidget';
 import TextareaWidget from './TextareaWidget';
-
-// This plugin is needed to support the parsing of date and time values in the `DateWidget` and `DateTimeWidget`
-dayjs.extend(customParseFormat);
 
 export function generateWidgets<
   T = any,

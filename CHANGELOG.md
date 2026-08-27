@@ -17,13 +17,16 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 
 # 6.9.0
+
 ## @rjsf/antd
 
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 
 ## @rjsf/chakra-ui
 
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 
 
 ## @rjsf/core
@@ -36,30 +39,44 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/daisyui
 
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+- Removed the module-level Font Awesome `library.add()` call from `AddButton`; every icon is passed to `FontAwesomeIcon` as an imported icon object, so the global registry was never consulted
 
 ## @rjsf/fluentui-rc
 
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 
 ## @rjsf/mantine
 
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+- Moved the `dayjs` `customParseFormat` plugin registration from the widgets barrel file into `DateTimeInput`, so it loads with the date widgets that actually need it
 
 ## @rjsf/mui
 
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 
 ## @rjsf/primereact
 
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 
 ## @rjsf/react-bootstrap
 
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 
 ## @rjsf/semantic-ui
 
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+
+## @rjsf/shadcn
+
+- Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
+- - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 
 ## @rjsf/utils
 
@@ -67,19 +84,23 @@ should change the heading of the (upcoming) version to include a major version b
 - Added new path utilities `getByPath`, `setByPath`, `hasByPath`, `unsetByPath` and `toPath`, and switched all path-based `lodash` usage (`get`, `set`, `setWith`, `has`, `unset`, `toPath`, `pick`) over to them. Unlike their lodash counterparts, these treat a bare string as a single literal key, lodash-style dotted path strings are parsed explicitly via `toPath()`, and `getByPath()`/`hasByPath()` resolve **own** properties only (inherited members and prototype internals such as `__proto__` never resolve)
 - Made the default value of a required boolean field be false if a `default` is not present in the schema
 - Fixed `omitExtraData()` by removing the over-reaching `additionalProperties: false` post-processing block introduced in [#5147](https://github.com/rjsf-team/react-jsonschema-form/pull/5147) that incorrectly stripped keys written by winning `oneOf`/`anyOf` and `if/then/else` branches, fixing [#5194](https://github.com/rjsf-team/react-jsonschema-form/issues/5194)
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 
 ## @rjsf/validator-ajv8
 
 - Replaced all `lodash/get` usage with the new `@rjsf/utils` path utilities
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 
 ## @rjsf/validator-ata
 
 - Replaced all `lodash/get` usage with the new `@rjsf/utils` path utilities
 - Updated `ata-validator` dependency to `^1.7.1`, picking up lazily materialized errors and the closure-tree interpreted engine ([#5211](https://github.com/rjsf-team/react-jsonschema-form/pull/5211))
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 
 ## @rjsf/validator-cfworker
 
 - Replaced all `lodash/get` usage with the new `@rjsf/utils` path utilities and dropped the `lodash`/`lodash-es` dependencies entirely
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 
 # 6.8.0
 

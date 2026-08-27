@@ -5,6 +5,7 @@
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
   "type": "module",
+  "sideEffects": false,
   "description": "Mantine theme, fields and widgets for react-jsonschema-form",
   "exports": {
     ".": {
