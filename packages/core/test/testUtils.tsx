@@ -57,13 +57,15 @@ export function createFormComponent(props: NoValFormProps, v: ValidatorType = va
   return createComponent(Form, { validator: v, ...props });
 }
 
-// oxlint-disable-next-line no-unused-vars
-type CreatorFn = (creatorFn: typeof createFormComponent) => void;
+export interface FormExtraProps {
+  omitExtraData: FormProps['omitExtraData'];
+  liveOmit?: FormProps['liveOmit'];
+}
 
-/* Run a group of tests with different combinations of omitExtraData and liveOmit as form props.
+/* Run a group of tests with each combination of omitExtraData and liveOmit as form props.
  */
-export function describeRepeated(title: string, fn: CreatorFn) {
-  const formExtraPropsList: { omitExtraData: FormProps['omitExtraData']; liveOmit?: FormProps['liveOmit'] }[] = [
+export function describeRepeated(title: string, fn: (creatorFn: typeof createFormComponent) => void) {
+  const formExtraPropsList: FormExtraProps[] = [
     { omitExtraData: false },
     { omitExtraData: true },
     { omitExtraData: true, liveOmit: true },
