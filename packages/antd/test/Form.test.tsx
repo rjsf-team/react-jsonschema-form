@@ -1,7 +1,7 @@
 import { formTests } from '@rjsf/snapshot-tests';
 import type { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 
 import Form from '../src';
 
@@ -40,6 +40,28 @@ describe('antd specific tests', () => {
     const { container } = render(<Form schema={schema} validator={validator} />);
 
     expect(container.querySelector('input#root_age')).toHaveAttribute('required');
+  });
+
+  test('clearing an optional integer field removes the value instead of setting null', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        age: {
+          type: 'integer',
+          title: 'Age',
+        },
+      },
+    };
+    const onChange = vi.fn();
+
+    const { container } = render(<Form schema={schema} validator={validator} onChange={onChange} />);
+    const input = container.querySelector('input#root_age') as HTMLInputElement;
+
+    fireEvent.change(input, { target: { value: '1' } });
+    fireEvent.change(input, { target: { value: '' } });
+
+    const lastCall = onChange.mock.calls[onChange.mock.calls.length - 1][0];
+    expect(lastCall.formData).toEqual({});
   });
 
   test('descriptionLocation tooltip in formContext', () => {
