@@ -5,6 +5,7 @@
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
   "type": "module",
+  "sideEffects": false,
   "description": "The ajv-8 based validator for @rjsf/core",
   "exports": {
     ".": {

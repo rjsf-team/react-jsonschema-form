@@ -1,6 +1,6 @@
 import type { FocusEvent } from 'react';
 import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { ariaDescribedByIds, descriptionId, getTemplate, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
+import { ariaDescribedByIds, descriptionId, getTemplate, schemaRequiresTrueValue } from '@rjsf/utils';
 import Form from 'react-bootstrap/Form';
 
 export default function CheckboxWidget<
@@ -24,11 +24,12 @@ export default function CheckboxWidget<
     onFocus,
     registry,
     uiSchema,
+    required,
   } = props;
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
-  const required = schemaRequiresTrueValue<S>(schema);
+  const trueValueRequired = schemaRequiresTrueValue<S>(schema) && required;
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
     'DescriptionFieldTemplate',
     registry,
@@ -54,9 +55,16 @@ export default function CheckboxWidget<
       <Form.Check
         id={id}
         name={htmlName || id}
-        label={labelValue(label, hideLabel || !label)}
+        label={
+          !hideLabel && label ? (
+            <>
+              {label}
+              {trueValueRequired && <span className='required'>*</span>}
+            </>
+          ) : undefined
+        }
         checked={typeof value === 'undefined' ? false : value}
-        required={required}
+        required={trueValueRequired}
         disabled={disabled || readonly}
         autoFocus={autofocus}
         onChange={handleChange}

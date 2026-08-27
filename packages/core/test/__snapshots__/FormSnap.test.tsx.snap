@@ -5494,6 +5494,97 @@ exports[`single fields > radio widget with description in schema and FieldTempla
 </DocumentFragment>
 `;
 
+exports[`single fields > required checkbox field 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="form-group rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="form-group rjsf-field rjsf-field-boolean"
+        >
+          <div
+            class="checkbox "
+          >
+            <label>
+              <input
+                aria-describedby="root_agree__error root_agree__description root_agree__help"
+                id="root_agree"
+                name="root_agree"
+                required=""
+                type="checkbox"
+              />
+              <span>
+                I Agree
+              </span>
+            </label>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields > required checkbox field, default true 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="form-group rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="form-group rjsf-field rjsf-field-boolean"
+        >
+          <div
+            class="checkbox "
+          >
+            <label>
+              <input
+                aria-describedby="root_agree__error root_agree__description root_agree__help"
+                checked=""
+                id="root_agree"
+                name="root_agree"
+                required=""
+                type="checkbox"
+              />
+              <span>
+                I Agree
+              </span>
+            </label>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > schema examples 1`] = `
 <DocumentFragment>
   <form

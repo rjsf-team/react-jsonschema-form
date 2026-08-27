@@ -31,11 +31,12 @@ export default function CheckboxWidget<
     registry,
     uiSchema,
     className,
+    required,
   } = props;
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
-  const required = schemaRequiresTrueValue<S>(schema);
+  const trueValueRequired = schemaRequiresTrueValue<S>(schema) && required;
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
     'DescriptionFieldTemplate',
     registry,
@@ -76,6 +77,7 @@ export default function CheckboxWidget<
         />
         <Label className='leading-tight' htmlFor={id}>
           {labelValue(label, hideLabel || !label)}
+          {!hideLabel && label && trueValueRequired && <span className='text-destructive ml-1'>*</span>}
         </Label>
       </div>
     </div>

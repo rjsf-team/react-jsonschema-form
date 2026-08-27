@@ -486,6 +486,62 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
       });
 
+      describe('required boolean properties default to false when no default is provided', () => {
+        it('sets required boolean to false when no default is given', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              agree: { type: 'boolean' },
+            },
+            required: ['agree'],
+          };
+          expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual({ agree: false });
+        });
+
+        it('preserves an explicit schema default of true for a required boolean', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              agree: { type: 'boolean', default: true },
+            },
+            required: ['agree'],
+          };
+          expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual({ agree: true });
+        });
+
+        it('does not set a default for an optional boolean', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              agree: { type: 'boolean' },
+            },
+          };
+          expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual({});
+        });
+
+        it('preserves existing formData true for a required boolean', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              agree: { type: 'boolean' },
+            },
+            required: ['agree'],
+          };
+          expect(getDefaultFormState(testValidator, schema, { agree: true }, schema)).toEqual({ agree: true });
+        });
+
+        it('preserves existing formData false for a required boolean', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              agree: { type: 'boolean' },
+            },
+            required: ['agree'],
+          };
+          expect(getDefaultFormState(testValidator, schema, { agree: false }, schema)).toEqual({ agree: false });
+        });
+      });
+
       describe('an object with an additionalProperties', () => {
         const schema: RJSFSchema = {
           type: 'object',

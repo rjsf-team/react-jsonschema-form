@@ -885,12 +885,11 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({ reqObj: { foo: '' } });
       });
 
-      it('returns an empty array when the array schema has no items definition', () => {
-        // removeOptionalEmptyObjects returns the array as-is (no items schema → skip processing).
-        // omitExtraData returns [] because handleArray finds no items schema and emits nothing.
+      it('returns source unchanged when the array schema has no items definition', () => {
+        // No items schema means there is no filtering rule — preserve the source as-is.
         const schema: RJSFSchema = { type: 'array' };
         const formData = [{ foo: 'bar' }];
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual([]);
+        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual([{ foo: 'bar' }]);
       });
     });
 
@@ -1090,6 +1089,99 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         const result = omitExtraData(testValidator, schema, schema, formData);
         expect(result).toEqual({ prop1: 'with required', prop2: { subprop1: '123', subprop2: '456' } });
       });
+
+      // Regression test for https://github.com/rjsf-team/react-jsonschema-form/issues/3920
+      // When there are ≥2 if/then entries in allOf and the merger can only hoist one, the
+      // remainingAllOf loop previously returned `source` as the accumulated target (because the
+      // allOf entry has no top-level type), aliasing source as the accumulator and causing
+      // handleArray to push items onto the same array it was iterating — an infinite growth loop
+      // that corrupted the list and dropped the conditional props with numeric-string keys.
+      it('preserves numeric-string property keys from multiple if/then allOf conditions (issue #3920)', () => {
+        const rankingDetails = {
+          type: 'object' as const,
+          properties: {
+            promotionPeriod: { type: 'integer' as const, minimum: 1, maximum: 12, default: 3 },
+            threshold: { type: 'number' as const },
+          },
+        };
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            list: {
+              type: 'array',
+              items: { type: 'integer', enum: [0, 1, 2, 3] },
+              uniqueItems: true,
+            },
+          },
+          allOf: [
+            {
+              if: { properties: { list: { contains: { const: 1 } } } },
+              then: { properties: { '1': { title: 'Level 1', ...rankingDetails } } },
+            },
+            {
+              if: { properties: { list: { contains: { const: 2 } } } },
+              then: { properties: { '2': { title: 'Level 2', ...rankingDetails } } },
+            },
+            {
+              if: { properties: { list: { contains: { const: 3 } } } },
+              then: { properties: { '3': { title: 'Level 3', ...rankingDetails } } },
+            },
+          ],
+        };
+        const formData = {
+          list: [1, 2],
+          '1': { promotionPeriod: 5, threshold: 0.8 },
+          '2': { promotionPeriod: 7, threshold: 0.5 },
+        };
+        // Merger hoists the first if/then; the remaining two stay in allOf.
+        // isValid calls (in order):
+        //   (1) allOf[1] if-condition (list contains 2) → true
+        //   (2) allOf[2] if-condition (list contains 3) → false
+        //   (3) hoisted top-level if-condition (list contains 1) → true
+        testValidator.setReturnValues({ isValid: [true, false, true] });
+        const result = omitExtraData(testValidator, schema, schema, formData);
+        expect(result).toEqual({
+          list: [1, 2],
+          '1': { promotionPeriod: 5, threshold: 0.8 },
+          '2': { promotionPeriod: 7, threshold: 0.5 },
+        });
+      });
+
+      it('preserves oneOf-filtered array content for type:array schemas with no top-level items', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          oneOf: [
+            { type: 'array', items: { type: 'object', properties: { a: { type: 'string' } } } },
+            { type: 'array', items: { type: 'object', properties: { b: { type: 'number' } } } },
+          ],
+        };
+        const formData = [
+          { a: 'hello', extra: true },
+          { a: 'world', extra: false },
+        ];
+        // isValid called once to pick the winning oneOf branch (index 0)
+        testValidator.setReturnValues({ isValid: [true] });
+        const result = omitExtraData(testValidator, schema, schema, formData);
+        // extra keys are dropped; array is preserved, not collapsed to []
+        expect(result).toEqual([{ a: 'hello' }, { a: 'world' }]);
+      });
+
+      it('preserves anyOf-filtered array content for type:array schemas with no top-level items', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          anyOf: [
+            { type: 'array', items: { type: 'object', properties: { x: { type: 'number' } } } },
+            { type: 'array', items: { type: 'object', properties: { y: { type: 'number' } } } },
+          ],
+        };
+        const formData = [
+          { x: 1, extra: true },
+          { x: 2, extra: false },
+        ];
+        testValidator.setReturnValues({ isValid: [true] });
+        const result = omitExtraData(testValidator, schema, schema, formData);
+        expect(result).toEqual([{ x: 1 }, { x: 2 }]);
+      });
     });
 
     describe('patternProperties support', () => {
@@ -1128,13 +1220,15 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
     });
 
     describe('propertyNames support', () => {
-      it('keeps all source keys when propertyNames is defined', () => {
+      it('returns empty object when propertyNames is defined but no properties are declared', () => {
+        // propertyNames only constrains key names — it does not declare which properties are allowed.
+        // Without properties/patternProperties/additionalProperties, no keys survive filtering.
         const schema: RJSFSchema = {
           type: 'object',
           propertyNames: { pattern: '^[a-z]+$' },
         };
         const formData = { foo: 'bar', baz: 42 };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual(formData);
+        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({});
       });
     });
 
@@ -1199,6 +1293,56 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         const result = omitExtraData(testValidator, schema, schema, formData);
         expect(result).toEqual({ type: 'B' });
       });
+
+      it('prunes then-branch keys not in parent properties/patternProperties when additionalProperties:false', () => {
+        // Post-pruning mirrors the SJSF behaviour: after all branch merging, any key that is not
+        // in the parent schema's own `properties` or matched by `patternProperties` is deleted
+        // when additionalProperties is false. 'extra' is only declared in the then-branch, so it
+        // is pruned. 'p_field' matches '^p_' and is retained.
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { type: { type: 'string' } },
+          patternProperties: { '^p_': { type: 'string' } },
+          additionalProperties: false,
+          if: { properties: { type: { const: 'A' } } },
+          then: { properties: { extra: { type: 'string' } } },
+        };
+        const formData = { type: 'A', p_field: 'keep', extra: 'drop' };
+        testValidator.setReturnValues({ isValid: [true] });
+        const result = omitExtraData(testValidator, schema, schema, formData);
+        expect(result).toEqual({ type: 'A', p_field: 'keep' });
+      });
+
+      it('prunes then-branch keys when parent has additionalProperties:false and no properties', () => {
+        // Without a parent `properties` key the known-key set is empty, so all keys that survive
+        // branch merging are removed by the post-pruning step.
+        const schema: RJSFSchema = {
+          type: 'object',
+          additionalProperties: false,
+          if: { type: 'object' } as any,
+          then: { properties: { extra: { type: 'string' } } },
+        };
+        const formData = { extra: 'keep' };
+        testValidator.setReturnValues({ isValid: [true] });
+        const result = omitExtraData(testValidator, schema, schema, formData);
+        expect(result).toEqual({});
+      });
+
+      it('returns existing filtered value when then-branch is permissive (true)', () => {
+        // Covers the `target ??` short-circuit in omit when schemaDef is `true` and target is truthy.
+        // handleConditions calls omit(true, source, filteredObj, false) — since filteredObj is
+        // non-null, `target ?? ...` returns target immediately without evaluating the RHS.
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { foo: { type: 'string' } },
+          if: { type: 'object' } as any,
+          then: true as any,
+        };
+        const formData = { foo: 'hello', extra: 'drop' };
+        testValidator.setReturnValues({ isValid: [true] });
+        const result = omitExtraData(testValidator, schema, schema, formData);
+        expect(result).toEqual({ foo: 'hello' });
+      });
     });
 
     describe('anyOf support', () => {
@@ -1221,6 +1365,17 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         expect(omitExtraData(testValidator, schema, schema, {})).toEqual({});
       });
 
+      it('returns source unchanged when anyOf contains a permissive (true) branch and source is empty object', () => {
+        // anyOf sees {} as empty → applies all branches including the `true` branch.
+        // `omit(true, {}, accum, false)` hits the `target ??` RHS with materializeSource=false,
+        // returning `undefined` (not the source) to avoid aliasing the accumulator.
+        // After all branches, result is still {}, and the outer omit returns {} via ?? source.
+        const schema: RJSFSchema = {
+          anyOf: [true as any, { properties: { foo: { type: 'string' } } }],
+        };
+        expect(omitExtraData(testValidator, schema, schema, {})).toEqual({});
+      });
+
       it('delegates to oneOf matching logic when source is non-empty', () => {
         const schema: RJSFSchema = {
           type: 'object',
@@ -1237,21 +1392,24 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
 
       it('applies all anyOf branches when source is an empty array', () => {
         // An empty array is an empty collection — all branches are applied so defaults flow through.
+        // Neither branch declares type:'array' so both return undefined; the outer type:'array'
+        // block creates a fresh [] as the initial target for handleArray.
         const schema: RJSFSchema = {
           type: 'array',
-          anyOf: [{ items: { type: 'string' } }],
+          anyOf: [{ items: { type: 'string' } }, { items: { type: 'number' } }],
           items: { type: 'string' },
         };
         expect(omitExtraData(testValidator, schema, schema, [] as any)).toEqual([]);
       });
 
       it('reuses an array target already built by anyOf when outer schema is also type:array', () => {
-        // anyOf sees [] as empty → applies all branches → returns [] as target.
-        // The outer type:'array' branch then runs handleArray with that existing [] as target,
-        // hitting the Array.isArray(target) ? target : [] true-branch.
+        // anyOf sees [] as empty → applies all branches.
+        // The branch has type:'array' so omit() returns [] as the filtered value.
+        // The outer type:'array' block then runs handleArray with that existing [] as target,
+        // hitting the Array.isArray(filtered) ? filtered : [] true-branch (filtered is an array).
         const schema: RJSFSchema = {
           type: 'array',
-          anyOf: [{ items: { type: 'string' } }, { items: { type: 'number' } }],
+          anyOf: [{ type: 'array', items: { type: 'string' } }],
           items: { type: 'string' },
         };
         expect(omitExtraData(testValidator, schema, schema, [] as any)).toEqual([]);
@@ -1299,6 +1457,24 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         expect(result).not.toHaveProperty('extra');
       });
 
+      it('preserves keys added by a dependency sub-schema even when parent has additionalProperties:false', () => {
+        // handleDependencies runs AFTER the post-prune step, so dependency-declared properties
+        // are never deleted by the additionalProperties:false sweep.
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { name: { type: 'string' } },
+          additionalProperties: false,
+          dependencies: {
+            name: {
+              properties: { age: { type: 'number' } },
+            },
+          },
+        };
+        const formData = { name: 'Alice', age: 30, extra: 'drop' };
+        const result = omitExtraData(testValidator, schema, schema, formData);
+        expect(result).toEqual({ name: 'Alice', age: 30 });
+      });
+
       it('skips property dependencies (string arrays) and schema dependencies for absent keys', () => {
         const schema: RJSFSchema = {
           type: 'object',
@@ -1333,6 +1509,117 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         const result = omitExtraData(testValidator, schema, schema, formData);
         // The best-matching option is the resolved Strict schema; extra key is dropped.
         expect(result).toEqual({ name: 'Alice' });
+      });
+    });
+
+    describe('regression #5176 — allOf with repeated list property does not loop or duplicate items', () => {
+      it('merges two allOf branches defining the same list property without duplicating items', () => {
+        // Two allOf entries each declare `items` on the same `list` property. Before the fix,
+        // the push-based handleArray would append to an already-populated target array on the
+        // second branch, doubling entries on every render cycle and eventually crashing.
+        const schema: RJSFSchema = {
+          type: 'object',
+          allOf: [
+            {
+              properties: {
+                list: {
+                  type: 'array',
+                  items: { type: 'string' },
+                },
+              },
+            },
+            {
+              properties: {
+                list: {
+                  type: 'array',
+                  items: { type: 'string' },
+                },
+              },
+            },
+          ],
+        };
+        const formData = { list: ['a', 'b'] };
+        const result = omitExtraData(testValidator, schema, schema, formData);
+        expect(result).toEqual({ list: ['a', 'b'] });
+      });
+    });
+
+    describe('regression #5196 — patternProperties empty schema over array inside dependencies does not infinite-loop', () => {
+      it('terminates and returns the correct filtered data when patternProperties:{} covers an array-holding key also described by a dependencies oneOf branch', () => {
+        // patternProperties: { "mux": {} } matches the "mux" key with an empty schema, which omit()
+        // passes through by returning `source` directly. handleObject writes that reference to
+        // target["mux"], aliasing target["mux"] to source["mux"]. When the dependencies oneOf branch
+        // later calls handleObject again with mux's schema, handleArray runs with target === source
+        // for the p2s array. The old push-based handleArray fed itself and never terminated; the fix
+        // uses index assignment so the loop stays bounded by source.length.
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            route: {
+              type: 'object',
+              title: 'Routing',
+              properties: {
+                mode: {
+                  title: 'Routing mode',
+                  type: 'integer',
+                  default: 0,
+                  oneOf: [
+                    { title: 'Mux', enum: [0] },
+                    { title: 'Direct', enum: [1] },
+                  ],
+                },
+              },
+              additionalProperties: false,
+              patternProperties: { mux: {} },
+              required: ['mode'],
+              dependencies: {
+                mode: {
+                  oneOf: [
+                    {
+                      properties: {
+                        mode: { enum: [0] },
+                        mux: {
+                          title: 'Mux',
+                          type: 'object',
+                          properties: {
+                            p2s: {
+                              title: 'Messages',
+                              type: 'array',
+                              items: {
+                                type: 'object',
+                                properties: {
+                                  id_format: {
+                                    title: 'ID format',
+                                    type: 'integer',
+                                    default: 0,
+                                    oneOf: [
+                                      { title: 'Standard (11-bit)', enum: [0] },
+                                      { title: 'Extended (29-bit)', enum: [1] },
+                                    ],
+                                  },
+                                  id: { title: 'ID (hex)', type: 'string', default: '11' },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                    { properties: { mode: { enum: [1] } } },
+                  ],
+                },
+              },
+            },
+          },
+        };
+        const formData = { route: { mode: 0, mux: { p2s: [{ id_format: 0, id: '11' }] } } };
+        // getClosestMatchingOption checks [JUNK, option] for each oneOf entry:
+        //   [false (JUNK), true (option0 matches mode=0), false (JUNK), false (option1 rejects mode=0)]
+        testValidator.setReturnValues({ isValid: [false, true, false, false] });
+        const result = omitExtraData(testValidator, schema, schema, formData);
+        expect(result).toEqual({ route: { mode: 0, mux: { p2s: [{ id_format: 0, id: '11' }] } } });
+        // The original p2s array must not have grown (the old bug caused it to grow unboundedly).
+        expect(formData.route.mux.p2s).toHaveLength(1);
       });
     });
 

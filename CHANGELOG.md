@@ -18,39 +18,96 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.9.0
 
-## @rjsf/utils
+## @rjsf/antd
 
-- Added new path utilities `getByPath`, `setByPath`, `hasByPath`, `unsetByPath` and `toPath`, and switched all path-based `lodash` usage (`get`, `set`, `setWith`, `has`, `unset`, `toPath`, `pick`) over to them. Unlike their lodash counterparts, these treat a bare string as a single literal key, lodash-style dotted path strings are parsed explicitly via `toPath()`, and `getByPath()`/`hasByPath()` resolve **own** properties only (inherited members and prototype internals such as `__proto__` never resolve)
-- Added an optional `deep` flag to `getChangedFields()` that descends into nested objects and same-length arrays and returns the dotted path of the field that changed ([#5205](https://github.com/rjsf-team/react-jsonschema-form/pull/5205))
+- Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+- Fixed `BaseInputTemplate` to clear `number`/`integer` fields back to `undefined` instead of `null` when the `InputNumber` widget is emptied, fixing [#5213](https://github.com/rjsf-team/react-jsonschema-form/issues/5213)
+
+## @rjsf/chakra-ui
+
+- Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 
 ## @rjsf/core
 
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused modules; a consumer importing only `Form` no longer bundles the AJV validator chain pulled in by `getTestRegistry`, shrinking a minimal bundle by ~34kB gzipped
+- Fixed `TimeWidget` to respect schema `multipleOf` time precision, preserving second-precision values while keeping minute-precision native inputs synchronized with their displayed value ([#5174](https://github.com/rjsf-team/react-jsonschema-form/pull/5174))
 - Replaced all path-based `lodash` usage (`get`, `set`, `unset`, `toPath`, `pick`) with the new `@rjsf/utils` path utilities
 - Fixed the clearing of errors on change so that only the field that actually changed loses its error, along with the errors the containers holding it own, rather than every field under the top-level key holding it, fixing [#5197](https://github.com/rjsf-team/react-jsonschema-form/issues/5197) ([#5205](https://github.com/rjsf-team/react-jsonschema-form/pull/5205))
+- Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
 
-## @rjsf/validator-ajv8
+## @rjsf/daisyui
 
-- Replaced all `lodash/get` usage with the new `@rjsf/utils` path utilities
+- Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+- Removed the module-level Font Awesome `library.add()` call from `AddButton`; every icon is passed to `FontAwesomeIcon` as an imported icon object, so the global registry was never consulted
 
-## @rjsf/validator-ata
+## @rjsf/fluentui-rc
 
-- Replaced all `lodash/get` usage with the new `@rjsf/utils` path utilities
+- Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 
-## @rjsf/validator-cfworker
+## @rjsf/mantine
 
-- Replaced all `lodash/get` usage with the new `@rjsf/utils` path utilities and dropped the `lodash`/`lodash-es` dependencies entirely
+- Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+- Moved the `dayjs` `customParseFormat` plugin registration from the widgets barrel file into `DateTimeInput`, so it loads with the date widgets that actually need it
 
-# 6.8.1
+## @rjsf/mui
+
+- Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+
+## @rjsf/primereact
+
+- Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+
+## @rjsf/react-bootstrap
+
+- Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+
+## @rjsf/semantic-ui
+
+- Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+
+## @rjsf/shadcn
+
+- Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
+- - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 
 ## @rjsf/utils
 
 - Fixed `mergeDefaultsWithFormData()` to take the recursive path when the default under an object key holds an array, so a default that lives inside a `dependencies` subschema is no longer dropped when the owning array sits more than one object below the root, fixing part of [#5198](https://github.com/rjsf-team/react-jsonschema-form/issues/5198) ([#5202](https://github.com/rjsf-team/react-jsonschema-form/pull/5202))
+- Added new path utilities `getByPath`, `setByPath`, `hasByPath`, `unsetByPath` and `toPath`, and switched all path-based `lodash` usage (`get`, `set`, `setWith`, `has`, `unset`, `toPath`, `pick`) over to them. Unlike their lodash counterparts, these treat a bare string as a single literal key, lodash-style dotted path strings are parsed explicitly via `toPath()`, and `getByPath()`/`hasByPath()` resolve **own** properties only (inherited members and prototype internals such as `__proto__` never resolve)
+- Added an optional `deep` flag to `getChangedFields()` that descends into nested objects and same-length arrays and returns the dotted path of the field that changed ([#5205](https://github.com/rjsf-team/react-jsonschema-form/pull/5205))
+- Made the default value of a required boolean field be false if a `default` is not present in the schema
+- Fixed `omitExtraData()` by removing the over-reaching `additionalProperties: false` post-processing block introduced in [#5147](https://github.com/rjsf-team/react-jsonschema-form/pull/5147) that incorrectly stripped keys written by winning `oneOf`/`anyOf` and `if/then/else` branches, fixing [#5194](https://github.com/rjsf-team/react-jsonschema-form/issues/5194)
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+
+## @rjsf/validator-ajv8
+
+- Replaced all `lodash/get` usage with the new `@rjsf/utils` path utilities
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+
+## @rjsf/validator-ata
+
+- Replaced all `lodash/get` usage with the new `@rjsf/utils` path utilities
+- Updated `ata-validator` dependency to `^1.7.1`, picking up lazily materialized errors and the closure-tree interpreted engine ([#5211](https://github.com/rjsf-team/react-jsonschema-form/pull/5211))
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+
+## @rjsf/validator-cfworker
+
+- Replaced all `lodash/get` usage with the new `@rjsf/utils` path utilities and dropped the `lodash`/`lodash-es` dependencies entirely
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 
 # 6.8.0
 
 ## @rjsf/core
 
-- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused modules; a consumer importing only `Form` no longer bundles the AJV validator chain pulled in by `getTestRegistry`, shrinking a minimal bundle by ~34kB gzipped
 - Fixed `TimeWidget` to respect schema `multipleOf` time precision, preserving second-precision values while keeping minute-precision native inputs synchronized with their displayed value ([#5174](https://github.com/rjsf-team/react-jsonschema-form/pull/5174))
 
 ## @rjsf/utils
