@@ -45,6 +45,11 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 - Removed the module-level Font Awesome `library.add()` call from `AddButton`; every icon is passed to `FontAwesomeIcon` as an imported icon object, so the global registry was never consulted
+- Registered `ArrayFieldDescriptionTemplate` and `ArrayFieldTitleTemplate` in `generateTemplates()`; `ArrayFieldTemplate` already looked these up from the registry, but since they were never registered, array titles/descriptions silently fell back to `core`'s unstyled defaults instead of the DaisyUI-styled versions the theme ships
+- Added `generateForm`, `generateTemplates`, `generateTheme` and `generateWidgets` exports so `lib/index.d.ts` matches the other themes, and consolidated the duplicate `daisyForm` entry point into `DaisyUIForm`
+- Wired the previously-unused `getDaisy()`/`DaisyProps` helpers into `FieldTemplate`, so `ui:options: { daisy: { theme, className, style } }` now applies a per-field DaisyUI theme, class name and/or style
+- Fixed `build:esm`/`build:umd` in `package.json`, which built and named the bundle as `@rjsf/chakra-ui` (`dist/chakra-ui.esm.js`/`.umd.js`) instead of `@rjsf/daisyui`
+- Gave `ArrayFieldTitleTemplate` and `ArrayFieldDescriptionTemplate` the `id` (`titleId`/`descriptionId` derived from `fieldPathId`) and empty-value guard every other template implementing these has, and that registering them in `generateTemplates()` had otherwise dropped from array titles/descriptions
 
 ## @rjsf/fluentui-rc
 
