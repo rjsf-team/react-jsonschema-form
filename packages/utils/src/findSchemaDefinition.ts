@@ -1,7 +1,5 @@
 import UriResolver from 'fast-uri';
 import jsonpointer from 'jsonpointer';
-import isEmpty from 'lodash/isEmpty';
-import isObject from 'lodash/isObject';
 
 import {
   ALL_OF_KEY,
@@ -11,6 +9,7 @@ import {
   REF_KEY,
   SCHEMA_KEY,
 } from './constants';
+import isObject from './isObject';
 import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types';
 
 /** Looks for the `$id` pointed by `ref` in the schema definitions embedded in
@@ -79,8 +78,7 @@ export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchem
  *      value from `object[key]`
  */
 export function splitKeyElementFromObject(key: string, object: GenericObjectType) {
-  const value = object[key];
-  const { [key]: removed, ...remaining } = object;
+  const { [key]: value, ...remaining } = object;
   return [remaining, value];
 }
 
@@ -122,7 +120,7 @@ export function findSchemaDefinitionRecursive<S extends StrictRJSFSchema = RJSFS
     current = findEmbeddedSchemaRecursive<S>(rootSchema, refId.replace(/\/$/, ''));
     if (current !== undefined) {
       currentBaseURI = current[ID_KEY];
-      if (!isEmpty(refAnchor)) {
+      if (refAnchor.length > 0) {
         current = jsonpointer.get(current, decodeURIComponent(refAnchor.join('#')));
       }
     }

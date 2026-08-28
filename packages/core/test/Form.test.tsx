@@ -17,13 +17,13 @@ import {
   getTemplate,
   getUiOptions,
   optionalControlsId,
+  noop,
 } from '@rjsf/utils';
 import validator, { customizeValidator } from '@rjsf/validator-ajv8';
 import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import draft06 from 'ajv/lib/refs/json-schema-draft-06.json';
-import { noop } from 'lodash';
-import { Portal } from 'react-portal';
+import { createPortal } from 'react-dom';
 import type { Mock } from 'vitest';
 
 import type { FormProps, IChangeEvent } from '../src';
@@ -3903,16 +3903,15 @@ describeRepeated('Form common', (createFormComponent) => {
           onSubmit: innerOnSubmit,
         };
 
-        return (
-          <Portal>
-            <div className='array' ref={innerRef}>
-              <Form {...innerFormProps}>
-                <button className='array-form-submit' type='submit'>
-                  Submit
-                </button>
-              </Form>
-            </div>
-          </Portal>
+        return createPortal(
+          <div className='array' ref={innerRef}>
+            <Form {...innerFormProps}>
+              <button className='array-form-submit' type='submit'>
+                Submit
+              </button>
+            </Form>
+          </div>,
+          document.body,
         );
       };
 

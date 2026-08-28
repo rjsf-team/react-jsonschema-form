@@ -1,8 +1,7 @@
-import isObject from 'lodash/isObject';
-
 import { ANY_OF_KEY, ONE_OF_KEY } from './constants';
 import getSchemaType from './getSchemaType';
 import getUiOptions from './getUiOptions';
+import isObject from './isObject';
 import isRootSchema from './isRootSchema';
 import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from './types';
 

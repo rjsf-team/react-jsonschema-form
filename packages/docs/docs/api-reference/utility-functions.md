@@ -560,6 +560,20 @@ Widgets should call this helper once and pass the result to `enumOptionValueEnco
 
 - OptionValueFormat: The resolved `OptionValueFormat`, defaulting to `'indexed'` when not set
 
+### getPropertySchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the sub-schema declared for `property` in the `properties` of `schema`, falling back to an empty schema when the schema has no such property.
+Callers treat the properties of a schema as schemas of the same type `S`, which the `JSONSchema7` typing of `properties` cannot express, so this function owns that single assertion rather than repeating it at every lookup.
+
+#### Parameters
+
+- schema: S | undefined - The schema, if any, from which to read the property sub-schema
+- property: string - The name of the property whose sub-schema is desired
+
+#### Returns
+
+- S: The sub-schema for `property`, or an empty schema when it is not declared
+
 ### getSchemaType()
 
 Gets the type of a given `schema`.
@@ -821,6 +835,19 @@ In this case, `thing` is an object if it has the type `object` but is NOT null, 
 
 - boolean: True if it is a non-null, non-array, non-File object
 
+### isPlainObject()
+
+Determines whether `thing` is a plain object, i.e. one created by the `Object` constructor or with a `null` prototype.
+Unlike [isObject()](#isobject), class instances such as `Error` are not plain objects, which matters when recursively walking a structure whose nested values are expected to be plain data.
+
+#### Parameters
+
+- thing: unknown - The thing to check to see whether it is a plain object
+
+#### Returns
+
+- boolean: True if it is a plain object, otherwise false. When true, `thing` is narrowed to `Record<string, unknown>`
+
 ### isRootSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Helper to check whether a JSON schema object is the root schema. The schema is a root schema with root `properties`
@@ -971,6 +998,14 @@ Return a consistent `id` for the `optionIndex`s of a `Radio` or `Checkboxes` wid
 #### Returns
 
 - string: An id for the option index based on the parent `id`
+
+### noop()
+
+A function that does nothing and returns `undefined`, useful as a placeholder for an optional callback or as the implementation of a mocked function.
+
+#### Returns
+
+- void
 
 ### optionsList&lt;T = any, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = any>()
 

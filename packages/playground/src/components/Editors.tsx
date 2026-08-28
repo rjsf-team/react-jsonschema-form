@@ -9,7 +9,6 @@ import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import type { ErrorSchema, RJSFSchema, UiSchema } from '@rjsf/utils';
-import isEqualWith from 'lodash/isEqualWith';
 import { Panel, Group, Separator } from 'react-resizable-panels';
 
 import type { SubthemeType } from './SubthemeSelector';
@@ -147,16 +146,10 @@ export default function Editors({
 
   const onFormDataEdited = useCallback(
     (newFormData: any) => {
-      if (
-        !isEqualWith(
-          newFormData,
-          formData,
-          // Since this is coming from the editor which uses JSON.stringify to trim undefined values compare the values
-          // using JSON.stringify to see if the trimmed formData is the same as the untrimmed state
-          // Sometimes passing the trimmed value back into the Form causes the defaults to be improperly assigned
-          (newValue, oldValue) => JSON.stringify(oldValue) === JSON.stringify(newValue),
-        )
-      ) {
+      // Since this is coming from the editor which uses JSON.stringify to trim undefined values compare the values
+      // using JSON.stringify to see if the trimmed formData is the same as the untrimmed state
+      // Sometimes passing the trimmed value back into the Form causes the defaults to be improperly assigned
+      if (JSON.stringify(formData) !== JSON.stringify(newFormData)) {
         setFormData(newFormData);
         setShareURL(null);
       }

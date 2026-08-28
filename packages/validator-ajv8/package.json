@@ -59,7 +59,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "compileReplacer": "tsc -p tsconfig.replacer.json && move-file lodashReplacer.js lodashReplacer.cjs && move-file ajvReplacer.js ajvReplacer.cjs",
+    "compileReplacer": "tsc -p tsconfig.replacer.json && move-file ajvReplacer.js ajvReplacer.cjs",
     "build:ts": "pnpm run compileReplacer && rimraf ./lib && tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs && esbuild ./src/compileSchemaValidators.ts --bundle --outfile=dist/compileSchemaValidators.cjs --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/validator-ajv8.esm.js --sourcemap --packages=external --format=esm  && esbuild ./src/compileSchemaValidators.ts --bundle --outfile=dist/compileSchemaValidators.esm.js --sourcemap --packages=external --format=esm",
@@ -70,7 +70,7 @@
     "lint": "oxlint src test",
     "precommit": "lint-staged",
     "compileSchemas": "tsx test/harness/compileTestSchema.ts",
-    "test": "pnpm run compileSchemas && vitest run"
+    "test": "vitest run"
   },
   "lint-staged": {
     "{src,test}/**/*.{ts,tsx}": [
@@ -80,9 +80,7 @@
   },
   "dependencies": {
     "ajv": "^8.20.0",
-    "ajv-formats": "^2.1.1",
-    "lodash": "^4.18.1",
-    "lodash-es": "^4.18.1"
+    "ajv-formats": "^2.1.1"
   },
   "peerDependencies": {
     "@rjsf/utils": "workspace:^"

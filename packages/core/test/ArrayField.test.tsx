@@ -13,8 +13,8 @@ import type {
   WidgetProps,
   FormValidation,
 } from '@rjsf/utils';
+import { noop } from '@rjsf/utils';
 import userEvent from '@testing-library/user-event';
-import noop from 'lodash/noop';
 
 import ArrayField from '../src/components/fields/ArrayField';
 import SchemaField from '../src/components/fields/SchemaField';

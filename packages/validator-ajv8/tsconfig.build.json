@@ -13,10 +13,6 @@
     "resolveFullPaths": true,
     "verbose": true,
     "replacers": {
-      "lodash": {
-        "enabled": true,
-        "file": "lodashReplacer.cjs"
-      },
       "ajv": {
         "enabled": true,
         "file": "ajvReplacer.cjs"

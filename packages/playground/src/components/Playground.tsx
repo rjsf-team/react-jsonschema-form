@@ -6,7 +6,6 @@ import Divider from '@mui/material/Divider';
 import type { FormProps, IChangeEvent } from '@rjsf/core';
 import { withTheme } from '@rjsf/core';
 import type { ErrorSchema, RJSFSchema, RJSFValidationError, UiSchema, ValidatorType } from '@rjsf/utils';
-import { isFunction } from 'lodash';
 
 import { samples } from '../samples';
 import type { Sample, UiSchemaForTheme } from '../samples/Sample';
@@ -50,7 +49,10 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     omitExtraData: false,
     liveOmit: false,
     experimental_componentUpdateStrategy: 'customDeep',
-    experimental_defaultFormStateBehavior: { arrayMinItems: 'populate', emptyObjectFields: 'populateAllDefaults' },
+    experimental_defaultFormStateBehavior: {
+      arrayMinItems: 'populate',
+      emptyObjectFields: 'populateAllDefaults',
+    },
     useFallbackField: false,
   });
   const [otherFormProps, setOtherFormProps] = useState<Partial<FormProps>>({});
@@ -73,7 +75,14 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   );
 
   const load = useCallback(
-    (data: Sample & { theme: string; liveSettings: LiveSettings; sampleName?: string; validator?: string }) => {
+    (
+      data: Sample & {
+        theme: string;
+        liveSettings: LiveSettings;
+        sampleName?: string;
+        validator?: string;
+      },
+    ) => {
       const {
         schema: loadedSchema,
         // uiSchema is missing on some examples. Provide a default to
@@ -97,7 +106,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       onThemeSelected(theTheme, themes[theTheme]);
 
       let theUiSchema: UiSchema;
-      if (isFunction(loadedUiSchema)) {
+      if (typeof loadedUiSchema === 'function') {
         theUiSchema = loadedUiSchema(theme);
       } else {
         theUiSchema = loadedUiSchema;
@@ -105,7 +114,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       if (loadedSampleName) {
         setSampleName(loadedSampleName);
         const sample = samples[loadedSampleName];
-        if (isFunction(sample.uiSchema)) {
+        if (typeof sample.uiSchema === 'function') {
           setUiSchemaGenerator({ generator: sample.uiSchema });
         } else {
           setUiSchemaGenerator(undefined);

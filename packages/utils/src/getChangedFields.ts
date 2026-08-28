@@ -1,7 +1,5 @@
-import difference from 'lodash/difference';
-import isPlainObject from 'lodash/isPlainObject';
-
 import deepEquals from './deepEquals';
+import isPlainObject from './isPlainObject';
 import { getByPath } from './pathUtils';
 
 /** Returns the paths of the changed descendants of `a` relative to `b`, relative to the node itself. An empty list
@@ -53,30 +51,30 @@ function getChangedDescendants(a: unknown, b: unknown): string[] {
  * console.log(getChangedFields(a, b, true)); // Output: ['items.0.qux']
  */
 export default function getChangedFields(a: unknown, b: unknown, deep = false): string[] {
-  const aIsPlainObject = isPlainObject(a);
-  const bIsPlainObject = isPlainObject(b);
-  // If strictly equal or neither of them is a plainObject returns an empty array
-  if (a === b || (!aIsPlainObject && !bIsPlainObject)) {
+  if (a === b) {
     return [];
   }
-  if (aIsPlainObject && !bIsPlainObject) {
-    return Object.keys(a as object);
+  // If only one of them is a plainObject all of its fields changed; if neither is, nothing did
+  if (!isPlainObject(a)) {
+    return isPlainObject(b) ? Object.keys(b) : [];
   }
-  if (!aIsPlainObject && bIsPlainObject) {
-    return Object.keys(b as object);
+  if (!isPlainObject(b)) {
+    return Object.keys(a);
   }
-  const unequalFields = Object.entries(a as object)
-    .filter(([key, value]) => !deepEquals(value, getByPath(b, key)))
-    .flatMap(([key, value]) => {
+  const aKeys = Object.keys(a);
+  const aKeySet = new Set(aKeys);
+  const unequalFields = aKeys
+    .filter((key) => !deepEquals(a[key], getByPath(b, key)))
+    .flatMap((key) => {
       if (!deep) {
         return [key];
       }
       // A key holding a `.` or a `[` is descended into like any other. The path it produces cannot be told apart from
       // a path through nested keys, but neither can the entry an `ErrorSchema` keeps for it, since `toErrorSchema()`
       // spells such a name out as a path in the same way, so the two agree on where the field lives.
-      const descendants = getChangedDescendants(value, getByPath(b, key));
+      const descendants = getChangedDescendants(a[key], getByPath(b, key));
       return descendants.length ? descendants.map((path) => `${key}.${path}`) : [key];
     });
-  const diffFields = difference(Object.keys(b as object), Object.keys(a as object));
+  const diffFields = Object.keys(b).filter((key) => !aKeySet.has(key));
   return [...unequalFields, ...diffFields];
 }

@@ -1,7 +1,6 @@
-import isPlainObject from 'lodash/isPlainObject';
-
 import { ERRORS_KEY } from './constants';
-import type { ErrorSchema, GenericObjectType, RJSFValidationError } from './types';
+import isPlainObject from './isPlainObject';
+import type { ErrorSchema, RJSFValidationError } from './types';
 
 /** Converts an `errorSchema` into a list of `RJSFValidationErrors`
  *
@@ -13,28 +12,26 @@ export default function toErrorList<T = any>(
   errorSchema?: ErrorSchema<T>,
   fieldPath: string[] = [],
 ): RJSFValidationError[] {
-  if (!errorSchema) {
-    return [];
-  }
-  let errorList: RJSFValidationError[] = [];
-  if (ERRORS_KEY in errorSchema) {
-    errorList = errorList.concat(
-      errorSchema[ERRORS_KEY]!.map((message: string) => {
-        const property = `.${fieldPath.join('.')}`;
-        return {
-          property,
-          message,
-          stack: `${property} ${message}`,
-        };
-      }),
-    );
-  }
+  return errorSchema ? errorsFrom(errorSchema, fieldPath) : [];
+}
+
+/** Does the actual conversion, working on the plain-object shape of an `ErrorSchema` so that the recursive call for a
+ * nested error schema does not need an assertion back to `ErrorSchema`.
+ *
+ * @param errorSchema - The error schema, viewed as the plain object it is at runtime
+ * @param fieldPath - The current field path
+ * @returns - The list of `RJSFValidationErrors` extracted from the `errorSchema`
+ */
+function errorsFrom(errorSchema: Record<string, unknown>, fieldPath: string[]): RJSFValidationError[] {
+  const errors = errorSchema[ERRORS_KEY];
+  const property = `.${fieldPath.join('.')}`;
+  const errorList: RJSFValidationError[] = Array.isArray(errors)
+    ? errors.map((message: string) => ({ property, message, stack: `${property} ${message}` }))
+    : [];
   return Object.keys(errorSchema).reduce((currentList, key) => {
-    if (key !== ERRORS_KEY) {
-      const childSchema = (errorSchema as GenericObjectType)[key];
-      if (isPlainObject(childSchema)) {
-        return currentList.concat(toErrorList(childSchema, [...fieldPath, key]));
-      }
+    const childSchema = errorSchema[key];
+    if (key !== ERRORS_KEY && isPlainObject(childSchema)) {
+      return currentList.concat(errorsFrom(childSchema, [...fieldPath, key]));
     }
     return currentList;
   }, errorList);

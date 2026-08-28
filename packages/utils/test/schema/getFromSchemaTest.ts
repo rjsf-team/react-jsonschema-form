@@ -1,7 +1,5 @@
-import get from 'lodash/get';
-
 import type { RJSFSchema } from '../../src';
-import { DEFINITIONS_KEY, PROPERTIES_KEY, createSchemaUtils } from '../../src';
+import { DEFINITIONS_KEY, PROPERTIES_KEY, createSchemaUtils, getByPath } from '../../src';
 import type { TestValidatorType } from './types';
 
 const rawSchema = {
@@ -67,13 +65,13 @@ export default function getFromSchemaTest(testValidator: TestValidatorType) {
     it('performs a simple `get` for a path without $ref values', () => {
       const fieldPath = [PROPERTIES_KEY, 'birth_date'];
       const field = schemaUtils.getFromSchema(PATIENT_SCHEMA, fieldPath, undefined);
-      expect(field).toEqual(get(PATIENT_SCHEMA, fieldPath));
+      expect(field).toEqual(getByPath(PATIENT_SCHEMA, fieldPath));
     });
     it('returns the expected field with the $refs retrieved for a path with a $ref', () => {
       const field = schemaUtils.getFromSchema(testSchema, [PROPERTIES_KEY, 'patient'], undefined);
       expect(field).toEqual({
         title: testSchema[PROPERTIES_KEY].patient.title,
-        ...schemaUtils.retrieveSchema(get(testSchema, [PROPERTIES_KEY, 'patient'])),
+        ...schemaUtils.retrieveSchema(getByPath<RJSFSchema>(testSchema, [PROPERTIES_KEY, 'patient'])),
       });
     });
     it('returns the expected field with the $refs retrieved for a path with nested $refs, string path', () => {

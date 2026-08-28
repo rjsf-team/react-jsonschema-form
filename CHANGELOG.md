@@ -18,6 +18,8 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.9.0
 
+> **Potentially breaking change:** `lodash` and `lodash-es` are no longer dependencies of any `@rjsf/*` package. No RJSF public API changed, but an application that imports `lodash` itself without declaring it — relying on it being hoisted into `node_modules` because RJSF depended on it — must now add `lodash` to its own `package.json`.
+
 ## @rjsf/antd
 
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
@@ -29,11 +31,13 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 
+
 ## @rjsf/core
 
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused modules; a consumer importing only `Form` no longer bundles the AJV validator chain pulled in by `getTestRegistry`, shrinking a minimal bundle by ~34kB gzipped
 - Fixed `TimeWidget` to respect schema `multipleOf` time precision, preserving second-precision values while keeping minute-precision native inputs synchronized with their displayed value ([#5174](https://github.com/rjsf-team/react-jsonschema-form/pull/5174))
 - Replaced all path-based `lodash` usage (`get`, `set`, `unset`, `toPath`, `pick`) with the new `@rjsf/utils` path utilities
+- Replaced the remaining non-path `lodash` usage (`isEmpty`, `isObject`, `isPlainObject`, `each`, `flatten`, `includes`, `intersection`, `last`, `uniqueId`, `noop`) with native equivalents, and dropped the `lodash`/`lodash-es` dependencies entirely
 - Fixed the clearing of errors on change so that only the field that actually changed loses its error, along with the errors the containers holding it own, rather than every field under the top-level key holding it, fixing [#5197](https://github.com/rjsf-team/react-jsonschema-form/issues/5197) ([#5205](https://github.com/rjsf-team/react-jsonschema-form/pull/5205))
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
 
@@ -63,6 +67,8 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+- Fixed `ArrayFieldTemplate` leaking the `errorSchema` object into the DOM as an `errorschema="[object Object]"` attribute
+- Fixed `SelectWidget` clobbering a consumer-supplied `options.prime.autoComplete` with `undefined` when `ui:autocomplete` is not set
 
 ## @rjsf/react-bootstrap
 
@@ -73,6 +79,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+- Fixed `RadioWidget` forwarding the unsupported `fluid`/`inverted` props to Semantic UI's `Radio`, which triggered React unknown-attribute warnings
 
 ## @rjsf/shadcn
 
@@ -83,6 +90,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Fixed `mergeDefaultsWithFormData()` to take the recursive path when the default under an object key holds an array, so a default that lives inside a `dependencies` subschema is no longer dropped when the owning array sits more than one object below the root, fixing part of [#5198](https://github.com/rjsf-team/react-jsonschema-form/issues/5198) ([#5202](https://github.com/rjsf-team/react-jsonschema-form/pull/5202))
 - Added new path utilities `getByPath`, `setByPath`, `hasByPath`, `unsetByPath` and `toPath`, and switched all path-based `lodash` usage (`get`, `set`, `setWith`, `has`, `unset`, `toPath`, `pick`) over to them. Unlike their lodash counterparts, these treat a bare string as a single literal key, lodash-style dotted path strings are parsed explicitly via `toPath()`, and `getByPath()`/`hasByPath()` resolve **own** properties only (inherited members and prototype internals such as `__proto__` never resolve)
+- Replaced the remaining non-path `lodash` usage (`isEmpty`, `isObject`, `isPlainObject`, `difference`, `times`, `uniqueId`, `noop`) with native equivalents, and dropped the `lodash`/`lodash-es` dependencies entirely
+- Added `isPlainObject`, the stricter counterpart to `isObject()` that excludes class instances, replacing `lodash/isPlainObject` for consumers
+- Added `getPropertySchema()`, which reads a property sub-schema out of a schema's `properties`, defaulting to an empty schema; it replaces the repeated `(schema[PROPERTIES_KEY]?.[key] ?? {}) as S` lookups in `@rjsf/utils` and `@rjsf/core`
+- Added `noop()`, a do-nothing function replacing `lodash/noop` for consumers
 - Added an optional `deep` flag to `getChangedFields()` that descends into nested objects and same-length arrays and returns the dotted path of the field that changed ([#5205](https://github.com/rjsf-team/react-jsonschema-form/pull/5205))
 - Made the default value of a required boolean field be false if a `default` is not present in the schema
 - Fixed `omitExtraData()` by removing the over-reaching `additionalProperties: false` post-processing block introduced in [#5147](https://github.com/rjsf-team/react-jsonschema-form/pull/5147) that incorrectly stripped keys written by winning `oneOf`/`anyOf` and `if/then/else` branches, fixing [#5194](https://github.com/rjsf-team/react-jsonschema-form/issues/5194)
@@ -91,11 +102,13 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/validator-ajv8
 
 - Replaced all `lodash/get` usage with the new `@rjsf/utils` path utilities
+- Replaced `lodash/isObject` with `isObject` from `@rjsf/utils` and dropped the `lodash`/`lodash-es` dependencies entirely
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 
 ## @rjsf/validator-ata
 
 - Replaced all `lodash/get` usage with the new `@rjsf/utils` path utilities
+- Replaced `lodash/isObject` with `isObject` from `@rjsf/utils` and dropped the `lodash`/`lodash-es` dependencies entirely
 - Updated `ata-validator` dependency to `^1.7.1`, picking up lazily materialized errors and the closure-tree interpreted engine ([#5211](https://github.com/rjsf-team/react-jsonschema-form/pull/5211))
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 
@@ -103,6 +116,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Replaced all `lodash/get` usage with the new `@rjsf/utils` path utilities and dropped the `lodash`/`lodash-es` dependencies entirely
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+
+## Dev / docs / playground
+
+- Removed the last `lodash` usage from the playground and the test suites, so no package declares `lodash`/`lodash-es` as a direct dependency any more (both remain in the lockfile as transitive dependencies of third-party tooling). The `lodashReplacer` `tsc-alias` machinery that rewrote `lodash` imports to `lodash-es` for the ESM builds has been deleted along with it
+- Cleaned up `@rjsf/validator-ajv8`'s tests: the deliberately-triggered AJV `console.warn` output is now asserted with a shared `expectWarn()` helper instead of leaking into the test output, the gitignored `superSchema*.cjs` harness files are regenerated by a vitest `globalSetup` (so watch mode and IDE runners work from a fresh clone too), and the harness files are read relative to the test file instead of the working directory
+- Added `size-limit` CI checks that enforce bundle size budgets for `@rjsf/core`, `@rjsf/utils` and `@rjsf/validator-ajv8` — each measured both with and without its runtime dependencies, plus single-export tree-shaking canaries — and comment the size diff versus the base branch on every PR
 
 # 6.8.0
 

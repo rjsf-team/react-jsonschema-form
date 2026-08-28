@@ -1,7 +1,7 @@
 import { createRef } from 'react';
 import type { FieldProps, FormValidation, GenericObjectType, RJSFSchema, WidgetProps } from '@rjsf/utils';
+import { noop } from '@rjsf/utils';
 import userEvent from '@testing-library/user-event';
-import noop from 'lodash/noop';
 
 import SchemaField from '../src/components/fields/SchemaField';
 import SelectWidget from '../src/components/widgets/SelectWidget';

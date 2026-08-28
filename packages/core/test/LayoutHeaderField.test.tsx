@@ -1,7 +1,6 @@
 import type { FieldProps, Registry, TitleFieldProps } from '@rjsf/utils';
-import { titleId, ID_KEY } from '@rjsf/utils';
+import { ID_KEY, noop, titleId } from '@rjsf/utils';
 import { render, screen, within } from '@testing-library/react';
-import noop from 'lodash/noop';
 
 import LayoutHeaderField from '../src/components/fields/LayoutHeaderField';
 import templates from '../src/components/templates';

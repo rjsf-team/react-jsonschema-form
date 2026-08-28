@@ -1,5 +1,3 @@
-import cloneDeep from 'lodash/cloneDeep';
-
 import type { RJSFSchema, Registry, UIOptionsType } from '../src';
 import { createSchemaUtils, englishStringTranslator, getTemplate } from '../src';
 import getTestValidator from './testUtils/getTestValidator';
@@ -113,7 +111,7 @@ describe('getTemplate', () => {
   });
   it('returns the custom template name from the registry', () => {
     const customTemplateKey = 'CustomTemplate';
-    const newRegistry = cloneDeep(registry);
+    const newRegistry = { ...registry, templates: { ...registry.templates } };
 
     newRegistry.templates[customTemplateKey] = FakeTemplate;
 

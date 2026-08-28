@@ -56,7 +56,6 @@ import {
   ANY_OF_KEY,
   ONE_OF_KEY,
 } from '@rjsf/utils';
-import _isEmpty from 'lodash/isEmpty';
 
 import getDefaultRegistry from '../getDefaultRegistry';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE, IS_RESET } from './constants';
@@ -348,15 +347,16 @@ function toIChangeEvent<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
   state: FormState<T, S, F>,
   status?: IChangeEvent['status'],
 ): IChangeEvent<T, S, F> {
+  const { schema, uiSchema, fieldPathId, schemaUtils, formData, edit, errors, errorSchema } = state;
   return {
-    schema: state.schema,
-    uiSchema: state.uiSchema,
-    fieldPathId: state.fieldPathId,
-    schemaUtils: state.schemaUtils,
-    formData: state.formData,
-    edit: state.edit,
-    errors: state.errors,
-    errorSchema: state.errorSchema,
+    schema,
+    uiSchema,
+    fieldPathId,
+    schemaUtils,
+    formData,
+    edit,
+    errors,
+    errorSchema,
     ...(status !== undefined && { status }),
   };
 }
@@ -1067,7 +1067,7 @@ export default class Form<
         ? getByPath(schemaValidationErrorSchema, path)
         : schemaValidationErrorSchema;
       // If there is an old validation error for this path, assume we are updating it directly
-      if (!_isEmpty(oldValidationError)) {
+      if (oldValidationError && Object.keys(oldValidationError).length > 0) {
         // Apply the user-supplied newErrorSchema onto a clone of the AJV-only base, so that
         // mergeErrors below sees the user's error at this path without mutating shared state.
         if (!isRootPath) {
