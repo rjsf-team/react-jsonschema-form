@@ -62,7 +62,6 @@ export function FancySelect({
   onValueChange,
   autoFocus = false,
   disabled = false,
-  required = false,
   placeholder = 'Select...',
   ariaDescribedby,
   ariaPlaceholder,
