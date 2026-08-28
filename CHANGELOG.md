@@ -45,10 +45,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 - Removed the module-level Font Awesome `library.add()` call from `AddButton`; every icon is passed to `FontAwesomeIcon` as an imported icon object, so the global registry was never consulted
-- Removed unused internal exports found by `knip` ([#5194](https://github.com/rjsf-team/react-jsonschema-form/pull/5194)). None were part of the public API, but all were reachable through the unblessed `@rjsf/daisyui/lib/*.js` deep-import path:
-  - `ThemeContext` is now module-private; use the exported `useTheme()` hook instead
-  - The per-widget barrels (`lib/widgets/<Widget>/index.js`) and the named widget re-exports from `lib/widgets/index.js` are gone; use `generateWidgets()`
-  - The template barrels (`lib/templates/index.js` and the `buttonTemplates` default export from `lib/templates/ButtonTemplates/index.js`) are gone; use `generateTemplates()` and destructure the template you need
+- Added the `generateForm()`, `generateTemplates()`, `generateTheme()` and `generateWidgets()` exports for overriding the generics, matching the other themes per the [TypeScript customization docs](https://rjsf-team.github.io/react-jsonschema-form/docs/advanced-customization/typescript) ([#5194](https://github.com/rjsf-team/react-jsonschema-form/pull/5194))
 
 ## @rjsf/fluentui-rc
 
