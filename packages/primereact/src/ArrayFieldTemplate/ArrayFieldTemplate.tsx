@@ -30,6 +30,7 @@ export default function ArrayFieldTemplate<
     // Destructure the following props out so that they aren't put into the DOM
     formData,
     rawErrors,
+    errorSchema,
     ...rest
   } = props;
 
