@@ -2,9 +2,11 @@
   "$schema": "https://unpkg.com/knip@6/schema-jsonc.json",
   "workspaces": {
     ".": {
-      // Invoked by tsc-alias through the `afterDeclarations` replacers in the
-      // per-package tsconfig.build.json files, which knip cannot follow.
-      "entry": ["tsc-alias-replacer/*.ts"]
+      // tsc-alias-replacer: invoked by tsc-alias through the `afterDeclarations`
+      // replacers in the per-package tsconfig.build.json files.
+      // .size-limit/report.mjs: invoked with `node` from
+      // .github/workflows/size-limit-comment.yml. knip can follow neither.
+      "entry": ["tsc-alias-replacer/*.ts", ".size-limit/report.mjs"]
     },
     "packages/daisyui": {
       // Published stylesheet: consumers import it, nothing in the repo does.
@@ -28,9 +30,5 @@
       // Published theme presets for consumers to copy; no in-repo importer.
       "ignore": ["resources/*.css"]
     }
-  },
-  // Source imports `lodash/*`; tsc-alias-replacer/lodashReplacer.ts rewrites
-  // those to `lodash-es` at build time, so the dependency only ever appears in
-  // build output. Applies to all seven packages that ship it.
-  "ignoreDependencies": ["lodash-es"]
+  }
 }
