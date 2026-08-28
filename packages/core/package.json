@@ -82,10 +82,8 @@
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
     "@types/json-schema": "^7.0.15",
-    "@types/react-portal": "^4.0.7",
     "ajv": "^8.20.0",
-    "atob": "^2.1.2",
-    "react-portal": "^4.3.0"
+    "atob": "^2.1.2"
   },
   "directories": {
     "test": "test"
