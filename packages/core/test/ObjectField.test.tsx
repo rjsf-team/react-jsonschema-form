@@ -1909,6 +1909,85 @@ describe('ObjectField', () => {
 
       expectToHaveBeenCalledWithFormData(onChange, { first: '' }, 'root_first');
     });
+
+    it.each([
+      { propName: 'name', propSchema: { type: 'string' as const }, initialValue: 'a' },
+      { propName: 'count', propSchema: { type: 'number' as const }, initialValue: 3 },
+    ])(
+      'deleting content of a nested $propName input should omit the key rather than store an empty string (#5222)',
+      async ({ propName, propSchema, initialValue }) => {
+        const nestedSchema: RJSFSchema = {
+          type: 'object',
+          additionalProperties: {
+            type: 'object',
+            properties: {
+              [propName]: propSchema,
+            },
+          },
+        };
+        const { node, onChange } = createFormComponent({
+          schema: nestedSchema,
+          formData: { Example: { [propName]: initialValue } },
+        });
+
+        await user.clear(node.querySelector(`#root_Example_${propName}`)!);
+
+        expectToHaveBeenCalledWithFormData(
+          onChange,
+          { Example: { [propName]: undefined } },
+          `root_Example_${propName}`,
+        );
+        // the entry and its key input must survive the clear
+        expect(node.querySelector('#root_Example-key')).toHaveValue('Example');
+      },
+    );
+
+    it('deleting content of a nested value input should respect a custom ui:emptyValue on that field (#5222)', async () => {
+      const nestedSchema: RJSFSchema = {
+        type: 'object',
+        additionalProperties: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+          },
+        },
+      };
+      const { node, onChange } = createFormComponent({
+        schema: nestedSchema,
+        uiSchema: { additionalProperties: { name: { 'ui:emptyValue': 'custom-default' } } },
+        formData: { Example: { name: 'a' } },
+      });
+
+      await user.clear(node.querySelector('#root_Example_name')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { Example: { name: 'custom-default' } }, 'root_Example_name');
+      // the entry and its key input must survive the clear
+      expect(node.querySelector('#root_Example-key')).toHaveValue('Example');
+    });
+
+    it('deleting content of a nested value input behind a $ref should omit the key rather than store an empty string (issue #5222)', async () => {
+      const nestedSchema: RJSFSchema = {
+        type: 'object',
+        definitions: {
+          project: {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+            },
+          },
+        },
+        additionalProperties: { $ref: '#/definitions/project' },
+      };
+      const { node, onChange } = createFormComponent({
+        schema: nestedSchema,
+        formData: { Example: { name: 'a' } },
+      });
+
+      await user.clear(node.querySelector('#root_Example_name')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { Example: { name: undefined } }, 'root_Example_name');
+      expect(node.querySelector('#root_Example-key')).toHaveValue('Example');
+    });
   });
   describe('markdown', () => {
     const schema: RJSFSchema = {

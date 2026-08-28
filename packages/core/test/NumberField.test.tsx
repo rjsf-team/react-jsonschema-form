@@ -80,6 +80,18 @@ describe('NumberField', () => {
 
       expect(node.querySelector('input')).toHaveAttribute('max', '100');
     });
+
+    it('should handle the allowClearTextInputs clear button the same as an empty string change event, not storing "" in a number slot', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'number' },
+        uiSchema: { 'ui:allowClearTextInputs': true },
+        formData: 3,
+      });
+
+      await user.click(node.querySelector('button.btn-clear')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, undefined, 'root');
+    });
   });
   describe('Number and text widget', () => {
     const uiSchemas: UiSchema[] = [

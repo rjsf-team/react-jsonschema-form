@@ -267,6 +267,8 @@ The optional `ui:allowClearTextInputs` uiSchema directive enables a clear/reset 
 When set to true, a clear button will be displayed when the input field has a value and is not readonly or disabled.
 When omitted, no clear button will be displayed for text input fields.
 
+When clicked, the property value will be set to the `ui:emptyValue`, if defined.
+
 ```tsx
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 const schema: RJSFSchema = { type: 'string' };
@@ -538,7 +540,7 @@ render(
 
 ### emptyValue
 
-The `ui:emptyValue` uiSchema directive provides the default value to use when an input for a field is empty
+The `ui:emptyValue` uiSchema directive provides the value to store when the input for a field is emptied, whether by typing or by clicking the `ui:allowClearTextInputs` clear button. It defaults to `undefined`, which omits the field from the form data entirely.
 
 ### enumDisabled
 
