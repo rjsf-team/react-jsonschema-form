@@ -1,0 +1,74 @@
+# Posts the size report produced by the "Size limit" workflow as a PR comment.
+# Split into a separate workflow_run job so it works for PRs from forks: the
+# pull_request job runs fork code with a read-only token, while this job has a
+# write token but only reads size numbers from the uploaded artifact and never
+# executes PR code — the markdown is rendered here, from the trusted checkout.
+# This job never fails on a budget overrun; branch protection must require the
+# "Size limit / size" job from size-limit.yml, not this one.
+name: Size limit comment
+on:
+  workflow_run:
+    workflows: ['Size limit']
+    types: [completed]
+permissions:
+  contents: read # for the trusted checkout below
+  pull-requests: write
+  actions: read
+# The list-then-create/update of the sticky comment is a check-then-act race if
+# two runs for the SAME PR overlap (e.g. a double re-run); serialize per PR. A
+# repo-global group would let a burst of PRs cancel each other's pending runs
+# (GitHub keeps at most one pending run per group). No cancel-in-progress so
+# the newest run still lands its update.
+concurrency:
+  group: size-limit-comment-${{ github.event.workflow_run.head_repository.full_name }}-${{ github.event.workflow_run.head_branch }}
+jobs:
+  comment:
+    # success = budgets pass, failure = budgets exceeded; both upload a report.
+    # Skip cancelled runs, which upload nothing.
+    if: >-
+      github.event.workflow_run.event == 'pull_request' &&
+      (github.event.workflow_run.conclusion == 'success' || github.event.workflow_run.conclusion == 'failure')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        id: download
+        # A run that failed before measuring uploads no artifact; skip quietly.
+        continue-on-error: true
+        with:
+          name: size-limit-report
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+      - uses: actions/github-script@v9
+        if: steps.download.outcome == 'success'
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const headSha = context.payload.workflow_run.head_sha;
+            // Derive the PR from trusted API data, not from artifact contents.
+            const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+              owner, repo, commit_sha: headSha,
+            });
+            const pr = prs.find((p) => p.head.sha === headSha);
+            if (!pr) {
+              core.warning('No PR currently at this head SHA; skipping comment.');
+              return;
+            }
+            // Render the report with this repo's report.mjs (from the trusted
+            // checkout); the artifact contributes only the head/base numbers.
+            const { execFileSync } = require('child_process');
+            const body = execFileSync('node', ['.size-limit/report.mjs', '.'], { encoding: 'utf8' });
+            const marker = '<!-- size-limit-report -->';
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner, repo, issue_number: pr.number, per_page: 100,
+            });
+            // Only adopt our own bot's comment: a user quoting the marker must
+            // not become the update target (editing it would 403 anyway).
+            const existing = comments.find(
+              (c) => c.user?.type === 'Bot' && c.body && c.body.startsWith(marker)
+            );
+            if (existing) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number: pr.number, body });
+            }

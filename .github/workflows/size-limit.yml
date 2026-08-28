@@ -1,0 +1,66 @@
+# Hand-rolled rather than andresz1/size-limit-action so PRs from forks are
+# handled safely: this read-only job builds untrusted PR code, and
+# size-limit-comment.yml (write token, never executes PR code) posts the report.
+# Branch protection must require THIS job ("Size limit / size") — the comment
+# workflow never fails on a budget overrun, it only annotates the report.
+name: Size limit
+on: pull_request
+permissions:
+  contents: read
+concurrency:
+  group: size-limit-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  size:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+          cache-dependency-path: 'pnpm-lock.yaml'
+      - name: Measure PR head
+        run: |
+          pnpm install --frozen-lockfile
+          # Only @rjsf/core (and its workspace deps, via nx dependsOn) is built and
+          # measured. Safe to let nx cache: lib/ is a declared build output in
+          # nx.json, so a cache hit restores it to disk.
+          pnpm exec nx run-many --target=build --projects=@rjsf/core
+          # size-limit exits non-zero when a budget is exceeded but still emits
+          # JSON; record the outcome and enforce it at the end so the report
+          # comment is produced either way.
+          if pnpm exec size-limit --json > "$RUNNER_TEMP/head.json"; then
+            echo ok > "$RUNNER_TEMP/status"
+          else
+            echo fail > "$RUNNER_TEMP/status"
+          fi
+      - name: Measure base branch
+        run: |
+          # The base sha may be unfetchable (force-pushed away), predate the
+          # size-limit setup, or fail to install or build; report no baseline in
+          # any of those cases instead of failing the check without an artifact.
+          # An nx cache hit here is fine: a hit means the build inputs are
+          # identical to the head build, so restoring its lib/ IS the baseline.
+          # This leaves the tree and node_modules at the base sha — steps after
+          # this one must only touch $RUNNER_TEMP.
+          if git fetch --no-tags --depth 1 origin ${{ github.event.pull_request.base.sha }} &&
+            git checkout -f ${{ github.event.pull_request.base.sha }} &&
+            [ -f .size-limit.json ] &&
+            pnpm install --frozen-lockfile &&
+            pnpm exec nx run-many --target=build --projects=@rjsf/core; then
+            pnpm exec size-limit --json > "$RUNNER_TEMP/base.json" || echo '[]' > "$RUNNER_TEMP/base.json"
+          else
+            echo '[]' > "$RUNNER_TEMP/base.json"
+          fi
+      - uses: actions/upload-artifact@v7
+        with:
+          name: size-limit-report
+          path: |
+            ${{ runner.temp }}/head.json
+            ${{ runner.temp }}/base.json
+      - name: Enforce limits
+        run: test "$(cat "$RUNNER_TEMP/status")" = ok
