@@ -19,6 +19,17 @@ import AJV8Validator from '../src/validator';
 
 const illFormedKey = "bar`'()=+*&^%$#@!";
 
+function expectWarn<T>(fn: () => T, ...expectedWarning: unknown[]): T {
+  const warnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
+  try {
+    const result = fn();
+    expect(warnSpy).toHaveBeenCalledWith(...expectedWarning);
+    return result;
+  } finally {
+    warnSpy.mockRestore();
+  }
+}
+
 describe('AJV8Validator', () => {
   let builder: ErrorSchemaBuilder;
   beforeAll(() => {
@@ -56,7 +67,12 @@ describe('AJV8Validator', () => {
       it('should return false if the schema is invalid', () => {
         const schema: RJSFSchema = 'foobarbaz' as unknown as RJSFSchema;
 
-        expect(validator.isValid(schema, { foo: 'bar' }, schema)).toBe(false);
+        const isValid = expectWarn(
+          () => validator.isValid(schema, { foo: 'bar' }, schema),
+          'Error encountered compiling schema:',
+          expect.any(Error),
+        );
+        expect(isValid).toBe(false);
       });
       it('should return true if the data is valid against the schema including refs to rootSchema', () => {
         const schema: RJSFSchema = {
@@ -139,9 +155,16 @@ describe('AJV8Validator', () => {
         const compileSpy = vi.spyOn(ajvInstance, 'compile');
         compileSpy.mockClear();
 
-        // Call isValid twice with the same schema
-        validator.isValid(schema, formData, rootSchema);
-        validator.isValid(schema, formData, rootSchema);
+        // Call isValid twice with the same schema; the mocked getSchema forces the
+        // addSchema path to throw ("already exists"), which isValid warns about
+        expectWarn(
+          () => {
+            validator.isValid(schema, formData, rootSchema);
+            validator.isValid(schema, formData, rootSchema);
+          },
+          'Error encountered compiling schema:',
+          expect.any(Error),
+        );
 
         getSchemaSpy.mockRestore();
         expect(compileSpy).toHaveBeenCalledTimes(1);
@@ -747,7 +770,12 @@ describe('AJV8Validator', () => {
       it('should return false if the schema is invalid', () => {
         const schema: RJSFSchema = 'foobarbaz' as unknown as RJSFSchema;
 
-        expect(validator.isValid(schema, { foo: 'bar' }, schema)).toBe(false);
+        const isValid = expectWarn(
+          () => validator.isValid(schema, { foo: 'bar' }, schema),
+          'Error encountered compiling schema:',
+          expect.any(Error),
+        );
+        expect(isValid).toBe(false);
       });
       it('should return true if the data is valid against the schema including refs to rootSchema', () => {
         const schema: RJSFSchema = {
@@ -1223,7 +1251,12 @@ describe('AJV8Validator', () => {
       it('should return false if the schema is invalid', () => {
         const schema: RJSFSchema = 'foobarbaz' as unknown as RJSFSchema;
 
-        expect(validator.isValid(schema, { foo: 'bar' }, schema)).toBe(false);
+        const isValid = expectWarn(
+          () => validator.isValid(schema, { foo: 'bar' }, schema),
+          'Error encountered compiling schema:',
+          expect.any(Error),
+        );
+        expect(isValid).toBe(false);
       });
       it('should return true if the data is valid against the schema including refs to rootSchema', () => {
         const schema: RJSFSchema = {
@@ -2425,7 +2458,10 @@ describe('AJV8Validator', () => {
         };
       });
       it('should not return a validation error if unknown string format is used', () => {
-        const result = validator.validateFormData({ phone: '800.555.2368' }, schema);
+        const result = expectWarn(
+          () => validator.validateFormData({ phone: '800.555.2368' }, schema),
+          expect.stringContaining('unknown format'),
+        );
         expect(result.errors).toHaveLength(0);
       });
       describe('validating using a custom formats', () => {
@@ -2609,7 +2645,10 @@ describe('AJV8Validator', () => {
         };
       });
       it('should not return a validation error if unknown string format is used', () => {
-        const result = validator.validateFormData({ phone: '800.555.2368' }, schema);
+        const result = expectWarn(
+          () => validator.validateFormData({ phone: '800.555.2368' }, schema),
+          expect.stringContaining('unknown format'),
+        );
         expect(result.errors).toHaveLength(0);
       });
       describe('validating using a custom formats', () => {
@@ -2997,7 +3036,10 @@ describe('AJV8Validator', () => {
         };
       });
       it('should not return a validation error if unknown string format is used', () => {
-        const result = validator.validateFormData({ phone: '800.555.2368' }, schema);
+        const result = expectWarn(
+          () => validator.validateFormData({ phone: '800.555.2368' }, schema),
+          expect.stringContaining('unknown format'),
+        );
         expect(result.errors).toHaveLength(0);
       });
       describe('validating using a custom formats', () => {

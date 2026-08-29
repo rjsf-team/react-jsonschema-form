@@ -1656,7 +1656,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 class="flex-grow undefined"
               >
                 <div
-                  class="field-template mb-3 "
+                  class="field-template mb-3"
                 >
                   <div
                     class="form-control"
@@ -3400,7 +3400,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 class="flex-grow undefined"
               >
                 <div
-                  class="field-template mb-3 "
+                  class="field-template mb-3"
                 >
                   <div
                     class="form-control"
@@ -5144,7 +5144,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 class="flex-grow undefined"
               >
                 <div
-                  class="field-template mb-3 "
+                  class="field-template mb-3"
                 >
                   <div
                     class="form-control"
@@ -6888,7 +6888,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 class="flex-grow undefined"
               >
                 <div
-                  class="field-template mb-3 "
+                  class="field-template mb-3"
                 >
                   <div
                     class="form-control"

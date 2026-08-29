@@ -42,6 +42,9 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     formContext: registry.formContext,
     options,
     uiSchema,
+    // Radio supports neither `fluid` nor `inverted`, so don't default them; they
+    // would be forwarded to the DOM element and trigger React unknown-attribute warnings
+    defaultSchemaProps: {},
   });
   const handleChange = (_: FormEvent<HTMLInputElement>, { value: eventValue }: CheckboxProps) =>
     onChange(enumOptionValueDecoder<S>(String(eventValue!), enumOptions, optionValueFormat, emptyValue));
