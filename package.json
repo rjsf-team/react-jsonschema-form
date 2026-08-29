@@ -30,17 +30,18 @@
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "devDependencies": {
     "@size-limit/preset-small-lib": "^13.0.3",
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.2",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
     "@types/node": "^24.13.2",
     "@types/react": "^18.3.31",
     "@types/react-dom": "^18.3.7",
-    "@vitest/coverage-v8": "^4.1.9",
+    "@vitest/coverage-v8": "^4.1.11",
     "cross-env": "^10.1.0",
     "esbuild": "^0.28.1",
     "husky": "^9.1.7",
     "is-ci": "^4.1.0",
-    "jsdom": "^29.1.1",
+    "jsdom": "^30.0.1",
     "jsdom-testing-mocks": "^1.16.0",
     "knip": "^6.32.2",
     "lint-staged": "^17.0.8",
@@ -57,7 +58,7 @@
     "tsc-alias": "^1.8.17",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.9"
+    "vitest": "^4.1.11"
   },
   "workspaces": [
     "packages/antd",
