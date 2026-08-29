@@ -88,7 +88,8 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/shadcn
 
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
-- - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+- Fixed `FancySelect` showing a red error border on required empty enum fields before validation runs, fixing [#5187](https://github.com/rjsf-team/react-jsonschema-form/issues/5187) ([#5209](https://github.com/rjsf-team/react-jsonschema-form/pull/5209))
 
 ## @rjsf/utils
 
