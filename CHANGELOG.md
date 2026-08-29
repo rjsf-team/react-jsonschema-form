@@ -134,6 +134,8 @@ should change the heading of the (upcoming) version to include a major version b
 - Added `knip` and removed the unused code, exports and dependencies it reported ([#5194](https://github.com/rjsf-team/react-jsonschema-form/pull/5194))
 - Removed test-setup shims that empirically no longer do anything (each verified by deleting it and running the package's suite): core's `setImmediate` global, antd's `MessageChannel` global, chakra-ui's `structuredClone` JSON polyfill (native since Node 17), mantine's `cleanSnapshotSerializer` (a no-op on all current snapshots), and primereact's `<style>`-injection blocker
 - Upgraded the test tooling: `@testing-library/jest-dom` 6→7, `jsdom` 29→30, `@testing-library/user-event` to 14.6.6, `vitest` to 4.1.11, and declared the `@testing-library/dom` peer explicitly at the root. Self-anchored test selectors were rewritten to `:scope` to match jsdom 30's corrected element-scoped `querySelectorAll` behavior
+- Tests now resolve `@rjsf/*` workspace imports to TypeScript source via a custom `@rjsf/source` export condition (declared in a new shared `testing/vitest.base.ts` that every package's vitest config extends), so `git clone && pnpm install && pnpm vitest run` works with no build step and tests always exercise current source
+
 
 # 6.8.0
 

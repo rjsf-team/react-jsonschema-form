@@ -3,6 +3,13 @@ import { defineConfig } from 'vitest/config';
 
 // Shared vitest defaults for every package; package configs extend this via mergeConfig().
 export default defineConfig({
+  // Resolve @rjsf/* workspace imports to TypeScript source via the custom
+  // "@rjsf/source" export condition, so tests run against current code with no
+  // prerequisite build. The custom name (rather than "development") keeps
+  // consumers' dev servers on the published lib/ output.
+  resolve: {
+    conditions: ['@rjsf/source'],
+  },
   test: {
     globals: true,
     environment: 'jsdom',
