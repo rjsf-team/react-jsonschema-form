@@ -1,6 +1,8 @@
 import type { FieldTemplateProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 import { getTemplate, getUiOptions } from '@rjsf/utils';
 
+import { getDaisy } from '../../utils';
+
 /** The `FieldTemplate` component provides the main layout for each form field
  * with DaisyUI styling. It handles:
  *
@@ -9,6 +11,7 @@ import { getTemplate, getUiOptions } from '@rjsf/utils';
  * - Proper spacing between form fields
  * - Rendering error messages and help text
  * - Maintaining accessibility with proper label associations
+ * - Applying a per-field DaisyUI theme, class name and/or style passed via `ui:options.daisy`
  *
  * This template uses DaisyUI's label and form-control components for consistent styling.
  *
@@ -45,12 +48,14 @@ export default function FieldTemplate<
     hidden,
     onChange,
     fieldPathId,
+    style,
     ...divProps
   } = props;
 
   // Special handling for checkboxes - they should have the label after the input
   const isCheckbox = schema.type === 'boolean';
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const daisy = getDaisy<T, S, F>({ uiSchema });
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
     registry,
@@ -73,7 +78,12 @@ export default function FieldTemplate<
       uiSchema={uiSchema}
       registry={registry}
     >
-      <div className={`field-template mb-3 ${classNames || ''}`} {...divProps}>
+      <div
+        className={`field-template mb-3 ${classNames || ''} ${daisy.className || ''}`.trim()}
+        data-theme={daisy.theme}
+        {...divProps}
+        style={{ ...style, ...daisy.style }}
+      >
         {displayLabel && !isCheckbox && (
           <label htmlFor={id} className='label'>
             <span className='label-text font-medium'>

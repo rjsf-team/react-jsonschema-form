@@ -46,8 +46,8 @@
   "scripts": {
     "build:ts": "tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
-    "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/chakra-ui.esm.js --sourcemap --packages=external --format=esm",
-    "build:umd": "rollup dist/chakra-ui.esm.js --format=umd --file=dist/chakra-ui.umd.js --name=@rjsf/chakra-ui",
+    "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/daisyui.esm.js --sourcemap --packages=external --format=esm",
+    "build:umd": "rollup dist/daisyui.esm.js --format=umd --file=dist/daisyui.umd.js --name=@rjsf/daisyui",
     "build": "pnpm run build:ts && pnpm run build:cjs && pnpm run build:esm && pnpm run build:umd",
     "cs-check": "oxfmt --check \"{src,test}/**/*.{ts,tsx}\"",
     "cs-format": "oxfmt \"{src,test}/**/*.{ts,tsx}\"",

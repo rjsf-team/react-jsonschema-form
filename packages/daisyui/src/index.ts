@@ -1,13 +1,13 @@
-import { withTheme } from '@rjsf/core';
+import DaisyUIForm from './DaisyUIForm';
+import { ThemeProvider, useTheme } from './theme';
 
-import Theme, { ThemeProvider, useTheme } from './theme';
-
-export { default as Form } from './DaisyUIForm';
+export type { DaisyProps } from './types/DaisyProps';
+export { default as Form, generateForm } from './DaisyUIForm';
 export { __createDaisyUIFrameProvider } from './DaisyUIFrameProvider';
 export { default as GridTemplate } from './templates/GridTemplate/GridTemplate';
-export { default as Templates } from './templates/Templates';
-export { default as Theme } from './theme';
-export { default as Widgets } from './widgets/Widgets';
+export { default as Templates, generateTemplates } from './templates/Templates';
+export { default as Theme, generateTheme } from './theme';
+export { default as Widgets, generateWidgets } from './widgets/Widgets';
 export { ThemeProvider, useTheme };
 
-export default withTheme(Theme);
+export default DaisyUIForm;
