@@ -1,3 +1,5 @@
+// @vitest-environment jsdom
+// jsdom provides the `navigator` global this file spies on; Node 20 has none.
 import { asNumber } from '../src';
 
 describe('asNumber()', () => {

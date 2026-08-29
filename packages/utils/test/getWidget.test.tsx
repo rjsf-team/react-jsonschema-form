@@ -1,3 +1,4 @@
+/** @vitest-environment jsdom */
 import type { ForwardedRef } from 'react';
 import { forwardRef, memo } from 'react';
 import { render } from '@testing-library/react';
