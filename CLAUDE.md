@@ -111,7 +111,7 @@ Fields select which widget to render based on schema `type` and `ui:widget`. Tem
 
 ## Code style
 
-- **TypeScript strict mode**, ES2020 target
+- **TypeScript strict mode**, ES2022 target
 - **Prettier**: single quotes, JSX single quotes, 120-char print width
 - **ESLint**: enforces semicolons, curly braces, no-console, React Hooks rules
 - Pre-commit hook (Husky + lint-staged) auto-formats and lints staged files

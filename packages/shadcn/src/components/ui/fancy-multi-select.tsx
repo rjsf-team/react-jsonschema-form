@@ -6,9 +6,9 @@ import { deepEquals } from '@rjsf/utils';
 import { Command as CommandPrimitive } from 'cmdk';
 import { X } from 'lucide-react';
 
-import { cn } from '../../lib/utils';
-import { Badge } from './badge';
-import { Command, CommandGroup, CommandItem, CommandList } from './command';
+import { cn } from '../../lib/utils.js';
+import { Badge } from './badge.js';
+import { Command, CommandGroup, CommandItem, CommandList } from './command.js';
 
 /**
  * Represents an item in the fancy multi-select dropdown

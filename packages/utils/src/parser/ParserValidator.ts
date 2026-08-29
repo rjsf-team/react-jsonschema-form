@@ -1,6 +1,6 @@
-import { ID_KEY } from '../constants';
-import deepEquals from '../deepEquals';
-import hashForSchema from '../hashForSchema';
+import { ID_KEY } from '../constants.js';
+import deepEquals from '../deepEquals.js';
+import hashForSchema from '../hashForSchema.js';
 import type {
   CustomValidator,
   ErrorSchema,
@@ -12,7 +12,7 @@ import type {
   UiSchema,
   ValidationData,
   ValidatorType,
-} from '../types';
+} from '../types.js';
 
 /** The type of the map of schema hash to schema
  */

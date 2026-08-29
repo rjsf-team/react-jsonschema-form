@@ -1,18 +1,18 @@
 import type { FormContextType, RegistryWidgetsType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
-import AltDateTimeWidget from './AltDateTimeWidget/AltDateTimeWidget';
-import AltDateWidget from './AltDateWidget/AltDateWidget';
-import CheckboxesWidget from './CheckboxesWidget/CheckboxesWidget';
-import CheckboxWidget from './CheckboxWidget/CheckboxWidget';
-import DateTimeWidget from './DateTimeWidget/DateTimeWidget';
-import DateWidget from './DateWidget/DateWidget';
-import RadioWidget from './RadioWidget/RadioWidget';
-import RangeWidget from './RangeWidget/RangeWidget';
-import RatingWidget from './RatingWidget/RatingWidget';
-import SelectWidget from './SelectWidget/SelectWidget';
-import TextareaWidget from './TextareaWidget/TextareaWidget';
-import TimeWidget from './TimeWidget/TimeWidget';
-import ToggleWidget from './ToggleWidget/ToggleWidget';
+import AltDateTimeWidget from './AltDateTimeWidget/AltDateTimeWidget.js';
+import AltDateWidget from './AltDateWidget/AltDateWidget.js';
+import CheckboxesWidget from './CheckboxesWidget/CheckboxesWidget.js';
+import CheckboxWidget from './CheckboxWidget/CheckboxWidget.js';
+import DateTimeWidget from './DateTimeWidget/DateTimeWidget.js';
+import DateWidget from './DateWidget/DateWidget.js';
+import RadioWidget from './RadioWidget/RadioWidget.js';
+import RangeWidget from './RangeWidget/RangeWidget.js';
+import RatingWidget from './RatingWidget/RatingWidget.js';
+import SelectWidget from './SelectWidget/SelectWidget.js';
+import TextareaWidget from './TextareaWidget/TextareaWidget.js';
+import TimeWidget from './TimeWidget/TimeWidget.js';
+import ToggleWidget from './ToggleWidget/ToggleWidget.js';
 
 export {
   AltDateTimeWidget,

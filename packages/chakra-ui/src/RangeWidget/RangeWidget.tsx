@@ -3,9 +3,9 @@ import type { SliderValueChangeDetails } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { ariaDescribedByIds, labelValue, rangeSpec } from '@rjsf/utils';
 
-import { Field } from '../components/ui/field';
-import { Slider } from '../components/ui/slider';
-import { getChakra } from '../utils';
+import { Field } from '../components/ui/field.js';
+import { Slider } from '../components/ui/slider.js';
+import { getChakra } from '../utils.js';
 
 export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   value,

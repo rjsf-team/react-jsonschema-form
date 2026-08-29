@@ -1,7 +1,7 @@
-import type { Localizer } from '../src';
-import defaultValidator, { customizeValidator } from '../src';
-import AJV8Validator from '../src/validator';
-import { CUSTOM_OPTIONS } from './harness/testData';
+import type { Localizer } from '../src/index.js';
+import defaultValidator, { customizeValidator } from '../src/index.js';
+import AJV8Validator from '../src/validator.js';
+import { CUSTOM_OPTIONS } from './harness/testData.js';
 
 vi.mock('../src/validator');
 

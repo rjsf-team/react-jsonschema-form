@@ -1,7 +1,7 @@
 import type { MockInstance } from 'vitest';
 
-import type { GlobalUISchemaOptions, UIOptionsType, UiSchema } from '../src';
-import { getUiOptions, noop } from '../src';
+import type { GlobalUISchemaOptions, UIOptionsType, UiSchema } from '../src/index.js';
+import { getUiOptions, noop } from '../src/index.js';
 
 const uiSchema: UiSchema = {
   widgetText: {

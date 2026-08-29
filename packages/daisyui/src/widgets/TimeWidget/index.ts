@@ -1,2 +1,2 @@
-export { default } from './TimeWidget';
-export * from './TimeWidget';
+export { default } from './TimeWidget.js';
+export * from './TimeWidget.js';

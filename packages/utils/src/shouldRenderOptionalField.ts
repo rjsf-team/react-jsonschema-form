@@ -1,9 +1,9 @@
-import { ANY_OF_KEY, ONE_OF_KEY } from './constants';
-import getSchemaType from './getSchemaType';
-import getUiOptions from './getUiOptions';
-import isObject from './isObject';
-import isRootSchema from './isRootSchema';
-import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from './types';
+import { ANY_OF_KEY, ONE_OF_KEY } from './constants.js';
+import getSchemaType from './getSchemaType.js';
+import getUiOptions from './getUiOptions.js';
+import isObject from './isObject.js';
+import isRootSchema from './isRootSchema.js';
+import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.js';
 
 /** Returns the unique list of schema types for all of the options in a anyOf/oneOf
  *

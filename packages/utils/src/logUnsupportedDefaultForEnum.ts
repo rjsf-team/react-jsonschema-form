@@ -1,5 +1,5 @@
-import enumOptionsIndexForValue from './enumOptionsIndexForValue';
-import type { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types';
+import enumOptionsIndexForValue from './enumOptionsIndexForValue.js';
+import type { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types.js';
 
 /** Logs a warning when a single-select enum widget has a schema default that is not one of its enum options.
  *

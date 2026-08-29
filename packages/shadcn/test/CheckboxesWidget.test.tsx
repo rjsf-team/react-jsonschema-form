@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 
-import CheckboxesWidget from '../src/CheckboxesWidget';
-import { makeWidgetMockProps } from './helpers/createMocks';
+import CheckboxesWidget from '../src/CheckboxesWidget/index.js';
+import { makeWidgetMockProps } from './helpers/createMocks.js';
 
 describe('CheckboxesWidget', () => {
   test('simple', () => {

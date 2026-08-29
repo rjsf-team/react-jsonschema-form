@@ -1,6 +1,6 @@
-import { SUBMIT_BTN_OPTIONS_KEY } from './constants';
-import getUiOptions from './getUiOptions';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema, UISchemaSubmitButtonOptions } from './types';
+import { SUBMIT_BTN_OPTIONS_KEY } from './constants.js';
+import getUiOptions from './getUiOptions.js';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema, UISchemaSubmitButtonOptions } from './types.js';
 
 /** The default submit button options, exported for testing purposes
  */

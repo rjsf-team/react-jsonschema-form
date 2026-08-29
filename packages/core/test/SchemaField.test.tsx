@@ -12,9 +12,9 @@ import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR, createSchemaUtils, englishStri
 import validator from '@rjsf/validator-ajv8';
 import userEvent from '@testing-library/user-event';
 
-import { getDefaultRegistry } from '../src';
-import SchemaField from '../src/components/fields/SchemaField';
-import { createFormComponent, submitForm } from './testUtils';
+import SchemaField from '../src/components/fields/SchemaField.js';
+import { getDefaultRegistry } from '../src/index.js';
+import { createFormComponent, submitForm } from './testUtils.js';
 
 const user = userEvent.setup();
 

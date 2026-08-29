@@ -15,9 +15,9 @@ import {
 } from '@rjsf/utils';
 import type { OptionsOrGroups } from 'chakra-react-select';
 
-import { Field } from '../components/ui/field';
-import { SelectRoot, SelectTrigger, SelectValueText } from '../components/ui/select';
-import { getChakra } from '../utils';
+import { Field } from '../components/ui/field.js';
+import { SelectRoot, SelectTrigger, SelectValueText } from '../components/ui/select.js';
+import { getChakra } from '../utils.js';
 
 export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>,

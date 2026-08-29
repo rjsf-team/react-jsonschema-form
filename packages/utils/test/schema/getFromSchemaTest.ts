@@ -1,6 +1,6 @@
-import type { RJSFSchema } from '../../src';
-import { DEFINITIONS_KEY, PROPERTIES_KEY, createSchemaUtils, getByPath } from '../../src';
-import type { TestValidatorType } from './types';
+import type { RJSFSchema } from '../../src/index.js';
+import { DEFINITIONS_KEY, PROPERTIES_KEY, createSchemaUtils, getByPath } from '../../src/index.js';
+import type { TestValidatorType } from './types.js';
 
 const rawSchema = {
   title: 'Test Schema',

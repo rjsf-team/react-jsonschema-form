@@ -1,2 +1,2 @@
-export { default } from './PrimeForm';
-export * from './PrimeForm';
+export { default } from './PrimeForm.js';
+export * from './PrimeForm.js';

@@ -12,11 +12,11 @@ import { UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
 import { act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import type Form from '../src';
-import ObjectField from '../src/components/fields/ObjectField';
-import SchemaField from '../src/components/fields/SchemaField';
-import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils';
-import { TextWidgetTest } from './TextWidgetTest';
+import ObjectField from '../src/components/fields/ObjectField.js';
+import SchemaField from '../src/components/fields/SchemaField.js';
+import type Form from '../src/index.js';
+import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.js';
+import { TextWidgetTest } from './TextWidgetTest.js';
 
 const user = userEvent.setup();
 

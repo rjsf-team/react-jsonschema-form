@@ -1,18 +1,18 @@
-import { ONE_OF_KEY, REF_KEY, JUNK_OPTION_ID, ANY_OF_KEY } from '../constants';
-import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
-import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDiscriminator';
-import guessType from '../guessType';
-import isObject from '../isObject';
-import { getByPath, hasByPath } from '../pathUtils';
+import { ONE_OF_KEY, REF_KEY, JUNK_OPTION_ID, ANY_OF_KEY } from '../constants.js';
+import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.js';
+import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDiscriminator.js';
+import guessType from '../guessType.js';
+import isObject from '../isObject.js';
+import { getByPath, hasByPath } from '../pathUtils.js';
 import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
-} from '../types';
-import getFirstMatchingOption from './getFirstMatchingOption';
-import retrieveSchema, { resolveAllReferences } from './retrieveSchema';
+} from '../types.js';
+import getFirstMatchingOption from './getFirstMatchingOption.js';
+import retrieveSchema, { resolveAllReferences } from './retrieveSchema.js';
 
 /** A junk option used to determine when the getFirstMatchingOption call really matches an option rather than returning
  * the first item

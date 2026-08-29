@@ -1,5 +1,5 @@
-import { REF_KEY } from '../constants';
-import { getByPath, hasByPath, toPath } from '../pathUtils';
+import { REF_KEY } from '../constants.js';
+import { getByPath, hasByPath, toPath } from '../pathUtils.js';
 import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
@@ -7,8 +7,8 @@ import type {
   SchemaFieldPath,
   StrictRJSFSchema,
   ValidatorType,
-} from '../types';
-import retrieveSchema from './retrieveSchema';
+} from '../types.js';
+import retrieveSchema from './retrieveSchema.js';
 
 /** Internal helper function that acts like `getByPath` but additionally retrieves `$ref`s as needed to get the path
  * for schemas containing potentially nested `$ref`s.

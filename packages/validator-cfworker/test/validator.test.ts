@@ -2,11 +2,11 @@ import type { Validator as EngineValidator } from '@cfworker/json-schema';
 import type { RJSFSchema, RJSFValidationError } from '@rjsf/utils';
 import { ROOT_SCHEMA_PREFIX } from '@rjsf/utils';
 
-import * as pkg from '../src';
-import createCfworkerInstance, { installFormats } from '../src/createCfworkerInstance';
-import customizeValidator from '../src/customizeValidator';
-import type { CFWorkerValidationError } from '../src/types';
-import { normalizeFormDataForValidation } from '../src/validator';
+import createCfworkerInstance, { installFormats } from '../src/createCfworkerInstance.js';
+import customizeValidator from '../src/customizeValidator.js';
+import * as pkg from '../src/index.js';
+import type { CFWorkerValidationError } from '../src/types.js';
+import { normalizeFormDataForValidation } from '../src/validator.js';
 
 describe('CFWorkerValidator', () => {
   it('normalizes undefined object members so required errors surface', () => {

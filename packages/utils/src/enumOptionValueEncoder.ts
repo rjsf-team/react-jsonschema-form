@@ -1,4 +1,4 @@
-import type { OptionValueFormat } from './types';
+import type { OptionValueFormat } from './types.js';
 
 /** Encodes an enum option value into a string for a DOM value attribute.
  *

@@ -1,2 +1,2 @@
-export { default } from './GridTemplate';
-export * from './GridTemplate';
+export { default } from './GridTemplate.js';
+export * from './GridTemplate.js';

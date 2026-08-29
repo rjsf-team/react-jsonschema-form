@@ -1,5 +1,5 @@
-import { getSubmitButtonOptions } from '../src';
-import { DEFAULT_OPTIONS } from '../src/getSubmitButtonOptions';
+import { DEFAULT_OPTIONS } from '../src/getSubmitButtonOptions.js';
+import { getSubmitButtonOptions } from '../src/index.js';
 
 describe('getSubmitButtonOptions', () => {
   it('default props', () => {

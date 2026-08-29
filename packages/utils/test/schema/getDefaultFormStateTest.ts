@@ -1,7 +1,7 @@
 import type { MockInstance } from 'vitest';
 
-import type { Experimental_DefaultFormStateBehavior, RJSFSchema } from '../../src';
-import { createSchemaUtils, getDefaultFormState, noop } from '../../src';
+import type { Experimental_DefaultFormStateBehavior, RJSFSchema } from '../../src/index.js';
+import { createSchemaUtils, getDefaultFormState, noop } from '../../src/index.js';
 import {
   AdditionalItemsHandling,
   computeDefaultBasedOnSchemaTypeAndDefaults,
@@ -11,10 +11,10 @@ import {
   getInnerSchemaForArrayItem,
   getObjectDefaults,
   ensureFormDataMatchingSchema,
-} from '../../src/schema/getDefaultFormState';
-import { resolveDependencies } from '../../src/schema/retrieveSchema';
-import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData';
-import type { TestValidatorType } from './types';
+} from '../../src/schema/getDefaultFormState.js';
+import { resolveDependencies } from '../../src/schema/retrieveSchema.js';
+import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData.js';
+import type { TestValidatorType } from './types.js';
 
 export default function getDefaultFormStateTest(testValidator: TestValidatorType) {
   describe('getDefaultFormState()', () => {

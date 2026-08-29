@@ -1,9 +1,9 @@
 import type { MockInstance } from 'vitest';
 
-import type { RJSFSchema } from '../../src';
-import { ID_KEY, hashForSchema, noop } from '../../src';
-import ParserValidator from '../../src/parser/ParserValidator';
-import { RECURSIVE_REF } from '../testUtils/testData';
+import type { RJSFSchema } from '../../src/index.js';
+import { ID_KEY, hashForSchema, noop } from '../../src/index.js';
+import ParserValidator from '../../src/parser/ParserValidator.js';
+import { RECURSIVE_REF } from '../testUtils/testData.js';
 
 const TINY_SCHEMA: RJSFSchema = {
   type: 'string',

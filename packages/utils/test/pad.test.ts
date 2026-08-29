@@ -1,4 +1,4 @@
-import { pad } from '../src';
+import { pad } from '../src/index.js';
 
 describe('pad()', () => {
   it('doesn`t pad a string with 0s when unnecessary', () => {

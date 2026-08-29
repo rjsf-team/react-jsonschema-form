@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.build.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./lib"
   },
@@ -9,9 +9,5 @@
       "path": "./src"
     }
   ],
-  "exclude": ["./test"],
-  "tsc-alias": {
-    "resolveFullPaths": true,
-    "verbose": true
-  }
+  "exclude": ["./test"]
 }

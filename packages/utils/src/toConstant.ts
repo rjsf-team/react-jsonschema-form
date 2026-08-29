@@ -1,5 +1,5 @@
-import { CONST_KEY, ENUM_KEY } from './constants';
-import type { RJSFSchema, StrictRJSFSchema } from './types';
+import { CONST_KEY, ENUM_KEY } from './constants.js';
+import type { RJSFSchema, StrictRJSFSchema } from './types.js';
 
 /** Returns the constant value from the schema when it is either a single value enum or has a const key. Otherwise
  * throws an error.

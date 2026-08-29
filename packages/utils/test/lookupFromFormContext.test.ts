@@ -1,6 +1,6 @@
-import { FORM_CONTEXT_NAME, LOOKUP_MAP_NAME } from '../src/constants';
-import lookupFromFormContext from '../src/lookupFromFormContext';
-import type { Registry } from '../src/types';
+import { FORM_CONTEXT_NAME, LOOKUP_MAP_NAME } from '../src/constants.js';
+import lookupFromFormContext from '../src/lookupFromFormContext.js';
+import type { Registry } from '../src/types.js';
 
 const PROP = 'exists';
 

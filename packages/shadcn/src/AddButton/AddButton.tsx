@@ -2,8 +2,8 @@ import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } f
 import { TranslatableString } from '@rjsf/utils';
 import { PlusCircle } from 'lucide-react';
 
-import { Button } from '../components/ui/button';
-import { cn } from '../lib/utils';
+import { Button } from '../components/ui/button.js';
+import { cn } from '../lib/utils.js';
 
 /**
  * A button component for adding new items in a form

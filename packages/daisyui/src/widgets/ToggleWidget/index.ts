@@ -1,2 +1,2 @@
-export { default } from './ToggleWidget';
-export * from './ToggleWidget';
+export { default } from './ToggleWidget.js';
+export * from './ToggleWidget.js';

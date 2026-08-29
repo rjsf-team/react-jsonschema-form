@@ -1,5 +1,5 @@
-export { default as AltDateTimeWidget } from './AltDateTimeWidget';
-export { default as AltDateWidget } from './AltDateWidget';
-export { default as DateWidget } from './DateWidget';
-export { default as DateTimeWidget } from './DateTimeWidget';
-export { default as TimeWidget } from './TimeWidget';
+export { default as AltDateTimeWidget } from './AltDateTimeWidget.js';
+export { default as AltDateWidget } from './AltDateWidget.js';
+export { default as DateWidget } from './DateWidget.js';
+export { default as DateTimeWidget } from './DateTimeWidget.js';
+export { default as TimeWidget } from './TimeWidget.js';

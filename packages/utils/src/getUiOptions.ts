@@ -1,5 +1,5 @@
-import { UI_OPTIONS_KEY, UI_WIDGET_KEY } from './constants';
-import isObject from './isObject';
+import { UI_OPTIONS_KEY, UI_WIDGET_KEY } from './constants.js';
+import isObject from './isObject.js';
 import type {
   FormContextType,
   GlobalUISchemaOptions,
@@ -7,7 +7,7 @@ import type {
   StrictRJSFSchema,
   UIOptionsType,
   UiSchema,
-} from './types';
+} from './types.js';
 
 /** Get all passed options from ui:options, and ui:<optionName>, returning them in an object with the `ui:`
  * stripped off. Any `globalOptions` will always be returned, unless they are overridden by options in the `uiSchema`.

@@ -11,10 +11,10 @@ import Typography from '@mui/material/Typography';
 import type { ErrorSchema, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { Panel, Group, Separator } from 'react-resizable-panels';
 
-import type { SubthemeType } from './SubthemeSelector';
-import SubthemeSelector from './SubthemeSelector';
-import type { ThemesType } from './ThemeSelector';
-import ThemeSelector from './ThemeSelector';
+import type { SubthemeType } from './SubthemeSelector.js';
+import SubthemeSelector from './SubthemeSelector.js';
+import type { ThemesType } from './ThemeSelector.js';
+import ThemeSelector from './ThemeSelector.js';
 
 const monacoEditorOptions = {
   minimap: {

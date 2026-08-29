@@ -1,7 +1,7 @@
-import { ADDITIONAL_PROPERTY_FLAG, UI_FIELD_KEY, UI_WIDGET_KEY } from '../constants';
-import getSchemaType from '../getSchemaType';
-import getUiOptions from '../getUiOptions';
-import isCustomWidget from '../isCustomWidget';
+import { ADDITIONAL_PROPERTY_FLAG, UI_FIELD_KEY, UI_WIDGET_KEY } from '../constants.js';
+import getSchemaType from '../getSchemaType.js';
+import getUiOptions from '../getUiOptions.js';
+import isCustomWidget from '../isCustomWidget.js';
 import type {
   FormContextType,
   GlobalUISchemaOptions,
@@ -11,9 +11,9 @@ import type {
   UiSchema,
   ValidatorType,
   Experimental_CustomMergeAllOf,
-} from '../types';
-import isFilesArray from './isFilesArray';
-import isMultiSelect from './isMultiSelect';
+} from '../types.js';
+import isFilesArray from './isFilesArray.js';
+import isMultiSelect from './isMultiSelect.js';
 
 /** Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema`
  * should be displayed in a UI.

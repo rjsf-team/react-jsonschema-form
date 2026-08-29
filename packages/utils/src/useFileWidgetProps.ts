@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo } from 'react';
 
-import dataURItoBlob from './dataURItoBlob';
+import dataURItoBlob from './dataURItoBlob.js';
 
 /** The information about files used by a FileWidget */
 export interface FileInfoType {

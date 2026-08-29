@@ -11,9 +11,9 @@ import {
   optionId,
 } from '@rjsf/utils';
 
-import { Field } from '../components/ui/field';
-import { Radio, RadioGroup } from '../components/ui/radio';
-import { getChakra } from '../utils';
+import { Field } from '../components/ui/field.js';
+import { Radio, RadioGroup } from '../components/ui/radio.js';
+import { getChakra } from '../utils.js';
 
 export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,

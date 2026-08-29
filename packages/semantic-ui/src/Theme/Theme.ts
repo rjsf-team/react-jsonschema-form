@@ -2,8 +2,8 @@ import type { ThemeProps } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { Form as SuiForm } from 'semantic-ui-react';
 
-import { generateTemplates } from '../Templates';
-import { generateWidgets } from '../Widgets';
+import { generateTemplates } from '../Templates/index.js';
+import { generateWidgets } from '../Widgets/index.js';
 
 export function generateTheme<
   T = any,

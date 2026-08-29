@@ -1,5 +1,5 @@
-import type { RJSFSchema, Widget } from '../src';
-import { hasWidget } from '../src';
+import type { RJSFSchema, Widget } from '../src/index.js';
+import { hasWidget } from '../src/index.js';
 
 // Mock the getWidget() function for the purposes of this test
 vi.mock('../src/getWidget', () => ({

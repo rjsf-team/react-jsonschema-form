@@ -1,5 +1,5 @@
-import { CONST_KEY } from './constants';
-import type { RJSFSchema, StrictRJSFSchema } from './types';
+import { CONST_KEY } from './constants.js';
+import type { RJSFSchema, StrictRJSFSchema } from './types.js';
 
 /** This function checks if the given `schema` matches a single constant value. This happens when either the schema has
  * an `enum` array with a single value or there is a `const` defined.

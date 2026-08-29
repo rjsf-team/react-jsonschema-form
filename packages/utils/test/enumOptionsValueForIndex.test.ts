@@ -1,5 +1,5 @@
-import { enumOptionsValueForIndex } from '../src';
-import { ALL_OPTIONS, FALSY_OPTIONS } from './testUtils/testData';
+import { enumOptionsValueForIndex } from '../src/index.js';
+import { ALL_OPTIONS, FALSY_OPTIONS } from './testUtils/testData.js';
 
 const EMPTY_VALUE = 'empty';
 

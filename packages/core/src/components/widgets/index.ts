@@ -1,25 +1,25 @@
 import type { FormContextType, RegistryWidgetsType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
-import AltDateTimeWidget from './AltDateTimeWidget';
-import AltDateWidget from './AltDateWidget';
-import CheckboxesWidget from './CheckboxesWidget';
-import CheckboxWidget from './CheckboxWidget';
-import ColorWidget from './ColorWidget';
-import DateTimeWidget from './DateTimeWidget';
-import DateWidget from './DateWidget';
-import EmailWidget from './EmailWidget';
-import FileWidget from './FileWidget';
-import HiddenWidget from './HiddenWidget';
-import PasswordWidget from './PasswordWidget';
-import RadioWidget from './RadioWidget';
-import RangeWidget from './RangeWidget';
-import RatingWidget from './RatingWidget';
-import SelectWidget from './SelectWidget';
-import TextareaWidget from './TextareaWidget';
-import TextWidget from './TextWidget';
-import TimeWidget from './TimeWidget';
-import UpDownWidget from './UpDownWidget';
-import URLWidget from './URLWidget';
+import AltDateTimeWidget from './AltDateTimeWidget.js';
+import AltDateWidget from './AltDateWidget.js';
+import CheckboxesWidget from './CheckboxesWidget.js';
+import CheckboxWidget from './CheckboxWidget.js';
+import ColorWidget from './ColorWidget.js';
+import DateTimeWidget from './DateTimeWidget.js';
+import DateWidget from './DateWidget.js';
+import EmailWidget from './EmailWidget.js';
+import FileWidget from './FileWidget.js';
+import HiddenWidget from './HiddenWidget.js';
+import PasswordWidget from './PasswordWidget.js';
+import RadioWidget from './RadioWidget.js';
+import RangeWidget from './RangeWidget.js';
+import RatingWidget from './RatingWidget.js';
+import SelectWidget from './SelectWidget.js';
+import TextareaWidget from './TextareaWidget.js';
+import TextWidget from './TextWidget.js';
+import TimeWidget from './TimeWidget.js';
+import UpDownWidget from './UpDownWidget.js';
+import URLWidget from './URLWidget.js';
 
 function widgets<
   T = any,

@@ -1,8 +1,8 @@
 import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { TranslatableString } from '@rjsf/utils';
 
-import { Plus } from '../icons';
-import IconButton from './IconButton';
+import { Plus } from '../icons.js';
+import IconButton from './IconButton.js';
 
 /** The `AddButton` renders a button that represent the `Add` action on a form
  */

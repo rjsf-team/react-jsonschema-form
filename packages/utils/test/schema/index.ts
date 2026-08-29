@@ -1,19 +1,19 @@
-import findFieldInSchemaTest from './findFieldInSchemaTest';
-import findSelectedOptionInXxxOfTest from './findSelectedOptionInXxxOfTest';
-import getClosestMatchingOptionTest from './getClosestMatchingOptionTest';
-import getDefaultFormStateTest from './getDefaultFormStateTest';
-import getDisplayLabelTest from './getDisplayLabelTest';
-import getFirstMatchingOptionTest from './getFirstMatchingOptionTest';
-import getFromSchemaTest from './getFromSchemaTest';
-import isFilesArrayTest from './isFilesArrayTest';
-import isMultiSelectTest from './isMultiSelectTest';
-import isSelectTest from './isSelectTest';
-import omitExtraDataTest from './omitExtraDataTest';
-import retrieveSchemaTest from './retrieveSchemaTest';
-import sanitizeDataForNewSchemaTest from './sanitizeDataForNewSchemaTest';
-import toPathSchemaTest from './toPathSchemaTest';
+import findFieldInSchemaTest from './findFieldInSchemaTest.js';
+import findSelectedOptionInXxxOfTest from './findSelectedOptionInXxxOfTest.js';
+import getClosestMatchingOptionTest from './getClosestMatchingOptionTest.js';
+import getDefaultFormStateTest from './getDefaultFormStateTest.js';
+import getDisplayLabelTest from './getDisplayLabelTest.js';
+import getFirstMatchingOptionTest from './getFirstMatchingOptionTest.js';
+import getFromSchemaTest from './getFromSchemaTest.js';
+import isFilesArrayTest from './isFilesArrayTest.js';
+import isMultiSelectTest from './isMultiSelectTest.js';
+import isSelectTest from './isSelectTest.js';
+import omitExtraDataTest from './omitExtraDataTest.js';
+import retrieveSchemaTest from './retrieveSchemaTest.js';
+import sanitizeDataForNewSchemaTest from './sanitizeDataForNewSchemaTest.js';
+import toPathSchemaTest from './toPathSchemaTest.js';
 
-export type * from './types';
+export type * from './types.js';
 
 export {
   findFieldInSchemaTest,

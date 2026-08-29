@@ -1,7 +1,7 @@
 import type { MockInstance } from 'vitest';
 
-import { noop } from '../src';
-import logUnsupportedDefaultForEnum from '../src/logUnsupportedDefaultForEnum';
+import { noop } from '../src/index.js';
+import logUnsupportedDefaultForEnum from '../src/logUnsupportedDefaultForEnum.js';
 
 describe('logUnsupportedDefaultForEnum()', () => {
   let consoleErrorSpy: MockInstance;

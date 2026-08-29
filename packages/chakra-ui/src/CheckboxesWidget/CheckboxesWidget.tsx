@@ -11,8 +11,8 @@ import {
   labelValue,
 } from '@rjsf/utils';
 
-import { Checkbox } from '../components/ui/checkbox';
-import { getChakra } from '../utils';
+import { Checkbox } from '../components/ui/checkbox.js';
+import { getChakra } from '../utils.js';
 
 export default function CheckboxesWidget<
   T = any,

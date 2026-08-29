@@ -1,4 +1,4 @@
-import type { DateObject } from './types';
+import type { DateObject } from './types.js';
 
 /** Parses the `dateString` into a `DateObject`, including the time information when `includeTime` is true
  *

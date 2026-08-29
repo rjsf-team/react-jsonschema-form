@@ -1,6 +1,6 @@
-import { noop } from '../../src';
-import type { RJSFValidationError, ValidationData } from '../../src';
-import type { TestValidatorParams, TestValidatorType } from '../schema/types';
+import { noop } from '../../src/index.js';
+import type { RJSFValidationError, ValidationData } from '../../src/index.js';
+import type { TestValidatorParams, TestValidatorType } from '../schema/types.js';
 
 /** A test validator implements the `ValidatorType` interface needed by all the `schema` based tests. Inside the `utils`
  * directory, there is no actual validator implementation, so it can be necessary to mock the expected return values

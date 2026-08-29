@@ -1,19 +1,5 @@
 {
-  "extends": "../../../tsconfig.base.json",
+  "extends": "../../../tsconfig.test.json",
   "include": ["./", "./**/*.json"],
-  "compilerOptions": {
-    "rootDir": "./",
-    "noEmit": true,
-    "resolveJsonModule": true,
-    "jsx": "react-jsx",
-    "types": ["vitest/globals", "node"]
-  },
-  "references": [
-    {
-      "path": "../src"
-    },
-    {
-      "path": "../../utils/test"
-    }
-  ]
+  "references": [{ "path": "../src" }, { "path": "../../utils/test" }]
 }

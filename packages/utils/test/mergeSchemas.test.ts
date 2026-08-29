@@ -1,4 +1,4 @@
-import { mergeSchemas } from '../src';
+import { mergeSchemas } from '../src/index.js';
 
 describe('mergeSchemas()', () => {
   it('shouldn`t mutate the provided objects', () => {

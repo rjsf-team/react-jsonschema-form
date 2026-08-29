@@ -11,10 +11,10 @@ import type {
 import { deepEquals, hashForSchema, ID_KEY, ROOT_SCHEMA_PREFIX, withIdRefPrefix } from '@rjsf/utils';
 import type { ValidationError, Validator } from 'ata-validator';
 
-import createAtaInstance from './createAtaInstance';
-import type { RawValidationErrorsType } from './processRawValidationErrors';
-import processRawValidationErrors from './processRawValidationErrors';
-import type { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringType } from './types';
+import createAtaInstance from './createAtaInstance.js';
+import type { RawValidationErrorsType } from './processRawValidationErrors.js';
+import processRawValidationErrors from './processRawValidationErrors.js';
+import type { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringType } from './types.js';
 
 /** `ValidatorType` implementation backed by `ata-validator`.
  *

@@ -6,10 +6,10 @@ import { render, fireEvent, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { MockInstance } from 'vitest';
 
-import Form from '../src';
-import RadioWidget from '../src/components/widgets/RadioWidget';
-import SelectWidget from '../src/components/widgets/SelectWidget';
-import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils';
+import RadioWidget from '../src/components/widgets/RadioWidget.js';
+import SelectWidget from '../src/components/widgets/SelectWidget.js';
+import Form from '../src/index.js';
+import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.js';
 
 const user = userEvent.setup();
 

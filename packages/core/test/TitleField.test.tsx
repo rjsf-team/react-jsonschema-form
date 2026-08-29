@@ -1,8 +1,8 @@
 import type { TitleFieldProps } from '@rjsf/utils';
 import { render } from '@testing-library/react';
 
-import { getTestRegistry } from '../src';
-import TitleField from '../src/components/templates/TitleField';
+import TitleField from '../src/components/templates/TitleField.js';
+import { getTestRegistry } from '../src/index.js';
 
 const registry = getTestRegistry({});
 

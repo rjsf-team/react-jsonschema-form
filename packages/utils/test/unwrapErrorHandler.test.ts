@@ -1,6 +1,6 @@
-import type { FormValidation } from '../src';
-import { createErrorHandler, getByPath, toPath, unwrapErrorHandler, ERRORS_KEY } from '../src';
-import { TEST_FORM_DATA, ERROR_MAPPER, TEST_ERROR_SCHEMA } from './testUtils/testData';
+import type { FormValidation } from '../src/index.js';
+import { createErrorHandler, getByPath, toPath, unwrapErrorHandler, ERRORS_KEY } from '../src/index.js';
+import { TEST_FORM_DATA, ERROR_MAPPER, TEST_ERROR_SCHEMA } from './testUtils/testData.js';
 
 const EMPTY_WRAPPER = createErrorHandler(null);
 const POPULATED_WRAPPER: FormValidation = Object.entries(ERROR_MAPPER).reduce(

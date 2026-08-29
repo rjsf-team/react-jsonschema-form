@@ -3,13 +3,13 @@
 import type { MouseEvent } from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import dateRangeOptions from './dateRangeOptions';
-import type { DateElementFormat, DateElementProp } from './getDateElementProps';
-import getDateElementProps from './getDateElementProps';
-import { ariaDescribedByIds } from './idGenerators';
-import parseDateString from './parseDateString';
-import toDateString from './toDateString';
-import type { DateObject, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types';
+import dateRangeOptions from './dateRangeOptions.js';
+import type { DateElementFormat, DateElementProp } from './getDateElementProps.js';
+import getDateElementProps from './getDateElementProps.js';
+import { ariaDescribedByIds } from './idGenerators.js';
+import parseDateString from './parseDateString.js';
+import toDateString from './toDateString.js';
+import type { DateObject, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types.js';
 
 /** Function that checks to see if a `DateObject` is ready for the onChange callback to be triggered
  *

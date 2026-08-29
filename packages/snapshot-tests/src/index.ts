@@ -1,7 +1,7 @@
-export { arrayTests } from './arrayTests';
+export { arrayTests } from './arrayTests.js';
 
-export { formTests } from './formTests';
+export { formTests } from './formTests.js';
 
-export { objectTests } from './objectTests';
+export { objectTests } from './objectTests.js';
 
-export { type GridRenderCustomOptions, gridTests } from './gridTests';
+export { type GridRenderCustomOptions, gridTests } from './gridTests.js';

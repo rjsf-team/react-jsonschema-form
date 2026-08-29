@@ -1,7 +1,7 @@
-import type { RJSFSchema } from '../../src';
-import { createSchemaUtils, getByPath, PROPERTIES_KEY } from '../../src';
-import { ANSWER_1, CHOICES, testAnyOfSchema, testOneOfSchema } from '../testUtils/testData';
-import type { TestValidatorType } from './types';
+import type { RJSFSchema } from '../../src/index.js';
+import { createSchemaUtils, getByPath, PROPERTIES_KEY } from '../../src/index.js';
+import { ANSWER_1, CHOICES, testAnyOfSchema, testOneOfSchema } from '../testUtils/testData.js';
+import type { TestValidatorType } from './types.js';
 
 const simpleSchema: RJSFSchema = {
   type: 'object',

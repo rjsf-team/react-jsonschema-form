@@ -1,6 +1,6 @@
-import { FORM_CONTEXT_NAME, LOOKUP_MAP_NAME } from './constants';
-import { getByPath, hasByPath } from './pathUtils';
-import type { FormContextType, RJSFSchema, Registry, StrictRJSFSchema } from './types';
+import { FORM_CONTEXT_NAME, LOOKUP_MAP_NAME } from './constants.js';
+import { getByPath, hasByPath } from './pathUtils.js';
+import type { FormContextType, RJSFSchema, Registry, StrictRJSFSchema } from './types.js';
 
 /** Given a React JSON Schema Form registry or formContext object, return the value associated with `toLookup`. This
  * might be contained within the lookup map in the formContext. If no such value exists, return the `fallback`

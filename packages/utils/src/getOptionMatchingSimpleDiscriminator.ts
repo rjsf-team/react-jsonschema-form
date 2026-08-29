@@ -1,6 +1,6 @@
-import getPropertySchema from './getPropertySchema';
-import { getByPath } from './pathUtils';
-import type { RJSFSchema, StrictRJSFSchema } from './types';
+import getPropertySchema from './getPropertySchema.js';
+import { getByPath } from './pathUtils.js';
+import type { RJSFSchema, StrictRJSFSchema } from './types.js';
 
 /** Compares the value of `discriminatorField` within `formData` against the value of `discriminatorField` within schema for each `option`.
  * Returns index of first `option` whose discriminator matches formData. Returns `undefined` if there is no match.

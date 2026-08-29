@@ -2,8 +2,8 @@ import type { FieldProps, Registry, TitleFieldProps } from '@rjsf/utils';
 import { ID_KEY, noop, titleId } from '@rjsf/utils';
 import { render, screen, within } from '@testing-library/react';
 
-import LayoutHeaderField from '../src/components/fields/LayoutHeaderField';
-import templates from '../src/components/templates';
+import LayoutHeaderField from '../src/components/fields/LayoutHeaderField.js';
+import templates from '../src/components/templates/index.js';
 
 const TEST_ID = 'test-id';
 const REQUIRED_ID = 'required-id';

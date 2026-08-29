@@ -1,15 +1,15 @@
 import type { FormContextType, RegistryWidgetsType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
-import AutoCompleteWidget from '../AutoCompleteWidget/AutoCompleteWidget';
-import CheckboxesWidget from '../CheckboxesWidget/CheckboxesWidget';
-import CheckboxWidget from '../CheckboxWidget/CheckboxWidget';
-import ColorWidget from '../ColorWidget/ColorWidget';
-import PasswordWidget from '../PasswordWidget/PasswordWidget';
-import RadioWidget from '../RadioWidget/RadioWidget';
-import RangeWidget from '../RangeWidget/RangeWidget';
-import SelectWidget from '../SelectWidget/SelectWidget';
-import TextareaWidget from '../TextareaWidget/TextareaWidget';
-import UpDownWidget from '../UpDownWidget/UpDownWidget';
+import AutoCompleteWidget from '../AutoCompleteWidget/AutoCompleteWidget.js';
+import CheckboxesWidget from '../CheckboxesWidget/CheckboxesWidget.js';
+import CheckboxWidget from '../CheckboxWidget/CheckboxWidget.js';
+import ColorWidget from '../ColorWidget/ColorWidget.js';
+import PasswordWidget from '../PasswordWidget/PasswordWidget.js';
+import RadioWidget from '../RadioWidget/RadioWidget.js';
+import RangeWidget from '../RangeWidget/RangeWidget.js';
+import SelectWidget from '../SelectWidget/SelectWidget.js';
+import TextareaWidget from '../TextareaWidget/TextareaWidget.js';
+import UpDownWidget from '../UpDownWidget/UpDownWidget.js';
 
 export function generateWidgets<
   T = any,

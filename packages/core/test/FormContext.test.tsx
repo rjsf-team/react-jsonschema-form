@@ -1,6 +1,6 @@
 import type { ArrayFieldTemplateProps, FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
 
-import { createFormComponent } from './testUtils';
+import { createFormComponent } from './testUtils.js';
 
 const schema: RJSFSchema = { type: 'string' };
 

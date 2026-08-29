@@ -1,17 +1,17 @@
-import findFieldInSchema from './findFieldInSchema';
-import findSelectedOptionInXxxOf from './findSelectedOptionInXxxOf';
-import getClosestMatchingOption from './getClosestMatchingOption';
-import getDefaultFormState from './getDefaultFormState';
-import getDisplayLabel from './getDisplayLabel';
-import getFirstMatchingOption from './getFirstMatchingOption';
-import getFromSchema from './getFromSchema';
-import isFilesArray from './isFilesArray';
-import isMultiSelect from './isMultiSelect';
-import isSelect from './isSelect';
-import omitExtraData, { getUsedFormData, getFieldNames, isValueEmpty } from './omitExtraData';
-import retrieveSchema, { relaxOptionsForScoring } from './retrieveSchema';
-import sanitizeDataForNewSchema from './sanitizeDataForNewSchema';
-import toPathSchema from './toPathSchema';
+import findFieldInSchema from './findFieldInSchema.js';
+import findSelectedOptionInXxxOf from './findSelectedOptionInXxxOf.js';
+import getClosestMatchingOption from './getClosestMatchingOption.js';
+import getDefaultFormState from './getDefaultFormState.js';
+import getDisplayLabel from './getDisplayLabel.js';
+import getFirstMatchingOption from './getFirstMatchingOption.js';
+import getFromSchema from './getFromSchema.js';
+import isFilesArray from './isFilesArray.js';
+import isMultiSelect from './isMultiSelect.js';
+import isSelect from './isSelect.js';
+import omitExtraData, { getUsedFormData, getFieldNames, isValueEmpty } from './omitExtraData.js';
+import retrieveSchema, { relaxOptionsForScoring } from './retrieveSchema.js';
+import sanitizeDataForNewSchema from './sanitizeDataForNewSchema.js';
+import toPathSchema from './toPathSchema.js';
 
 export {
   findFieldInSchema,

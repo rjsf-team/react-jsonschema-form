@@ -7,18 +7,18 @@ import type { FormProps, IChangeEvent } from '@rjsf/core';
 import { withTheme } from '@rjsf/core';
 import type { ErrorSchema, RJSFSchema, RJSFValidationError, UiSchema, ValidatorType } from '@rjsf/utils';
 
-import { samples } from '../samples';
-import type { Sample, UiSchemaForTheme } from '../samples/Sample';
-import base64 from '../utils/base64';
-import DemoFrame from './DemoFrame';
-import Editors from './Editors';
-import ErrorBoundary from './ErrorBoundary';
-import GeoPosition from './GeoPosition';
-import type { LiveSettings } from './OptionsDrawer';
-import OptionsDrawer from './OptionsDrawer';
-import SampleSelector from './SampleSelector';
-import SpecialInput from './SpecialInput';
-import type { ThemesType } from './ThemeSelector';
+import { samples } from '../samples/index.js';
+import type { Sample, UiSchemaForTheme } from '../samples/Sample.js';
+import base64 from '../utils/base64.js';
+import DemoFrame from './DemoFrame.js';
+import Editors from './Editors.js';
+import ErrorBoundary from './ErrorBoundary.js';
+import GeoPosition from './GeoPosition.js';
+import type { LiveSettings } from './OptionsDrawer.js';
+import OptionsDrawer from './OptionsDrawer.js';
+import SampleSelector from './SampleSelector.js';
+import SpecialInput from './SpecialInput.js';
+import type { ThemesType } from './ThemeSelector.js';
 
 export interface PlaygroundProps {
   themes: Record<string, ThemesType>;

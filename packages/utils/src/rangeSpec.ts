@@ -1,4 +1,4 @@
-import type { RangeSpecType, RJSFSchema, StrictRJSFSchema } from './types';
+import type { RangeSpecType, RJSFSchema, StrictRJSFSchema } from './types.js';
 
 /** Extracts the range spec information `{ step?: number, min?: number, max?: number }` that can be spread onto an HTML
  * input from the range analog in the schema `{ multipleOf?: number, minimum?: number, maximum?: number }`.

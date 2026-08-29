@@ -1,4 +1,4 @@
-import { orderProperties } from '../src';
+import { orderProperties } from '../src/index.js';
 
 describe('orderProperties()', () => {
   it('returns properties when order array is not specified', () => {

@@ -13,14 +13,14 @@ import {
   REF_KEY,
   RJSF_REF_CYCLE_KEY,
   RJSF_REF_KEY,
-} from '../constants';
-import deepEquals from '../deepEquals';
-import findSchemaDefinition, { splitKeyElementFromObject } from '../findSchemaDefinition';
-import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
-import guessType from '../guessType';
-import isObject from '../isObject';
-import mergeSchemas from '../mergeSchemas';
-import { getByPath } from '../pathUtils';
+} from '../constants.js';
+import deepEquals from '../deepEquals.js';
+import findSchemaDefinition, { splitKeyElementFromObject } from '../findSchemaDefinition.js';
+import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.js';
+import guessType from '../guessType.js';
+import isObject from '../isObject.js';
+import mergeSchemas from '../mergeSchemas.js';
+import { getByPath } from '../pathUtils.js';
 import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
@@ -29,9 +29,9 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
-} from '../types';
-import getFirstMatchingOption from './getFirstMatchingOption';
-import shallowAllOfMerge from './shallowAllOfMerge';
+} from '../types.js';
+import getFirstMatchingOption from './getFirstMatchingOption.js';
+import shallowAllOfMerge from './shallowAllOfMerge.js';
 
 /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and dependencies
  * resolved and merged into the `schema` given a `validator`, `rootSchema` and `rawFormData` that is used to do the

@@ -1,5 +1,5 @@
-import isPlainObject from './isPlainObject';
-import type { ErrorSchema, FormValidation } from './types';
+import isPlainObject from './isPlainObject.js';
+import type { ErrorSchema, FormValidation } from './types.js';
 
 /** Unwraps the `errorHandler` structure into the associated `ErrorSchema`, stripping the `addError()` functions from it
  *

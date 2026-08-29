@@ -1,6 +1,6 @@
-import mergeObjects from './mergeObjects';
-import toErrorList from './toErrorList';
-import type { ErrorSchema, ValidationData } from './types';
+import mergeObjects from './mergeObjects.js';
+import toErrorList from './toErrorList.js';
+import type { ErrorSchema, ValidationData } from './types.js';
 
 /** Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in the
  * two `ErrorSchema`s and then appending the error list from the `additionalErrorSchema` obtained by calling

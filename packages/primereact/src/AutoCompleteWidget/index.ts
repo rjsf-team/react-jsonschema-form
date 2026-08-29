@@ -1,2 +1,2 @@
-export { default } from './AutoCompleteWidget';
-export * from './AutoCompleteWidget';
+export { default } from './AutoCompleteWidget.js';
+export * from './AutoCompleteWidget.js';

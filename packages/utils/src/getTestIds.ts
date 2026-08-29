@@ -1,5 +1,5 @@
-import { getByPath } from './pathUtils';
-import type { TestIdShape } from './types';
+import { getByPath } from './pathUtils.js';
+import type { TestIdShape } from './types.js';
 
 let testIdCounter = 0;
 

@@ -1,7 +1,7 @@
 import type { FormContextType, TitleFieldProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { Grid, Header } from 'semantic-ui-react';
 
-import { getSemanticProps } from '../util';
+import { getSemanticProps } from '../util.js';
 
 const DEFAULT_OPTIONS = {
   inverted: false,

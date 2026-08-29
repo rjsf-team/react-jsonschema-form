@@ -1,2 +1,2 @@
-export { default } from './FieldHelpTemplate';
-export * from './FieldHelpTemplate';
+export { default } from './FieldHelpTemplate.js';
+export * from './FieldHelpTemplate.js';

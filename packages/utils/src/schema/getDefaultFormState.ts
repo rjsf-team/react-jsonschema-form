@@ -9,21 +9,21 @@ import {
   IF_KEY,
   ONE_OF_KEY,
   REF_KEY,
-} from '../constants';
-import constIsAjvDataReference from '../constIsAjvDataReference';
-import deepEquals from '../deepEquals';
-import findSchemaDefinition from '../findSchemaDefinition';
-import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
-import getPropertySchema from '../getPropertySchema';
-import getSchemaType from '../getSchemaType';
-import isConstant from '../isConstant';
-import isFixedItems from '../isFixedItems';
-import isObject from '../isObject';
-import mergeDefaultsWithFormData from '../mergeDefaultsWithFormData';
-import mergeObjects from '../mergeObjects';
-import mergeSchemas from '../mergeSchemas';
-import optionsList from '../optionsList';
-import { getByPath } from '../pathUtils';
+} from '../constants.js';
+import constIsAjvDataReference from '../constIsAjvDataReference.js';
+import deepEquals from '../deepEquals.js';
+import findSchemaDefinition from '../findSchemaDefinition.js';
+import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.js';
+import getPropertySchema from '../getPropertySchema.js';
+import getSchemaType from '../getSchemaType.js';
+import isConstant from '../isConstant.js';
+import isFixedItems from '../isFixedItems.js';
+import isObject from '../isObject.js';
+import mergeDefaultsWithFormData from '../mergeDefaultsWithFormData.js';
+import mergeObjects from '../mergeObjects.js';
+import mergeSchemas from '../mergeSchemas.js';
+import optionsList from '../optionsList.js';
+import { getByPath } from '../pathUtils.js';
 import type {
   Experimental_CustomMergeAllOf,
   Experimental_DefaultFormStateBehavior,
@@ -32,11 +32,11 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
-} from '../types';
-import getClosestMatchingOption from './getClosestMatchingOption';
-import isMultiSelect from './isMultiSelect';
-import isSelect from './isSelect';
-import retrieveSchema, { resolveDependencies } from './retrieveSchema';
+} from '../types.js';
+import getClosestMatchingOption from './getClosestMatchingOption.js';
+import isMultiSelect from './isMultiSelect.js';
+import isSelect from './isSelect.js';
+import retrieveSchema, { resolveDependencies } from './retrieveSchema.js';
 
 const PRIMITIVE_TYPES = ['string', 'number', 'integer', 'boolean', 'null'];
 

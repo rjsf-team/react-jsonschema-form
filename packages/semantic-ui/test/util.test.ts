@@ -1,4 +1,4 @@
-import { getSemanticErrorProps, getSemanticProps } from '../src/util';
+import { getSemanticErrorProps, getSemanticProps } from '../src/util.js';
 
 describe('util js functions', () => {
   describe('getSemanticProps', () => {

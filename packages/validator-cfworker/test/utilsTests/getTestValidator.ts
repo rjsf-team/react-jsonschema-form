@@ -1,8 +1,8 @@
 import type { CustomValidator, ErrorTransformer, RJSFSchema, ValidationData } from '@rjsf/utils';
 
-import type { TestValidatorType } from '../../../utils/test/schema';
-import type { CustomValidatorOptionsType } from '../../src';
-import { customizeValidator } from '../../src';
+import type { TestValidatorType } from '../../../utils/test/schema/index.js';
+import type { CustomValidatorOptionsType } from '../../src/index.js';
+import { customizeValidator } from '../../src/index.js';
 
 export default function getTestValidator<T = any>(options: CustomValidatorOptionsType): TestValidatorType<T> {
   const validator = customizeValidator<T>(options);

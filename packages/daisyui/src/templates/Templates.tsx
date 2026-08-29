@@ -1,11 +1,11 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } from '@rjsf/utils';
 
-import ArrayFieldDescriptionTemplate from './ArrayFieldDescriptionTemplate';
-import ArrayFieldItemButtonsTemplate from './ArrayFieldItemButtonsTemplate';
-import ArrayFieldItemTemplate from './ArrayFieldItemTemplate';
-import ArrayFieldTemplate from './ArrayFieldTemplate/ArrayFieldTemplate';
-import ArrayFieldTitleTemplate from './ArrayFieldTitleTemplate';
-import BaseInputTemplate from './BaseInputTemplate/BaseInputTemplate';
+import ArrayFieldDescriptionTemplate from './ArrayFieldDescriptionTemplate/index.js';
+import ArrayFieldItemButtonsTemplate from './ArrayFieldItemButtonsTemplate/index.js';
+import ArrayFieldItemTemplate from './ArrayFieldItemTemplate/index.js';
+import ArrayFieldTemplate from './ArrayFieldTemplate/ArrayFieldTemplate.js';
+import ArrayFieldTitleTemplate from './ArrayFieldTitleTemplate/index.js';
+import BaseInputTemplate from './BaseInputTemplate/BaseInputTemplate.js';
 import {
   AddButton,
   CopyButton,
@@ -14,19 +14,19 @@ import {
   RemoveButton,
   SubmitButton,
   ClearButton,
-} from './ButtonTemplates';
-import CyclicSchemaExpandTemplate from './CyclicSchemaExpandTemplate';
-import DescriptionField from './DescriptionField';
-import ErrorList from './ErrorList';
-import FieldErrorTemplate from './FieldErrorTemplate';
-import FieldHelpTemplate from './FieldHelpTemplate';
-import FieldTemplate from './FieldTemplate';
-import GridTemplate from './GridTemplate/GridTemplate';
-import MultiSchemaFieldTemplate from './MultiSchemaFieldTemplate';
-import ObjectFieldTemplate from './ObjectFieldTemplate';
-import OptionalDataControlsTemplate from './OptionalDataControlsTemplate';
-import TitleFieldTemplate from './TitleField/TitleField';
-import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate';
+} from './ButtonTemplates/index.js';
+import CyclicSchemaExpandTemplate from './CyclicSchemaExpandTemplate/index.js';
+import DescriptionField from './DescriptionField/index.js';
+import ErrorList from './ErrorList/index.js';
+import FieldErrorTemplate from './FieldErrorTemplate/index.js';
+import FieldHelpTemplate from './FieldHelpTemplate/index.js';
+import FieldTemplate from './FieldTemplate/index.js';
+import GridTemplate from './GridTemplate/GridTemplate.js';
+import MultiSchemaFieldTemplate from './MultiSchemaFieldTemplate/index.js';
+import ObjectFieldTemplate from './ObjectFieldTemplate/index.js';
+import OptionalDataControlsTemplate from './OptionalDataControlsTemplate/index.js';
+import TitleFieldTemplate from './TitleField/TitleField.js';
+import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate/index.js';
 
 /** Function that generates all the template components required for the DaisyUI theme.
  *

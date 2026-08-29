@@ -1,6 +1,6 @@
-import type { RJSFSchema } from '../../src';
-import { createSchemaUtils, isSelect } from '../../src';
-import type { TestValidatorType } from './types';
+import type { RJSFSchema } from '../../src/index.js';
+import { createSchemaUtils, isSelect } from '../../src/index.js';
+import type { TestValidatorType } from './types.js';
 
 export default function isSelectTest(testValidator: TestValidatorType) {
   describe('isSelect()', () => {

@@ -1,4 +1,4 @@
-import { schemaRequiresTrueValue } from '../src';
+import { schemaRequiresTrueValue } from '../src/index.js';
 
 describe('schemaRequiresTrueValue()', () => {
   it('const', () => {

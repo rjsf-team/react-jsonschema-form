@@ -1,2 +1,2 @@
-export { default } from './WrapIfAdditionalTemplate';
-export * from './WrapIfAdditionalTemplate';
+export { default } from './WrapIfAdditionalTemplate.js';
+export * from './WrapIfAdditionalTemplate.js';

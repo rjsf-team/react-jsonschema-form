@@ -1,5 +1,5 @@
-import { enumOptionSelectedValue } from '../src';
-import type { EnumOptionsType } from '../src';
+import { enumOptionSelectedValue } from '../src/index.js';
+import type { EnumOptionsType } from '../src/index.js';
 
 const stringOptions: EnumOptionsType[] = [
   { value: 'foo', label: 'Foo' },

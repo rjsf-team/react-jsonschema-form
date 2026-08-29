@@ -1,6 +1,6 @@
-import ErrorSchemaBuilder from './ErrorSchemaBuilder';
-import { toPath } from './pathUtils';
-import type { ErrorSchema, RJSFValidationError } from './types';
+import ErrorSchemaBuilder from './ErrorSchemaBuilder.js';
+import { toPath } from './pathUtils.js';
+import type { ErrorSchema, RJSFValidationError } from './types.js';
 
 /** Transforms a rjsf validation errors list:
  * [

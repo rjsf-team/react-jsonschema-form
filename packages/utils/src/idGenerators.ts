@@ -1,5 +1,5 @@
-import { ID_KEY } from './constants';
-import type { FieldPathId } from './types';
+import { ID_KEY } from './constants.js';
+import type { FieldPathId } from './types.js';
 
 /** Generates a consistent `id` pattern for a given `id` and a `suffix`
  *

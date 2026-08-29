@@ -27,12 +27,12 @@ import userEvent from '@testing-library/user-event';
 import LayoutMultiSchemaField, {
   computeEnumOptions,
   getSelectedOption,
-} from '../src/components/fields/LayoutMultiSchemaField';
-import RadioWidget from '../src/components/widgets/RadioWidget';
-import SelectWidget from '../src/components/widgets/SelectWidget';
-import getTestRegistry from '../src/getTestRegistry';
-import { SIMPLE_ONEOF, SIMPLE_ONEOF_OPTIONS } from './testData/layoutData';
-import { setupConsoleErrorSuppression } from './testUtils';
+} from '../src/components/fields/LayoutMultiSchemaField.js';
+import RadioWidget from '../src/components/widgets/RadioWidget.js';
+import SelectWidget from '../src/components/widgets/SelectWidget.js';
+import getTestRegistry from '../src/getTestRegistry.js';
+import { SIMPLE_ONEOF, SIMPLE_ONEOF_OPTIONS } from './testData/layoutData.js';
+import { setupConsoleErrorSuppression } from './testUtils.js';
 
 vi.mock('@rjsf/utils', async (importOriginal) => ({
   ...(await importOriginal()),

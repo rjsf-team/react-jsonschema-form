@@ -1,32 +1,13 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": [
-    "./",
-    "src",
-    "test",
-  ],
+  "include": ["src", "test"],
   "compilerOptions": {
-    "rootDir": "./",
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ESNext"
-    ],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": false,
-    "composite": true,
-    "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
-    "types": ["vite/client", "node"]
+    "types": ["vite/client", "node", "vitest/globals", "@testing-library/jest-dom/vitest"]
   },
   "references": [
     {

@@ -1,4 +1,4 @@
-import { labelValue } from '../src';
+import { labelValue } from '../src/index.js';
 
 const LABEL = 'label';
 const LABEL_NODE = <strong>{LABEL}</strong>;

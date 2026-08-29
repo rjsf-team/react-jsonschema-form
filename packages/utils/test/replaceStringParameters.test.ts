@@ -1,4 +1,4 @@
-import { replaceStringParameters } from '../src';
+import { replaceStringParameters } from '../src/index.js';
 
 const PARAMS = ['one', 'two'];
 const FUNKY_PARAMS = ['o%20n%20e'];

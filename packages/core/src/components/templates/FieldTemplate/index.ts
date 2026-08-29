@@ -1,3 +1,3 @@
-import FieldTemplate from './FieldTemplate';
+import FieldTemplate from './FieldTemplate.js';
 
 export default FieldTemplate;

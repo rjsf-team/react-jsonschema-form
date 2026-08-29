@@ -1,19 +1,19 @@
 import type { Field, FormContextType, RegistryFieldsType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
-import ArrayField from './ArrayField';
-import BooleanField from './BooleanField';
-import CyclicSchemaField from './CyclicSchemaField';
-import FallbackField from './FallbackField';
-import LayoutGridField from './LayoutGridField';
-import LayoutHeaderField from './LayoutHeaderField';
-import LayoutMultiSchemaField from './LayoutMultiSchemaField';
-import MultiSchemaField from './MultiSchemaField';
-import NullField from './NullField';
-import NumberField from './NumberField';
-import ObjectField from './ObjectField';
-import OptionalDataControlsField from './OptionalDataControlsField';
-import SchemaField from './SchemaField';
-import StringField from './StringField';
+import ArrayField from './ArrayField.js';
+import BooleanField from './BooleanField.js';
+import CyclicSchemaField from './CyclicSchemaField.js';
+import FallbackField from './FallbackField.js';
+import LayoutGridField from './LayoutGridField.js';
+import LayoutHeaderField from './LayoutHeaderField.js';
+import LayoutMultiSchemaField from './LayoutMultiSchemaField.js';
+import MultiSchemaField from './MultiSchemaField.js';
+import NullField from './NullField.js';
+import NumberField from './NumberField.js';
+import ObjectField from './ObjectField.js';
+import OptionalDataControlsField from './OptionalDataControlsField.js';
+import SchemaField from './SchemaField.js';
+import StringField from './StringField.js';
 
 function fields<
   T = any,

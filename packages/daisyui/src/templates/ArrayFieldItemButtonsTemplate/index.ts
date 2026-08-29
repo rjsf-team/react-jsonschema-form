@@ -1,2 +1,2 @@
-export { default } from './ArrayFieldItemButtonsTemplate';
-export * from './ArrayFieldItemButtonsTemplate';
+export { default } from './ArrayFieldItemButtonsTemplate.js';
+export * from './ArrayFieldItemButtonsTemplate.js';

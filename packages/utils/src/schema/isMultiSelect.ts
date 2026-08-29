@@ -4,8 +4,8 @@ import type {
   StrictRJSFSchema,
   ValidatorType,
   Experimental_CustomMergeAllOf,
-} from '../types';
-import isSelect from './isSelect';
+} from '../types.js';
+import isSelect from './isSelect.js';
 
 /** Checks to see if the `schema` combination represents a multi-select
  *

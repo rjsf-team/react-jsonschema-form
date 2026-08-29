@@ -1,9 +1,9 @@
-import { NAME_KEY, RJSF_ADDITIONAL_PROPERTIES_FLAG } from '../constants';
-import findSchemaDefinition from '../findSchemaDefinition';
-import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
-import getSchemaType from '../getSchemaType';
-import isObject from '../isObject';
-import { getByPath, hasByPath, setByPath, toPath } from '../pathUtils';
+import { NAME_KEY, RJSF_ADDITIONAL_PROPERTIES_FLAG } from '../constants.js';
+import findSchemaDefinition from '../findSchemaDefinition.js';
+import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.js';
+import getSchemaType from '../getSchemaType.js';
+import isObject from '../isObject.js';
+import { getByPath, hasByPath, setByPath, toPath } from '../pathUtils.js';
 import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
@@ -12,11 +12,11 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
-} from '../types';
-import getClosestMatchingOption from './getClosestMatchingOption';
-import isSelect from './isSelect';
-import { relaxOptionsForScoring, resolveAllReferences } from './retrieveSchema';
-import shallowAllOfMerge from './shallowAllOfMerge';
+} from '../types.js';
+import getClosestMatchingOption from './getClosestMatchingOption.js';
+import isSelect from './isSelect.js';
+import { relaxOptionsForScoring, resolveAllReferences } from './retrieveSchema.js';
+import shallowAllOfMerge from './shallowAllOfMerge.js';
 
 /** Returns the `formData` with only the elements specified in the `fields` list
  *

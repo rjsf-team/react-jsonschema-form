@@ -1,6 +1,6 @@
-import { REF_KEY, ROOT_SCHEMA_PREFIX } from './constants';
-import isObject from './isObject';
-import type { RJSFSchema, StrictRJSFSchema } from './types';
+import { REF_KEY, ROOT_SCHEMA_PREFIX } from './constants.js';
+import isObject from './isObject.js';
+import type { RJSFSchema, StrictRJSFSchema } from './types.js';
 
 /** Takes a `node` object and transforms any contained `$ref` node variables with a prefix, recursively calling
  * `withIdRefPrefix` for any other elements.

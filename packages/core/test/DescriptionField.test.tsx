@@ -1,8 +1,8 @@
 import type { DescriptionFieldProps } from '@rjsf/utils';
 import { render } from '@testing-library/react';
 
-import { getTestRegistry } from '../src';
-import DescriptionField from '../src/components/templates/DescriptionField';
+import DescriptionField from '../src/components/templates/DescriptionField.js';
+import { getTestRegistry } from '../src/index.js';
 
 const registry = getTestRegistry({});
 

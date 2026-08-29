@@ -4,7 +4,7 @@ import Ajv from 'ajv';
 import type { FormatsPluginOptions } from 'ajv-formats';
 import addFormats from 'ajv-formats';
 
-import type { CustomValidatorOptionsType } from './types';
+import type { CustomValidatorOptionsType } from './types.js';
 
 export const AJV_CONFIG: Options = {
   allErrors: true,

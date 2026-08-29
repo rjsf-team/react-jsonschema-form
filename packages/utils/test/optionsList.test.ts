@@ -1,7 +1,7 @@
 import type { MockInstance } from 'vitest';
 
-import type { RJSFSchema, UiSchema } from '../src';
-import { CONST_KEY, PROPERTIES_KEY, getByPath, noop, optionsList } from '../src';
+import type { RJSFSchema, UiSchema } from '../src/index.js';
+import { CONST_KEY, PROPERTIES_KEY, getByPath, noop, optionsList } from '../src/index.js';
 
 describe('optionsList()', () => {
   let consoleWarnSpy: MockInstance;

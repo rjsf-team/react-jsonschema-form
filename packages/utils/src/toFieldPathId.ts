@@ -1,5 +1,5 @@
-import { ID_KEY } from './constants';
-import type { FieldPathId, FieldPathList, GlobalFormOptions } from './types';
+import { ID_KEY } from './constants.js';
+import type { FieldPathId, FieldPathList, GlobalFormOptions } from './types.js';
 
 /** Constructs the `FieldPathId` for `fieldPath`. If `parentPathId` is provided, the `fieldPath` is appended to the end
  * of the parent path. Then the `ID_KEY` of the resulting `FieldPathId` is constructed from the `idPrefix` and

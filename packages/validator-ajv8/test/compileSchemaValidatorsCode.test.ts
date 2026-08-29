@@ -1,10 +1,10 @@
 import type { RJSFSchema } from '@rjsf/utils';
 import { schemaParser } from '@rjsf/utils';
 
-import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators';
-import createAjvInstance from '../src/createAjvInstance';
-import { SUPER_SCHEMA_OPTIONS, superSchema } from './harness/compileSuperSchema';
-import { CUSTOM_OPTIONS, expectWarn } from './harness/testData';
+import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.js';
+import createAjvInstance from '../src/createAjvInstance.js';
+import { SUPER_SCHEMA_OPTIONS, superSchema } from './harness/compileSuperSchema.js';
+import { CUSTOM_OPTIONS, expectWarn } from './harness/testData.js';
 
 vi.mock('../src/createAjvInstance', async (importOriginal) => {
   const { default: realCreateAjvInstance } = await importOriginal<{

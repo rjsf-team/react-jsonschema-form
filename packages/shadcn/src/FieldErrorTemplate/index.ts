@@ -1,2 +1,2 @@
-export { default } from './FieldErrorTemplate';
-export * from './FieldErrorTemplate';
+export { default } from './FieldErrorTemplate.js';
+export * from './FieldErrorTemplate.js';

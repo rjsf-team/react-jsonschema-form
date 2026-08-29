@@ -4,10 +4,10 @@ import validator from '@rjsf/validator-ajv8';
 import userEvent from '@testing-library/user-event';
 import type { Mock } from 'vitest';
 
-import type { FormProps } from '../src';
-import Form from '../src';
-import type { NoValFormProps, RerenderType } from './testUtils';
-import { expectToHaveBeenCalledWithFormData, renderNode, submitForm, describeRepeated } from './testUtils';
+import type { FormProps } from '../src/index.js';
+import Form from '../src/index.js';
+import type { NoValFormProps, RerenderType } from './testUtils.js';
+import { expectToHaveBeenCalledWithFormData, renderNode, submitForm, describeRepeated } from './testUtils.js';
 
 const user = userEvent.setup();
 

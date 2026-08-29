@@ -1,6 +1,6 @@
-import { ERRORS_KEY } from './constants';
-import { getByPath, setByPath, toPath } from './pathUtils';
-import type { ErrorSchema, FieldPathList } from './types';
+import { ERRORS_KEY } from './constants.js';
+import { getByPath, setByPath, toPath } from './pathUtils.js';
+import type { ErrorSchema, FieldPathList } from './types.js';
 
 /** Represents the type of the path which can be a string of dotted path values or a list of string or numbers where
  * numbers represent array indexes/

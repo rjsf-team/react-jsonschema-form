@@ -1,5 +1,5 @@
 import { arrayTests } from '@rjsf/snapshot-tests';
 
-import WrappedForm from './WrappedForm';
+import WrappedForm from './WrappedForm.js';
 
 arrayTests(WrappedForm);

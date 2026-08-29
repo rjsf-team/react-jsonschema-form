@@ -1,11 +1,11 @@
 import type { RJSFSchema, RJSFValidationError } from '@rjsf/utils';
 
-import customizeValidator from '../src/customizeValidator';
+import customizeValidator from '../src/customizeValidator.js';
 import processRawValidationErrors, {
   filterDuplicateErrors,
   transformRJSFValidationErrors,
-} from '../src/processRawValidationErrors';
-import type { CFWorkerValidationError } from '../src/types';
+} from '../src/processRawValidationErrors.js';
+import type { CFWorkerValidationError } from '../src/types.js';
 
 function rawError(overrides: Partial<CFWorkerValidationError> = {}): CFWorkerValidationError {
   return {

@@ -1,4 +1,4 @@
-import getDecimalSeparator from './getDecimalSeparator';
+import getDecimalSeparator from './getDecimalSeparator.js';
 
 /** Attempts to convert the string into a number. If an empty string is provided, then `undefined` is returned.
  * If a `null` is provided, it is returned. If the string ends in a `.` or the locale-specific separator then the

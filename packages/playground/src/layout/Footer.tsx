@@ -1,4 +1,4 @@
-import { DRAWER_WIDTH } from '../components/OptionsDrawer';
+import { DRAWER_WIDTH } from '../components/OptionsDrawer.js';
 
 export default function Footer() {
   return (

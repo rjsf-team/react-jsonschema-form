@@ -34,7 +34,7 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { MockInstance } from 'vitest';
 
-import type { LayoutGridFieldProps } from '../src/components/fields/LayoutGridField';
+import type { LayoutGridFieldProps } from '../src/components/fields/LayoutGridField.js';
 import LayoutGridField, {
   computeArraySchemasIfPresent,
   computeFieldUiSchema,
@@ -46,9 +46,9 @@ import LayoutGridField, {
   GridType,
   LAYOUT_GRID_OPTION,
   Operators,
-} from '../src/components/fields/LayoutGridField';
-import getTestRegistry from '../src/getTestRegistry';
-import { SAMPLE_SCHEMA, sampleUISchema, SIMPLE_ONEOF, SIMPLE_ONEOF_OPTIONS } from './testData/layoutData';
+} from '../src/components/fields/LayoutGridField.js';
+import getTestRegistry from '../src/getTestRegistry.js';
+import { SAMPLE_SCHEMA, sampleUISchema, SIMPLE_ONEOF, SIMPLE_ONEOF_OPTIONS } from './testData/layoutData.js';
 
 const ColumnWidth3 = 'col-xs-3';
 const ColumnWidth4 = 'col-xs-4';

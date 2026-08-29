@@ -1,6 +1,6 @@
-import deepEquals from './deepEquals';
-import enumOptionsValueForIndex from './enumOptionsValueForIndex';
-import type { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types';
+import deepEquals from './deepEquals.js';
+import enumOptionsValueForIndex from './enumOptionsValueForIndex.js';
+import type { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types.js';
 
 /** Removes the enum option value at the `valueIndex` from the currently `selected` (list of) value(s). If `selected` is
  * a list, then that list is updated to remove the enum option value with the `valueIndex` in `allEnumOptions`. If it is

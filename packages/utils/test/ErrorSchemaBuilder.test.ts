@@ -1,5 +1,5 @@
-import type { ErrorSchema } from '../src';
-import { ErrorSchemaBuilder, ERRORS_KEY } from '../src';
+import type { ErrorSchema } from '../src/index.js';
+import { ErrorSchemaBuilder, ERRORS_KEY } from '../src/index.js';
 
 const AN_ERROR = 'an error';
 const SOME_ERRORS = ['error1', 'error2'];

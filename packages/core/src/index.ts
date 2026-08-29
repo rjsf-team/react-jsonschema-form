@@ -1,15 +1,15 @@
-import type { FormProps, FormState, IChangeEvent } from './components/Form';
-import Form from './components/Form';
-import type { RichDescriptionProps } from './components/RichDescription';
-import RichDescription from './components/RichDescription';
-import type { RichHelpProps } from './components/RichHelp';
-import RichHelp from './components/RichHelp';
-import type { SchemaExamplesProps } from './components/SchemaExamples';
-import SchemaExamples from './components/SchemaExamples';
-import getDefaultRegistry from './getDefaultRegistry';
-import getTestRegistry from './getTestRegistry';
-import type { ThemeProps } from './withTheme';
-import withTheme from './withTheme';
+import type { FormProps, FormState, IChangeEvent } from './components/Form.js';
+import Form from './components/Form.js';
+import type { RichDescriptionProps } from './components/RichDescription.js';
+import RichDescription from './components/RichDescription.js';
+import type { RichHelpProps } from './components/RichHelp.js';
+import RichHelp from './components/RichHelp.js';
+import type { SchemaExamplesProps } from './components/SchemaExamples.js';
+import SchemaExamples from './components/SchemaExamples.js';
+import getDefaultRegistry from './getDefaultRegistry.js';
+import getTestRegistry from './getTestRegistry.js';
+import type { ThemeProps } from './withTheme.js';
+import withTheme from './withTheme.js';
 
 export type {
   FormProps,

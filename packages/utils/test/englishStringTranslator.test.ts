@@ -1,4 +1,4 @@
-import { englishStringTranslator, TranslatableString } from '../src';
+import { englishStringTranslator, TranslatableString } from '../src/index.js';
 
 const PARAMS = ['one', 'two', 'three'];
 

@@ -1,5 +1,5 @@
-import type { Registry, RJSFSchema, TemplatesType, UiSchema, UiSchemaDefinitions } from '../src';
-import { RJSF_REF_KEY, noop, resolveUiSchema } from '../src';
+import type { Registry, RJSFSchema, TemplatesType, UiSchema, UiSchemaDefinitions } from '../src/index.js';
+import { RJSF_REF_KEY, noop, resolveUiSchema } from '../src/index.js';
 
 beforeEach(() => {
   vi.spyOn(console, 'warn').mockImplementation(noop);

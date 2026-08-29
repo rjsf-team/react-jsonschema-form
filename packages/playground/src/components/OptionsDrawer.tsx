@@ -7,10 +7,10 @@ import type { RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
 import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
 
-import base64 from '../utils/base64';
-import CopyLink from './CopyLink';
-import RawValidatorTest from './RawValidatorTest';
-import ValidatorSelector from './ValidatorSelector';
+import base64 from '../utils/base64.js';
+import CopyLink from './CopyLink.js';
+import RawValidatorTest from './RawValidatorTest.js';
+import ValidatorSelector from './ValidatorSelector.js';
 
 export const DRAWER_WIDTH = '28rem';
 

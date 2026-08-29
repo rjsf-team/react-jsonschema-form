@@ -1,23 +1,23 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } from '@rjsf/utils';
 
-import AddButton from '../AddButton';
-import ArrayFieldItemTemplate from '../ArrayFieldItemTemplate';
-import ArrayFieldTemplate from '../ArrayFieldTemplate';
-import BaseInputTemplate from '../BaseInputTemplate/BaseInputTemplate';
-import CyclicSchemaExpandTemplate from '../CyclicSchemaExpandTemplate';
-import DescriptionField from '../DescriptionField';
-import ErrorList from '../ErrorList';
-import FieldErrorTemplate from '../FieldErrorTemplate';
-import FieldHelpTemplate from '../FieldHelpTemplate';
-import FieldTemplate from '../FieldTemplate';
-import GridTemplate from '../GridTemplate';
-import { CopyButton, MoveDownButton, MoveUpButton, RemoveButton, ClearButton } from '../IconButton';
-import MultiSchemaFieldTemplate from '../MultiSchemaFieldTemplate';
-import ObjectFieldTemplate from '../ObjectFieldTemplate';
-import OptionalDataControlsTemplate from '../OptionalDataControlsTemplate';
-import SubmitButton from '../SubmitButton';
-import TitleField from '../TitleField';
-import WrapIfAdditionalTemplate from '../WrapIfAdditionalTemplate';
+import AddButton from '../AddButton/index.js';
+import ArrayFieldItemTemplate from '../ArrayFieldItemTemplate/index.js';
+import ArrayFieldTemplate from '../ArrayFieldTemplate/index.js';
+import BaseInputTemplate from '../BaseInputTemplate/BaseInputTemplate.js';
+import CyclicSchemaExpandTemplate from '../CyclicSchemaExpandTemplate/index.js';
+import DescriptionField from '../DescriptionField/index.js';
+import ErrorList from '../ErrorList/index.js';
+import FieldErrorTemplate from '../FieldErrorTemplate/index.js';
+import FieldHelpTemplate from '../FieldHelpTemplate/index.js';
+import FieldTemplate from '../FieldTemplate/index.js';
+import GridTemplate from '../GridTemplate/index.js';
+import { CopyButton, MoveDownButton, MoveUpButton, RemoveButton, ClearButton } from '../IconButton/index.js';
+import MultiSchemaFieldTemplate from '../MultiSchemaFieldTemplate/index.js';
+import ObjectFieldTemplate from '../ObjectFieldTemplate/index.js';
+import OptionalDataControlsTemplate from '../OptionalDataControlsTemplate/index.js';
+import SubmitButton from '../SubmitButton/index.js';
+import TitleField from '../TitleField/index.js';
+import WrapIfAdditionalTemplate from '../WrapIfAdditionalTemplate/index.js';
 
 export function generateTemplates<
   T = any,

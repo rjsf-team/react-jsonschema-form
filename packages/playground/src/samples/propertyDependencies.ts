@@ -1,4 +1,4 @@
-import type { Sample } from './Sample';
+import type { Sample } from './Sample.js';
 
 const propertyDependencies: Sample = {
   schema: {

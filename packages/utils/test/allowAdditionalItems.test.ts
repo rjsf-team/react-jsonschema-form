@@ -1,7 +1,7 @@
 import type { MockInstance } from 'vitest';
 
-import type { RJSFSchema } from '../src';
-import { allowAdditionalItems, noop } from '../src';
+import type { RJSFSchema } from '../src/index.js';
+import { allowAdditionalItems, noop } from '../src/index.js';
 
 const schema1: RJSFSchema = {
   type: 'string',

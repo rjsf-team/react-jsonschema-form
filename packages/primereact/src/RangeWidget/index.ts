@@ -1,2 +1,2 @@
-export { default } from './RangeWidget';
-export * from './RangeWidget';
+export { default } from './RangeWidget.js';
+export * from './RangeWidget.js';

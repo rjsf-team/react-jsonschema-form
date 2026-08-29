@@ -1,4 +1,4 @@
-import { getByPath, hasByPath, setByPath, toPath, unsetByPath } from '../src';
+import { getByPath, hasByPath, setByPath, toPath, unsetByPath } from '../src/index.js';
 
 describe('toPath()', () => {
   it('splits dotted paths', () => {

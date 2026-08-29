@@ -1,7 +1,7 @@
 import React from 'react';
 
-import deepEquals from './deepEquals';
-import shallowEquals from './shallowEquals';
+import deepEquals from './deepEquals.js';
+import shallowEquals from './shallowEquals.js';
 
 /** The supported component update strategies */
 export type ComponentUpdateStrategy = 'customDeep' | 'shallow' | 'always';

@@ -1,9 +1,9 @@
 import type { RJSFSchema } from '@rjsf/utils';
 
-import type { CustomValidatorOptionsType, ValidatorFunctions } from '../../src';
-import { compileSchemaValidatorsCode } from '../../src/compileSchemaValidators';
+import { compileSchemaValidatorsCode } from '../../src/compileSchemaValidators.js';
+import type { CustomValidatorOptionsType, ValidatorFunctions } from '../../src/index.js';
 import superSchemaObj from './superSchema.json';
-import { CUSTOM_OPTIONS, expectWarn } from './testData';
+import { CUSTOM_OPTIONS, expectWarn } from './testData.js';
 
 export const superSchema = superSchemaObj as unknown as RJSFSchema;
 

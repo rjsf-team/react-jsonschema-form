@@ -1,5 +1,5 @@
-import { enumOptionsIndexForValue } from '../src';
-import { ALL_OPTIONS } from './testUtils/testData';
+import { enumOptionsIndexForValue } from '../src/index.js';
+import { ALL_OPTIONS } from './testUtils/testData.js';
 
 const VALUE = ALL_OPTIONS[1].value;
 const VALUES = [ALL_OPTIONS[1].value, ALL_OPTIONS[0].value];

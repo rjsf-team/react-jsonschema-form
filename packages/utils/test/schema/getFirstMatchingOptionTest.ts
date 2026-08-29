@@ -1,6 +1,6 @@
-import type { RJSFSchema } from '../../src';
-import { createSchemaUtils, getFirstMatchingOption, noop } from '../../src';
-import type { TestValidatorType } from './types';
+import type { RJSFSchema } from '../../src/index.js';
+import { createSchemaUtils, getFirstMatchingOption, noop } from '../../src/index.js';
+import type { TestValidatorType } from './types.js';
 
 export default function getFirstMatchingOptionTest(testValidator: TestValidatorType) {
   describe('getFirstMatchingOption()', () => {

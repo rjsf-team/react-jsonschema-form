@@ -1,15 +1,15 @@
-import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY } from '../constants';
-import deepEquals from '../deepEquals';
-import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
-import { getByPath } from '../pathUtils';
+import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY } from '../constants.js';
+import deepEquals from '../deepEquals.js';
+import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.js';
+import { getByPath } from '../pathUtils.js';
 import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
-} from '../types';
-import retrieveSchema from './retrieveSchema';
+} from '../types.js';
+import retrieveSchema from './retrieveSchema.js';
 
 /** Finds the option inside the `schema['any/oneOf']` list which has the `properties[selectorField].default` or
  * `properties[selectorField].const` that matches the `formData[selectorField]` value. For the purposes of this

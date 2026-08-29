@@ -6,14 +6,14 @@ import userEvent from '@testing-library/user-event';
 import draft06 from 'ajv/lib/refs/json-schema-draft-06.json';
 import { createPortal } from 'react-dom';
 
-import type { FormProps } from '../src';
-import Form from '../src';
+import type { FormProps } from '../src/index.js';
+import Form from '../src/index.js';
 import {
   expectToHaveBeenCalledWithFormData,
   setupConsoleErrorSuppression,
   submitForm,
   describeRepeated,
-} from './testUtils';
+} from './testUtils.js';
 
 const user = userEvent.setup();
 const renderErrorSuppression = setupConsoleErrorSuppression();

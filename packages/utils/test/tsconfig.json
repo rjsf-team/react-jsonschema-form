@@ -1,18 +1,11 @@
 {
-  "extends": "../../../tsconfig.base.json",
+  "extends": "../../../tsconfig.test.json",
   "include": ["./"],
   "compilerOptions": {
+    // Emitted because packages/validator-*/test/utilsTests import these helpers as a built package.
+    "noEmit": false,
     "rootDir": "./",
-    // todo: noEmit: true
-    // maybe better to move this to some separate package
-    // this is needed for packages/validator-ajv8/test/utilsTests
-    "outDir": "../lib-test",
-    "jsx": "react-jsx",
-    "types": ["vitest/globals", "node"]
+    "outDir": "../lib-test"
   },
-  "references": [
-    {
-      "path": "../src"
-    }
-  ]
+  "references": [{ "path": "../src" }]
 }

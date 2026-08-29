@@ -1,8 +1,8 @@
 import { getTestRegistry } from '@rjsf/core';
 import type { WidgetProps, RJSFSchema } from '@rjsf/utils';
 
-import BaseInputTemplate from '../../src/BaseInputTemplate';
-import Templates from '../../src/Templates';
+import BaseInputTemplate from '../../src/BaseInputTemplate/index.js';
+import Templates from '../../src/Templates/index.js';
 
 const mockSchema: RJSFSchema = {
   type: 'array',

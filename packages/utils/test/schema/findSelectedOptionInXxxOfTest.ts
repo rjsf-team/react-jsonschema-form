@@ -1,5 +1,5 @@
-import type { RJSFSchema } from '../../src';
-import { ANY_OF_KEY, createSchemaUtils, ONE_OF_KEY } from '../../src';
+import type { RJSFSchema } from '../../src/index.js';
+import { ANY_OF_KEY, createSchemaUtils, ONE_OF_KEY } from '../../src/index.js';
 import {
   ANSWER_1,
   ANSWER_2,
@@ -8,8 +8,8 @@ import {
   testAnyOfSchema,
   testOneOfDiscriminatorSchema,
   testOneOfSchema,
-} from '../testUtils/testData';
-import type { TestValidatorType } from './types';
+} from '../testUtils/testData.js';
+import type { TestValidatorType } from './types.js';
 
 export default function findSelectedOptionInXxxOfTest(testValidator: TestValidatorType) {
   const schemaUtils = createSchemaUtils(testValidator, {} as RJSFSchema);

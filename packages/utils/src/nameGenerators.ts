@@ -1,4 +1,4 @@
-import type { NameGeneratorFunction, FieldPathList } from './types';
+import type { NameGeneratorFunction, FieldPathList } from './types.js';
 
 /**
  * Generates bracketed names

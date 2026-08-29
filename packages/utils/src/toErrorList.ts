@@ -1,6 +1,6 @@
-import { ERRORS_KEY } from './constants';
-import isPlainObject from './isPlainObject';
-import type { ErrorSchema, RJSFValidationError } from './types';
+import { ERRORS_KEY } from './constants.js';
+import isPlainObject from './isPlainObject.js';
+import type { ErrorSchema, RJSFValidationError } from './types.js';
 
 /** Converts an `errorSchema` into a list of `RJSFValidationErrors`
  *

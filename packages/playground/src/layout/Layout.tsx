@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react';
 
-import Footer from './Footer';
+import Footer from './Footer.js';
 
 export function Layout({ children }: PropsWithChildren) {
   return (

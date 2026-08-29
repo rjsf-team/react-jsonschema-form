@@ -9,9 +9,9 @@ import {
   SelectedOptionDescription,
 } from '@rjsf/utils';
 
-import { FancyMultiSelect } from '../components/ui/fancy-multi-select';
-import { FancySelect } from '../components/ui/fancy-select';
-import { cn } from '../lib/utils';
+import { FancyMultiSelect } from '../components/ui/fancy-multi-select.js';
+import { FancySelect } from '../components/ui/fancy-select.js';
+import { cn } from '../lib/utils.js';
 
 /** The `SelectWidget` is a widget for rendering dropdowns.
  *  It is typically used with string properties constrained with enum options.

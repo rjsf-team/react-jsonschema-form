@@ -18,6 +18,7 @@
       "oxfmt"
     ]
   },
+  "type": "module",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [

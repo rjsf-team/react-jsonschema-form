@@ -27,14 +27,13 @@ import {
   toFieldPathId,
   useDeepCompareMemo,
   ONE_OF_KEY,
-  PROPERTIES_KEY,
   REF_KEY,
   isObject,
   TranslatableString,
 } from '@rjsf/utils';
 import { Markdown } from 'markdown-to-jsx/react';
 
-import { ADDITIONAL_PROPERTY_KEY_REMOVE } from '../constants';
+import { ADDITIONAL_PROPERTY_KEY_REMOVE } from '../constants.js';
 
 /** Returns a flag indicating whether the `name` field is required in the object schema
  *

@@ -2,8 +2,8 @@ import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { schemaParser } from '@rjsf/utils';
 import standaloneCode from 'ajv/dist/standalone';
 
-import createAjvInstance from './createAjvInstance';
-import type { CustomValidatorOptionsType } from './types';
+import createAjvInstance from './createAjvInstance.js';
+import type { CustomValidatorOptionsType } from './types.js';
 
 /** The function used to compile a schema into javascript code in the form that allows it to be used as a precompiled
  * validator. The main reasons for using a precompiled validator is reducing code size, improving validation speed and,

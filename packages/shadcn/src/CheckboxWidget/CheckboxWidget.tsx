@@ -1,8 +1,8 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { ariaDescribedByIds, descriptionId, getTemplate, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
 
-import { Checkbox } from '../components/ui/checkbox';
-import { Label } from '../components/ui/label';
+import { Checkbox } from '../components/ui/checkbox.js';
+import { Label } from '../components/ui/label.js';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.

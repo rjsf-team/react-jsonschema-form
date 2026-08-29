@@ -1,9 +1,9 @@
 import type { MockInstance } from 'vitest';
 
-import type { Registry, RJSFSchema, TemplatesType } from '../src';
-import { createSchemaUtils, englishStringTranslator, isRootSchema } from '../src';
-import getTestValidator from './testUtils/getTestValidator';
-import { GLOBAL_FORM_OPTIONS } from './testUtils/testData';
+import type { Registry, RJSFSchema, TemplatesType } from '../src/index.js';
+import { createSchemaUtils, englishStringTranslator, isRootSchema } from '../src/index.js';
+import getTestValidator from './testUtils/getTestValidator.js';
+import { GLOBAL_FORM_OPTIONS } from './testUtils/testData.js';
 
 const TEST_SCHEMA_TO_COMPARE: RJSFSchema = {
   title: 'Sample Schema',
