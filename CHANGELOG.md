@@ -40,6 +40,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Replaced the remaining non-path `lodash` usage (`isEmpty`, `isObject`, `isPlainObject`, `each`, `flatten`, `includes`, `intersection`, `last`, `uniqueId`, `noop`) with native equivalents, and dropped the `lodash`/`lodash-es` dependencies entirely
 - Fixed the clearing of errors on change so that only the field that actually changed loses its error, along with the errors the containers holding it own, rather than every field under the top-level key holding it, fixing [#5197](https://github.com/rjsf-team/react-jsonschema-form/issues/5197) ([#5205](https://github.com/rjsf-team/react-jsonschema-form/pull/5205))
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
+- Renamed the test file `Form.test.tsx` to `Form.behaviors.test.tsx` so all the `Form` test files follow the `Form.<topic>.test.tsx` naming pattern introduced by [#5219](https://github.com/rjsf-team/react-jsonschema-form/pull/5219)
 
 ## @rjsf/daisyui
 
