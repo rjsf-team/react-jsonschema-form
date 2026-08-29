@@ -47,6 +47,10 @@ class SchemaUtils<
   validator: ValidatorType<T, S, F>;
   defaultFormStateBehavior: DefaultFormStateBehavior;
   customMergeAllOf?: CustomMergeAllOf<S>;
+  /** The last `retrieveSchema()` result per input schema; a deep-equal recomputation returns the retained instance so
+   * consumers comparing by reference (React.memo, useMemo dependencies) see an unchanged schema as unchanged
+   */
+  private lastRetrievedSchemas = new WeakMap<object, S>();
 
   /** Constructs the `SchemaUtils` instance with the given `validator` and `rootSchema` stored as instance variables
    *
@@ -325,7 +329,7 @@ class SchemaUtils<
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
    */
   retrieveSchema(schema: S, rawFormData?: T, resolveAnyOfOrOneOfRefs?: boolean) {
-    return retrieveSchema<T, S, F>(
+    const result = retrieveSchema<T, S, F>(
       this.validator,
       schema,
       this.rootSchema,
@@ -333,6 +337,16 @@ class SchemaUtils<
       this.customMergeAllOf,
       resolveAnyOfOrOneOfRefs,
     );
+    /* v8 ignore next 3 -- schemas are objects by type; the guard only keeps a runtime non-object out of the WeakMap */
+    if (schema === null || typeof schema !== 'object') {
+      return result;
+    }
+    const retained = this.lastRetrievedSchemas.get(schema);
+    if (retained && deepEquals(retained, result)) {
+      return retained;
+    }
+    this.lastRetrievedSchemas.set(schema, result);
+    return result;
   }
 
   /** Returns an `ErrorSchema` holding a required error for every field marked `ui:required: true` (via
