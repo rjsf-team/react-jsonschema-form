@@ -57,7 +57,7 @@ export function createFormComponent(props: NoValFormProps, v: ValidatorType = va
   return createComponent(Form, { validator: v, ...props });
 }
 
-export interface FormExtraProps {
+interface FormExtraProps {
   omitExtraData: FormProps['omitExtraData'];
   liveOmit?: FormProps['liveOmit'];
 }
