@@ -4,7 +4,6 @@ import { fireEvent, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import StringField from '../src/components/fields/StringField';
-import TextWidget from '../src/components/widgets/TextWidget';
 import {
   createFormComponent,
   getSelectedOptionValue,
@@ -12,6 +11,7 @@ import {
   submitForm,
   expectToHaveBeenCalledWithFormData,
 } from './testUtils';
+import { TextWidgetTest } from './TextWidgetTest';
 
 const consoleErrorSuppression = setupConsoleErrorSuppression();
 
@@ -36,20 +36,6 @@ function StringFieldTest(props: FieldProps) {
     props.onChange(newFormData, path, raiseError, id);
   };
   return <StringField {...props} onChange={onChangeTest} />;
-}
-
-export function TextWidgetTest(props: WidgetProps) {
-  const onChangeTest = (newFormData: any, errorSchema?: ErrorSchema, id?: string) => {
-    const value = newFormData;
-    let raiseError = errorSchema;
-    if (value !== 'test') {
-      raiseError = {
-        __errors: ['Value must be "test"'],
-      } as ErrorSchema;
-    }
-    props.onChange(newFormData, raiseError, id);
-  };
-  return <TextWidget {...props} onChange={onChangeTest} />;
 }
 
 const user = userEvent.setup();

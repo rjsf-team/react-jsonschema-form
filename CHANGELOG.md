@@ -38,6 +38,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `TimeWidget` to respect schema `multipleOf` time precision, preserving second-precision values while keeping minute-precision native inputs synchronized with their displayed value ([#5174](https://github.com/rjsf-team/react-jsonschema-form/pull/5174))
 - Replaced all path-based `lodash` usage (`get`, `set`, `unset`, `toPath`, `pick`) with the new `@rjsf/utils` path utilities
 - Replaced the remaining non-path `lodash` usage (`isEmpty`, `isObject`, `isPlainObject`, `each`, `flatten`, `includes`, `intersection`, `last`, `uniqueId`, `noop`) with native equivalents, and dropped the `lodash`/`lodash-es` dependencies entirely
+- Fixed the clearing of errors on change so that only the field that actually changed loses its error, along with the errors the containers holding it own, rather than every field under the top-level key holding it, fixing [#5197](https://github.com/rjsf-team/react-jsonschema-form/issues/5197) ([#5205](https://github.com/rjsf-team/react-jsonschema-form/pull/5205))
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
 
 ## @rjsf/daisyui
@@ -45,7 +46,12 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 - Removed the module-level Font Awesome `library.add()` call from `AddButton`; every icon is passed to `FontAwesomeIcon` as an imported icon object, so the global registry was never consulted
-- Added the `generateForm()`, `generateTemplates()`, `generateTheme()` and `generateWidgets()` exports for overriding the generics, matching the other themes per the [TypeScript customization docs](https://rjsf-team.github.io/react-jsonschema-form/docs/advanced-customization/typescript) ([#5194](https://github.com/rjsf-team/react-jsonschema-form/pull/5194))
+- Registered `ArrayFieldDescriptionTemplate` and `ArrayFieldTitleTemplate` in `generateTemplates()`; `ArrayFieldTemplate` already looked these up from the registry, but since they were never registered, array titles/descriptions silently fell back to `core`'s unstyled defaults instead of the DaisyUI-styled versions the theme ships
+- Added `generateForm`, `generateTemplates`, `generateTheme` and `generateWidgets` exports so `lib/index.d.ts` matches the other themes, and consolidated the duplicate `daisyForm` entry point into `DaisyUIForm`
+- Wired the previously-unused `getDaisy()`/`DaisyProps` helpers into `FieldTemplate`, so `ui:options: { daisy: { theme, className, style } }` now applies a per-field DaisyUI theme, class name and/or style
+- Fixed `build:esm`/`build:umd` in `package.json`, which built and named the bundle as `@rjsf/chakra-ui` (`dist/chakra-ui.esm.js`/`.umd.js`) instead of `@rjsf/daisyui`
+- Gave `ArrayFieldTitleTemplate` and `ArrayFieldDescriptionTemplate` the `id` (`titleId`/`descriptionId` derived from `fieldPathId`) and empty-value guard every other template implementing these has, and that registering them in `generateTemplates()` had otherwise dropped from array titles/descriptions
+>>>>>>> origin/main
 
 ## @rjsf/fluentui-rc
 
@@ -84,7 +90,8 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/shadcn
 
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
-- - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+- Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+- Fixed `FancySelect` showing a red error border on required empty enum fields before validation runs, fixing [#5187](https://github.com/rjsf-team/react-jsonschema-form/issues/5187) ([#5209](https://github.com/rjsf-team/react-jsonschema-form/pull/5209))
 
 ## @rjsf/utils
 
@@ -94,6 +101,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Added `isPlainObject`, the stricter counterpart to `isObject()` that excludes class instances, replacing `lodash/isPlainObject` for consumers
 - Added `getPropertySchema()`, which reads a property sub-schema out of a schema's `properties`, defaulting to an empty schema; it replaces the repeated `(schema[PROPERTIES_KEY]?.[key] ?? {}) as S` lookups in `@rjsf/utils` and `@rjsf/core`
 - Added `noop()`, a do-nothing function replacing `lodash/noop` for consumers
+- Added an optional `deep` flag to `getChangedFields()` that descends into nested objects and same-length arrays and returns the dotted path of the field that changed ([#5205](https://github.com/rjsf-team/react-jsonschema-form/pull/5205))
 - Made the default value of a required boolean field be false if a `default` is not present in the schema
 - Fixed `omitExtraData()` by removing the over-reaching `additionalProperties: false` post-processing block introduced in [#5147](https://github.com/rjsf-team/react-jsonschema-form/pull/5147) that incorrectly stripped keys written by winning `oneOf`/`anyOf` and `if/then/else` branches, fixing [#5194](https://github.com/rjsf-team/react-jsonschema-form/issues/5194)
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
@@ -121,6 +129,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Removed the last `lodash` usage from the playground and the test suites, so no package declares `lodash`/`lodash-es` as a direct dependency any more (both remain in the lockfile as transitive dependencies of third-party tooling). The `lodashReplacer` `tsc-alias` machinery that rewrote `lodash` imports to `lodash-es` for the ESM builds has been deleted along with it
 - Cleaned up `@rjsf/validator-ajv8`'s tests: the deliberately-triggered AJV `console.warn` output is now asserted with a shared `expectWarn()` helper instead of leaking into the test output, the gitignored `superSchema*.cjs` harness files are regenerated by a vitest `globalSetup` (so watch mode and IDE runners work from a fresh clone too), and the harness files are read relative to the test file instead of the working directory
 - Added `size-limit` CI checks that enforce bundle size budgets for `@rjsf/core`, `@rjsf/utils` and `@rjsf/validator-ajv8` — each measured both with and without its runtime dependencies, plus single-export tree-shaking canaries — and comment the size diff versus the base branch on every PR
+- Restructured `@rjsf/core`'s test suite for speed: the "Form common" suite was split by topic into six test files so vitest can parallelize them, and the `StringField` suite is no longer re-executed via cross-imports from the `ArrayField`/`ObjectField` suites (302 duplicate test executions removed)
 - Added `knip` and removed the unused code, exports and dependencies it reported ([#5194](https://github.com/rjsf-team/react-jsonschema-form/pull/5194))
 
 # 6.8.0

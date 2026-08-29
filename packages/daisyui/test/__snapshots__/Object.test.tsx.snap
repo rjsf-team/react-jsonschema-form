@@ -771,19 +771,12 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                   >
-                    <div
-                      class="title-field mb-6"
+                    <h3
+                      class="text-2xl font-bold"
                       id="root_tags__title"
                     >
-                      <h2
-                        class="text-3xl font-bold text-primary mb-2"
-                      >
-                        tags
-                      </h2>
-                      <div
-                        class="divider divider-primary my-0"
-                      />
-                    </div>
+                      tags
+                    </h3>
                     <div
                       class="flex flex-col gap-4"
                     >
@@ -1776,19 +1769,12 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                   >
-                    <div
-                      class="title-field mb-6"
+                    <h3
+                      class="text-2xl font-bold"
                       id="root_items__title"
                     >
-                      <h2
-                        class="text-3xl font-bold text-primary mb-2"
-                      >
-                        items
-                      </h2>
-                      <div
-                        class="divider divider-primary my-0"
-                      />
-                    </div>
+                      items
+                    </h3>
                     <div
                       class="flex flex-col gap-4"
                     >
@@ -2586,19 +2572,12 @@ exports[`object fields > additionalProperties, array type 1`] = `
                     <div
                       class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                     >
-                      <div
-                        class="title-field mb-6"
+                      <h3
+                        class="text-2xl font-bold"
                         id="root_foo__title"
                       >
-                        <h2
-                          class="text-3xl font-bold text-primary mb-2"
-                        >
-                          foo
-                        </h2>
-                        <div
-                          class="divider divider-primary my-0"
-                        />
-                      </div>
+                        foo
+                      </h3>
                       <div
                         class="flex flex-col gap-4"
                       >

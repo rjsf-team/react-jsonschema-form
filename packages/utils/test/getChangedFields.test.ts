@@ -163,4 +163,57 @@ describe('getChangedFields()', () => {
       ),
     ).toEqual(['f', 'g']);
   });
+  describe('deep', () => {
+    it('returns the path of the field that changed inside an array item', () => {
+      const a = { items: [{ qux: '', corge: '' }] };
+      const b = { items: [{ qux: 'a', corge: '' }] };
+      expect(getChangedFields(a, b)).toEqual(['items']);
+      expect(getChangedFields(a, b, true)).toEqual(['items.0.qux']);
+    });
+    it('returns the path of the field that changed inside a nested object', () => {
+      const a = { outer: { inner: { one: 1, two: 2 } } };
+      const b = { outer: { inner: { one: 1, two: 3 } } };
+      expect(getChangedFields(a, b, true)).toEqual(['outer.inner.two']);
+    });
+    it('reports every field that changed', () => {
+      const a = { items: [{ qux: '', corge: '' }, { qux: '' }], top: 1 };
+      const b = { items: [{ qux: 'a', corge: 'b' }, { qux: '' }], top: 2 };
+      expect(getChangedFields(a, b, true)).toEqual(['items.0.qux', 'items.0.corge', 'top']);
+    });
+    it('reports the array itself when its length changed', () => {
+      const a = { items: [{ qux: '' }] };
+      const b = { items: [{ qux: '' }, { qux: '' }] };
+      expect(getChangedFields(a, b, true)).toEqual(['items']);
+    });
+    it('reports the index when the item that changed is not an object', () => {
+      const a = { items: ['one', 'two'] };
+      const b = { items: ['one', 'three'] };
+      expect(getChangedFields(a, b, true)).toEqual(['items.1']);
+    });
+    it('stops where one side is no longer an object', () => {
+      const a = { outer: { inner: 1 } };
+      const b = { outer: 'gone' };
+      expect(getChangedFields(a, b, true)).toEqual(['outer']);
+    });
+    it('descends into a key holding a dot, spelling the name out as part of the path', () => {
+      const a = { 'has.dot': { inner: 1, other: 2 } };
+      const b = { 'has.dot': { inner: 3, other: 2 } };
+      expect(getChangedFields(a, b)).toEqual(['has.dot']);
+      expect(getChangedFields(a, b, true)).toEqual(['has.dot.inner']);
+    });
+    it('descends into a key holding a bracket', () => {
+      const a = { 'has[0]': { inner: 1, other: 2 } };
+      const b = { 'has[0]': { inner: 3, other: 2 } };
+      expect(getChangedFields(a, b, true)).toEqual(['has[0].inner']);
+    });
+    it('reports a key holding a dot whole when the difference cannot be narrowed', () => {
+      const a = { 'has.dot': 1 };
+      const b = { 'has.dot': 2 };
+      expect(getChangedFields(a, b, true)).toEqual(['has.dot']);
+    });
+    it('leaves the shallow result alone', () => {
+      expect(getChangedFields(complexObject, { ...makeComplexObject(), a: 2 }, true)).toEqual(['a']);
+      expect(getChangedFields(undefined, complexObject, true)).toEqual(complexObjectKeys);
+    });
+  });
 });

@@ -1,8 +1,10 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } from '@rjsf/utils';
 
+import ArrayFieldDescriptionTemplate from './ArrayFieldDescriptionTemplate';
 import ArrayFieldItemButtonsTemplate from './ArrayFieldItemButtonsTemplate';
 import ArrayFieldItemTemplate from './ArrayFieldItemTemplate';
 import ArrayFieldTemplate from './ArrayFieldTemplate/ArrayFieldTemplate';
+import ArrayFieldTitleTemplate from './ArrayFieldTitleTemplate';
 import BaseInputTemplate from './BaseInputTemplate/BaseInputTemplate';
 import {
   AddButton,
@@ -46,9 +48,11 @@ export function generateTemplates<
   F extends FormContextType = any,
 >(): Partial<TemplatesType<T, S, F>> {
   return {
+    ArrayFieldDescriptionTemplate,
     ArrayFieldItemTemplate,
     ArrayFieldTemplate,
     ArrayFieldItemButtonsTemplate,
+    ArrayFieldTitleTemplate,
     BaseInputTemplate,
     CyclicSchemaExpandTemplate,
     ButtonTemplates: {
