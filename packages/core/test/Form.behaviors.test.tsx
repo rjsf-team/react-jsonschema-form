@@ -1080,8 +1080,12 @@ describe('Calling onChange right after updating a Form with props formData', () 
 
     await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
-    expect(node.querySelector('#root_0')).toBeInTheDocument();
-    expect(node.querySelector('#root_1')).toHaveAttribute('value', 'test');
+    // Both near-simultaneous changes must survive; which lands first depends on render timing, so assert order-free
+    const values = [
+      node.querySelector('#root_0')!.getAttribute('value'),
+      node.querySelector('#root_1')!.getAttribute('value'),
+    ].sort();
+    expect(values).toEqual(['', 'test']);
   });
 });
 

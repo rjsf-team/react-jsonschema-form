@@ -17,7 +17,6 @@ import type {
 import {
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
-  deepEquals,
   descriptionId,
   fieldPathToId,
   getSchemaType,
@@ -386,22 +385,13 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   );
 }
 
-/** The `SchemaField` component wraps `SchemaFieldRender` with a custom memoization comparator that  determines whether it is necessary to rerender the component based on any props changes
- * using `experimental_componentUpdateStrategy`.
+/** The `SchemaField` component wraps `SchemaFieldRender` in `memo` with a shallow props comparator. Field identity
+ * props are primitives, so shallow comparison is correct; object props bail out of memoization until their references
+ * are stabilized.
  *
  * The cast to `typeof SchemaFieldRender` preserves the generic type signature (<T, S, F>) for consumers,
  * since React.memo's return type erases generic parameters.
  */
-const SchemaField = memo(SchemaFieldRender, (prevProps, nextProps) => {
-  const { experimental_componentUpdateStrategy = 'customDeep' } = nextProps.registry.globalFormOptions;
-  if (experimental_componentUpdateStrategy === 'always') {
-    return false; // always re-render — never consider props equal
-  }
-  if (experimental_componentUpdateStrategy === 'shallow') {
-    return shallowEquals(prevProps, nextProps);
-  }
-  // default: 'customDeep'
-  return deepEquals(prevProps, nextProps);
-}) as unknown as typeof SchemaFieldRender;
+const SchemaField = memo(SchemaFieldRender, shallowEquals) as unknown as typeof SchemaFieldRender;
 
 export default SchemaField;
