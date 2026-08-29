@@ -742,7 +742,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         await user.clear(fieldNodes[1].querySelector('input')!);
         await user.type(fieldNodes[1].querySelector('input')!, 'bad');
 
-        const liNodes = fieldNodes[1].querySelectorAll('.rjsf-field-string .error-detail li');
+        const liNodes = fieldNodes[1].querySelectorAll(':scope .error-detail li');
         const errors = [].map.call(liNodes, (li: Element) => li.textContent);
 
         expect(errors).toEqual(['must NOT have fewer than 4 characters']);
