@@ -134,7 +134,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Added `knip` and removed the unused code, exports and dependencies it reported ([#5194](https://github.com/rjsf-team/react-jsonschema-form/pull/5194))
 - Upgraded the test tooling: `@testing-library/jest-dom` 6→7, `jsdom` 29→30, `@testing-library/user-event` to 14.6.6, `vitest` to 4.1.11, and declared the `@testing-library/dom` peer explicitly at the root. Self-anchored test selectors were rewritten to `:scope` to match jsdom 30's corrected element-scoped `querySelectorAll` behavior
 
-
 # 6.8.0
 
 ## @rjsf/core
