@@ -9,11 +9,13 @@
   "description": "The ajv-8 based validator for @rjsf/core",
   "exports": {
     ".": {
+      "@rjsf/source": "./src/index.ts",
       "types": "./lib/index.d.ts",
       "require": "./dist/index.cjs",
       "import": "./lib/index.js"
     },
     "./compileSchemaValidators": {
+      "@rjsf/source": "./src/compileSchemaValidators.ts",
       "types": "./lib/compileSchemaValidators.d.ts",
       "require": "./dist/compileSchemaValidators.cjs",
       "import": "./lib/compileSchemaValidators.js"
@@ -69,7 +71,6 @@
     "cs-format": "oxfmt \"{src,test}/**/*.{ts,tsx}\"",
     "lint": "oxlint src test",
     "precommit": "lint-staged",
-    "compileSchemas": "tsx test/harness/compileTestSchema.ts",
     "test": "vitest run"
   },
   "lint-staged": {

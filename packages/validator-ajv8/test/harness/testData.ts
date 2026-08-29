@@ -1,8 +1,20 @@
+import { noop } from '@rjsf/utils';
 import type Ajv from 'ajv';
 
 import type { CustomValidatorOptionsType } from '../../src';
 
-// NOTE these are the same as the CUSTOM_OPTIONS in `compileTestSchema.js`, keep them in sync
+/** Runs `fn` with console.warn stubbed, asserts it warned with `expectedWarning`, and returns the result. */
+export function expectWarn<T>(fn: () => T, ...expectedWarning: unknown[]): T {
+  const warnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
+  try {
+    const result = fn();
+    expect(warnSpy).toHaveBeenCalledWith(...expectedWarning);
+    return result;
+  } finally {
+    warnSpy.mockRestore();
+  }
+}
+
 export const CUSTOM_OPTIONS: CustomValidatorOptionsType = {
   // oxlint-disable-next-line typescript/no-var-requires
   additionalMetaSchemas: [require('ajv/lib/refs/json-schema-draft-06.json')],

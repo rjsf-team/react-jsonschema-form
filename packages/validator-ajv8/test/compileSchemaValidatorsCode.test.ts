@@ -1,12 +1,10 @@
 import type { RJSFSchema } from '@rjsf/utils';
-import { noop, schemaParser } from '@rjsf/utils';
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { schemaParser } from '@rjsf/utils';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators';
 import createAjvInstance from '../src/createAjvInstance';
-import superSchema from './harness/superSchema.json';
-import { CUSTOM_OPTIONS } from './harness/testData';
+import { SUPER_SCHEMA_OPTIONS, superSchema } from './harness/compileSuperSchema';
+import { CUSTOM_OPTIONS, expectWarn } from './harness/testData';
 
 vi.mock('../src/createAjvInstance', async (importOriginal) => {
   const { default: realCreateAjvInstance } = await importOriginal<{
@@ -16,19 +14,12 @@ vi.mock('../src/createAjvInstance', async (importOriginal) => {
 });
 
 describe('compileSchemaValidatorsCode()', () => {
-  let expectedCode: string;
-  let generatedCode: string;
-
   describe('compiling without additional options', () => {
     let schemas: RJSFSchema[];
     beforeAll(() => {
-      schemas = Object.values(schemaParser(superSchema as unknown as RJSFSchema));
-      expectedCode = readFileSync(join(__dirname, 'harness/superSchema.cjs')).toString();
+      schemas = Object.values(schemaParser(superSchema));
       // superSchema deliberately uses the unregistered "phone-us" format, which AJV warns about
-      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
-      generatedCode = compileSchemaValidatorsCode(superSchema as unknown as RJSFSchema);
-      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('unknown format'));
-      warnSpy.mockRestore();
+      expectWarn(() => compileSchemaValidatorsCode(superSchema), expect.stringContaining('unknown format'));
     });
     it('create AJV instance was called with the expected options', () => {
       const expectedCompileOpts = {
@@ -44,23 +35,12 @@ describe('compileSchemaValidatorsCode()', () => {
         undefined,
       );
     });
-    it('generates the expected output', () => {
-      expect(generatedCode).toBe(expectedCode);
-    });
   });
   describe('compiling WITH additional options', () => {
     let schemas: RJSFSchema[];
-    let expectedCode: string;
     beforeAll(() => {
-      schemas = Object.values(schemaParser(superSchema as unknown as RJSFSchema));
-      expectedCode = readFileSync(join(__dirname, 'harness/superSchemaOptions.cjs')).toString();
-      generatedCode = compileSchemaValidatorsCode(superSchema as unknown as RJSFSchema, {
-        ...CUSTOM_OPTIONS,
-        ajvOptionsOverrides: {
-          ...CUSTOM_OPTIONS.ajvOptionsOverrides,
-          code: { lines: false },
-        },
-      });
+      schemas = Object.values(schemaParser(superSchema));
+      compileSchemaValidatorsCode(superSchema, SUPER_SCHEMA_OPTIONS);
     });
     it('create AJV instance was called with the expected options', () => {
       const {
@@ -84,9 +64,6 @@ describe('compileSchemaValidatorsCode()', () => {
         AjvClass,
         extenderFn,
       );
-    });
-    it('generates expected output', () => {
-      expect(generatedCode).toBe(expectedCode);
     });
   });
 });

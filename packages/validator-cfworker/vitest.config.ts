@@ -1,21 +1,9 @@
-import { defineConfig } from 'vitest/config';
+import { mergeConfig } from 'vitest/config';
 
-export default defineConfig({
+import base, { fullCoverage } from '../../testing/vitest.base';
+
+export default mergeConfig(base, {
   test: {
-    globals: true,
-    environment: 'jsdom',
-    coverage: {
-      provider: 'v8',
-      enabled: true,
-      reportsDirectory: 'coverage',
-      include: ['src/**'],
-      exclude: ['node_modules/**', 'test/**', 'src/types.ts', '**/tsconfig.json'],
-      thresholds: {
-        branches: 100,
-        functions: 100,
-        lines: 100,
-        statements: 100,
-      },
-    },
+    coverage: fullCoverage(['src/types.ts']),
   },
 });
