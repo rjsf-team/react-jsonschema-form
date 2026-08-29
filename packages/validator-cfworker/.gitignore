@@ -1,3 +1,0 @@
-# Ignore generated test schema files
-test/harness/superSchema*.js
-test/harness/superSchema*.cjs

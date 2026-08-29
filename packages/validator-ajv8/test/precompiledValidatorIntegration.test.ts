@@ -12,23 +12,13 @@
 import type { RJSFSchema } from '@rjsf/utils';
 import { getClosestMatchingOption, getFirstMatchingOption, omitExtraData, relaxOptionsForScoring } from '@rjsf/utils';
 
-import type { ValidatorFunctions } from '../src';
 import { createPrecompiledValidator } from '../src';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators';
+import { evalValidatorCode } from './harness/compileSuperSchema';
 
-/**
- * Compiles `schema` to AJV standalone code, evaluates it via Function constructor, and
- * wraps it in an AJV8PrecompiledValidator. This avoids writing files to disk and keeps
- * the tests fully self-contained.
- *
- * The compiled code is pure JS with no require() calls, so Function evaluation is safe.
- */
+/** Compiles `schema` to AJV standalone code in memory and wraps it in an AJV8PrecompiledValidator. */
 function buildPrecompiledValidator(schema: RJSFSchema) {
-  const code = compileSchemaValidatorsCode(schema);
-  const exports: ValidatorFunctions = {};
-  // oxlint-disable-next-line no-new-func, no-implied-eval
-  new Function('exports', code)(exports);
-  return createPrecompiledValidator(exports, schema);
+  return createPrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(schema)), schema);
 }
 
 // ─── Test schemas ─────────────────────────────────────────────────────────────

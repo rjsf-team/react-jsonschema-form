@@ -71,7 +71,6 @@
     "cs-format": "oxfmt \"{src,test}/**/*.{ts,tsx}\"",
     "lint": "oxlint src test",
     "precommit": "lint-staged",
-    "compileSchemas": "tsx --conditions=@rjsf/source test/harness/compileTestSchema.ts",
     "test": "vitest run"
   },
   "lint-staged": {
