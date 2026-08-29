@@ -513,7 +513,7 @@ describe('SchemaField', () => {
 
       await submitForm(node, user);
 
-      const matches = node.querySelectorAll('form > .form-group > div > .error-detail .text-danger');
+      const matches = node.querySelectorAll(':scope > .form-group > div > .error-detail .text-danger');
       expect(matches).toHaveLength(1);
       expect(matches[0]).toHaveTextContent('container');
     });
@@ -527,7 +527,7 @@ describe('SchemaField', () => {
 
       await submitForm(node, user);
 
-      const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
+      const matches = node.querySelectorAll(':scope .form-group .form-group .text-danger');
       expect(matches).toHaveLength(1);
       expect(matches[0]).toHaveTextContent('test');
     });
@@ -559,7 +559,7 @@ describe('SchemaField', () => {
 
       await submitForm(node, user);
 
-      const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
+      const matches = node.querySelectorAll(':scope .form-group .form-group .text-danger');
       expect(matches).toHaveLength(1);
       expect(matches[0]).toHaveTextContent('test');
     });
@@ -596,7 +596,7 @@ describe('SchemaField', () => {
 
       await submitForm(node, user);
 
-      const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
+      const matches = node.querySelectorAll(':scope .form-group .form-group .text-danger');
       expect(matches).toHaveLength(1);
       expect(matches[0]).toHaveTextContent('test');
     });
@@ -612,10 +612,10 @@ describe('SchemaField', () => {
 
       await submitForm(node, user);
 
-      const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
+      const matches = node.querySelectorAll(':scope .form-group .form-group .text-danger');
       expect(matches).toHaveLength(0);
 
-      const customMatches = node.querySelectorAll('form .form-group .form-group .custom-field-error');
+      const customMatches = node.querySelectorAll(':scope .form-group .form-group .custom-field-error');
       expect(customMatches[0]).toHaveTextContent('test');
     });
 
@@ -636,10 +636,10 @@ describe('SchemaField', () => {
 
       await submitForm(node, user);
 
-      const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
+      const matches = node.querySelectorAll(':scope .form-group .form-group .text-danger');
       expect(matches).toHaveLength(0);
 
-      const customMatches = node.querySelectorAll('form .form-group .form-group .custom-field-error');
+      const customMatches = node.querySelectorAll(':scope .form-group .form-group .custom-field-error');
       expect(customMatches[0]).toHaveTextContent('test');
     });
 
@@ -677,7 +677,7 @@ describe('SchemaField', () => {
 
         await submitForm(node, user);
 
-        const matches = node.querySelectorAll('form > .form-group > div > .error-detail .text-danger');
+        const matches = node.querySelectorAll(':scope > .form-group > div > .error-detail .text-danger');
         expect(matches).toHaveLength(0);
       });
 
@@ -690,7 +690,7 @@ describe('SchemaField', () => {
 
         await submitForm(node, user);
 
-        const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
+        const matches = node.querySelectorAll(':scope .form-group .form-group .text-danger');
         expect(matches).toHaveLength(0);
       });
 
@@ -733,7 +733,7 @@ describe('SchemaField', () => {
 
         await submitForm(node, user);
 
-        const matches = node.querySelectorAll('form > .form-group > div > .error-detail .text-danger');
+        const matches = node.querySelectorAll(':scope > .form-group > div > .error-detail .text-danger');
         expect(matches).toHaveLength(0);
       });
 
@@ -746,7 +746,7 @@ describe('SchemaField', () => {
 
         await submitForm(node, user);
 
-        const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
+        const matches = node.querySelectorAll(':scope .form-group .form-group .text-danger');
         expect(matches).toHaveLength(1);
         expect(matches[0]).toHaveTextContent('test');
       });
@@ -772,7 +772,7 @@ describe('SchemaField', () => {
 
       await submitForm(node, user);
 
-      const matches = node.querySelectorAll('form .form-group .form-group .help-block');
+      const matches = node.querySelectorAll(':scope .form-group .form-group .help-block');
       expect(matches).toHaveLength(1);
       expect(matches[0]).toHaveTextContent(helpText);
     });
@@ -787,10 +787,10 @@ describe('SchemaField', () => {
 
       await submitForm(node, user);
 
-      const matches = node.querySelectorAll('form .form-group .form-group .help-block');
+      const matches = node.querySelectorAll(':scope .form-group .form-group .help-block');
       expect(matches).toHaveLength(0);
 
-      const customMatches = node.querySelectorAll('form .form-group .form-group .custom-field-help');
+      const customMatches = node.querySelectorAll(':scope .form-group .form-group .custom-field-help');
       expect(customMatches[0]).toHaveTextContent(helpText);
     });
 
@@ -807,10 +807,10 @@ describe('SchemaField', () => {
 
       await submitForm(node, user);
 
-      const matches = node.querySelectorAll('form .form-group .form-group .help-block');
+      const matches = node.querySelectorAll(':scope .form-group .form-group .help-block');
       expect(matches).toHaveLength(0);
 
-      const customMatches = node.querySelectorAll('form .form-group .form-group .custom-field-help');
+      const customMatches = node.querySelectorAll(':scope .form-group .form-group .custom-field-help');
       expect(customMatches[0]).toHaveTextContent(helpText);
     });
   });
@@ -835,7 +835,7 @@ describe('SchemaField', () => {
         },
       });
 
-      const field = node.querySelector('form .form-group .form-group .field-description')!;
+      const field = node.querySelector(':scope .form-group .form-group .field-description')!;
 
       expect(field).toContainHTML('<strong>bold</strong>');
       expect(field).toContainHTML('<em>italic</em>');
@@ -852,7 +852,7 @@ describe('SchemaField', () => {
         },
       });
 
-      const field = node.querySelector('form .form-group .form-group .field-description')!;
+      const field = node.querySelector(':scope .form-group .form-group .field-description')!;
 
       expect(field).not.toContainHTML('<strong>bold</strong>');
       expect(field).not.toContainHTML('<em>italic</em>');
