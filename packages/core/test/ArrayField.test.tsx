@@ -18,8 +18,8 @@ import userEvent from '@testing-library/user-event';
 
 import ArrayField from '../src/components/fields/ArrayField';
 import SchemaField from '../src/components/fields/SchemaField';
-import { TextWidgetTest } from './StringField.test';
 import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils';
+import { TextWidgetTest } from './TextWidgetTest';
 
 const user = userEvent.setup();
 
