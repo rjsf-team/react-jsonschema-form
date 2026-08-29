@@ -3,7 +3,9 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     globals: true,
-    environment: 'jsdom',
+    // Most utils are pure functions; the DOM-dependent test files opt back into
+    // jsdom with a /** @vitest-environment jsdom */ pragma.
+    environment: 'node',
     setupFiles: ['../../testing/testSetup.ts'],
     exclude: ['node_modules/**', 'lib-test/**'],
     coverage: {

@@ -1,3 +1,4 @@
+/** @vitest-environment jsdom */
 import type { ChangeEvent, MouseEvent } from 'react';
 import { fireEvent, render, renderHook } from '@testing-library/react';
 

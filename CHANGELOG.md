@@ -106,6 +106,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Made the default value of a required boolean field be false if a `default` is not present in the schema
 - Fixed `omitExtraData()` by removing the over-reaching `additionalProperties: false` post-processing block introduced in [#5147](https://github.com/rjsf-team/react-jsonschema-form/pull/5147) that incorrectly stripped keys written by winning `oneOf`/`anyOf` and `if/then/else` branches, fixing [#5194](https://github.com/rjsf-team/react-jsonschema-form/issues/5194)
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+- Sped up the test suite (~6.2s → ~2.7s) by defaulting to vitest's `node` environment; the few DOM-dependent test files opt back into jsdom with a `@vitest-environment` pragma, and the shared test setup skips its ResizeObserver mock when there is no `window`
 
 ## @rjsf/validator-ajv8
 
