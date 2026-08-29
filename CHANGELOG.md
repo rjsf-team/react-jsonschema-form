@@ -38,6 +38,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `TimeWidget` to respect schema `multipleOf` time precision, preserving second-precision values while keeping minute-precision native inputs synchronized with their displayed value ([#5174](https://github.com/rjsf-team/react-jsonschema-form/pull/5174))
 - Replaced all path-based `lodash` usage (`get`, `set`, `unset`, `toPath`, `pick`) with the new `@rjsf/utils` path utilities
 - Replaced the remaining non-path `lodash` usage (`isEmpty`, `isObject`, `isPlainObject`, `each`, `flatten`, `includes`, `intersection`, `last`, `uniqueId`, `noop`) with native equivalents, and dropped the `lodash`/`lodash-es` dependencies entirely
+- Fixed the clearing of errors on change so that only the field that actually changed loses its error, along with the errors the containers holding it own, rather than every field under the top-level key holding it, fixing [#5197](https://github.com/rjsf-team/react-jsonschema-form/issues/5197) ([#5205](https://github.com/rjsf-team/react-jsonschema-form/pull/5205))
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
 
 ## @rjsf/daisyui
@@ -99,6 +100,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Added `isPlainObject`, the stricter counterpart to `isObject()` that excludes class instances, replacing `lodash/isPlainObject` for consumers
 - Added `getPropertySchema()`, which reads a property sub-schema out of a schema's `properties`, defaulting to an empty schema; it replaces the repeated `(schema[PROPERTIES_KEY]?.[key] ?? {}) as S` lookups in `@rjsf/utils` and `@rjsf/core`
 - Added `noop()`, a do-nothing function replacing `lodash/noop` for consumers
+- Added an optional `deep` flag to `getChangedFields()` that descends into nested objects and same-length arrays and returns the dotted path of the field that changed ([#5205](https://github.com/rjsf-team/react-jsonschema-form/pull/5205))
 - Made the default value of a required boolean field be false if a `default` is not present in the schema
 - Fixed `omitExtraData()` by removing the over-reaching `additionalProperties: false` post-processing block introduced in [#5147](https://github.com/rjsf-team/react-jsonschema-form/pull/5147) that incorrectly stripped keys written by winning `oneOf`/`anyOf` and `if/then/else` branches, fixing [#5194](https://github.com/rjsf-team/react-jsonschema-form/issues/5194)
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports

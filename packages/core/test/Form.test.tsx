@@ -2363,6 +2363,248 @@ describeRepeated('Form common', (createFormComponent) => {
 
           expect(node.querySelectorAll('.rjsf-field-error')).toHaveLength(0);
         });
+
+        it('should only clear the error of the field that changed inside an array item (#5197)', async () => {
+          const altSchema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              foo: { type: 'string' },
+              bar: { type: 'string' },
+              baz: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    qux: { type: 'string' },
+                    corge: { type: 'string' },
+                  },
+                  required: ['qux', 'corge'],
+                },
+              },
+            },
+            required: ['foo', 'bar'],
+          };
+
+          // The form has to be controlled, since the errors are cleared by comparing the incoming
+          // `formData` prop against the previous one.
+          function Controlled() {
+            const [formData, setFormData] = useState<any>({ baz: [{}] });
+            return (
+              <Form
+                schema={altSchema}
+                validator={validator}
+                formData={formData}
+                noHtml5Validate
+                onChange={(e) => setFormData(e.formData)}
+              />
+            );
+          }
+
+          const { container } = render(<Controlled />);
+          const node = container.firstElementChild!;
+          const shownErrors = () => Array.from(node.querySelectorAll('.error-detail')).map((e) => e.textContent);
+
+          await submitForm(node, user);
+          expect(shownErrors()).toEqual([
+            "must have required property 'foo'",
+            "must have required property 'bar'",
+            "must have required property 'qux'",
+            "must have required property 'corge'",
+          ]);
+
+          // A top-level field clears only itself, which already worked
+          await user.type(node.querySelector('#root_foo')!, 'a');
+          expect(shownErrors()).toEqual([
+            "must have required property 'bar'",
+            "must have required property 'qux'",
+            "must have required property 'corge'",
+          ]);
+
+          // and so should a field inside an array item
+          await user.type(node.querySelector('#root_baz_0_qux')!, 'a');
+          expect(shownErrors()).toEqual(["must have required property 'bar'", "must have required property 'corge'"]);
+        });
+
+        it('should clear the error of a field whose name contains a dot', async () => {
+          const altSchema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              'foo.bar': { type: 'string' },
+              baz: { type: 'string' },
+            },
+            required: ['foo.bar', 'baz'],
+          };
+          const formRef = createRef<Form>();
+
+          function Controlled() {
+            const [formData, setFormData] = useState<any>({});
+            return (
+              <Form
+                ref={formRef}
+                schema={altSchema}
+                validator={validator}
+                formData={formData}
+                noHtml5Validate
+                onChange={(e) => setFormData(e.formData)}
+              />
+            );
+          }
+
+          const { container } = render(<Controlled />);
+          const node = container.firstElementChild!;
+
+          await submitForm(node, user);
+          // `toErrorSchema` runs the property name through `toPath`, so the error of a name holding a dot lands at
+          // the path that name spells out, not under the name itself
+          expect(formRef.current!.state.errorSchema).toEqual({
+            foo: { bar: { __errors: ["must have required property 'foo.bar'"] } },
+            baz: { __errors: ["must have required property 'baz'"] },
+          });
+
+          // Clearing has to reach the same place, and leave the field that was not touched alone
+          await user.type(node.querySelector('[id="root_foo.bar"]')!, 'a');
+          expect(formRef.current!.state.errorSchema).toEqual({
+            foo: { bar: undefined },
+            baz: { __errors: ["must have required property 'baz'"] },
+          });
+        });
+
+        it('should only clear the error of the field that changed under a name containing a dot', async () => {
+          const altSchema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              'has.dot': {
+                type: 'object',
+                properties: {
+                  inner: { type: 'string' },
+                  other: { type: 'string' },
+                },
+                required: ['inner', 'other'],
+              },
+            },
+          };
+          const formRef = createRef<Form>();
+
+          function Controlled() {
+            const [formData, setFormData] = useState<any>({ 'has.dot': {} });
+            return (
+              <Form
+                ref={formRef}
+                schema={altSchema}
+                validator={validator}
+                formData={formData}
+                noHtml5Validate
+                onChange={(e) => setFormData(e.formData)}
+              />
+            );
+          }
+
+          const { container } = render(<Controlled />);
+          const node = container.firstElementChild!;
+
+          await submitForm(node, user);
+          // The name is spelled out as a path here too, so the errors of the two fields it holds sit side by side
+          // under it and clearing one has to leave the other where it is
+          expect(formRef.current!.state.errorSchema).toEqual({
+            has: {
+              dot: {
+                inner: { __errors: ["must have required property 'inner'"] },
+                other: { __errors: ["must have required property 'other'"] },
+              },
+            },
+          });
+
+          await user.type(node.querySelector('[id="root_has.dot_inner"]')!, 'a');
+          expect(formRef.current!.state.errorSchema).toEqual({
+            has: {
+              dot: {
+                inner: undefined,
+                other: { __errors: ["must have required property 'other'"] },
+              },
+            },
+          });
+        });
+
+        it('should clear the error of the container holding the field that changed', async () => {
+          const altSchema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              tags: { type: 'array', uniqueItems: true, items: { type: 'string' } },
+            },
+          };
+
+          function Controlled() {
+            const [formData, setFormData] = useState<any>({ tags: ['a', 'a'] });
+            return (
+              <Form
+                schema={altSchema}
+                validator={validator}
+                formData={formData}
+                noHtml5Validate
+                onChange={(e) => setFormData(e.formData)}
+              />
+            );
+          }
+
+          const { container } = render(<Controlled />);
+          const node = container.firstElementChild!;
+          const shownErrors = () => Array.from(node.querySelectorAll('.error-detail')).map((e) => e.textContent);
+
+          await submitForm(node, user);
+          expect(shownErrors()).toEqual(['must NOT have duplicate items (items ## 1 and 0 are identical)']);
+
+          // The error belongs to the array rather than to the item that was edited, and the array changed too
+          await user.type(node.querySelectorAll('input[type=text]')[1], 'b');
+          expect(shownErrors()).toEqual([]);
+        });
+
+        it('should keep the errors that a reorder of the array items left standing', async () => {
+          const altSchema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              baz: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    qux: { type: 'string' },
+                    corge: { type: 'string' },
+                  },
+                  required: ['qux', 'corge'],
+                },
+              },
+            },
+          };
+
+          function Controlled() {
+            const [formData, setFormData] = useState<any>({ baz: [{}, { corge: 'z' }] });
+            return (
+              <Form
+                schema={altSchema}
+                validator={validator}
+                formData={formData}
+                noHtml5Validate
+                onChange={(e) => setFormData(e.formData)}
+              />
+            );
+          }
+
+          const { container } = render(<Controlled />);
+          const node = container.firstElementChild!;
+          const shownErrors = () => Array.from(node.querySelectorAll('.error-detail')).map((e) => e.textContent);
+
+          await submitForm(node, user);
+          expect(shownErrors()).toEqual([
+            "must have required property 'qux'",
+            "must have required property 'corge'",
+            "must have required property 'qux'",
+          ]);
+
+          // Moving the first item down leaves neither item holding a `qux`, so both of those errors are still the
+          // errors of the values sitting at those paths and only the `corge` that moved loses its own
+          await user.click(node.querySelector<HTMLButtonElement>('.rjsf-array-item-move-down')!);
+          expect(shownErrors()).toEqual(["must have required property 'qux'", "must have required property 'qux'"]);
+        });
       });
 
       describe('Live validation', () => {
