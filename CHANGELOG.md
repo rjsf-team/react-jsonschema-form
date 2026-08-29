@@ -132,6 +132,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Added `size-limit` CI checks that enforce bundle size budgets for `@rjsf/core`, `@rjsf/utils` and `@rjsf/validator-ajv8` — each measured both with and without its runtime dependencies, plus single-export tree-shaking canaries — and comment the size diff versus the base branch on every PR
 - Restructured `@rjsf/core`'s test suite for speed: the "Form common" suite was split by topic into six test files so vitest can parallelize them, and the `StringField` suite is no longer re-executed via cross-imports from the `ArrayField`/`ObjectField` suites (302 duplicate test executions removed)
 - Added `knip` and removed the unused code, exports and dependencies it reported ([#5194](https://github.com/rjsf-team/react-jsonschema-form/pull/5194))
+- Removed test-setup shims that empirically no longer do anything (each verified by deleting it and running the package's suite): core's `setImmediate` global, antd's `MessageChannel` global, chakra-ui's `structuredClone` JSON polyfill (native since Node 17), mantine's `cleanSnapshotSerializer` (a no-op on all current snapshots), and primereact's `<style>`-injection blocker
 
 # 6.8.0
 
