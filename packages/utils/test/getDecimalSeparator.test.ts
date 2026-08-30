@@ -1,3 +1,5 @@
+// @vitest-environment jsdom
+// jsdom provides the `navigator` global these tests spy on; Node 20 has none.
 import { getDecimalSeparator } from '../src';
 
 describe('getDecimalSeparator()', () => {

@@ -38,8 +38,6 @@ import single from './single';
 import validation from './validation';
 import widgets from './widgets';
 
-export type { Sample };
-
 const samplesList: Record<string, Sample> = {
   Blank: { schema: {}, uiSchema: {}, formData: {} },
   Simple: simple,

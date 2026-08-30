@@ -14,7 +14,7 @@
     "precommit": "lint-staged",
     "publish-to-npm": "pnpm run build && pnpm publish",
     "test": "vitest run",
-    "test:debug": "node --inspect-brk ../../node_modules/.bin/jest",
+    "test:debug": "node --inspect-brk ../../node_modules/.bin/vitest --pool=forks",
     "test:update": "vitest run --update",
     "test:watch": "vitest",
     "test-coverage": "vitest run --coverage"
@@ -32,6 +32,7 @@
   "sideEffects": false,
   "exports": {
     ".": {
+      "@rjsf/source": "./src/index.ts",
       "types": "./lib/index.d.ts",
       "require": "./dist/index.cjs",
       "import": "./lib/index.js"
@@ -71,19 +72,17 @@
     "react": ">=18"
   },
   "dependencies": {
-    "markdown-to-jsx": "^9.8.2",
-    "prop-types": "^15.8.1"
+    "markdown-to-jsx": "^9.8.2"
   },
   "devDependencies": {
     "@rjsf/snapshot-tests": "workspace:^",
     "@rjsf/utils": "workspace:^",
     "@rjsf/validator-ajv8": "workspace:^",
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.2",
-    "@testing-library/user-event": "^14.6.1",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.6",
     "@types/json-schema": "^7.0.15",
-    "ajv": "^8.20.0",
-    "atob": "^2.1.2"
+    "ajv": "^8.20.0"
   },
   "directories": {
     "test": "test"

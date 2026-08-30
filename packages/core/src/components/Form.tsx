@@ -7,6 +7,7 @@ import type {
   FieldPathId,
   FieldPathList,
   FormContextType,
+  GenericObjectType,
   PathSchema,
   StrictRJSFSchema,
   Registry,
@@ -493,7 +494,9 @@ export default class Form<
         //  match one of the subSchemas, the retrieved schema must be updated.
         isSchemaChanged || isFormDataChanged ? undefined : this.state.retrievedSchema,
         isSchemaChanged,
-        formDataChangedFields,
+        // Only the error clearing needs the path of each changed field, and it runs only when live validation does
+        // not, so the walk that produces them is left for `getStateFromProps` to ask for
+        () => getChangedFields(this.props.formData, prevProps.formData, true),
         // Skip live validation for this request if no form data has changed from the last state
         !isStateDataChanged,
       );
@@ -550,7 +553,8 @@ export default class Form<
    * @param inputFormData - The new or current data for the `Form`
    * @param retrievedSchema - An expanded schema, if not provided, it will be retrieved from the `schema` and `formData`.
    * @param [isSchemaChanged=false] - A flag indicating whether the schema has changed.
-   * @param [formDataChangedFields=[]] - The changed fields of `formData`
+   * @param [getFormDataChangedFields=() => []] - Optional function returning the path of each `formData` field that
+   *          changed, only called when those paths are needed, which is when live validation is not going to run
    * @param [skipLiveValidate=false] - Optional flag, if true, means that we are not running live validation
    * @param [shouldSanitize=false] - Optional flag, if true, means that we should attempt to sanitize formData
    * @returns - The new state for the `Form`
@@ -560,7 +564,7 @@ export default class Form<
     inputFormData?: T,
     retrievedSchema?: S,
     isSchemaChanged = false,
-    formDataChangedFields: string[] = [],
+    getFormDataChangedFields: () => string[] = () => [],
     skipLiveValidate = false,
     shouldSanitize = false,
   ): FormState<T, S, F> {
@@ -696,17 +700,31 @@ export default class Form<
       errors = currentErrors.errors;
       errorSchema = currentErrors.errorSchema;
       // We only update the error schema for changed fields if mustValidate is false
-      if (formDataChangedFields.length > 0 && !mustValidate) {
-        const newErrorSchema = formDataChangedFields.reduce<Record<string, undefined>>((acc, key) => {
-          acc[key] = undefined;
-          return acc;
-        }, {});
-        schemaValidationErrorSchema = mergeObjects(
-          currentErrors.errorSchema,
-          newErrorSchema,
-          'preventDuplicates',
-        ) as ErrorSchema<T>;
-        errorSchema = schemaValidationErrorSchema;
+      if (!mustValidate) {
+        const formDataChangedFields = getFormDataChangedFields();
+        if (formDataChangedFields.length > 0) {
+          // `formDataChangedFields` carries the path of each field that changed, so clearing has to follow that path
+          // instead of dropping the whole branch it starts in. The path is split with `toPath()`, the same way
+          // `toErrorSchema()` splits a validation error property, so the two address the same entry. Intermediate
+          // objects are forced so the numeric segment of an array item stays an object key, which is how an
+          // `ErrorSchema` addresses array items.
+          const newErrorSchema = formDataChangedFields.reduce<GenericObjectType>((acc, path) => {
+            const pathOfField = toPath(path);
+            // Every container holding the field changed along with it, so an error of their own, such as the
+            // `uniqueItems` of the array the field sits in, is cleared too. Only their own errors go: the other
+            // fields they hold did not change and keep theirs.
+            for (let i = 1; i < pathOfField.length; i++) {
+              setByPath(acc, [...pathOfField.slice(0, i), ERRORS_KEY], undefined, true);
+            }
+            return setByPath(acc, pathOfField, undefined, true);
+          }, {});
+          schemaValidationErrorSchema = mergeObjects(
+            currentErrors.errorSchema,
+            newErrorSchema,
+            'preventDuplicates',
+          ) as ErrorSchema<T>;
+          errorSchema = schemaValidationErrorSchema;
+        }
       }
       const mergedErrors = Form.mergeErrors<T>({ errorSchema, errors }, props.extraErrors, state.customErrors);
       errors = mergedErrors.errors;

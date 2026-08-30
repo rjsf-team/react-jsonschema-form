@@ -1,9 +1,5 @@
 import { mockViewport } from 'jsdom-testing-mocks';
 
-import cleanSnapshotSerializer from './cleanSnapshotSerializer';
-
-expect.addSnapshotSerializer(cleanSnapshotSerializer as any);
-
 // mockViewport installs a matchMedia mock backed by real CSS media query evaluation.
 // jsdom doesn't implement matchMedia; without this Mantine components that read
 // window.matchMedia throw or behave incorrectly in tests.

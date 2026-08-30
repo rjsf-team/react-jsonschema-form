@@ -17,10 +17,13 @@
       "cache": true
     },
     "test": {
-      "cache": true
+      "cache": true,
+      "//test": "the shared vitest base/setup live outside project roots; without these inputs a warm cache serves stale results when they change",
+      "inputs": ["default", "^default", "{workspaceRoot}/testing/*", "{workspaceRoot}/vitest.config.ts"]
     },
     "test:update": {
-      "cache": true
+      "cache": true,
+      "inputs": ["default", "^default", "{workspaceRoot}/testing/*", "{workspaceRoot}/vitest.config.ts"]
     },
     "test:watch": {
       "cache": true

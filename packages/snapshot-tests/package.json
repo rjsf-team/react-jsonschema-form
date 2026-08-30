@@ -22,7 +22,8 @@
   "typings": "lib/index.d.ts",
   "files": [
     "dist",
-    "lib"
+    "lib",
+    "src"
   ],
   "engineStrict": false,
   "engines": {
@@ -31,8 +32,8 @@
   "peerDependencies": {
     "@rjsf/core": "workspace:^",
     "@rjsf/utils": "workspace:^",
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.0",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
     "react": ">=18"
   },
   "devDependencies": {
@@ -57,5 +58,14 @@
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": {
+      "@rjsf/source": "./src/index.ts",
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./package.json": "./package.json",
+    "./*": "./*"
   }
 }

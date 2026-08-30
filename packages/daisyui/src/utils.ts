@@ -1,18 +1,26 @@
-import type { UiSchema } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 
 import type { DaisyProps } from './types/DaisyProps';
 
-export interface DaisyUiSchema extends Omit<UiSchema, 'ui:options'> {
-  'ui:options'?: DaisyUiOptions;
+export interface DaisyUiSchema<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> extends Omit<UiSchema<T, S, F>, 'ui:options'> {
+  'ui:options'?: DaisyUiOptions<T, S, F>;
 }
 
-type DaisyUiOptions = UiSchema['ui:options'] & { daisy?: DaisyProps };
+type DaisyUiOptions<T, S extends StrictRJSFSchema, F extends FormContextType> = UiSchema<T, S, F>['ui:options'] & {
+  daisy?: DaisyProps;
+};
 
-interface GetDaisyProps {
-  uiSchema?: DaisyUiSchema;
+interface GetDaisyProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
+  uiSchema?: DaisyUiSchema<T, S, F>;
 }
 
-export function getDaisy({ uiSchema = {} }: GetDaisyProps): DaisyProps {
+export function getDaisy<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+  uiSchema = {},
+}: GetDaisyProps<T, S, F>): DaisyProps {
   const daisyProps = uiSchema['ui:options']?.daisy || {};
   return daisyProps;
 }

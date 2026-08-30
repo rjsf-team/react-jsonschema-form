@@ -29,19 +29,12 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-object"
                   >
-                    <div
-                      class="title-field mb-6"
+                    <h3
+                      class="text-2xl font-bold"
                       id="root_tasks__title"
                     >
-                      <h2
-                        class="text-3xl font-bold text-primary mb-2"
-                      >
-                        tasks
-                      </h2>
-                      <div
-                        class="divider divider-primary my-0"
-                      />
-                    </div>
+                      tasks
+                    </h3>
                     <div
                       class="flex flex-col gap-4"
                     >
@@ -569,19 +562,12 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                   >
-                    <div
-                      class="title-field mb-6"
+                    <h3
+                      class="text-2xl font-bold"
                       id="root_tags__title"
                     >
-                      <h2
-                        class="text-3xl font-bold text-primary mb-2"
-                      >
-                        tags
-                      </h2>
-                      <div
-                        class="divider divider-primary my-0"
-                      />
-                    </div>
+                      tags
+                    </h3>
                     <div
                       class="flex flex-col gap-4"
                     >
@@ -1962,19 +1948,12 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-object"
                   >
-                    <div
-                      class="title-field mb-6"
+                    <h3
+                      class="text-2xl font-bold"
                       id="root_tasks__title"
                     >
-                      <h2
-                        class="text-3xl font-bold text-primary mb-2"
-                      >
-                        tasks
-                      </h2>
-                      <div
-                        class="divider divider-primary my-0"
-                      />
-                    </div>
+                      tasks
+                    </h3>
                     <div
                       class="flex flex-col gap-4"
                     >
@@ -2502,19 +2481,12 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                   >
-                    <div
-                      class="title-field mb-6"
+                    <h3
+                      class="text-2xl font-bold"
                       id="root_tags__title"
                     >
-                      <h2
-                        class="text-3xl font-bold text-primary mb-2"
-                      >
-                        tags
-                      </h2>
-                      <div
-                        class="divider divider-primary my-0"
-                      />
-                    </div>
+                      tags
+                    </h3>
                     <div
                       class="flex flex-col gap-4"
                     >
@@ -5747,19 +5719,12 @@ exports[`single fields > optional data controls > does not show optional control
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                             >
-                              <div
-                                class="title-field mb-6"
+                              <h3
+                                class="text-2xl font-bold"
                                 id="root_nestedObjectOptional_deepArrayOptional__title"
                               >
-                                <h2
-                                  class="text-3xl font-bold text-primary mb-2"
-                                >
-                                  deepArrayOptional
-                                </h2>
-                                <div
-                                  class="divider divider-primary my-0"
-                                />
-                              </div>
+                                deepArrayOptional
+                              </h3>
                               <div
                                 class="flex flex-col gap-4"
                               >
@@ -5829,19 +5794,12 @@ exports[`single fields > optional data controls > does not show optional control
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                             >
-                              <div
-                                class="title-field mb-6"
+                              <h3
+                                class="text-2xl font-bold"
                                 id="root_nestedObjectOptional_deepArrayOptional2__title"
                               >
-                                <h2
-                                  class="text-3xl font-bold text-primary mb-2"
-                                >
-                                  deepArrayOptional2
-                                </h2>
-                                <div
-                                  class="divider divider-primary my-0"
-                                />
-                              </div>
+                                deepArrayOptional2
+                              </h3>
                               <div
                                 class="flex flex-col gap-4"
                               >
@@ -5911,19 +5869,12 @@ exports[`single fields > optional data controls > does not show optional control
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                             >
-                              <div
-                                class="title-field mb-6"
+                              <h3
+                                class="text-2xl font-bold"
                                 id="root_nestedObjectOptional_deepArray__title"
                               >
-                                <h2
-                                  class="text-3xl font-bold text-primary mb-2"
-                                >
-                                  deepArray
-                                </h2>
-                                <div
-                                  class="divider divider-primary my-0"
-                                />
-                              </div>
+                                deepArray
+                              </h3>
                               <div
                                 class="flex flex-col gap-4"
                               >
@@ -6005,19 +5956,12 @@ exports[`single fields > optional data controls > does not show optional control
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                   >
-                    <div
-                      class="title-field mb-6"
+                    <h3
+                      class="text-2xl font-bold"
                       id="root_nestedArrayOptional__title"
                     >
-                      <h2
-                        class="text-3xl font-bold text-primary mb-2"
-                      >
-                        nestedArrayOptional
-                      </h2>
-                      <div
-                        class="divider divider-primary my-0"
-                      />
-                    </div>
+                      nestedArrayOptional
+                    </h3>
                     <div
                       class="flex flex-col gap-4"
                     >
@@ -6184,19 +6128,12 @@ exports[`single fields > optional data controls > does not show optional control
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                   >
-                    <div
-                      class="title-field mb-6"
+                    <h3
+                      class="text-2xl font-bold"
                       id="root_nestedArray__title"
                     >
-                      <h2
-                        class="text-3xl font-bold text-primary mb-2"
-                      >
-                        nestedArray
-                      </h2>
-                      <div
-                        class="divider divider-primary my-0"
-                      />
-                    </div>
+                      nestedArray
+                    </h3>
                     <div
                       class="flex flex-col gap-4"
                     >
@@ -6561,19 +6498,12 @@ exports[`single fields > optional data controls > does not show optional control
                         <div
                           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                         >
-                          <div
-                            class="title-field mb-6"
+                          <h3
+                            class="text-2xl font-bold"
                             id="root_optionalArrayWithAnyofs__title"
                           >
-                            <h2
-                              class="text-3xl font-bold text-primary mb-2"
-                            >
-                              optionalArrayWithAnyofs
-                            </h2>
-                            <div
-                              class="divider divider-primary my-0"
-                            />
-                          </div>
+                            optionalArrayWithAnyofs
+                          </h3>
                           <div
                             class="flex flex-col gap-4"
                           >
@@ -6981,19 +6911,12 @@ exports[`single fields > optional data controls > does not show optional control
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                             >
-                              <div
-                                class="title-field mb-6"
+                              <h3
+                                class="text-2xl font-bold"
                                 id="root_nestedObjectOptional_deepArrayOptional__title"
                               >
-                                <h2
-                                  class="text-3xl font-bold text-primary mb-2"
-                                >
-                                  deepArrayOptional
-                                </h2>
-                                <div
-                                  class="divider divider-primary my-0"
-                                />
-                              </div>
+                                deepArrayOptional
+                              </h3>
                               <div
                                 class="flex flex-col gap-4"
                               >
@@ -7064,19 +6987,12 @@ exports[`single fields > optional data controls > does not show optional control
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                             >
-                              <div
-                                class="title-field mb-6"
+                              <h3
+                                class="text-2xl font-bold"
                                 id="root_nestedObjectOptional_deepArrayOptional2__title"
                               >
-                                <h2
-                                  class="text-3xl font-bold text-primary mb-2"
-                                >
-                                  deepArrayOptional2
-                                </h2>
-                                <div
-                                  class="divider divider-primary my-0"
-                                />
-                              </div>
+                                deepArrayOptional2
+                              </h3>
                               <div
                                 class="flex flex-col gap-4"
                               >
@@ -7147,19 +7063,12 @@ exports[`single fields > optional data controls > does not show optional control
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                             >
-                              <div
-                                class="title-field mb-6"
+                              <h3
+                                class="text-2xl font-bold"
                                 id="root_nestedObjectOptional_deepArray__title"
                               >
-                                <h2
-                                  class="text-3xl font-bold text-primary mb-2"
-                                >
-                                  deepArray
-                                </h2>
-                                <div
-                                  class="divider divider-primary my-0"
-                                />
-                              </div>
+                                deepArray
+                              </h3>
                               <div
                                 class="flex flex-col gap-4"
                               >
@@ -7242,19 +7151,12 @@ exports[`single fields > optional data controls > does not show optional control
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                   >
-                    <div
-                      class="title-field mb-6"
+                    <h3
+                      class="text-2xl font-bold"
                       id="root_nestedArrayOptional__title"
                     >
-                      <h2
-                        class="text-3xl font-bold text-primary mb-2"
-                      >
-                        nestedArrayOptional
-                      </h2>
-                      <div
-                        class="divider divider-primary my-0"
-                      />
-                    </div>
+                      nestedArrayOptional
+                    </h3>
                     <div
                       class="flex flex-col gap-4"
                     >
@@ -7423,19 +7325,12 @@ exports[`single fields > optional data controls > does not show optional control
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                   >
-                    <div
-                      class="title-field mb-6"
+                    <h3
+                      class="text-2xl font-bold"
                       id="root_nestedArray__title"
                     >
-                      <h2
-                        class="text-3xl font-bold text-primary mb-2"
-                      >
-                        nestedArray
-                      </h2>
-                      <div
-                        class="divider divider-primary my-0"
-                      />
-                    </div>
+                      nestedArray
+                    </h3>
                     <div
                       class="flex flex-col gap-4"
                     >
@@ -7801,19 +7696,12 @@ exports[`single fields > optional data controls > does not show optional control
                         <div
                           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                         >
-                          <div
-                            class="title-field mb-6"
+                          <h3
+                            class="text-2xl font-bold"
                             id="root_optionalArrayWithAnyofs__title"
                           >
-                            <h2
-                              class="text-3xl font-bold text-primary mb-2"
-                            >
-                              optionalArrayWithAnyofs
-                            </h2>
-                            <div
-                              class="divider divider-primary my-0"
-                            />
-                          </div>
+                            optionalArrayWithAnyofs
+                          </h3>
                           <div
                             class="flex flex-col gap-4"
                           >
@@ -8227,19 +8115,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                             >
-                              <div
-                                class="title-field mb-6"
+                              <h3
+                                class="text-2xl font-bold"
                                 id="root_nestedObjectOptional_deepArrayOptional__title"
                               >
-                                <h2
-                                  class="text-3xl font-bold text-primary mb-2"
-                                >
-                                  deepArrayOptional
-                                </h2>
-                                <div
-                                  class="divider divider-primary my-0"
-                                />
-                              </div>
+                                deepArrayOptional
+                              </h3>
                               <div
                                 class="flex flex-col gap-4"
                               >
@@ -8310,50 +8191,39 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
                             >
                               <div
-                                class="title-field mb-6"
-                                id="root_nestedObjectOptional_deepArrayOptional2__title"
+                                class="flex flex-col"
                               >
-                                <div
-                                  class="flex"
+                                <h3
+                                  class="text-2xl font-bold"
+                                  id="root_nestedObjectOptional_deepArrayOptional2__title"
                                 >
-                                  <div
-                                    class="flex flex-auto"
+                                  deepArrayOptional2
+                                </h3>
+                              </div>
+                              <div
+                                class="flex justify-end"
+                              >
+                                <button
+                                  aria-label="Add data for optional field"
+                                  class="rjsf-add-optional-data"
+                                  id="root_nestedObjectOptional_deepArrayOptional2__optionalAdd"
+                                  title="Add data for optional field"
+                                  type="button"
+                                >
+                                  <svg
+                                    aria-hidden="true"
+                                    class="svg-inline--fa fa-plus h-5 w-5"
+                                    data-icon="plus"
+                                    data-prefix="fas"
+                                    role="img"
+                                    viewBox="0 0 448 512"
                                   >
-                                    <h2
-                                      class="text-3xl font-bold text-primary mb-2"
-                                    >
-                                      deepArrayOptional2
-                                    </h2>
-                                  </div>
-                                  <div
-                                    class="flex justify-end"
-                                  >
-                                    <button
-                                      aria-label="Add data for optional field"
-                                      class="rjsf-add-optional-data"
-                                      id="root_nestedObjectOptional_deepArrayOptional2__optionalAdd"
-                                      title="Add data for optional field"
-                                      type="button"
-                                    >
-                                      <svg
-                                        aria-hidden="true"
-                                        class="svg-inline--fa fa-plus h-5 w-5"
-                                        data-icon="plus"
-                                        data-prefix="fas"
-                                        role="img"
-                                        viewBox="0 0 448 512"
-                                      >
-                                        <path
-                                          d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
-                                          fill="currentColor"
-                                        />
-                                      </svg>
-                                    </button>
-                                  </div>
-                                </div>
-                                <div
-                                  class="divider divider-primary my-0"
-                                />
+                                    <path
+                                      d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
+                                      fill="currentColor"
+                                    />
+                                  </svg>
+                                </button>
                               </div>
                               <div
                                 class="flex flex-col gap-4"
@@ -8385,19 +8255,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                             >
-                              <div
-                                class="title-field mb-6"
+                              <h3
+                                class="text-2xl font-bold"
                                 id="root_nestedObjectOptional_deepArray__title"
                               >
-                                <h2
-                                  class="text-3xl font-bold text-primary mb-2"
-                                >
-                                  deepArray
-                                </h2>
-                                <div
-                                  class="divider divider-primary my-0"
-                                />
-                              </div>
+                                deepArray
+                              </h3>
                               <div
                                 class="flex flex-col gap-4"
                               >
@@ -8480,50 +8343,39 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
                   >
                     <div
-                      class="title-field mb-6"
-                      id="root_nestedArrayOptional__title"
+                      class="flex flex-col"
                     >
-                      <div
-                        class="flex"
+                      <h3
+                        class="text-2xl font-bold"
+                        id="root_nestedArrayOptional__title"
                       >
-                        <div
-                          class="flex flex-auto"
+                        nestedArrayOptional
+                      </h3>
+                    </div>
+                    <div
+                      class="flex justify-end"
+                    >
+                      <button
+                        aria-label="Remove data for optional field"
+                        class="rjsf-remove-optional-data"
+                        id="root_nestedArrayOptional__optionalRemove"
+                        title="Remove data for optional field"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="svg-inline--fa fa-trash h-5 w-5"
+                          data-icon="trash"
+                          data-prefix="fas"
+                          role="img"
+                          viewBox="0 0 448 512"
                         >
-                          <h2
-                            class="text-3xl font-bold text-primary mb-2"
-                          >
-                            nestedArrayOptional
-                          </h2>
-                        </div>
-                        <div
-                          class="flex justify-end"
-                        >
-                          <button
-                            aria-label="Remove data for optional field"
-                            class="rjsf-remove-optional-data"
-                            id="root_nestedArrayOptional__optionalRemove"
-                            title="Remove data for optional field"
-                            type="button"
-                          >
-                            <svg
-                              aria-hidden="true"
-                              class="svg-inline--fa fa-trash h-5 w-5"
-                              data-icon="trash"
-                              data-prefix="fas"
-                              role="img"
-                              viewBox="0 0 448 512"
-                            >
-                              <path
-                                d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
-                                fill="currentColor"
-                              />
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-                      <div
-                        class="divider divider-primary my-0"
-                      />
+                          <path
+                            d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </button>
                     </div>
                     <div
                       class="flex flex-col gap-4"
@@ -8774,19 +8626,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                   >
-                    <div
-                      class="title-field mb-6"
+                    <h3
+                      class="text-2xl font-bold"
                       id="root_nestedArray__title"
                     >
-                      <h2
-                        class="text-3xl font-bold text-primary mb-2"
-                      >
-                        nestedArray
-                      </h2>
-                      <div
-                        class="divider divider-primary my-0"
-                      />
-                    </div>
+                      nestedArray
+                    </h3>
                     <div
                       class="flex flex-col gap-4"
                     >
@@ -8956,50 +8801,39 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
                         >
                           <div
-                            class="title-field mb-6"
-                            id="root_optionalArrayWithAnyofs__title"
+                            class="flex flex-col"
                           >
-                            <div
-                              class="flex"
+                            <h3
+                              class="text-2xl font-bold"
+                              id="root_optionalArrayWithAnyofs__title"
                             >
-                              <div
-                                class="flex flex-auto"
+                              optionalArrayWithAnyofs
+                            </h3>
+                          </div>
+                          <div
+                            class="flex justify-end"
+                          >
+                            <button
+                              aria-label="Add data for optional field"
+                              class="rjsf-add-optional-data"
+                              id="root_optionalArrayWithAnyofs__optionalAdd"
+                              title="Add data for optional field"
+                              type="button"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                class="svg-inline--fa fa-plus h-5 w-5"
+                                data-icon="plus"
+                                data-prefix="fas"
+                                role="img"
+                                viewBox="0 0 448 512"
                               >
-                                <h2
-                                  class="text-3xl font-bold text-primary mb-2"
-                                >
-                                  optionalArrayWithAnyofs
-                                </h2>
-                              </div>
-                              <div
-                                class="flex justify-end"
-                              >
-                                <button
-                                  aria-label="Add data for optional field"
-                                  class="rjsf-add-optional-data"
-                                  id="root_optionalArrayWithAnyofs__optionalAdd"
-                                  title="Add data for optional field"
-                                  type="button"
-                                >
-                                  <svg
-                                    aria-hidden="true"
-                                    class="svg-inline--fa fa-plus h-5 w-5"
-                                    data-icon="plus"
-                                    data-prefix="fas"
-                                    role="img"
-                                    viewBox="0 0 448 512"
-                                  >
-                                    <path
-                                      d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
-                                      fill="currentColor"
-                                    />
-                                  </svg>
-                                </button>
-                              </div>
-                            </div>
-                            <div
-                              class="divider divider-primary my-0"
-                            />
+                                <path
+                                  d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
+                                  fill="currentColor"
+                                />
+                              </svg>
+                            </button>
                           </div>
                           <div
                             class="flex flex-col gap-4"
@@ -9316,19 +9150,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                             >
-                              <div
-                                class="title-field mb-6"
+                              <h3
+                                class="text-2xl font-bold"
                                 id="root_nestedObjectOptional_deepArrayOptional__title"
                               >
-                                <h2
-                                  class="text-3xl font-bold text-primary mb-2"
-                                >
-                                  deepArrayOptional
-                                </h2>
-                                <div
-                                  class="divider divider-primary my-0"
-                                />
-                              </div>
+                                deepArrayOptional
+                              </h3>
                               <div
                                 class="flex flex-col gap-4"
                               >
@@ -9399,19 +9226,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
                             >
-                              <div
-                                class="title-field mb-6"
+                              <h3
+                                class="text-2xl font-bold"
                                 id="root_nestedObjectOptional_deepArrayOptional2__title"
                               >
-                                <h2
-                                  class="text-3xl font-bold text-primary mb-2"
-                                >
-                                  deepArrayOptional2
-                                </h2>
-                                <div
-                                  class="divider divider-primary my-0"
-                                />
-                              </div>
+                                deepArrayOptional2
+                              </h3>
                               <div
                                 class="flex flex-col gap-4"
                               >
@@ -9447,19 +9267,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                             >
-                              <div
-                                class="title-field mb-6"
+                              <h3
+                                class="text-2xl font-bold"
                                 id="root_nestedObjectOptional_deepArray__title"
                               >
-                                <h2
-                                  class="text-3xl font-bold text-primary mb-2"
-                                >
-                                  deepArray
-                                </h2>
-                                <div
-                                  class="divider divider-primary my-0"
-                                />
-                              </div>
+                                deepArray
+                              </h3>
                               <div
                                 class="flex flex-col gap-4"
                               >
@@ -9542,19 +9355,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
                   >
-                    <div
-                      class="title-field mb-6"
+                    <h3
+                      class="text-2xl font-bold"
                       id="root_nestedArrayOptional__title"
                     >
-                      <h2
-                        class="text-3xl font-bold text-primary mb-2"
-                      >
-                        nestedArrayOptional
-                      </h2>
-                      <div
-                        class="divider divider-primary my-0"
-                      />
-                    </div>
+                      nestedArrayOptional
+                    </h3>
                     <div
                       class="flex flex-col gap-4"
                     >
@@ -9808,19 +9614,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                   >
-                    <div
-                      class="title-field mb-6"
+                    <h3
+                      class="text-2xl font-bold"
                       id="root_nestedArray__title"
                     >
-                      <h2
-                        class="text-3xl font-bold text-primary mb-2"
-                      >
-                        nestedArray
-                      </h2>
-                      <div
-                        class="divider divider-primary my-0"
-                      />
-                    </div>
+                      nestedArray
+                    </h3>
                     <div
                       class="flex flex-col gap-4"
                     >
@@ -9963,19 +9762,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         <div
                           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
                         >
-                          <div
-                            class="title-field mb-6"
+                          <h3
+                            class="text-2xl font-bold"
                             id="root_optionalArrayWithAnyofs__title"
                           >
-                            <h2
-                              class="text-3xl font-bold text-primary mb-2"
-                            >
-                              optionalArrayWithAnyofs
-                            </h2>
-                            <div
-                              class="divider divider-primary my-0"
-                            />
-                          </div>
+                            optionalArrayWithAnyofs
+                          </h3>
                           <div
                             class="flex flex-col gap-4"
                           >
@@ -10140,50 +9932,39 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
                   >
                     <div
-                      class="title-field mb-6"
-                      id="root_nestedArrayOptional__title"
+                      class="flex flex-col"
                     >
-                      <div
-                        class="flex"
+                      <h3
+                        class="text-2xl font-bold"
+                        id="root_nestedArrayOptional__title"
                       >
-                        <div
-                          class="flex flex-auto"
+                        nestedArrayOptional
+                      </h3>
+                    </div>
+                    <div
+                      class="flex justify-end"
+                    >
+                      <button
+                        aria-label="Add data for optional field"
+                        class="rjsf-add-optional-data"
+                        id="root_nestedArrayOptional__optionalAdd"
+                        title="Add data for optional field"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="svg-inline--fa fa-plus h-5 w-5"
+                          data-icon="plus"
+                          data-prefix="fas"
+                          role="img"
+                          viewBox="0 0 448 512"
                         >
-                          <h2
-                            class="text-3xl font-bold text-primary mb-2"
-                          >
-                            nestedArrayOptional
-                          </h2>
-                        </div>
-                        <div
-                          class="flex justify-end"
-                        >
-                          <button
-                            aria-label="Add data for optional field"
-                            class="rjsf-add-optional-data"
-                            id="root_nestedArrayOptional__optionalAdd"
-                            title="Add data for optional field"
-                            type="button"
-                          >
-                            <svg
-                              aria-hidden="true"
-                              class="svg-inline--fa fa-plus h-5 w-5"
-                              data-icon="plus"
-                              data-prefix="fas"
-                              role="img"
-                              viewBox="0 0 448 512"
-                            >
-                              <path
-                                d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
-                                fill="currentColor"
-                              />
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-                      <div
-                        class="divider divider-primary my-0"
-                      />
+                          <path
+                            d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </button>
                     </div>
                     <div
                       class="flex flex-col gap-4"
@@ -10312,19 +10093,12 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                   >
-                    <div
-                      class="title-field mb-6"
+                    <h3
+                      class="text-2xl font-bold"
                       id="root_nestedArray__title"
                     >
-                      <h2
-                        class="text-3xl font-bold text-primary mb-2"
-                      >
-                        nestedArray
-                      </h2>
-                      <div
-                        class="divider divider-primary my-0"
-                      />
-                    </div>
+                      nestedArray
+                    </h3>
                     <div
                       class="flex flex-col gap-4"
                     >
@@ -10494,50 +10268,39 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
                         >
                           <div
-                            class="title-field mb-6"
-                            id="root_optionalArrayWithAnyofs__title"
+                            class="flex flex-col"
                           >
-                            <div
-                              class="flex"
+                            <h3
+                              class="text-2xl font-bold"
+                              id="root_optionalArrayWithAnyofs__title"
                             >
-                              <div
-                                class="flex flex-auto"
+                              optionalArrayWithAnyofs
+                            </h3>
+                          </div>
+                          <div
+                            class="flex justify-end"
+                          >
+                            <button
+                              aria-label="Add data for optional field"
+                              class="rjsf-add-optional-data"
+                              id="root_optionalArrayWithAnyofs__optionalAdd"
+                              title="Add data for optional field"
+                              type="button"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                class="svg-inline--fa fa-plus h-5 w-5"
+                                data-icon="plus"
+                                data-prefix="fas"
+                                role="img"
+                                viewBox="0 0 448 512"
                               >
-                                <h2
-                                  class="text-3xl font-bold text-primary mb-2"
-                                >
-                                  optionalArrayWithAnyofs
-                                </h2>
-                              </div>
-                              <div
-                                class="flex justify-end"
-                              >
-                                <button
-                                  aria-label="Add data for optional field"
-                                  class="rjsf-add-optional-data"
-                                  id="root_optionalArrayWithAnyofs__optionalAdd"
-                                  title="Add data for optional field"
-                                  type="button"
-                                >
-                                  <svg
-                                    aria-hidden="true"
-                                    class="svg-inline--fa fa-plus h-5 w-5"
-                                    data-icon="plus"
-                                    data-prefix="fas"
-                                    role="img"
-                                    viewBox="0 0 448 512"
-                                  >
-                                    <path
-                                      d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
-                                      fill="currentColor"
-                                    />
-                                  </svg>
-                                </button>
-                              </div>
-                            </div>
-                            <div
-                              class="divider divider-primary my-0"
-                            />
+                                <path
+                                  d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
+                                  fill="currentColor"
+                                />
+                              </svg>
+                            </button>
                           </div>
                           <div
                             class="flex flex-col gap-4"
@@ -10673,19 +10436,12 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
                   >
-                    <div
-                      class="title-field mb-6"
+                    <h3
+                      class="text-2xl font-bold"
                       id="root_nestedArrayOptional__title"
                     >
-                      <h2
-                        class="text-3xl font-bold text-primary mb-2"
-                      >
-                        nestedArrayOptional
-                      </h2>
-                      <div
-                        class="divider divider-primary my-0"
-                      />
-                    </div>
+                      nestedArrayOptional
+                    </h3>
                     <div
                       class="flex flex-col gap-4"
                     >
@@ -10822,19 +10578,12 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                   >
-                    <div
-                      class="title-field mb-6"
+                    <h3
+                      class="text-2xl font-bold"
                       id="root_nestedArray__title"
                     >
-                      <h2
-                        class="text-3xl font-bold text-primary mb-2"
-                      >
-                        nestedArray
-                      </h2>
-                      <div
-                        class="divider divider-primary my-0"
-                      />
-                    </div>
+                      nestedArray
+                    </h3>
                     <div
                       class="flex flex-col gap-4"
                     >
@@ -10981,19 +10730,12 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         <div
                           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
                         >
-                          <div
-                            class="title-field mb-6"
+                          <h3
+                            class="text-2xl font-bold"
                             id="root_optionalArrayWithAnyofs__title"
                           >
-                            <h2
-                              class="text-3xl font-bold text-primary mb-2"
-                            >
-                              optionalArrayWithAnyofs
-                            </h2>
-                            <div
-                              class="divider divider-primary my-0"
-                            />
-                          </div>
+                            optionalArrayWithAnyofs
+                          </h3>
                           <div
                             class="flex flex-col gap-4"
                           >

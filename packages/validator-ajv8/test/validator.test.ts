@@ -16,19 +16,9 @@ import type { Mock } from 'vitest';
 
 import type { Localizer } from '../src';
 import AJV8Validator from '../src/validator';
+import { expectWarn } from './harness/testData';
 
 const illFormedKey = "bar`'()=+*&^%$#@!";
-
-function expectWarn<T>(fn: () => T, ...expectedWarning: unknown[]): T {
-  const warnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
-  try {
-    const result = fn();
-    expect(warnSpy).toHaveBeenCalledWith(...expectedWarning);
-    return result;
-  } finally {
-    warnSpy.mockRestore();
-  }
-}
 
 describe('AJV8Validator', () => {
   let builder: ErrorSchemaBuilder;

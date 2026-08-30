@@ -1,3 +1,5 @@
+/** @vitest-environment jsdom */
+// Asserts against jsdom Blob/File semantics that differ from the Node globals.
 import { dataURItoBlob } from '../src';
 
 describe('dataURItoBlob()', () => {
