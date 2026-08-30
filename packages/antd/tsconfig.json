@@ -1,12 +1,11 @@
 {
   "extends": "../../tsconfig.base.json",
-  "files": [],
-  "references": [
-    {
-      "path": "./src"
-    },
-    {
-      "path": "./test"
-    }
-  ]
+  "include": ["src"],
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib",
+    // Skip because of antd inner ts errors
+    "skipLibCheck": true
+  },
+  "references": [{ "path": "../core" }, { "path": "../utils" }, { "path": "../validator-ajv8" }]
 }

@@ -6,13 +6,12 @@
     "allowImportingTsExtensions": true,
     "rootDir": "./",
     "noEmit": true,
-    "jsx": "react-jsx",
     "skipLibCheck": true,
     "types": ["vitest/globals", "node"]
   },
   "references": [
     {
-      "path": "../src"
+      "path": ".."
     },
     {
       "path": "../../snapshot-tests"

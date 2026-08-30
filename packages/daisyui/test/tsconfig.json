@@ -8,7 +8,6 @@
     "noImplicitAny": false,
     "types": ["vitest/globals", "node"],
     "esModuleInterop": true,
-    "jsx": "react-jsx",
     "resolveJsonModule": true,
     "skipLibCheck": true
   },

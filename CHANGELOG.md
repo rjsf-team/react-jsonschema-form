@@ -34,6 +34,11 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Relative TypeScript imports now name their real `.ts`/`.tsx` source file (and an explicit `index.ts` for directory imports), and TypeScript's `rewriteRelativeImportExtensions` emits the `.js` specifiers directly. This removes `tsc-alias` and its post-emit string rewriting entirely, along with the `tsc-alias-replacer/` directory, both `tsconfig.replacer.json` files, the `compileReplacer` scripts and `move-file-cli`. Naming the source file rather than the output is deliberate: Node's native type stripping requires exact `.ts` extensions and does no extension or directory-index searching, so this avoids a second repository-wide import migration later
 - Fixed `packages/daisyui/test/tsconfig.json`, which was configured to emit into `../dist` — the esbuild/rollup bundle output directory — instead of type-checking without emit like every other test project
+- Collapsed each published package's `tsconfig.json` + `tsconfig.build.json` + `src/tsconfig.json` chain into a single source config at the package root plus one test config. A source build now depends only on its dependencies' source builds — `tsc -b packages/core --dry --verbose` no longer pulls `utils/test` or `validator-ajv8/test` into the graph — and the shared options live in one place in `tsconfig.base.json` instead of being split across two root configs and repeated per package
+- Fixed the root `tsconfig.json` solution, which referenced `snapshot-tests` twice and omitted `mantine`, `primereact`, `validator-ata` and `validator-cfworker` (they were only reachable transitively through the playground). It now lists every project exactly once
+- Fixed `build:ts` in the packages that prefixed it with `rimraf ./lib`: deleting `lib` without deleting `tsconfig.tsbuildinfo` left `tsc -b` believing the project was up to date, so it emitted nothing and running the script left the package with no output at all. All 15 packages now clear both
+- `@rjsf/chakra-ui`'s `type-check` script ran `tsc --noEmit` against a solution config with `files: []`, so it checked nothing at all; it now builds the source and test projects. `@rjsf/validator-cfworker`'s `typecheck` keeps its existing source-plus-tests scope
+- Added `"type": "module"` to `@rjsf/snapshot-tests`, which emits and publishes ESM `.js` files
 
 # 6.9.0
 
@@ -51,6 +56,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 - Fixed `BaseInputTemplate`'s `ui:allowClearTextInputs` clear button to store `ui:emptyValue` (`undefined` by default) instead of always storing `""`, so clicking it now behaves exactly like clearing the input by typing. **Potentially breaking change:** an app that never sets `ui:emptyValue` and clicks the clear button on a field (rather than backspacing it) previously got `""` back; it now gets `undefined`, matching every other way of emptying the field.
+- Removed the `environment` prop passed to `EnvironmentProvider` in the test wrapper. `EnvironmentProvider` has no such prop, so it was silently ignored; dropping it leaves the default environment in place and lets the package's `type-check` script cover the test files
 
 ## @rjsf/core
 

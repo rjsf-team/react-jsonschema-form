@@ -1,12 +1,11 @@
 {
   "extends": "../../tsconfig.base.json",
-  "files": [],
-  "references": [
-    {
-      "path": "./src"
-    },
-    {
-      "path": "./test"
-    }
-  ]
+  "include": ["src"],
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib",
+    // There are type errors in semantic-ui-react type definitions because of which skipLibCheck had to be added
+    "skipLibCheck": true
+  },
+  "references": [{ "path": "../core" }, { "path": "../utils" }, { "path": "../validator-ajv8" }]
 }

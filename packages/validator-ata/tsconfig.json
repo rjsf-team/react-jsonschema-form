@@ -1,15 +1,10 @@
 {
   "extends": "../../tsconfig.base.json",
-  "files": [],
-  "references": [
-    {
-      "path": "./src"
-    },
-    {
-      "path": "./test"
-    },
-    {
-      "path": "../utils"
-    }
-  ]
+  "include": ["src"],
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib",
+    "types": ["node"]
+  },
+  "references": [{ "path": "../utils" }]
 }

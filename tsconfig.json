@@ -1,47 +1,22 @@
 {
   "files": [],
   "references": [
-    {
-      "path": "./packages/antd"
-    },
-    {
-      "path": "./packages/react-bootstrap"
-    },
-    {
-      "path": "./packages/chakra-ui"
-    },
-    {
-      "path": "./packages/daisyui"
-    },
-    {
-      "path": "./packages/core"
-    },
-    {
-      "path": "./packages/snapshot-tests"
-    },
-    {
-      "path": "./packages/fluentui-rc"
-    },
-    {
-      "path": "./packages/mui"
-    },
-    {
-      "path": "./packages/playground"
-    },
-    {
-      "path": "./packages/semantic-ui"
-    },
-    {
-      "path": "./packages/shadcn"
-    },
-    {
-      "path": "./packages/utils"
-    },
-    {
-      "path": "./packages/validator-ajv8"
-    },
-    {
-      "path": "./packages/snapshot-tests"
-    }
+    { "path": "./packages/antd" },
+    { "path": "./packages/chakra-ui" },
+    { "path": "./packages/core" },
+    { "path": "./packages/daisyui" },
+    { "path": "./packages/fluentui-rc" },
+    { "path": "./packages/mantine" },
+    { "path": "./packages/mui" },
+    { "path": "./packages/playground" },
+    { "path": "./packages/primereact" },
+    { "path": "./packages/react-bootstrap" },
+    { "path": "./packages/semantic-ui" },
+    { "path": "./packages/shadcn" },
+    { "path": "./packages/snapshot-tests" },
+    { "path": "./packages/utils" },
+    { "path": "./packages/validator-ajv8" },
+    { "path": "./packages/validator-ata" },
+    { "path": "./packages/validator-cfworker" }
   ]
 }

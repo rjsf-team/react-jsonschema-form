@@ -10,12 +10,11 @@
     "outDir": "../lib-test",
     "rewriteRelativeImportExtensions": false,
     "allowImportingTsExtensions": true,
-    "jsx": "react-jsx",
     "types": ["vitest/globals", "node"]
   },
   "references": [
     {
-      "path": "../src"
+      "path": ".."
     }
   ]
 }

@@ -4,18 +4,7 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./lib",
-    "jsx": "react-jsx",
     "types": ["vitest/globals", "node"]
   },
-  "references": [
-    {
-      "path": "../core/src"
-    },
-    {
-      "path": "../utils"
-    },
-    {
-      "path": "../validator-ajv8"
-    }
-  ]
+  "references": [{ "path": "../core" }, { "path": "../utils" }, { "path": "../validator-ajv8" }]
 }

@@ -5,7 +5,7 @@ import Form from '../src/index.ts';
 
 export default function WrappedForm(props: FormProps) {
   return (
-    <EnvironmentProvider environment={{ document, window }}>
+    <EnvironmentProvider>
       <ChakraProvider value={defaultSystem}>
         <Form {...props} />
       </ChakraProvider>
