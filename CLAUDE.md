@@ -93,6 +93,8 @@ Every theme package follows the same structure:
 
 Fields select which widget to render based on schema `type` and `ui:widget`. Templates wrap the output for consistent styling.
 
+When making a change to a widget or template, consider if the change should be generalized to all theme packages. If substantial logic is duplicated across themes, consider refactoring the logic to `@rjsf/utils` or `@rjsf/core`.
+
 ### Form rendering flow
 
 1. Caller provides `schema`, `validator` (required), `formData`, and `uiSchema`

@@ -236,6 +236,30 @@ describe('StringField', () => {
       expectToHaveBeenCalledWithFormData(onChange, 'default', 'root');
     });
 
+    it('should handle the allowClearTextInputs clear button the same as an empty string change event', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'string' },
+        uiSchema: { 'ui:allowClearTextInputs': true },
+        formData: 'x',
+      });
+
+      await user.click(node.querySelector('button.btn-clear')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, undefined, 'root');
+    });
+
+    it('should handle the allowClearTextInputs clear button with custom ui:emptyValue the same as an empty string change event', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'string' },
+        uiSchema: { 'ui:allowClearTextInputs': true, 'ui:emptyValue': 'default' },
+        formData: 'x',
+      });
+
+      await user.click(node.querySelector('button.btn-clear')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, 'default', 'root');
+    });
+
     it('should handle an empty string change event with defaults set', async () => {
       const { node, onChange } = createFormComponent({
         schema: {

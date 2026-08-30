@@ -18,6 +18,7 @@ import {
   setByPath,
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
+  deepEquals,
   getTemplate,
   getPropertySchema,
   getUiOptions,
@@ -130,27 +131,27 @@ function ObjectFieldPropertyFn<T = any, S extends StrictRJSFSchema = RJSFSchema,
     toFieldPathId(propertyName, globalFormOptions, fieldPathId.path),
   );
 
-  /** Returns the `onPropertyChange` handler for the `name` field. Handles the special case where a user is attempting
-   * to clear the data for a field added as an additional property. Calls the `onChange()` handler with the updated
-   * formData.
-   *
-   * @param name - The name of the property
-   * @param addedByAdditionalProperties - Flag indicating whether this property is an additional property
-   * @returns - The onPropertyChange callback for the `name` property
+  /** The `onChange` handler installed on this property's `SchemaField`. Handles the special case where the user
+   * clears a value at this property's own path when it was added as an additional property, coercing `undefined`
+   * to the empty string so the property's key input survives. Every other change, including any change to a
+   * descendant of this property, is forwarded to `onChange()` untouched.
    */
   const onPropertyChange = useCallback(
     (value: T | undefined, path: FieldPathList, newErrorSchema?: ErrorSchema<T>, id?: string) => {
-      // Don't set value = undefined for fields added by additionalProperties. Doing so removes them from the
-      // formData, which causes them to completely disappear (including the input field for the property name). Unlike
-      // fields which are "mandated" by the schema, these fields can be set to undefined by clicking a "delete field"
-      // button, so set empty values to the empty string.
+      // An `additionalProperties` value lives at this property's own path, so clearing its widget to `undefined`
+      // would drop the key from the formData and take the key input with it. Coerce that one case to the empty
+      // string.
+      // A descendant's path is this property's path plus at least one segment, so comparing to this
+      // property's own path (rather than merely its length) tells apart "this property changed" from "a
+      // descendant changed"; a cleared descendant must stay `undefined` so it is omitted from the formData
+      // exactly like a cleared property declared in `properties` (#5222).
       let normalizedValue = value;
-      if (value === undefined && addedByAdditionalProperties) {
+      if (value === undefined && addedByAdditionalProperties && deepEquals(path, innerFieldIdPathId.path)) {
         normalizedValue = '' as unknown as T;
       }
       onChange(normalizedValue, path, newErrorSchema, id);
     },
-    [onChange, addedByAdditionalProperties],
+    [onChange, addedByAdditionalProperties, innerFieldIdPathId],
   );
 
   /** The key change event handler; Called when the key associated with a field is changed for an additionalProperty.

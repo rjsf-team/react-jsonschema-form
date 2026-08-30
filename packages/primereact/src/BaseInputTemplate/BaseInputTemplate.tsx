@@ -44,7 +44,7 @@ export default function BaseInputTemplate<
     (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      onChange(options.emptyValue ?? '');
+      onChange(options.emptyValue);
     },
     [onChange, options.emptyValue],
   );
