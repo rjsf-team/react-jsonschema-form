@@ -1,1 +1,1 @@
-export { default } from '../../testing/vitest.base';
+export { default } from '../../testing/vitest.base.ts';

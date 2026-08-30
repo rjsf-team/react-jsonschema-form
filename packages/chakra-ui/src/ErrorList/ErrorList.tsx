@@ -2,7 +2,7 @@ import { ListItem, ListRoot } from '@chakra-ui/react';
 import type { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { TranslatableString } from '@rjsf/utils';
 
-import { Alert } from '../components/ui/alert';
+import { Alert } from '../components/ui/alert.tsx';
 
 export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   errors,

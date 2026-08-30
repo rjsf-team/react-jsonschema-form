@@ -5,9 +5,9 @@ import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import type { FormProps, IChangeEvent } from '../src';
-import Form from '../src';
-import type { NoValFormProps } from './testUtils';
+import type { FormProps, IChangeEvent } from '../src/index.ts';
+import Form from '../src/index.ts';
+import type { NoValFormProps } from './testUtils.tsx';
 import {
   actWrappedDelayPromise,
   createComponent,
@@ -16,7 +16,7 @@ import {
   expectToHaveBeenCalledWithFormData,
   setupConsoleErrorSuppression,
   submitForm,
-} from './testUtils';
+} from './testUtils.tsx';
 import widgetsSchema from './widgets_schema.json';
 
 const user = userEvent.setup();

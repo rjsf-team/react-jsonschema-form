@@ -1,6 +1,6 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 
-import DateTimeInput from './DateTimeInput';
+import DateTimeInput from './DateTimeInput.tsx';
 
 /** The `DateWidget` component uses the `DateTimeInput` changing the valueFormat to show `date`
  *

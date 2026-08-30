@@ -1,7 +1,7 @@
 import type { JSONSchema7Type } from 'json-schema';
 
-import { CONST_KEY, getSchemaType, isObject } from './';
-import type { RJSFSchema, StrictRJSFSchema } from './types';
+import { CONST_KEY, getSchemaType, isObject } from './index.ts';
+import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /**
  * Checks if the schema const property value is an AJV $data reference

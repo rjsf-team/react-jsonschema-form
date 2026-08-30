@@ -9,9 +9,9 @@ import {
   optionId,
 } from '@rjsf/utils';
 
-import { Label } from '../components/ui/label';
-import { RadioGroup, RadioGroupItem } from '../components/ui/radio-group';
-import { cn } from '../lib/utils';
+import { Label } from '../components/ui/label.tsx';
+import { RadioGroup, RadioGroupItem } from '../components/ui/radio-group.tsx';
+import { cn } from '../lib/utils.ts';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.

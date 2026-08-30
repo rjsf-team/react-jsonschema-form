@@ -2,7 +2,7 @@ import { Alert, Button, Group } from '@mantine/core';
 import type { CyclicSchemaExpandProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { ID_KEY, TranslatableString } from '@rjsf/utils';
 
-import { ExclamationCircle } from './icons';
+import { ExclamationCircle } from './icons.tsx';
 
 /** The `CyclicSchemaExpandTemplate` is the template to use to render the cyclic schema expand message and controls
  *

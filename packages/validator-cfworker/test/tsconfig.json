@@ -2,6 +2,8 @@
   "extends": "../../../tsconfig.base.json",
   "include": ["./", "./**/*.json"],
   "compilerOptions": {
+    "rewriteRelativeImportExtensions": false,
+    "allowImportingTsExtensions": true,
     "rootDir": "./",
     "noEmit": true,
     "resolveJsonModule": true,

@@ -57,8 +57,8 @@ import {
   ONE_OF_KEY,
 } from '@rjsf/utils';
 
-import getDefaultRegistry from '../getDefaultRegistry';
-import { ADDITIONAL_PROPERTY_KEY_REMOVE, IS_RESET } from './constants';
+import getDefaultRegistry from '../getDefaultRegistry.ts';
+import { ADDITIONAL_PROPERTY_KEY_REMOVE, IS_RESET } from './constants.ts';
 
 /** Represents a boolean option that is deprecated.
  * @deprecated - In a future major release, this type will be removed

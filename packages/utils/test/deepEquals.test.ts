@@ -1,4 +1,4 @@
-import { deepEquals } from '../src';
+import { deepEquals } from '../src/index.ts';
 
 describe('deepEquals()', () => {
   it('should assume functions are always equivalent', () => {

@@ -1,7 +1,7 @@
-import type { SchemaUtilsType, RJSFSchema } from '../../src';
-import { createSchemaUtils, sanitizeDataForNewSchema, setByPath } from '../../src';
-import { FIRST_ONE_OF, oneOfData, oneOfSchema, SECOND_ONE_OF } from '../testUtils/testData';
-import type { TestValidatorType } from './types';
+import type { SchemaUtilsType, RJSFSchema } from '../../src/index.ts';
+import { createSchemaUtils, sanitizeDataForNewSchema, setByPath } from '../../src/index.ts';
+import { FIRST_ONE_OF, oneOfData, oneOfSchema, SECOND_ONE_OF } from '../testUtils/testData.ts';
+import type { TestValidatorType } from './types.ts';
 
 export default function sanitizeDataForNewSchemaTest(testValidator: TestValidatorType) {
   describe('sanitizeDataForNewSchema', () => {

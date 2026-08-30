@@ -1,7 +1,7 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
-import type { CustomValidatorOptionsType } from './types';
-import CFWorkerValidator from './validator';
+import type { CustomValidatorOptionsType } from './types.ts';
+import CFWorkerValidator from './validator.ts';
 
 /** Creates a customized cfworker-backed `ValidatorType` implementation. */
 export default function customizeValidator<

@@ -1,4 +1,4 @@
-import getOptionMatchingSimpleDiscriminator from '../src/getOptionMatchingSimpleDiscriminator';
+import getOptionMatchingSimpleDiscriminator from '../src/getOptionMatchingSimpleDiscriminator.ts';
 
 describe('getOptionMatchingSimpleDiscriminator()', () => {
   describe('returns undefined if no option matches discriminator', () => {

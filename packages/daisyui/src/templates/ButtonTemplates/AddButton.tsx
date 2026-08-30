@@ -2,7 +2,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { TranslatableString } from '@rjsf/utils';
 
-import DaisyUIButton from './DaisyUIButton';
+import DaisyUIButton from './DaisyUIButton.tsx';
 
 /** The `AddButton` renders a button that represent the `Add` action on a form
  *

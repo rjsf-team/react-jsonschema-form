@@ -4,7 +4,7 @@ import type { ComponentProps } from 'react';
 import { Indicator, Root } from '@radix-ui/react-checkbox';
 import { CheckIcon } from '@radix-ui/react-icons';
 
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.ts';
 
 /**
  * A checkbox component built on top of Radix UI Checkbox primitive

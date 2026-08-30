@@ -13,8 +13,8 @@ import {
   retrieveSchemaTest,
   sanitizeDataForNewSchemaTest,
   toPathSchemaTest,
-} from './schema';
-import getTestValidator from './testUtils/getTestValidator';
+} from './schema/index.ts';
+import getTestValidator from './testUtils/getTestValidator.ts';
 
 const testValidator = getTestValidator({});
 

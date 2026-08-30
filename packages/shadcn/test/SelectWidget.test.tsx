@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import SelectWidget from '../src/SelectWidget';
-import { makeWidgetMockProps } from './helpers/createMocks';
+import SelectWidget from '../src/SelectWidget/index.ts';
+import { makeWidgetMockProps } from './helpers/createMocks.ts';
 
 describe('SelectWidget', () => {
   test('single select is reachable from the tab order and opens with the keyboard', async () => {

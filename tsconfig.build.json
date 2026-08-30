@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "rewriteRelativeImportExtensions": true,
     "composite": true,
     "target": "esnext",
     "module": "esnext",
@@ -13,12 +14,8 @@
     "esModuleInterop": true,
     "declaration": true,
     "declarationMap": true,
-    "skipLibCheck": true,
+    "skipLibCheck": true
   },
-  "include": [
-    "./src"
-  ],
-  "exclude": [
-    "./test"
-  ]
+  "include": ["./src"],
+  "exclude": ["./test"]
 }

@@ -1,4 +1,4 @@
-import { shallowEquals } from '../src';
+import { shallowEquals } from '../src/index.ts';
 
 describe('shallowEquals()', () => {
   it('should return true for identical references', () => {

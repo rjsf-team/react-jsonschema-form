@@ -1,4 +1,4 @@
-import { isCustomWidget } from '../src';
+import { isCustomWidget } from '../src/index.ts';
 
 describe('isCustomWidget()', () => {
   it('When the function is called with no uiSchema it returns false', () => {

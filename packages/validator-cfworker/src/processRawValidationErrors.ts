@@ -22,7 +22,7 @@ import {
   validationDataMerge,
 } from '@rjsf/utils';
 
-import type { CFWorkerValidationError, SuppressDuplicateFilteringType } from './types';
+import type { CFWorkerValidationError, SuppressDuplicateFilteringType } from './types.ts';
 
 /** The raw validation results produced by the underlying engine, before conversion into RJSF's error formats. */
 export interface RawValidationErrorsType<Result = any> {

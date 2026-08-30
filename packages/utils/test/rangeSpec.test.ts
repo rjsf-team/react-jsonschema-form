@@ -1,4 +1,4 @@
-import { rangeSpec } from '../src';
+import { rangeSpec } from '../src/index.ts';
 
 describe('rangeSpec()', () => {
   it('returns an empty object when the schema does not contain range info', () => {

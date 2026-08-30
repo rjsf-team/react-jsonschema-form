@@ -1,5 +1,5 @@
-import rangeSpec from './rangeSpec';
-import type { FormContextType, InputPropsType, RJSFSchema, StrictRJSFSchema, UIOptionsType } from './types';
+import rangeSpec from './rangeSpec.ts';
+import type { FormContextType, InputPropsType, RJSFSchema, StrictRJSFSchema, UIOptionsType } from './types.ts';
 
 /** Using the `schema`, `defaultType` and `options`, extract out the props for the <input> element that make sense.
  *

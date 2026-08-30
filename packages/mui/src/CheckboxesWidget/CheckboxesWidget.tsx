@@ -18,7 +18,7 @@ import {
   optionId,
 } from '@rjsf/utils';
 
-import { getMuiProps } from '../util';
+import { getMuiProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the CheckboxesWidget. */
 export interface CheckboxesWidgetMuiProps extends GenericObjectType {

@@ -123,6 +123,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Replaced all `lodash/get` usage with the new `@rjsf/utils` path utilities
 - Replaced `lodash/isObject` with `isObject` from `@rjsf/utils` and dropped the `lodash`/`lodash-es` dependencies entirely
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+- Changed the `standaloneCode` import to name the file, `ajv/dist/standalone/index.js`, instead of the directory subpath `ajv/dist/standalone`. A `tsc-alias` replacer used to patch this into the emitted output; the source now says what it means. No public API changed
 
 ## @rjsf/validator-ata
 
@@ -148,6 +149,8 @@ should change the heading of the (upcoming) version to include a major version b
 - Tests now resolve `@rjsf/*` workspace imports to TypeScript source via a custom `@rjsf/source` export condition (declared in a new shared `testing/vitest.base.ts` that every package's vitest config extends), so `git clone && pnpm install && pnpm vitest run` works with no build step and tests always exercise current source; a root vitest `projects` config also lets vitest run across every package from the repo root, while the nx-driven test scripts remain unchanged
 - Simplified `@rjsf/validator-ajv8`'s precompiled-validator test harness: the tests now compile `superSchema` in memory via a small `compileSuperSchema()` helper, replacing the generated gitignored `superSchema*.cjs` fixtures and with them the `compileSchemas` npm script and the vitest `globalSetup` that regenerated them
 - Updated the `emptyValue` and `allowClearTextInputs` uiSchema docs to indicate relationship each other.
+- Relative TypeScript imports now name their real `.ts`/`.tsx` source file (and an explicit `index.ts` for directory imports), and TypeScript's `rewriteRelativeImportExtensions` emits the `.js` specifiers directly. This removes `tsc-alias` and its post-emit string rewriting entirely, along with the `tsc-alias-replacer/` directory, both `tsconfig.replacer.json` files, the `compileReplacer` scripts and `move-file-cli`. Naming the source file rather than the output is deliberate: Node's native type stripping requires exact `.ts` extensions and does no extension or directory-index searching, so this avoids a second repository-wide import migration later
+- Fixed `packages/daisyui/test/tsconfig.json`, which was configured to emit into `../dist` — the esbuild/rollup bundle output directory — instead of type-checking without emit like every other test project
 
 # 6.8.0
 

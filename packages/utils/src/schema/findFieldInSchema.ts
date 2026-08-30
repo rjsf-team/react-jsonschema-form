@@ -1,5 +1,5 @@
-import { ANY_OF_KEY, ONE_OF_KEY, PROPERTIES_KEY, REQUIRED_KEY } from '../constants';
-import { getByPath, hasByPath } from '../pathUtils';
+import { ANY_OF_KEY, ONE_OF_KEY, PROPERTIES_KEY, REQUIRED_KEY } from '../constants.ts';
+import { getByPath, hasByPath } from '../pathUtils.ts';
 import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
@@ -8,9 +8,9 @@ import type {
   SchemaFieldPath,
   StrictRJSFSchema,
   ValidatorType,
-} from '../types';
-import findSelectedOptionInXxxOf from './findSelectedOptionInXxxOf';
-import getFromSchema from './getFromSchema';
+} from '../types.ts';
+import findSelectedOptionInXxxOf from './findSelectedOptionInXxxOf.ts';
+import getFromSchema from './getFromSchema.ts';
 
 /** Unique schema that represents no schema was found, exported for testing purposes */
 export const NOT_FOUND_SCHEMA = { title: '!@#$_UNKNOWN_$#@!' };

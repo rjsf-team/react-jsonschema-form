@@ -1,18 +1,18 @@
 import type { FormContextType, RegistryWidgetsType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
-import AltDateTimeWidget from './AltDateTimeWidget/AltDateTimeWidget';
-import AltDateWidget from './AltDateWidget/AltDateWidget';
-import CheckboxesWidget from './CheckboxesWidget/CheckboxesWidget';
-import CheckboxWidget from './CheckboxWidget/CheckboxWidget';
-import DateTimeWidget from './DateTimeWidget/DateTimeWidget';
-import DateWidget from './DateWidget/DateWidget';
-import RadioWidget from './RadioWidget/RadioWidget';
-import RangeWidget from './RangeWidget/RangeWidget';
-import RatingWidget from './RatingWidget/RatingWidget';
-import SelectWidget from './SelectWidget/SelectWidget';
-import TextareaWidget from './TextareaWidget/TextareaWidget';
-import TimeWidget from './TimeWidget/TimeWidget';
-import ToggleWidget from './ToggleWidget/ToggleWidget';
+import AltDateTimeWidget from './AltDateTimeWidget/AltDateTimeWidget.tsx';
+import AltDateWidget from './AltDateWidget/AltDateWidget.tsx';
+import CheckboxesWidget from './CheckboxesWidget/CheckboxesWidget.tsx';
+import CheckboxWidget from './CheckboxWidget/CheckboxWidget.tsx';
+import DateTimeWidget from './DateTimeWidget/DateTimeWidget.tsx';
+import DateWidget from './DateWidget/DateWidget.tsx';
+import RadioWidget from './RadioWidget/RadioWidget.tsx';
+import RangeWidget from './RangeWidget/RangeWidget.tsx';
+import RatingWidget from './RatingWidget/RatingWidget.tsx';
+import SelectWidget from './SelectWidget/SelectWidget.tsx';
+import TextareaWidget from './TextareaWidget/TextareaWidget.tsx';
+import TimeWidget from './TimeWidget/TimeWidget.tsx';
+import ToggleWidget from './ToggleWidget/ToggleWidget.tsx';
 
 export {
   AltDateTimeWidget,

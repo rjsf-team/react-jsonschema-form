@@ -1,5 +1,5 @@
-import { createErrorHandler, ERRORS_KEY } from '../src';
-import { TEST_FORM_DATA } from './testUtils/testData';
+import { createErrorHandler, ERRORS_KEY } from '../src/index.ts';
+import { TEST_FORM_DATA } from './testUtils/testData.ts';
 
 const SOME_ERROR = 'some error';
 

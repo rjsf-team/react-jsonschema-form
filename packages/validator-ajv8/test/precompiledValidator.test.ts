@@ -2,9 +2,9 @@ import type { ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError, UiSc
 import { ErrorSchemaBuilder, JUNK_OPTION_ID, RJSF_REF_KEY, hashForSchema, noop, retrieveSchema } from '@rjsf/utils';
 import type { Mock } from 'vitest';
 
-import type { Localizer } from '../src';
-import AJV8PrecompiledValidator from '../src/precompiledValidator';
-import { SUPER_SCHEMA_OPTIONS, compileSuperSchema, superSchema } from './harness/compileSuperSchema';
+import type { Localizer } from '../src/index.ts';
+import AJV8PrecompiledValidator from '../src/precompiledValidator.ts';
+import { SUPER_SCHEMA_OPTIONS, compileSuperSchema, superSchema } from './harness/compileSuperSchema.ts';
 
 const validateFns = compileSuperSchema();
 

@@ -1,4 +1,4 @@
-import getDateElementProps from '../src/getDateElementProps';
+import getDateElementProps from '../src/getDateElementProps.ts';
 
 describe('getDateElementProps', () => {
   const monthRange = [1, 12];

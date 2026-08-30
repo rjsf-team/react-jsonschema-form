@@ -1,8 +1,8 @@
 /** @vitest-environment jsdom */
 import { render } from '@testing-library/react';
 
-import type { DescriptionFieldProps, Registry, RJSFSchema, SelectedOptionDescriptionProps } from '../src';
-import { SelectedOptionDescription } from '../src';
+import type { DescriptionFieldProps, Registry, RJSFSchema, SelectedOptionDescriptionProps } from '../src/index.ts';
+import { SelectedOptionDescription } from '../src/index.ts';
 
 function DescriptionFieldTemplate({ id, description, schema }: DescriptionFieldProps) {
   return (

@@ -1,4 +1,4 @@
-import { getOptionValueFormat } from '../src';
+import { getOptionValueFormat } from '../src/index.ts';
 
 describe('getOptionValueFormat', () => {
   it("defaults to 'indexed' when options is undefined", () => {

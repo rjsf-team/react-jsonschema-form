@@ -1,4 +1,4 @@
-import { enumOptionValueEncoder } from '../src';
+import { enumOptionValueEncoder } from '../src/index.ts';
 
 describe('enumOptionValueEncoder', () => {
   describe("when format is 'indexed'", () => {

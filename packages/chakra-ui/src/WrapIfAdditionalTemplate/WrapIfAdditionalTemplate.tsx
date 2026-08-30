@@ -2,7 +2,7 @@ import { Grid, GridItem, Input } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
 import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString } from '@rjsf/utils';
 
-import { Field } from '../components/ui/field';
+import { Field } from '../components/ui/field.tsx';
 
 export default function WrapIfAdditionalTemplate<
   T = any,

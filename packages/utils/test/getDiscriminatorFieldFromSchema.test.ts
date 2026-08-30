@@ -1,7 +1,7 @@
 import type { MockInstance } from 'vitest';
 
-import type { RJSFSchema } from '../src';
-import { getDiscriminatorFieldFromSchema, noop } from '../src';
+import type { RJSFSchema } from '../src/index.ts';
+import { getDiscriminatorFieldFromSchema, noop } from '../src/index.ts';
 
 const PROPERTY_NAME = 'testProp';
 const BAD_DISCRIMINATOR: RJSFSchema = { discriminator: { propertyName: 5 } };

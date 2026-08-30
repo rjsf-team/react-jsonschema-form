@@ -1,10 +1,10 @@
 import type { RJSFSchema } from '@rjsf/utils';
 import { ErrorSchemaBuilder, ID_KEY, ROOT_SCHEMA_PREFIX, noop } from '@rjsf/utils';
 
+import customizeValidator from '../src/customizeValidator.ts';
 // Static import of the package surface so its top-level evaluation
 // (`export default customizeValidator()`) is included in coverage.
-import * as pkg from '../src';
-import customizeValidator from '../src/customizeValidator';
+import * as pkg from '../src/index.ts';
 
 /** ATAValidator behavior tests. The shared `@rjsf/utils` schema test suite
  * (see `test/utilsTests/schema.test.ts`) exercises the full ValidatorType
@@ -374,7 +374,7 @@ describe('createAtaInstance defaults', () => {
   it('builds a Validator when called with no options', async () => {
     // The factory has a default `options = {}` parameter that customizeValidator
     // never triggers (it always passes an options object). Cover it directly.
-    const { default: createAtaInstance } = await import('../src/createAtaInstance');
+    const { default: createAtaInstance } = await import('../src/createAtaInstance.ts');
     const validator = createAtaInstance({ type: 'string' });
     expect(validator).toBeDefined();
     expect(validator.validate('hello').valid).toBe(true);

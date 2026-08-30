@@ -16,7 +16,7 @@ import Typography from '@mui/material/Typography';
 import type { ErrorListProps, FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { TranslatableString, getUiOptions } from '@rjsf/utils';
 
-import { computeSxProps, getMuiProps } from '../util';
+import { computeSxProps, getMuiProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the ErrorList. */
 export interface ErrorListMuiProps extends GenericObjectType {

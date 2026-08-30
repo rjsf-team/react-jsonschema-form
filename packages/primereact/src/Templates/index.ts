@@ -1,2 +1,2 @@
-export { default } from './Templates';
-export * from './Templates';
+export { default } from './Templates.ts';
+export * from './Templates.ts';
