@@ -25,11 +25,13 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 - Fixed `BaseInputTemplate` to clear `number`/`integer` fields back to `undefined` instead of `null` when the `InputNumber` widget is emptied, fixing [#5213](https://github.com/rjsf-team/react-jsonschema-form/issues/5213)
+- Fixed `BaseInputTemplate`'s `ui:allowClearTextInputs` clear button to store `ui:emptyValue` (`undefined` by default) instead of always storing `""`, so clicking it now behaves exactly like clearing the input by typing. **Potentially breaking change:** an app that never sets `ui:emptyValue` and clicks the clear button on a field (rather than backspacing it) previously got `""` back; it now gets `undefined`, matching every other way of emptying the field.
 
 ## @rjsf/chakra-ui
 
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+- Fixed `BaseInputTemplate`'s `ui:allowClearTextInputs` clear button to store `ui:emptyValue` (`undefined` by default) instead of always storing `""`, so clicking it now behaves exactly like clearing the input by typing. **Potentially breaking change:** an app that never sets `ui:emptyValue` and clicks the clear button on a field (rather than backspacing it) previously got `""` back; it now gets `undefined`, matching every other way of emptying the field.
 
 ## @rjsf/core
 
@@ -53,22 +55,26 @@ should change the heading of the (upcoming) version to include a major version b
 - Wired the previously-unused `getDaisy()`/`DaisyProps` helpers into `FieldTemplate`, so `ui:options: { daisy: { theme, className, style } }` now applies a per-field DaisyUI theme, class name and/or style
 - Fixed `build:esm`/`build:umd` in `package.json`, which built and named the bundle as `@rjsf/chakra-ui` (`dist/chakra-ui.esm.js`/`.umd.js`) instead of `@rjsf/daisyui`
 - Gave `ArrayFieldTitleTemplate` and `ArrayFieldDescriptionTemplate` the `id` (`titleId`/`descriptionId` derived from `fieldPathId`) and empty-value guard every other template implementing these has, and that registering them in `generateTemplates()` had otherwise dropped from array titles/descriptions
+- Fixed `BaseInputTemplate`'s `ui:allowClearTextInputs` clear button to store `ui:emptyValue` (`undefined` by default) instead of always storing `""`, so clicking it now behaves exactly like clearing the input by typing. **Potentially breaking change:** an app that never sets `ui:emptyValue` and clicks the clear button on a field (rather than backspacing it) previously got `""` back; it now gets `undefined`, matching every other way of emptying the field.
 
 ## @rjsf/fluentui-rc
 
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+- Fixed `BaseInputTemplate`'s `ui:allowClearTextInputs` clear button to store `ui:emptyValue` (`undefined` by default) instead of always storing `""`, so clicking it now behaves exactly like clearing the input by typing. **Potentially breaking change:** an app that never sets `ui:emptyValue` and clicks the clear button on a field (rather than backspacing it) previously got `""` back; it now gets `undefined`, matching every other way of emptying the field.
 
 ## @rjsf/mantine
 
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 - Moved the `dayjs` `customParseFormat` plugin registration from the widgets barrel file into `DateTimeInput`, so it loads with the date widgets that actually need it
+- Fixed `BaseInputTemplate`'s `ui:allowClearTextInputs` clear button to store `ui:emptyValue` (`undefined` by default) instead of always storing `""`, so clicking it now behaves exactly like clearing the input by typing. **Potentially breaking change:** an app that never sets `ui:emptyValue` and clicks the clear button on a field (rather than backspacing it) previously got `""` back; it now gets `undefined`, matching every other way of emptying the field.
 
 ## @rjsf/mui
 
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+- Fixed `BaseInputTemplate`'s `ui:allowClearTextInputs` clear button to store `ui:emptyValue` (`undefined` by default) instead of always storing `""`, so clicking it now behaves exactly like clearing the input by typing. **Potentially breaking change:** an app that never sets `ui:emptyValue` and clicks the clear button on a field (rather than backspacing it) previously got `""` back; it now gets `undefined`, matching every other way of emptying the field.
 
 ## @rjsf/primereact
 
@@ -76,23 +82,27 @@ should change the heading of the (upcoming) version to include a major version b
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 - Fixed `ArrayFieldTemplate` leaking the `errorSchema` object into the DOM as an `errorschema="[object Object]"` attribute
 - Fixed `SelectWidget` clobbering a consumer-supplied `options.prime.autoComplete` with `undefined` when `ui:autocomplete` is not set
+- Fixed `BaseInputTemplate`'s `ui:allowClearTextInputs` clear button to store `ui:emptyValue` (`undefined` by default) instead of always storing `""`, so clicking it now behaves exactly like clearing the input by typing. **Potentially breaking change:** an app that never sets `ui:emptyValue` and clicks the clear button on a field (rather than backspacing it) previously got `""` back; it now gets `undefined`, matching every other way of emptying the field.
 
 ## @rjsf/react-bootstrap
 
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
+- Fixed `BaseInputTemplate`'s `ui:allowClearTextInputs` clear button to store `ui:emptyValue` (`undefined` by default) instead of always storing `""`, so clicking it now behaves exactly like clearing the input by typing. **Potentially breaking change:** an app that never sets `ui:emptyValue` and clicks the clear button on a field (rather than backspacing it) previously got `""` back; it now gets `undefined`, matching every other way of emptying the field.
 
 ## @rjsf/semantic-ui
 
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 - Fixed `RadioWidget` forwarding the unsupported `fluid`/`inverted` props to Semantic UI's `Radio`, which triggered React unknown-attribute warnings
+- Fixed `BaseInputTemplate`'s `ui:allowClearTextInputs` clear button to store `ui:emptyValue` (`undefined` by default) instead of always storing `""`, so clicking it now behaves exactly like clearing the input by typing. **Potentially breaking change:** an app that never sets `ui:emptyValue` and clicks the clear button on a field (rather than backspacing it) previously got `""` back; it now gets `undefined`, matching every other way of emptying the field.
 
 ## @rjsf/shadcn
 
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 - Fixed `FancySelect` showing a red error border on required empty enum fields before validation runs, fixing [#5187](https://github.com/rjsf-team/react-jsonschema-form/issues/5187) ([#5209](https://github.com/rjsf-team/react-jsonschema-form/pull/5209))
+- Fixed `BaseInputTemplate`'s `ui:allowClearTextInputs` clear button to store `ui:emptyValue` (`undefined` by default) instead of always storing `""`, so clicking it now behaves exactly like clearing the input by typing. **Potentially breaking change:** an app that never sets `ui:emptyValue` and clicks the clear button on a field (rather than backspacing it) previously got `""` back; it now gets `undefined`, matching every other way of emptying the field.
 
 ## @rjsf/utils
 
