@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/validator-cfworker",
-  "version": "6.8.0",
+  "version": "6.9.0",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
