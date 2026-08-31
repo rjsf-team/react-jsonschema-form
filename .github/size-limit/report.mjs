@@ -1,9 +1,10 @@
 // Builds a markdown size report comparing head.json/base.json size-limit output.
-// Usage: node report.mjs <dir containing head.json and base.json>
+// Usage: node report.mjs <dir containing head.json and base.json> [head sha]
 import fs from 'node:fs';
 import path from 'node:path';
 
 const dir = process.argv[2];
+const headSha = process.argv[3];
 // size-limit prints `{"error": "..."}` (not an array) when it fails internally,
 // and a crashed run can leave an empty file; treat both as "no data".
 const read = (f) => {
@@ -25,7 +26,10 @@ const safe = (name) =>
     .slice(0, 80);
 // size-limit budgets ("90 kB") are decimal via bytes-iec, so format with 1000.
 const fmt = (bytes) => `${(bytes / 1000).toFixed(2)} kB`;
-const rows = head.slice(0, 20).map((c) => {
+// One row per released package, plus a second for those with dependencies of
+// their own; bounded well above that so the report stays finite for json the
+// PR's own build produced.
+const rows = head.slice(0, 60).map((c) => {
   const b = base.get(c.name);
   const diff = b ? c.size - b.size : null;
   // Under 5 bytes the delta would render as a signed 0.00 kB; call it unchanged.
@@ -42,7 +46,11 @@ const body = [
   '<!-- size-limit-report -->',
   '## Size limit report',
   '',
-  'Sizes are minified + brotli, measured by [size-limit](https://github.com/ai/size-limit).',
+  `Sizes are minified + brotli, measured by [size-limit](https://github.com/ai/size-limit)${
+    headSha ? ` at \`${headSha.slice(0, 7)}\`` : ''
+  }.`,
+  '',
+  'A package listed twice is measured both as installed and, on the second row, as its own code with its dependencies excluded. Peer dependencies are always excluded.',
   '',
   '| Check | Base | PR | Δ |',
   '| --- | --- | --- | --- |',

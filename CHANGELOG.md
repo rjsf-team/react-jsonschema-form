@@ -16,6 +16,13 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.9.1
+
+## Dev / docs / playground
+
+- Fixed the size-limit report never being posted on a pull request from a fork. The comment workflow resolved the PR from its head sha, which the base repository cannot associate with a fork's commit, so it warned and skipped — leaving a green check and no comment. The measuring job now carries the PR number across and the comment job verifies it against the trusted `workflow_run` payload before posting, and fails loudly rather than skipping when the two disagree
+- Extended the size-limit checks to cover every released package rather than just `@rjsf/core`, `@rjsf/utils` and `@rjsf/validator-ajv8`. The checks are derived from each package's own `package.json`, so a new package or a dependency change needs no config edit; only the packages that already had budgets enforce one, the rest are measured and reported
+
 # 6.9.0
 
 > **Potentially breaking change:** `lodash` and `lodash-es` are no longer dependencies of any `@rjsf/*` package. No RJSF public API changed, but an application that imports `lodash` itself without declaring it — relying on it being hoisted into `node_modules` because RJSF depended on it — must now add `lodash` to its own `package.json`.

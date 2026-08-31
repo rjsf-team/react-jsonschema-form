@@ -4,9 +4,9 @@
     ".": {
       // tsc-alias-replacer: invoked by tsc-alias through the `afterDeclarations`
       // replacers in the per-package tsconfig.build.json files.
-      // .size-limit/report.mjs: invoked with `node` from
+      // .github/size-limit/report.mjs: invoked with `node` from
       // .github/workflows/size-limit-comment.yml. knip can follow neither.
-      "entry": ["tsc-alias-replacer/*.ts", ".size-limit/report.mjs"]
+      "entry": ["tsc-alias-replacer/*.ts", ".github/size-limit/report.mjs"]
     },
     "packages/daisyui": {
       // Every src file is resolvable through the `./lib/*.js` exports wildcard,
