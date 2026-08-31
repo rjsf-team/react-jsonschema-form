@@ -1,4 +1,5 @@
 // Usage: node report.mjs <dir containing head.json and base.json> [head sha]
+// Prints the markdown report to stdout.
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -36,13 +37,12 @@ if (rows.length === 0) {
   rows.push('| _no size data produced_ | — | — | — |');
 }
 
+const at = headSha ? ` at \`${headSha.slice(0, 7)}\`` : '';
 const body = [
   '<!-- size-limit-report -->',
   '## Size limit report',
   '',
-  `Sizes are minified + brotli, measured by [size-limit](https://github.com/ai/size-limit)${
-    headSha ? ` at \`${headSha.slice(0, 7)}\`` : ''
-  }.`,
+  `Sizes are minified + brotli, measured by [size-limit](https://github.com/ai/size-limit)${at}.`,
   '',
   'A package listed twice is measured both as installed and, on the second row, as its own code with its dependencies excluded. Peer dependencies are always excluded.',
   '',
@@ -52,5 +52,4 @@ const body = [
   '',
 ].join('\n');
 
-fs.writeFileSync(path.join(dir, 'size-limit-report.md'), body);
 console.log(body);

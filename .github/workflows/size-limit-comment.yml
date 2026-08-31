@@ -44,25 +44,22 @@ jobs:
         if: steps.download.outcome == 'success'
         with:
           script: |
-            const fs = require('fs');
             const { owner, repo } = context.repo;
             const run = context.payload.workflow_run;
             const headSha = run.head_sha;
-            // The number comes from the artifact, which fork code wrote, so it is
-            // a claim: a PR whose head is this exact sha in this exact head repo
-            // is necessarily the one measured, whoever wrote the file.
-            const number = Number(fs.readFileSync('pr', 'utf8').trim());
-            if (!Number.isInteger(number) || number <= 0) {
-              core.setFailed(`Malformed PR number in artifact: ${JSON.stringify(number)}`);
-              return;
-            }
-            const { data: pr } = await github.rest.pulls.get({ owner, repo, pull_number: number });
-            if (pr.head.sha !== headSha || pr.head.repo?.full_name !== run.head_repository.full_name) {
-              // Wrong PR named, or the branch moved on. Fail rather than skip: a
-              // missing comment is indistinguishable from a healthy run.
+            // A fork's head sha is associated with no PR in the base repo, so the
+            // PR is found by head instead — head repo and branch both come from
+            // the workflow_run payload, which fork code cannot write to.
+            const { data: prs } = await github.rest.pulls.list({
+              owner, repo, state: 'all',
+              head: `${run.head_repository.owner.login}:${run.head_branch}`,
+            });
+            const pr = prs.find((p) => p.head.sha === headSha);
+            if (!pr) {
+              // The branch moved on, or was renamed or deleted. Fail rather than
+              // skip: a missing comment is indistinguishable from a healthy run.
               core.setFailed(
-                `PR #${number} is at ${pr.head.sha} on ${pr.head.repo?.full_name}, ` +
-                  `but the report was measured at ${headSha} on ${run.head_repository.full_name}.`
+                `No PR at ${headSha} on ${run.head_repository.full_name}:${run.head_branch}.`
               );
               return;
             }

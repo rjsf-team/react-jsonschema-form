@@ -1,24 +1,24 @@
 const { readdirSync, readFileSync, existsSync } = require('node:fs');
 
-// getTestRegistry pulls the AJV chain into core's lib/, but it is a devDependency
-// there — a consumer installing @rjsf/core never gets it.
-const EXTRA_IGNORE = {
-  '@rjsf/core': ['@rjsf/validator-ajv8', 'ajv', 'ajv-formats', 'prop-types'],
-};
-
-// Only where a budget already existed; elsewhere the PR comment's delta column is
-// what catches a regression, without the bump commits a per-theme budget invites.
-const LIMITS = {
-  '@rjsf/core': { installed: '92 kB', own: '24 kB' },
-  '@rjsf/utils': { installed: '34 kB', own: '19 kB' },
+// Budgets only where one already existed; elsewhere the PR comment's delta column
+// catches a regression without the bump commits a per-theme budget invites.
+// Canaries are single-export imports that fail if tree-shaking regresses.
+const PACKAGES = {
+  '@rjsf/core': {
+    installed: '92 kB',
+    own: '24 kB',
+    // getTestRegistry pulls the AJV chain into core's lib/, but it is a
+    // devDependency there — a consumer installing @rjsf/core never gets it.
+    extraIgnore: ['@rjsf/validator-ajv8'],
+    canaries: [{ label: 'Form', import: 'Form', limit: '53 kB' }],
+  },
+  '@rjsf/utils': {
+    installed: '34 kB',
+    own: '19 kB',
+    canaries: [{ label: 'getUiOptions', import: '{ getUiOptions }', limit: '1 kB' }],
+  },
   '@rjsf/validator-ajv8': { installed: '39 kB', own: '3 kB' },
 };
-
-// Single-export imports that fail if tree-shaking regresses.
-const CANARIES = [
-  { pkg: '@rjsf/core', label: 'Form', import: 'Form', limit: '53 kB' },
-  { pkg: '@rjsf/utils', label: 'getUiOptions', import: '{ getUiOptions }', limit: '1 kB' },
-];
 
 const released = readdirSync('packages')
   .filter((dir) => existsSync(`packages/${dir}/package.json`))
@@ -33,26 +33,26 @@ module.exports = released.flatMap(({ dir, pkg }) => {
   const deps = Object.keys(pkg.dependencies ?? {});
   // react-dom is never declared but is always the host's to provide.
   const peers = [...Object.keys(pkg.peerDependencies ?? {}), 'react-dom'];
-  const limits = LIMITS[pkg.name] ?? {};
+  const { installed, own, extraIgnore = [], canaries = [] } = PACKAGES[pkg.name] ?? {};
 
-  const checks = [{ name: pkg.name, path, ignore: peers, limit: limits.installed }];
-  if (deps.length) {
-    checks.push({
-      name: `${pkg.name} (without dependencies)`,
+  return [
+    { name: pkg.name, path, ignore: peers, ...(installed && { limit: installed }) },
+    ...(deps.length
+      ? [
+          {
+            name: `${pkg.name} (without dependencies)`,
+            path,
+            ignore: [...peers, ...deps, ...extraIgnore],
+            ...(own && { limit: own }),
+          },
+        ]
+      : []),
+    ...canaries.map(({ label, import: imp, limit }) => ({
+      name: `${pkg.name}: ${label}`,
       path,
-      ignore: [...peers, ...deps, ...(EXTRA_IGNORE[pkg.name] ?? [])],
-      limit: limits.own,
-    });
-  }
-  for (const canary of CANARIES.filter((c) => c.pkg === pkg.name)) {
-    checks.push({
-      name: `${pkg.name}: ${canary.label}`,
-      path,
-      import: canary.import,
+      import: imp,
       ignore: peers,
-      limit: canary.limit,
-    });
-  }
-  // size-limit rejects an explicit `limit: undefined`.
-  return checks.map((c) => (c.limit === undefined ? (({ limit, ...rest }) => rest)(c) : c));
+      limit,
+    })),
+  ];
 });
