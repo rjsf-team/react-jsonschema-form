@@ -49,24 +49,17 @@ jobs:
           # this one must only touch $RUNNER_TEMP.
           if git fetch --no-tags --depth 1 origin ${{ github.event.pull_request.base.sha }} &&
             git checkout -f ${{ github.event.pull_request.base.sha }} &&
-            { [ -f .size-limit.js ] || [ -f .size-limit.json ]; } &&
             pnpm install --frozen-lockfile &&
             pnpm exec nx run-many --target=build:ts --all; then
             pnpm exec size-limit --json > "$RUNNER_TEMP/base.json" || echo '[]' > "$RUNNER_TEMP/base.json"
           else
             echo '[]' > "$RUNNER_TEMP/base.json"
           fi
-      - name: Record the PR number
-        # A fork's head sha resolves to no PR in the base repo, so the comment
-        # workflow gets the number from here and validates it against the
-        # workflow_run payload.
-        run: echo '${{ github.event.pull_request.number }}' > "$RUNNER_TEMP/pr"
       - uses: actions/upload-artifact@v7
         with:
           name: size-limit-report
           path: |
             ${{ runner.temp }}/head.json
             ${{ runner.temp }}/base.json
-            ${{ runner.temp }}/pr
       - name: Enforce limits
         run: test "$(cat "$RUNNER_TEMP/status")" = ok
