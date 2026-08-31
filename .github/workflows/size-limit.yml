@@ -26,10 +26,12 @@ jobs:
       - name: Measure PR head
         run: |
           pnpm install --frozen-lockfile
-          # Only @rjsf/core (and its workspace deps, via nx dependsOn) is built and
-          # measured. Safe to let nx cache: lib/ is a declared build output in
-          # nx.json, so a cache hit restores it to disk.
-          pnpm exec nx run-many --target=build --projects=@rjsf/core
+          # build:ts is the tsc-only lib/ build that size-limit measures; the
+          # cjs/esm/umd bundles are not. --all resolves to exactly the released
+          # packages, since those are the only ones declaring the target. Safe to
+          # let nx cache: lib/ is a declared build:ts output in nx.json, so a
+          # cache hit restores it to disk.
+          pnpm exec nx run-many --target=build:ts --all
           # size-limit exits non-zero when a budget is exceeded but still emits
           # JSON; record the outcome and enforce it at the end so the report
           # comment is produced either way.
@@ -49,18 +51,24 @@ jobs:
           # this one must only touch $RUNNER_TEMP.
           if git fetch --no-tags --depth 1 origin ${{ github.event.pull_request.base.sha }} &&
             git checkout -f ${{ github.event.pull_request.base.sha }} &&
-            [ -f .size-limit.json ] &&
+            { [ -f .size-limit.js ] || [ -f .size-limit.json ]; } &&
             pnpm install --frozen-lockfile &&
-            pnpm exec nx run-many --target=build --projects=@rjsf/core; then
+            pnpm exec nx run-many --target=build:ts --all; then
             pnpm exec size-limit --json > "$RUNNER_TEMP/base.json" || echo '[]' > "$RUNNER_TEMP/base.json"
           else
             echo '[]' > "$RUNNER_TEMP/base.json"
           fi
+      - name: Record the PR number
+        # The comment workflow cannot resolve a fork PR from its head sha, so the
+        # number is carried across. It is fork-writable and therefore validated
+        # against the trusted workflow_run payload before anything is posted.
+        run: echo '${{ github.event.pull_request.number }}' > "$RUNNER_TEMP/pr"
       - uses: actions/upload-artifact@v7
         with:
           name: size-limit-report
           path: |
             ${{ runner.temp }}/head.json
             ${{ runner.temp }}/base.json
+            ${{ runner.temp }}/pr
       - name: Enforce limits
         run: test "$(cat "$RUNNER_TEMP/status")" = ok
