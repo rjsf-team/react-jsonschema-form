@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.9.1
+
+## @rjsf/utils
+
+- Fixed `computeDefaults()` to merge a non-object schema's `allOf` when `experimental_defaultFormStateBehavior.allOf` is set to `populateDefaults`, so a `$ref` wrapped in a single-element `allOf` now populates the same defaults as the bare `$ref` does, fixing [#5177](https://github.com/rjsf-team/react-jsonschema-form/issues/5177)
+
 # 6.9.0
 
 > **Potentially breaking change:** `lodash` and `lodash-es` are no longer dependencies of any `@rjsf/*` package. No RJSF public API changed, but an application that imports `lodash` itself without declaring it — relying on it being hoisted into `node_modules` because RJSF depended on it — must now add `lodash` to its own `package.json`.
