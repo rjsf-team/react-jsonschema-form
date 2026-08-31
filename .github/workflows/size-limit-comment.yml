@@ -5,8 +5,7 @@
 # executes PR code — the markdown is rendered here, from the trusted checkout.
 # This job never fails on a budget overrun; branch protection must require the
 # "Size limit / size" job from size-limit.yml, not this one. It does fail when it
-# cannot identify the PR to comment on, which is a broken handoff rather than a
-# size result.
+# cannot identify the PR to comment on — a broken handoff, not a size result.
 name: Size limit comment
 on:
   workflow_run:
@@ -49,12 +48,9 @@ jobs:
             const { owner, repo } = context.repo;
             const run = context.payload.workflow_run;
             const headSha = run.head_sha;
-            // A fork PR's head sha is not associated with any PR in the base repo,
-            // so it cannot be looked up from the sha alone; the measuring job
-            // carries the number across instead. That artifact is written by a job
-            // running fork code, so the number is treated as a claim and verified:
-            // a PR whose head is this exact sha in this exact head repository is
-            // necessarily the PR that was measured, whoever wrote the file.
+            // The number comes from the artifact, which fork code wrote, so it is
+            // a claim: a PR whose head is this exact sha in this exact head repo
+            // is necessarily the one measured, whoever wrote the file.
             const number = Number(fs.readFileSync('pr', 'utf8').trim());
             if (!Number.isInteger(number) || number <= 0) {
               core.setFailed(`Malformed PR number in artifact: ${JSON.stringify(number)}`);
@@ -62,10 +58,8 @@ jobs:
             }
             const { data: pr } = await github.rest.pulls.get({ owner, repo, pull_number: number });
             if (pr.head.sha !== headSha || pr.head.repo?.full_name !== run.head_repository.full_name) {
-              // Either the artifact named the wrong PR, or the branch moved on
-              // after it was measured. Neither is a report worth posting, and
-              // neither should pass silently — a skipped comment is otherwise
-              // indistinguishable from a healthy run.
+              // Wrong PR named, or the branch moved on. Fail rather than skip: a
+              // missing comment is indistinguishable from a healthy run.
               core.setFailed(
                 `PR #${number} is at ${pr.head.sha} on ${pr.head.repo?.full_name}, ` +
                   `but the report was measured at ${headSha} on ${run.head_repository.full_name}.`
