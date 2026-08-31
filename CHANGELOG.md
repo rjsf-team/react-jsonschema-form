@@ -44,6 +44,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Renamed the test file `Form.test.tsx` to `Form.behaviors.test.tsx` so all the `Form` test files follow the `Form.<topic>.test.tsx` naming pattern introduced by [#5219](https://github.com/rjsf-team/react-jsonschema-form/pull/5219)
 - Fixed `ObjectField` to coerce a cleared `additionalProperties`/`patternProperties` value to the empty string only when the change targets the additional property's own path, so clearing a field nested inside an entry now omits that field's key instead of storing `""` in it, fixing [#5222](https://github.com/rjsf-team/react-jsonschema-form/issues/5222)
 - Fixed `BaseInputTemplate`'s `ui:allowClearTextInputs` clear button to store `ui:emptyValue` (`undefined` by default) instead of always storing `""`, so clicking it now behaves exactly like clearing the input by typing. **Potentially breaking change:** an app that never sets `ui:emptyValue` and clicks the clear button on a field (rather than backspacing it) previously got `""` back; it now gets `undefined`, matching every other way of emptying the field.
+- Fixed `NumberField` to preserve comma-decimal input by using a text input by default in comma-decimal locales, fixing [#5199](https://github.com/rjsf-team/react-jsonschema-form/issues/5199)
 
 ## @rjsf/daisyui
 

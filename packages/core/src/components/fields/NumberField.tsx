@@ -7,7 +7,7 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { asNumber, getDecimalSeparator, getUiOptions, optionsList } from '@rjsf/utils';
+import { asNumber, getDecimalSeparator, getUiOptions, hasWidget, optionsList } from '@rjsf/utils';
 
 // Static matchers for standard '.' separator used during normalization inside handleChange
 const trailingCharMatcherWithPrefix = /\.([0-9]*0)*$/;
@@ -33,7 +33,7 @@ const trailingCharMatcher = /[0.]0*$/;
 function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: FieldProps<T, S, F>,
 ) {
-  const { registry, onChange, formData, value: initialValue } = props;
+  const { registry, onChange, formData, schema, uiSchema, value: initialValue } = props;
   const [lastValue, setLastValue] = useState(initialValue);
   const { StringField } = registry.fields;
 
@@ -41,6 +41,27 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   const escapedSeparator = separator === '.' ? '\\.' : separator;
 
   let value = formData;
+  let fieldUiSchema = uiSchema;
+
+  const { schemaUtils, widgets } = registry;
+  const enumOptions = schemaUtils.isSelect(schema) ? optionsList(schema, uiSchema) : undefined;
+  const formatWidget = schema.format && hasWidget<T, S, F>(schema, schema.format, widgets) ? schema.format : undefined;
+  const defaultWidget = enumOptions ? 'select' : (formatWidget ?? 'text');
+  const { widget = defaultWidget, inputType } = getUiOptions(uiSchema);
+
+  if (separator !== '.' && schema.type === 'number') {
+    // Native number inputs reject locale-specific decimal separators. Use a text input
+    // by default so localized values reach handleChange intact and can be normalized.
+    if (widget === 'text' && inputType === undefined) {
+      fieldUiSchema = {
+        ...uiSchema,
+        'ui:options': {
+          ...uiSchema?.['ui:options'],
+          inputType: 'text',
+        },
+      };
+    }
+  }
 
   /** Handle the change from the `StringField` to properly convert to a number
    *
@@ -87,12 +108,6 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   // Format value to use the locale separator for rendering if it is a number
   let displayValue: T | undefined = value;
   if (typeof value === 'number' && separator !== '.') {
-    const { schema, uiSchema } = props;
-    const { schemaUtils } = registry;
-    const enumOptions = schemaUtils.isSelect(schema) ? optionsList(schema, uiSchema) : undefined;
-    const defaultWidget = enumOptions ? 'select' : 'text';
-    const { widget = defaultWidget } = getUiOptions(uiSchema);
-
     // Do not convert the value to a locale-specific string for radio, select,
     // or hidden widgets because option matching relies on the original numeric value.
     if (widget !== 'radio' && widget !== 'select' && widget !== 'hidden') {
@@ -100,7 +115,7 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     }
   }
 
-  return <StringField {...props} formData={displayValue} onChange={handleChange} />;
+  return <StringField {...props} uiSchema={fieldUiSchema} formData={displayValue} onChange={handleChange} />;
 }
 
 export default NumberField;

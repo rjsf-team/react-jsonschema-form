@@ -1,5 +1,5 @@
 import { createRef } from 'react';
-import type { RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -631,6 +631,40 @@ describe('NumberField', () => {
       await user.type(node.querySelector('input')!, '2,5');
 
       expectToHaveBeenCalledWithFormData(onChange, 2.5, 'root');
+    });
+
+    it('should handle a change event using comma decimal separator with the default input', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'number',
+        },
+      });
+
+      const input = node.querySelector('input')!;
+      expect(input).toHaveAttribute('type', 'text');
+
+      await user.type(input, '2,5');
+
+      expectToHaveBeenCalledWithFormData(onChange, 2.5, 'root');
+    });
+
+    it('should preserve custom format widgets', () => {
+      const CustomFormatWidget = (props: WidgetProps) => {
+        expect(props.options.inputType).toBeUndefined();
+        return <div id='custom-format-widget' />;
+      };
+
+      const { node } = createFormComponent({
+        schema: {
+          type: 'number',
+          format: 'custom-format',
+        },
+        widgets: {
+          'custom-format': CustomFormatWidget,
+        },
+      });
+
+      expect(node.querySelector('#custom-format-widget')).toBeInTheDocument();
     });
 
     it('should render with trailing zeroes using comma', async () => {
