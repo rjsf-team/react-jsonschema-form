@@ -14,7 +14,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
     const newArraySchema: RJSFSchema = {
       type: 'object',
       properties: {
-        values: { type: 'array', default: [], items: { type: 'string' } },
+        values: { type: 'array', default: [], items: { type: 'string', enum: ['a', 'b'] } },
       },
     };
     let schemaUtils: SchemaUtilsType;
@@ -76,13 +76,13 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         }),
       ).toEqual({ values: [], idCode: undefined });
     });
-    it('preserves an empty array already present for a property newly defined by the new schema', () => {
+    it('sanitizes array data already present for a property newly defined by the new schema', () => {
       expect(
         schemaUtils.sanitizeDataForNewSchema(newArraySchema, oldDisjointSchema, {
-          values: [],
+          values: ['a', 'x'],
           idCode: undefined,
         }),
-      ).toEqual({ values: [], idCode: undefined });
+      ).toEqual({ values: ['a'], idCode: undefined });
     });
     it('continues sanitizing an existing array when the old schema omits its type', () => {
       const oldSchema: RJSFSchema = {

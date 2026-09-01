@@ -162,16 +162,13 @@ export default function sanitizeDataForNewSchema<
           delete removeOldSchemaData[key];
         }
         // If it is an object, we'll recurse and store the resulting sanitized data for the key
-        if (
-          newSchemaTypeForKey === 'object' ||
-          (!isNewProperty && newSchemaTypeForKey === 'array' && Array.isArray(formValue))
-        ) {
+        if (newSchemaTypeForKey === 'object' || (newSchemaTypeForKey === 'array' && Array.isArray(formValue))) {
           // SIDE-EFFECT: process the new schema type of object recursively to save iterations
           const itemData = sanitizeDataForNewSchema<T, S, F>(
             validator,
             rootSchema,
             newKeyedSchema,
-            oldKeyedSchema,
+            isNewProperty && newSchemaTypeForKey === 'array' ? newKeyedSchema : oldKeyedSchema,
             formValue,
             experimental_customMergeAllOf,
           );
