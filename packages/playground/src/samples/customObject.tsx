@@ -19,7 +19,7 @@ function ObjectFieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F
     <div>
       {title && (
         <TitleFieldTemplate
-          id={titleId<T>(fieldPathId)}
+          id={titleId(fieldPathId)}
           title={title}
           required={required}
           schema={schema}
