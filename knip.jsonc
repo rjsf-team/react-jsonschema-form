@@ -31,6 +31,9 @@
       // Published theme presets for consumers to copy; no in-repo importer.
       // src/index.ts: see packages/chakra-ui.
       "ignore": ["resources/*.css", "src/index.ts"],
+      // build-css.ts runs its `tailwindcss` binary through execFile, which knip
+      // cannot trace back to the package.
+      "ignoreDependencies": ["@tailwindcss/cli"],
     },
     "packages/docs": {
       // Docusaurus scaffold kept for the homepage. It is also the only
