@@ -42,6 +42,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Added a shared `tsconfig.test.json` that every package's `test/tsconfig.json` extends, so the vitest globals, `node` and `@testing-library/jest-dom` matcher types and the `.ts`-import settings are declared once instead of in 15 files
 - The root `tsconfig.json` solution now references the test projects too, and a new root `typecheck` script (`tsc --build`) runs them in CI. Test code was previously never typechecked outside the editor; this surfaced two stale tests (`@rjsf/validator-ata` passing an AJV-only option that its validator ignores, and jest-dom matchers without their types in `@rjsf/antd` and `@rjsf/shadcn`) and two playground samples that had drifted from the current core API
 - Set `"types": []` in `tsconfig.base.json` so published packages no longer see every hoisted `@types/*` package by default; the packages that use Node APIs opt in explicitly
+- Every package now emits `lib/` with the same compiler settings. Before, `@rjsf/core` emitted `esnext` JavaScript with declaration maps through `tsconfig.build.json` while the other packages emitted ES2018 with JS source maps through `tsconfig.base.json`. The single base now targets `esnext` for all of them: since every theme depends on `@rjsf/core`, consumers already had to run `esnext` output, so downleveling the rest bought nothing and cost 1–4% in size. All packages ship both `.js.map` and `.d.ts.map`, and `tsconfig.tsbuildinfo` is no longer written into `lib/` and published with it
 
 # 6.9.0
 

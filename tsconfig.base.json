@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "composite": true,
-    "target": "ES2018",
+    "target": "esnext",
     "module": "esnext",
     "moduleResolution": "bundler",
     "lib": ["DOM", "ESNext"],
