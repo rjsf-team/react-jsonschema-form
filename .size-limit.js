@@ -37,7 +37,7 @@ module.exports = released.flatMap(({ dir, pkg }) => {
 
   return [
     { name: pkg.name, path, ignore: peers, ...(installed && { limit: installed }) },
-    ...(deps.length
+    ...(deps.length || extraIgnore.length
       ? [
           {
             name: `${pkg.name} (without dependencies)`,

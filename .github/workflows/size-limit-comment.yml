@@ -50,17 +50,21 @@ jobs:
             // A fork's head sha is associated with no PR in the base repo, so the
             // PR is found by head instead — head repo and branch both come from
             // the workflow_run payload, which fork code cannot write to.
-            const { data: prs } = await github.rest.pulls.list({
-              owner, repo, state: 'all',
+            const prs = await github.paginate(github.rest.pulls.list, {
+              owner, repo, state: 'all', per_page: 100,
               head: `${run.head_repository.owner.login}:${run.head_branch}`,
             });
             const pr = prs.find((p) => p.head.sha === headSha);
             if (!pr) {
-              // The branch moved on, or was renamed or deleted. Fail rather than
-              // skip: a missing comment is indistinguishable from a healthy run.
-              core.setFailed(
-                `No PR at ${headSha} on ${run.head_repository.full_name}:${run.head_branch}.`
-              );
+              if (prs.length) {
+                // The branch was pushed again after this run was measured; the
+                // new commit's own run will post the comment.
+                core.info(`Skipping: ${run.head_branch} has moved on from ${headSha}.`);
+                return;
+              }
+              // No PR on this head at all: a broken handoff. Fail rather than
+              // skip, since a missing comment is indistinguishable from a healthy run.
+              core.setFailed(`No PR for ${run.head_repository.full_name}:${run.head_branch}.`);
               return;
             }
             // Render the report with this repo's report.mjs (from the trusted
