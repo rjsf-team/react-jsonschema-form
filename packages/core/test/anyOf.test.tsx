@@ -186,6 +186,50 @@ describe('anyOf', () => {
     );
   });
 
+  it('should restore defaults when returning to an option with disjoint properties', async () => {
+    const { node, onChange } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          age: { type: 'integer', title: 'Age' },
+        },
+        anyOf: [
+          {
+            title: 'First method of identification',
+            properties: {
+              firstName: { type: 'string', title: 'First name', default: 'Chuck' },
+              lastName: { type: 'string', title: 'Last name' },
+            },
+          },
+          {
+            title: 'Second method of identification',
+            properties: {
+              idCode: { type: 'string', title: 'ID code' },
+            },
+          },
+        ],
+      },
+    });
+    const $select = node.querySelector<HTMLSelectElement>('#root__anyof_select');
+
+    expect(node.querySelector('#root_firstName')).toHaveValue('Chuck');
+    await user.selectOptions($select!, '1');
+    expect($select).toHaveValue('1');
+
+    await user.type(node.querySelector('#root_age')!, '42');
+    expect($select).toHaveValue('1');
+    expect(node.querySelector('#root_firstName')).not.toBeInTheDocument();
+
+    await user.selectOptions($select!, '0');
+    expect(node.querySelector('#root_firstName')).toHaveValue('Chuck');
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        formData: expect.objectContaining({ firstName: 'Chuck' }),
+      }),
+      'root__anyof_select',
+    );
+  });
+
   it('should assign a default value and set defaults on option change for scalar types schemas', async () => {
     const { node, onChange } = createFormComponent({
       schema: {

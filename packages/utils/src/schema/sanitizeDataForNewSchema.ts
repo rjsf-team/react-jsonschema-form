@@ -69,7 +69,7 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *       - Otherwise, check for default or const values:
  *         - Get the old and new `default` values from the schema and check:
  *           - If the new `default` value does not match the form value:
- *             - If the old `default` value DOES match the form value, then:
+ *             - If the key is new and its form value is undefined, or the old `default` matches the form value, then:
  *               - Replace `removeOldSchemaData[key]` with the new `default`
  *               - Otherwise, if the new schema is `readOnly` then replace `removeOldSchemaData[key]` with undefined
  *         - Get the old and new `const` values from the schema and check:
@@ -78,7 +78,7 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *             - Replace `removeOldSchemaData[key]` with the new `const`
  *             - Otherwise, replace `removeOldSchemaData[key]` with undefined
  *   - Once all keys have been processed, return an object built as follows:
- *     - `{ ...removeOldSchemaData, ...nestedData, ...pick(data, keysToKeep) }`
+ *     - `{ ...data, ...removeOldSchemaData, ...nestedData }`
  * - If the new and old schema types are array and the `data` is an array then:
  *   - If the type of the old and new schema `items` are a non-array objects:
  *     - Retrieve the schema for any refs within each `oldKeySchema.items` and/or `newKeySchema.items`
@@ -130,6 +130,7 @@ export default function sanitizeDataForNewSchema<
     const nestedData: GenericObjectType = {};
     keys.forEach((key) => {
       const formValue = data?.[key];
+      const isNewProperty = !hasByPath(oldSchema, [PROPERTIES_KEY, key]);
       let oldKeyedSchema = getPropertySchema<S>(oldSchema, key);
       let newKeyedSchema = getPropertySchema<S>(newSchema, key);
       // Resolve the refs if they exist
@@ -167,7 +168,7 @@ export default function sanitizeDataForNewSchema<
             validator,
             rootSchema,
             newKeyedSchema,
-            oldKeyedSchema,
+            isNewProperty && newSchemaTypeForKey === 'array' ? newKeyedSchema : oldKeyedSchema,
             formValue,
             experimental_customMergeAllOf,
           );
@@ -182,8 +183,8 @@ export default function sanitizeDataForNewSchema<
           const newOptionDefault = getByPath(newKeyedSchema, DEFAULT_KEY, NO_VALUE);
           const oldOptionDefault = getByPath(oldKeyedSchema, DEFAULT_KEY, NO_VALUE);
           if (newOptionDefault !== NO_VALUE && newOptionDefault !== formValue) {
-            if (oldOptionDefault === formValue) {
-              // If the old default matches the formValue, we'll update the new value to match the new default
+            if ((isNewProperty && formValue === undefined) || oldOptionDefault === formValue) {
+              // Initialize a newly entered property or replace an old default with the new default.
               removeOldSchemaData[key] = newOptionDefault;
             } else if (newKeyedSchema.readOnly === true) {
               // If the new schema has the default set to read-only, treat it like a const and remove the value

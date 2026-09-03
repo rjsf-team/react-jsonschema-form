@@ -2483,6 +2483,66 @@ describe('clearing a field with a schema default does not re-apply the default (
   });
 });
 
+describe('dependency defaults in controlled forms', () => {
+  const triggersSchema: RJSFSchema = {
+    type: 'array',
+    default: [],
+    items: { type: 'object' },
+  };
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: {
+      triggersOverride: {
+        type: 'boolean',
+        oneOf: [
+          { title: 'Override Repo Triggers', enum: [true] },
+          { title: 'Default to Repo Triggers', enum: [false] },
+        ],
+      },
+    },
+    dependencies: {
+      triggersOverride: {
+        oneOf: [
+          {
+            properties: {
+              triggersOverride: { enum: [false] },
+              repoData: {
+                type: 'object',
+                properties: {
+                  triggers: triggersSchema,
+                },
+              },
+            },
+          },
+          {
+            properties: {
+              triggersOverride: { enum: [true] },
+              triggers: triggersSchema,
+            },
+          },
+        ],
+      },
+    },
+  };
+
+  it('preserves an empty array already present when enabling the dependency branch', async () => {
+    const { node, onChange } = createFormComponent({
+      schema,
+      formData: {
+        triggersOverride: false,
+        triggers: [],
+        repoData: { triggersOverride: true, triggers: [] },
+      },
+      liveValidate: 'onChange',
+      uiSchema: { triggersOverride: { 'ui:widget': 'radio' } },
+    });
+
+    await user.click(node.querySelectorAll<HTMLInputElement>('input[type=radio]')[0]);
+
+    expectToHaveBeenCalledWithFormData(onChange, { triggersOverride: true, triggers: [] }, 'root_triggersOverride');
+  });
+});
+
 describe('enum-based array values do not update when dependencies change (#1357 and #2492)', () => {
   it('should remove enum values in array when dependency switches', async () => {
     const schema: RJSFSchema = {
