@@ -1,5 +1,5 @@
-import type { ErrorSchema } from '../src';
-import { ErrorSchemaBuilder, ERRORS_KEY } from '../src';
+import type { ErrorSchema } from '../src/index.ts';
+import { ErrorSchemaBuilder, ERRORS_KEY } from '../src/index.ts';
 
 const AN_ERROR = 'an error';
 const SOME_ERRORS = ['error1', 'error2'];

@@ -1,4 +1,4 @@
-import type { Sample } from './Sample';
+import type { Sample } from './Sample.ts';
 
 const ENUM_NAMES = {
   'ui:enumNames': ['New York', 'Amsterdam', 'Hong Kong'],

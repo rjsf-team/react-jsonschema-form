@@ -9,9 +9,5 @@
       "path": "./src"
     }
   ],
-  "exclude": ["./test"],
-  "tsc-alias": {
-    "resolveFullPaths": true,
-    "verbose": true
-  }
+  "exclude": ["./test"]
 }

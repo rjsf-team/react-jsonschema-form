@@ -2,10 +2,10 @@ import { Component, createRef } from 'react';
 import type { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
-import type { FormProps, ThemeProps } from '../src';
-import type Form from '../src';
-import { withTheme } from '../src';
-import { createComponent } from './testUtils';
+import type { FormProps, ThemeProps } from '../src/index.ts';
+import type Form from '../src/index.ts';
+import { withTheme } from '../src/index.ts';
+import { createComponent } from './testUtils.tsx';
 
 function WrapperClassComponent(props: ThemeProps) {
   return class extends Component<FormProps> {

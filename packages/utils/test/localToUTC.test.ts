@@ -1,4 +1,4 @@
-import { localToUTC } from '../src';
+import { localToUTC } from '../src/index.ts';
 
 describe('localToUTC()', () => {
   it('returns undefined when passed empty string', () => {

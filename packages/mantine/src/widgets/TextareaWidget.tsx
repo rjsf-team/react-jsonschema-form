@@ -4,7 +4,7 @@ import { Textarea } from '@mantine/core';
 import type { StrictRJSFSchema, RJSFSchema, FormContextType, WidgetProps } from '@rjsf/utils';
 import { labelValue, ariaDescribedByIds } from '@rjsf/utils';
 
-import { cleanupOptions } from '../utils';
+import { cleanupOptions } from '../utils.ts';
 
 /** The `TextareaWidget` is a widget for rendering input fields as textarea.
  *

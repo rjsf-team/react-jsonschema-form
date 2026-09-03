@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import type { FormContextType, GenericObjectType, TitleFieldProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { getUiOptions } from '@rjsf/utils';
 
-import { computeSxProps, getMuiProps } from '../util';
+import { computeSxProps, getMuiProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the TitleField. */
 export interface TitleFieldMuiProps extends GenericObjectType {

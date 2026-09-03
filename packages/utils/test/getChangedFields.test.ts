@@ -1,4 +1,4 @@
-import { getChangedFields } from '../src';
+import { getChangedFields } from '../src/index.ts';
 
 const makeComplexObject = () => ({
   a: 1,

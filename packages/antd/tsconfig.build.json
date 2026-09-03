@@ -8,15 +8,5 @@
     {
       "path": "./src"
     }
-  ],
-  "tsc-alias": {
-    "resolveFullPaths": true,
-    "verbose": true,
-    "replacers": {
-      "antdIcons": {
-        "enabled": true,
-        "file": "antdIconsReplacer.cjs"
-      }
-    }
-  }
+  ]
 }

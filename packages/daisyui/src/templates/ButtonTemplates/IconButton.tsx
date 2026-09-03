@@ -3,7 +3,7 @@ import { faCopy, faArrowDown, faArrowUp, faTrash, faXmark } from '@fortawesome/f
 import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { TranslatableString } from '@rjsf/utils';
 
-import DaisyUIButton from './DaisyUIButton';
+import DaisyUIButton from './DaisyUIButton.tsx';
 
 function CopyButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: IconButtonProps<T, S, F>,

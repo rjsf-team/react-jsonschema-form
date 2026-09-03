@@ -1,8 +1,8 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, SubmitButtonProps } from '@rjsf/utils';
 import { getSubmitButtonOptions } from '@rjsf/utils';
 
-import { Button } from '../components/ui/button';
-import { cn } from '../lib/utils';
+import { Button } from '../components/ui/button.tsx';
+import { cn } from '../lib/utils.ts';
 
 /** The `SubmitButton` renders a button that represent the `Submit` action on a form
  */

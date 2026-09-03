@@ -1,4 +1,4 @@
-import { isObject } from '../src';
+import { isObject } from '../src/index.ts';
 
 const NON_OBJECTS = ['string', 10, NaN, true, null, undefined];
 

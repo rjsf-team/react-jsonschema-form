@@ -2,7 +2,7 @@ import { Box, Button, FieldsetRoot } from '@chakra-ui/react';
 import type { DateElementProp, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { DateElement, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
 
-import { getChakra } from '../utils';
+import { getChakra } from '../utils.ts';
 
 function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   autofocus = false,

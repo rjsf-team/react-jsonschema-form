@@ -1,8 +1,8 @@
-import enumOptionsIsSelected from './enumOptionsIsSelected';
-import getTemplate from './getTemplate';
-import getUiOptions from './getUiOptions';
-import { descriptionId } from './idGenerators';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types';
+import enumOptionsIsSelected from './enumOptionsIsSelected.ts';
+import getTemplate from './getTemplate.ts';
+import getUiOptions from './getUiOptions.ts';
+import { descriptionId } from './idGenerators.ts';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types.ts';
 
 export type SelectedOptionDescriptionProps<
   T = any,

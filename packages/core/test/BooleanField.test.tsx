@@ -6,7 +6,7 @@ import {
   expectToHaveBeenCalledWithFormData,
   getSelectedOptionValue,
   submitForm,
-} from './testUtils';
+} from './testUtils.tsx';
 
 const user = userEvent.setup();
 

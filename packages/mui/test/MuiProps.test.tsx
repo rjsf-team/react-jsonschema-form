@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 
-import Form from '../src';
+import Form from '../src/index.ts';
 
 describe('MUI Theme-Specific Props', () => {
   it('should apply mui props to BaseInputTemplate (TextField)', () => {

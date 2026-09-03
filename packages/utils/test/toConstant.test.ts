@@ -1,4 +1,4 @@
-import { toConstant } from '../src';
+import { toConstant } from '../src/index.ts';
 
 describe('toConstant()', () => {
   describe('schema contains an enum array', () => {

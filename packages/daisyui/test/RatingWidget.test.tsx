@@ -1,7 +1,7 @@
 import { render, fireEvent } from '@testing-library/react';
 
-import RatingWidget from '../src/widgets/RatingWidget/RatingWidget';
-import { makeWidgetMockProps } from './helpers/createMocks';
+import RatingWidget from '../src/widgets/RatingWidget/RatingWidget.tsx';
+import { makeWidgetMockProps } from './helpers/createMocks.ts';
 
 describe('RatingWidget', () => {
   test('renders with default props (value=0)', () => {

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { forwardRef } from 'react';
 import { Alert as ChakraAlert } from '@chakra-ui/react';
 
-import { CloseButton } from './close-button';
+import { CloseButton } from './close-button.tsx';
 
 /**
  * Alert component that displays a message with an optional icon and close button.

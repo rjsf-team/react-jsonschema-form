@@ -1,5 +1,5 @@
-import isObject from './isObject';
-import type { GenericObjectType } from './types';
+import isObject from './isObject.ts';
+import type { GenericObjectType } from './types.ts';
 
 /** Recursively merge deeply nested objects.
  *

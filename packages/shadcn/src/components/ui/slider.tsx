@@ -4,7 +4,7 @@ import type { ComponentProps } from 'react';
 import { useMemo } from 'react';
 import { Range, Root, Thumb, Track } from '@radix-ui/react-slider';
 
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.ts';
 
 /**
  * A slider component for selecting a numeric value within a range

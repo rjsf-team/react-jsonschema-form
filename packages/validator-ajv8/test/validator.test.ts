@@ -14,9 +14,9 @@ import Ajv2020 from 'ajv/dist/2020';
 import metaSchemaDraft6 from 'ajv/lib/refs/json-schema-draft-06.json';
 import type { Mock } from 'vitest';
 
-import type { Localizer } from '../src';
-import AJV8Validator from '../src/validator';
-import { expectWarn } from './harness/testData';
+import type { Localizer } from '../src/index.ts';
+import AJV8Validator from '../src/validator.ts';
+import { expectWarn } from './harness/testData.ts';
 
 const illFormedKey = "bar`'()=+*&^%$#@!";
 

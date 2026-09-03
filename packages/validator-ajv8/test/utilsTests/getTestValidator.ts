@@ -1,8 +1,8 @@
 import type { CustomValidator, ErrorTransformer, RJSFSchema, ValidationData } from '@rjsf/utils';
 
-import type { TestValidatorType } from '../../../utils/test/schema';
-import type { CustomValidatorOptionsType } from '../../src';
-import { customizeValidator } from '../../src';
+import type { TestValidatorType } from '../../../utils/test/schema/index.ts';
+import type { CustomValidatorOptionsType } from '../../src/index.ts';
+import { customizeValidator } from '../../src/index.ts';
 
 /** In this environment, a test validator merely creates an internal `AJV8` validator with the custom `options` and
  * then forwards all calls into it. It is provided to mirror the test validator in the `utils` directory, except that

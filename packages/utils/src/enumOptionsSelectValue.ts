@@ -1,5 +1,5 @@
-import enumOptionsValueForIndex from './enumOptionsValueForIndex';
-import type { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types';
+import enumOptionsValueForIndex from './enumOptionsValueForIndex.ts';
+import type { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Add the enum option value at the `valueIndex` to the list of `selected` values in the proper order as defined by
  * `allEnumOptions`

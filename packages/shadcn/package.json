@@ -46,7 +46,7 @@
   "scripts": {
     "build:css": "tsx build-css.ts",
     "copy-resources": "cp dist/*.css resources",
-    "build:ts": "rimraf ./lib && tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+    "build:ts": "rimraf ./lib && tsc -b tsconfig.build.json",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/rjsf-shadcn.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/rjsf-shadcn.esm.js --format=umd --file=dist/rjsf-shadcn.umd.js --name=@rjsf/rjsf-shadcn",

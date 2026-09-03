@@ -1,7 +1,7 @@
 import type { RJSFSchema } from '@rjsf/utils';
 
-import { createPrecompiledValidator } from '../src';
-import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators';
+import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
+import { createPrecompiledValidator } from '../src/index.ts';
 
 // Evaluate generated CJS module source into an exports object.
 function loadModule(code: string) {

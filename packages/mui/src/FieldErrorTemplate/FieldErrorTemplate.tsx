@@ -7,7 +7,7 @@ import ListItem from '@mui/material/ListItem';
 import type { FieldErrorProps, FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { errorId, getUiOptions } from '@rjsf/utils';
 
-import { getMuiProps } from '../util';
+import { getMuiProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the FieldErrorTemplate. */
 export interface FieldErrorTemplateMuiProps extends GenericObjectType {

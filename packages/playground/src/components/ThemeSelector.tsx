@@ -5,7 +5,7 @@ import Form from '@rjsf/core';
 import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
 
-import type { SubthemesType } from './SubthemeSelector';
+import type { SubthemesType } from './SubthemeSelector.tsx';
 
 export interface ThemesType {
   theme: any;

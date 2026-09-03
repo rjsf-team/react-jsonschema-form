@@ -1,7 +1,7 @@
 import { PureComponent } from 'react';
 import type { DescriptionFieldProps, ObjectFieldTemplateProps } from '@rjsf/utils';
 
-import { createFormComponent } from './testUtils';
+import { createFormComponent } from './testUtils.tsx';
 
 const formData = { foo: 'bar', bar: 'foo' };
 class ObjectFieldTemplate extends PureComponent<ObjectFieldTemplateProps> {

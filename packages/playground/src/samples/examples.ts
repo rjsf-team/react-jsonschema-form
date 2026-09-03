@@ -1,4 +1,4 @@
-import type { Sample } from './Sample';
+import type { Sample } from './Sample.ts';
 
 const examples: Sample = {
   schema: {

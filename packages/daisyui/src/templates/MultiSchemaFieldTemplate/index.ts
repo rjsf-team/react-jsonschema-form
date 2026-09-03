@@ -1,2 +1,2 @@
-export { default } from './MultiSchemaFieldTemplate';
-export * from './MultiSchemaFieldTemplate';
+export { default } from './MultiSchemaFieldTemplate.tsx';
+export * from './MultiSchemaFieldTemplate.tsx';

@@ -1,4 +1,4 @@
-import { isFixedItems } from '../src';
+import { isFixedItems } from '../src/index.ts';
 
 describe('isFixedItems()', () => {
   it('returns false when schema.items is not an array', () => {

@@ -1,6 +1,6 @@
 import type { MockInstance } from 'vitest';
 
-import { utcToLocal } from '../src';
+import { utcToLocal } from '../src/index.ts';
 
 const UTC_DATE = '2016-04-05T00:00:00.000Z';
 const EXPECTED_DATE = '2016-04-05T02:00:00.000';

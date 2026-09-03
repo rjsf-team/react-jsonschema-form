@@ -1,6 +1,6 @@
 import type { TextareaHTMLAttributes, ComponentProps } from 'react';
 
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.ts';
 
 /**
  * Props for the Textarea component

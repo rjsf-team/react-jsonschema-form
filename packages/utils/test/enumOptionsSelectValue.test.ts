@@ -1,6 +1,6 @@
-import type { EnumOptionsType } from '../src';
-import { enumOptionsSelectValue } from '../src';
-import { ALL_OPTIONS, FALSY_OPTIONS } from './testUtils/testData';
+import type { EnumOptionsType } from '../src/index.ts';
+import { enumOptionsSelectValue } from '../src/index.ts';
+import { ALL_OPTIONS, FALSY_OPTIONS } from './testUtils/testData.ts';
 
 describe('enumOptionsSelectValue()', () => {
   let selected: EnumOptionsType['value'][];

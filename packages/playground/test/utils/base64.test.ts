@@ -1,4 +1,4 @@
-import base64 from '../../src/utils/base64';
+import base64 from '../../src/utils/base64.ts';
 
 describe('base64', () => {
   it('should successfully encode a ascii character', () => {

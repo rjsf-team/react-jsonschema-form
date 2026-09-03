@@ -1,6 +1,6 @@
 import type { DescriptionFieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
-import RichDescription from '../RichDescription';
+import RichDescription from '../RichDescription.tsx';
 
 /** The `DescriptionField` is the template to use to render the description of a field
  *

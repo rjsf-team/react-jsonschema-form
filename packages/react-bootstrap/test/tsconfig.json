@@ -2,6 +2,8 @@
   "extends": "../../../tsconfig.base.json",
   "include": ["./"],
   "compilerOptions": {
+    "rewriteRelativeImportExtensions": false,
+    "allowImportingTsExtensions": true,
     "rootDir": "./",
     "noEmit": true,
     "jsx": "react-jsx",

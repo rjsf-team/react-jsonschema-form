@@ -1,19 +1,16 @@
 {
-    "extends": "../tsconfig.json",
-    "compilerOptions": {
-        "rootDir": "..",
-        "outDir": "../dist",
-        "noImplicitAny": false,
-        "types": ["vitest/globals", "node"],
-        "esModuleInterop": true,
-        "jsx": "react-jsx",
-        "resolveJsonModule": true,
-        "skipLibCheck": true
-    },
-    "include": [
-        "./**/*.ts",
-        "./**/*.tsx",
-        "../src/**/*.ts",
-        "../src/**/*.tsx"
-    ]
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "rewriteRelativeImportExtensions": false,
+    "allowImportingTsExtensions": true,
+    "rootDir": "..",
+    "noEmit": true,
+    "noImplicitAny": false,
+    "types": ["vitest/globals", "node"],
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "resolveJsonModule": true,
+    "skipLibCheck": true
+  },
+  "include": ["./**/*.ts", "./**/*.tsx", "../src/**/*.ts", "../src/**/*.tsx"]
 }

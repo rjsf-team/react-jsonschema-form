@@ -1,7 +1,7 @@
 // oxlint-disable typescript/no-deprecated
-import type { RJSFSchema } from '../src';
-import removeOptionalEmptyObjects from '../src/removeOptionalEmptyObjects';
-import getTestValidator from './testUtils/getTestValidator';
+import type { RJSFSchema } from '../src/index.ts';
+import removeOptionalEmptyObjects from '../src/removeOptionalEmptyObjects.ts';
+import getTestValidator from './testUtils/getTestValidator.ts';
 
 const testValidator = getTestValidator({});
 
