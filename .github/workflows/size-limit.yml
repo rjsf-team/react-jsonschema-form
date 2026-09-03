@@ -49,6 +49,7 @@ jobs:
           # this one must only touch $RUNNER_TEMP.
           if git fetch --no-tags --depth 1 origin ${{ github.event.pull_request.base.sha }} &&
             git checkout -f ${{ github.event.pull_request.base.sha }} &&
+            [ -f .size-limit.js ] &&
             pnpm install --frozen-lockfile &&
             pnpm exec nx run-many --target=build:ts --all; then
             pnpm exec size-limit --json > "$RUNNER_TEMP/base.json" || echo '[]' > "$RUNNER_TEMP/base.json"
