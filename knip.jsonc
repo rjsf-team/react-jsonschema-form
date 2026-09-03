@@ -2,9 +2,9 @@
   "$schema": "https://unpkg.com/knip@6/schema-jsonc.json",
   "workspaces": {
     ".": {
-      // .size-limit/report.mjs: invoked with `node` from
+      // .github/size-limit/report.mjs: invoked with `node` from
       // .github/workflows/size-limit-comment.yml. knip cannot follow that.
-      "entry": [".size-limit/report.mjs"],
+      "entry": [".github/size-limit/report.mjs"],
     },
     "packages/daisyui": {
       // Every src file is resolvable through the `./lib/*.js` exports wildcard,

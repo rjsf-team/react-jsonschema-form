@@ -26,10 +26,10 @@ jobs:
       - name: Measure PR head
         run: |
           pnpm install --frozen-lockfile
-          # Only @rjsf/core (and its workspace deps, via nx dependsOn) is built and
-          # measured. Safe to let nx cache: lib/ is a declared build output in
-          # nx.json, so a cache hit restores it to disk.
-          pnpm exec nx run-many --target=build --projects=@rjsf/core
+          # size-limit measures lib/, not the cjs/esm/umd bundles, and only the
+          # released packages declare build:ts. Safe to let nx cache: lib/ is a
+          # declared build:ts output in nx.json, so a hit restores it to disk.
+          pnpm exec nx run-many --target=build:ts --all
           # size-limit exits non-zero when a budget is exceeded but still emits
           # JSON; record the outcome and enforce it at the end so the report
           # comment is produced either way.
@@ -49,9 +49,9 @@ jobs:
           # this one must only touch $RUNNER_TEMP.
           if git fetch --no-tags --depth 1 origin ${{ github.event.pull_request.base.sha }} &&
             git checkout -f ${{ github.event.pull_request.base.sha }} &&
-            [ -f .size-limit.json ] &&
+            [ -f .size-limit.js ] &&
             pnpm install --frozen-lockfile &&
-            pnpm exec nx run-many --target=build --projects=@rjsf/core; then
+            pnpm exec nx run-many --target=build:ts --all; then
             pnpm exec size-limit --json > "$RUNNER_TEMP/base.json" || echo '[]' > "$RUNNER_TEMP/base.json"
           else
             echo '[]' > "$RUNNER_TEMP/base.json"
