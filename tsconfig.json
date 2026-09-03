@@ -17,6 +17,21 @@
     { "path": "./packages/utils" },
     { "path": "./packages/validator-ajv8" },
     { "path": "./packages/validator-ata" },
-    { "path": "./packages/validator-cfworker" }
+    { "path": "./packages/validator-cfworker" },
+    { "path": "./packages/antd/test" },
+    { "path": "./packages/chakra-ui/test" },
+    { "path": "./packages/core/test" },
+    { "path": "./packages/daisyui/test" },
+    { "path": "./packages/fluentui-rc/test" },
+    { "path": "./packages/mantine/test" },
+    { "path": "./packages/mui/test" },
+    { "path": "./packages/primereact/test" },
+    { "path": "./packages/react-bootstrap/test" },
+    { "path": "./packages/semantic-ui/test" },
+    { "path": "./packages/shadcn/test" },
+    { "path": "./packages/utils/test" },
+    { "path": "./packages/validator-ajv8/test" },
+    { "path": "./packages/validator-ata/test" },
+    { "path": "./packages/validator-cfworker/test" }
   ]
 }

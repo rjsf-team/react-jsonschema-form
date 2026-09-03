@@ -1,15 +1,5 @@
 {
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "rewriteRelativeImportExtensions": false,
-    "allowImportingTsExtensions": true,
-    "rootDir": "..",
-    "noEmit": true,
-    "noImplicitAny": false,
-    "types": ["vitest/globals", "node"],
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true
-  },
-  "include": ["./**/*.ts", "./**/*.tsx", "../src/**/*.ts", "../src/**/*.tsx"]
+  "extends": "../../../tsconfig.test.json",
+  "include": ["./"],
+  "references": [{ "path": ".." }, { "path": "../../snapshot-tests" }]
 }

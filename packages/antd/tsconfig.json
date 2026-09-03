@@ -3,9 +3,7 @@
   "include": ["src"],
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "lib",
-    // Skip because of antd inner ts errors
-    "skipLibCheck": true
+    "outDir": "lib"
   },
   "references": [{ "path": "../core" }, { "path": "../utils" }, { "path": "../validator-ajv8" }]
 }

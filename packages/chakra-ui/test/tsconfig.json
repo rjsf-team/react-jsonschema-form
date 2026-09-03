@@ -1,13 +1,8 @@
 {
-  "extends": "../../../tsconfig.base.json",
+  "extends": "../../../tsconfig.test.json",
   "include": ["./"],
   "compilerOptions": {
-    "rewriteRelativeImportExtensions": false,
-    "allowImportingTsExtensions": true,
-    "rootDir": "./",
-    "noEmit": true,
-    "skipLibCheck": true,
-    "types": ["vitest/globals", "node"]
+    "skipLibCheck": true
   },
   "references": [
     {

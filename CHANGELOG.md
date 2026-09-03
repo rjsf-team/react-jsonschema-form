@@ -39,6 +39,9 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `build:ts` in the packages that prefixed it with `rimraf ./lib`: deleting `lib` without deleting `tsconfig.tsbuildinfo` left `tsc -b` believing the project was up to date, so it emitted nothing and running the script left the package with no output at all. All 15 packages now clear both
 - `@rjsf/chakra-ui`'s `type-check` script ran `tsc --noEmit` against a solution config with `files: []`, so it checked nothing at all; it now builds the source and test projects. `@rjsf/validator-cfworker`'s `typecheck` keeps its existing source-plus-tests scope
 - Added `"type": "module"` to `@rjsf/snapshot-tests`, which emits and publishes ESM `.js` files
+- Added a shared `tsconfig.test.json` that every package's `test/tsconfig.json` extends, so the vitest globals, `node` and `@testing-library/jest-dom` matcher types and the `.ts`-import settings are declared once instead of in 15 files
+- The root `tsconfig.json` solution now references the test projects too, and a new root `typecheck` script (`tsc --build`) runs them in CI. Test code was previously never typechecked outside the editor; this surfaced two stale tests (`@rjsf/validator-ata` passing an AJV-only option that its validator ignores, and jest-dom matchers without their types in `@rjsf/antd` and `@rjsf/shadcn`) and two playground samples that had drifted from the current core API
+- Set `"types": []` in `tsconfig.base.json` so published packages no longer see every hoisted `@types/*` package by default; the packages that use Node APIs opt in explicitly
 
 # 6.9.0
 

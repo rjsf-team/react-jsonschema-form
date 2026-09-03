@@ -6,6 +6,7 @@
     "moduleResolution": "bundler",
     "lib": ["DOM", "ESNext"],
     "jsx": "react-jsx",
+    "types": [],
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
