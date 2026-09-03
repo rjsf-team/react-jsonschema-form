@@ -127,6 +127,34 @@ describe('oneOf', () => {
     );
   });
 
+  it('should restore defaults when returning to an option with disjoint properties', async () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        oneOf: [
+          {
+            title: 'First method of identification',
+            properties: {
+              firstName: { type: 'string', default: 'Chuck' },
+            },
+          },
+          {
+            title: 'Second method of identification',
+            properties: {
+              idCode: { type: 'string' },
+            },
+          },
+        ],
+      },
+    });
+    const $select = node.querySelector<HTMLSelectElement>('#root__oneof_select');
+
+    await user.selectOptions($select!, '1');
+    await user.selectOptions($select!, '0');
+
+    expect(node.querySelector('#root_firstName')).toHaveValue('Chuck');
+  });
+
   it('should assign a default value and set defaults on option change when using refs', async () => {
     const { node, onChange } = createFormComponent({
       schema: {

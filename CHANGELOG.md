@@ -18,6 +18,14 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.9.1
 
+## @rjsf/core
+
+- Fixed defaults not being restored when returning to an `anyOf` or `oneOf` option with disjoint properties ([#3736](https://github.com/rjsf-team/react-jsonschema-form/issues/3736))
+
+## @rjsf/utils
+
+- Fixed `sanitizeDataForNewSchema()` clearing existing arrays or preserving stale `undefined` values instead of retaining data or applying defaults for properties newly defined by the incoming schema ([#3736](https://github.com/rjsf-team/react-jsonschema-form/issues/3736))
+
 ## Dev / docs / playground
 
 - Fixed the size-limit report never being posted on a pull request from a fork. The comment workflow resolved the PR from its head sha, which the base repository cannot associate with a fork's commit, so it warned and skipped — leaving a green check and no comment. The PR is now found by head repository and branch, both of which come from the trusted `workflow_run` payload, and the job fails loudly rather than skipping when no PR matches
