@@ -2,14 +2,14 @@ import { createRef } from 'react';
 import type { FieldTemplateProps, RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
 import userEvent from '@testing-library/user-event';
 
-import Form from '../src';
-import type { NoValFormProps } from './testUtils';
+import Form from '../src/index.ts';
+import type { NoValFormProps } from './testUtils.tsx';
 import {
   createComponent,
   expectToHaveBeenCalledWithFormData,
   setupConsoleErrorSuppression,
   describeRepeated,
-} from './testUtils';
+} from './testUtils.tsx';
 
 const TWO_BUTTONS = (
   <>

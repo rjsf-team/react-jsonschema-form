@@ -1,5 +1,5 @@
 // oxlint-disable typescript/no-deprecated
-import type { PathSchema, RJSFSchema } from '../../src';
+import type { PathSchema, RJSFSchema } from '../../src/index.ts';
 import {
   createSchemaUtils,
   getFieldNames,
@@ -8,8 +8,8 @@ import {
   omitExtraData,
   NAME_KEY,
   RJSF_ADDITIONAL_PROPERTIES_FLAG,
-} from '../../src';
-import type { TestValidatorType } from './types';
+} from '../../src/index.ts';
+import type { TestValidatorType } from './types.ts';
 
 export default function omitExtraDataTest(testValidator: TestValidatorType) {
   describe('isValueEmpty()', () => {

@@ -1,5 +1,5 @@
-import enumOptionsIndexForValue from './enumOptionsIndexForValue';
-import type { EnumOptionsType, OptionValueFormat, StrictRJSFSchema, RJSFSchema } from './types';
+import enumOptionsIndexForValue from './enumOptionsIndexForValue.ts';
+import type { EnumOptionsType, OptionValueFormat, StrictRJSFSchema, RJSFSchema } from './types.ts';
 
 /** Computes the value to pass to a select element's `value` attribute.
  *

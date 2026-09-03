@@ -1,6 +1,6 @@
 import { arrayTests } from '@rjsf/snapshot-tests';
 
-import Form from '../src';
+import Form from '../src/index.ts';
 
 // Mock PrimeReact components that use parentElement or real DOM
 vi.mock('primereact/dropdown', () => ({

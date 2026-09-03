@@ -1,7 +1,7 @@
 import type { FieldProps, FieldTemplateProps, FieldPathId, RJSFSchema } from '@rjsf/utils';
 import { ID_KEY, getTemplate, noop } from '@rjsf/utils';
 
-import type { Sample } from './Sample';
+import type { Sample } from './Sample.ts';
 
 function UiField(props: FieldProps) {
   const { fieldPathId, formData, onChange, registry, schema, uiSchema, ...otherProps } = props;

@@ -1,8 +1,8 @@
 /** @vitest-environment jsdom */
 import { renderHook } from '@testing-library/react';
 
-import type { FieldPathId } from '../src';
-import { ID_KEY, useDeepCompareMemo } from '../src';
+import type { FieldPathId } from '../src/index.ts';
+import { ID_KEY, useDeepCompareMemo } from '../src/index.ts';
 
 const ID_1 = 'id-1';
 const ID_2 = 'id-2';

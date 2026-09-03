@@ -4,7 +4,7 @@ import IconButton from '@mui/material/IconButton';
 import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { getUiOptions, TranslatableString } from '@rjsf/utils';
 
-import { getMuiProps } from '../util';
+import { getMuiProps } from '../util.ts';
 
 /** The `AddButton` renders a button that represent the `Add` action on a form
  */

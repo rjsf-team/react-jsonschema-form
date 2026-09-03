@@ -2,7 +2,7 @@ import type { ChangeEvent, FocusEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { ariaDescribedByIds } from '@rjsf/utils';
 
-import { Textarea } from '../components/ui/textarea';
+import { Textarea } from '../components/ui/textarea.tsx';
 
 type CustomWidgetProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = WidgetProps<
   T,

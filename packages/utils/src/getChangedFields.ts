@@ -1,6 +1,6 @@
-import deepEquals from './deepEquals';
-import isPlainObject from './isPlainObject';
-import { getByPath } from './pathUtils';
+import deepEquals from './deepEquals.ts';
+import isPlainObject from './isPlainObject.ts';
+import { getByPath } from './pathUtils.ts';
 
 /** Returns the paths of the changed descendants of `a` relative to `b`, relative to the node itself. An empty list
  * means the difference could not be narrowed any further, so the caller should report its own key instead.

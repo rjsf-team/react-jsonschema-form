@@ -4,7 +4,7 @@ import type { ComponentProps } from 'react';
 import { Root, Indicator, Item } from '@radix-ui/react-radio-group';
 import { CircleIcon } from 'lucide-react';
 
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.ts';
 
 /**
  * A radio group component for selecting a single option from a list

@@ -3,7 +3,7 @@
 import type { ComponentProps } from 'react';
 import { Root } from '@radix-ui/react-separator';
 
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.ts';
 
 /**
  * A separator component for visually dividing content

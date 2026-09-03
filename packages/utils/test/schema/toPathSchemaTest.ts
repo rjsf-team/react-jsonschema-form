@@ -1,10 +1,10 @@
 // oxlint-disable typescript/no-deprecated
 import type { MockInstance } from 'vitest';
 
-import type { RJSFSchema } from '../../src';
-import { createSchemaUtils, noop, toPathSchema } from '../../src';
-import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData';
-import type { TestValidatorType } from './types';
+import type { RJSFSchema } from '../../src/index.ts';
+import { createSchemaUtils, noop, toPathSchema } from '../../src/index.ts';
+import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData.ts';
+import type { TestValidatorType } from './types.ts';
 
 export default function toPathSchemaTest(testValidator: TestValidatorType) {
   describe('toPathSchema()', () => {

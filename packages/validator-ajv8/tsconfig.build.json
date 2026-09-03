@@ -8,15 +8,5 @@
     {
       "path": "./src"
     }
-  ],
-  "tsc-alias": {
-    "resolveFullPaths": true,
-    "verbose": true,
-    "replacers": {
-      "ajv": {
-        "enabled": true,
-        "file": "ajvReplacer.cjs"
-      }
-    }
-  }
+  ]
 }

@@ -1,5 +1,5 @@
-import type { RJSFSchema } from '../src';
-import getPropertySchema from '../src/getPropertySchema';
+import getPropertySchema from '../src/getPropertySchema.ts';
+import type { RJSFSchema } from '../src/index.ts';
 
 const SCHEMA: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
 

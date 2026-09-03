@@ -3,7 +3,7 @@ import type { FormProps } from '@rjsf/core';
 import { withTheme } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
-import { generateTheme } from './theme';
+import { generateTheme } from './theme/index.ts';
 
 /** Generates a `Form` pre-configured with the DaisyUI theme, allowing the generics to be overridden
  *

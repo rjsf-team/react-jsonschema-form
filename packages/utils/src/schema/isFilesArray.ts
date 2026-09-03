@@ -1,4 +1,4 @@
-import { UI_WIDGET_KEY } from '../constants';
+import { UI_WIDGET_KEY } from '../constants.ts';
 import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
@@ -6,8 +6,8 @@ import type {
   StrictRJSFSchema,
   UiSchema,
   ValidatorType,
-} from '../types';
-import retrieveSchema from './retrieveSchema';
+} from '../types.ts';
+import retrieveSchema from './retrieveSchema.ts';
 
 /** Checks to see if the `schema` and `uiSchema` combination represents an array of files
  *

@@ -3,13 +3,13 @@ import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import { act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import type Form from '../src';
+import type Form from '../src/index.ts';
 import {
   createFormComponent,
   expectToHaveBeenCalledWithFormData,
   getSelectedOptionValue,
   submitForm,
-} from './testUtils';
+} from './testUtils.tsx';
 
 const user = userEvent.setup();
 

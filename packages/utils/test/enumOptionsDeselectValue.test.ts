@@ -1,6 +1,6 @@
-import type { EnumOptionsType } from '../src';
-import { enumOptionsDeselectValue } from '../src';
-import { ALL_OPTIONS } from './testUtils/testData';
+import type { EnumOptionsType } from '../src/index.ts';
+import { enumOptionsDeselectValue } from '../src/index.ts';
+import { ALL_OPTIONS } from './testUtils/testData.ts';
 
 const ALL_VALUES = ALL_OPTIONS.map((opt) => opt.value);
 

@@ -4,9 +4,9 @@ import { Field as ChakraField, Text } from '@chakra-ui/react';
 import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 import { ariaDescribedByIds, descriptionId, getTemplate, getUiOptions, schemaRequiresTrueValue } from '@rjsf/utils';
 
-import { Checkbox } from '../components/ui/checkbox';
-import { Field } from '../components/ui/field';
-import { getChakra } from '../utils';
+import { Checkbox } from '../components/ui/checkbox.tsx';
+import { Field } from '../components/ui/field.tsx';
+import { getChakra } from '../utils.ts';
 
 export default function CheckboxWidget<
   T = any,

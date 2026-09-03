@@ -1,9 +1,9 @@
 import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR, englishStringTranslator } from '@rjsf/utils';
 
-import fields from './components/fields';
-import templates from './components/templates';
-import widgets from './components/widgets';
+import fields from './components/fields/index.ts';
+import templates from './components/templates/index.ts';
+import widgets from './components/widgets/index.ts';
 
 /** The default registry consists of all the fields, templates and widgets provided in the core implementation,
  * plus an empty `rootSchema` and `formContext. We omit schemaUtils here because it cannot be defaulted without a

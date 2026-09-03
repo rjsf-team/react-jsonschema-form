@@ -12,8 +12,8 @@ import {
 } from '@rjsf/utils';
 import type { OptionsOrGroups } from 'chakra-react-select';
 
-import { Field } from '../components/ui/field';
-import { getChakra } from '../utils';
+import { Field } from '../components/ui/field.tsx';
+import { getChakra } from '../utils.ts';
 
 /**
  * NativeSelectWidget is a React component that renders a native select input.

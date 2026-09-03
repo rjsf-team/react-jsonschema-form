@@ -4,8 +4,8 @@ import type { ThemeProps } from '@rjsf/core';
 import { getDefaultRegistry } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
-import { generateTemplates } from '../templates/Templates';
-import { generateWidgets } from '../widgets/Widgets';
+import { generateTemplates } from '../templates/Templates.tsx';
+import { generateWidgets } from '../widgets/Widgets.tsx';
 
 /** Generates a complete theme configuration for RJSF with DaisyUI styling
  *

@@ -1,4 +1,4 @@
-import type { FieldPathId } from '../src';
+import type { FieldPathId } from '../src/index.ts';
 import {
   ID_KEY,
   ariaDescribedByIds,
@@ -10,7 +10,7 @@ import {
   optionalControlsId,
   optionId,
   titleId,
-} from '../src';
+} from '../src/index.ts';
 
 const SIMPLE_ID = 'simpleID';
 const PATH_ID = 'test';

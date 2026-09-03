@@ -1,7 +1,7 @@
 import type { FormProps } from '@rjsf/core';
 import type { UiSchema } from '@rjsf/utils';
 
-import type { LiveSettings } from '../components/OptionsDrawer';
+import type { LiveSettings } from '../components/OptionsDrawer.tsx';
 
 export type UiSchemaForTheme = (theme: string) => UiSchema;
 

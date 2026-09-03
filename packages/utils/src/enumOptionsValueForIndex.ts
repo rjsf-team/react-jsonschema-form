@@ -1,4 +1,4 @@
-import type { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types';
+import type { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Returns the value(s) from `allEnumOptions` at the index(es) provided by `valueIndex`. If `valueIndex` is not an
  * array AND the index is not valid for `allEnumOptions`, `emptyValue` is returned. If `valueIndex` is an array, AND it
