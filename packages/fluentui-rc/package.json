@@ -3,7 +3,7 @@
   "version": "6.9.0",
   "description": "FluentUI React Components theme, fields and widgets for react-jsonschema-form",
   "scripts": {
-    "build:ts": "rimraf ./lib tsconfig.tsbuildinfo && tsc -b .",
+    "build:ts": "tsc -b",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/index.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/index.esm.js --format=umd --file=dist/core.umd.js --name=JSONSchemaForm",

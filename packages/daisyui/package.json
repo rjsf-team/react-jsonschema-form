@@ -44,7 +44,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "build:ts": "rimraf ./lib tsconfig.tsbuildinfo && tsc -b .",
+    "build:ts": "tsc -b",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/daisyui.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/daisyui.esm.js --format=umd --file=dist/daisyui.umd.js --name=@rjsf/daisyui",

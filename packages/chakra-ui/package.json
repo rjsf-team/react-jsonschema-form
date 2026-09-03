@@ -40,7 +40,7 @@
     "src"
   ],
   "scripts": {
-    "build:ts": "rimraf ./lib tsconfig.tsbuildinfo && tsc -b .",
+    "build:ts": "tsc -b",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/chakra-ui.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/chakra-ui.esm.js --format=umd --file=dist/chakra-ui.umd.js --name=@rjsf/chakra-ui",
