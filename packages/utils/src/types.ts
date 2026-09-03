@@ -185,6 +185,8 @@ export interface InputPropsType {
   max?: number | string;
   /** Specifies the `autoComplete` value for an <input> element */
   autoComplete?: HTMLInputElement['autocomplete'];
+  /** Specifies the `autoCapitalize` value for an <input> element */
+  autoCapitalize?: HTMLInputElement['autocapitalize'];
   /** Specifies a filter for what file types the user can upload. */
   accept?: HTMLInputElement['accept'];
 }
@@ -1142,6 +1144,8 @@ type UIOptionsBaseType<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     autofocus?: boolean;
     /** Use to mark the field as supporting auto complete on a text input or textarea input */
     autocomplete?: HTMLInputElement['autocomplete'];
+    /** Controls automatic capitalization for text entered on supporting virtual keyboards */
+    autocapitalize?: HTMLInputElement['autocapitalize'];
     /** Flag, if set to `true`, will mark all child widgets from a given field as disabled */
     disabled?: boolean;
     /** The default value to use when an input for a field is empty */

@@ -317,6 +317,16 @@ describe('StringField', () => {
       expect(node.querySelector('input')).toHaveAttribute('autocomplete', 'family-name');
     });
 
+    it('should create and set autocapitalize attribute', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'string' },
+        uiSchema: { 'ui:autocapitalize': 'words' },
+        formData: undefined,
+      });
+
+      expect(node.querySelector('input')).toHaveAttribute('autocapitalize', 'words');
+    });
+
     it('Check that when formData changes, the form should re-validate', async () => {
       const { node, rerender } = createFormComponent({
         schema: { type: 'string' },
