@@ -9,8 +9,7 @@ import type {
   ValidatorType,
 } from '@rjsf/utils';
 import { deepEquals, ID_KEY, ROOT_SCHEMA_PREFIX, withIdRefPrefix, hashForSchema } from '@rjsf/utils';
-import type { ErrorObject, ValidateFunction } from 'ajv';
-import type Ajv from 'ajv';
+import type { ErrorObject, ValidateFunction, Ajv } from 'ajv';
 
 import createAjvInstance from './createAjvInstance.ts';
 import type { RawValidationErrorsType } from './processRawValidationErrors.ts';

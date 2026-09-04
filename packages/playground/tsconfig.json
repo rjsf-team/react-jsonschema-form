@@ -2,6 +2,9 @@
   "extends": "../../tsconfig.base.json",
   "include": ["./"],
   "compilerOptions": {
+    // A Vite app, not a library: Vite resolves its imports, Node never does.
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "composite": false,
     "noEmit": true,
     "target": "ESNext",

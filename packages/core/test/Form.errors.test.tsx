@@ -3,7 +3,7 @@ import type { ErrorSchema, FormValidation, RJSFSchema } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { userEvent } from '@testing-library/user-event';
 
 import type { FormProps } from '../src/index.ts';
 import Form from '../src/index.ts';

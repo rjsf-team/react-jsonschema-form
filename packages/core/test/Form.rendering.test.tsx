@@ -1,6 +1,6 @@
 import { createRef } from 'react';
 import type { FieldTemplateProps, RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
-import userEvent from '@testing-library/user-event';
+import { userEvent } from '@testing-library/user-event';
 
 import Form from '../src/index.ts';
 import type { NoValFormProps } from './testUtils.tsx';

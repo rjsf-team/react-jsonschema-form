@@ -2,6 +2,10 @@
   "extends": "../../tsconfig.base.json",
   "include": ["src"],
   "compilerOptions": {
+    // @chakra-ui/react ships ESM declarations with extensionless relative re-exports, which Node's
+    // rules cannot resolve, so every named import from it fails under "nodenext".
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "rootDir": "src",
     "outDir": "lib"
   },

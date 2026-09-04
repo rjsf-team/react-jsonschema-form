@@ -1,4 +1,4 @@
-import userEvent from '@testing-library/user-event';
+import { userEvent } from '@testing-library/user-event';
 
 import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.tsx';
 

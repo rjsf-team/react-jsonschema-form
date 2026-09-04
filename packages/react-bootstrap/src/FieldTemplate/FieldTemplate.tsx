@@ -1,6 +1,6 @@
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { getTemplate, getUiOptions } from '@rjsf/utils';
-import Form from 'react-bootstrap/Form';
+import { Form } from 'react-bootstrap';
 
 export default function FieldTemplate<
   T = any,

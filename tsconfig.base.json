@@ -2,8 +2,7 @@
   "compilerOptions": {
     "composite": true,
     "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "bundler",
+    "module": "nodenext",
     "lib": ["DOM", "ESNext"],
     "jsx": "react-jsx",
     "types": [],

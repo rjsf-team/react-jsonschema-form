@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { ariaDescribedByIds, examplesId, getInputProps } from '@rjsf/utils';
-import Form from 'react-bootstrap/Form';
+import { Form } from 'react-bootstrap';
 
 export default function BaseInputTemplate<
   T = any,

@@ -1,5 +1,5 @@
 import { noop } from '@rjsf/utils';
-import type Ajv from 'ajv';
+import type { Ajv } from 'ajv';
 
 import type { CustomValidatorOptionsType } from '../../src/index.ts';
 
