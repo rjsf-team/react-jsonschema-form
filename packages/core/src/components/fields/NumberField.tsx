@@ -7,7 +7,7 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { asNumber, getDecimalSeparator, getUiOptions, optionsList } from '@rjsf/utils';
+import { asNumber, getDecimalSeparator, getUiOptions, hasWidget, optionsList } from '@rjsf/utils';
 
 // Static matchers for standard '.' separator used during normalization inside handleChange
 const trailingCharMatcherWithPrefix = /\.([0-9]*0)*$/;
@@ -38,7 +38,6 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   const { StringField } = registry.fields;
 
   const separator = getDecimalSeparator();
-  const escapedSeparator = separator === '.' ? '\\.' : separator;
 
   let value = formData;
 
@@ -72,14 +71,20 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   );
 
   if (typeof lastValue === 'string' && typeof value === 'number') {
+    // Normalize the cached input to the standard '.' separator so a user-typed '.' is
+    // recognized as a pending decimal point even in locales whose separator is different.
+    const canonicalLastValue = lastValue.replace(separator, '.');
+
     // Construct a regular expression that checks for a string that consists
-    // of the formData value suffixed with zero or one locale separator characters and zero
-    // or more '0' characters
-    const re = new RegExp(`^(${String(value).replace('.', escapedSeparator)})?${escapedSeparator}?0*$`);
+    // of the formData value suffixed with zero or one '.' characters and zero
+    // or more '0' characters. Escape the value first: its own '.' is a literal
+    // character here, not the regex "any character" wildcard.
+    const escapedValue = String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp(`^(${escapedValue})?\\.?0*$`);
 
     // If the cached "lastValue" is a match, use that instead of the formData
     // value to prevent the input value from changing in the UI
-    if (lastValue.match(re)) {
+    if (canonicalLastValue.match(re)) {
       value = lastValue as unknown as T;
     }
   }
@@ -88,14 +93,19 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   let displayValue: T | undefined = value;
   if (typeof value === 'number' && separator !== '.') {
     const { schema, uiSchema } = props;
-    const { schemaUtils } = registry;
+    const { schemaUtils, widgets } = registry;
     const enumOptions = schemaUtils.isSelect(schema) ? optionsList(schema, uiSchema) : undefined;
-    const defaultWidget = enumOptions ? 'select' : 'text';
+    let defaultWidget = enumOptions ? 'select' : 'text';
+    if (schema.format && hasWidget<T, S, F>(schema, schema.format, widgets)) {
+      defaultWidget = schema.format;
+    }
     const { widget = defaultWidget } = getUiOptions(uiSchema);
 
-    // Do not convert the value to a locale-specific string for radio, select,
-    // or hidden widgets because option matching relies on the original numeric value.
-    if (widget !== 'radio' && widget !== 'select' && widget !== 'hidden') {
+    // Only the built-in text widget renders as a plain text input in this locale (see
+    // getInputProps()), so it's the only one whose displayed value needs to match the
+    // locale separator. Every other widget (custom, radio, select, hidden,
+    // format-registered, ...) keeps receiving the numeric formData its contract promises.
+    if (widget === 'text') {
       displayValue = String(value).replace('.', separator) as unknown as T;
     }
   }
