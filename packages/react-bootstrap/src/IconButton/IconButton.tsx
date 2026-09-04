@@ -1,13 +1,13 @@
 import { memo } from 'react';
-import { AiOutlineArrowDown } from '@react-icons/all-files/ai/AiOutlineArrowDown';
-import { AiOutlineArrowUp } from '@react-icons/all-files/ai/AiOutlineArrowUp';
-import { IoIosCopy } from '@react-icons/all-files/io/IoIosCopy';
-import { IoIosRemove } from '@react-icons/all-files/io/IoIosRemove';
-import { IoMdClose } from '@react-icons/all-files/io/IoMdClose';
+import { AiOutlineArrowDown } from '@react-icons/all-files/ai/AiOutlineArrowDown.js';
+import { AiOutlineArrowUp } from '@react-icons/all-files/ai/AiOutlineArrowUp.js';
+import { IoIosCopy } from '@react-icons/all-files/io/IoIosCopy.js';
+import { IoIosRemove } from '@react-icons/all-files/io/IoIosRemove.js';
+import { IoMdClose } from '@react-icons/all-files/io/IoMdClose.js';
 import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { TranslatableString } from '@rjsf/utils';
-import type { ButtonProps } from 'react-bootstrap/Button';
-import Button from 'react-bootstrap/Button';
+import type { ButtonProps } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 
 export type BootstrapIconButtonProps<
   T = any,

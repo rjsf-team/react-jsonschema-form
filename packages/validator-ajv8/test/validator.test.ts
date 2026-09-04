@@ -7,16 +7,19 @@ import type {
   ValidatorType,
 } from '@rjsf/utils';
 import { ErrorSchemaBuilder, noop } from '@rjsf/utils';
-import type Ajv from 'ajv';
-import localize from 'ajv-i18n';
-import Ajv2019 from 'ajv/dist/2019';
-import Ajv2020 from 'ajv/dist/2020';
-import metaSchemaDraft6 from 'ajv/lib/refs/json-schema-draft-06.json';
+import type { Ajv } from 'ajv';
+import ajvI18n from 'ajv-i18n';
+import { Ajv2019 } from 'ajv/dist/2019.js';
+import { Ajv2020 } from 'ajv/dist/2020.js';
+import metaSchemaDraft6 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json' };
 import type { Mock } from 'vitest';
 
 import type { Localizer } from '../src/index.ts';
 import AJV8Validator from '../src/validator.ts';
 import { expectWarn } from './harness/testData.ts';
+
+// ajv-i18n's declarations describe an ES module with a default export, but its CommonJS runtime is the localizer map itself
+const localize = ajvI18n as unknown as typeof ajvI18n.default;
 
 const illFormedKey = "bar`'()=+*&^%$#@!";
 

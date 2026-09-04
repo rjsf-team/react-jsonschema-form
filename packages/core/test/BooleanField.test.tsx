@@ -1,5 +1,5 @@
 import type { RJSFSchema, WidgetProps } from '@rjsf/utils';
-import userEvent from '@testing-library/user-event';
+import { userEvent } from '@testing-library/user-event';
 
 import {
   createFormComponent,

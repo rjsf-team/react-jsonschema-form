@@ -685,7 +685,7 @@ Some strings contain replaceable parameter values as indicated by `%1`, `%2`, et
 The number after the `%` indicates the order of the parameter.
 The ordering of parameters is important because some languages may choose to put the second parameter before the first in its translation. In addition to replaceable parameters, some of the strings support the use of markdown and simple html.
 
-One can use the [documentation](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/enums.ts) of the `TranslatableString` enums to determine which enum values contain replaceable parameters and which support markdown and simple html.
+One can use the [documentation](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/enums.ts) of the `TranslatableString` values to determine which contain replaceable parameters and which support markdown and simple html.
 
 One could use this function to alter one or more of the existing english strings to better suit one's application or fully translate all strings into a different language.
 Below is an example of changing a few of the english strings to something else:

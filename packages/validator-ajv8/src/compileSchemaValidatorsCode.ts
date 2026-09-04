@@ -46,5 +46,5 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
     extenderFn,
   );
 
-  return standaloneCode(ajv);
+  return standaloneCode.default(ajv);
 }

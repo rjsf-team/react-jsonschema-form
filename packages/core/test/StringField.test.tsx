@@ -1,7 +1,7 @@
 import type { ErrorSchema, FieldPathList, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { parseDateString, toDateString, TranslatableString, utcToLocal } from '@rjsf/utils';
 import { fireEvent, act } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { userEvent } from '@testing-library/user-event';
 
 import StringField from '../src/components/fields/StringField.tsx';
 import {

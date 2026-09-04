@@ -22,7 +22,7 @@ import {
   UI_WIDGET_KEY,
 } from '@rjsf/utils';
 import { render, screen, waitFor, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { userEvent } from '@testing-library/user-event';
 
 import LayoutMultiSchemaField, {
   computeEnumOptions,

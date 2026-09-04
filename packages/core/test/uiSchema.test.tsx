@@ -3,7 +3,7 @@ import type { GenericObjectType, RJSFSchema, UiSchema, Widget, WidgetProps } fro
 import { noop } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, fireEvent, act, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { userEvent } from '@testing-library/user-event';
 import type { MockInstance } from 'vitest';
 
 import RadioWidget from '../src/components/widgets/RadioWidget.tsx';

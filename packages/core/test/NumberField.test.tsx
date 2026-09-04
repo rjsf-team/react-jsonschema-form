@@ -1,7 +1,7 @@
 import { createRef } from 'react';
 import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import { act } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { userEvent } from '@testing-library/user-event';
 
 import type Form from '../src/index.ts';
 import {

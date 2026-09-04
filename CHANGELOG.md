@@ -25,14 +25,21 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Fixed defaults not being restored when returning to an `anyOf` or `oneOf` option with disjoint properties ([#3736](https://github.com/rjsf-team/react-jsonschema-form/issues/3736))
+- **Potentially breaking change:** `GridType` and `Operators` are now `as const` objects with same-named union types instead of `enum`s, so the source is valid under Node's type stripping. Values and `GridType.ROW`-style member access are unchanged; code that used a member as a type must write `typeof GridType.ROW` instead of `GridType.ROW`
+
+## @rjsf/react-bootstrap
+
+- Fixed `lib/index.js` being unloadable by Node: it imported `react-bootstrap/Col`-style directory subpaths and extensionless `@react-icons/all-files` paths, which only bundlers resolve. Components are now imported from `react-bootstrap` itself and icon files by their full `.js` name
 
 ## @rjsf/utils
 
 - Fixed `sanitizeDataForNewSchema()` clearing existing arrays or preserving stale `undefined` values instead of retaining data or applying defaults for properties newly defined by the incoming schema ([#3736](https://github.com/rjsf-team/react-jsonschema-form/issues/3736))
+- **Potentially breaking change:** `TranslatableString` and `AdditionalItemsHandling` are now `as const` objects with same-named union types instead of `enum`s, so the source is valid under Node's type stripping. Values (`AdditionalItemsHandling` keeps `0`, `1`, `2`) and `TranslatableString.ArrayItemTitle`-style member access are unchanged; code that used a member as a type must write `typeof TranslatableString.ArrayItemTitle`, and the numeric enum's reverse mapping (`AdditionalItemsHandling[0]`) no longer exists
 
 ## @rjsf/validator-ajv8
 
 - Changed the `standaloneCode` import to name the file, `ajv/dist/standalone/index.js`, instead of the directory subpath `ajv/dist/standalone`. A `tsc-alias` replacer used to patch this into the emitted output; the source now says what it means. No public API changed
+- Imports the `Ajv` class by name and reaches `ajv-formats` and `ajv/dist/standalone` through `.default`, which is where Node exposes those CommonJS modules' default export to ESM importers. No runtime change; the previous default-import spelling only typechecked under bundler resolution
 
 ## Dev / docs / playground
 
@@ -46,6 +53,10 @@ should change the heading of the (upcoming) version to include a major version b
 - `build:ts` is now plain `tsc -b`. The old `rimraf ./lib` also deleted the build-info, forcing a full rebuild every time; the build-info is now an Nx `build` output alongside `lib/` so cache restores stay coherent
 - Added `"type": "module"` to `@rjsf/snapshot-tests`, which publishes ESM `.js` files
 - Enabled `verbatimModuleSyntax`, so type-only imports must be written as `import type`. The one import it affected, `React` in `@rjsf/utils`'s `shouldRender.ts`, is now type-only, so emitted output is unchanged
+- Upgraded TypeScript to 7.0.2. The root `typecheck` runs in 5 s instead of 22 s; `@rjsf/docs`'s editor-only tsconfig now extends `@docusaurus/tsconfig`, since the old `@tsconfig/docusaurus` sets `baseUrl`, which TypeScript 7 removed
+- `module` is now `nodenext` in `tsconfig.base.json` (was `esnext` with `moduleResolution: bundler`), so `tsc` checks the published `lib/` against Node's ESM rules. Two projects keep bundler resolution with a comment saying why: the playground is a Vite app, and `@chakra-ui/react` ships declarations Node's rules cannot resolve. Test files gained `with { type: 'json' }` on JSON imports and import `userEvent` by name, both of which the stricter rules require
+- Enabled `erasableSyntaxOnly`, which rejects `enum`, `namespace` and parameter properties; the four exported enums were the only violations
+- `packages/utils/test` no longer emits declarations for the validator packages' tests to consume. Each validator test project includes the shared schema test suite directly, so every test project is now `noEmit`
 
 # 6.9.0
 

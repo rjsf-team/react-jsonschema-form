@@ -285,12 +285,12 @@ importers:
       '@docusaurus/plugin-content-docs':
         specifier: ^3.10.1
         version: 3.10.1(@mdx-js/react@3.1.1(@types/react@18.3.31)(react@18.3.1))(esbuild@0.28.1)(postcss@8.5.26)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@7.0.2)
+      '@docusaurus/tsconfig':
+        specifier: ^3.10.2
+        version: 3.10.2
       '@docusaurus/types':
         specifier: ^3.10.1
         version: 3.10.1(clean-css@5.3.3)(cssnano@6.1.2(postcss@8.5.26))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.26)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@tsconfig/docusaurus':
-        specifier: ^2.0.9
-        version: 2.0.9
 
   packages/fluentui-rc:
     dependencies:
@@ -2035,6 +2035,9 @@ packages:
   '@docusaurus/theme-translations@3.10.1':
     resolution: {integrity: sha512-cLMyaKivjBVWKMJuWqyFVVgtqe8DPJNPkog0bn8W1MDVAKcPdxRFycBfC1We1RaNp7Rdk513bmtW78RR6OBxBw==}
     engines: {node: '>=20.0'}
+
+  '@docusaurus/tsconfig@3.10.2':
+    resolution: {integrity: sha512-5GiB7h/nFsMFPO9mCqcRNE1yA5TSXXNCshNIgHPL6fCPOjcTDixs6qjQBu8ddkgPcicwCvOA7n3jeK2rGdJk6g==}
 
   '@docusaurus/types@3.10.1':
     resolution: {integrity: sha512-XYMK8k1szDCFMw2V+Xyen0g7Kee1sP3dtFnl7vkGkZOkeAJ/oPDQPL8iz4HBKOo/cwU8QeV6onVjMqtP+tFzsw==}
@@ -5190,9 +5193,6 @@ packages:
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
       '@testing-library/dom': '>=7.21.4'
-
-  '@tsconfig/docusaurus@2.0.9':
-    resolution: {integrity: sha512-0jVxZCgy2v7TnJrW9kVNikNwJHeiWb68Zhiiw2vHw4tzBFSP5vS2zn3O5EY2oPEVz5dXZRkK7MnWG3Ay5q0mIg==}
 
   '@tybys/wasm-util@0.10.3':
     resolution: {integrity: sha512-F3fo1MYrRJYL3zER0OUOmkutjr1Vp23m7OsSgp7nq4SP6OqX6C/56XFIPAl5bt3zaBRjmW7SGz3u/6LwFpYcOg==}
@@ -12990,6 +12990,8 @@ snapshots:
       fs-extra: 11.3.5
       tslib: 2.8.1
 
+  '@docusaurus/tsconfig@3.10.2': {}
+
   '@docusaurus/types@3.10.1(clean-css@5.3.3)(cssnano@6.1.2(postcss@8.5.26))(esbuild@0.28.1)(html-minifier-terser@7.2.0)(postcss@8.5.26)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@mdx-js/mdx': 3.1.1
@@ -16690,8 +16692,6 @@ snapshots:
   '@testing-library/user-event@14.6.6(@testing-library/dom@10.4.1)':
     dependencies:
       '@testing-library/dom': 10.4.1
-
-  '@tsconfig/docusaurus@2.0.9': {}
 
   '@tybys/wasm-util@0.10.3':
     dependencies:

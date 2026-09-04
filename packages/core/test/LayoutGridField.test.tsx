@@ -31,7 +31,7 @@ import {
 } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { userEvent } from '@testing-library/user-event';
 import type { MockInstance } from 'vitest';
 
 import type { LayoutGridFieldProps } from '../src/components/fields/LayoutGridField.tsx';

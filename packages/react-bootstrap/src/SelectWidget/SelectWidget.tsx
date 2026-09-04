@@ -9,7 +9,7 @@ import {
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
 } from '@rjsf/utils';
-import FormSelect from 'react-bootstrap/FormSelect';
+import { FormSelect } from 'react-bootstrap';
 
 export default function SelectWidget<
   T = any,

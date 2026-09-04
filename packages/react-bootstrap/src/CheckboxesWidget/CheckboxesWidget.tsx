@@ -9,7 +9,7 @@ import {
   getOptionValueFormat,
   optionId,
 } from '@rjsf/utils';
-import Form from 'react-bootstrap/Form';
+import { Form } from 'react-bootstrap';
 
 export default function CheckboxesWidget<
   T = any,

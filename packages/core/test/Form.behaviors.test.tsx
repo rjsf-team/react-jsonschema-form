@@ -3,7 +3,7 @@ import type { ErrorSchema, Experimental_DefaultFormStateBehavior, FieldProps, RJ
 import { bracketNameGenerator, buttonId, dotNotationNameGenerator, optionalControlsId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { userEvent } from '@testing-library/user-event';
 
 import type { FormProps, IChangeEvent } from '../src/index.ts';
 import Form from '../src/index.ts';
@@ -17,7 +17,7 @@ import {
   setupConsoleErrorSuppression,
   submitForm,
 } from './testUtils.tsx';
-import widgetsSchema from './widgets_schema.json';
+import widgetsSchema from './widgets_schema.json' with { type: 'json' };
 
 const user = userEvent.setup();
 
