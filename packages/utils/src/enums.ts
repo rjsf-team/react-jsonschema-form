@@ -73,7 +73,8 @@ export const TranslatableString = {
   /** Deprecated label, where %1 will be replaced by the label as provided by SchemaField */
   DeprecatedLabel: '%1 (deprecated)',
   /** Cyclic schema message */
-  CycleDetected: 'Circular reference ($ref cycle) detected for field "%1". You may choose to expand to the next cycle break',
+  CycleDetected:
+    'Circular reference ($ref cycle) detected for field "%1". You may choose to expand to the next cycle break',
   // Strings with replaceable parameters AND/OR that support markdown and html
   /** Invalid object field configuration as provided by the ObjectField.
    * NOTE: Use markdown notation rather than html tags.
