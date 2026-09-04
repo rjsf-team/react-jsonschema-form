@@ -18,6 +18,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.9.1
 
+## @rjsf/chakra-ui
+
+- Removed the `environment` prop passed to `EnvironmentProvider` in the test wrapper. `EnvironmentProvider` has no such prop, so it was silently ignored; dropping it leaves the default environment in place and lets the package's `type-check` script cover the test files
+
 ## @rjsf/core
 
 - Fixed defaults not being restored when returning to an `anyOf` or `oneOf` option with disjoint properties ([#3736](https://github.com/rjsf-team/react-jsonschema-form/issues/3736))
@@ -42,6 +46,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Added a shared `tsconfig.test.json` that every package's `test/tsconfig.json` extends, so the vitest globals, `node` and `@testing-library/jest-dom` matcher types and the `.ts`-import settings are declared once instead of in 15 files
 - The root `tsconfig.json` solution now references the test projects too, and a new root `typecheck` script (`tsc --build`) runs them in CI. Test code was previously never typechecked outside the editor; this surfaced two stale tests (`@rjsf/validator-ata` passing an AJV-only option that its validator ignores, and jest-dom matchers without their types in `@rjsf/antd` and `@rjsf/shadcn`) and two playground samples that had drifted from the current core API
 - Set `"types": []` in `tsconfig.base.json` so published packages no longer see every hoisted `@types/*` package by default; the packages that use Node APIs opt in explicitly
+- The validator packages (`@rjsf/validator-ajv8`, `-ata` and `-cfworker`) override `lib` to `["ESNext"]`, so a validator can no longer compile against browser globals
 - Every package now emits `lib/` with the same compiler settings. Before, `@rjsf/core` emitted `esnext` JavaScript with declaration maps through `tsconfig.build.json` while the other packages emitted ES2018 with JS source maps through `tsconfig.base.json`. The single base now targets `esnext` for all of them: since every theme depends on `@rjsf/core`, consumers already had to run `esnext` output, so downleveling the rest bought nothing and cost 1–4% in size. All packages ship both `.js.map` and `.d.ts.map`, and `tsconfig.tsbuildinfo` is no longer written into `lib/` and published with it — in 6.8.0 that file was 446 kB of `@rjsf/antd`'s 959 kB unpacked tarball and 265 kB of `@rjsf/mui`'s 856 kB
 
 # 6.9.0
@@ -60,7 +65,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 - Fixed `BaseInputTemplate`'s `ui:allowClearTextInputs` clear button to store `ui:emptyValue` (`undefined` by default) instead of always storing `""`, so clicking it now behaves exactly like clearing the input by typing. **Potentially breaking change:** an app that never sets `ui:emptyValue` and clicks the clear button on a field (rather than backspacing it) previously got `""` back; it now gets `undefined`, matching every other way of emptying the field.
-- Removed the `environment` prop passed to `EnvironmentProvider` in the test wrapper. `EnvironmentProvider` has no such prop, so it was silently ignored; dropping it leaves the default environment in place and lets the package's `type-check` script cover the test files
 
 ## @rjsf/core
 
