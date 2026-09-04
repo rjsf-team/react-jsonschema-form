@@ -56,7 +56,7 @@
     "rollup": "^4.62.2",
     "size-limit": "^13.0.3",
     "tsx": "^4.22.4",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "vitest": "^4.1.11"
   },
   "workspaces": [
