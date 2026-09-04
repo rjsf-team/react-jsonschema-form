@@ -45,7 +45,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "build:ts": "rimraf ./lib && tsc -b tsconfig.build.json",
+    "build:ts": "tsc -b",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/validator-cfworker.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/validator-cfworker.esm.js --format=umd --file=dist/validator-cfworker.umd.js --name=@rjsf/validator-cfworker",
@@ -55,7 +55,7 @@
     "lint": "oxlint src test",
     "precommit": "lint-staged",
     "test": "vitest run",
-    "typecheck": "tsc -b tsconfig.json --pretty false"
+    "typecheck": "tsc -b tsconfig.json test/tsconfig.json --pretty false"
   },
   "lint-staged": {
     "{src,test}/**/*.{ts,tsx}": [

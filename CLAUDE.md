@@ -113,7 +113,7 @@ When making a change to a widget or template, consider if the change should be g
 
 ## Code style
 
-- **TypeScript strict mode**, ES2020 target
+- **TypeScript strict mode**, `esnext` target
 - **Prettier**: single quotes, JSX single quotes, 120-char print width
 - **ESLint**: enforces semicolons, curly braces, no-console, React Hooks rules
 - Pre-commit hook (Husky + lint-staged) auto-formats and lints staged files

@@ -1,17 +1,9 @@
 {
-  "extends": "../../../tsconfig.base.json",
+  "extends": "../../../tsconfig.test.json",
   "include": ["./"],
-  "compilerOptions": {
-    "rewriteRelativeImportExtensions": false,
-    "allowImportingTsExtensions": true,
-    "rootDir": "./",
-    "noEmit": true,
-    "jsx": "react-jsx",
-    "types": ["vitest/globals", "node"]
-  },
   "references": [
     {
-      "path": "../src"
+      "path": ".."
     },
     {
       "path": "../../snapshot-tests"

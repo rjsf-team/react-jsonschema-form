@@ -1,75 +1,28 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": [
-    "./",
-    "src",
-    "test",
-  ],
+  "include": ["./"],
   "compilerOptions": {
-    "rootDir": "./",
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ESNext"
-    ],
-    "allowJs": false,
-    "composite": true,
-    "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
+    "composite": false,
     "noEmit": true,
-    "jsx": "react-jsx",
-    "types": ["vite/client", "node"]
+    "target": "ESNext",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "resolveJsonModule": true,
+    "types": ["vite/client", "vitest/globals", "node"]
   },
   "references": [
-    {
-      "path": "../antd"
-    },
-    {
-      "path": "../chakra-ui"
-    },
-    {
-      "path": "../core"
-    },
-    {
-      "path": "../daisyui"
-    },
-    {
-      "path": "../fluentui-rc"
-    },
-    {
-      "path": "../mui"
-    },
-    {
-      "path": "../primereact"
-    },
-    {
-      "path": "../react-bootstrap"
-    },
-    {
-      "path": "../semantic-ui"
-    },
-    {
-      "path": "../shadcn"
-    },
-    {
-      "path": "../utils"
-    },
-    {
-      "path": "../validator-ajv8"
-    },
-    {
-      "path": "../validator-ata"
-    },
-    {
-      "path": "../validator-cfworker"
-    }
+    { "path": "../antd" },
+    { "path": "../chakra-ui" },
+    { "path": "../core" },
+    { "path": "../daisyui" },
+    { "path": "../fluentui-rc" },
+    { "path": "../mui" },
+    { "path": "../primereact" },
+    { "path": "../react-bootstrap" },
+    { "path": "../semantic-ui" },
+    { "path": "../shadcn" },
+    { "path": "../utils" },
+    { "path": "../validator-ajv8" },
+    { "path": "../validator-ata" },
+    { "path": "../validator-cfworker" }
   ]
 }

@@ -1,21 +1,18 @@
 {
-  "extends": "../../../tsconfig.base.json",
+  "extends": "../../../tsconfig.test.json",
   "include": ["./"],
   "compilerOptions": {
+    "noEmit": false,
     "rootDir": "./",
     // todo: noEmit: true
     // maybe better to move this to some separate package
     // this is needed for packages/validator-ajv8/test/utilsTests
     "emitDeclarationOnly": true,
-    "outDir": "../lib-test",
-    "rewriteRelativeImportExtensions": false,
-    "allowImportingTsExtensions": true,
-    "jsx": "react-jsx",
-    "types": ["vitest/globals", "node"]
+    "outDir": "../lib-test"
   },
   "references": [
     {
-      "path": "../src"
+      "path": ".."
     }
   ]
 }

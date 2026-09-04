@@ -44,7 +44,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "build:ts": "tsc -b tsconfig.build.json",
+    "build:ts": "tsc -b",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/semantic-ui.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/semantic-ui.esm.js --format=umd --file=dist/semantic-ui.umd.js --name=@rjsf/semantic-ui",

@@ -9,6 +9,7 @@
     "test": "nx run-many --parallel=2 --target=test",
     "test:update": "nx run-many --parallel=2 --target=test:update",
     "lint": "nx run-many --target=lint",
+    "typecheck": "tsc --build",
     "knip": "knip",
     "cs-check": "nx run-many --target=cs-check",
     "cs-format": "nx run-many --target=cs-format",

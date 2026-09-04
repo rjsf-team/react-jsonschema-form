@@ -35,7 +35,7 @@
     }
   },
   "scripts": {
-    "build:ts": "rimraf ./lib && tsc -b tsconfig.build.json",
+    "build:ts": "tsc -b",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/antd.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/antd.esm.js --format=umd --file=dist/antd.umd.js --name=@rjsf/antd",

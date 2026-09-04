@@ -40,7 +40,7 @@
     "src"
   ],
   "scripts": {
-    "build:ts": "tsc -b tsconfig.build.json",
+    "build:ts": "tsc -b",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/chakra-ui.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/chakra-ui.esm.js --format=umd --file=dist/chakra-ui.umd.js --name=@rjsf/chakra-ui",
@@ -52,7 +52,7 @@
     "test": "vitest run",
     "test:update": "vitest run --update",
     "test:watch": "vitest",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc -b tsconfig.json test/tsconfig.json"
   },
   "lint-staged": {
     "{src,test}/**/*.{ts,tsx}": [

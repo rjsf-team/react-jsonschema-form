@@ -1,6 +1,7 @@
 {
   "name": "@rjsf/snapshot-tests",
   "version": "6.9.0",
+  "type": "module",
   "description": "A set of snapshot tests to be used for testing RJSF theme.",
   "scripts": {
     "build": "tsc -b .",

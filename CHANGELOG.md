@@ -18,6 +18,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.9.1
 
+## @rjsf/chakra-ui
+
+- Removed an `environment` prop the test wrapper passed to `EnvironmentProvider`, which has no such prop and silently ignored it
+
 ## @rjsf/core
 
 - Fixed defaults not being restored when returning to an `anyOf` or `oneOf` option with disjoint properties ([#3736](https://github.com/rjsf-team/react-jsonschema-form/issues/3736))
@@ -34,6 +38,14 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Relative TypeScript imports now name their real `.ts`/`.tsx` source file (and an explicit `index.ts` for directory imports), and TypeScript's `rewriteRelativeImportExtensions` emits the `.js` specifiers directly. This removes `tsc-alias` and its post-emit string rewriting entirely, along with the `tsc-alias-replacer/` directory, both `tsconfig.replacer.json` files, the `compileReplacer` scripts and `move-file-cli`. Naming the source file rather than the output is deliberate: Node's native type stripping requires exact `.ts` extensions and does no extension or directory-index searching, so this avoids a second repository-wide import migration later
 - Fixed `packages/daisyui/test/tsconfig.json`, which was configured to emit into `../dist` — the esbuild/rollup bundle output directory — instead of type-checking without emit like every other test project
+- Collapsed each package's `tsconfig.json` + `tsconfig.build.json` + `src/tsconfig.json` chain into one source config plus one test config extending a new shared root `tsconfig.test.json`. Building a package no longer pulls its dependencies' test projects into the graph
+- Fixed the root `tsconfig.json`, which referenced `snapshot-tests` twice and omitted `mantine`, `primereact`, `validator-ata` and `validator-cfworker`. It now lists every source and test project once, and a new root `typecheck` script runs in CI, so tests are typechecked for the first time. That surfaced stale tests in `@rjsf/chakra-ui` and `@rjsf/validator-ata` and two drifted playground samples, fixed here. `@rjsf/chakra-ui`'s `type-check` script previously ran against a solution config with `files: []` and checked nothing
+- Every package now emits `lib/` with the same settings: `esnext` target plus `.js.map` and `.d.ts.map`. Previously only `@rjsf/core` did; the rest emitted ES2018 with JS source maps only, depending on which root config their `src/tsconfig.json` extended
+- `tsconfig.tsbuildinfo` is no longer written into `lib/` and published with it. In 6.8.0 it was 446 kB of `@rjsf/antd`'s 959 kB unpacked tarball
+- Set `"types": []` in `tsconfig.base.json` so packages no longer see every hoisted `@types/*`, with Node-using packages opting in, and `"lib": ["ESNext"]` in the three validator packages so they cannot compile against browser globals
+- `build:ts` is now plain `tsc -b`. The old `rimraf ./lib` also deleted the build-info, forcing a full rebuild every time; the build-info is now an Nx `build` output alongside `lib/` so cache restores stay coherent
+- Added `"type": "module"` to `@rjsf/snapshot-tests`, which publishes ESM `.js` files
+- Enabled `verbatimModuleSyntax`, so type-only imports must be written as `import type`. The one import it affected, `React` in `@rjsf/utils`'s `shouldRender.ts`, is now type-only, so emitted output is unchanged
 
 # 6.9.0
 
