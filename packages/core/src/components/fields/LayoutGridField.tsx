@@ -36,20 +36,22 @@ import {
 
 /** The enumeration of the three different Layout GridTemplate type values
  */
-export enum GridType {
-  ROW = 'ui:row',
-  COLUMN = 'ui:col',
-  COLUMNS = 'ui:columns',
-  CONDITION = 'ui:condition',
-}
+export const GridType = {
+  ROW: 'ui:row',
+  COLUMN: 'ui:col',
+  COLUMNS: 'ui:columns',
+  CONDITION: 'ui:condition',
+} as const;
+export type GridType = (typeof GridType)[keyof typeof GridType];
 
 /** The enumeration of the different operators within a condition
  */
-export enum Operators {
-  ALL = 'all',
-  SOME = 'some',
-  NONE = 'none',
-}
+export const Operators = {
+  ALL: 'all',
+  SOME: 'some',
+  NONE: 'none',
+} as const;
+export type Operators = (typeof Operators)[keyof typeof Operators];
 
 /** Type used to represent an object that contains anything */
 type ConfigObject = Record<string, any>;
