@@ -4,98 +4,99 @@
  * parameters is important because some languages may choose to put the second parameter before the first in its
  * translation. Also, some strings are rendered using `markdown-to-jsx` and thus support markdown and inline html.
  */
-export enum TranslatableString {
+export const TranslatableString = {
   /** Fallback title of an array item, used by ArrayField */
-  ArrayItemTitle = 'Item',
+  ArrayItemTitle: 'Item',
   /** Missing items reason, used by ArrayField */
-  MissingItems = 'Missing items definition',
+  MissingItems: 'Missing items definition',
   /** Empty array message, used by ArrayField */
-  EmptyArray = 'No items yet. Use the button below to add some.',
+  EmptyArray: 'No items yet. Use the button below to add some.',
   /** Yes label, used by BooleanField */
-  YesLabel = 'Yes',
+  YesLabel: 'Yes',
   /** No label, used by BooleanField */
-  NoLabel = 'No',
+  NoLabel: 'No',
   /** Close label, used by ErrorList */
-  CloseLabel = 'Close',
+  CloseLabel: 'Close',
   /** Errors label, used by ErrorList */
-  ErrorsLabel = 'Errors',
+  ErrorsLabel: 'Errors',
   /** New additionalProperties string default value, used by ObjectField */
-  NewStringDefault = 'New Value',
+  NewStringDefault: 'New Value',
   /** Add button title, used by AddButton */
-  AddButton = 'Add',
+  AddButton: 'Add',
   /** Add button title, used by AddButton */
-  AddItemButton = 'Add Item',
+  AddItemButton: 'Add Item',
   /** Copy button title, used by IconButton */
-  CopyButton = 'Copy',
+  CopyButton: 'Copy',
   /** Expand cycle button title */
-  ExpandButton = 'Expand Cycle',
+  ExpandButton: 'Expand Cycle',
   /** Move down button title, used by IconButton */
-  MoveDownButton = 'Move down',
+  MoveDownButton: 'Move down',
   /** Move up button title, used by IconButton */
-  MoveUpButton = 'Move up',
+  MoveUpButton: 'Move up',
   /** Remove button title, used by IconButton */
-  RemoveButton = 'Remove',
+  RemoveButton: 'Remove',
   /** Now label, used by AltDateWidget */
-  NowLabel = 'Now',
+  NowLabel: 'Now',
   /** Clear label, used by AltDateWidget */
-  ClearLabel = 'Clear',
+  ClearLabel: 'Clear',
   /** Aria date label, used by DateWidget */
-  AriaDateLabel = 'Select a date',
+  AriaDateLabel: 'Select a date',
   /** File preview label, used by FileWidget */
-  PreviewLabel = 'Preview',
+  PreviewLabel: 'Preview',
   /** Decrement button aria label, used by UpDownWidget */
-  DecrementAriaLabel = 'Decrease value by 1',
+  DecrementAriaLabel: 'Decrease value by 1',
   /** Increment button aria label, used by UpDownWidget */
-  IncrementAriaLabel = 'Increase value by 1',
+  IncrementAriaLabel: 'Increase value by 1',
   /** The label for the Add button in for an optional object field */
-  OptionalObjectAdd = 'Add data for optional field',
+  OptionalObjectAdd: 'Add data for optional field',
   /** The label for the Remove button in for an optional object field */
-  OptionalObjectRemove = 'Remove data for optional field',
+  OptionalObjectRemove: 'Remove data for optional field',
   /** The label for when displaying a non-editable form with missing optional field data */
-  OptionalObjectEmptyMsg = 'No data for optional field',
+  OptionalObjectEmptyMsg: 'No data for optional field',
   /** Label for the schema type selector, used by FallbackField */
-  Type = 'Type',
+  Type: 'Type',
   /** Label for the 'value' field, used by FallbackField */
-  Value = 'Value',
+  Value: 'Value',
   /** Clear button title, used by IconButton */
-  ClearButton = 'clear input',
+  ClearButton: 'clear input',
   // Strings with replaceable parameters
   /** Unknown field type reason, where %1 will be replaced with the type as provided by SchemaField */
-  UnknownFieldType = 'Unknown field type %1',
+  UnknownFieldType: 'Unknown field type %1',
   /** Option prefix, where %1 will be replaced with the option index as provided by MultiSchemaField */
-  OptionPrefix = 'Option %1',
+  OptionPrefix: 'Option %1',
   /** Option prefix, where %1 and %2 will be replaced by the schema title and option index, respectively as provided by
    * MultiSchemaField
    */
-  TitleOptionPrefix = '%1 option %2',
+  TitleOptionPrefix: '%1 option %2',
   /** Key label, where %1 will be replaced by the label as provided by WrapIfAdditionalTemplate */
-  KeyLabel = '%1 Key',
+  KeyLabel: '%1 Key',
   /** Deprecated label, where %1 will be replaced by the label as provided by SchemaField */
-  DeprecatedLabel = '%1 (deprecated)',
+  DeprecatedLabel: '%1 (deprecated)',
   /** Cyclic schema message */
-  CycleDetected = 'Circular reference ($ref cycle) detected for field "%1". You may choose to expand to the next cycle break',
+  CycleDetected: 'Circular reference ($ref cycle) detected for field "%1". You may choose to expand to the next cycle break',
   // Strings with replaceable parameters AND/OR that support markdown and html
   /** Invalid object field configuration as provided by the ObjectField.
    * NOTE: Use markdown notation rather than html tags.
    */
-  InvalidObjectField = 'Invalid "%1" object field configuration: _%2_.',
+  InvalidObjectField: 'Invalid "%1" object field configuration: _%2_.',
   /** Unsupported field schema, used by UnsupportedField */
-  UnsupportedField = 'Unsupported field schema.',
+  UnsupportedField: 'Unsupported field schema.',
   /** Unsupported field schema, where %1 will be replaced by the FieldPathId.$id as provided by UnsupportedField.
    * NOTE: Use markdown notation rather than html tags.
    */
-  UnsupportedFieldWithId = 'Unsupported field schema for field `%1`.',
+  UnsupportedFieldWithId: 'Unsupported field schema for field `%1`.',
   /** Unsupported field schema, where %1 will be replaced by the reason string as provided by UnsupportedField.
    * NOTE: Use markdown notation rather than html tags.
    */
-  UnsupportedFieldWithReason = 'Unsupported field schema: _%1_.',
+  UnsupportedFieldWithReason: 'Unsupported field schema: _%1_.',
   /** Unsupported field schema, where %1 and %2 will be replaced by the FieldPathId.$id and reason strings,
    * respectively, as provided by UnsupportedField.
    * NOTE: Use markdown notation rather than html tags.
    */
-  UnsupportedFieldWithIdAndReason = 'Unsupported field schema for field `%1`: _%2_.',
+  UnsupportedFieldWithIdAndReason: 'Unsupported field schema for field `%1`: _%2_.',
   /** File name, type and size info, where %1, %2 and %3 will be replaced by the file name, file type and file size as
    * provided by FileWidget
    */
-  FilesInfo = '**%1** (%2, %3 bytes)',
-}
+  FilesInfo: '**%1** (%2, %3 bytes)',
+} as const;
+export type TranslatableString = (typeof TranslatableString)[keyof typeof TranslatableString];
