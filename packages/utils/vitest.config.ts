@@ -7,7 +7,6 @@ export default mergeConfig(base, {
     // Most utils are pure functions; the DOM-dependent test files opt back into
     // jsdom with a /** @vitest-environment jsdom */ pragma.
     environment: 'node',
-    exclude: ['node_modules/**', 'lib-test/**'],
     coverage: fullCoverage(),
   },
 });
