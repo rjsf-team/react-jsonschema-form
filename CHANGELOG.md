@@ -21,10 +21,12 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Fixed defaults not being restored when returning to an `anyOf` or `oneOf` option with disjoint properties ([#3736](https://github.com/rjsf-team/react-jsonschema-form/issues/3736))
+- Fixed `NumberField` losing or misinterpreting decimal input in comma-decimal locales, and passing a locale-formatted string instead of a `number` to custom and format-registered widgets, fixing [#5199](https://github.com/rjsf-team/react-jsonschema-form/issues/5199) and [#5241](https://github.com/rjsf-team/react-jsonschema-form/issues/5241)
 
 ## @rjsf/utils
 
 - Fixed `sanitizeDataForNewSchema()` clearing existing arrays or preserving stale `undefined` values instead of retaining data or applying defaults for properties newly defined by the incoming schema ([#3736](https://github.com/rjsf-team/react-jsonschema-form/issues/3736))
+- Fixed `getInputProps()` defaulting `type: number` schemas to a native `number` input in locales whose decimal separator isn't `.`, where the browser rejects the localized value; it now defaults to a `text` input in those locales unless an explicit `inputType` is set
 
 ## @rjsf/validator-ajv8
 
