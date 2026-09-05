@@ -1,7 +1,19 @@
 {
   // This file is not used in compilation. It is here just for a nice editor experience.
-  "extends": "@tsconfig/docusaurus/tsconfig.json",
+  // Docusaurus's own preset (@docusaurus/tsconfig) still sets `baseUrl`, which TypeScript 7 removed, so its
+  // options are inlined here without it.
   "compilerOptions": {
-    "resolveJsonModule": true
+    "allowJs": true,
+    "jsx": "preserve",
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "paths": {
+      "@site/*": ["./*"]
+    },
+    "resolveJsonModule": true,
+    "skipLibCheck": true
   }
 }

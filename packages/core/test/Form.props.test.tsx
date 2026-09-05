@@ -2,8 +2,8 @@ import { createRef } from 'react';
 import type { RJSFSchema } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
 import validator, { customizeValidator } from '@rjsf/validator-ajv8';
-import userEvent from '@testing-library/user-event';
-import draft06 from 'ajv/lib/refs/json-schema-draft-06.json';
+import { userEvent } from '@testing-library/user-event';
+import draft06 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json' };
 import { createPortal } from 'react-dom';
 
 import type { FormProps } from '../src/index.ts';

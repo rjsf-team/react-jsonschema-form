@@ -1,7 +1,7 @@
 import { createRef, useState, useCallback } from 'react';
 import type { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import userEvent from '@testing-library/user-event';
+import { userEvent } from '@testing-library/user-event';
 import type { Mock } from 'vitest';
 
 import type { FormProps } from '../src/index.ts';

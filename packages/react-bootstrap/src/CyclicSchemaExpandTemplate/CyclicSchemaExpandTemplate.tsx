@@ -1,7 +1,6 @@
 import type { CyclicSchemaExpandProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { ID_KEY, TranslatableString } from '@rjsf/utils';
-import Alert from 'react-bootstrap/Alert';
-import Button from 'react-bootstrap/Button';
+import { Alert, Button } from 'react-bootstrap';
 
 /** The `CyclicSchemaExpandTemplate` is the template to use to render the cyclic schema expand message and controls
  *
