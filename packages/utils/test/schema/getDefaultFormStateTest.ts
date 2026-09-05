@@ -6111,6 +6111,35 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       });
     });
     describe('with dependencies', () => {
+      it('should populate dependency defaults when formData is undefined', () => {
+        testValidator.setReturnValues({ isValid: [true, false] });
+        const schema: RJSFSchema = {
+          type: 'object',
+          required: ['type'],
+          properties: {
+            type: { type: 'integer', default: 0 },
+          },
+          dependencies: {
+            type: {
+              oneOf: [
+                {
+                  properties: {
+                    type: { enum: [0] },
+                    value: { type: 'integer', default: 5 },
+                  },
+                  required: ['value'],
+                },
+                {
+                  properties: {
+                    type: { enum: [1] },
+                  },
+                },
+              ],
+            },
+          },
+        };
+        expect(getDefaultFormState(testValidator, schema)).toEqual({ type: 0, value: 5 });
+      });
       it('should populate defaults for dependencies', () => {
         const schema: RJSFSchema = {
           type: 'object',
