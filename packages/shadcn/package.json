@@ -46,11 +46,7 @@
   "scripts": {
     "build:css": "tsx build-css.ts",
     "copy-resources": "cp dist/*.css resources",
-    "build:ts": "tsc -b",
-    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
-    "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/rjsf-shadcn.esm.js --sourcemap --packages=external --format=esm",
-    "build:umd": "rollup dist/rjsf-shadcn.esm.js --format=umd --file=dist/rjsf-shadcn.umd.js --name=@rjsf/rjsf-shadcn",
-    "build": "pnpm run build:ts && pnpm run build:cjs && pnpm run build:esm && pnpm run build:umd && pnpm run build:css && pnpm run copy-resources",
+    "build": "tsdown -c ../../tsdown.base.mts && pnpm run build:css && pnpm run copy-resources",
     "cs-check": "oxfmt --check \"{src,test}/**/*.{ts,tsx}\"",
     "cs-format": "oxfmt \"{src,test}/**/*.{ts,tsx}\"",
     "lint": "oxlint src test",

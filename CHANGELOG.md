@@ -46,6 +46,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `build:ts` is now plain `tsc -b`. The old `rimraf ./lib` also deleted the build-info, forcing a full rebuild every time; the build-info is now an Nx `build` output alongside `lib/` so cache restores stay coherent
 - Added `"type": "module"` to `@rjsf/snapshot-tests`, which publishes ESM `.js` files
 - Enabled `verbatimModuleSyntax`, so type-only imports must be written as `import type`. The one import it affected, `React` in `@rjsf/utils`'s `shouldRender.ts`, is now type-only, so emitted output is unchanged
+- Replaced the per-package `tsc -b` emit plus `esbuild` + `rollup` bundling with a single `tsdown` run driven by one shared `tsdown.base.mts`, which derives bundle and global names from each `package.json`. tsdown now emits everything that is published: per-file ESM and declarations in `lib/` and the CJS, ESM and UMD bundles in `dist/`. The build only transpiles; typechecking is the separate root `tsc --build`, and tsc no longer emits JavaScript (the package tsconfigs are `emitDeclarationOnly`). Published files keep the same paths, export surfaces and types. The one difference is inside the UMD wrapper's `<script>`-tag branch, where the guessed browser-global names for externals (e.g. `fastEquals`) are now rolldown's guesses (e.g. `fast_equals`); neither set matched the globals those libraries actually expose, so that branch was never usable
 
 # 6.9.0
 

@@ -4,14 +4,10 @@
     "build": {
       "dependsOn": ["^build"],
       "cache": true,
-      "//": "outputs = nx's defaults (dist/build/public) plus lib/ and the tsbuildinfo that build:ts emits; without lib/ a cache hit reports success without restoring it to disk, and without the tsbuildinfo the next tsc -b after a restore does a needless full rebuild",
-      "outputs": [
-        "{projectRoot}/lib",
-        "{projectRoot}/tsconfig.tsbuildinfo",
-        "{projectRoot}/dist",
-        "{projectRoot}/build",
-        "{projectRoot}/public"
-      ]
+      "//": "outputs = nx's defaults (dist/build/public) plus lib/, which tsdown emits; without it a cache hit reports success without restoring lib/ to disk",
+      "outputs": ["{projectRoot}/lib", "{projectRoot}/dist", "{projectRoot}/build", "{projectRoot}/public"],
+      "//inputs": "the shared tsdown config lives outside project roots; without it a warm cache serves stale bundles when it changes",
+      "inputs": ["default", "^default", "{workspaceRoot}/tsdown.base.mts"]
     },
     "cs-check": {
       "cache": true
