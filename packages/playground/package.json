@@ -3,7 +3,7 @@
   "version": "6.9.0",
   "description": "rjsf playground",
   "private": true,
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "cs-check": "oxfmt --check \"src/**/*.{ts,tsx}\"",
     "cs-format": "oxfmt \"src/**/*.{ts,tsx}\"",

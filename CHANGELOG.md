@@ -57,6 +57,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `module` is now `nodenext` in `tsconfig.base.json` (was `esnext` with `moduleResolution: bundler`), so `tsc` checks the published `lib/` against Node's ESM rules. Two projects keep bundler resolution with a comment saying why: the playground is a Vite app, and `@chakra-ui/react` ships declarations Node's rules cannot resolve. Test files gained `with { type: 'json' }` on JSON imports and import `userEvent` by name, both of which the stricter rules require
 - Enabled `erasableSyntaxOnly`, which rejects `enum`, `namespace` and parameter properties; the four exported enums were the only violations
 - `packages/utils/test` no longer emits declarations for the validator packages' tests to consume. Each validator test project includes the shared schema test suite directly, so every test project is now `noEmit`
+- The root and playground `package.json` now say `"type": "module"`, so the playground typechecks under `nodenext` like every published package and no longer needs a bundler-resolution override; `scripts/get-version-tag.js` is `.cjs` since it uses `require`. The playground's `ajv`, `ajv-i18n` and `@monaco-editor/react` imports use the same Node-correct spellings as the validator tests
 
 # 6.9.0
 

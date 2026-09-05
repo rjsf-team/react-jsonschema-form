@@ -11,15 +11,16 @@ import { Theme as shadcnTheme } from '@rjsf/shadcn';
 import v8Validator, { customizeValidator } from '@rjsf/validator-ajv8';
 import ataValidator, { customizeValidator as customizeAtaValidator } from '@rjsf/validator-ata';
 import cfworkerValidator, { customizeValidator as customizeCfworkerValidator } from '@rjsf/validator-cfworker';
-import localize_es from 'ajv-i18n/localize/es';
-import Ajv2019 from 'ajv/dist/2019.js';
-import Ajv2020 from 'ajv/dist/2020.js';
+import localize_es from 'ajv-i18n/localize/es/index.js';
+import { Ajv2019 } from 'ajv/dist/2019.js';
+import { Ajv2020 } from 'ajv/dist/2020.js';
 
 import type { PlaygroundProps } from './components/index.ts';
 import Playground from './components/index.ts';
 import Layout from './layout/index.ts';
 
-const esV8Validator = customizeValidator({}, localize_es);
+// ajv-i18n's declarations describe an ES module with a default export, but its CommonJS runtime is the localizer function itself
+const esV8Validator = customizeValidator({}, localize_es as unknown as typeof localize_es.default);
 const AJV8_2019 = customizeValidator({ AjvClass: Ajv2019 });
 const AJV8_2020 = customizeValidator({ AjvClass: Ajv2020 });
 const AJV8_DISC = customizeValidator({ ajvOptionsOverrides: { discriminator: true } });
