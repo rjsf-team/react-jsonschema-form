@@ -1,5 +1,6 @@
+import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
-import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString } from '@rjsf/utils';
+import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString, getWidget } from '@rjsf/utils';
 
 import Label from './FieldTemplate/Label.tsx';
 
@@ -31,8 +32,9 @@ export default function WrapIfAdditionalTemplate<
     children,
     uiSchema,
     registry,
+    propertyNamesEnum,
   } = props;
-  const { templates, translateString } = registry;
+  const { templates, translateString, widgets } = registry;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
@@ -45,6 +47,19 @@ export default function WrapIfAdditionalTemplate<
   }
   const uiClassNames = classNamesList.join(' ').trim();
 
+  // Use SelectWidget when propertyNamesEnum is available
+  const SelectWidget = propertyNamesEnum && propertyNamesEnum.length > 0 ? getWidget(widgets, 'SelectWidget') : null;
+  const enumOptions = propertyNamesEnum?.map((value) => ({ value, label: String(value) })) ?? [];
+
+  // Handle onBlur for SelectWidget which expects (id: string, value: any) => void
+  // but onKeyRenameBlur expects (event: FocusEvent<HTMLInputElement>) => void
+  const handleSelectBlur = useCallback(
+    (_id: string, value: any) => {
+      onKeyRenameBlur({ target: { value } } as any);
+    },
+    [onKeyRenameBlur],
+  );
+
   if (!additional) {
     return (
       <div className={uiClassNames} style={style}>
@@ -53,6 +68,7 @@ export default function WrapIfAdditionalTemplate<
     );
   }
   const margin = hasDescription ? 46 : 26;
+
   return (
     <div className={uiClassNames} style={style}>
       <div className='row'>
@@ -60,14 +76,41 @@ export default function WrapIfAdditionalTemplate<
           <div className='form-group'>
             {displayLabel && <Label label={keyLabel} required={required} id={`${id}-key`} />}
             {displayLabel && rawDescription && <div>&nbsp;</div>}
-            <input
-              key={label}
-              className='form-control'
-              type='text'
-              id={`${id}-key`}
-              onBlur={onKeyRenameBlur}
-              defaultValue={label}
-            />
+            {SelectWidget ? (
+              <SelectWidget
+                key={label}
+                id={`${id}-key`}
+                name={`${id}-key`}
+                value={label}
+                required={required}
+                disabled={disabled || readonly}
+                readonly={readonly}
+                options={{
+                  enumOptions,
+                  enumDisabled: [],
+                }}
+                onBlur={handleSelectBlur}
+                onFocus={handleSelectBlur}
+                onChange={(value) => {
+                  onKeyRenameBlur({ target: { value } } as any);
+                }}
+                schema={{ type: 'string', enum: propertyNamesEnum }}
+                as
+                any
+                registry={registry as any}
+                uiSchema={uiSchema as any}
+                label={keyLabel}
+              />
+            ) : (
+              <input
+                key={label}
+                className='form-control'
+                type='text'
+                id={`${id}-key`}
+                onBlur={onKeyRenameBlur}
+                defaultValue={label}
+              />
+            )}
           </div>
         </div>
         <div className='form-additional form-group col-xs-5'>{children}</div>

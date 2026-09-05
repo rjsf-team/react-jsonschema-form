@@ -1,6 +1,7 @@
+import { useCallback } from 'react';
 import { Grid, GridItem, Input } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
-import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString } from '@rjsf/utils';
+import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString, getWidget } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
 
@@ -25,14 +26,29 @@ export default function WrapIfAdditionalTemplate<
     required,
     schema,
     uiSchema,
+    propertyNamesEnum,
   } = props;
-  const { templates, translateString } = registry;
+  const { templates, translateString, widgets } = registry;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = displayLabel ? translateString(TranslatableString.KeyLabel, [label]) : undefined;
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
   const hasDescription = !!rawDescription;
   const margin = hasDescription ? 58 : 22;
+
+  // Use SelectWidget when propertyNamesEnum is available
+  const SelectWidget = propertyNamesEnum && propertyNamesEnum.length > 0 ? getWidget(widgets, 'SelectWidget') : null;
+  const enumOptions = propertyNamesEnum?.map((value) => ({ value, label: String(value) })) ?? [];
+
+  // Handle onBlur for SelectWidget which expects (id: string, value: any) => void
+  // but onKeyRenameBlur expects (event: FocusEvent<HTMLInputElement>) => void
+  const handleSelectBlur = useCallback(
+    (_id: string, value: any) => {
+      onKeyRenameBlur({ target: { value } } as any);
+    },
+    [onKeyRenameBlur],
+  );
+
   if (!additional) {
     return (
       <div className={classNames} style={style}>
@@ -52,16 +68,43 @@ export default function WrapIfAdditionalTemplate<
     >
       <GridItem colSpan={5} style={{ marginTop: hasDescription ? '36px' : undefined }}>
         <Field required={required} label={keyLabel}>
-          <Input
-            key={label}
-            defaultValue={label}
-            disabled={disabled || readonly}
-            id={`${id}-key`}
-            name={`${id}-key`}
-            onBlur={!readonly ? onKeyRenameBlur : undefined}
-            type='text'
-            mb={1}
-          />
+          {SelectWidget ? (
+            <SelectWidget
+              key={label}
+              id={`${id}-key`}
+              name={`${id}-key`}
+              value={label}
+              required={required}
+              disabled={disabled || readonly}
+              readonly={readonly}
+              options={{
+                enumOptions,
+                enumDisabled: [],
+              }}
+              onBlur={handleSelectBlur}
+              onFocus={handleSelectBlur}
+              onChange={(value) => {
+                onKeyRenameBlur({ target: { value } } as any);
+              }}
+              schema={{ type: 'string', enum: propertyNamesEnum }}
+              as
+              any
+              registry={registry as any}
+              uiSchema={uiSchema as any}
+              label={keyLabel}
+            />
+          ) : (
+            <Input
+              key={label}
+              defaultValue={label}
+              disabled={disabled || readonly}
+              id={`${id}-key`}
+              name={`${id}-key`}
+              onBlur={!readonly ? onKeyRenameBlur : undefined}
+              type='text'
+              mb={1}
+            />
+          )}
         </Field>
       </GridItem>
       <GridItem colSpan={5}>{children}</GridItem>

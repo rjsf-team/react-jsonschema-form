@@ -5,7 +5,7 @@ import type { EmotionCache } from '@emotion/cache';
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import { MantineProvider } from '@mantine/core';
-import { CssBaseline } from '@mui/material';
+import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import { Widgets } from '@rjsf/antd';
 import { __createChakraFrameProvider } from '@rjsf/chakra-ui';
 import { __createDaisyUIFrameProvider } from '@rjsf/daisyui';
@@ -14,6 +14,18 @@ import { ConfigProvider } from 'antd';
 import { PrimeReactProvider } from 'primereact/api';
 import type { FrameComponentProps } from 'react-frame-component';
 import Frame, { FrameContextConsumer } from 'react-frame-component';
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
+
+const lightTheme = createTheme({
+  palette: {
+    mode: 'light',
+  },
+});
 
 const DEMO_FRAME_JSS = 'demo-frame-jss';
 
@@ -176,10 +188,11 @@ interface DemoFrameProps extends FrameComponentProps {
    */
   children: ReactElement;
   subtheme: string;
+  darkMode?: boolean;
 }
 
 export default function DemoFrame(props: DemoFrameProps) {
-  const { children, head, theme, subtheme, ...frameProps } = props;
+  const { children, head, theme, subtheme, darkMode, ...frameProps } = props;
 
   const [ready, setReady] = useState(false);
   const [emotionCache, setEmotionCache] = useState<EmotionCache>(createCache({ key: 'css' }));
@@ -205,11 +218,13 @@ export default function DemoFrame(props: DemoFrameProps) {
   if (theme === 'mui') {
     body = ready ? (
       <CacheProvider value={emotionCache}>
-        <CssBaseline />
-        {cloneElement(children, {
-          container,
-          window,
-        })}
+        <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
+          <CssBaseline enableColorScheme />
+          {cloneElement(children, {
+            container,
+            window,
+          })}
+        </ThemeProvider>
       </CacheProvider>
     ) : null;
   } else if (theme === 'fluentui-rc') {
