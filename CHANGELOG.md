@@ -29,6 +29,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Fixed `sanitizeDataForNewSchema()` clearing existing arrays or preserving stale `undefined` values instead of retaining data or applying defaults for properties newly defined by the incoming schema ([#3736](https://github.com/rjsf-team/react-jsonschema-form/issues/3736))
+- Fixed defaults from a dependency subschema being omitted when `getDefaultFormState()` is called without form data ([#5198](https://github.com/rjsf-team/react-jsonschema-form/issues/5198))
 
 ## @rjsf/validator-ajv8
 

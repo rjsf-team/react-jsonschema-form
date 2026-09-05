@@ -862,7 +862,8 @@ export default function getDefaultFormState<
   // Get the computed defaults with 'shouldMergeDefaultsIntoFormData' set to true to merge defaults into formData.
   // This is done when for example the value from formData does not exist in the schema 'enum' property, in such
   // cases we take the value from the defaults because the value from the formData is not valid.
-  const defaults = computeDefaults<T, S, F>(validator, schema, {
+  const schemaForDefaults = formData === undefined && DEPENDENCIES_KEY in theSchema ? theSchema : schema;
+  const defaults = computeDefaults<T, S, F>(validator, schemaForDefaults, {
     rootSchema,
     includeUndefinedValues,
     experimental_defaultFormStateBehavior,
