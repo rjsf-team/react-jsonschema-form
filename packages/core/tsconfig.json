@@ -3,7 +3,8 @@
   "include": ["src"],
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "lib"
+    "outDir": "lib",
+    "emitDeclarationOnly": true
   },
   "references": [{ "path": "../utils" }, { "path": "../validator-ajv8" }]
 }

@@ -5,6 +5,7 @@
     "rootDir": "src",
     "lib": ["ESNext"],
     "outDir": "lib",
+    "emitDeclarationOnly": true,
     "types": ["node"]
   },
   "references": [{ "path": "../utils" }]
