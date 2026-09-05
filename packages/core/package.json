@@ -3,11 +3,7 @@
   "version": "6.9.0",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
-    "build:ts": "tsc -b",
-    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
-    "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/index.esm.js --sourcemap --packages=external --format=esm",
-    "build:umd": "rollup dist/index.esm.js --format=umd --file=dist/core.umd.js --name=JSONSchemaForm",
-    "build": "pnpm run build:ts && pnpm run build:cjs && pnpm run build:esm && pnpm run build:umd",
+    "build": "tsdown -c ../../tsdown.base.mts",
     "cs-check": "oxfmt --check \"{src,test}/**/*.{ts,tsx,js,jsx}\"",
     "cs-format": "oxfmt \"{src,test}/**/*.{ts,tsx,js,jsx}\"",
     "lint": "oxlint src test",

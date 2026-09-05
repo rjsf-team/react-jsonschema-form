@@ -35,11 +35,7 @@
     }
   },
   "scripts": {
-    "build:ts": "tsc -b",
-    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
-    "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/antd.esm.js --sourcemap --packages=external --format=esm",
-    "build:umd": "rollup dist/antd.esm.js --format=umd --file=dist/antd.umd.js --name=@rjsf/antd",
-    "build": "pnpm run build:ts && pnpm run build:cjs && pnpm run build:esm && pnpm run build:umd",
+    "build": "tsdown -c ../../tsdown.base.mts",
     "cs-check": "oxfmt --check \"{src,test}/**/*.{ts,tsx}\"",
     "cs-format": "oxfmt \"{src,test}/**/*.{ts,tsx}\"",
     "lint": "oxlint src test",

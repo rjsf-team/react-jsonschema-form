@@ -6,15 +6,31 @@
       // .github/workflows/size-limit-comment.yml. knip cannot follow that.
       "entry": [".size-limit/report.mjs"],
     },
+    // src/index.ts in these themes exports `Form` both as a named export and
+    // as `default` (a published alias, kept until the next major). knip reports
+    // that as a duplicate export now that the build no longer names the entry in
+    // an esbuild script line, which previously masked it.
+    "packages/chakra-ui": {
+      "ignore": ["src/index.ts"],
+    },
     "packages/daisyui": {
       // Every src file is resolvable through the `./lib/*.js` exports wildcard,
       // and per review (#5194) the files nothing in-repo imports stay until the
       // next major rather than break deep imports. Treat all of src as entry
       // points until then.
       "entry": ["src/**/*.{ts,tsx}"],
-      // Widgets.tsx: its `default` is a compat alias for `generateWidgets` (same
-      // deep-import reasoning as above), which knip reports as a duplicate export.
+      // Widgets.tsx: its `default` is a compat alias for `generateWidgets`
+      // (same deep-import reasoning as above), which knip reports as a
+      // duplicate export.
       "ignore": ["src/widgets/Widgets.tsx"],
+    },
+    "packages/react-bootstrap": {
+      "ignore": ["src/index.ts"],
+    },
+    "packages/shadcn": {
+      // Published theme presets for consumers to copy; no in-repo importer.
+      // src/index.ts: see packages/chakra-ui.
+      "ignore": ["resources/*.css", "src/index.ts"],
     },
     "packages/docs": {
       // Docusaurus scaffold kept for the homepage. It is also the only
@@ -26,10 +42,6 @@
       // CSS-only package. No source file imports it, but it is a runtime
       // dependency consumers load for the default theme (see the README).
       "ignoreDependencies": ["semantic-ui-css"],
-    },
-    "packages/shadcn": {
-      // Published theme presets for consumers to copy; no in-repo importer.
-      "ignore": ["resources/*.css"],
     },
   },
 }

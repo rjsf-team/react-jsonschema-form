@@ -40,7 +40,7 @@ cd packages/playground && pnpm start
 pnpm run sanity-check
 ```
 
-Individual package builds output three module formats: `build:cjs`, `build:esm`, `build:umd`.
+Each package build is one `tsdown -c ../../tsdown.base.mts` run: it emits per-file ESM and declarations into `lib/` and the CJS, ESM and UMD bundles into `dist/`. It only transpiles; `pnpm run typecheck` (`tsc --build`) is the typecheck, and tsc never emits JavaScript.
 
 ## Architecture
 
