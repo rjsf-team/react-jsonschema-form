@@ -70,6 +70,11 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   }
 
   const schemaType = getSchemaType(schema);
+
+  if (Array.isArray(schemaType) && schemaType.length !== 1) {
+    return fields.FallbackField;
+  }
+
   const type: string = Array.isArray(schemaType) ? schemaType[0] : schemaType || '';
 
   const schemaId = schema.$id;

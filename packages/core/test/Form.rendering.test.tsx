@@ -98,7 +98,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(node.querySelector('select')).toBeInTheDocument();
       let select = node.querySelector('select')!;
       let options = node.querySelectorAll<HTMLOptionElement>('select option');
-      expect(options).toHaveLength(5);
+      expect(options).toHaveLength(7);
       expect(options[0]).toHaveTextContent('string');
       expect(options[0].selected).toBe(true);
       expect(node.querySelector<HTMLInputElement>('input[type=text]')!).toHaveAttribute('value', '123456');
