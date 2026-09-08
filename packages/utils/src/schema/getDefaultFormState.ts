@@ -9,21 +9,21 @@ import {
   IF_KEY,
   ONE_OF_KEY,
   REF_KEY,
-} from '../constants';
-import constIsAjvDataReference from '../constIsAjvDataReference';
-import deepEquals from '../deepEquals';
-import findSchemaDefinition from '../findSchemaDefinition';
-import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
-import getPropertySchema from '../getPropertySchema';
-import getSchemaType from '../getSchemaType';
-import isConstant from '../isConstant';
-import isFixedItems from '../isFixedItems';
-import isObject from '../isObject';
-import mergeDefaultsWithFormData from '../mergeDefaultsWithFormData';
-import mergeObjects from '../mergeObjects';
-import mergeSchemas from '../mergeSchemas';
-import optionsList from '../optionsList';
-import { getByPath } from '../pathUtils';
+} from '../constants.ts';
+import constIsAjvDataReference from '../constIsAjvDataReference.ts';
+import deepEquals from '../deepEquals.ts';
+import findSchemaDefinition from '../findSchemaDefinition.ts';
+import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
+import getPropertySchema from '../getPropertySchema.ts';
+import getSchemaType from '../getSchemaType.ts';
+import isConstant from '../isConstant.ts';
+import isFixedItems from '../isFixedItems.ts';
+import isObject from '../isObject.ts';
+import mergeDefaultsWithFormData from '../mergeDefaultsWithFormData.ts';
+import mergeObjects from '../mergeObjects.ts';
+import mergeSchemas from '../mergeSchemas.ts';
+import optionsList from '../optionsList.ts';
+import { getByPath } from '../pathUtils.ts';
 import type {
   Experimental_CustomMergeAllOf,
   Experimental_DefaultFormStateBehavior,
@@ -32,11 +32,11 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
-} from '../types';
-import getClosestMatchingOption from './getClosestMatchingOption';
-import isMultiSelect from './isMultiSelect';
-import isSelect from './isSelect';
-import retrieveSchema, { resolveDependencies } from './retrieveSchema';
+} from '../types.ts';
+import getClosestMatchingOption from './getClosestMatchingOption.ts';
+import isMultiSelect from './isMultiSelect.ts';
+import isSelect from './isSelect.ts';
+import retrieveSchema, { resolveDependencies } from './retrieveSchema.ts';
 
 const PRIMITIVE_TYPES = ['string', 'number', 'integer', 'boolean', 'null'];
 

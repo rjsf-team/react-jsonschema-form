@@ -2,7 +2,7 @@ import type { ArrayFieldTemplateProps, ArrayFieldItemTemplateProps, RJSFSchema }
 import { getUiOptions } from '@rjsf/utils';
 import userEvent from '@testing-library/user-event';
 
-import { createFormComponent } from './testUtils';
+import { createFormComponent } from './testUtils.tsx';
 
 const user = userEvent.setup();
 

@@ -3,8 +3,8 @@ import type { FormProps, ThemeProps } from '@rjsf/core';
 import { withTheme } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
-import Templates, { generateTemplates } from './templates';
-import Widgets, { generateWidgets } from './widgets';
+import Templates, { generateTemplates } from './templates/index.ts';
+import Widgets, { generateWidgets } from './widgets/index.ts';
 
 export function generateTheme<
   T = any,

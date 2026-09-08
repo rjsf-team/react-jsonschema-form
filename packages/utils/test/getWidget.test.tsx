@@ -3,8 +3,8 @@ import type { ForwardedRef } from 'react';
 import { forwardRef, memo } from 'react';
 import { render } from '@testing-library/react';
 
-import type { FieldPathId, Registry, RJSFSchema, WidgetProps, Widget } from '../src';
-import { getWidget } from '../src';
+import type { FieldPathId, Registry, RJSFSchema, WidgetProps, Widget } from '../src/index.ts';
+import { getWidget } from '../src/index.ts';
 
 const subschema: RJSFSchema = {
   type: 'boolean',

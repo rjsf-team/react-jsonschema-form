@@ -1,15 +1,15 @@
 import type { FormContextType, RegistryWidgetsType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
-import CheckboxesWidget from './CheckboxesWidget';
-import CheckboxWidget from './CheckboxWidget';
-import ColorWidget from './ColorWidget';
-import { AltDateTimeWidget, AltDateWidget, DateWidget, DateTimeWidget, TimeWidget } from './DateTime';
-import FileWidget from './FileWidget';
-import PasswordWidget from './PasswordWidget';
-import RadioWidget from './RadioWidget';
-import RangeWidget from './RangeWidget';
-import SelectWidget from './SelectWidget';
-import TextareaWidget from './TextareaWidget';
+import CheckboxesWidget from './CheckboxesWidget.tsx';
+import CheckboxWidget from './CheckboxWidget.tsx';
+import ColorWidget from './ColorWidget.tsx';
+import { AltDateTimeWidget, AltDateWidget, DateWidget, DateTimeWidget, TimeWidget } from './DateTime/index.ts';
+import FileWidget from './FileWidget.tsx';
+import PasswordWidget from './PasswordWidget.tsx';
+import RadioWidget from './RadioWidget.tsx';
+import RangeWidget from './RangeWidget.tsx';
+import SelectWidget from './SelectWidget.tsx';
+import TextareaWidget from './TextareaWidget.tsx';
 
 export function generateWidgets<
   T = any,

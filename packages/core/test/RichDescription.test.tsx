@@ -1,8 +1,8 @@
 import type { Registry } from '@rjsf/utils';
 import { render, within } from '@testing-library/react';
 
-import type { RichDescriptionProps } from '../src';
-import { RichDescription } from '../src';
+import type { RichDescriptionProps } from '../src/index.ts';
+import { RichDescription } from '../src/index.ts';
 
 const TEST_ID = 'test-id';
 

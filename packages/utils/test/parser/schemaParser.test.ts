@@ -1,4 +1,4 @@
-import { schemaParser } from '../../src';
+import { schemaParser } from '../../src/index.ts';
 import {
   PROPERTY_DEPENDENCIES,
   RECURSIVE_REF,
@@ -13,7 +13,7 @@ import {
   SCHEMA_WITH_MULTIPLE_CONDITIONS,
   SCHEMA_WITH_NESTED_CONDITIONS,
   SUPER_SCHEMA,
-} from '../testUtils/testData';
+} from '../testUtils/testData.ts';
 
 describe('schemaParser()', () => {
   it('parses property dependencies properly', () => {

@@ -1,4 +1,4 @@
-import { bracketNameGenerator, dotNotationNameGenerator } from '../src';
+import { bracketNameGenerator, dotNotationNameGenerator } from '../src/index.ts';
 
 describe('bracketNameGenerator()', () => {
   test('returns "root" for empty path', () => {

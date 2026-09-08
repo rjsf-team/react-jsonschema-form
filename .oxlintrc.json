@@ -54,10 +54,10 @@
         "mjs": "never",
         "cjs": "never",
         "jsx": "never",
-        "ts": "never",
-        "cts": "never",
-        "mts": "never",
-        "tsx": "never"
+        "ts": "always",
+        "cts": "always",
+        "mts": "always",
+        "tsx": "always"
       }
     ],
     "import/first": "error",

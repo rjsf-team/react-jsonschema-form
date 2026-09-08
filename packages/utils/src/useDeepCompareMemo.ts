@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 
-import deepEquals from './deepEquals';
+import deepEquals from './deepEquals.ts';
 
 /** Hook that stores and returns a `T` value. If `newValue` is the same as the stored one, then the stored one is
  * returned to avoid having a component rerender due it being a different object. Otherwise, the `newValue` is stored

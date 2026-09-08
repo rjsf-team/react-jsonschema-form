@@ -1,7 +1,7 @@
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { getTemplate, getUiOptions } from '@rjsf/utils';
 
-import { cn } from '../lib/utils';
+import { cn } from '../lib/utils.ts';
 
 /** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
  * content, (label, description, children, errors and help) inside a `WrapIfAdditional` component.

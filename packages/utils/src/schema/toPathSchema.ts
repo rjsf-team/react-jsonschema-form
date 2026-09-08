@@ -12,12 +12,12 @@ import {
   PROPERTIES_KEY,
   REF_KEY,
   RJSF_ADDITIONAL_PROPERTIES_FLAG,
-} from '../constants';
-import deepEquals from '../deepEquals';
-import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
-import getPropertySchema from '../getPropertySchema';
-import isObject from '../isObject';
-import { getByPath, setByPath } from '../pathUtils';
+} from '../constants.ts';
+import deepEquals from '../deepEquals.ts';
+import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
+import getPropertySchema from '../getPropertySchema.ts';
+import isObject from '../isObject.ts';
+import { getByPath, setByPath } from '../pathUtils.ts';
 import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
@@ -26,9 +26,9 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
-} from '../types';
-import getClosestMatchingOption from './getClosestMatchingOption';
-import retrieveSchema from './retrieveSchema';
+} from '../types.ts';
+import getClosestMatchingOption from './getClosestMatchingOption.ts';
+import retrieveSchema from './retrieveSchema.ts';
 
 /** An internal helper that generates an `PathSchema` object for the `schema`, recursively with protection against
  * infinite recursion

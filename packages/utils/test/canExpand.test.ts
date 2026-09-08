@@ -1,5 +1,5 @@
-import type { RJSFSchema } from '../src';
-import { canExpand } from '../src';
+import type { RJSFSchema } from '../src/index.ts';
+import { canExpand } from '../src/index.ts';
 
 describe('canExpand()', () => {
   it('no additional or pattern properties', () => {

@@ -1,2 +1,2 @@
-export { default } from './DateTimeWidget';
-export * from './DateTimeWidget';
+export { default } from './DateTimeWidget.tsx';
+export * from './DateTimeWidget.tsx';

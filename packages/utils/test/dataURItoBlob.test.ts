@@ -1,6 +1,6 @@
 /** @vitest-environment jsdom */
 // Asserts against jsdom Blob/File semantics that differ from the Node globals.
-import { dataURItoBlob } from '../src';
+import { dataURItoBlob } from '../src/index.ts';
 
 describe('dataURItoBlob()', () => {
   it('should pass when the data is empty', () => {

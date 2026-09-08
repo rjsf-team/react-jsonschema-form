@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { shouldRender } from '../src';
+import { shouldRender } from '../src/index.ts';
 
 type VoidFunc = () => void;
 interface MyComponentProps {

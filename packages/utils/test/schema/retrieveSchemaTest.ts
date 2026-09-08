@@ -1,6 +1,6 @@
 import type { MockInstance } from 'vitest';
 
-import type { RJSFSchema } from '../../src';
+import type { RJSFSchema } from '../../src/index.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   createSchemaUtils,
@@ -10,7 +10,7 @@ import {
   RJSF_REF_CYCLE_KEY,
   RJSF_REF_KEY,
   noop,
-} from '../../src';
+} from '../../src/index.ts';
 import {
   getAllPermutationsOfXxxOf,
   getMatchingPatternProperties,
@@ -21,7 +21,7 @@ import {
   stubExistingAdditionalProperties,
   withDependentProperties,
   withExactlyOneSubschema,
-} from '../../src/schema/retrieveSchema';
+} from '../../src/schema/retrieveSchema.ts';
 import {
   PROPERTY_DEPENDENCIES,
   RECURSIVE_REF,
@@ -34,8 +34,8 @@ import {
   SCHEMA_WITH_ONEOF_NESTED_DEPENDENCIES,
   SCHEMA_WITH_SINGLE_CONDITION,
   SUPER_SCHEMA,
-} from '../testUtils/testData';
-import type { TestValidatorType } from './types';
+} from '../testUtils/testData.ts';
+import type { TestValidatorType } from './types.ts';
 
 export default function retrieveSchemaTest(testValidator: TestValidatorType) {
   describe('getMatchingPatternProperties()', () => {

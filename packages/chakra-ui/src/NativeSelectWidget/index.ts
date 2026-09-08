@@ -1,2 +1,2 @@
-export { default } from './NativeSelectWidget';
-export * from './NativeSelectWidget';
+export { default } from './NativeSelectWidget.tsx';
+export * from './NativeSelectWidget.tsx';

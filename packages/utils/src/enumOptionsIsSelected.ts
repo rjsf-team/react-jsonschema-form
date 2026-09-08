@@ -1,5 +1,5 @@
-import deepEquals from './deepEquals';
-import type { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types';
+import deepEquals from './deepEquals.ts';
+import type { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Determines whether the given `value` is (one of) the `selected` value(s).
  *

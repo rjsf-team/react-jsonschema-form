@@ -1,5 +1,5 @@
-import type { TestIdShape } from '../src';
-import { getTestIds } from '../src';
+import type { TestIdShape } from '../src/index.ts';
+import { getTestIds } from '../src/index.ts';
 
 const TEST_ID_BASE = 'test-id-';
 

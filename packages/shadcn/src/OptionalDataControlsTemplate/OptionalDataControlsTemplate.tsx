@@ -1,7 +1,7 @@
 import type { FormContextType, OptionalDataControlsTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { PlusCircle } from 'lucide-react';
 
-import IconButton, { RemoveButton } from '../IconButton';
+import IconButton, { RemoveButton } from '../IconButton/index.ts';
 
 /** The OptionalDataControlsTemplate renders one of three different states. If
  * there is an `onAddClick()` function, it renders the "Add" button. If there is

@@ -5,9 +5,9 @@ import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import type { FormProps } from '../src';
-import Form from '../src';
-import { expectToHaveBeenCalledWithFormData, submitForm, describeRepeated } from './testUtils';
+import type { FormProps } from '../src/index.ts';
+import Form from '../src/index.ts';
+import { expectToHaveBeenCalledWithFormData, submitForm, describeRepeated } from './testUtils.tsx';
 
 const user = userEvent.setup();
 

@@ -1,8 +1,8 @@
-import type { Localizer } from '../src';
-import defaultValidator from '../src';
-import customizeValidator from '../src/customizeValidator';
-import ATAValidator from '../src/validator';
-import { CUSTOM_OPTIONS } from './harness/testData';
+import customizeValidator from '../src/customizeValidator.ts';
+import type { Localizer } from '../src/index.ts';
+import defaultValidator from '../src/index.ts';
+import ATAValidator from '../src/validator.ts';
+import { CUSTOM_OPTIONS } from './harness/testData.ts';
 
 describe('customizeValidator()', () => {
   it('default export is an ATAValidator instance', () => {

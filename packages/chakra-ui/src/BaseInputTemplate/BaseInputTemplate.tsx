@@ -5,8 +5,8 @@ import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { ariaDescribedByIds, examplesId, labelValue, getInputProps } from '@rjsf/utils';
 
-import { Field } from '../components/ui/field';
-import { getChakra } from '../utils';
+import { Field } from '../components/ui/field.tsx';
+import { getChakra } from '../utils.ts';
 
 export default function BaseInputTemplate<
   T = any,

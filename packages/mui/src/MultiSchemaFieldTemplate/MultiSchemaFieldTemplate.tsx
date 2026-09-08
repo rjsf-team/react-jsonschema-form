@@ -11,7 +11,7 @@ import type {
 } from '@rjsf/utils';
 import { getUiOptions } from '@rjsf/utils';
 
-import { getMuiProps } from '../util';
+import { getMuiProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the MultiSchemaFieldTemplate. */
 export interface MultiSchemaFieldTemplateMuiProps extends GenericObjectType {

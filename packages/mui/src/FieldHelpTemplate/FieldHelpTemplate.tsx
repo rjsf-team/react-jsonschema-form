@@ -4,7 +4,7 @@ import { RichHelp } from '@rjsf/core';
 import type { FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema, GenericObjectType } from '@rjsf/utils';
 import { helpId, getUiOptions } from '@rjsf/utils';
 
-import { computeSxProps, getMuiProps } from '../util';
+import { computeSxProps, getMuiProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the FieldHelpTemplate. */
 export interface FieldHelpTemplateMuiProps extends GenericObjectType {

@@ -2,8 +2,8 @@ import type { ComponentType, ForwardedRef } from 'react';
 import { forwardRef } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
-import type { FormProps } from './components/Form';
-import Form from './components/Form';
+import type { FormProps } from './components/Form.tsx';
+import Form from './components/Form.tsx';
 
 /** The properties for the `withTheme` function, essentially a subset of properties from the `FormProps` that can be
  * overridden while creating a theme

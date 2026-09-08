@@ -1,7 +1,7 @@
-import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY, REF_KEY } from '../constants';
-import deepEquals from '../deepEquals';
-import getPropertySchema from '../getPropertySchema';
-import { getByPath, hasByPath } from '../pathUtils';
+import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY, REF_KEY } from '../constants.ts';
+import deepEquals from '../deepEquals.ts';
+import getPropertySchema from '../getPropertySchema.ts';
+import { getByPath, hasByPath } from '../pathUtils.ts';
 import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
@@ -9,8 +9,8 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
-} from '../types';
-import retrieveSchema from './retrieveSchema';
+} from '../types.ts';
+import retrieveSchema from './retrieveSchema.ts';
 
 const NO_VALUE = Symbol('no Value');
 

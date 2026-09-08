@@ -1,6 +1,6 @@
-import { REF_KEY } from './constants';
-import deepEquals from './deepEquals';
-import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema } from './types';
+import { REF_KEY } from './constants.ts';
+import deepEquals from './deepEquals.ts';
+import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Helper to check whether a JSON schema object is the root schema. The schema is a root schema with root `properties`
  * key or a root `$ref` key. If the `schemaToCompare` has a root `oneOf` property, the function will

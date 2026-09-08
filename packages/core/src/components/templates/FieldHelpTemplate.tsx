@@ -1,7 +1,7 @@
 import type { FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { helpId } from '@rjsf/utils';
 
-import RichHelp from '../RichHelp';
+import RichHelp from '../RichHelp.tsx';
 
 /** The `FieldHelpTemplate` component renders any help desired for a field
  *

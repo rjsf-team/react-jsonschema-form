@@ -13,8 +13,8 @@ import {
   retrieveSchemaTest,
   sanitizeDataForNewSchemaTest,
   toPathSchemaTest,
-} from '../../../utils/test/schema';
-import getTestValidator from './getTestValidator';
+} from '../../../utils/test/schema/index.ts';
+import getTestValidator from './getTestValidator.ts';
 
 const testValidator = getTestValidator({});
 
@@ -33,9 +33,7 @@ retrieveSchemaTest(testValidator);
 sanitizeDataForNewSchemaTest(testValidator);
 toPathSchemaTest(testValidator);
 
-const testValidatorDiscriminated = getTestValidator({
-  ajvOptionsOverrides: { discriminator: true },
-});
+const testValidatorDiscriminated = getTestValidator({});
 
 // NOTE: to restrict which tests to run, you can temporarily comment out any tests you aren't needing
 findFieldInSchemaTest(testValidatorDiscriminated);

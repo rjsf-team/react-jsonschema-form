@@ -1,6 +1,6 @@
-import type { RJSFSchema, SchemaUtilsType } from '../../src';
-import { createSchemaUtils, getByPath, getClosestMatchingOption } from '../../src';
-import { calculateIndexScore } from '../../src/schema/getClosestMatchingOption';
+import type { RJSFSchema, SchemaUtilsType } from '../../src/index.ts';
+import { createSchemaUtils, getByPath, getClosestMatchingOption } from '../../src/index.ts';
+import { calculateIndexScore } from '../../src/schema/getClosestMatchingOption.ts';
 import {
   oneOfData,
   oneOfSchema,
@@ -9,8 +9,8 @@ import {
   OPTIONAL_ONE_OF_SCHEMA,
   ONE_OF_SCHEMA_OPTIONS,
   OPTIONAL_ONE_OF_SCHEMA_ONEOF,
-} from '../testUtils/testData';
-import type { TestValidatorType } from './types';
+} from '../testUtils/testData.ts';
+import type { TestValidatorType } from './types.ts';
 
 const firstOption = oneOfSchema.definitions!.first_option_def as RJSFSchema;
 const secondOption = oneOfSchema.definitions!.second_option_def as RJSFSchema;

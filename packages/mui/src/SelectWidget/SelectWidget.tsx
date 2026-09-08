@@ -16,7 +16,7 @@ import {
   SelectedOptionDescription,
 } from '@rjsf/utils';
 
-import { getMuiProps } from '../util';
+import { getMuiProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the SelectWidget. */
 export interface SelectWidgetMuiProps extends GenericObjectType {

@@ -1,5 +1,5 @@
-import getUiOptions from './getUiOptions';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from './types';
+import getUiOptions from './getUiOptions.ts';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.ts';
 
 /** Checks to see if the `uiSchema` contains the `widget` field and that the widget is not `hidden`
  *

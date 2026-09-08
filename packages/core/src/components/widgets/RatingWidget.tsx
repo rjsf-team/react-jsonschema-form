@@ -24,7 +24,6 @@ export default function RatingWidget<
   required,
   disabled,
   readonly,
-  autofocus,
   onChange,
   onFocus,
   onBlur,

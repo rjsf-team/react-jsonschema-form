@@ -3,7 +3,7 @@ import { FileInput, Pill } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { ariaDescribedByIds, labelValue, useFileWidgetProps } from '@rjsf/utils';
 
-import { cleanupOptions } from '../utils';
+import { cleanupOptions } from '../utils.ts';
 
 /**
  * The `FileWidget` is a widget for rendering file upload fields.

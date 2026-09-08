@@ -1,4 +1,4 @@
-import type { FieldPathList } from './types';
+import type { FieldPathList } from './types.ts';
 
 /** A path into an object: either a list of path segments or a single property key (string or number).
  * A bare string is ALWAYS treated as one literal key — `'a.b'` is the key `'a.b'`, not a deep path. To

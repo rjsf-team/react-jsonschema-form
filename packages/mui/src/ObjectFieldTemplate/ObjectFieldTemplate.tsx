@@ -9,7 +9,7 @@ import type {
 } from '@rjsf/utils';
 import { canExpand, descriptionId, getTemplate, getUiOptions, titleId, buttonId } from '@rjsf/utils';
 
-import { computeSxProps, getMuiProps } from '../util';
+import { computeSxProps, getMuiProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the ObjectFieldTemplate. */
 export interface ObjectFieldTemplateMuiProps extends GenericObjectType {

@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 // jsdom provides the `navigator` global this file spies on; Node 20 has none.
-import { asNumber } from '../src';
+import { asNumber } from '../src/index.ts';
 
 describe('asNumber()', () => {
   it('should return a number out of a string representing a number', () => {

@@ -1,7 +1,7 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
-import type { CustomValidatorOptionsType, Localizer } from './types';
-import ATAValidator from './validator';
+import type { CustomValidatorOptionsType, Localizer } from './types.ts';
+import ATAValidator from './validator.ts';
 
 /** Build an `ATAValidator` instance, optionally customized with format
  * checkers, validator overrides, an extender hook, or a localizer. Mirrors

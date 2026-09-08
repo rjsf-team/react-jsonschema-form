@@ -4,8 +4,8 @@ import type { FocusEvent, FocusEventHandler, ReactElement } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { Check, ChevronDown } from 'lucide-react';
 
-import { cn } from '../../lib/utils';
-import { Command, CommandGroup, CommandItem, CommandList } from './command';
+import { cn } from '../../lib/utils.ts';
+import { Command, CommandGroup, CommandItem, CommandList } from './command.tsx';
 
 /**
  * Represents an item in the fancy select dropdown

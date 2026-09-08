@@ -3,9 +3,9 @@ import type { NumberInputValueChangeDetails } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { ariaDescribedByIds, labelValue } from '@rjsf/utils';
 
-import { Field } from '../components/ui/field';
-import { NumberInputRoot } from '../components/ui/number-input';
-import { getChakra } from '../utils';
+import { Field } from '../components/ui/field.tsx';
+import { NumberInputRoot } from '../components/ui/number-input.tsx';
+import { getChakra } from '../utils.ts';
 
 export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>,

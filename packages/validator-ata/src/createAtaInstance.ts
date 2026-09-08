@@ -2,7 +2,7 @@ import { isObject } from '@rjsf/utils';
 import type { ValidatorOptions } from 'ata-validator';
 import { Validator } from 'ata-validator';
 
-import type { AtaFormatChecker, CustomValidatorOptionsType } from './types';
+import type { AtaFormatChecker, CustomValidatorOptionsType } from './types.ts';
 
 /** Default options applied to every ata `Validator` constructed for RJSF.
  * `verbose: true` keeps `parentSchema` available on errors, which the RJSF

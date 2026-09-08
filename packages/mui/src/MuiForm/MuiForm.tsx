@@ -3,7 +3,7 @@ import type { FormProps } from '@rjsf/core';
 import { withTheme } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
-import { generateTheme } from '../Theme';
+import { generateTheme } from '../Theme/index.ts';
 
 export function generateForm<
   T = any,

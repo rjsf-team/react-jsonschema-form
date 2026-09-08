@@ -5,7 +5,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { ariaDescribedByIds, descriptionId, getTemplate, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
 
-import { getMuiProps } from '../util';
+import { getMuiProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the CheckboxWidget. */
 export interface CheckboxWidgetMuiProps extends GenericObjectType {

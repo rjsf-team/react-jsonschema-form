@@ -1,4 +1,4 @@
-import type { DateObject } from './types';
+import type { DateObject } from './types.ts';
 
 /** Available options for re-ordering date input element */
 export type DateElementFormat = 'DMY' | 'MDY' | 'YMD';

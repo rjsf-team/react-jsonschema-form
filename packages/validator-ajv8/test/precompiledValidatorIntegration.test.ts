@@ -12,9 +12,9 @@
 import type { RJSFSchema } from '@rjsf/utils';
 import { getClosestMatchingOption, getFirstMatchingOption, omitExtraData, relaxOptionsForScoring } from '@rjsf/utils';
 
-import { createPrecompiledValidator } from '../src';
-import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators';
-import { evalValidatorCode } from './harness/compileSuperSchema';
+import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
+import { createPrecompiledValidator } from '../src/index.ts';
+import { evalValidatorCode } from './harness/compileSuperSchema.ts';
 
 /** Compiles `schema` to AJV standalone code in memory and wraps it in an AJV8PrecompiledValidator. */
 function buildPrecompiledValidator(schema: RJSFSchema) {

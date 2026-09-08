@@ -1,11 +1,11 @@
 import type { FormContextType, RegistryWidgetsType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
-import CheckboxesWidget from '../CheckboxesWidget/CheckboxesWidget';
-import CheckboxWidget from '../CheckboxWidget/CheckboxWidget';
-import RadioWidget from '../RadioWidget/RadioWidget';
-import RangeWidget from '../RangeWidget/RangeWidget';
-import SelectWidget from '../SelectWidget/SelectWidget';
-import TextareaWidget from '../TextareaWidget/TextareaWidget';
+import CheckboxesWidget from '../CheckboxesWidget/CheckboxesWidget.tsx';
+import CheckboxWidget from '../CheckboxWidget/CheckboxWidget.tsx';
+import RadioWidget from '../RadioWidget/RadioWidget.tsx';
+import RangeWidget from '../RangeWidget/RangeWidget.tsx';
+import SelectWidget from '../SelectWidget/SelectWidget.tsx';
+import TextareaWidget from '../TextareaWidget/TextareaWidget.tsx';
 
 export function generateWidgets<
   T = any,

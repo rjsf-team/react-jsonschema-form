@@ -5,7 +5,7 @@ import { ActionIcon } from '@mantine/core';
 import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { TranslatableString } from '@rjsf/utils';
 
-import { Copy, ChevronDown, ChevronUp, X } from '../icons';
+import { Copy, ChevronDown, ChevronUp, X } from '../icons.tsx';
 
 export type MantineIconButtonProps<
   T = any,

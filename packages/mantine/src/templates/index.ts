@@ -1,22 +1,22 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } from '@rjsf/utils';
 
-import ArrayFieldItemTemplate from './ArrayFieldItemTemplate';
-import ArrayFieldTemplate from './ArrayFieldTemplate';
-import ArrayFieldTitleTemplate from './ArrayFieldTitleTemplate';
-import BaseInputTemplate from './BaseInputTemplate';
-import ButtonTemplates from './ButtonTemplates';
-import CyclicSchemaExpandTemplate from './CyclicSchemaExpandTemplate';
-import DescriptionField from './DescriptionField';
-import ErrorList from './ErrorList';
-import FieldErrorTemplate from './FieldErrorTemplate';
-import FieldHelpTemplate from './FieldHelpTemplate';
-import FieldTemplate from './FieldTemplate';
-import GridTemplate from './GridTemplate';
-import MultiSchemaFieldTemplate from './MultiSchemaFieldTemplate';
-import ObjectFieldTemplate from './ObjectFieldTemplate';
-import OptionalDataControlsTemplate from './OptionalDataControlsTemplate';
-import TitleField from './TitleField';
-import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate';
+import ArrayFieldItemTemplate from './ArrayFieldItemTemplate.tsx';
+import ArrayFieldTemplate from './ArrayFieldTemplate.tsx';
+import ArrayFieldTitleTemplate from './ArrayFieldTitleTemplate.tsx';
+import BaseInputTemplate from './BaseInputTemplate.tsx';
+import ButtonTemplates from './ButtonTemplates/index.ts';
+import CyclicSchemaExpandTemplate from './CyclicSchemaExpandTemplate.tsx';
+import DescriptionField from './DescriptionField.tsx';
+import ErrorList from './ErrorList.tsx';
+import FieldErrorTemplate from './FieldErrorTemplate.tsx';
+import FieldHelpTemplate from './FieldHelpTemplate.tsx';
+import FieldTemplate from './FieldTemplate.tsx';
+import GridTemplate from './GridTemplate.tsx';
+import MultiSchemaFieldTemplate from './MultiSchemaFieldTemplate.tsx';
+import ObjectFieldTemplate from './ObjectFieldTemplate.tsx';
+import OptionalDataControlsTemplate from './OptionalDataControlsTemplate.tsx';
+import TitleField from './TitleField.tsx';
+import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate.tsx';
 
 export function generateTemplates<
   T = any,

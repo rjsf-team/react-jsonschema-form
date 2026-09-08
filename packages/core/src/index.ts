@@ -1,15 +1,15 @@
-import type { FormProps, FormState, IChangeEvent } from './components/Form';
-import Form from './components/Form';
-import type { RichDescriptionProps } from './components/RichDescription';
-import RichDescription from './components/RichDescription';
-import type { RichHelpProps } from './components/RichHelp';
-import RichHelp from './components/RichHelp';
-import type { SchemaExamplesProps } from './components/SchemaExamples';
-import SchemaExamples from './components/SchemaExamples';
-import getDefaultRegistry from './getDefaultRegistry';
-import getTestRegistry from './getTestRegistry';
-import type { ThemeProps } from './withTheme';
-import withTheme from './withTheme';
+import type { FormProps, FormState, IChangeEvent } from './components/Form.tsx';
+import Form from './components/Form.tsx';
+import type { RichDescriptionProps } from './components/RichDescription.tsx';
+import RichDescription from './components/RichDescription.tsx';
+import type { RichHelpProps } from './components/RichHelp.tsx';
+import RichHelp from './components/RichHelp.tsx';
+import type { SchemaExamplesProps } from './components/SchemaExamples.tsx';
+import SchemaExamples from './components/SchemaExamples.tsx';
+import getDefaultRegistry from './getDefaultRegistry.ts';
+import getTestRegistry from './getTestRegistry.tsx';
+import type { ThemeProps } from './withTheme.tsx';
+import withTheme from './withTheme.tsx';
 
 export type {
   FormProps,

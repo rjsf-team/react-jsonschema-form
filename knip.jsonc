@@ -2,11 +2,9 @@
   "$schema": "https://unpkg.com/knip@6/schema-jsonc.json",
   "workspaces": {
     ".": {
-      // tsc-alias-replacer: invoked by tsc-alias through the `afterDeclarations`
-      // replacers in the per-package tsconfig.build.json files.
       // .size-limit/report.mjs: invoked with `node` from
-      // .github/workflows/size-limit-comment.yml. knip can follow neither.
-      "entry": ["tsc-alias-replacer/*.ts", ".size-limit/report.mjs"]
+      // .github/workflows/size-limit-comment.yml. knip cannot follow that.
+      "entry": [".size-limit/report.mjs"],
     },
     "packages/daisyui": {
       // Every src file is resolvable through the `./lib/*.js` exports wildcard,
@@ -14,29 +12,24 @@
       // next major rather than break deep imports. Treat all of src as entry
       // points until then.
       "entry": ["src/**/*.{ts,tsx}"],
-      // styles.css: published stylesheet; consumers import it, nothing in the
-      // repo does. Widgets.tsx: its `default` is a compat alias for
-      // `generateWidgets` (same deep-import reasoning as above), which knip
-      // reports as a duplicate export.
-      "ignore": ["src/styles.css", "src/widgets/Widgets.tsx"],
-      // Imported by src/styles.css (`@import "tailwindcss/preflight"`).
-      // knip does not resolve imports inside CSS.
-      "ignoreDependencies": ["tailwindcss"]
+      // Widgets.tsx: its `default` is a compat alias for `generateWidgets` (same
+      // deep-import reasoning as above), which knip reports as a duplicate export.
+      "ignore": ["src/widgets/Widgets.tsx"],
     },
     "packages/docs": {
       // Docusaurus scaffold kept for the homepage. It is also the only
       // TypeScript under packages/docs/src, so removing it leaves that
       // package's cs-check glob with no files to match.
-      "ignore": ["src/components/HomepageFeatures/**"]
+      "ignore": ["src/components/HomepageFeatures/**"],
     },
     "packages/semantic-ui": {
       // CSS-only package. No source file imports it, but it is a runtime
       // dependency consumers load for the default theme (see the README).
-      "ignoreDependencies": ["semantic-ui-css"]
+      "ignoreDependencies": ["semantic-ui-css"],
     },
     "packages/shadcn": {
       // Published theme presets for consumers to copy; no in-repo importer.
-      "ignore": ["resources/*.css"]
-    }
-  }
+      "ignore": ["resources/*.css"],
+    },
+  },
 }

@@ -1,4 +1,4 @@
-import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR, ID_KEY, toFieldPathId } from '../src';
+import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR, ID_KEY, toFieldPathId } from '../src/index.ts';
 
 const GLOBAL_FORM_OPTIONS = {
   idPrefix: DEFAULT_ID_PREFIX,

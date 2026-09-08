@@ -1,5 +1,5 @@
-import { toErrorSchema } from '../src';
-import { TEST_ERROR_LIST, TEST_ERROR_SCHEMA } from './testUtils/testData';
+import { toErrorSchema } from '../src/index.ts';
+import { TEST_ERROR_LIST, TEST_ERROR_SCHEMA } from './testUtils/testData.ts';
 
 describe('toErrorSchema()', () => {
   it('returns an empty error schema when passed an empty list', () => {

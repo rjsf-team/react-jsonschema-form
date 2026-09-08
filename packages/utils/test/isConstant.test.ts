@@ -1,4 +1,4 @@
-import { isConstant } from '../src';
+import { isConstant } from '../src/index.ts';
 
 describe('isConstant', () => {
   it('should return false when neither enum nor const is defined', () => {

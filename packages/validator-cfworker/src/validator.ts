@@ -11,10 +11,10 @@ import type {
 } from '@rjsf/utils';
 import { deepEquals, hashForSchema, ID_KEY, ROOT_SCHEMA_PREFIX, withIdRefPrefix } from '@rjsf/utils';
 
-import createCfworkerInstance from './createCfworkerInstance';
-import type { RawValidationErrorsType } from './processRawValidationErrors';
-import processRawValidationErrors from './processRawValidationErrors';
-import type { CFWorkerValidationError, CustomValidatorOptionsType } from './types';
+import createCfworkerInstance from './createCfworkerInstance.ts';
+import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
+import processRawValidationErrors from './processRawValidationErrors.ts';
+import type { CFWorkerValidationError, CustomValidatorOptionsType } from './types.ts';
 
 /** Cached schema-bound validator and the schemas used to construct it. */
 interface CachedValidator {

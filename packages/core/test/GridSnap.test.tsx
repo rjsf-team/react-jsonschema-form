@@ -1,6 +1,6 @@
 import { gridTests } from '@rjsf/snapshot-tests';
 
-import Form from '../src';
+import Form from '../src/index.ts';
 
 gridTests(Form, {
   ColumnWidthAll: { className: 'col-xs-12' },

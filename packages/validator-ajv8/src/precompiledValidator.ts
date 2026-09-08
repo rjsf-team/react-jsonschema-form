@@ -11,9 +11,14 @@ import type {
 import { deepEquals, hashForSchema, ID_KEY, JUNK_OPTION_ID, retrieveSchema } from '@rjsf/utils';
 import type { ErrorObject } from 'ajv';
 
-import type { RawValidationErrorsType } from './processRawValidationErrors';
-import processRawValidationErrors from './processRawValidationErrors';
-import type { CompiledValidateFunction, Localizer, SuppressDuplicateFilteringType, ValidatorFunctions } from './types';
+import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
+import processRawValidationErrors from './processRawValidationErrors.ts';
+import type {
+  CompiledValidateFunction,
+  Localizer,
+  SuppressDuplicateFilteringType,
+  ValidatorFunctions,
+} from './types.ts';
 
 /** `ValidatorType` implementation that uses an AJV 8 precompiled validator as created by the
  * `compileSchemaValidators()` function provided by the `@rjsf/validator-ajv8` library.

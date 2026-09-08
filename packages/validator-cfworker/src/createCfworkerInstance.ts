@@ -2,7 +2,7 @@ import * as CFWorkerJsonSchema from '@cfworker/json-schema';
 import type { Schema } from '@cfworker/json-schema';
 import { Validator } from '@cfworker/json-schema';
 
-import type { CFWorkerFormatChecker, CustomValidatorOptionsType } from './types';
+import type { CFWorkerFormatChecker, CustomValidatorOptionsType } from './types.ts';
 
 /** Regular expression used to validate RJSF's `color` format. */
 export const COLOR_FORMAT_REGEX =

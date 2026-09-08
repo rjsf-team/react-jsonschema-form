@@ -1,5 +1,5 @@
-import type { RJSFSchema, UIOptionsType } from '../src';
-import { getInputProps } from '../src';
+import type { RJSFSchema, UIOptionsType } from '../src/index.ts';
+import { getInputProps } from '../src/index.ts';
 
 describe('getInputProps', () => {
   it('returns type=text when no other data is passed', () => {

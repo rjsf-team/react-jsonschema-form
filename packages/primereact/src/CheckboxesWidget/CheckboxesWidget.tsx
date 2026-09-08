@@ -11,7 +11,7 @@ import {
 import type { CheckboxChangeEvent } from 'primereact/checkbox';
 import { Checkbox } from 'primereact/checkbox';
 
-import { Label } from '../util';
+import { Label } from '../util.tsx';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
  *  It is typically used to represent an array of enums.

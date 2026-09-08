@@ -1,4 +1,4 @@
-import { enumOptionsIsSelected } from '../src';
+import { enumOptionsIsSelected } from '../src/index.ts';
 
 const VALUE = { foo: 'bar' };
 const VALUES = [VALUE, 'another'];

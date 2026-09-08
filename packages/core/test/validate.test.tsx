@@ -4,8 +4,8 @@ import userEvent from '@testing-library/user-event';
 import draft06 from 'ajv/lib/refs/json-schema-draft-06.json';
 import type { Mock } from 'vitest';
 
-import type { FormProps } from '../src';
-import { createFormComponent, submitForm } from './testUtils';
+import type { FormProps } from '../src/index.ts';
+import { createFormComponent, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 

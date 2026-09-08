@@ -5,7 +5,7 @@ import Slider from '@mui/material/Slider';
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { ariaDescribedByIds, labelValue, rangeSpec } from '@rjsf/utils';
 
-import { getMuiProps } from '../util';
+import { getMuiProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the RangeWidget. */
 export interface RangeWidgetMuiProps extends GenericObjectType {

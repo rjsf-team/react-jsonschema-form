@@ -1,6 +1,6 @@
-import defaultValidator, { customizeValidator } from '../src';
-import CFWorkerValidator from '../src/validator';
-import { CUSTOM_OPTIONS } from './harness/testData';
+import defaultValidator, { customizeValidator } from '../src/index.ts';
+import CFWorkerValidator from '../src/validator.ts';
+import { CUSTOM_OPTIONS } from './harness/testData.ts';
 
 vi.mock('../src/validator');
 

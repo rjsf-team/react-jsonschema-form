@@ -3,8 +3,8 @@ import type { FormValidation, RJSFSchema, WidgetProps } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
 import userEvent from '@testing-library/user-event';
 
-import SelectWidget from '../src/components/widgets/SelectWidget';
-import { createFormComponent, getSelectedOptionValue, submitForm } from './testUtils';
+import SelectWidget from '../src/components/widgets/SelectWidget.tsx';
+import { createFormComponent, getSelectedOptionValue, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 

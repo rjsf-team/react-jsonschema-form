@@ -12,10 +12,10 @@ import { deepEquals, ID_KEY, ROOT_SCHEMA_PREFIX, withIdRefPrefix, hashForSchema 
 import type { ErrorObject, ValidateFunction } from 'ajv';
 import type Ajv from 'ajv';
 
-import createAjvInstance from './createAjvInstance';
-import type { RawValidationErrorsType } from './processRawValidationErrors';
-import processRawValidationErrors from './processRawValidationErrors';
-import type { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringType } from './types';
+import createAjvInstance from './createAjvInstance.ts';
+import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
+import processRawValidationErrors from './processRawValidationErrors.ts';
+import type { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringType } from './types.ts';
 
 /** `ValidatorType` implementation that uses the AJV 8 validation mechanism.
  */

@@ -1,5 +1,5 @@
-import guessType from './guessType';
-import type { RJSFSchema, StrictRJSFSchema } from './types';
+import guessType from './guessType.ts';
+import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Gets the type of a given `schema`. If the type is not explicitly defined, then an attempt is made to infer it from
  * other elements of the schema as follows:

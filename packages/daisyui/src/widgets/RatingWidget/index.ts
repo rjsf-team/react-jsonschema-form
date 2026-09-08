@@ -1,2 +1,2 @@
-export { default } from './RatingWidget';
-export * from './RatingWidget';
+export { default } from './RatingWidget.tsx';
+export * from './RatingWidget.tsx';

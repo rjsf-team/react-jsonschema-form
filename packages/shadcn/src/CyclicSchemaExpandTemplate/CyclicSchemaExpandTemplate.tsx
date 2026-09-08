@@ -2,9 +2,9 @@ import type { CyclicSchemaExpandProps, FormContextType, RJSFSchema, StrictRJSFSc
 import { ID_KEY, TranslatableString } from '@rjsf/utils';
 import { AlertCircle } from 'lucide-react';
 
-import { Alert, AlertDescription } from '../components/ui/alert';
-import { Button } from '../components/ui/button';
-import { cn } from '../lib/utils';
+import { Alert, AlertDescription } from '../components/ui/alert.tsx';
+import { Button } from '../components/ui/button.tsx';
+import { cn } from '../lib/utils.ts';
 
 /** The `CyclicSchemaExpandTemplate` is the template to use to render the cyclic schema expand message and controls
  *

@@ -1,6 +1,6 @@
-import { ANY_OF_KEY, ONE_OF_KEY, REF_KEY, RJSF_REF_KEY } from './constants';
-import findSchemaDefinition from './findSchemaDefinition';
-import mergeObjects from './mergeObjects';
+import { ANY_OF_KEY, ONE_OF_KEY, REF_KEY, RJSF_REF_KEY } from './constants.ts';
+import findSchemaDefinition from './findSchemaDefinition.ts';
+import mergeObjects from './mergeObjects.ts';
 import type {
   FormContextType,
   GenericObjectType,
@@ -9,7 +9,7 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
   UiSchema,
-} from './types';
+} from './types.ts';
 
 /** Resolves the uiSchema for a given schema, considering `ui:definitions` stored in the registry.
  *

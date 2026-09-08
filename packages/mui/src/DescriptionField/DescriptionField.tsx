@@ -10,7 +10,7 @@ import type {
 } from '@rjsf/utils';
 import { getUiOptions } from '@rjsf/utils';
 
-import { computeSxProps, getMuiProps } from '../util';
+import { computeSxProps, getMuiProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the DescriptionField. */
 export interface DescriptionFieldMuiProps extends GenericObjectType {

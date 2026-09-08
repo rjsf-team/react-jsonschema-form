@@ -1,4 +1,4 @@
-import { getMuiProps } from '../src/util';
+import { getMuiProps } from '../src/util.ts';
 
 describe('getMuiProps', () => {
   it('should extract mui props from uiOptions', () => {

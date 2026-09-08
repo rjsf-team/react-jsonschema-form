@@ -1,10 +1,10 @@
-import { CONST_KEY, DEFAULT_KEY } from './constants';
-import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema';
-import getPropertySchema from './getPropertySchema';
-import getUiOptions from './getUiOptions';
-import { getByPath } from './pathUtils';
-import toConstant from './toConstant';
-import type { RJSFSchema, EnumOptionsType, EnumValue, StrictRJSFSchema, FormContextType, UiSchema } from './types';
+import { CONST_KEY, DEFAULT_KEY } from './constants.ts';
+import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema.ts';
+import getPropertySchema from './getPropertySchema.ts';
+import getUiOptions from './getUiOptions.ts';
+import { getByPath } from './pathUtils.ts';
+import toConstant from './toConstant.ts';
+import type { RJSFSchema, EnumOptionsType, EnumValue, StrictRJSFSchema, FormContextType, UiSchema } from './types.ts';
 
 /** Reorders `options` according to `order`, which may contain a `'*'` wildcard representing all
  * remaining options in their original order. Options not listed in `order` (and not covered by

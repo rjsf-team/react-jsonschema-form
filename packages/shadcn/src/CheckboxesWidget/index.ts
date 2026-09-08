@@ -1,2 +1,2 @@
-export { default } from './CheckboxesWidget';
-export * from './CheckboxesWidget';
+export { default } from './CheckboxesWidget.tsx';
+export * from './CheckboxesWidget.tsx';

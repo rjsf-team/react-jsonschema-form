@@ -10,9 +10,9 @@ import {
   optionId,
 } from '@rjsf/utils';
 
-import { Checkbox } from '../components/ui/checkbox';
-import { Label } from '../components/ui/label';
-import { cn } from '../lib/utils';
+import { Checkbox } from '../components/ui/checkbox.tsx';
+import { Label } from '../components/ui/label.tsx';
+import { cn } from '../lib/utils.ts';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
  *  It is typically used to represent an array of enums.

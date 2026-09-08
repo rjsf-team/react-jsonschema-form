@@ -1,6 +1,6 @@
-import isObject from './isObject';
-import { isValueEmpty, retrieveSchema } from './schema';
-import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, ValidatorType } from './types';
+import isObject from './isObject.ts';
+import { isValueEmpty, retrieveSchema } from './schema/index.ts';
+import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, ValidatorType } from './types.ts';
 
 /** Recursively removes optional objects from the `formData` that are empty (i.e., all their fields
  * are undefined, null, empty strings, or themselves empty optional objects). This solves the problem

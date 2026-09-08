@@ -3,7 +3,7 @@ import type { RJSFSchema } from '@rjsf/utils';
 import { writeFileSync } from 'fs';
 import type { MockInstance } from 'vitest';
 
-import compileSchemaValidators, { compileSchemaValidatorsCode } from '../src/compileSchemaValidators';
+import compileSchemaValidators, { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 
 vi.mock('fs', () => {
   const writeFileSync = vi.fn();

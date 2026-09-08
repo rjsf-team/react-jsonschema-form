@@ -1,4 +1,4 @@
-import noop from '../src/noop';
+import noop from '../src/noop.ts';
 
 describe('noop()', () => {
   it('returns undefined and does nothing', () => {

@@ -3,7 +3,7 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
 import { ariaDescribedByIds, rangeSpec } from '@rjsf/utils';
 import { Input } from 'semantic-ui-react';
 
-import { getSemanticProps } from '../util';
+import { getSemanticProps } from '../util.tsx';
 
 /** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
  * in a div, with the value along side it.

@@ -1,2 +1,2 @@
-export { default } from './AltDateWidget';
-export * from './AltDateWidget';
+export { default } from './AltDateWidget.tsx';
+export * from './AltDateWidget.tsx';

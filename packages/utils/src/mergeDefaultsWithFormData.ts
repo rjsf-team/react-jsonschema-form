@@ -1,5 +1,5 @@
-import type { GenericObjectType } from '../src';
-import isObject from './isObject';
+import type { GenericObjectType } from './index.ts';
+import isObject from './isObject.ts';
 
 /** Merges the `defaults` object of type `T` into the `formData` of type `T`
  *

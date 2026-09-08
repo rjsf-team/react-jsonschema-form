@@ -1,6 +1,6 @@
-import { ID_KEY, JSON_SCHEMA_DRAFT_2020_12, SCHEMA_KEY } from './constants';
-import deepEquals from './deepEquals';
-import { makeAllReferencesAbsolute } from './findSchemaDefinition';
+import { ID_KEY, JSON_SCHEMA_DRAFT_2020_12, SCHEMA_KEY } from './constants.ts';
+import deepEquals from './deepEquals.ts';
+import { makeAllReferencesAbsolute } from './findSchemaDefinition.ts';
 import {
   findFieldInSchema,
   findSelectedOptionInXxxOf,
@@ -16,7 +16,7 @@ import {
   retrieveSchema,
   sanitizeDataForNewSchema,
   toPathSchema,
-} from './schema';
+} from './schema/index.ts';
 import type {
   Experimental_CustomMergeAllOf,
   Experimental_DefaultFormStateBehavior,
@@ -30,7 +30,7 @@ import type {
   StrictRJSFSchema,
   UiSchema,
   ValidatorType,
-} from './types';
+} from './types.ts';
 
 /** The `SchemaUtils` class provides a wrapper around the publicly exported APIs in the `utils/schema` directory such
  * that one does not have to explicitly pass the `validator`, `rootSchema`, `experimental_defaultFormStateBehavior` or

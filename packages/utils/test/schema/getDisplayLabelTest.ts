@@ -1,6 +1,6 @@
-import type { RJSFSchema } from '../../src';
-import { ADDITIONAL_PROPERTY_FLAG, createSchemaUtils, getDisplayLabel } from '../../src';
-import type { TestValidatorType } from './types';
+import type { RJSFSchema } from '../../src/index.ts';
+import { ADDITIONAL_PROPERTY_FLAG, createSchemaUtils, getDisplayLabel } from '../../src/index.ts';
+import type { TestValidatorType } from './types.ts';
 
 export default function getDisplayLabelTest(testValidator: TestValidatorType) {
   describe('getDisplayLabel()', () => {

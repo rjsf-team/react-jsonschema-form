@@ -12,7 +12,7 @@ import {
   titleId,
 } from '@rjsf/utils';
 
-import { cleanupOptions } from '../utils';
+import { cleanupOptions } from '../utils.ts';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
  *  It is typically used to represent an array of enums.

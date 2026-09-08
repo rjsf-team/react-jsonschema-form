@@ -3,9 +3,9 @@ import type { FieldProps, FormValidation, GenericObjectType, RJSFSchema, WidgetP
 import { noop } from '@rjsf/utils';
 import userEvent from '@testing-library/user-event';
 
-import SchemaField from '../src/components/fields/SchemaField';
-import SelectWidget from '../src/components/widgets/SelectWidget';
-import { createFormComponent, getSelectedOptionValue, submitForm } from './testUtils';
+import SchemaField from '../src/components/fields/SchemaField.tsx';
+import SelectWidget from '../src/components/widgets/SelectWidget.tsx';
+import { createFormComponent, getSelectedOptionValue, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 

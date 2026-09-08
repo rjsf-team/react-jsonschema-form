@@ -1,5 +1,5 @@
-import { toErrorList } from '../src';
-import { TEST_ERROR_LIST_OUTPUT, TEST_ERROR_SCHEMA } from './testUtils/testData';
+import { toErrorList } from '../src/index.ts';
+import { TEST_ERROR_LIST_OUTPUT, TEST_ERROR_SCHEMA } from './testUtils/testData.ts';
 
 describe('toErrorList()', () => {
   it('returns empty array when nothing is passed', () => {

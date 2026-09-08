@@ -1,4 +1,4 @@
-import isPlainObject from '../src/isPlainObject';
+import isPlainObject from '../src/isPlainObject.ts';
 
 describe('isPlainObject()', () => {
   it('returns false for non-objects', () => {

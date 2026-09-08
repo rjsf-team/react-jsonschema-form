@@ -27,12 +27,12 @@ import userEvent from '@testing-library/user-event';
 import LayoutMultiSchemaField, {
   computeEnumOptions,
   getSelectedOption,
-} from '../src/components/fields/LayoutMultiSchemaField';
-import RadioWidget from '../src/components/widgets/RadioWidget';
-import SelectWidget from '../src/components/widgets/SelectWidget';
-import getTestRegistry from '../src/getTestRegistry';
-import { SIMPLE_ONEOF, SIMPLE_ONEOF_OPTIONS } from './testData/layoutData';
-import { setupConsoleErrorSuppression } from './testUtils';
+} from '../src/components/fields/LayoutMultiSchemaField.tsx';
+import RadioWidget from '../src/components/widgets/RadioWidget.tsx';
+import SelectWidget from '../src/components/widgets/SelectWidget.tsx';
+import getTestRegistry from '../src/getTestRegistry.tsx';
+import { SIMPLE_ONEOF, SIMPLE_ONEOF_OPTIONS } from './testData/layoutData.ts';
+import { setupConsoleErrorSuppression } from './testUtils.tsx';
 
 vi.mock('@rjsf/utils', async (importOriginal) => ({
   ...(await importOriginal()),
@@ -532,7 +532,7 @@ describe('LayoutMultiSchemaField', () => {
       const { schemaUtils } = getTestRegistry(schema);
       const option1 = schemaUtils.retrieveSchema(oneOfSchema[ONE_OF_KEY][0]);
       const option2 = schemaUtils.retrieveSchema(oneOfSchema[ONE_OF_KEY][1]);
-      const enumOptions = computeEnumOptions(schema, oneOfSchema[ONE_OF_KEY], schemaUtils, uiSchema);
+      const enumOptions = computeEnumOptions(schema, oneOfSchema[ONE_OF_KEY] as RJSFSchema[], schemaUtils, uiSchema);
       expect(enumOptions).toEqual([
         {
           schema: option1,

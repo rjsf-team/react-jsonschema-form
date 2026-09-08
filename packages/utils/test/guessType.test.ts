@@ -1,4 +1,4 @@
-import { guessType } from '../src';
+import { guessType } from '../src/index.ts';
 
 describe('guessType()', () => {
   it('should guess the type of array values', () => {

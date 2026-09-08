@@ -1,7 +1,7 @@
 import { render, fireEvent } from '@testing-library/react';
 
-import ToggleWidget from '../src/widgets/ToggleWidget/ToggleWidget';
-import { makeWidgetMockProps } from './helpers/createMocks';
+import ToggleWidget from '../src/widgets/ToggleWidget/ToggleWidget.tsx';
+import { makeWidgetMockProps } from './helpers/createMocks.ts';
 
 describe('ToggleWidget', () => {
   test('renders correctly', () => {

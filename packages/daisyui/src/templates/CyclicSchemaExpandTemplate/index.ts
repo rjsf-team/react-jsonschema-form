@@ -1,2 +1,2 @@
-export { default } from './CyclicSchemaExpandTemplate';
-export * from './CyclicSchemaExpandTemplate';
+export { default } from './CyclicSchemaExpandTemplate.tsx';
+export * from './CyclicSchemaExpandTemplate.tsx';

@@ -1,7 +1,14 @@
 import deepFreeze from 'deep-freeze-es6';
 
-import type { EnumOptionsType, ErrorSchema, RJSFSchema, RJSFValidationError } from '../../src';
-import { ANY_OF_KEY, DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR, ErrorSchemaBuilder, ID_KEY, ONE_OF_KEY } from '../../src';
+import type { EnumOptionsType, ErrorSchema, RJSFSchema, RJSFValidationError } from '../../src/index.ts';
+import {
+  ANY_OF_KEY,
+  DEFAULT_ID_PREFIX,
+  DEFAULT_ID_SEPARATOR,
+  ErrorSchemaBuilder,
+  ID_KEY,
+  ONE_OF_KEY,
+} from '../../src/index.ts';
 
 export const GLOBAL_FORM_OPTIONS = {
   idPrefix: DEFAULT_ID_PREFIX,

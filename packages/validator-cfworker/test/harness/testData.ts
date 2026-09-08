@@ -1,4 +1,4 @@
-import type { CustomValidatorOptionsType } from '../../src';
+import type { CustomValidatorOptionsType } from '../../src/index.ts';
 
 export const CUSTOM_OPTIONS: CustomValidatorOptionsType = {
   customFormats: {

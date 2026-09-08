@@ -1,11 +1,11 @@
 import type { ErrorSchema, RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
 import type { ValidationError } from 'ata-validator';
 
-import customizeValidator from '../src/customizeValidator';
+import customizeValidator from '../src/customizeValidator.ts';
 import processRawValidationErrors, {
   filterDuplicateErrors,
   transformRJSFValidationErrors,
-} from '../src/processRawValidationErrors';
+} from '../src/processRawValidationErrors.ts';
 
 /** A minimal validator stub satisfies the `ValidatorType` slots that
  * `processRawValidationErrors` reaches through during default-form-state

@@ -1,7 +1,7 @@
 import type { RJSFSchema, FieldProps, GenericObjectType } from '@rjsf/utils';
 
-import SchemaField from '../src/components/fields/SchemaField';
-import { createFormComponent, setupConsoleWarnSuppression } from './testUtils';
+import SchemaField from '../src/components/fields/SchemaField.tsx';
+import { createFormComponent, setupConsoleWarnSuppression } from './testUtils.tsx';
 
 setupConsoleWarnSuppression();
 

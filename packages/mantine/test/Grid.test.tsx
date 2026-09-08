@@ -1,6 +1,6 @@
 import { gridTests } from '@rjsf/snapshot-tests';
 
-import WrappedForm from './WrappedForm';
+import WrappedForm from './WrappedForm.tsx';
 
 gridTests(WrappedForm, {
   ColumnWidthAll: { span: 12 },

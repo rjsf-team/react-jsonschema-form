@@ -3,7 +3,7 @@ import { forwardRef } from 'react';
 import type { CollectionItem } from '@chakra-ui/react';
 import { Select as ChakraSelect, Portal } from '@chakra-ui/react';
 
-import { CloseButton } from './close-button';
+import { CloseButton } from './close-button.tsx';
 
 /**
  * SelectClearTrigger component that renders a clear button for the select component.

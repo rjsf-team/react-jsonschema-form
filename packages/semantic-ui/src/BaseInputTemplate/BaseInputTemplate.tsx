@@ -5,7 +5,7 @@ import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSch
 import { ariaDescribedByIds, examplesId, getInputProps, labelValue } from '@rjsf/utils';
 import { Form } from 'semantic-ui-react';
 
-import { getSemanticProps } from '../util';
+import { getSemanticProps } from '../util.tsx';
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.

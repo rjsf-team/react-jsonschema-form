@@ -1,8 +1,8 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import type { FormContextType, OptionalDataControlsTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
-import { RemoveButton } from '../ButtonTemplates';
-import DaisyUIButton from '../ButtonTemplates/DaisyUIButton';
+import DaisyUIButton from '../ButtonTemplates/DaisyUIButton.tsx';
+import { RemoveButton } from '../ButtonTemplates/index.ts';
 
 /** The OptionalDataControlsTemplate renders one of three different states. If
  * there is an `onAddClick()` function, it renders the "Add" button. If there is

@@ -1,6 +1,6 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 
-import type { DaisyProps } from './types/DaisyProps';
+import type { DaisyProps } from './types/DaisyProps.ts';
 
 export interface DaisyUiSchema<
   T = any,
