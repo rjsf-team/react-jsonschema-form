@@ -22,4 +22,4 @@ should change the heading of the (upcoming) version to include a major version b
 
 - **BREAKING CHANGE** Dropped support for Node 20, 23, 25, and 24 releases before 24.11.0; `engines.node` is now `^22.18.0 || ^24.11.0 || >=26.0.0` across all packages, matching the active Node.js LTS lines, and CI now runs against Node 22, 24, and 26
 - Upgraded pnpm from 10.17.1 to 12.3.4, which was previously pinned because pnpm 11+ requires Node >=22.13
-
+- Dropped the `tsx` dev dependency; `@rjsf/shadcn`'s `build:css` script runs `build-css.ts` with `node` directly, which every Node release the `engines` field now allows strips types natively

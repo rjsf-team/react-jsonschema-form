@@ -44,7 +44,7 @@
     "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
   },
   "scripts": {
-    "build:css": "tsx build-css.ts",
+    "build:css": "node build-css.ts",
     "copy-resources": "cp dist/*.css resources",
     "build:ts": "tsc -b",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
