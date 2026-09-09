@@ -432,7 +432,6 @@ render(<Form schema={schema} validator={validator} focusOnFirstError={focusOnErr
 You can provide a `formContext` object to the Form, which is passed down to all fields and widgets. Useful for implementing context aware fields and widgets.
 
 See [AntD Customization](themes/antd/uiSchema.md#formcontext) for formContext customizations for the `antd` theme.
-See [Semantic UI Customization](themes/semantic-ui/uiSchema.md#formcontext) for formContext customizations for the `semantic-ui` theme.
 
 ## formData
 

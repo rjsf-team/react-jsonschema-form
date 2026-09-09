@@ -263,8 +263,8 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>;
   // Private
   /**
-   * _internalFormWrapper is currently used by the semantic-ui theme to provide a custom wrapper around `<Form />`
-   * that supports the proper rendering of those themes. To use this prop, one must pass a component that takes two
+   * _internalFormWrapper lets a theme provide a custom wrapper around `<Form />` to support the proper rendering
+   * of that theme. To use this prop, one must pass a component that takes two
    * props: `children` and `as`. That component, at minimum, should render the `children` inside of a <form /> tag
    * unless `as` is provided, in which case, use the `as` prop in place of `<form />`.
    * i.e.:
@@ -1485,9 +1485,8 @@ export default class Form<
     const { schema, uiSchema, formData, errorSchema, fieldPathId, registry } = this.state;
     const { SchemaField: SchemaFieldComponent } = registry.fields;
     const { SubmitButton } = registry.templates.ButtonTemplates;
-    // The `semantic-ui` and `material-ui` themes have `_internalFormWrapper`s that take an `as` prop that is the
-    // PropTypes.elementType to use for the inner tag, so we'll need to pass `tagName` along if it is provided.
-    // NOTE, the `as` prop is native to `semantic-ui` and is emulated in the `material-ui` theme
+    // A theme's `_internalFormWrapper` can take an `as` prop that is the PropTypes.elementType to use for the
+    // inner tag, so we'll need to pass `tagName` along if it is provided.
     const as = _internalFormWrapper ? tagName : undefined;
     const FormTag = _internalFormWrapper || tagName || 'form';
 

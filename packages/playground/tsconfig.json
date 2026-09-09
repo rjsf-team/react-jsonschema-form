@@ -18,7 +18,6 @@
     { "path": "../mui" },
     { "path": "../primereact" },
     { "path": "../react-bootstrap" },
-    { "path": "../semantic-ui" },
     { "path": "../shadcn" },
     { "path": "../utils" },
     { "path": "../validator-ajv8" },

@@ -26,11 +26,6 @@
       // package's cs-check glob with no files to match.
       "ignore": ["src/components/HomepageFeatures/**"],
     },
-    "packages/semantic-ui": {
-      // CSS-only package. No source file imports it, but it is a runtime
-      // dependency consumers load for the default theme (see the README).
-      "ignoreDependencies": ["semantic-ui-css"],
-    },
     "packages/shadcn": {
       // Published theme presets for consumers to copy; no in-repo importer.
       "ignore": ["resources/*.css"],
