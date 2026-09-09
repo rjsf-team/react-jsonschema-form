@@ -1316,7 +1316,7 @@ export function formTests(Form: ComponentType<FormProps>) {
     const uiSchema: UiSchema = {
       'ui:autocapitalize': 'words',
     };
-    const { container } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
-    expect(container.querySelector('input')?.getAttribute('autocapitalize')).toBe('words');
+    const { asFragment } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+    expect(asFragment()).toMatchSnapshot();
   });
 }
