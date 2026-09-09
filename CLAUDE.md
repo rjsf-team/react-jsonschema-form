@@ -17,12 +17,22 @@ pnpm run build-serial
 # Run all tests
 pnpm test
 
-# Lint
+# Lint (oxlint, type-aware)
 pnpm run lint
 
-# Prettier check / format
+# Typecheck every package and its tests
+pnpm run typecheck
+
+# Dead code / unused dependency check
+pnpm run knip
+
+# Format check / format source files (oxfmt)
 pnpm run cs-check
 pnpm run cs-format
+
+# Format check / format every file in the repo, including configs and markdown
+pnpm run format-check
+pnpm run format
 
 # Run a single package's tests
 cd packages/core && pnpm test
@@ -36,11 +46,13 @@ cd packages/snapshot-tests && pnpm run test:update
 # Start the playground (interactive demo)
 cd packages/playground && pnpm start
 
-# Full sanity check (lint + build + test)
+# Full sanity check (lint + knip + build + test)
 pnpm run sanity-check
 ```
 
-Individual package builds output three module formats: `build:cjs`, `build:esm`, `build:umd`.
+CI runs lint, knip, build, typecheck, and test in that order, so run those before pushing. Per-package `tsc` misses the test and playground projects; only the root `typecheck` covers them.
+
+Individual package builds run `build:ts` (`tsc -b`, emits `lib/`) and then bundle `dist/` in three formats: `build:cjs` and `build:esm` via esbuild, `build:umd` via rollup.
 
 ## Architecture
 
@@ -48,15 +60,15 @@ This is an **pnpm workspaces + Nx** monorepo. All packages live under `packages/
 
 ### Package roles
 
-| Package | Role |
-|---|---|
-| `@rjsf/utils` | Shared types, 80+ utility functions, schema helpers. No UI dependencies. |
-| `@rjsf/core` | Core `Form` component, Bootstrap 3 as default theme, `withTheme()` HOC. |
-| `@rjsf/validator-ajv8` | AJV 8-based validator. Exported via `customizeValidator()`. |
-| `@rjsf/snapshot-tests` | Shared snapshot test suite consumed by all theme packages. |
-| Theme packages (`@rjsf/mui`, `@rjsf/antd`, `@rjsf/chakra-ui`, etc.) | UI-library-specific implementations of fields, widgets, and templates. |
-| `@rjsf/playground` | Vite app importing all themes, used for manual testing and demos. |
-| `@rjsf/docs` | Docusaurus documentation site. |
+| Package                                                             | Role                                                                     |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `@rjsf/utils`                                                       | Shared types, 80+ utility functions, schema helpers. No UI dependencies. |
+| `@rjsf/core`                                                        | Core `Form` component, Bootstrap 3 as default theme, `withTheme()` HOC.  |
+| `@rjsf/validator-ajv8`                                              | AJV 8-based validator. Exported via `customizeValidator()`.              |
+| `@rjsf/snapshot-tests`                                              | Shared snapshot test suite consumed by all theme packages.               |
+| Theme packages (`@rjsf/mui`, `@rjsf/antd`, `@rjsf/chakra-ui`, etc.) | UI-library-specific implementations of fields, widgets, and templates.   |
+| `@rjsf/playground`                                                  | Vite app importing all themes, used for manual testing and demos.        |
+| `@rjsf/docs`                                                        | Docusaurus documentation site.                                           |
 
 ### Registry pattern (the plugin system)
 
@@ -64,15 +76,17 @@ The `Registry` object is the core extension point passed to every field/widget/t
 
 ```typescript
 Registry = {
-  fields,        // Map of field type → Field component
-  widgets,       // Map of widget name → Widget component
-  templates,     // Layout/structural templates
-  rootSchema,    // Root JSON Schema
-  formContext,   // Arbitrary context object threaded to all components
-  schemaUtils,   // Schema parsing & validation helpers
+  fields, // Map of field type → Field component
+  widgets, // Map of widget name → Widget component
+  templates, // Layout/structural templates
+  rootSchema, // Root JSON Schema
+  formContext, // Arbitrary context object threaded to all components
+  schemaUtils, // Schema parsing & validation helpers
   translateString,
-  globalFormOptions,
-}
+  globalFormOptions, // Form-level options available to every template, field, and widget
+  globalUiOptions, // Optional; global ui:options applied to every field
+  uiSchemaDefinitions, // Optional; uiSchema fragments keyed by $ref path, applied when that $ref resolves
+};
 ```
 
 Override fields/widgets/templates per-form via props, or globally via `withTheme()`.
@@ -80,6 +94,7 @@ Override fields/widgets/templates per-form via props, or globally via `withTheme
 ### Theme pattern
 
 Every theme package follows the same structure:
+
 1. Imports `withTheme` from `@rjsf/core`
 2. Defines custom `Templates`, `Widgets`, and optionally `Fields`
 3. Calls `withTheme({ templates, widgets, fields })` to produce a themed `Form`
@@ -113,10 +128,11 @@ When making a change to a widget or template, consider if the change should be g
 
 ## Code style
 
-- **TypeScript strict mode**, `esnext` target
-- **Prettier**: single quotes, JSX single quotes, 120-char print width
-- **ESLint**: enforces semicolons, curly braces, no-console, React Hooks rules
-- Pre-commit hook (Husky + lint-staged) auto-formats and lints staged files
+- **TypeScript strict mode**, `esnext` target, `verbatimModuleSyntax` (type-only imports must be `import type`), relative imports include the `.ts`/`.tsx` extension
+- **oxfmt** (`.oxfmtrc.json`): single quotes, JSX single quotes, 120-char print width, sorted imports with React first
+- **oxlint** (`.oxlintrc.json`): the `airbnb-typescript` rule set translated to oxlint, plus `typescript`, `react`, `jsx-a11y`, and `import` plugins; enforces curly braces, no-console, React rules of hooks
+- **knip** (`knip.jsonc`): fails CI on unused files, exports, and dependencies
+- Pre-commit hook (Husky + lint-staged) runs `oxlint --fix` and `oxfmt` on staged files
 
 ## Code comments
 
@@ -130,6 +146,8 @@ When making a change to a widget or template, consider if the change should be g
 
 ## Testing
 
-- Vitest, jsdom, Testing Library
+- Vitest, jsdom, Testing Library; shared config in `testing/vitest.base.ts`, extended per package
+- Tests resolve `@rjsf/*` imports to TypeScript source via the `@rjsf/source` export condition, so no build is needed before running them
+- `@rjsf/utils` and the validator packages enforce 100% coverage
 - Snapshot tests in `@rjsf/snapshot-tests` are shared across theme packages — run `test:update` there when changing core rendering
 - Node ^22.18.0 || ^24.11.0 || >=26.0.0 required (active LTS lines only)
