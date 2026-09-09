@@ -49,10 +49,6 @@ const tsconfig = 'tsconfig.json';
 /** Validators also ship their `compileSchemaValidators` entry as a standalone CJS + ESM bundle. */
 const extraEntries = ['compileSchemaValidators'].filter((entry) => existsSync(`src/${entry}.ts`));
 
-// esbuild dropped JSDoc and kept legal/annotation comments; rolldown keeps
-// JSDoc by default, which grew the heavily documented bundles by ~50%.
-const comments = { legal: true, annotation: true, jsdoc: false };
-
 const common = {
   cwd: process.cwd(),
   outDir: 'dist',
@@ -85,14 +81,14 @@ export default defineConfig([
     ...common,
     entry: 'src/index.ts',
     format: {
-      cjs: { outputOptions: { comments } },
+      cjs: {},
       esm: {
-        outputOptions: { entryFileNames: `${esmName}.js`, comments },
+        outputOptions: { entryFileNames: `${esmName}.js` },
       },
       umd: {
         sourcemap: false,
         globalName,
-        outputOptions: { entryFileNames: `${umdName}.js`, comments },
+        outputOptions: { entryFileNames: `${umdName}.js` },
       },
     },
   },
@@ -100,9 +96,9 @@ export default defineConfig([
     ...common,
     entry: `src/${entry}.ts`,
     format: {
-      cjs: { outputOptions: { comments } },
+      cjs: {},
       esm: {
-        outputOptions: { entryFileNames: `${entry}.esm.js`, comments },
+        outputOptions: { entryFileNames: `${entry}.esm.js` },
       },
     },
   })),
