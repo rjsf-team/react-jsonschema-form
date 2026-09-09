@@ -10,15 +10,12 @@ import { defineConfig } from 'tsdown';
 export default defineConfig({
   // Relative paths resolve from the package that runs the build, not from this file.
   cwd: process.cwd(),
-  entry: ['src/**/*.ts', 'src/**/*.tsx'],
+  entry: 'src/**/*.{ts,tsx}',
   outDir: 'lib',
   unbundle: true,
-  // `.js`/`.d.ts`, not tsdown's default `.mjs`/`.d.mts`; the packages are `type: module`.
-  fixedExtension: false,
-  // Otherwise tsdown derives a Node target from `engines`; these packages also run in browsers.
-  target: 'esnext',
+  // The packages run in browsers and SSR alike; `neutral` also keeps the `.js`/`.d.ts` extensions.
+  platform: 'neutral',
   sourcemap: true,
-  dts: true,
   // Every dependency, workspace packages included, stays an import; nothing is inlined into lib/.
   deps: { neverBundle: true },
 });
