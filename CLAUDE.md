@@ -132,4 +132,4 @@ When making a change to a widget or template, consider if the change should be g
 
 - Vitest, jsdom, Testing Library
 - Snapshot tests in `@rjsf/snapshot-tests` are shared across theme packages — run `test:update` there when changing core rendering
-- Node >=20 required
+- Node ^22.18.0 || ^24.11.0 || >=26.0.0 required (active LTS lines only)
