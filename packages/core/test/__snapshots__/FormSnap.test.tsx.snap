@@ -7108,3 +7108,35 @@ exports[`single fields > using custom tagName 1`] = `
   </div>
 </DocumentFragment>
 `;
+
+exports[`string field with autocapitalize 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="form-group rjsf-field rjsf-field-string"
+    >
+      <input
+        aria-describedby="root__error root__description root__help"
+        autocapitalize="words"
+        class="form-control"
+        id="root"
+        label=""
+        name="root"
+        placeholder=""
+        type="text"
+        value=""
+      />
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;

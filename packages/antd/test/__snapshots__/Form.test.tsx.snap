@@ -17473,3 +17473,62 @@ exports[`single fields > using custom tagName 1`] = `
   </div>
 </DocumentFragment>
 `;
+
+exports[`string field with autocapitalize 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-ypkju9 ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-ypkju9 css-var-root"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ypkju9 css-var-root"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <span
+                  class="ant-input-affix-wrapper css-dev-only-do-not-override-ypkju9 ant-input-outlined css-var-root ant-input-css-var"
+                  style="width: 100%;"
+                >
+                  <input
+                    aria-describedby="root__error root__description root__help"
+                    autocapitalize="words"
+                    class="ant-input css-dev-only-do-not-override-ypkju9"
+                    id="root"
+                    name="root"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
+                  <span
+                    class="ant-input-suffix"
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-ypkju9 css-var-root ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
