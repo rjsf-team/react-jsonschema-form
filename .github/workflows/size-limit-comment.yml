@@ -16,12 +16,12 @@ permissions:
   pull-requests: write
   actions: read
 # The list-then-create/update of the sticky comment is a check-then-act race if
-# two runs for the SAME PR overlap (e.g. a double re-run); serialize per PR. A
-# repo-global group would let a burst of PRs cancel each other's pending runs
-# (GitHub keeps at most one pending run per group). No cancel-in-progress so
-# the newest run still lands its update.
+# two runs for the SAME commit overlap (e.g. a double re-run); serialize per
+# head sha. A repo-global group would let a burst of PRs cancel each other's
+# pending runs (GitHub keeps at most one pending run per group). No
+# cancel-in-progress so the newest run still lands its update.
 concurrency:
-  group: size-limit-comment-${{ github.event.workflow_run.head_repository.full_name }}-${{ github.event.workflow_run.head_branch }}
+  group: size-limit-comment-${{ github.event.workflow_run.head_sha }}
 jobs:
   comment:
     # success = budgets pass, failure = budgets exceeded; both upload a report.
@@ -45,26 +45,29 @@ jobs:
         with:
           script: |
             const { owner, repo } = context.repo;
-            const run = context.payload.workflow_run;
-            const headSha = run.head_sha;
-            // A fork's head sha is associated with no PR in the base repo, so the
-            // PR is found by head instead — head repo and branch both come from
-            // the workflow_run payload, which fork code cannot write to.
-            const prs = await github.paginate(github.rest.pulls.list, {
-              owner, repo, state: 'all', per_page: 100,
-              head: `${run.head_repository.owner.login}:${run.head_branch}`,
-            });
-            const pr = prs.find((p) => p.head.sha === headSha);
+            const headSha = context.payload.workflow_run.head_sha;
+            // The artifact was written by PR code, so its PR number is trusted
+            // only once that PR is confirmed to be at this run's head sha, which
+            // comes from the workflow_run payload that fork code cannot write to.
+            const { readFileSync } = require('fs');
+            const prNumber = Number(readFileSync('pr_number', 'utf8').trim());
+            if (!Number.isInteger(prNumber) || prNumber <= 0) {
+              core.setFailed(`Artifact has no PR number for ${headSha}.`);
+              return;
+            }
+            const pr = await github.rest.pulls.get({ owner, repo, pull_number: prNumber })
+              .then((r) => r.data)
+              .catch((e) => (e.status === 404 ? null : Promise.reject(e)));
             if (!pr) {
-              if (prs.length) {
-                // The branch was pushed again after this run was measured; the
-                // new commit's own run will post the comment.
-                core.info(`Skipping: ${run.head_branch} has moved on from ${headSha}.`);
-                return;
-              }
-              // No PR on this head at all: a broken handoff. Fail rather than
-              // skip, since a missing comment is indistinguishable from a healthy run.
-              core.setFailed(`No PR for ${run.head_repository.full_name}:${run.head_branch}.`);
+              // A broken handoff. Fail rather than skip, since a missing comment
+              // is indistinguishable from a healthy run.
+              core.setFailed(`No PR #${prNumber} for ${headSha}.`);
+              return;
+            }
+            if (pr.head.sha !== headSha) {
+              // The branch moved on (its own run will post) or the artifact named
+              // a PR it does not belong to.
+              core.info(`Skipping: PR #${prNumber} is at ${pr.head.sha}, not ${headSha}.`);
               return;
             }
             // Render the report with this repo's report.mjs (from the trusted

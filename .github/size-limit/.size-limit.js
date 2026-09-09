@@ -1,4 +1,7 @@
 const { readdirSync, readFileSync, existsSync } = require('node:fs');
+const { join } = require('node:path');
+
+const ROOT = join(__dirname, '..', '..');
 
 // Budgets only where one already existed; elsewhere the PR comment's delta column
 // catches a regression without the bump commits a per-theme budget invites.
@@ -20,16 +23,16 @@ const PACKAGES = {
   '@rjsf/validator-ajv8': { installed: '39 kB', own: '3 kB' },
 };
 
-const released = readdirSync('packages')
-  .filter((dir) => existsSync(`packages/${dir}/package.json`))
-  .map((dir) => ({ dir, pkg: JSON.parse(readFileSync(`packages/${dir}/package.json`, 'utf8')) }))
+const released = readdirSync(join(ROOT, 'packages'))
+  .filter((dir) => existsSync(join(ROOT, 'packages', dir, 'package.json')))
+  .map((dir) => ({ dir, pkg: JSON.parse(readFileSync(join(ROOT, 'packages', dir, 'package.json'), 'utf8')) }))
   // build:ts emits the lib/ entry point being measured; a package without one
   // (@rjsf/snapshot-tests) ships no bundle to measure.
   .filter(({ pkg }) => !pkg.private && pkg.scripts?.['build:ts'])
   .sort((a, b) => a.pkg.name.localeCompare(b.pkg.name));
 
 module.exports = released.flatMap(({ dir, pkg }) => {
-  const path = `packages/${dir}/lib/index.js`;
+  const path = join(ROOT, 'packages', dir, 'lib', 'index.js');
   const deps = Object.keys(pkg.dependencies ?? {});
   // react-dom is never declared but is always the host's to provide.
   const peers = [...Object.keys(pkg.peerDependencies ?? {}), 'react-dom'];

@@ -22,10 +22,14 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'pnpm'
-          cache-dependency-path: 'pnpm-lock.yaml'
+          cache-dependency-path: |
+            pnpm-lock.yaml
+            .github/size-limit/pnpm-lock.yaml
       - name: Measure PR head
         run: |
           pnpm install --frozen-lockfile
+          pnpm install --frozen-lockfile --ignore-workspace --dir .github/size-limit
+          echo ${{ github.event.pull_request.number }} > "$RUNNER_TEMP/pr_number"
           # size-limit measures lib/, not the cjs/esm/umd bundles, and only the
           # released packages declare build:ts. Safe to let nx cache: lib/ is a
           # declared build:ts output in nx.json, so a hit restores it to disk.
@@ -33,7 +37,7 @@ jobs:
           # size-limit exits non-zero when a budget is exceeded but still emits
           # JSON; record the outcome and enforce it at the end so the report
           # comment is produced either way.
-          if pnpm exec size-limit --json > "$RUNNER_TEMP/head.json"; then
+          if pnpm --dir .github/size-limit exec size-limit --json > "$RUNNER_TEMP/head.json"; then
             echo ok > "$RUNNER_TEMP/status"
           else
             echo fail > "$RUNNER_TEMP/status"
@@ -49,10 +53,11 @@ jobs:
           # this one must only touch $RUNNER_TEMP.
           if git fetch --no-tags --depth 1 origin ${{ github.event.pull_request.base.sha }} &&
             git checkout -f ${{ github.event.pull_request.base.sha }} &&
-            [ -f .size-limit.js ] &&
+            [ -f .github/size-limit/.size-limit.js ] &&
             pnpm install --frozen-lockfile &&
+            pnpm install --frozen-lockfile --ignore-workspace --dir .github/size-limit &&
             pnpm exec nx run-many --target=build:ts --all; then
-            pnpm exec size-limit --json > "$RUNNER_TEMP/base.json" || echo '[]' > "$RUNNER_TEMP/base.json"
+            pnpm --dir .github/size-limit exec size-limit --json > "$RUNNER_TEMP/base.json" || echo '[]' > "$RUNNER_TEMP/base.json"
           else
             echo '[]' > "$RUNNER_TEMP/base.json"
           fi
@@ -62,5 +67,6 @@ jobs:
           path: |
             ${{ runner.temp }}/head.json
             ${{ runner.temp }}/base.json
+            ${{ runner.temp }}/pr_number
       - name: Enforce limits
         run: test "$(cat "$RUNNER_TEMP/status")" = ok
