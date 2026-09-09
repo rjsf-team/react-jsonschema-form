@@ -14,7 +14,7 @@ import type {
   FormValidation,
 } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
-import userEvent from '@testing-library/user-event';
+import { userEvent } from '@testing-library/user-event';
 
 import ArrayField from '../src/components/fields/ArrayField.tsx';
 import SchemaField from '../src/components/fields/SchemaField.tsx';

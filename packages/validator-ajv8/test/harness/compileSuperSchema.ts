@@ -2,7 +2,7 @@ import type { RJSFSchema } from '@rjsf/utils';
 
 import { compileSchemaValidatorsCode } from '../../src/compileSchemaValidators.ts';
 import type { CustomValidatorOptionsType, ValidatorFunctions } from '../../src/index.ts';
-import superSchemaObj from './superSchema.json';
+import superSchemaObj from './superSchema.json' with { type: 'json' };
 import { CUSTOM_OPTIONS, expectWarn } from './testData.ts';
 
 export const superSchema = superSchemaObj as unknown as RJSFSchema;

@@ -1,7 +1,7 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { rangeSpec } from '@rjsf/utils';
-import FormRange from 'react-bootstrap/FormRange';
+import { Form } from 'react-bootstrap';
 
 export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>,
@@ -25,7 +25,7 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
 
   return (
     <>
-      <FormRange {...rangeProps} />
+      <Form.Range {...rangeProps} />
       <span className='range-view'>{value}</span>
     </>
   );

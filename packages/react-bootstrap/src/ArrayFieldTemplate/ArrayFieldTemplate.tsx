@@ -1,8 +1,6 @@
 import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { buttonId, getTemplate, getUiOptions } from '@rjsf/utils';
-import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
+import { Col, Container, Row } from 'react-bootstrap';
 
 export default function ArrayFieldTemplate<
   T = any,

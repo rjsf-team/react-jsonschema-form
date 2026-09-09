@@ -2,7 +2,7 @@ import { createRef, useEffect } from 'react';
 import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { getTemplate, getUiOptions } from '@rjsf/utils';
 import { waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { userEvent } from '@testing-library/user-event';
 
 import type { FormProps, IChangeEvent } from '../src/index.ts';
 import { expectToHaveBeenCalledWithFormData, submitForm, describeRepeated } from './testUtils.tsx';

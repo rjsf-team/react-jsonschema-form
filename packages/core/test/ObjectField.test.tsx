@@ -10,7 +10,7 @@ import type {
 } from '@rjsf/utils';
 import { UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
 import { act } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { userEvent } from '@testing-library/user-event';
 
 import ObjectField from '../src/components/fields/ObjectField.tsx';
 import SchemaField from '../src/components/fields/SchemaField.tsx';

@@ -1,6 +1,6 @@
 import { isObject, RJSF_ADDITIONAL_PROPERTIES_FLAG } from '@rjsf/utils';
 import type { Options } from 'ajv';
-import Ajv from 'ajv';
+import { Ajv } from 'ajv';
 import type { FormatsPluginOptions } from 'ajv-formats';
 import addFormats from 'ajv-formats';
 
@@ -43,9 +43,9 @@ export default function createAjvInstance(
 ) {
   let ajv = new AjvClass({ ...AJV_CONFIG, ...ajvOptionsOverrides });
   if (ajvFormatOptions) {
-    addFormats(ajv, ajvFormatOptions);
+    addFormats.default(ajv, ajvFormatOptions);
   } else if (ajvFormatOptions !== false) {
-    addFormats(ajv);
+    addFormats.default(ajv);
   }
 
   // add custom formats

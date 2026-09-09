@@ -1,5 +1,4 @@
-import type { Options, ErrorObject } from 'ajv';
-import type Ajv from 'ajv';
+import type { Options, ErrorObject, Ajv } from 'ajv';
 import type { FormatsPluginOptions } from 'ajv-formats';
 
 /** The type describing the value for the `suppressDuplicateFiltering` option */

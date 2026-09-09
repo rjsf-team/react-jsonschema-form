@@ -2,8 +2,7 @@
   "compilerOptions": {
     "composite": true,
     "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "bundler",
+    "module": "nodenext",
     "lib": ["DOM", "ESNext"],
     "jsx": "react-jsx",
     "types": [],
@@ -15,6 +14,7 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
     "rewriteRelativeImportExtensions": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,

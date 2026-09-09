@@ -42,11 +42,12 @@ const PRIMITIVE_TYPES = ['string', 'number', 'integer', 'boolean', 'null'];
 
 /** Enum that indicates how `schema.additionalItems` should be handled by the `getInnerSchemaForArrayItem()` function.
  */
-export enum AdditionalItemsHandling {
-  Ignore,
-  Invert,
-  Fallback,
-}
+export const AdditionalItemsHandling = {
+  Ignore: 0,
+  Invert: 1,
+  Fallback: 2,
+} as const;
+export type AdditionalItemsHandling = (typeof AdditionalItemsHandling)[keyof typeof AdditionalItemsHandling];
 
 /** Given a `schema` will return an inner schema that for an array item. This is computed differently based on the
  * `additionalItems` enum and the value of `idx`. There are four possible returns:

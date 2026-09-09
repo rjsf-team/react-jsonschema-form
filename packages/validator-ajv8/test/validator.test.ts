@@ -7,11 +7,11 @@ import type {
   ValidatorType,
 } from '@rjsf/utils';
 import { ErrorSchemaBuilder, noop } from '@rjsf/utils';
-import type Ajv from 'ajv';
-import localize from 'ajv-i18n';
-import Ajv2019 from 'ajv/dist/2019';
-import Ajv2020 from 'ajv/dist/2020';
-import metaSchemaDraft6 from 'ajv/lib/refs/json-schema-draft-06.json';
+import type { Ajv } from 'ajv';
+import ajvI18n from 'ajv-i18n';
+import { Ajv2019 } from 'ajv/dist/2019.js';
+import { Ajv2020 } from 'ajv/dist/2020.js';
+import metaSchemaDraft6 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json' };
 import type { Mock } from 'vitest';
 
 import type { Localizer } from '../src/index.ts';
@@ -2688,7 +2688,7 @@ describe('AJV8Validator', () => {
     });
     describe('validating dependencies', () => {
       beforeAll(() => {
-        validator = new AJV8Validator({ AjvClass: Ajv2019 }, localize.en as Localizer);
+        validator = new AJV8Validator({ AjvClass: Ajv2019 }, ajvI18n.en);
       });
       it('should return an error when a dependent is missing', () => {
         schema = {

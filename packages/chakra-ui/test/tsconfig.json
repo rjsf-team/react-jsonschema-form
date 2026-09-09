@@ -2,6 +2,9 @@
   "extends": "../../../tsconfig.test.json",
   "include": ["./"],
   "compilerOptions": {
+    // Same reason as ../tsconfig.json: @chakra-ui/react's declarations do not resolve under "nodenext".
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "skipLibCheck": true
   },
   "references": [

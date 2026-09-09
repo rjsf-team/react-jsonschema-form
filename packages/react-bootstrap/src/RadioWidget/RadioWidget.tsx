@@ -8,7 +8,7 @@ import {
   getOptionValueFormat,
   optionId,
 } from '@rjsf/utils';
-import Form from 'react-bootstrap/Form';
+import { Form } from 'react-bootstrap';
 
 export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,

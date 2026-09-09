@@ -5,7 +5,7 @@ import type { Mock } from 'vitest';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import type { Localizer, ValidatorFunctions } from '../src/index.ts';
 import ATAPrecompiledValidator from '../src/precompiledValidator.ts';
-import superSchemaObj from './harness/superSchema.json';
+import superSchemaObj from './harness/superSchema.json' with { type: 'json' };
 
 const rootSchema = superSchemaObj as unknown as RJSFSchema;
 

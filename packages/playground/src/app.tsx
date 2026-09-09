@@ -10,9 +10,9 @@ import { Theme as shadcnTheme } from '@rjsf/shadcn';
 import v8Validator, { customizeValidator } from '@rjsf/validator-ajv8';
 import ataValidator, { customizeValidator as customizeAtaValidator } from '@rjsf/validator-ata';
 import cfworkerValidator, { customizeValidator as customizeCfworkerValidator } from '@rjsf/validator-cfworker';
-import localize_es from 'ajv-i18n/localize/es';
-import Ajv2019 from 'ajv/dist/2019.js';
-import Ajv2020 from 'ajv/dist/2020.js';
+import localize_es from 'ajv-i18n/localize/es/index.js';
+import { Ajv2019 } from 'ajv/dist/2019.js';
+import { Ajv2020 } from 'ajv/dist/2020.js';
 
 import type { PlaygroundProps } from './components/index.ts';
 import Playground from './components/index.ts';

@@ -1,6 +1,6 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, SubmitButtonProps } from '@rjsf/utils';
 import { getSubmitButtonOptions } from '@rjsf/utils';
-import Button from 'react-bootstrap/Button';
+import { Button } from 'react-bootstrap';
 
 export default function SubmitButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: SubmitButtonProps<T, S, F>,

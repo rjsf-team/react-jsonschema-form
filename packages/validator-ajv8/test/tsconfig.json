@@ -1,15 +1,12 @@
 {
   "extends": "../../../tsconfig.test.json",
-  "include": ["./", "./**/*.json"],
+  "include": ["./", "./**/*.json", "../../utils/test/schema", "../../utils/test/testUtils"],
   "compilerOptions": {
     "resolveJsonModule": true
   },
   "references": [
     {
       "path": ".."
-    },
-    {
-      "path": "../../utils/test"
     }
   ]
 }

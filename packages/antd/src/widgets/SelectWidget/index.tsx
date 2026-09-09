@@ -11,7 +11,7 @@ import {
 } from '@rjsf/utils';
 import type { SelectProps } from 'antd';
 import { Select } from 'antd';
-import type { DefaultOptionType } from 'antd/es/select';
+import type { DefaultOptionType } from 'antd/es/select/index.js';
 
 const SELECT_STYLE = {
   width: '100%',

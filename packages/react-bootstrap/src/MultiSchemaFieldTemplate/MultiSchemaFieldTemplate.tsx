@@ -1,5 +1,5 @@
 import type { FormContextType, MultiSchemaFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import Card from 'react-bootstrap/Card';
+import { Card } from 'react-bootstrap';
 
 export default function MultiSchemaFieldTemplate<
   T = any,
