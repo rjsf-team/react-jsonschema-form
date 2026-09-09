@@ -13,9 +13,7 @@
       "outputs": ["{projectRoot}/lib", "{projectRoot}/tsconfig.tsbuildinfo"]
     },
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "cache": true,
       "//": "outputs = nx's defaults (dist/build/public) plus lib/, which tsdown emits; without it a cache hit reports success without restoring lib/ to disk",
       "outputs": ["{projectRoot}/lib", "{projectRoot}/dist", "{projectRoot}/build", "{projectRoot}/public"],
@@ -34,21 +32,11 @@
     "test": {
       "cache": true,
       "//test": "the shared vitest base/setup live outside project roots; without these inputs a warm cache serves stale results when they change",
-      "inputs": [
-        "default",
-        "^default",
-        "{workspaceRoot}/testing/*",
-        "{workspaceRoot}/vitest.config.ts"
-      ]
+      "inputs": ["default", "^default", "{workspaceRoot}/testing/*", "{workspaceRoot}/vitest.config.ts"]
     },
     "test:update": {
       "cache": true,
-      "inputs": [
-        "default",
-        "^default",
-        "{workspaceRoot}/testing/*",
-        "{workspaceRoot}/vitest.config.ts"
-      ]
+      "inputs": ["default", "^default", "{workspaceRoot}/testing/*", "{workspaceRoot}/vitest.config.ts"]
     },
     "test:watch": {
       "cache": true
@@ -62,15 +50,6 @@
     "test-coverage": {
       "cache": true
     },
-    "build:lib": {
-      "cache": true
-    },
-    "prepublishOnly": {
-      "cache": true
-    },
-    "build:dist": {
-      "cache": true
-    },
     "publish-to-gh-pages": {
       "cache": true
     }
@@ -79,9 +58,7 @@
   "defaultBase": "main",
   "useLegacyCache": true,
   "release": {
-    "projects": [
-      "*"
-    ],
+    "projects": ["*"],
     "version": {
       "generatorOptions": {
         "updateDependents": "always"

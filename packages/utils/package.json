@@ -9,17 +9,10 @@
   "exports": {
     ".": {
       "@rjsf/source": "./src/index.ts",
-      "types": "./lib/index.d.ts",
       "default": "./lib/index.js"
     },
-    "./lib": {
-      "types": "./lib/index.d.ts",
-      "default": "./lib/index.js"
-    },
-    "./lib/*.js": {
-      "types": "./lib/*.d.ts",
-      "default": "./lib/*.js"
-    }
+    "./lib": "./lib/index.js",
+    "./lib/*.js": "./lib/*.js"
   },
   "files": [
     "lib",

@@ -9,26 +9,15 @@
   "exports": {
     ".": {
       "@rjsf/source": "./src/index.ts",
-      "types": "./lib/index.d.ts",
       "default": "./lib/index.js"
     },
     "./compileSchemaValidators": {
       "@rjsf/source": "./src/compileSchemaValidators.ts",
-      "types": "./lib/compileSchemaValidators.d.ts",
       "default": "./lib/compileSchemaValidators.js"
     },
-    "./lib/compileSchemaValidators": {
-      "types": "./lib/compileSchemaValidators.d.ts",
-      "default": "./lib/compileSchemaValidators.js"
-    },
-    "./lib": {
-      "types": "./lib/index.d.ts",
-      "default": "./lib/index.js"
-    },
-    "./lib/*.js": {
-      "types": "./lib/*.d.ts",
-      "default": "./lib/*.js"
-    }
+    "./lib/compileSchemaValidators": "./lib/compileSchemaValidators.js",
+    "./lib": "./lib/index.js",
+    "./lib/*.js": "./lib/*.js"
   },
   "files": [
     "lib",

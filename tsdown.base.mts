@@ -7,23 +7,18 @@ import { defineConfig } from 'tsdown';
  * deep-import exports keep resolving. It does not typecheck; that is the
  * separate root `tsc --build`.
  */
-
-const tsconfig = 'tsconfig.json';
-
 export default defineConfig({
   // Relative paths resolve from the package that runs the build, not from this file.
   cwd: process.cwd(),
   entry: ['src/**/*.ts', 'src/**/*.tsx'],
-  format: 'esm',
   outDir: 'lib',
   unbundle: true,
-  clean: true,
-  platform: 'neutral',
+  // `.js`/`.d.ts`, not tsdown's default `.mjs`/`.d.mts`; the packages are `type: module`.
+  fixedExtension: false,
+  // Otherwise tsdown derives a Node target from `engines`; these packages also run in browsers.
   target: 'esnext',
   sourcemap: true,
-  tsconfig,
-  outExtensions: () => ({ js: '.js', dts: '.d.ts' }),
-  dts: { tsconfig, sourcemap: true },
+  dts: true,
   // Every dependency, workspace packages included, stays an import; nothing is inlined into lib/.
   deps: { neverBundle: true },
 });

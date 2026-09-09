@@ -7,18 +7,9 @@
   "sideEffects": false,
   "description": "@cfworker/json-schema based validator for @rjsf/core",
   "exports": {
-    ".": {
-      "types": "./lib/index.d.ts",
-      "default": "./lib/index.js"
-    },
-    "./lib": {
-      "types": "./lib/index.d.ts",
-      "default": "./lib/index.js"
-    },
-    "./lib/*.js": {
-      "types": "./lib/*.d.ts",
-      "default": "./lib/*.js"
-    }
+    ".": "./lib/index.js",
+    "./lib": "./lib/index.js",
+    "./lib/*.js": "./lib/*.js"
   },
   "files": [
     "lib",
