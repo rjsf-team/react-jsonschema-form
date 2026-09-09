@@ -35,7 +35,6 @@
 - [Mantine](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/mantine)
 - [Material UI v7](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/mui)
 - [React-Bootstrap (Bootstrap v5)](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/react-bootstrap)
-- [Semantic UI v2](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/semantic-ui)
 - [Shad CN](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/shadcn)
 
 ## API Libraries

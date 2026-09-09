@@ -10,12 +10,12 @@ meaning that you must load the Bootstrap stylesheet on the page to view the form
 | antd                  | Published | `@rjsf/antd`            |
 | Chakra UI             | Published | `@rjsf/chakra-ui`       |
 | Bootstrap 3 (default) | Published | `@rjsf/core`            |
+| Daisy UI              | Published | `@rjsf/daisyui`         |
 | fluentui-rc           | Published | `@rjsf/fluentui-rc`     |
 | mantine               | Published | `@rjsf/mantine`         |
 | material-ui           | Published | `@rjsf/mui`             |
 | PrimeReact            | Published | `@rjsf/primereact`      |
 | react-bootstrap       | Published | `@rjsf/react-bootstrap` |
-| Semantic UI           | Published | `@rjsf/semantic-ui`     |
 | shadcn                | Published | `@rjsf/shadcn`          |
 
 ## Using themes
@@ -41,10 +41,10 @@ For example, to use the standard bootstrap 3 form, you can run:
 import Form from '@rjsf/core';
 ```
 
-To use the material-ui form, you should first install both `@rjsf/core` and `@rjsf/material-ui`. Then, you can run:
+To use the material-ui form, you should first install both `@rjsf/core` and `@rjsf/mui`. Then, you can run:
 
 ```ts
-import Form from '@rjsf/material-ui';
+import Form from '@rjsf/mui';
 ```
 
 For more information on how to create a custom theme, see documentation on the `withTheme` component.

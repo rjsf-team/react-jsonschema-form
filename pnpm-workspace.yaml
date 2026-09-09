@@ -2,6 +2,11 @@ packages:
   - 'packages/*'
 
 overrides:
+  # Pins every peer-resolved react/react-dom to the versions we actually test
+  # against; pnpm 12's peer resolution otherwise also installs react@19 for
+  # ">=18" peer ranges, pairing it with our react-dom@18 and breaking rendering
+  'react': ^18.3.1
+  'react-dom': ^18.3.1
   'sockjs>uuid': ^14.0.0
   # Fixes security issues in form-data by overriding to safe version
   'form-data': ^4.0.6

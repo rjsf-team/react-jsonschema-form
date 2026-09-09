@@ -6,7 +6,6 @@ import { Theme as MantineTheme } from '@rjsf/mantine';
 import { Theme as MuiTheme } from '@rjsf/mui';
 import { Theme as PrimeReactTheme } from '@rjsf/primereact';
 import { Theme as BootstrapTheme } from '@rjsf/react-bootstrap';
-import { Theme as SuiTheme } from '@rjsf/semantic-ui';
 import { Theme as shadcnTheme } from '@rjsf/shadcn';
 import v8Validator, { customizeValidator } from '@rjsf/validator-ajv8';
 import ataValidator, { customizeValidator as customizeAtaValidator } from '@rjsf/validator-ata';
@@ -329,10 +328,6 @@ const themes: PlaygroundProps['themes'] = {
   'react-bootstrap': {
     stylesheet: '//cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css',
     theme: BootstrapTheme,
-  },
-  'semantic-ui': {
-    stylesheet: '//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css',
-    theme: SuiTheme,
   },
   shadcn: {
     stylesheet: '//cdn.jsdelivr.net/gh/rjsf-team/react-jsonschema-form@main/packages/shadcn/resources/default.css',

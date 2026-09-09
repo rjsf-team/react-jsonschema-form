@@ -974,4 +974,3 @@ const uiSchema: UiSchema = {
 - [Chakra-UI Customization](themes/chakra-ui/uiSchema.md)
 - [MUI Customization](themes/mui/uiSchema.md)
 - [PrimeReact Customization](themes/primereact/uiSchema.md)
-- [Semantic-UI Customization](themes/semantic-ui/uiSchema.md)
