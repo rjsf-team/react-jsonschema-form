@@ -76,7 +76,7 @@ export default function BaseInputTemplate<
   } = props;
   const { ClearButton } = registry.templates.ButtonTemplates;
   // Now we need to pull out the step, min, max into an inner `inputProps` for material-ui
-  const { step, min, max, accept, ...rest } = getInputProps<T, S, F>(schema, type, options);
+  const { step, min, max, accept, autoCapitalize, ...rest } = getInputProps<T, S, F>(schema, type, options);
 
   const muiProps = getMuiProps<T, S, F, BaseInputTemplateMuiProps>(options);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
@@ -88,6 +88,7 @@ export default function BaseInputTemplate<
     min,
     max,
     accept,
+    ...(autoCapitalize === undefined ? {} : { autoCapitalize }),
     ...(schema.examples ? { list: examplesId(id) } : undefined),
   };
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>

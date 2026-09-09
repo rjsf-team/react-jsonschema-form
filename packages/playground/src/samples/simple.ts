@@ -42,6 +42,7 @@ const simple: Sample = {
       'ui:emptyValue': '',
       'ui:placeholder': 'ui:emptyValue causes this field to always be valid despite being required',
       'ui:autocomplete': 'family-name',
+      'ui:autocapitalize': 'words',
       'ui:enableMarkdownInDescription': true,
       'ui:description':
         'Make text **bold** or *italic*. Take a look at other options [here](https://markdown-to-jsx.quantizor.dev/).',
