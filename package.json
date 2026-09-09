@@ -30,6 +30,7 @@
   "license": "Apache-2.0",
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "devDependencies": {
+    "@nx/js": "23.2.0",
     "@size-limit/preset-small-lib": "^13.0.3",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^7.0.1",
@@ -46,7 +47,7 @@
     "jsdom-testing-mocks": "^1.16.0",
     "knip": "^6.32.2",
     "lint-staged": "^17.0.8",
-    "nx": "^23.0.2",
+    "nx": "23.2.0",
     "oxfmt": "^0.55.0",
     "oxlint": "^1.70.0",
     "oxlint-tsgolint": "^0.23.0",
