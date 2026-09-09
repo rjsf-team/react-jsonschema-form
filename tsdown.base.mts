@@ -13,7 +13,10 @@ import { defineConfig } from 'tsdown';
  * `--packages=external`.
  */
 
-const pkg = JSON.parse(readFileSync('package.json', 'utf8')) as { name: string };
+const pkg = JSON.parse(readFileSync('package.json', 'utf8')) as {
+  name: string;
+  exports?: Record<string, { require?: string }>;
+};
 const shortName = pkg.name.replace(/^@rjsf\//, '');
 
 /**
@@ -49,6 +52,13 @@ const tsconfig = 'tsconfig.json';
 /** Validators also ship their `compileSchemaValidators` entry as a standalone CJS + ESM bundle. */
 const extraEntries = ['compileSchemaValidators'].filter((entry) => existsSync(`src/${entry}.ts`));
 
+/**
+ * A package publishes dist/ bundles iff its main export has a `require` entry
+ * pointing at one. snapshot-tests is consumed as ESM by test suites only and
+ * declares none, so it gets lib/ alone.
+ */
+const publishesBundles = Boolean(pkg.exports?.['.']?.require);
+
 const common = {
   cwd: process.cwd(),
   outDir: 'dist',
@@ -64,19 +74,20 @@ const common = {
   suppressWarnings: ['MISSING_GLOBAL_NAME'],
 } as const;
 
-export default defineConfig([
-  {
-    ...common,
-    // Per-file ESM + declarations mirroring src/ one-to-one.
-    entry: ['src/**/*.ts', 'src/**/*.tsx'],
-    format: 'esm',
-    outDir: 'lib',
-    unbundle: true,
-    clean: true,
-    tsconfig,
-    outExtensions: () => ({ js: '.js', dts: '.d.ts' }),
-    dts: { tsconfig, sourcemap: true },
-  },
+const libConfig = {
+  ...common,
+  // Per-file ESM + declarations mirroring src/ one-to-one.
+  entry: ['src/**/*.ts', 'src/**/*.tsx'],
+  format: 'esm',
+  outDir: 'lib',
+  unbundle: true,
+  clean: true,
+  tsconfig,
+  outExtensions: () => ({ js: '.js', dts: '.d.ts' }),
+  dts: { tsconfig, sourcemap: true },
+} as const;
+
+const bundleConfigs = [
   {
     ...common,
     entry: 'src/index.ts',
@@ -102,4 +113,6 @@ export default defineConfig([
       },
     },
   })),
-]);
+];
+
+export default defineConfig([libConfig, ...(publishesBundles ? bundleConfigs : [])]);
