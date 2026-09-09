@@ -3,7 +3,7 @@
   "private": true,
   "description": "monorepo for react-jsonschema-form and its themes",
   "engines": {
-    "node": ">=20"
+    "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
   },
   "scripts": {
     "test": "nx run-many --parallel=2 --target=test",
