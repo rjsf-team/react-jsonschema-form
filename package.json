@@ -14,7 +14,7 @@
     "knip": "knip",
     "cs-check": "nx run-many --target=cs-check",
     "cs-format": "nx run-many --target=cs-format",
-    "clean-build": "rimraf packages/*/tsconfig.tsbuildinfo && rimraf packages/*/lib && rimraf packages/*/dist && pnpm run build",
+    "clean-build": "rimraf packages/*/tsconfig.tsbuildinfo && rimraf packages/*/lib && pnpm run build",
     "build": "nx run-many --target=build",
     "build-serial": "nx run-many --target=build --parallel=1",
     "start": "echo 'use \"pnpm run build\" from main directory and then \"pnpm start\" in the playground package'",

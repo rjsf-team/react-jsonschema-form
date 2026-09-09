@@ -19,7 +19,7 @@
       "cache": true,
       "//": "outputs = nx's defaults (dist/build/public) plus lib/, which tsdown emits; without it a cache hit reports success without restoring lib/ to disk",
       "outputs": ["{projectRoot}/lib", "{projectRoot}/dist", "{projectRoot}/build", "{projectRoot}/public"],
-      "//inputs": "the shared tsdown config lives outside project roots; without it a warm cache serves stale bundles when it changes",
+      "//inputs": "the shared tsdown config lives outside project roots; without it a warm cache serves stale output when it changes",
       "inputs": ["default", "^default", "{workspaceRoot}/tsdown.base.mts"]
     },
     "cs-check": {

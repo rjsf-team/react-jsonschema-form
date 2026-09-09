@@ -2,36 +2,22 @@
   "name": "@rjsf/primereact",
   "version": "6.10.0",
   "description": "PrimeReact theme, fields and widgets for react-jsonschema-form",
-  "main": "dist/index.js",
-  "module": "lib/index.js",
+  "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "type": "module",
   "sideEffects": false,
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./lib/index.js"
+      "default": "./lib/index.js"
     },
     "./lib": {
       "types": "./lib/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./lib/index.js"
+      "default": "./lib/index.js"
     },
     "./lib/*.js": {
       "types": "./lib/*.d.ts",
-      "require": "./dist/*.cjs",
-      "import": "./lib/*.js"
-    },
-    "./dist": {
-      "types": "./lib/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./lib/index.js"
-    },
-    "./dist/*.cjs": {
-      "types": "./lib/*.d.ts",
-      "require": "./dist/*.cjs",
-      "import": "./lib/*.js"
+      "default": "./lib/*.js"
     }
   },
   "scripts": {
@@ -50,7 +36,6 @@
     ]
   },
   "files": [
-    "dist",
     "lib",
     "src"
   ],

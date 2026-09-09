@@ -5,10 +5,10 @@ import { promisify } from 'node:util';
 
 const run = promisify(execFile);
 const srcDir = './src/css';
-const distDir = './dist/';
+const outDir = './resources/';
 const contentGlobs = './src/**/*.{js,jsx,ts,tsx},../playground/src/**/*.{js,jsx,ts,tsx}';
 
-fs.mkdirSync(distDir, { recursive: true });
+fs.mkdirSync(outDir, { recursive: true });
 
 const themes = fs.readdirSync(srcDir).filter((file) => path.extname(file) === '.css');
 
@@ -19,7 +19,7 @@ try {
     themes.map((file) =>
       run(
         'tailwindcss',
-        ['-i', path.join(srcDir, file), '-o', path.join(distDir, file), '--minify', '--content', contentGlobs],
+        ['-i', path.join(srcDir, file), '-o', path.join(outDir, file), '--minify', '--content', contentGlobs],
         {
           shell: process.platform === 'win32',
         },
