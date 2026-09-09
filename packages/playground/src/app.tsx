@@ -18,8 +18,7 @@ import type { PlaygroundProps } from './components/index.ts';
 import Playground from './components/index.ts';
 import Layout from './layout/index.ts';
 
-// ajv-i18n's declarations describe an ES module with a default export, but its CommonJS runtime is the localizer function itself
-const esV8Validator = customizeValidator({}, localize_es as unknown as typeof localize_es.default);
+const esV8Validator = customizeValidator({}, localize_es);
 const AJV8_2019 = customizeValidator({ AjvClass: Ajv2019 });
 const AJV8_2020 = customizeValidator({ AjvClass: Ajv2020 });
 const AJV8_DISC = customizeValidator({ ajvOptionsOverrides: { discriminator: true } });

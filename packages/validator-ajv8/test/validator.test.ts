@@ -18,9 +18,6 @@ import type { Localizer } from '../src/index.ts';
 import AJV8Validator from '../src/validator.ts';
 import { expectWarn } from './harness/testData.ts';
 
-// ajv-i18n's declarations describe an ES module with a default export, but its CommonJS runtime is the localizer map itself
-const localize = ajvI18n as unknown as typeof ajvI18n.default;
-
 const illFormedKey = "bar`'()=+*&^%$#@!";
 
 describe('AJV8Validator', () => {
@@ -2691,7 +2688,7 @@ describe('AJV8Validator', () => {
     });
     describe('validating dependencies', () => {
       beforeAll(() => {
-        validator = new AJV8Validator({ AjvClass: Ajv2019 }, localize.en as Localizer);
+        validator = new AJV8Validator({ AjvClass: Ajv2019 }, ajvI18n.en);
       });
       it('should return an error when a dependent is missing', () => {
         schema = {
