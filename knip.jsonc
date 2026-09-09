@@ -5,6 +5,10 @@
       // .size-limit/report.mjs: invoked with `node` from
       // .github/workflows/size-limit-comment.yml. knip cannot follow that.
       "entry": [".size-limit/report.mjs"],
+      "ignoreDependencies": [
+        // Required for nx publish
+        "@nx/js"
+      ]
     },
     "packages/daisyui": {
       // Every src file is resolvable through the `./lib/*.js` exports wildcard,
