@@ -52,7 +52,7 @@ const extraEntries = ['compileSchemaValidators'].filter((entry) => existsSync(`s
 const common = {
   cwd: process.cwd(),
   outDir: 'dist',
-  platform: 'browser',
+  platform: 'neutral',
   target: 'esnext',
   sourcemap: true,
   dts: false,
