@@ -1,6 +1,3 @@
-import { createElement } from 'react';
-import ReactIs from 'react-is';
-
 import getSchemaType from './getSchemaType.ts';
 import type { FormContextType, RJSFSchema, Widget, RegistryWidgetsType, StrictRJSFSchema } from './types.ts';
 
@@ -59,33 +56,10 @@ const widgetMap: Record<string, Record<string, string>> = {
   },
 };
 
-/** Wraps the given widget with stateless functional component that will merge any `defaultProps.options` with the
- * `options` that are provided in the props. It will add the wrapper component as a `MergedWidget` property onto the
- * `Widget` so that future attempts to wrap `AWidget` will return the already existing wrapper.
- *
- * @param AWidget - A widget that will be wrapped or one that is already wrapped
- * @returns - The wrapper widget
- */
-function mergeWidgetOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  AWidget: Widget<T, S, F>,
-) {
-  let { MergedWidget } = AWidget;
-  // cache return value as property of widget for proper react reconciliation
-  if (!MergedWidget) {
-    // oxlint-disable-next-line typescript/no-deprecated
-    const defaultOptions = AWidget.defaultProps?.options || {};
-    MergedWidget = ({ options, ...props }) => <AWidget options={{ ...defaultOptions, ...options }} {...props} />;
-    // The mutation is deliberate: the wrapper is cached on the widget itself for React reconciliation
-    // oxlint-disable-next-line no-param-reassign
-    AWidget.MergedWidget = MergedWidget;
-  }
-  return MergedWidget;
-}
-
 /** Given a schema representing a field to render and either the name or actual `Widget` implementation, returns the
- * React component that is used to render the widget. If the `widget` is already a React component, then it is wrapped
- * with a `MergedWidget`. Otherwise an attempt is made to look up the widget inside of the `registeredWidgets` map based
- * on the schema type and `widget` name. If no widget component can be found an `Error` is thrown.
+ * React component that is used to render the widget. If the `widget` is already a React component, it is returned
+ * as-is. Otherwise an attempt is made to look up the widget inside of the `registeredWidgets` map based on the
+ * schema type and `widget` name. If no widget component can be found an `Error` is thrown.
  *
  * @param schema - The schema for the field
  * @param [widget] - Either the name of the widget OR a `Widget` implementation to use
@@ -100,12 +74,8 @@ export default function getWidget<T = any, S extends StrictRJSFSchema = RJSFSche
 ): Widget<T, S, F> {
   const type = getSchemaType(schema);
 
-  if (
-    typeof widget === 'function' ||
-    (widget && ReactIs.isForwardRef(createElement(widget))) ||
-    ReactIs.isMemo(widget)
-  ) {
-    return mergeWidgetOptions<T, S, F>(widget as Widget<T, S, F>);
+  if (widget && typeof widget !== 'string') {
+    return widget;
   }
 
   if (typeof widget !== 'string') {
