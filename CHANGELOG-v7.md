@@ -18,6 +18,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 7.0.0
 
+## @rjsf/utils
+
+- **BREAKING CHANGE** Removed `defaultProps`-based options merging from `getWidget()`; a widget passed as a component is now returned as-is instead of being wrapped in a cached `MergedWidget`. Apply option defaults inside the widget itself instead (e.g. via destructuring). The now-unused `MergedWidget` property was also removed from the `Widget` type, and the `react-is` dependency was dropped
+
 ## Dev / docs / playground
 
 - **BREAKING CHANGE** Dropped support for Node 20, 23, 25, and 24 releases before 24.11.0; `engines.node` is now `^22.18.0 || ^24.11.0 || >=26.0.0` across all packages, matching the active Node.js LTS lines, and CI now runs against Node 22, 24, and 26

@@ -227,32 +227,6 @@ describe('uiSchema', () => {
         );
       });
 
-      it('should cache MergedWidget instance', () => {
-        // Cast to get to the underlying cached object without typescript warnings
-        expect((widget as GenericObjectType).MergedWidget).not.toBeDefined();
-        createFormComponent({
-          schema: {
-            type: 'string',
-          },
-          uiSchema: {
-            'ui:widget': 'widget',
-          },
-          widgets,
-        });
-        const cached = (widget as GenericObjectType).MergedWidget;
-        expect(cached).toBeDefined();
-        createFormComponent({
-          schema: {
-            type: 'string',
-          },
-          uiSchema: {
-            'ui:widget': 'widget',
-          },
-          widgets,
-        });
-        expect((widget as GenericObjectType).MergedWidget).toBe(cached);
-      });
-
       it('should render merged ui:widget options for widget referenced as function', () => {
         const { node } = createFormComponent({
           schema,

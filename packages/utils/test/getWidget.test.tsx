@@ -35,37 +35,28 @@ const schemaStr = JSON.stringify(schema);
 
 const TestRefWidget: Widget = forwardRef<HTMLSpanElement, Partial<WidgetProps>>(
   (props: Partial<WidgetProps>, ref: ForwardedRef<HTMLSpanElement>) => {
-    const { options } = props;
+    const { id = 'test-id', ...options } = props.options ?? {};
     return (
-      <span {...options} ref={ref}>
+      <span id={id} {...options} ref={ref}>
         test
       </span>
     );
   },
 );
 
-// oxlint-disable-next-line typescript/no-deprecated
-TestRefWidget.defaultProps = {
-  options: { id: 'test-id' },
-};
-
 function TestWidget(props: WidgetProps) {
   const { options } = props;
   return <div {...options}>test</div>;
 }
 
-TestWidget.defaultProps = {
-  id: 'foo',
-};
-
-function TestWidgetDefaults(props: WidgetProps) {
-  const { options } = props;
-  return <div {...options}>test</div>;
+function TestWidgetWithDefaultOptions(props: WidgetProps) {
+  const { color = 'yellow', ...options } = props.options;
+  return (
+    <div color={color} {...options}>
+      test
+    </div>
+  );
 }
-
-TestWidgetDefaults.defaultProps = {
-  options: { color: 'yellow' },
-};
 
 const widgetProps: WidgetProps = {
   id: '',
@@ -119,14 +110,14 @@ describe('getWidget()', () => {
   });
 
   it('should return `SelectWidget` for boolean type', () => {
-    const registry = { SelectWidget: TestWidgetDefaults };
+    const registry = { SelectWidget: TestWidgetWithDefaultOptions };
     const TheWidget = getWidget(subschema, 'select', registry);
     const { asFragment } = render(<TheWidget {...widgetProps} options={{ color: 'green' }} />);
     expect(asFragment()).toMatchSnapshot();
   });
 
   it('should not fail on correct component', () => {
-    const TheWidget = getWidget(schema, TestWidgetDefaults);
+    const TheWidget = getWidget(schema, TestWidgetWithDefaultOptions);
     const { asFragment } = render(<TheWidget {...widgetProps} />);
     expect(asFragment()).toMatchSnapshot();
   });
