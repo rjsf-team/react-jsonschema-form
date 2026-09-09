@@ -1,4 +1,4 @@
-import { cleanupOptions } from '../src/utils';
+import { cleanupOptions } from '../src/utils.ts';
 
 describe('cleanupOptions()', () => {
   it('removes autocapitalize from Mantine theme props', () => {
