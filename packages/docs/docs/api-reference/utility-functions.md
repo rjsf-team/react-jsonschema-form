@@ -655,9 +655,9 @@ Any `globalOptions` will always be returned, unless they are overridden by optio
 ### getWidget&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Given a schema representing a field to render and either the name or actual `Widget` implementation, returns the
-React component that is used to render the widget. If the `widget` is already a React component, then it is wrapped
-with a `MergedWidget`. Otherwise an attempt is made to look up the widget inside of the `registeredWidgets` map based
-on the schema type and `widget` name. If no widget component can be found an `Error` is thrown.
+React component that is used to render the widget. If the `widget` is already a React component, it is returned
+as-is. Otherwise an attempt is made to look up the widget inside of the `registeredWidgets` map based on the
+schema type and `widget` name. If no widget component can be found an `Error` is thrown.
 
 #### Parameters
 
