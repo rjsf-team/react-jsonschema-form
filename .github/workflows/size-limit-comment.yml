@@ -15,13 +15,15 @@ permissions:
   contents: read # for the trusted checkout below
   pull-requests: write
   actions: read
-# The list-then-create/update of the sticky comment is a check-then-act race if
-# two runs for the SAME commit overlap (e.g. a double re-run); serialize per
-# head sha. A repo-global group would let a burst of PRs cancel each other's
-# pending runs (GitHub keeps at most one pending run per group). No
-# cancel-in-progress so the newest run still lands its update.
+# The list-then-create/update of the sticky comment is a check-then-act race,
+# so serialize per PR branch: two quick pushes to one PR then run in order and
+# the later job's head-sha check sees the moved branch and skips. A repo-global
+# group would let a burst of PRs cancel each other's pending runs (GitHub keeps
+# at most one pending run per group). No cancel-in-progress so the newest run
+# still lands its update. head_repository is null once a fork is deleted; the
+# expression then yields an empty segment rather than failing.
 concurrency:
-  group: size-limit-comment-${{ github.event.workflow_run.head_sha }}
+  group: size-limit-comment-${{ github.event.workflow_run.head_repository.full_name }}-${{ github.event.workflow_run.head_branch }}
 jobs:
   comment:
     # success = budgets pass, failure = budgets exceeded; both upload a report.
@@ -49,10 +51,10 @@ jobs:
             // The artifact was written by PR code, so its PR number is trusted
             // only once that PR is confirmed to be at this run's head sha, which
             // comes from the workflow_run payload that fork code cannot write to.
-            const { readFileSync } = require('fs');
-            const prNumber = Number(readFileSync('pr_number', 'utf8').trim());
+            const { existsSync, readFileSync } = require('fs');
+            const prNumber = existsSync('pr_number') ? Number(readFileSync('pr_number', 'utf8').trim()) : NaN;
             if (!Number.isInteger(prNumber) || prNumber <= 0) {
-              core.setFailed(`Artifact has no PR number for ${headSha}.`);
+              core.setFailed(`Artifact has no PR number for ${headSha} (uploaded by an older size-limit.yml?).`);
               return;
             }
             const pr = await github.rest.pulls.get({ owner, repo, pull_number: prNumber })
