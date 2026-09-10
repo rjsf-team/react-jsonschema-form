@@ -18,10 +18,9 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 7.0.0
 
-
 ## @rjsf/antd
 
-- **BREAKING CHANGE** Dropped support for `antd` version 5; the peer dependency range is now `>6.3.5`. `ErrorList` and `CyclicSchemaExpandTemplate` use of `Alert` always passing `title` prop now
+- **BREAKING CHANGE** Dropped support for `antd` version 5; the peer dependency range is now `^6.3.6`. `ErrorList` and `CyclicSchemaExpandTemplate` use of `Alert` always passing `title` prop now. The `6.3.6` floor isn't arbitrary: antd 6.0.0-6.3.5 crash `@rjsf/antd` forms on first render (`getRealHeight` destructuring a `null` node), fixed upstream in [ant-design/ant-design#57636](https://github.com/ant-design/ant-design/pull/57636)
 
 ## @rjsf/chakra-ui
 

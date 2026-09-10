@@ -38,7 +38,7 @@
     "@ant-design/icons": "^6.0.0",
     "@rjsf/core": "workspace:^",
     "@rjsf/utils": "workspace:^",
-    "antd": ">6.3.5",
+    "antd": "^6.3.6",
     "dayjs": "^1.8.0",
     "react": ">=19"
   },

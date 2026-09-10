@@ -38,7 +38,7 @@
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
-  - [Material UI version 7](#material-ui-version-7)
+  - [Material UI version 9](#material-ui-version-9)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [Contact](#contact)
@@ -87,7 +87,7 @@ yarn add @rjsf/mui
 
 ## Usage
 
-### Material UI version 7
+### Material UI version 9
 
 ```js
 import Form from '@rjsf/mui';
@@ -127,7 +127,6 @@ You can pass MUI-specific props (like `sx`, `rjsfSlotProps`, `variant`, etc.) di
 ```
 
 For more details on available properties and `rjsfSlotProps` targets, see the [Material UI Customization Documentation](https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/themes/mui/uiSchema/).
-
 
 <!-- ROADMAP -->
 
