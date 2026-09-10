@@ -18,16 +18,21 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 7.0.0
 
-## @rjsf/core
 
-- **BREAKING CHANGE:** `GridType` and `Operators` are now `as const` objects with same-named union types instead of `enum`s, so the source is valid under Node's type stripping. Values and `GridType.ROW`-style member access are unchanged; code that used a member as a type must write `typeof GridType.ROW` instead of `GridType.ROW` ([#5244](https://github.com/rjsf-team/react-jsonschema-form/pull/5244))
-- **BREAKING CHANGE** `withTheme()` now returns a plain function component instead of a `forwardRef`-wrapped one, and `FormProps['onSubmit']`'s event parameter is now typed as `SubmitEvent<any>` instead of the deprecated `FormEvent<any>`
-- **BREAKING CHANGE:** Removed deprecated `Form` APIs: the `getUsedFormData()` and `getFieldNames()` instance methods (no direct replacement), the `omitExtraData()` instance method (use `SchemaUtils.omitExtraData(schema, formData)` instead), the `removeEmptyOptionalObjects` prop (already a no-op; use `omitExtraData`, which now prunes empty optional objects itself), and `boolean` values for the `liveValidate`/`liveOmit` props (use `'onChange'` in place of `true`, or omit the prop in place of `false`). Also removed the `ui:rootFieldId` uiSchema directive; use the `Form.idPrefix` prop instead
+## @rjsf/antd
+
+- **BREAKING CHANGE** Dropped support for `antd` version 5; the peer dependency range is now `>6.3.5`. `ErrorList` and `CyclicSchemaExpandTemplate` use of `Alert` always passing `title` prop now
 
 ## @rjsf/chakra-ui
 
 - Converted the internal `forwardRef`-wrapped UI primitives (`Field`, `Slider`, `Alert`, `NumberInputRoot`, `Checkbox`, `Radio`, `CloseButton`, and the `Select` family) to plain function components that accept `ref` as a regular prop, now that React 19 supports this natively
 - `SelectRoot` is now a plain generic function (`function SelectRoot<T extends CollectionItem>(...)`) instead of a non-generic arrow function cast to `ChakraSelect.RootComponent`, removing the cast and the wrapping parens it required
+
+## @rjsf/core
+
+- **BREAKING CHANGE:** `GridType` and `Operators` are now `as const` objects with same-named union types instead of `enum`s, so the source is valid under Node's type stripping. Values and `GridType.ROW`-style member access are unchanged; code that used a member as a type must write `typeof GridType.ROW` instead of `GridType.ROW` ([#5244](https://github.com/rjsf-team/react-jsonschema-form/pull/5244))
+- **BREAKING CHANGE** `withTheme()` now returns a plain function component instead of a `forwardRef`-wrapped one, and `FormProps['onSubmit']`'s event parameter is now typed as `SubmitEvent<any>` instead of the deprecated `FormEvent<any>`
+- **BREAKING CHANGE:** Removed deprecated `Form` APIs: the `getUsedFormData()` and `getFieldNames()` instance methods (no direct replacement), the `omitExtraData()` instance method (use `SchemaUtils.omitExtraData(schema, formData)` instead), the `removeEmptyOptionalObjects` prop (already a no-op; use `omitExtraData`, which now prunes empty optional objects itself), and `boolean` values for the `liveValidate`/`liveOmit` props (use `'onChange'` in place of `true`, or omit the prop in place of `false`). Also removed the `ui:rootFieldId` uiSchema directive; use the `Form.idPrefix` prop instead
 
 ## @rjsf/mantine
 
@@ -39,6 +44,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/mui
 
 - Updated the README, which said "Material UI 7 requires React 18, so you will need to upgrade" — the peer requirement is now React 19
+- **BREAKING CHANGE** Dropped support for `@mui/material`/`@mui/icons-material` version 7; the peer dependency range is now `^9.0.0`
 
 ## @rjsf/react-bootstrap
 

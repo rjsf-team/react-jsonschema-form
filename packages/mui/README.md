@@ -47,14 +47,14 @@
 
 ## About The Project
 
-Exports `MUI` version 5 theme, fields, and widgets for `react-jsonschema-form`.
+Exports `MUI` version 9 theme, fields, and widgets for `react-jsonschema-form`.
 
 [<img src="./screenshot.png" alt="product-screenshot" width="800" />](https://rjsf-team.github.io/@rjsf/mui)
 
 ### Built With
 
 - [react-jsonschema-form](https://github.com/rjsf-team/react-jsonschema-form/)
-- [Material UI 7](https://mui.com/)
+- [Material UI 9](https://mui.com/)
 - [TypeScript](https://www.typescriptlang.org/)
 
 <!-- GETTING STARTED -->
@@ -65,8 +65,8 @@ Exports `MUI` version 5 theme, fields, and widgets for `react-jsonschema-form`.
 
 NOTE: This theme requires React 19, so you will need to upgrade if you are on an older version
 
-- `@mui/material >= 7`
-- `@mui/icons-material >= 7`
+- `@mui/material >= 9`
+- `@mui/icons-material >= 9`
 - `@emotion/react >= 11`
 - `@emotion/styled >= 11`
 - `@rjsf/core >= 6`

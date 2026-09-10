@@ -1,9 +1,7 @@
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import type { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { TranslatableString } from '@rjsf/utils';
-import { Alert, Space, theme, version } from 'antd';
-
-const antdMajor = parseInt(version.split('.')[0], 10);
+import { Alert, Space, theme } from 'antd';
 
 /** The `ErrorList` component is the template that renders the all the errors associated with the fields in the `Form`
  *
@@ -41,11 +39,12 @@ export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSche
     </ul>
   );
 
-  // Deal with the two versions of antd that we support (v5, v6). In RJSF v7, we will drop support for antd 5, so clean this up
-  const headerProp =
-    antdMajor >= 6
-      ? { title: translateString(TranslatableString.ErrorsLabel) }
-      : { message: translateString(TranslatableString.ErrorsLabel) };
-
-  return <Alert className='panel panel-danger errors' description={renderErrors()} type='error' {...headerProp} />;
+  return (
+    <Alert
+      className='panel panel-danger errors'
+      description={renderErrors()}
+      type='error'
+      title={translateString(TranslatableString.ErrorsLabel)}
+    />
+  );
 }
