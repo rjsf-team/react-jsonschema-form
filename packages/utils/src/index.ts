@@ -69,7 +69,6 @@ import parseDateString from './parseDateString.ts';
 import { getByPath, hasByPath, setByPath, toPath, unsetByPath } from './pathUtils.ts';
 import type { ObjectPath } from './pathUtils.ts';
 import rangeSpec from './rangeSpec.ts';
-import removeOptionalEmptyObjects from './removeOptionalEmptyObjects.ts';
 import replaceStringParameters from './replaceStringParameters.ts';
 import resolveUiSchema from './resolveUiSchema.ts';
 import schemaRequiresTrueValue from './schemaRequiresTrueValue.ts';
@@ -183,8 +182,6 @@ export {
   pad,
   parseDateString,
   rangeSpec,
-  // oxlint-disable-next-line typescript/no-deprecated
-  removeOptionalEmptyObjects,
   replaceStringParameters,
   resolveUiSchema,
   schemaRequiresTrueValue,

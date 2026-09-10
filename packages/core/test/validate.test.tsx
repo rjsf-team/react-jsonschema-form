@@ -169,7 +169,7 @@ describe('Validation', () => {
           schema,
           customValidate,
           formData,
-          liveValidate: true,
+          liveValidate: 'onChange',
         });
 
         const input = node.querySelector('input')!;
@@ -439,7 +439,7 @@ describe('Validation', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          liveValidate: true,
+          liveValidate: 'onChange',
           formData,
           templates: { ErrorListTemplate: CustomErrorList },
           formContext: { className: 'foo' },
@@ -490,7 +490,7 @@ describe('Validation', () => {
           {
             schema,
             formData,
-            liveValidate: true,
+            liveValidate: 'onChange',
           },
           validator,
         );

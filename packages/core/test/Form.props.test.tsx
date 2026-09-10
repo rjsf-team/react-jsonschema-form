@@ -255,7 +255,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
       const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
       const formProps: Omit<FormProps, 'validator'> = {
         ref: createRef(),
-        liveValidate: true,
+        liveValidate: 'onChange',
         formData: {
           areaCode: '123455',
         },

@@ -15,7 +15,6 @@ import {
   isSelectTest,
   retrieveSchemaTest,
   sanitizeDataForNewSchemaTest,
-  toPathSchemaTest,
 } from '../../../utils/test/schema/index.ts';
 import getTestValidator from './getTestValidator.ts';
 
@@ -34,7 +33,6 @@ isMultiSelectTest(testValidator);
 isSelectTest(testValidator);
 retrieveSchemaTest(testValidator);
 sanitizeDataForNewSchemaTest(testValidator);
-toPathSchemaTest(testValidator);
 
 const testValidatorDiscriminated = getTestValidator({
   ajvOptionsOverrides: { discriminator: true },
@@ -53,7 +51,6 @@ isMultiSelectTest(testValidatorDiscriminated);
 isSelectTest(testValidatorDiscriminated);
 retrieveSchemaTest(testValidatorDiscriminated);
 sanitizeDataForNewSchemaTest(testValidatorDiscriminated);
-toPathSchemaTest(testValidatorDiscriminated);
 
 const testValidator2019 = getTestValidator({ AjvClass: Ajv2019 });
 
@@ -70,7 +67,6 @@ isMultiSelectTest(testValidator2019);
 isSelectTest(testValidator2019);
 retrieveSchemaTest(testValidator2019);
 sanitizeDataForNewSchemaTest(testValidator2019);
-toPathSchemaTest(testValidator2019);
 
 const testValidator2020 = getTestValidator({ AjvClass: Ajv2020 });
 
@@ -86,5 +82,4 @@ isFilesArrayTest(testValidator2020);
 isMultiSelectTest(testValidator2020);
 isSelectTest(testValidator2020);
 retrieveSchemaTest(testValidator2020);
-retrieveSchemaTest(testValidator2020);
-toPathSchemaTest(testValidator2020);
+sanitizeDataForNewSchemaTest(testValidator2020);

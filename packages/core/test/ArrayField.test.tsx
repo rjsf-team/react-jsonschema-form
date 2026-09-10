@@ -417,7 +417,7 @@ describe('ArrayField', () => {
           ArrayFieldTemplate: CustomComponent,
         },
         formData: [1],
-        liveValidate: true,
+        liveValidate: 'onChange',
       });
 
       // trigger the errors by submitting the form
@@ -909,7 +909,7 @@ describe('ArrayField', () => {
       };
       const formData = [1, 2, 3];
       const { node, onChange, onError } = createFormComponent({
-        liveValidate: true,
+        liveValidate: 'onChange',
         schema,
         formData,
       });
@@ -1126,7 +1126,7 @@ describe('ArrayField', () => {
         schema,
         uiSchema,
         formData: {},
-        liveValidate: true,
+        liveValidate: 'onChange',
         noValidate: true,
       });
       await submitForm(form.node, user);
@@ -1137,7 +1137,7 @@ describe('ArrayField', () => {
         schema,
         uiSchema,
         formData: {},
-        liveValidate: true,
+        liveValidate: 'onChange',
         noValidate: false,
       });
       await submitForm(form.node, user);
@@ -1284,7 +1284,7 @@ describe('ArrayField', () => {
             SelectWidget: CustomComponent,
           },
           formData: ['foo', 'foo'],
-          liveValidate: true,
+          liveValidate: 'onChange',
         });
         // trigger the errors by submitting the form since initial render no longer shows them
         await submitForm(node, user);
@@ -1463,7 +1463,7 @@ describe('ArrayField', () => {
           },
           uiSchema,
           formData: [],
-          liveValidate: true,
+          liveValidate: 'onChange',
         });
 
         // trigger the errors by submitting the form since initial render no longer shows them
@@ -1624,7 +1624,7 @@ describe('ArrayField', () => {
           FileWidget: CustomComponent,
         },
         formData: [],
-        liveValidate: true,
+        liveValidate: 'onChange',
       });
 
       // trigger the errors by submitting the form since initial render no longer shows them
@@ -1696,7 +1696,7 @@ describe('ArrayField', () => {
         schema,
         templates: { ArrayFieldTemplate: CustomTemplate, ArrayFieldItemTemplate: CustomItem },
         formData: [[]],
-        liveValidate: true,
+        liveValidate: 'onChange',
       });
 
       // trigger the errors by submitting the form since initial render no longer shows them
@@ -3108,7 +3108,7 @@ describe('ArrayField', () => {
       const { node, rerender } = createFormComponent({
         schema,
         formData: [{}],
-        liveValidate: true,
+        liveValidate: 'onChange',
       });
 
       // trigger the errors by submitting the form since initial render no longer shows them.
@@ -3121,7 +3121,7 @@ describe('ArrayField', () => {
       const errorMessage = node.querySelector('#root_0_text__error .text-danger');
       expect(errorMessage).toHaveTextContent("must have required property 'text'");
 
-      rerender({ schema, formData: [{ text: 'test' }], liveValidate: true });
+      rerender({ schema, formData: [{ text: 'test' }], liveValidate: 'onChange' });
 
       expect(node.querySelectorAll('#root_0_text__error')).toHaveLength(0);
     });

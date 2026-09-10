@@ -252,7 +252,7 @@ describe('ObjectField', () => {
         formData: {
           checkbox: true,
         },
-        liveValidate: true,
+        liveValidate: 'onChange',
       });
 
       // Uncheck the checkbox
@@ -293,7 +293,7 @@ describe('ObjectField', () => {
           email: 'Appie@hotmail.com',
           emailConfirm: 'wrong@wrong.com',
         },
-        liveValidate: true,
+        liveValidate: 'onChange',
       });
 
       // trigger the errors by submitting the form since initial render no longer shows them
@@ -308,7 +308,7 @@ describe('ObjectField', () => {
           email: 'Appie@hotmail.com',
           emailConfirm: 'Appie@hotmail.com',
         },
-        liveValidate: true,
+        liveValidate: 'onChange',
       });
 
       expect(node.querySelectorAll('#root_foo__error')).toHaveLength(0);
@@ -320,7 +320,7 @@ describe('ObjectField', () => {
         formData: {
           foo: null,
         },
-        liveValidate: true,
+        liveValidate: 'onChange',
       });
 
       // trigger the errors by submitting the form since initial render no longer shows them.
@@ -333,7 +333,7 @@ describe('ObjectField', () => {
       const errorMessageContent = node.querySelector('#root_foo__error .text-danger');
       expect(errorMessageContent).toHaveTextContent('must be string');
 
-      rerender({ schema, formData: { foo: 'test' }, liveValidate: true });
+      rerender({ schema, formData: { foo: 'test' }, liveValidate: 'onChange' });
 
       expect(node.querySelectorAll('#root_foo__error')).toHaveLength(0);
     });

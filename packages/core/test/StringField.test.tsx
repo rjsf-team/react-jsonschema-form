@@ -331,7 +331,7 @@ describe('StringField', () => {
       const { node, rerender } = createFormComponent({
         schema: { type: 'string' },
         formData: null,
-        liveValidate: true,
+        liveValidate: 'onChange',
       });
 
       // trigger the errors by submitting the form since initial render no longer shows them
@@ -342,7 +342,7 @@ describe('StringField', () => {
       const errorMessageContent = node.querySelector('#root__error .text-danger');
       expect(errorMessageContent).toHaveTextContent('must be string');
 
-      rerender({ schema: { type: 'string' }, formData: 'hello', liveValidate: true });
+      rerender({ schema: { type: 'string' }, formData: 'hello', liveValidate: 'onChange' });
 
       expect(node.querySelectorAll('#root__error')).toHaveLength(0);
     });
@@ -925,7 +925,7 @@ describe('StringField', () => {
           format: 'date',
         },
         uiSchema,
-        liveValidate: true,
+        liveValidate: 'onChange',
       });
 
       const input = node.querySelector<HTMLInputElement>('[type=date]')!;
@@ -1647,7 +1647,7 @@ describe('StringField', () => {
           format: 'date',
         },
         uiSchema,
-        liveValidate: true,
+        liveValidate: 'onChange',
         formData: '2012-12-12',
       });
 
@@ -1662,7 +1662,7 @@ describe('StringField', () => {
             format: 'date',
           },
           uiSchema,
-          liveValidate: true,
+          liveValidate: 'onChange',
           formData: '2012-1212',
         }),
       ).toThrow('Unable to parse date 2012-1212');
@@ -1879,7 +1879,7 @@ describe('StringField', () => {
           type: 'string',
           format: 'email',
         },
-        liveValidate: true,
+        liveValidate: 'onChange',
       });
 
       await user.type(node.querySelector('[type=email]')!, 'invalid');
@@ -2015,7 +2015,7 @@ describe('StringField', () => {
           type: 'string',
           format: 'uri',
         },
-        liveValidate: true,
+        liveValidate: 'onChange',
       });
 
       await user.type(node.querySelector('[type=url]')!, 'invalid');

@@ -215,28 +215,6 @@ export interface FieldPathId {
   name?: string;
 }
 
-/** Type describing a name used for a field in the `PathSchema` */
-export interface FieldPath {
-  /** The name of a field */
-  $name: string;
-}
-
-/** Type describing a recursive structure of `FieldPath`s for an object with a non-empty set of keys
- * @deprecated - To be removed as an exported `@rjsf/utils` type in a future release
- */
-export type PathSchema<T = any> = T extends (infer U)[]
-  ? FieldPath & {
-      // oxlint-disable-next-line typescript/no-deprecated
-      [i: number]: PathSchema<U>;
-    }
-  : T extends GenericObjectType
-    ? FieldPath & {
-        /** The set of names for fields in the recursive object structure */
-        // oxlint-disable-next-line typescript/no-deprecated
-        [key in keyof T]?: PathSchema<T[key]>;
-      }
-    : FieldPath;
-
 /** The type for error produced by RJSF schema validation */
 export interface RJSFValidationError {
   /** Name of the error, for example, "required" or "minLength" */
@@ -1225,11 +1203,6 @@ export type UiSchema<
      * Registry for use everywhere.
      */
     'ui:globalOptions'?: GlobalUISchemaOptions;
-    /** Allows the form to generate a unique prefix for the `Form`'s root prefix
-     *
-     * @deprecated - use `Form.idPrefix` instead, will be removed in a future major version
-     */
-    'ui:rootFieldId'?: string;
     /** By default, any field that is rendered for an `anyOf`/`oneOf` schema will be wrapped inside the `AnyOfField` or
      * `OneOfField` component. This default behavior may be undesirable if your custom field already handles behavior
      * related to choosing one or more subschemas contained in the `anyOf`/`oneOf` schema.
@@ -1505,14 +1478,4 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
    */
   sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: any): T;
-  /** Generates an `PathSchema` object for the `schema`, recursively
-   *
-   * @param schema - The schema for which the display label flag is desired
-   * @param [name] - The base name for the schema
-   * @param [formData] - The current formData, if any, onto which to provide any missing defaults
-   * @returns - The `PathSchema` object for the `schema`
-   * @deprecated - To be removed as an exported `@rjsf/utils` function in a future release
-   */
-  // oxlint-disable-next-line typescript/no-deprecated
-  toPathSchema(schema: S, name?: string, formData?: T): PathSchema<T>;
 }
