@@ -25,6 +25,9 @@ jobs:
           cache: 'pnpm'
           cache-dependency-path: 'pnpm-lock.yaml'
       - run: pnpm install --frozen-lockfile
+      # Lockfile hygiene is independent of the Node version, so check it once.
+      - if: matrix.node-version == '24.x'
+        run: pnpm dedupe --check
       - run: pnpm run lint
       # Workspace-wide and independent of the Node version, so run it once.
       - if: matrix.node-version == '24.x'
