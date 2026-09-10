@@ -98,6 +98,36 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
       });
 
+      describe('schema with a ref wrapped in a single-element allOf (issue #5177)', () => {
+        const schema: RJSFSchema = {
+          definitions: {
+            person: {
+              type: 'object',
+              properties: {
+                name: {
+                  type: 'string',
+                  default: 'Jane',
+                },
+              },
+            },
+          },
+          type: 'object',
+          properties: {
+            person: {
+              allOf: [{ $ref: '#/definitions/person' }],
+            },
+          },
+        };
+
+        test('populates the default from the referenced schema', () => {
+          expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual({
+            person: {
+              name: 'Jane',
+            },
+          });
+        });
+      });
+
       describe('schema with anyOf containing $ref AND default should preserve existing formData', () => {
         // This test verifies the fix for a bug where anyOf schemas with $ref AND default
         // would incorrectly override existing formData with the default value.
@@ -1199,7 +1229,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         describe('a recursive allof schema', () => {
           const schema = RECURSIVE_REF_ALLOF;
           const expected = {
-            value: [undefined],
+            value: [{ name: '' }],
           };
 
           test('getDefaultFormState', () => {
