@@ -800,11 +800,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               <style
                                 data-mantine-styles="inline"
                               >
-                                .__m__-_r_vb_{--grid-gap:var(--mantine-spacing-md);}
+                                .__m__-_r_vb_{--grid-gap:var(--mantine-spacing-xs);}
                               </style>
                               <div
                                 class="m_410352e9 mantine-Grid-root __m__-_r_vb_"
-                                gutter="xs"
                               >
                                 <div
                                   class="m_dee7bd2f mantine-Grid-inner"
@@ -3661,11 +3660,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               <style
                                 data-mantine-styles="inline"
                               >
-                                .__m__-_r_1cu_{--grid-gap:var(--mantine-spacing-md);}
+                                .__m__-_r_1cu_{--grid-gap:var(--mantine-spacing-xs);}
                               </style>
                               <div
                                 class="m_410352e9 mantine-Grid-root __m__-_r_1cu_"
-                                gutter="xs"
                               >
                                 <div
                                   class="m_dee7bd2f mantine-Grid-inner"
@@ -6564,11 +6562,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               <style
                                 data-mantine-styles="inline"
                               >
-                                .__m__-_r_1qo_{--grid-gap:var(--mantine-spacing-md);}
+                                .__m__-_r_1qo_{--grid-gap:var(--mantine-spacing-xs);}
                               </style>
                               <div
                                 class="m_410352e9 mantine-Grid-root __m__-_r_1qo_"
-                                gutter="xs"
                               >
                                 <div
                                   class="m_dee7bd2f mantine-Grid-inner"
@@ -8523,11 +8520,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               <style
                                 data-mantine-styles="inline"
                               >
-                                .__m__-_r_ho_{--grid-gap:var(--mantine-spacing-md);}
+                                .__m__-_r_ho_{--grid-gap:var(--mantine-spacing-xs);}
                               </style>
                               <div
                                 class="m_410352e9 mantine-Grid-root __m__-_r_ho_"
-                                gutter="xs"
                               >
                                 <div
                                   class="m_dee7bd2f mantine-Grid-inner"

@@ -1,6 +1,6 @@
 // oxlint-disable no-console
-import type { ComponentType, SubmitEvent } from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import type { SubmitEvent } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import type { FormProps, IChangeEvent } from '@rjsf/core';
@@ -59,19 +59,17 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
 
   const playGroundFormRef = useRef<any>(null);
 
-  // oxlint-disable-next-line react/hook-use-state
-  const [FormComponent, setFormComponent] = useState<ComponentType<FormProps>>(() => withTheme({}));
+  const FormComponent = useMemo(() => withTheme(themes[theme].theme), [themes, theme]);
 
   const onThemeSelected = useCallback(
-    (newTheme: string, { stylesheet: newStylesheet, theme: themeObj }: ThemesType) => {
+    (newTheme: string, { stylesheet: newStylesheet }: ThemesType) => {
       setTheme(newTheme);
-      setFormComponent(() => withTheme(themeObj));
       setStylesheet(newStylesheet);
       if (uiSchemaGenerator) {
         setUiSchema(uiSchemaGenerator.generator(newTheme));
       }
     },
-    [uiSchemaGenerator, setTheme, setFormComponent, setStylesheet],
+    [uiSchemaGenerator, setTheme, setStylesheet],
   );
 
   const load = useCallback(

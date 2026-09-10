@@ -113,29 +113,28 @@ export const SelectValueText = ({ children, ref, ...rest }: SelectValueTextProps
 /**
  * SelectRoot component that serves as the root element for the select component.
  *
- * Unlike its siblings in this file, its props type stays an inline intersection rather than a
- * named interface: `ChakraSelect.RootProps<T>` is generic over the item type, and the final `as
- * ChakraSelect.RootComponent` cast (needed because this implementation itself isn't generic) has
- * to apply to the whole arrow function, which is why the extra wrapping parens below are required
- * — removing them would make the cast apply to the returned JSX instead and break the type.
- *
  * @param props - The properties for the select root component.
  * @param [props.positioning] - The positioning properties for the select component.
  * @param [props.children] - The content to display inside the select root.
  * @returns The rendered select root component.
  */
-export const SelectRoot = (({ ref, ...props }: ChakraSelect.RootProps & { ref?: Ref<HTMLDivElement> }) => (
-  <ChakraSelect.Root {...props} ref={ref} positioning={{ sameWidth: true, ...props.positioning }}>
-    {props.asChild ? (
-      props.children
-    ) : (
-      <>
-        <ChakraSelect.HiddenSelect />
-        {props.children}
-      </>
-    )}
-  </ChakraSelect.Root>
-)) as ChakraSelect.RootComponent;
+export function SelectRoot<T extends CollectionItem>({
+  ref,
+  ...props
+}: ChakraSelect.RootProps<T> & { ref?: Ref<HTMLDivElement> }) {
+  return (
+    <ChakraSelect.Root {...props} ref={ref} positioning={{ sameWidth: true, ...props.positioning }}>
+      {props.asChild ? (
+        props.children
+      ) : (
+        <>
+          <ChakraSelect.HiddenSelect />
+          {props.children}
+        </>
+      )}
+    </ChakraSelect.Root>
+  );
+}
 
 interface SelectItemGroupProps extends ComponentProps<typeof ChakraSelect.ItemGroup> {
   label: React.ReactNode;

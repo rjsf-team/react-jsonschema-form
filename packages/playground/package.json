@@ -61,9 +61,9 @@
     "dayjs": "^1.11.21",
     "monaco-editor": "^0.55.1",
     "primereact": "^10.9.8",
-    "react": "^19.2.0",
+    "react": "^19.3.0",
     "react-bootstrap": "^2.10.10",
-    "react-dom": "^19.2.0",
+    "react-dom": "^19.3.0",
     "react-frame-component": "^5.3.2",
     "react-resizable-panels": "^4.11.2"
   },

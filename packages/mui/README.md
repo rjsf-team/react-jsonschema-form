@@ -63,7 +63,7 @@ Exports `MUI` version 5 theme, fields, and widgets for `react-jsonschema-form`.
 
 ### Prerequisites
 
-NOTE: Material UI 7 requires React 18, so you will need to upgrade
+NOTE: This theme requires React 19, so you will need to upgrade if you are on an older version
 
 - `@mui/material >= 7`
 - `@mui/icons-material >= 7`

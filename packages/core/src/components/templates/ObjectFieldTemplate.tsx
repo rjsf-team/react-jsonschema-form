@@ -78,7 +78,7 @@ export default function ObjectFieldTemplate<
         />
       )}
       {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
-      {properties.map((prop: ObjectFieldTemplatePropertyType) => prop.content)}
+      {properties.map((prop: ObjectFieldTemplatePropertyType<T, S, F>) => prop.content)}
       {canExpand<T, S, F>(schema, uiSchema, formData) && (
         <AddButton
           id={buttonId(fieldPathId, 'add')}
