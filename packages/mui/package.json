@@ -5,7 +5,7 @@
   "types": "./lib/index.d.ts",
   "type": "module",
   "sideEffects": false,
-  "description": "Material UI 7 theme, fields and widgets for react-jsonschema-form",
+  "description": "Material UI 9 theme, fields and widgets for react-jsonschema-form",
   "exports": {
     ".": "./lib/index.js",
     "./lib": "./lib/index.js",
@@ -36,8 +36,8 @@
   "peerDependencies": {
     "@emotion/react": "^11.7.0",
     "@emotion/styled": "^11.6.0",
-    "@mui/icons-material": "^7.0.0 || ^9.0.0",
-    "@mui/material": "^7.0.0 || ^9.0.0",
+    "@mui/icons-material": "^9.0.0",
+    "@mui/material": "^9.0.0",
     "@rjsf/core": "workspace:^",
     "@rjsf/utils": "workspace:^",
     "react": ">=19"
