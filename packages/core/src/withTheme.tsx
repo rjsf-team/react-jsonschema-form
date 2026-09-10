@@ -12,7 +12,13 @@ export type ThemeProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
   'fields' | 'templates' | 'widgets' | '_internalFormWrapper'
 >;
 
-/** A Higher-Order component that creates a wrapper around a `Form` with the overrides from the `WithThemeProps` */
+/** A Higher-Order component that creates a wrapper around a `Form` with the overrides from the `WithThemeProps`.
+ *
+ * Returns a plain function component, not a `forwardRef`-wrapped one. Don't pass the return value directly to
+ * `useState()` or a state setter (e.g. `useState(withTheme(theme))`, `setForm(withTheme(theme))`) — React treats a
+ * bare function passed there as a lazy initializer/updater and calls it immediately with no arguments, which crashes.
+ * Wrap it in a lazy initializer instead: `useState(() => withTheme(theme))`.
+ */
 export default function withTheme<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   themeProps: ThemeProps<T, S, F>,
 ): ComponentType<FormProps<T, S, F>> {
