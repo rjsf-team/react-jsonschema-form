@@ -9,7 +9,7 @@ import {
 } from './testUtils.tsx';
 
 const user = userEvent.setup();
-const renderErrorSuppression = setupConsoleErrorSuppression();
+setupConsoleErrorSuppression();
 
 describeRepeated('Form common: schema definitions and defaults', (createFormComponent) => {
   describe('Schema definitions', () => {
@@ -171,9 +171,6 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       };
 
       expect(() => createFormComponent({ schema })).toThrow(/#\/definitions\/nonexistent/);
-      expect(renderErrorSuppression.consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('The above error occurred in the <Form> component'),
-      );
     });
 
     it('should propagate referenced definition defaults', () => {

@@ -35,17 +35,17 @@
     ]
   },
   "peerDependencies": {
-    "@mantine/core": ">=8",
-    "@mantine/dates": ">=8",
-    "@mantine/hooks": ">=8",
+    "@mantine/core": ">=9",
+    "@mantine/dates": ">=9",
+    "@mantine/hooks": ">=9",
     "@rjsf/core": "workspace:^",
     "@rjsf/utils": "workspace:^",
-    "react": ">=18"
+    "react": ">=19"
   },
   "devDependencies": {
-    "@mantine/core": "^8.3.18",
-    "@mantine/dates": "^8.3.18",
-    "@mantine/hooks": "^8.3.18",
+    "@mantine/core": "^9.6.1",
+    "@mantine/dates": "^9.6.1",
+    "@mantine/hooks": "^9.6.1",
     "@rjsf/core": "workspace:^",
     "@rjsf/snapshot-tests": "workspace:^",
     "@rjsf/utils": "workspace:^"

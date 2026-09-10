@@ -286,8 +286,8 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-r2g__control"
-                    id="field-r2g__label"
+                    for="field-_r_2g___control"
+                    id="field-_r_2g___label"
                   >
                     customField Key
                   </label>
@@ -295,7 +295,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-r2g__label"
+                      aria-labelledby="field-_r_2g___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_customField-key"
                       name="root_customField-key"
@@ -1759,8 +1759,8 @@ exports[`object fields > additionalProperties 1`] = `
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-r4__control"
-                    id="field-r4__label"
+                    for="field-_r_4___control"
+                    id="field-_r_4___label"
                   >
                     foo Key
                   </label>
@@ -1768,7 +1768,7 @@ exports[`object fields > additionalProperties 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-r4__label"
+                      aria-labelledby="field-_r_4___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -1913,8 +1913,8 @@ exports[`object fields > additionalProperties, array type 1`] = `
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-ri__control"
-                    id="field-ri__label"
+                    for="field-_r_i___control"
+                    id="field-_r_i___label"
                   >
                     foo Key
                   </label>
@@ -1922,7 +1922,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-ri__label"
+                      aria-labelledby="field-_r_i___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -2097,8 +2097,8 @@ exports[`object fields > additionalProperties, description 1`] = `
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-ra__control"
-                    id="field-ra__label"
+                    for="field-_r_a___control"
+                    id="field-_r_a___label"
                   >
                     foo Key
                   </label>
@@ -2106,7 +2106,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-ra__label"
+                      aria-labelledby="field-_r_a___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -2262,8 +2262,8 @@ exports[`object fields > additionalProperties, label off 1`] = `
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-r7__control"
-                    id="field-r7__label"
+                    for="field-_r_7___control"
+                    id="field-_r_7___label"
                   >
                     foo Key
                   </label>
@@ -2271,7 +2271,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-r7__label"
+                      aria-labelledby="field-_r_7___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -2416,8 +2416,8 @@ exports[`object fields > additionalProperties, object type 1`] = `
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-rd__control"
-                    id="field-rd__label"
+                    for="field-_r_d___control"
+                    id="field-_r_d___label"
                   >
                     foo Key
                   </label>
@@ -2425,7 +2425,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-rd__label"
+                      aria-labelledby="field-_r_d___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -2699,8 +2699,8 @@ exports[`object fields > show add button and fields if additionalProperties is t
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-rm__control"
-                    id="field-rm__label"
+                    for="field-_r_m___control"
+                    id="field-_r_m___label"
                   >
                     additionalProperty Key
                   </label>
@@ -2708,7 +2708,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-rm__label"
+                      aria-labelledby="field-_r_m___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_additionalProperty-key"
                       name="root_additionalProperty-key"
@@ -2875,8 +2875,8 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-ru__control"
-                    id="field-ru__label"
+                    for="field-_r_u___control"
+                    id="field-_r_u___label"
                   >
                     foo Key
                   </label>
@@ -2884,7 +2884,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-ru__label"
+                      aria-labelledby="field-_r_u___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -3191,8 +3191,8 @@ exports[`object fields > with title and description > show add button and fields
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-r12__control"
-                    id="field-r12__label"
+                    for="field-_r_12___control"
+                    id="field-_r_12___label"
                   >
                     additionalProperty Key
                   </label>
@@ -3200,7 +3200,7 @@ exports[`object fields > with title and description > show add button and fields
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-r12__label"
+                      aria-labelledby="field-_r_12___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_additionalProperty-key"
                       name="root_additionalProperty-key"
@@ -3367,8 +3367,8 @@ exports[`object fields > with title and description from both > additionalProper
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-r1m__control"
-                    id="field-r1m__label"
+                    for="field-_r_1m___control"
+                    id="field-_r_1m___label"
                   >
                     foo Key
                   </label>
@@ -3376,7 +3376,7 @@ exports[`object fields > with title and description from both > additionalProper
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-r1m__label"
+                      aria-labelledby="field-_r_1m___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -3683,8 +3683,8 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-r1a__control"
-                    id="field-r1a__label"
+                    for="field-_r_1a___control"
+                    id="field-_r_1a___label"
                   >
                     foo Key
                   </label>
@@ -3692,7 +3692,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-r1a__label"
+                      aria-labelledby="field-_r_1a___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -3999,8 +3999,8 @@ exports[`object fields > with title and description from uiSchema > show add but
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-r1e__control"
-                    id="field-r1e__label"
+                    for="field-_r_1e___control"
+                    id="field-_r_1e___label"
                   >
                     additionalProperty Key
                   </label>
@@ -4008,7 +4008,7 @@ exports[`object fields > with title and description from uiSchema > show add but
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-r1e__label"
+                      aria-labelledby="field-_r_1e___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_additionalProperty-key"
                       name="root_additionalProperty-key"

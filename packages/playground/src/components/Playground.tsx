@@ -1,5 +1,5 @@
 // oxlint-disable no-console
-import type { ComponentType, FormEvent } from 'react';
+import type { ComponentType, SubmitEvent } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -60,12 +60,12 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const playGroundFormRef = useRef<any>(null);
 
   // oxlint-disable-next-line react/hook-use-state
-  const [FormComponent, setFormComponent] = useState<ComponentType<FormProps>>(withTheme({}));
+  const [FormComponent, setFormComponent] = useState<ComponentType<FormProps>>(() => withTheme({}));
 
   const onThemeSelected = useCallback(
     (newTheme: string, { stylesheet: newStylesheet, theme: themeObj }: ThemesType) => {
       setTheme(newTheme);
-      setFormComponent(withTheme(themeObj));
+      setFormComponent(() => withTheme(themeObj));
       setStylesheet(newStylesheet);
       if (uiSchemaGenerator) {
         setUiSchema(uiSchemaGenerator.generator(newTheme));
@@ -194,7 +194,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     [setFormData, setShareURL],
   );
 
-  const onFormDataSubmit = useCallback(({ formData: submittedFormData }: IChangeEvent, event: FormEvent<any>) => {
+  const onFormDataSubmit = useCallback(({ formData: submittedFormData }: IChangeEvent, event: SubmitEvent<any>) => {
     console.log('submitted formData', submittedFormData);
     console.log('submit event', event);
     // oxlint-disable-next-line no-alert

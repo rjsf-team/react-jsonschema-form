@@ -915,7 +915,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r2t:::legend"
+        aria-labelledby="fieldset::_r_2t_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -934,7 +934,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-object"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r2u:::legend"
+                    aria-labelledby="fieldset::_r_2u_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -970,7 +970,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-string"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r2v:::legend"
+                    aria-labelledby="fieldset::_r_2v_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -982,7 +982,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="chakra-field__root emotion-12"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r30:"
+                        id="field::_r_30_"
                         role="group"
                       >
                         <label
@@ -990,8 +990,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-part="label"
                           data-required=""
                           data-scope="field"
-                          for=":r30:"
-                          id="field:::r30:::label"
+                          for="_r_30_"
+                          id="field::_r_30_::label"
                         >
                           First Name
                           <span
@@ -1024,7 +1024,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-string"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r31:::legend"
+                    aria-labelledby="fieldset::_r_31_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -1036,15 +1036,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="chakra-field__root emotion-12"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r32:"
+                        id="field::_r_32_"
                         role="group"
                       >
                         <label
                           class="chakra-field__label emotion-13"
                           data-part="label"
                           data-scope="field"
-                          for=":r32:"
-                          id="field:::r32:::label"
+                          for="_r_32_"
+                          id="field::_r_32_::label"
                         >
                           Middle
                         </label>
@@ -1069,7 +1069,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-string"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r33:::legend"
+                    aria-labelledby="fieldset::_r_33_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -1081,7 +1081,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="chakra-field__root emotion-12"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r34:"
+                        id="field::_r_34_"
                         role="group"
                       >
                         <label
@@ -1089,8 +1089,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-part="label"
                           data-required=""
                           data-scope="field"
-                          for=":r34:"
-                          id="field:::r34:::label"
+                          for="_r_34_"
+                          id="field::_r_34_::label"
                         >
                           Last Name
                           <span
@@ -1127,7 +1127,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-string"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r35:::legend"
+                    aria-labelledby="fieldset::_r_35_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -1139,7 +1139,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="chakra-field__root emotion-12"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r36:"
+                        id="field::_r_36_"
                         role="group"
                       >
                         <label
@@ -1147,8 +1147,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-part="label"
                           data-required=""
                           data-scope="field"
-                          for=":r36:"
-                          id="field:::r36:::label"
+                          for="_r_36_"
+                          id="field::_r_36_::label"
                         >
                           Date of Birth
                           <span
@@ -1183,7 +1183,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-array"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r37:::legend"
+                    aria-labelledby="fieldset::_r_37_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -1192,7 +1192,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="fieldset__legend emotion-36"
                       data-part="legend"
                       data-scope="fieldset"
-                      id="fieldset:::r37:::legend"
+                      id="fieldset::_r_37_::legend"
                     >
                       <sup
                         class="emotion-37"
@@ -1205,7 +1205,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="fieldset__content emotion-1"
                     >
                       <fieldset
-                        aria-labelledby="fieldset:::r38:::legend"
+                        aria-labelledby="fieldset::_r_38_::legend"
                         class="fieldset__root emotion-39"
                         data-part="root"
                         data-scope="fieldset"
@@ -1214,7 +1214,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="fieldset__legend emotion-40"
                           data-part="legend"
                           data-scope="fieldset"
-                          id="fieldset:::r38:::legend"
+                          id="fieldset::_r_38_::legend"
                         >
                           Race
                         </legend>
@@ -1489,7 +1489,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-object"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r3e:::legend"
+                    aria-labelledby="fieldset::_r_3e_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -1507,7 +1507,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="rjsf-field rjsf-field-string"
                           >
                             <fieldset
-                              aria-labelledby="fieldset:::r3f:::legend"
+                              aria-labelledby="fieldset::_r_3f_::legend"
                               class="fieldset__root emotion-0"
                               data-part="root"
                               data-scope="fieldset"
@@ -1519,7 +1519,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   class="chakra-field__root emotion-12"
                                   data-part="root"
                                   data-scope="field"
-                                  id="field:::r3g:"
+                                  id="field::_r_3g_"
                                   role="group"
                                 >
                                   <label
@@ -1527,8 +1527,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-part="label"
                                     data-required=""
                                     data-scope="field"
-                                    for=":r3g:"
-                                    id="field:::r3g:::label"
+                                    for="_r_3g_"
+                                    id="field::_r_3g_::label"
                                   >
                                     Address
                                     <span
@@ -1563,7 +1563,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="rjsf-field rjsf-field-string"
                           >
                             <fieldset
-                              aria-labelledby="fieldset:::r3h:::legend"
+                              aria-labelledby="fieldset::_r_3h_::legend"
                               class="fieldset__root emotion-0"
                               data-part="root"
                               data-scope="fieldset"
@@ -1575,15 +1575,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   class="chakra-field__root emotion-12"
                                   data-part="root"
                                   data-scope="field"
-                                  id="field:::r3i:"
+                                  id="field::_r_3i_"
                                   role="group"
                                 >
                                   <label
                                     class="chakra-field__label emotion-13"
                                     data-part="label"
                                     data-scope="field"
-                                    for=":r3i:"
-                                    id="field:::r3i:::label"
+                                    for="_r_3i_"
+                                    id="field::_r_3i_::label"
                                   >
                                     Address 2
                                   </label>
@@ -1610,7 +1610,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="rjsf-field rjsf-field-string"
                           >
                             <fieldset
-                              aria-labelledby="fieldset:::r3j:::legend"
+                              aria-labelledby="fieldset::_r_3j_::legend"
                               class="fieldset__root emotion-0"
                               data-part="root"
                               data-scope="fieldset"
@@ -1622,7 +1622,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   class="chakra-field__root emotion-12"
                                   data-part="root"
                                   data-scope="field"
-                                  id="field:::r3k:"
+                                  id="field::_r_3k_"
                                   role="group"
                                 >
                                   <label
@@ -1630,8 +1630,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-part="label"
                                     data-required=""
                                     data-scope="field"
-                                    for=":r3k:"
-                                    id="field:::r3k:::label"
+                                    for="_r_3k_"
+                                    id="field::_r_3k_::label"
                                   >
                                     City
                                     <span
@@ -1666,7 +1666,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="rjsf-field rjsf-field-string"
                           >
                             <fieldset
-                              aria-labelledby="fieldset:::r3l:::legend"
+                              aria-labelledby="fieldset::_r_3l_::legend"
                               class="fieldset__root emotion-0"
                               data-part="root"
                               data-scope="fieldset"
@@ -1678,7 +1678,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   class="chakra-field__root emotion-89"
                                   data-part="root"
                                   data-scope="field"
-                                  id="field:::r3m:"
+                                  id="field::_r_3m_"
                                   role="group"
                                 >
                                   <label
@@ -1686,8 +1686,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-part="label"
                                     data-required=""
                                     data-scope="field"
-                                    for=":r3m:"
-                                    id="field:::r3m:::label"
+                                    for="_r_3m_"
+                                    id="field::_r_3m_::label"
                                   >
                                     State
                                     <span
@@ -1707,8 +1707,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   >
                                     <select
                                       aria-hidden="true"
-                                      aria-labelledby="field:::r3m:::label"
-                                      id=":r3m:"
+                                      aria-labelledby="field::_r_3m_::label"
+                                      id="_r_3m_"
                                       name="root_person_address_state"
                                       required=""
                                       style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
@@ -2019,7 +2019,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           aria-expanded="false"
                                           aria-haspopup="listbox"
                                           aria-invalid="false"
-                                          aria-labelledby="field:::r3m:::label"
+                                          aria-labelledby="field::_r_3m_::label"
                                           aria-required="true"
                                           class="chakra-select__trigger emotion-95"
                                           data-part="trigger"
@@ -2070,7 +2070,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                                     >
                                       <div
-                                        aria-labelledby="field:::r3m:::label"
+                                        aria-labelledby="field::_r_3m_::label"
                                         class="chakra-select__content emotion-101"
                                         data-part="content"
                                         data-scope="select"
@@ -3776,7 +3776,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="rjsf-field rjsf-field-string"
                           >
                             <fieldset
-                              aria-labelledby="fieldset:::r3o:::legend"
+                              aria-labelledby="fieldset::_r_3o_::legend"
                               class="fieldset__root emotion-0"
                               data-part="root"
                               data-scope="fieldset"
@@ -3788,7 +3788,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   class="chakra-field__root emotion-12"
                                   data-part="root"
                                   data-scope="field"
-                                  id="field:::r3p:"
+                                  id="field::_r_3p_"
                                   role="group"
                                 >
                                   <label
@@ -3796,8 +3796,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-part="label"
                                     data-required=""
                                     data-scope="field"
-                                    for=":r3p:"
-                                    id="field:::r3p:::label"
+                                    for="_r_3p_"
+                                    id="field::_r_3p_::label"
                                   >
                                     ZIP Code
                                     <span
@@ -3840,7 +3840,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   >
                     <div>
                       <fieldset
-                        aria-labelledby="fieldset:::r3q:::legend"
+                        aria-labelledby="fieldset::_r_3q_::legend"
                         class="fieldset__root emotion-0"
                         data-part="root"
                         data-scope="fieldset"
@@ -3852,28 +3852,28 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="chakra-field__root emotion-12"
                             data-part="root"
                             data-scope="field"
-                            id="field:::r3r:"
+                            id="field::_r_3r_"
                             role="group"
                           >
                             <label
                               class="chakra-field__label emotion-13"
                               data-part="label"
                               data-scope="field"
-                              for=":r3r:"
-                              id="field:::r3r:::label"
+                              for="_r_3r_"
+                              id="field::_r_3r_::label"
                             >
                               Employment
                             </label>
                             <div
                               aria-describedby="root_employment__error root_employment__description root_employment__help"
-                              aria-labelledby="fieldset:::r3q:::legend"
+                              aria-labelledby="fieldset::_r_3q_::legend"
                               aria-orientation="vertical"
                               class="chakra-radio-group__root"
                               data-orientation="vertical"
                               data-part="root"
                               data-scope="radio-group"
                               dir="ltr"
-                              id="radio-group::r3s:"
+                              id="radio-group:_r_3s_"
                               role="radiogroup"
                               style="position: relative;"
                             >
@@ -3888,14 +3888,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   data-ssr=""
                                   data-state="checked"
                                   dir="ltr"
-                                  for="radio-group::r3s::radio:input:0"
+                                  for="radio-group:_r_3s_:radio:input:0"
                                   id="root_employment-0"
                                 >
                                   <input
-                                    aria-labelledby="radio-group::r3s::radio:label:0"
+                                    aria-labelledby="radio-group:_r_3s_:radio:label:0"
                                     checked=""
-                                    data-ownedby="radio-group::r3s:"
-                                    id="radio-group::r3s::radio:input:0"
+                                    data-ownedby="radio-group:_r_3s_"
+                                    id="radio-group:_r_3s_:radio:input:0"
                                     name="root_employment"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
@@ -3911,7 +3911,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ssr=""
                                     data-state="checked"
                                     dir="ltr"
-                                    id="radio-group::r3s::radio:control:0"
+                                    id="radio-group:_r_3s_:radio:control:0"
                                   >
                                     <span
                                       class="dot"
@@ -3925,7 +3925,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ssr=""
                                     data-state="checked"
                                     dir="ltr"
-                                    id="radio-group::r3s::radio:label:0"
+                                    id="radio-group:_r_3s_:radio:label:0"
                                   >
                                     Company
                                   </span>
@@ -3938,13 +3938,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   data-ssr=""
                                   data-state="unchecked"
                                   dir="ltr"
-                                  for="radio-group::r3s::radio:input:1"
+                                  for="radio-group:_r_3s_:radio:input:1"
                                   id="root_employment-1"
                                 >
                                   <input
-                                    aria-labelledby="radio-group::r3s::radio:label:1"
-                                    data-ownedby="radio-group::r3s:"
-                                    id="radio-group::r3s::radio:input:1"
+                                    aria-labelledby="radio-group:_r_3s_:radio:label:1"
+                                    data-ownedby="radio-group:_r_3s_"
+                                    id="radio-group:_r_3s_:radio:input:1"
                                     name="root_employment"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
@@ -3959,7 +3959,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ssr=""
                                     data-state="unchecked"
                                     dir="ltr"
-                                    id="radio-group::r3s::radio:control:1"
+                                    id="radio-group:_r_3s_:radio:control:1"
                                   />
                                   <span
                                     class="chakra-radio-group__itemText"
@@ -3969,7 +3969,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ssr=""
                                     data-state="unchecked"
                                     dir="ltr"
-                                    id="radio-group::r3s::radio:label:1"
+                                    id="radio-group:_r_3s_:radio:label:1"
                                   >
                                     Education
                                   </span>
@@ -3982,13 +3982,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   data-ssr=""
                                   data-state="unchecked"
                                   dir="ltr"
-                                  for="radio-group::r3s::radio:input:2"
+                                  for="radio-group:_r_3s_:radio:input:2"
                                   id="root_employment-2"
                                 >
                                   <input
-                                    aria-labelledby="radio-group::r3s::radio:label:2"
-                                    data-ownedby="radio-group::r3s:"
-                                    id="radio-group::r3s::radio:input:2"
+                                    aria-labelledby="radio-group:_r_3s_:radio:label:2"
+                                    data-ownedby="radio-group:_r_3s_"
+                                    id="radio-group:_r_3s_:radio:input:2"
                                     name="root_employment"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
@@ -4003,7 +4003,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ssr=""
                                     data-state="unchecked"
                                     dir="ltr"
-                                    id="radio-group::r3s::radio:control:2"
+                                    id="radio-group:_r_3s_:radio:control:2"
                                   />
                                   <span
                                     class="chakra-radio-group__itemText"
@@ -4013,7 +4013,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ssr=""
                                     data-state="unchecked"
                                     dir="ltr"
-                                    id="radio-group::r3s::radio:label:2"
+                                    id="radio-group:_r_3s_:radio:label:2"
                                   >
                                     Other
                                   </span>
@@ -4032,7 +4032,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="rjsf-field rjsf-field-string"
                     >
                       <fieldset
-                        aria-labelledby="fieldset:::r3t:::legend"
+                        aria-labelledby="fieldset::_r_3t_::legend"
                         class="fieldset__root emotion-0"
                         data-part="root"
                         data-scope="fieldset"
@@ -4044,7 +4044,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="chakra-field__root emotion-12"
                             data-part="root"
                             data-scope="field"
-                            id="field:::r3u:"
+                            id="field::_r_3u_"
                             role="group"
                           >
                             <label
@@ -4052,8 +4052,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-part="label"
                               data-required=""
                               data-scope="field"
-                              for=":r3u:"
-                              id="field:::r3u:::label"
+                              for="_r_3u_"
+                              id="field::_r_3u_::label"
                             >
                               Company Name
                               <span
@@ -4088,7 +4088,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="rjsf-field rjsf-field-string"
                     >
                       <fieldset
-                        aria-labelledby="fieldset:::r3v:::legend"
+                        aria-labelledby="fieldset::_r_3v_::legend"
                         class="fieldset__root emotion-0"
                         data-part="root"
                         data-scope="fieldset"
@@ -4100,15 +4100,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="chakra-field__root emotion-12"
                             data-part="root"
                             data-scope="field"
-                            id="field:::r40:"
+                            id="field::_r_40_"
                             role="group"
                           >
                             <label
                               class="chakra-field__label emotion-13"
                               data-part="label"
                               data-scope="field"
-                              for=":r40:"
-                              id="field:::r40:::label"
+                              for="_r_40_"
+                              id="field::_r_40_::label"
                             >
                               Job Title
                             </label>
@@ -4135,7 +4135,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="rjsf-field rjsf-field-string"
                     >
                       <fieldset
-                        aria-labelledby="fieldset:::r41:::legend"
+                        aria-labelledby="fieldset::_r_41_::legend"
                         class="fieldset__root emotion-0"
                         data-part="root"
                         data-scope="fieldset"
@@ -4147,7 +4147,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="chakra-field__root emotion-12"
                             data-part="root"
                             data-scope="field"
-                            id="field:::r42:"
+                            id="field::_r_42_"
                             role="group"
                           >
                             <label
@@ -4155,8 +4155,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-part="label"
                               data-required=""
                               data-scope="field"
-                              for=":r42:"
-                              id="field:::r42:::label"
+                              for="_r_42_"
+                              id="field::_r_42_::label"
                             >
                               City
                               <span
@@ -4189,7 +4189,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="rjsf-field rjsf-field-string"
                     >
                       <fieldset
-                        aria-labelledby="fieldset:::r43:::legend"
+                        aria-labelledby="fieldset::_r_43_::legend"
                         class="fieldset__root emotion-0"
                         data-part="root"
                         data-scope="fieldset"
@@ -4201,7 +4201,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="chakra-field__root emotion-89"
                             data-part="root"
                             data-scope="field"
-                            id="field:::r44:"
+                            id="field::_r_44_"
                             role="group"
                           >
                             <label
@@ -4209,8 +4209,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-part="label"
                               data-required=""
                               data-scope="field"
-                              for=":r44:"
-                              id="field:::r44:::label"
+                              for="_r_44_"
+                              id="field::_r_44_::label"
                             >
                               State
                               <span
@@ -4230,8 +4230,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             >
                               <select
                                 aria-hidden="true"
-                                aria-labelledby="field:::r44:::label"
-                                id=":r44:"
+                                aria-labelledby="field::_r_44_::label"
+                                id="_r_44_"
                                 name="root_employment_location_state"
                                 required=""
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
@@ -4542,7 +4542,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     aria-expanded="false"
                                     aria-haspopup="listbox"
                                     aria-invalid="false"
-                                    aria-labelledby="field:::r44:::label"
+                                    aria-labelledby="field::_r_44_::label"
                                     aria-required="true"
                                     class="chakra-select__trigger emotion-95"
                                     data-part="trigger"
@@ -4593,7 +4593,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                               >
                                 <div
-                                  aria-labelledby="field:::r44:::label"
+                                  aria-labelledby="field::_r_44_::label"
                                   class="chakra-select__content emotion-101"
                                   data-part="content"
                                   data-scope="select"
@@ -7231,7 +7231,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r46:::legend"
+        aria-labelledby="fieldset::_r_46_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -7250,7 +7250,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-object"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r47:::legend"
+                    aria-labelledby="fieldset::_r_47_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -7286,7 +7286,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-string"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r48:::legend"
+                    aria-labelledby="fieldset::_r_48_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -7298,7 +7298,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="chakra-field__root emotion-12"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r49:"
+                        id="field::_r_49_"
                         role="group"
                       >
                         <label
@@ -7306,8 +7306,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-part="label"
                           data-required=""
                           data-scope="field"
-                          for=":r49:"
-                          id="field:::r49:::label"
+                          for="_r_49_"
+                          id="field::_r_49_::label"
                         >
                           First Name
                           <span
@@ -7340,7 +7340,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-string"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r4a:::legend"
+                    aria-labelledby="fieldset::_r_4a_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -7352,15 +7352,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="chakra-field__root emotion-12"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r4b:"
+                        id="field::_r_4b_"
                         role="group"
                       >
                         <label
                           class="chakra-field__label emotion-13"
                           data-part="label"
                           data-scope="field"
-                          for=":r4b:"
-                          id="field:::r4b:::label"
+                          for="_r_4b_"
+                          id="field::_r_4b_::label"
                         >
                           Middle
                         </label>
@@ -7385,7 +7385,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-string"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r4c:::legend"
+                    aria-labelledby="fieldset::_r_4c_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -7397,7 +7397,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="chakra-field__root emotion-12"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r4d:"
+                        id="field::_r_4d_"
                         role="group"
                       >
                         <label
@@ -7405,8 +7405,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-part="label"
                           data-required=""
                           data-scope="field"
-                          for=":r4d:"
-                          id="field:::r4d:::label"
+                          for="_r_4d_"
+                          id="field::_r_4d_::label"
                         >
                           Last Name
                           <span
@@ -7443,7 +7443,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-string"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r4e:::legend"
+                    aria-labelledby="fieldset::_r_4e_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -7455,7 +7455,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="chakra-field__root emotion-12"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r4f:"
+                        id="field::_r_4f_"
                         role="group"
                       >
                         <label
@@ -7463,8 +7463,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-part="label"
                           data-required=""
                           data-scope="field"
-                          for=":r4f:"
-                          id="field:::r4f:::label"
+                          for="_r_4f_"
+                          id="field::_r_4f_::label"
                         >
                           Date of Birth
                           <span
@@ -7499,7 +7499,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-array"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r4g:::legend"
+                    aria-labelledby="fieldset::_r_4g_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -7508,7 +7508,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="fieldset__legend emotion-36"
                       data-part="legend"
                       data-scope="fieldset"
-                      id="fieldset:::r4g:::legend"
+                      id="fieldset::_r_4g_::legend"
                     >
                       <sup
                         class="emotion-37"
@@ -7521,7 +7521,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="fieldset__content emotion-1"
                     >
                       <fieldset
-                        aria-labelledby="fieldset:::r4h:::legend"
+                        aria-labelledby="fieldset::_r_4h_::legend"
                         class="fieldset__root emotion-39"
                         data-part="root"
                         data-scope="fieldset"
@@ -7530,7 +7530,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="fieldset__legend emotion-40"
                           data-part="legend"
                           data-scope="fieldset"
-                          id="fieldset:::r4h:::legend"
+                          id="fieldset::_r_4h_::legend"
                         >
                           Race
                         </legend>
@@ -7805,7 +7805,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-object"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r4n:::legend"
+                    aria-labelledby="fieldset::_r_4n_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -7823,7 +7823,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="rjsf-field rjsf-field-string"
                           >
                             <fieldset
-                              aria-labelledby="fieldset:::r4o:::legend"
+                              aria-labelledby="fieldset::_r_4o_::legend"
                               class="fieldset__root emotion-0"
                               data-part="root"
                               data-scope="fieldset"
@@ -7835,7 +7835,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   class="chakra-field__root emotion-12"
                                   data-part="root"
                                   data-scope="field"
-                                  id="field:::r4p:"
+                                  id="field::_r_4p_"
                                   role="group"
                                 >
                                   <label
@@ -7843,8 +7843,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-part="label"
                                     data-required=""
                                     data-scope="field"
-                                    for=":r4p:"
-                                    id="field:::r4p:::label"
+                                    for="_r_4p_"
+                                    id="field::_r_4p_::label"
                                   >
                                     Address
                                     <span
@@ -7879,7 +7879,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="rjsf-field rjsf-field-string"
                           >
                             <fieldset
-                              aria-labelledby="fieldset:::r4q:::legend"
+                              aria-labelledby="fieldset::_r_4q_::legend"
                               class="fieldset__root emotion-0"
                               data-part="root"
                               data-scope="fieldset"
@@ -7891,15 +7891,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   class="chakra-field__root emotion-12"
                                   data-part="root"
                                   data-scope="field"
-                                  id="field:::r4r:"
+                                  id="field::_r_4r_"
                                   role="group"
                                 >
                                   <label
                                     class="chakra-field__label emotion-13"
                                     data-part="label"
                                     data-scope="field"
-                                    for=":r4r:"
-                                    id="field:::r4r:::label"
+                                    for="_r_4r_"
+                                    id="field::_r_4r_::label"
                                   >
                                     Address 2
                                   </label>
@@ -7926,7 +7926,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="rjsf-field rjsf-field-string"
                           >
                             <fieldset
-                              aria-labelledby="fieldset:::r4s:::legend"
+                              aria-labelledby="fieldset::_r_4s_::legend"
                               class="fieldset__root emotion-0"
                               data-part="root"
                               data-scope="fieldset"
@@ -7938,7 +7938,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   class="chakra-field__root emotion-12"
                                   data-part="root"
                                   data-scope="field"
-                                  id="field:::r4t:"
+                                  id="field::_r_4t_"
                                   role="group"
                                 >
                                   <label
@@ -7946,8 +7946,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-part="label"
                                     data-required=""
                                     data-scope="field"
-                                    for=":r4t:"
-                                    id="field:::r4t:::label"
+                                    for="_r_4t_"
+                                    id="field::_r_4t_::label"
                                   >
                                     City
                                     <span
@@ -7982,7 +7982,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="rjsf-field rjsf-field-string"
                           >
                             <fieldset
-                              aria-labelledby="fieldset:::r4u:::legend"
+                              aria-labelledby="fieldset::_r_4u_::legend"
                               class="fieldset__root emotion-0"
                               data-part="root"
                               data-scope="fieldset"
@@ -7994,7 +7994,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   class="chakra-field__root emotion-89"
                                   data-part="root"
                                   data-scope="field"
-                                  id="field:::r4v:"
+                                  id="field::_r_4v_"
                                   role="group"
                                 >
                                   <label
@@ -8002,8 +8002,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-part="label"
                                     data-required=""
                                     data-scope="field"
-                                    for=":r4v:"
-                                    id="field:::r4v:::label"
+                                    for="_r_4v_"
+                                    id="field::_r_4v_::label"
                                   >
                                     State
                                     <span
@@ -8023,8 +8023,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   >
                                     <select
                                       aria-hidden="true"
-                                      aria-labelledby="field:::r4v:::label"
-                                      id=":r4v:"
+                                      aria-labelledby="field::_r_4v_::label"
+                                      id="_r_4v_"
                                       name="root_person_address_state"
                                       required=""
                                       style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
@@ -8335,7 +8335,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           aria-expanded="false"
                                           aria-haspopup="listbox"
                                           aria-invalid="false"
-                                          aria-labelledby="field:::r4v:::label"
+                                          aria-labelledby="field::_r_4v_::label"
                                           aria-required="true"
                                           class="chakra-select__trigger emotion-95"
                                           data-part="trigger"
@@ -8386,7 +8386,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                                     >
                                       <div
-                                        aria-labelledby="field:::r4v:::label"
+                                        aria-labelledby="field::_r_4v_::label"
                                         class="chakra-select__content emotion-101"
                                         data-part="content"
                                         data-scope="select"
@@ -10092,7 +10092,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="rjsf-field rjsf-field-string"
                           >
                             <fieldset
-                              aria-labelledby="fieldset:::r51:::legend"
+                              aria-labelledby="fieldset::_r_51_::legend"
                               class="fieldset__root emotion-0"
                               data-part="root"
                               data-scope="fieldset"
@@ -10104,7 +10104,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   class="chakra-field__root emotion-12"
                                   data-part="root"
                                   data-scope="field"
-                                  id="field:::r52:"
+                                  id="field::_r_52_"
                                   role="group"
                                 >
                                   <label
@@ -10112,8 +10112,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-part="label"
                                     data-required=""
                                     data-scope="field"
-                                    for=":r52:"
-                                    id="field:::r52:::label"
+                                    for="_r_52_"
+                                    id="field::_r_52_::label"
                                   >
                                     ZIP Code
                                     <span
@@ -10156,7 +10156,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   >
                     <div>
                       <fieldset
-                        aria-labelledby="fieldset:::r53:::legend"
+                        aria-labelledby="fieldset::_r_53_::legend"
                         class="fieldset__root emotion-0"
                         data-part="root"
                         data-scope="fieldset"
@@ -10168,28 +10168,28 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="chakra-field__root emotion-12"
                             data-part="root"
                             data-scope="field"
-                            id="field:::r54:"
+                            id="field::_r_54_"
                             role="group"
                           >
                             <label
                               class="chakra-field__label emotion-13"
                               data-part="label"
                               data-scope="field"
-                              for=":r54:"
-                              id="field:::r54:::label"
+                              for="_r_54_"
+                              id="field::_r_54_::label"
                             >
                               Employment
                             </label>
                             <div
                               aria-describedby="root_employment__error root_employment__description root_employment__help"
-                              aria-labelledby="fieldset:::r53:::legend"
+                              aria-labelledby="fieldset::_r_53_::legend"
                               aria-orientation="vertical"
                               class="chakra-radio-group__root"
                               data-orientation="vertical"
                               data-part="root"
                               data-scope="radio-group"
                               dir="ltr"
-                              id="radio-group::r55:"
+                              id="radio-group:_r_55_"
                               role="radiogroup"
                               style="position: relative;"
                             >
@@ -10204,13 +10204,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   data-ssr=""
                                   data-state="unchecked"
                                   dir="ltr"
-                                  for="radio-group::r55::radio:input:0"
+                                  for="radio-group:_r_55_:radio:input:0"
                                   id="root_employment-0"
                                 >
                                   <input
-                                    aria-labelledby="radio-group::r55::radio:label:0"
-                                    data-ownedby="radio-group::r55:"
-                                    id="radio-group::r55::radio:input:0"
+                                    aria-labelledby="radio-group:_r_55_:radio:label:0"
+                                    data-ownedby="radio-group:_r_55_"
+                                    id="radio-group:_r_55_:radio:input:0"
                                     name="root_employment"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
@@ -10225,7 +10225,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ssr=""
                                     data-state="unchecked"
                                     dir="ltr"
-                                    id="radio-group::r55::radio:control:0"
+                                    id="radio-group:_r_55_:radio:control:0"
                                   />
                                   <span
                                     class="chakra-radio-group__itemText"
@@ -10235,7 +10235,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ssr=""
                                     data-state="unchecked"
                                     dir="ltr"
-                                    id="radio-group::r55::radio:label:0"
+                                    id="radio-group:_r_55_:radio:label:0"
                                   >
                                     Company
                                   </span>
@@ -10248,14 +10248,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   data-ssr=""
                                   data-state="checked"
                                   dir="ltr"
-                                  for="radio-group::r55::radio:input:1"
+                                  for="radio-group:_r_55_:radio:input:1"
                                   id="root_employment-1"
                                 >
                                   <input
-                                    aria-labelledby="radio-group::r55::radio:label:1"
+                                    aria-labelledby="radio-group:_r_55_:radio:label:1"
                                     checked=""
-                                    data-ownedby="radio-group::r55:"
-                                    id="radio-group::r55::radio:input:1"
+                                    data-ownedby="radio-group:_r_55_"
+                                    id="radio-group:_r_55_:radio:input:1"
                                     name="root_employment"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
@@ -10271,7 +10271,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ssr=""
                                     data-state="checked"
                                     dir="ltr"
-                                    id="radio-group::r55::radio:control:1"
+                                    id="radio-group:_r_55_:radio:control:1"
                                   >
                                     <span
                                       class="dot"
@@ -10285,7 +10285,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ssr=""
                                     data-state="checked"
                                     dir="ltr"
-                                    id="radio-group::r55::radio:label:1"
+                                    id="radio-group:_r_55_:radio:label:1"
                                   >
                                     Education
                                   </span>
@@ -10298,13 +10298,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   data-ssr=""
                                   data-state="unchecked"
                                   dir="ltr"
-                                  for="radio-group::r55::radio:input:2"
+                                  for="radio-group:_r_55_:radio:input:2"
                                   id="root_employment-2"
                                 >
                                   <input
-                                    aria-labelledby="radio-group::r55::radio:label:2"
-                                    data-ownedby="radio-group::r55:"
-                                    id="radio-group::r55::radio:input:2"
+                                    aria-labelledby="radio-group:_r_55_:radio:label:2"
+                                    data-ownedby="radio-group:_r_55_"
+                                    id="radio-group:_r_55_:radio:input:2"
                                     name="root_employment"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
@@ -10319,7 +10319,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ssr=""
                                     data-state="unchecked"
                                     dir="ltr"
-                                    id="radio-group::r55::radio:control:2"
+                                    id="radio-group:_r_55_:radio:control:2"
                                   />
                                   <span
                                     class="chakra-radio-group__itemText"
@@ -10329,7 +10329,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ssr=""
                                     data-state="unchecked"
                                     dir="ltr"
-                                    id="radio-group::r55::radio:label:2"
+                                    id="radio-group:_r_55_:radio:label:2"
                                   >
                                     Other
                                   </span>
@@ -10348,7 +10348,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="rjsf-field rjsf-field-string"
                     >
                       <fieldset
-                        aria-labelledby="fieldset:::r56:::legend"
+                        aria-labelledby="fieldset::_r_56_::legend"
                         class="fieldset__root emotion-0"
                         data-part="root"
                         data-scope="fieldset"
@@ -10360,15 +10360,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="chakra-field__root emotion-12"
                             data-part="root"
                             data-scope="field"
-                            id="field:::r57:"
+                            id="field::_r_57_"
                             role="group"
                           >
                             <label
                               class="chakra-field__label emotion-13"
                               data-part="label"
                               data-scope="field"
-                              for=":r57:"
-                              id="field:::r57:::label"
+                              for="_r_57_"
+                              id="field::_r_57_::label"
                             >
                               District Name
                             </label>
@@ -10395,7 +10395,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="rjsf-field rjsf-field-string"
                     >
                       <fieldset
-                        aria-labelledby="fieldset:::r58:::legend"
+                        aria-labelledby="fieldset::_r_58_::legend"
                         class="fieldset__root emotion-0"
                         data-part="root"
                         data-scope="fieldset"
@@ -10407,7 +10407,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="chakra-field__root emotion-12"
                             data-part="root"
                             data-scope="field"
-                            id="field:::r59:"
+                            id="field::_r_59_"
                             role="group"
                           >
                             <label
@@ -10415,8 +10415,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-part="label"
                               data-required=""
                               data-scope="field"
-                              for=":r59:"
-                              id="field:::r59:::label"
+                              for="_r_59_"
+                              id="field::_r_59_::label"
                             >
                               School Name
                               <span
@@ -10451,7 +10451,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="rjsf-field rjsf-field-string"
                     >
                       <fieldset
-                        aria-labelledby="fieldset:::r5a:::legend"
+                        aria-labelledby="fieldset::_r_5a_::legend"
                         class="fieldset__root emotion-0"
                         data-part="root"
                         data-scope="fieldset"
@@ -10463,15 +10463,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="chakra-field__root emotion-12"
                             data-part="root"
                             data-scope="field"
-                            id="field:::r5b:"
+                            id="field::_r_5b_"
                             role="group"
                           >
                             <label
                               class="chakra-field__label emotion-13"
                               data-part="label"
                               data-scope="field"
-                              for=":r5b:"
-                              id="field:::r5b:::label"
+                              for="_r_5b_"
+                              id="field::_r_5b_::label"
                             >
                               Job Title
                             </label>
@@ -10498,7 +10498,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="rjsf-field rjsf-field-string"
                     >
                       <fieldset
-                        aria-labelledby="fieldset:::r5c:::legend"
+                        aria-labelledby="fieldset::_r_5c_::legend"
                         class="fieldset__root emotion-0"
                         data-part="root"
                         data-scope="fieldset"
@@ -10510,7 +10510,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="chakra-field__root emotion-12"
                             data-part="root"
                             data-scope="field"
-                            id="field:::r5d:"
+                            id="field::_r_5d_"
                             role="group"
                           >
                             <label
@@ -10518,8 +10518,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-part="label"
                               data-required=""
                               data-scope="field"
-                              for=":r5d:"
-                              id="field:::r5d:::label"
+                              for="_r_5d_"
+                              id="field::_r_5d_::label"
                             >
                               City
                               <span
@@ -10552,7 +10552,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="rjsf-field rjsf-field-string"
                     >
                       <fieldset
-                        aria-labelledby="fieldset:::r5e:::legend"
+                        aria-labelledby="fieldset::_r_5e_::legend"
                         class="fieldset__root emotion-0"
                         data-part="root"
                         data-scope="fieldset"
@@ -10564,7 +10564,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="chakra-field__root emotion-89"
                             data-part="root"
                             data-scope="field"
-                            id="field:::r5f:"
+                            id="field::_r_5f_"
                             role="group"
                           >
                             <label
@@ -10572,8 +10572,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-part="label"
                               data-required=""
                               data-scope="field"
-                              for=":r5f:"
-                              id="field:::r5f:::label"
+                              for="_r_5f_"
+                              id="field::_r_5f_::label"
                             >
                               State
                               <span
@@ -10593,8 +10593,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             >
                               <select
                                 aria-hidden="true"
-                                aria-labelledby="field:::r5f:::label"
-                                id=":r5f:"
+                                aria-labelledby="field::_r_5f_::label"
+                                id="_r_5f_"
                                 name="root_employment_location_state"
                                 required=""
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
@@ -10905,7 +10905,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     aria-expanded="false"
                                     aria-haspopup="listbox"
                                     aria-invalid="false"
-                                    aria-labelledby="field:::r5f:::label"
+                                    aria-labelledby="field::_r_5f_::label"
                                     aria-required="true"
                                     class="chakra-select__trigger emotion-95"
                                     data-part="trigger"
@@ -10956,7 +10956,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                               >
                                 <div
-                                  aria-labelledby="field:::r5f:::label"
+                                  aria-labelledby="field::_r_5f_::label"
                                   class="chakra-select__content emotion-101"
                                   data-part="content"
                                   data-scope="select"
@@ -13639,7 +13639,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r5h:::legend"
+        aria-labelledby="fieldset::_r_5h_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -13658,7 +13658,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-object"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r5i:::legend"
+                    aria-labelledby="fieldset::_r_5i_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -13694,7 +13694,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-string"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r5j:::legend"
+                    aria-labelledby="fieldset::_r_5j_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -13706,7 +13706,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="chakra-field__root emotion-12"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r5k:"
+                        id="field::_r_5k_"
                         role="group"
                       >
                         <label
@@ -13714,8 +13714,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-part="label"
                           data-required=""
                           data-scope="field"
-                          for=":r5k:"
-                          id="field:::r5k:::label"
+                          for="_r_5k_"
+                          id="field::_r_5k_::label"
                         >
                           First Name
                           <span
@@ -13748,7 +13748,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-string"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r5l:::legend"
+                    aria-labelledby="fieldset::_r_5l_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -13760,15 +13760,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="chakra-field__root emotion-12"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r5m:"
+                        id="field::_r_5m_"
                         role="group"
                       >
                         <label
                           class="chakra-field__label emotion-13"
                           data-part="label"
                           data-scope="field"
-                          for=":r5m:"
-                          id="field:::r5m:::label"
+                          for="_r_5m_"
+                          id="field::_r_5m_::label"
                         >
                           Middle
                         </label>
@@ -13793,7 +13793,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-string"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r5n:::legend"
+                    aria-labelledby="fieldset::_r_5n_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -13805,7 +13805,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="chakra-field__root emotion-12"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r5o:"
+                        id="field::_r_5o_"
                         role="group"
                       >
                         <label
@@ -13813,8 +13813,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-part="label"
                           data-required=""
                           data-scope="field"
-                          for=":r5o:"
-                          id="field:::r5o:::label"
+                          for="_r_5o_"
+                          id="field::_r_5o_::label"
                         >
                           Last Name
                           <span
@@ -13851,7 +13851,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-string"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r5p:::legend"
+                    aria-labelledby="fieldset::_r_5p_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -13863,7 +13863,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="chakra-field__root emotion-12"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r5q:"
+                        id="field::_r_5q_"
                         role="group"
                       >
                         <label
@@ -13871,8 +13871,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-part="label"
                           data-required=""
                           data-scope="field"
-                          for=":r5q:"
-                          id="field:::r5q:::label"
+                          for="_r_5q_"
+                          id="field::_r_5q_::label"
                         >
                           Date of Birth
                           <span
@@ -13907,7 +13907,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-array"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r5r:::legend"
+                    aria-labelledby="fieldset::_r_5r_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -13916,7 +13916,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="fieldset__legend emotion-36"
                       data-part="legend"
                       data-scope="fieldset"
-                      id="fieldset:::r5r:::legend"
+                      id="fieldset::_r_5r_::legend"
                     >
                       <sup
                         class="emotion-37"
@@ -13929,7 +13929,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="fieldset__content emotion-1"
                     >
                       <fieldset
-                        aria-labelledby="fieldset:::r5s:::legend"
+                        aria-labelledby="fieldset::_r_5s_::legend"
                         class="fieldset__root emotion-39"
                         data-part="root"
                         data-scope="fieldset"
@@ -13938,7 +13938,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="fieldset__legend emotion-40"
                           data-part="legend"
                           data-scope="fieldset"
-                          id="fieldset:::r5s:::legend"
+                          id="fieldset::_r_5s_::legend"
                         >
                           Race
                         </legend>
@@ -14213,7 +14213,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-object"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r62:::legend"
+                    aria-labelledby="fieldset::_r_62_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -14231,7 +14231,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="rjsf-field rjsf-field-string"
                           >
                             <fieldset
-                              aria-labelledby="fieldset:::r63:::legend"
+                              aria-labelledby="fieldset::_r_63_::legend"
                               class="fieldset__root emotion-0"
                               data-part="root"
                               data-scope="fieldset"
@@ -14243,7 +14243,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   class="chakra-field__root emotion-12"
                                   data-part="root"
                                   data-scope="field"
-                                  id="field:::r64:"
+                                  id="field::_r_64_"
                                   role="group"
                                 >
                                   <label
@@ -14251,8 +14251,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-part="label"
                                     data-required=""
                                     data-scope="field"
-                                    for=":r64:"
-                                    id="field:::r64:::label"
+                                    for="_r_64_"
+                                    id="field::_r_64_::label"
                                   >
                                     Address
                                     <span
@@ -14287,7 +14287,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="rjsf-field rjsf-field-string"
                           >
                             <fieldset
-                              aria-labelledby="fieldset:::r65:::legend"
+                              aria-labelledby="fieldset::_r_65_::legend"
                               class="fieldset__root emotion-0"
                               data-part="root"
                               data-scope="fieldset"
@@ -14299,15 +14299,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   class="chakra-field__root emotion-12"
                                   data-part="root"
                                   data-scope="field"
-                                  id="field:::r66:"
+                                  id="field::_r_66_"
                                   role="group"
                                 >
                                   <label
                                     class="chakra-field__label emotion-13"
                                     data-part="label"
                                     data-scope="field"
-                                    for=":r66:"
-                                    id="field:::r66:::label"
+                                    for="_r_66_"
+                                    id="field::_r_66_::label"
                                   >
                                     Address 2
                                   </label>
@@ -14334,7 +14334,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="rjsf-field rjsf-field-string"
                           >
                             <fieldset
-                              aria-labelledby="fieldset:::r67:::legend"
+                              aria-labelledby="fieldset::_r_67_::legend"
                               class="fieldset__root emotion-0"
                               data-part="root"
                               data-scope="fieldset"
@@ -14346,7 +14346,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   class="chakra-field__root emotion-12"
                                   data-part="root"
                                   data-scope="field"
-                                  id="field:::r68:"
+                                  id="field::_r_68_"
                                   role="group"
                                 >
                                   <label
@@ -14354,8 +14354,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-part="label"
                                     data-required=""
                                     data-scope="field"
-                                    for=":r68:"
-                                    id="field:::r68:::label"
+                                    for="_r_68_"
+                                    id="field::_r_68_::label"
                                   >
                                     City
                                     <span
@@ -14390,7 +14390,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="rjsf-field rjsf-field-string"
                           >
                             <fieldset
-                              aria-labelledby="fieldset:::r69:::legend"
+                              aria-labelledby="fieldset::_r_69_::legend"
                               class="fieldset__root emotion-0"
                               data-part="root"
                               data-scope="fieldset"
@@ -14402,7 +14402,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   class="chakra-field__root emotion-89"
                                   data-part="root"
                                   data-scope="field"
-                                  id="field:::r6a:"
+                                  id="field::_r_6a_"
                                   role="group"
                                 >
                                   <label
@@ -14410,8 +14410,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-part="label"
                                     data-required=""
                                     data-scope="field"
-                                    for=":r6a:"
-                                    id="field:::r6a:::label"
+                                    for="_r_6a_"
+                                    id="field::_r_6a_::label"
                                   >
                                     State
                                     <span
@@ -14431,8 +14431,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   >
                                     <select
                                       aria-hidden="true"
-                                      aria-labelledby="field:::r6a:::label"
-                                      id=":r6a:"
+                                      aria-labelledby="field::_r_6a_::label"
+                                      id="_r_6a_"
                                       name="root_person_address_state"
                                       required=""
                                       style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
@@ -14743,7 +14743,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           aria-expanded="false"
                                           aria-haspopup="listbox"
                                           aria-invalid="false"
-                                          aria-labelledby="field:::r6a:::label"
+                                          aria-labelledby="field::_r_6a_::label"
                                           aria-required="true"
                                           class="chakra-select__trigger emotion-95"
                                           data-part="trigger"
@@ -14794,7 +14794,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                                     >
                                       <div
-                                        aria-labelledby="field:::r6a:::label"
+                                        aria-labelledby="field::_r_6a_::label"
                                         class="chakra-select__content emotion-101"
                                         data-part="content"
                                         data-scope="select"
@@ -16500,7 +16500,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="rjsf-field rjsf-field-string"
                           >
                             <fieldset
-                              aria-labelledby="fieldset:::r6c:::legend"
+                              aria-labelledby="fieldset::_r_6c_::legend"
                               class="fieldset__root emotion-0"
                               data-part="root"
                               data-scope="fieldset"
@@ -16512,7 +16512,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   class="chakra-field__root emotion-12"
                                   data-part="root"
                                   data-scope="field"
-                                  id="field:::r6d:"
+                                  id="field::_r_6d_"
                                   role="group"
                                 >
                                   <label
@@ -16520,8 +16520,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-part="label"
                                     data-required=""
                                     data-scope="field"
-                                    for=":r6d:"
-                                    id="field:::r6d:::label"
+                                    for="_r_6d_"
+                                    id="field::_r_6d_::label"
                                   >
                                     ZIP Code
                                     <span
@@ -16564,7 +16564,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   >
                     <div>
                       <fieldset
-                        aria-labelledby="fieldset:::r6e:::legend"
+                        aria-labelledby="fieldset::_r_6e_::legend"
                         class="fieldset__root emotion-0"
                         data-part="root"
                         data-scope="fieldset"
@@ -16576,28 +16576,28 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="chakra-field__root emotion-12"
                             data-part="root"
                             data-scope="field"
-                            id="field:::r6f:"
+                            id="field::_r_6f_"
                             role="group"
                           >
                             <label
                               class="chakra-field__label emotion-13"
                               data-part="label"
                               data-scope="field"
-                              for=":r6f:"
-                              id="field:::r6f:::label"
+                              for="_r_6f_"
+                              id="field::_r_6f_::label"
                             >
                               Employment
                             </label>
                             <div
                               aria-describedby="root_employment__error root_employment__description root_employment__help"
-                              aria-labelledby="fieldset:::r6e:::legend"
+                              aria-labelledby="fieldset::_r_6e_::legend"
                               aria-orientation="vertical"
                               class="chakra-radio-group__root"
                               data-orientation="vertical"
                               data-part="root"
                               data-scope="radio-group"
                               dir="ltr"
-                              id="radio-group::r6g:"
+                              id="radio-group:_r_6g_"
                               role="radiogroup"
                               style="position: relative;"
                             >
@@ -16612,13 +16612,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   data-ssr=""
                                   data-state="unchecked"
                                   dir="ltr"
-                                  for="radio-group::r6g::radio:input:0"
+                                  for="radio-group:_r_6g_:radio:input:0"
                                   id="root_employment-0"
                                 >
                                   <input
-                                    aria-labelledby="radio-group::r6g::radio:label:0"
-                                    data-ownedby="radio-group::r6g:"
-                                    id="radio-group::r6g::radio:input:0"
+                                    aria-labelledby="radio-group:_r_6g_:radio:label:0"
+                                    data-ownedby="radio-group:_r_6g_"
+                                    id="radio-group:_r_6g_:radio:input:0"
                                     name="root_employment"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
@@ -16633,7 +16633,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ssr=""
                                     data-state="unchecked"
                                     dir="ltr"
-                                    id="radio-group::r6g::radio:control:0"
+                                    id="radio-group:_r_6g_:radio:control:0"
                                   />
                                   <span
                                     class="chakra-radio-group__itemText"
@@ -16643,7 +16643,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ssr=""
                                     data-state="unchecked"
                                     dir="ltr"
-                                    id="radio-group::r6g::radio:label:0"
+                                    id="radio-group:_r_6g_:radio:label:0"
                                   >
                                     Company
                                   </span>
@@ -16656,13 +16656,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   data-ssr=""
                                   data-state="unchecked"
                                   dir="ltr"
-                                  for="radio-group::r6g::radio:input:1"
+                                  for="radio-group:_r_6g_:radio:input:1"
                                   id="root_employment-1"
                                 >
                                   <input
-                                    aria-labelledby="radio-group::r6g::radio:label:1"
-                                    data-ownedby="radio-group::r6g:"
-                                    id="radio-group::r6g::radio:input:1"
+                                    aria-labelledby="radio-group:_r_6g_:radio:label:1"
+                                    data-ownedby="radio-group:_r_6g_"
+                                    id="radio-group:_r_6g_:radio:input:1"
                                     name="root_employment"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
@@ -16677,7 +16677,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ssr=""
                                     data-state="unchecked"
                                     dir="ltr"
-                                    id="radio-group::r6g::radio:control:1"
+                                    id="radio-group:_r_6g_:radio:control:1"
                                   />
                                   <span
                                     class="chakra-radio-group__itemText"
@@ -16687,7 +16687,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ssr=""
                                     data-state="unchecked"
                                     dir="ltr"
-                                    id="radio-group::r6g::radio:label:1"
+                                    id="radio-group:_r_6g_:radio:label:1"
                                   >
                                     Education
                                   </span>
@@ -16700,14 +16700,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   data-ssr=""
                                   data-state="checked"
                                   dir="ltr"
-                                  for="radio-group::r6g::radio:input:2"
+                                  for="radio-group:_r_6g_:radio:input:2"
                                   id="root_employment-2"
                                 >
                                   <input
-                                    aria-labelledby="radio-group::r6g::radio:label:2"
+                                    aria-labelledby="radio-group:_r_6g_:radio:label:2"
                                     checked=""
-                                    data-ownedby="radio-group::r6g:"
-                                    id="radio-group::r6g::radio:input:2"
+                                    data-ownedby="radio-group:_r_6g_"
+                                    id="radio-group:_r_6g_:radio:input:2"
                                     name="root_employment"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
@@ -16723,7 +16723,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ssr=""
                                     data-state="checked"
                                     dir="ltr"
-                                    id="radio-group::r6g::radio:control:2"
+                                    id="radio-group:_r_6g_:radio:control:2"
                                   >
                                     <span
                                       class="dot"
@@ -16737,7 +16737,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ssr=""
                                     data-state="checked"
                                     dir="ltr"
-                                    id="radio-group::r6g::radio:label:2"
+                                    id="radio-group:_r_6g_:radio:label:2"
                                   >
                                     Other
                                   </span>
@@ -16756,7 +16756,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="rjsf-field rjsf-field-string"
                     >
                       <fieldset
-                        aria-labelledby="fieldset:::r6h:::legend"
+                        aria-labelledby="fieldset::_r_6h_::legend"
                         class="fieldset__root emotion-0"
                         data-part="root"
                         data-scope="fieldset"
@@ -16768,7 +16768,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="chakra-field__root emotion-12"
                             data-part="root"
                             data-scope="field"
-                            id="field:::r6i:"
+                            id="field::_r_6i_"
                             role="group"
                           >
                             <label
@@ -16776,8 +16776,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-part="label"
                               data-required=""
                               data-scope="field"
-                              for=":r6i:"
-                              id="field:::r6i:::label"
+                              for="_r_6i_"
+                              id="field::_r_6i_::label"
                             >
                               Describe your job
                               <span
@@ -17743,7 +17743,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r1k:::legend"
+        aria-labelledby="fieldset::_r_1k_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -17762,7 +17762,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-object"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r1l:::legend"
+                    aria-labelledby="fieldset::_r_1l_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -17798,7 +17798,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-string"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r1m:::legend"
+                    aria-labelledby="fieldset::_r_1m_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -17810,7 +17810,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="chakra-field__root emotion-12"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r1n:"
+                        id="field::_r_1n_"
                         role="group"
                       >
                         <label
@@ -17818,8 +17818,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-part="label"
                           data-required=""
                           data-scope="field"
-                          for=":r1n:"
-                          id="field:::r1n:::label"
+                          for="_r_1n_"
+                          id="field::_r_1n_::label"
                         >
                           First Name
                           <span
@@ -17852,7 +17852,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-string"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r1o:::legend"
+                    aria-labelledby="fieldset::_r_1o_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -17864,15 +17864,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="chakra-field__root emotion-12"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r1p:"
+                        id="field::_r_1p_"
                         role="group"
                       >
                         <label
                           class="chakra-field__label emotion-13"
                           data-part="label"
                           data-scope="field"
-                          for=":r1p:"
-                          id="field:::r1p:::label"
+                          for="_r_1p_"
+                          id="field::_r_1p_::label"
                         >
                           Middle
                         </label>
@@ -17897,7 +17897,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-string"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r1q:::legend"
+                    aria-labelledby="fieldset::_r_1q_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -17909,7 +17909,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="chakra-field__root emotion-12"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r1r:"
+                        id="field::_r_1r_"
                         role="group"
                       >
                         <label
@@ -17917,8 +17917,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-part="label"
                           data-required=""
                           data-scope="field"
-                          for=":r1r:"
-                          id="field:::r1r:::label"
+                          for="_r_1r_"
+                          id="field::_r_1r_::label"
                         >
                           Last Name
                           <span
@@ -17955,7 +17955,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-string"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r1s:::legend"
+                    aria-labelledby="fieldset::_r_1s_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -17967,7 +17967,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="chakra-field__root emotion-12"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r1t:"
+                        id="field::_r_1t_"
                         role="group"
                       >
                         <label
@@ -17975,8 +17975,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-part="label"
                           data-required=""
                           data-scope="field"
-                          for=":r1t:"
-                          id="field:::r1t:::label"
+                          for="_r_1t_"
+                          id="field::_r_1t_::label"
                         >
                           Date of Birth
                           <span
@@ -18011,7 +18011,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-array"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r1u:::legend"
+                    aria-labelledby="fieldset::_r_1u_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -18020,7 +18020,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="fieldset__legend emotion-36"
                       data-part="legend"
                       data-scope="fieldset"
-                      id="fieldset:::r1u:::legend"
+                      id="fieldset::_r_1u_::legend"
                     >
                       <sup
                         class="emotion-37"
@@ -18033,7 +18033,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="fieldset__content emotion-1"
                     >
                       <fieldset
-                        aria-labelledby="fieldset:::r1v:::legend"
+                        aria-labelledby="fieldset::_r_1v_::legend"
                         class="fieldset__root emotion-39"
                         data-part="root"
                         data-scope="fieldset"
@@ -18042,7 +18042,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="fieldset__legend emotion-40"
                           data-part="legend"
                           data-scope="fieldset"
-                          id="fieldset:::r1v:::legend"
+                          id="fieldset::_r_1v_::legend"
                         >
                           Race
                         </legend>
@@ -18317,7 +18317,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="rjsf-field rjsf-field-object"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r25:::legend"
+                    aria-labelledby="fieldset::_r_25_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -18335,7 +18335,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="rjsf-field rjsf-field-string"
                           >
                             <fieldset
-                              aria-labelledby="fieldset:::r26:::legend"
+                              aria-labelledby="fieldset::_r_26_::legend"
                               class="fieldset__root emotion-0"
                               data-part="root"
                               data-scope="fieldset"
@@ -18347,7 +18347,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   class="chakra-field__root emotion-12"
                                   data-part="root"
                                   data-scope="field"
-                                  id="field:::r27:"
+                                  id="field::_r_27_"
                                   role="group"
                                 >
                                   <label
@@ -18355,8 +18355,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-part="label"
                                     data-required=""
                                     data-scope="field"
-                                    for=":r27:"
-                                    id="field:::r27:::label"
+                                    for="_r_27_"
+                                    id="field::_r_27_::label"
                                   >
                                     Address
                                     <span
@@ -18391,7 +18391,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="rjsf-field rjsf-field-string"
                           >
                             <fieldset
-                              aria-labelledby="fieldset:::r28:::legend"
+                              aria-labelledby="fieldset::_r_28_::legend"
                               class="fieldset__root emotion-0"
                               data-part="root"
                               data-scope="fieldset"
@@ -18403,15 +18403,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   class="chakra-field__root emotion-12"
                                   data-part="root"
                                   data-scope="field"
-                                  id="field:::r29:"
+                                  id="field::_r_29_"
                                   role="group"
                                 >
                                   <label
                                     class="chakra-field__label emotion-13"
                                     data-part="label"
                                     data-scope="field"
-                                    for=":r29:"
-                                    id="field:::r29:::label"
+                                    for="_r_29_"
+                                    id="field::_r_29_::label"
                                   >
                                     Address 2
                                   </label>
@@ -18438,7 +18438,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="rjsf-field rjsf-field-string"
                           >
                             <fieldset
-                              aria-labelledby="fieldset:::r2a:::legend"
+                              aria-labelledby="fieldset::_r_2a_::legend"
                               class="fieldset__root emotion-0"
                               data-part="root"
                               data-scope="fieldset"
@@ -18450,7 +18450,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   class="chakra-field__root emotion-12"
                                   data-part="root"
                                   data-scope="field"
-                                  id="field:::r2b:"
+                                  id="field::_r_2b_"
                                   role="group"
                                 >
                                   <label
@@ -18458,8 +18458,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-part="label"
                                     data-required=""
                                     data-scope="field"
-                                    for=":r2b:"
-                                    id="field:::r2b:::label"
+                                    for="_r_2b_"
+                                    id="field::_r_2b_::label"
                                   >
                                     City
                                     <span
@@ -18494,7 +18494,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="rjsf-field rjsf-field-string"
                           >
                             <fieldset
-                              aria-labelledby="fieldset:::r2c:::legend"
+                              aria-labelledby="fieldset::_r_2c_::legend"
                               class="fieldset__root emotion-0"
                               data-part="root"
                               data-scope="fieldset"
@@ -18506,7 +18506,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   class="chakra-field__root emotion-89"
                                   data-part="root"
                                   data-scope="field"
-                                  id="field:::r2d:"
+                                  id="field::_r_2d_"
                                   role="group"
                                 >
                                   <label
@@ -18514,8 +18514,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-part="label"
                                     data-required=""
                                     data-scope="field"
-                                    for=":r2d:"
-                                    id="field:::r2d:::label"
+                                    for="_r_2d_"
+                                    id="field::_r_2d_::label"
                                   >
                                     State
                                     <span
@@ -18535,8 +18535,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   >
                                     <select
                                       aria-hidden="true"
-                                      aria-labelledby="field:::r2d:::label"
-                                      id=":r2d:"
+                                      aria-labelledby="field::_r_2d_::label"
+                                      id="_r_2d_"
                                       name="root_person_address_state"
                                       required=""
                                       style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
@@ -18847,7 +18847,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           aria-expanded="false"
                                           aria-haspopup="listbox"
                                           aria-invalid="false"
-                                          aria-labelledby="field:::r2d:::label"
+                                          aria-labelledby="field::_r_2d_::label"
                                           aria-required="true"
                                           class="chakra-select__trigger emotion-95"
                                           data-part="trigger"
@@ -18898,7 +18898,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                                     >
                                       <div
-                                        aria-labelledby="field:::r2d:::label"
+                                        aria-labelledby="field::_r_2d_::label"
                                         class="chakra-select__content emotion-101"
                                         data-part="content"
                                         data-scope="select"
@@ -20604,7 +20604,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="rjsf-field rjsf-field-string"
                           >
                             <fieldset
-                              aria-labelledby="fieldset:::r2f:::legend"
+                              aria-labelledby="fieldset::_r_2f_::legend"
                               class="fieldset__root emotion-0"
                               data-part="root"
                               data-scope="fieldset"
@@ -20616,7 +20616,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   class="chakra-field__root emotion-12"
                                   data-part="root"
                                   data-scope="field"
-                                  id="field:::r2g:"
+                                  id="field::_r_2g_"
                                   role="group"
                                 >
                                   <label
@@ -20624,8 +20624,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-part="label"
                                     data-required=""
                                     data-scope="field"
-                                    for=":r2g:"
-                                    id="field:::r2g:::label"
+                                    for="_r_2g_"
+                                    id="field::_r_2g_::label"
                                   >
                                     ZIP Code
                                     <span
@@ -20668,7 +20668,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   >
                     <div>
                       <fieldset
-                        aria-labelledby="fieldset:::r2h:::legend"
+                        aria-labelledby="fieldset::_r_2h_::legend"
                         class="fieldset__root emotion-0"
                         data-part="root"
                         data-scope="fieldset"
@@ -20680,28 +20680,28 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="chakra-field__root emotion-12"
                             data-part="root"
                             data-scope="field"
-                            id="field:::r2i:"
+                            id="field::_r_2i_"
                             role="group"
                           >
                             <label
                               class="chakra-field__label emotion-13"
                               data-part="label"
                               data-scope="field"
-                              for=":r2i:"
-                              id="field:::r2i:::label"
+                              for="_r_2i_"
+                              id="field::_r_2i_::label"
                             >
                               Employment
                             </label>
                             <div
                               aria-describedby="root_employment__error root_employment__description root_employment__help"
-                              aria-labelledby="fieldset:::r2h:::legend"
+                              aria-labelledby="fieldset::_r_2h_::legend"
                               aria-orientation="vertical"
                               class="chakra-radio-group__root"
                               data-orientation="vertical"
                               data-part="root"
                               data-scope="radio-group"
                               dir="ltr"
-                              id="radio-group::r2j:"
+                              id="radio-group:_r_2j_"
                               role="radiogroup"
                               style="position: relative;"
                             >
@@ -20716,14 +20716,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   data-ssr=""
                                   data-state="checked"
                                   dir="ltr"
-                                  for="radio-group::r2j::radio:input:0"
+                                  for="radio-group:_r_2j_:radio:input:0"
                                   id="root_employment-0"
                                 >
                                   <input
-                                    aria-labelledby="radio-group::r2j::radio:label:0"
+                                    aria-labelledby="radio-group:_r_2j_:radio:label:0"
                                     checked=""
-                                    data-ownedby="radio-group::r2j:"
-                                    id="radio-group::r2j::radio:input:0"
+                                    data-ownedby="radio-group:_r_2j_"
+                                    id="radio-group:_r_2j_:radio:input:0"
                                     name="root_employment"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
@@ -20739,7 +20739,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ssr=""
                                     data-state="checked"
                                     dir="ltr"
-                                    id="radio-group::r2j::radio:control:0"
+                                    id="radio-group:_r_2j_:radio:control:0"
                                   >
                                     <span
                                       class="dot"
@@ -20753,7 +20753,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ssr=""
                                     data-state="checked"
                                     dir="ltr"
-                                    id="radio-group::r2j::radio:label:0"
+                                    id="radio-group:_r_2j_:radio:label:0"
                                   >
                                     Company
                                   </span>
@@ -20766,13 +20766,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   data-ssr=""
                                   data-state="unchecked"
                                   dir="ltr"
-                                  for="radio-group::r2j::radio:input:1"
+                                  for="radio-group:_r_2j_:radio:input:1"
                                   id="root_employment-1"
                                 >
                                   <input
-                                    aria-labelledby="radio-group::r2j::radio:label:1"
-                                    data-ownedby="radio-group::r2j:"
-                                    id="radio-group::r2j::radio:input:1"
+                                    aria-labelledby="radio-group:_r_2j_:radio:label:1"
+                                    data-ownedby="radio-group:_r_2j_"
+                                    id="radio-group:_r_2j_:radio:input:1"
                                     name="root_employment"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
@@ -20787,7 +20787,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ssr=""
                                     data-state="unchecked"
                                     dir="ltr"
-                                    id="radio-group::r2j::radio:control:1"
+                                    id="radio-group:_r_2j_:radio:control:1"
                                   />
                                   <span
                                     class="chakra-radio-group__itemText"
@@ -20797,7 +20797,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ssr=""
                                     data-state="unchecked"
                                     dir="ltr"
-                                    id="radio-group::r2j::radio:label:1"
+                                    id="radio-group:_r_2j_:radio:label:1"
                                   >
                                     Education
                                   </span>
@@ -20810,13 +20810,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   data-ssr=""
                                   data-state="unchecked"
                                   dir="ltr"
-                                  for="radio-group::r2j::radio:input:2"
+                                  for="radio-group:_r_2j_:radio:input:2"
                                   id="root_employment-2"
                                 >
                                   <input
-                                    aria-labelledby="radio-group::r2j::radio:label:2"
-                                    data-ownedby="radio-group::r2j:"
-                                    id="radio-group::r2j::radio:input:2"
+                                    aria-labelledby="radio-group:_r_2j_:radio:label:2"
+                                    data-ownedby="radio-group:_r_2j_"
+                                    id="radio-group:_r_2j_:radio:input:2"
                                     name="root_employment"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
@@ -20831,7 +20831,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ssr=""
                                     data-state="unchecked"
                                     dir="ltr"
-                                    id="radio-group::r2j::radio:control:2"
+                                    id="radio-group:_r_2j_:radio:control:2"
                                   />
                                   <span
                                     class="chakra-radio-group__itemText"
@@ -20841,7 +20841,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     data-ssr=""
                                     data-state="unchecked"
                                     dir="ltr"
-                                    id="radio-group::r2j::radio:label:2"
+                                    id="radio-group:_r_2j_:radio:label:2"
                                   >
                                     Other
                                   </span>
@@ -20860,7 +20860,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="rjsf-field rjsf-field-string"
                     >
                       <fieldset
-                        aria-labelledby="fieldset:::r2k:::legend"
+                        aria-labelledby="fieldset::_r_2k_::legend"
                         class="fieldset__root emotion-0"
                         data-part="root"
                         data-scope="fieldset"
@@ -20872,7 +20872,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="chakra-field__root emotion-12"
                             data-part="root"
                             data-scope="field"
-                            id="field:::r2l:"
+                            id="field::_r_2l_"
                             role="group"
                           >
                             <label
@@ -20880,8 +20880,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-part="label"
                               data-required=""
                               data-scope="field"
-                              for=":r2l:"
-                              id="field:::r2l:::label"
+                              for="_r_2l_"
+                              id="field::_r_2l_::label"
                             >
                               Company Name
                               <span
@@ -20916,7 +20916,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="rjsf-field rjsf-field-string"
                     >
                       <fieldset
-                        aria-labelledby="fieldset:::r2m:::legend"
+                        aria-labelledby="fieldset::_r_2m_::legend"
                         class="fieldset__root emotion-0"
                         data-part="root"
                         data-scope="fieldset"
@@ -20928,15 +20928,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="chakra-field__root emotion-12"
                             data-part="root"
                             data-scope="field"
-                            id="field:::r2n:"
+                            id="field::_r_2n_"
                             role="group"
                           >
                             <label
                               class="chakra-field__label emotion-13"
                               data-part="label"
                               data-scope="field"
-                              for=":r2n:"
-                              id="field:::r2n:::label"
+                              for="_r_2n_"
+                              id="field::_r_2n_::label"
                             >
                               Job Title
                             </label>
@@ -20963,7 +20963,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="rjsf-field rjsf-field-string"
                     >
                       <fieldset
-                        aria-labelledby="fieldset:::r2o:::legend"
+                        aria-labelledby="fieldset::_r_2o_::legend"
                         class="fieldset__root emotion-0"
                         data-part="root"
                         data-scope="fieldset"
@@ -20975,7 +20975,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="chakra-field__root emotion-12"
                             data-part="root"
                             data-scope="field"
-                            id="field:::r2p:"
+                            id="field::_r_2p_"
                             role="group"
                           >
                             <label
@@ -20983,8 +20983,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-part="label"
                               data-required=""
                               data-scope="field"
-                              for=":r2p:"
-                              id="field:::r2p:::label"
+                              for="_r_2p_"
+                              id="field::_r_2p_::label"
                             >
                               City
                               <span
@@ -21017,7 +21017,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="rjsf-field rjsf-field-string"
                     >
                       <fieldset
-                        aria-labelledby="fieldset:::r2q:::legend"
+                        aria-labelledby="fieldset::_r_2q_::legend"
                         class="fieldset__root emotion-0"
                         data-part="root"
                         data-scope="fieldset"
@@ -21029,7 +21029,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="chakra-field__root emotion-89"
                             data-part="root"
                             data-scope="field"
-                            id="field:::r2r:"
+                            id="field::_r_2r_"
                             role="group"
                           >
                             <label
@@ -21037,8 +21037,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-part="label"
                               data-required=""
                               data-scope="field"
-                              for=":r2r:"
-                              id="field:::r2r:::label"
+                              for="_r_2r_"
+                              id="field::_r_2r_::label"
                             >
                               State
                               <span
@@ -21058,8 +21058,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             >
                               <select
                                 aria-hidden="true"
-                                aria-labelledby="field:::r2r:::label"
-                                id=":r2r:"
+                                aria-labelledby="field::_r_2r_::label"
+                                id="_r_2r_"
                                 name="root_employment_location_state"
                                 required=""
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
@@ -21370,7 +21370,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     aria-expanded="false"
                                     aria-haspopup="listbox"
                                     aria-invalid="false"
-                                    aria-labelledby="field:::r2r:::label"
+                                    aria-labelledby="field::_r_2r_::label"
                                     aria-required="true"
                                     class="chakra-select__trigger emotion-95"
                                     data-part="trigger"
@@ -21421,7 +21421,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                               >
                                 <div
-                                  aria-labelledby="field:::r2r:::label"
+                                  aria-labelledby="field::_r_2r_::label"
                                   class="chakra-select__content emotion-101"
                                   data-part="content"
                                   data-scope="select"
@@ -23922,7 +23922,7 @@ exports[`Three even column grid > renders person and address in three columns, n
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::rq:::legend"
+        aria-labelledby="fieldset::_r_q_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -23938,7 +23938,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 class="rjsf-field rjsf-field-object"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::rr:::legend"
+                  aria-labelledby="fieldset::_r_r_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -23970,7 +23970,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::rs:::legend"
+                  aria-labelledby="fieldset::_r_s_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -23982,7 +23982,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       class="chakra-field__root emotion-10"
                       data-part="root"
                       data-scope="field"
-                      id="field:::rt:"
+                      id="field::_r_t_"
                       role="group"
                     >
                       <label
@@ -23990,8 +23990,8 @@ exports[`Three even column grid > renders person and address in three columns, n
                         data-part="label"
                         data-required=""
                         data-scope="field"
-                        for=":rt:"
-                        id="field:::rt:::label"
+                        for="_r_t_"
+                        id="field::_r_t_::label"
                       >
                         First Name
                         <span
@@ -24024,7 +24024,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::ru:::legend"
+                  aria-labelledby="fieldset::_r_u_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -24036,15 +24036,15 @@ exports[`Three even column grid > renders person and address in three columns, n
                       class="chakra-field__root emotion-10"
                       data-part="root"
                       data-scope="field"
-                      id="field:::rv:"
+                      id="field::_r_v_"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-11"
                         data-part="label"
                         data-scope="field"
-                        for=":rv:"
-                        id="field:::rv:::label"
+                        for="_r_v_"
+                        id="field::_r_v_::label"
                       >
                         Middle
                       </label>
@@ -24069,7 +24069,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r10:::legend"
+                  aria-labelledby="fieldset::_r_10_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -24081,7 +24081,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       class="chakra-field__root emotion-10"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r11:"
+                      id="field::_r_11_"
                       role="group"
                     >
                       <label
@@ -24089,8 +24089,8 @@ exports[`Three even column grid > renders person and address in three columns, n
                         data-part="label"
                         data-required=""
                         data-scope="field"
-                        for=":r11:"
-                        id="field:::r11:::label"
+                        for="_r_11_"
+                        id="field::_r_11_::label"
                       >
                         Last Name
                         <span
@@ -24123,7 +24123,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r12:::legend"
+                  aria-labelledby="fieldset::_r_12_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -24135,7 +24135,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       class="chakra-field__root emotion-10"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r13:"
+                      id="field::_r_13_"
                       role="group"
                     >
                       <label
@@ -24143,8 +24143,8 @@ exports[`Three even column grid > renders person and address in three columns, n
                         data-part="label"
                         data-required=""
                         data-scope="field"
-                        for=":r13:"
-                        id="field:::r13:::label"
+                        for="_r_13_"
+                        id="field::_r_13_::label"
                       >
                         Date of Birth
                         <span
@@ -24177,7 +24177,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 class="rjsf-field rjsf-field-array"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r14:::legend"
+                  aria-labelledby="fieldset::_r_14_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -24186,7 +24186,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     class="fieldset__legend emotion-32"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset:::r14:::legend"
+                    id="fieldset::_r_14_::legend"
                   >
                     <sup
                       class="emotion-33"
@@ -24199,7 +24199,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     class="fieldset__content emotion-1"
                   >
                     <fieldset
-                      aria-labelledby="fieldset:::r15:::legend"
+                      aria-labelledby="fieldset::_r_15_::legend"
                       class="fieldset__root emotion-35"
                       data-part="root"
                       data-scope="fieldset"
@@ -24208,7 +24208,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="fieldset__legend emotion-36"
                         data-part="legend"
                         data-scope="fieldset"
-                        id="fieldset:::r15:::legend"
+                        id="fieldset::_r_15_::legend"
                       >
                         Race
                       </legend>
@@ -24479,7 +24479,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r1b:::legend"
+                  aria-labelledby="fieldset::_r_1b_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -24491,7 +24491,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       class="chakra-field__root emotion-10"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r1c:"
+                      id="field::_r_1c_"
                       role="group"
                     >
                       <label
@@ -24499,8 +24499,8 @@ exports[`Three even column grid > renders person and address in three columns, n
                         data-part="label"
                         data-required=""
                         data-scope="field"
-                        for=":r1c:"
-                        id="field:::r1c:::label"
+                        for="_r_1c_"
+                        id="field::_r_1c_::label"
                       >
                         Address
                         <span
@@ -24533,7 +24533,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r1d:::legend"
+                  aria-labelledby="fieldset::_r_1d_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -24545,15 +24545,15 @@ exports[`Three even column grid > renders person and address in three columns, n
                       class="chakra-field__root emotion-10"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r1e:"
+                      id="field::_r_1e_"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-11"
                         data-part="label"
                         data-scope="field"
-                        for=":r1e:"
-                        id="field:::r1e:::label"
+                        for="_r_1e_"
+                        id="field::_r_1e_::label"
                       >
                         Address 2
                       </label>
@@ -24578,7 +24578,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r1f:::legend"
+                  aria-labelledby="fieldset::_r_1f_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -24590,7 +24590,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       class="chakra-field__root emotion-10"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r1g:"
+                      id="field::_r_1g_"
                       role="group"
                     >
                       <label
@@ -24598,8 +24598,8 @@ exports[`Three even column grid > renders person and address in three columns, n
                         data-part="label"
                         data-required=""
                         data-scope="field"
-                        for=":r1g:"
-                        id="field:::r1g:::label"
+                        for="_r_1g_"
+                        id="field::_r_1g_::label"
                       >
                         City
                         <span
@@ -24632,7 +24632,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r1h:::legend"
+                  aria-labelledby="fieldset::_r_1h_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -24644,7 +24644,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       class="chakra-field__root emotion-78"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r1i:"
+                      id="field::_r_1i_"
                       role="group"
                     >
                       <label
@@ -24652,8 +24652,8 @@ exports[`Three even column grid > renders person and address in three columns, n
                         data-part="label"
                         data-required=""
                         data-scope="field"
-                        for=":r1i:"
-                        id="field:::r1i:::label"
+                        for="_r_1i_"
+                        id="field::_r_1i_::label"
                       >
                         State
                         <span
@@ -24673,8 +24673,8 @@ exports[`Three even column grid > renders person and address in three columns, n
                       >
                         <select
                           aria-hidden="true"
-                          aria-labelledby="field:::r1i:::label"
-                          id=":r1i:"
+                          aria-labelledby="field::_r_1i_::label"
+                          id="_r_1i_"
                           name="root_person_address_state"
                           required=""
                           style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
@@ -24985,7 +24985,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                               aria-expanded="false"
                               aria-haspopup="listbox"
                               aria-invalid="false"
-                              aria-labelledby="field:::r1i:::label"
+                              aria-labelledby="field::_r_1i_::label"
                               aria-required="true"
                               class="chakra-select__trigger emotion-84"
                               data-part="trigger"
@@ -25036,7 +25036,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                           style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                         >
                           <div
-                            aria-labelledby="field:::r1i:::label"
+                            aria-labelledby="field::_r_1i_::label"
                             class="chakra-select__content emotion-90"
                             data-part="content"
                             data-scope="select"
@@ -27535,7 +27535,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r0:::legend"
+        aria-labelledby="fieldset::_r_0_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -27551,7 +27551,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 class="rjsf-field rjsf-field-object"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r1:::legend"
+                  aria-labelledby="fieldset::_r_1_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -27583,7 +27583,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r2:::legend"
+                  aria-labelledby="fieldset::_r_2_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -27595,7 +27595,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       class="chakra-field__root emotion-10"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r3:"
+                      id="field::_r_3_"
                       role="group"
                     >
                       <label
@@ -27603,8 +27603,8 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         data-part="label"
                         data-required=""
                         data-scope="field"
-                        for=":r3:"
-                        id="field:::r3:::label"
+                        for="_r_3_"
+                        id="field::_r_3_::label"
                       >
                         First Name
                         <span
@@ -27637,7 +27637,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r4:::legend"
+                  aria-labelledby="fieldset::_r_4_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -27649,15 +27649,15 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       class="chakra-field__root emotion-10"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r5:"
+                      id="field::_r_5_"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-11"
                         data-part="label"
                         data-scope="field"
-                        for=":r5:"
-                        id="field:::r5:::label"
+                        for="_r_5_"
+                        id="field::_r_5_::label"
                       >
                         Middle
                       </label>
@@ -27682,7 +27682,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r6:::legend"
+                  aria-labelledby="fieldset::_r_6_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -27694,7 +27694,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       class="chakra-field__root emotion-10"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r7:"
+                      id="field::_r_7_"
                       role="group"
                     >
                       <label
@@ -27702,8 +27702,8 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         data-part="label"
                         data-required=""
                         data-scope="field"
-                        for=":r7:"
-                        id="field:::r7:::label"
+                        for="_r_7_"
+                        id="field::_r_7_::label"
                       >
                         First Name
                         <span
@@ -27736,7 +27736,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r8:::legend"
+                  aria-labelledby="fieldset::_r_8_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -27748,7 +27748,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       class="chakra-field__root emotion-10"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r9:"
+                      id="field::_r_9_"
                       role="group"
                     >
                       <label
@@ -27756,8 +27756,8 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         data-part="label"
                         data-required=""
                         data-scope="field"
-                        for=":r9:"
-                        id="field:::r9:::label"
+                        for="_r_9_"
+                        id="field::_r_9_::label"
                       >
                         Date of Birth
                         <span
@@ -27790,7 +27790,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 class="rjsf-field rjsf-field-array"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::ra:::legend"
+                  aria-labelledby="fieldset::_r_a_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -27799,7 +27799,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     class="fieldset__legend emotion-32"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset:::ra:::legend"
+                    id="fieldset::_r_a_::legend"
                   >
                     <sup
                       class="emotion-33"
@@ -27812,7 +27812,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     class="fieldset__content emotion-1"
                   >
                     <fieldset
-                      aria-labelledby="fieldset:::rb:::legend"
+                      aria-labelledby="fieldset::_r_b_::legend"
                       class="fieldset__root emotion-35"
                       data-part="root"
                       data-scope="fieldset"
@@ -27821,7 +27821,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="fieldset__legend emotion-36"
                         data-part="legend"
                         data-scope="fieldset"
-                        id="fieldset:::rb:::legend"
+                        id="fieldset::_r_b_::legend"
                       >
                         Race
                       </legend>
@@ -28092,7 +28092,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::rh:::legend"
+                  aria-labelledby="fieldset::_r_h_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -28104,7 +28104,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       class="chakra-field__root emotion-10"
                       data-part="root"
                       data-scope="field"
-                      id="field:::ri:"
+                      id="field::_r_i_"
                       role="group"
                     >
                       <label
@@ -28112,8 +28112,8 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         data-part="label"
                         data-required=""
                         data-scope="field"
-                        for=":ri:"
-                        id="field:::ri:::label"
+                        for="_r_i_"
+                        id="field::_r_i_::label"
                       >
                         Address
                         <span
@@ -28146,7 +28146,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::rj:::legend"
+                  aria-labelledby="fieldset::_r_j_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -28158,15 +28158,15 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       class="chakra-field__root emotion-10"
                       data-part="root"
                       data-scope="field"
-                      id="field:::rk:"
+                      id="field::_r_k_"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-11"
                         data-part="label"
                         data-scope="field"
-                        for=":rk:"
-                        id="field:::rk:::label"
+                        for="_r_k_"
+                        id="field::_r_k_::label"
                       >
                         Address 2
                       </label>
@@ -28191,7 +28191,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::rl:::legend"
+                  aria-labelledby="fieldset::_r_l_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -28203,7 +28203,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       class="chakra-field__root emotion-10"
                       data-part="root"
                       data-scope="field"
-                      id="field:::rm:"
+                      id="field::_r_m_"
                       role="group"
                     >
                       <label
@@ -28211,8 +28211,8 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         data-part="label"
                         data-required=""
                         data-scope="field"
-                        for=":rm:"
-                        id="field:::rm:::label"
+                        for="_r_m_"
+                        id="field::_r_m_::label"
                       >
                         City
                         <span
@@ -28245,7 +28245,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::rn:::legend"
+                  aria-labelledby="fieldset::_r_n_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -28257,7 +28257,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       class="chakra-field__root emotion-78"
                       data-part="root"
                       data-scope="field"
-                      id="field:::ro:"
+                      id="field::_r_o_"
                       role="group"
                     >
                       <label
@@ -28265,8 +28265,8 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         data-part="label"
                         data-required=""
                         data-scope="field"
-                        for=":ro:"
-                        id="field:::ro:::label"
+                        for="_r_o_"
+                        id="field::_r_o_::label"
                       >
                         State
                         <span
@@ -28286,8 +28286,8 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       >
                         <select
                           aria-hidden="true"
-                          aria-labelledby="field:::ro:::label"
-                          id=":ro:"
+                          aria-labelledby="field::_r_o_::label"
+                          id="_r_o_"
                           name="root_person_address_state"
                           required=""
                           style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
@@ -28598,7 +28598,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                               aria-expanded="false"
                               aria-haspopup="listbox"
                               aria-invalid="false"
-                              aria-labelledby="field:::ro:::label"
+                              aria-labelledby="field::_r_o_::label"
                               aria-required="true"
                               class="chakra-select__trigger emotion-84"
                               data-part="trigger"
@@ -28649,7 +28649,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                           style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                         >
                           <div
-                            aria-labelledby="field:::ro:::label"
+                            aria-labelledby="field::_r_o_::label"
                             class="chakra-select__content emotion-90"
                             data-part="content"
                             data-scope="select"

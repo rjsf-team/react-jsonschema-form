@@ -40,7 +40,7 @@
     "@rjsf/utils": "workspace:^",
     "antd": "^5 || >6.3.5",
     "dayjs": "^1.8.0",
-    "react": ">=18"
+    "react": ">=19"
   },
   "dependencies": {
     "classnames": "^2.5.1"

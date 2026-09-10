@@ -16,7 +16,7 @@ export default function GridTemplate(props: GridTemplateProps) {
   // Grid with fluid container
   if (fluid) {
     return (
-      <Container p='4' mx={0} w='100%'>
+      <Container fluid p='4' mx={0} w='100%'>
         <Grid {...rest}>{children}</Grid>
       </Container>
     );

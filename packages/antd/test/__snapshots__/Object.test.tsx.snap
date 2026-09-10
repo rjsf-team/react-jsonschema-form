@@ -941,7 +941,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                         id="root_active"
                                         name="root[active]"
                                         type="checkbox"
-                                        value=""
                                       />
                                     </span>
                                     <span

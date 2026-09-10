@@ -52,7 +52,7 @@ export default function ObjectFieldTemplate<
   const gridVerticalSpacing = uiOptions?.gridVerticalSpacing;
 
   return (
-    <Container id={fieldPathId.$id} p={0}>
+    <Container id={fieldPathId.$id} p={0} fluid>
       {title && (
         <TitleFieldTemplate
           id={titleId(fieldPathId)}

@@ -254,7 +254,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r2k:::legend"
+        aria-labelledby="fieldset::_r_2k_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -270,7 +270,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                 class="rjsf-field rjsf-field-object"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r2l:::legend"
+                  aria-labelledby="fieldset::_r_2l_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -301,7 +301,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                           class="rjsf-field rjsf-field-string"
                         >
                           <fieldset
-                            aria-labelledby="fieldset:::r2m:::legend"
+                            aria-labelledby="fieldset::_r_2m_::legend"
                             class="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -313,15 +313,15 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                 class="chakra-field__root emotion-11"
                                 data-part="root"
                                 data-scope="field"
-                                id="field:::r2n:"
+                                id="field::_r_2n_"
                                 role="group"
                               >
                                 <label
                                   class="chakra-field__label emotion-12"
                                   data-part="label"
                                   data-scope="field"
-                                  for=":r2n:"
-                                  id="field:::r2n:::label"
+                                  for="_r_2n_"
+                                  id="field::_r_2n_::label"
                                 >
                                   name
                                 </label>
@@ -346,7 +346,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                           class="rjsf-field rjsf-field-object"
                         >
                           <fieldset
-                            aria-labelledby="fieldset:::r2o:::legend"
+                            aria-labelledby="fieldset::_r_2o_::legend"
                             class="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -377,7 +377,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                     class="rjsf-field rjsf-field-string"
                                   >
                                     <fieldset
-                                      aria-labelledby="fieldset:::r2p:::legend"
+                                      aria-labelledby="fieldset::_r_2p_::legend"
                                       class="fieldset__root emotion-0"
                                       data-part="root"
                                       data-scope="fieldset"
@@ -389,15 +389,15 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                           class="chakra-field__root emotion-11"
                                           data-part="root"
                                           data-scope="field"
-                                          id="field:::r2q:"
+                                          id="field::_r_2q_"
                                           role="group"
                                         >
                                           <label
                                             class="chakra-field__label emotion-12"
                                             data-part="label"
                                             data-scope="field"
-                                            for=":r2q:"
-                                            id="field:::r2q:::label"
+                                            for="_r_2q_"
+                                            id="field::_r_2q_::label"
                                           >
                                             street
                                           </label>
@@ -422,7 +422,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                     class="rjsf-field rjsf-field-string"
                                   >
                                     <fieldset
-                                      aria-labelledby="fieldset:::r2r:::legend"
+                                      aria-labelledby="fieldset::_r_2r_::legend"
                                       class="fieldset__root emotion-0"
                                       data-part="root"
                                       data-scope="fieldset"
@@ -434,15 +434,15 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                           class="chakra-field__root emotion-11"
                                           data-part="root"
                                           data-scope="field"
-                                          id="field:::r2s:"
+                                          id="field::_r_2s_"
                                           role="group"
                                         >
                                           <label
                                             class="chakra-field__label emotion-12"
                                             data-part="label"
                                             data-scope="field"
-                                            for=":r2s:"
-                                            id="field:::r2s:::label"
+                                            for="_r_2s_"
+                                            id="field::_r_2s_::label"
                                           >
                                             city
                                           </label>
@@ -467,7 +467,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                     class="rjsf-field rjsf-field-string"
                                   >
                                     <fieldset
-                                      aria-labelledby="fieldset:::r2t:::legend"
+                                      aria-labelledby="fieldset::_r_2t_::legend"
                                       class="fieldset__root emotion-0"
                                       data-part="root"
                                       data-scope="fieldset"
@@ -479,15 +479,15 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                           class="chakra-field__root emotion-11"
                                           data-part="root"
                                           data-scope="field"
-                                          id="field:::r2u:"
+                                          id="field::_r_2u_"
                                           role="group"
                                         >
                                           <label
                                             class="chakra-field__label emotion-12"
                                             data-part="label"
                                             data-scope="field"
-                                            for=":r2u:"
-                                            id="field:::r2u:::label"
+                                            for="_r_2u_"
+                                            id="field::_r_2u_::label"
                                           >
                                             country
                                           </label>
@@ -947,7 +947,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r2v:::legend"
+        aria-labelledby="fieldset::_r_2v_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -963,7 +963,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r30:::legend"
+                  aria-labelledby="fieldset::_r_30_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -975,15 +975,15 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r31:"
+                      id="field::_r_31_"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for=":r31:"
-                        id="field:::r31:::label"
+                        for="_r_31_"
+                        id="field::_r_31_::label"
                       >
                         name
                       </label>
@@ -1014,15 +1014,15 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                     class="chakra-field__root emotion-10"
                     data-part="root"
                     data-scope="field"
-                    id="field:::r32:"
+                    id="field::_r_32_"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-6"
                       data-part="label"
                       data-scope="field"
-                      for=":r32:"
-                      id="field:::r32:::label"
+                      for="_r_32_"
+                      id="field::_r_32_::label"
                     >
                       customField Key
                     </label>
@@ -1041,7 +1041,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                   class="emotion-9"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r33:::legend"
+                    aria-labelledby="fieldset::_r_33_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -1053,15 +1053,15 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                         class="chakra-field__root emotion-5"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r34:"
+                        id="field::_r_34_"
                         role="group"
                       >
                         <label
                           class="chakra-field__label emotion-6"
                           data-part="label"
                           data-scope="field"
-                          for=":r34:"
-                          id="field:::r34:::label"
+                          for="_r_34_"
+                          id="field::_r_34_::label"
                         >
                           customField
                         </label>
@@ -1721,7 +1721,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r35:::legend"
+        aria-labelledby="fieldset::_r_35_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -1737,7 +1737,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r36:::legend"
+                  aria-labelledby="fieldset::_r_36_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -1749,15 +1749,15 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r37:"
+                      id="field::_r_37_"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for=":r37:"
-                        id="field:::r37:::label"
+                        for="_r_37_"
+                        id="field::_r_37_::label"
                       >
                         name
                       </label>
@@ -1782,7 +1782,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                 class="rjsf-field rjsf-field-number"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r38:::legend"
+                  aria-labelledby="fieldset::_r_38_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -1794,15 +1794,15 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r39:"
+                      id="field::_r_39_"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for=":r39:"
-                        id="field:::r39:::label"
+                        for="_r_39_"
+                        id="field::_r_39_::label"
                       >
                         age
                       </label>
@@ -1828,7 +1828,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                 class="rjsf-field rjsf-field-boolean"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r3a:::legend"
+                  aria-labelledby="fieldset::_r_3a_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -1840,7 +1840,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r3b:"
+                      id="field::_r_3b_"
                       role="group"
                     >
                       <label
@@ -1850,14 +1850,14 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                         data-scope="checkbox"
                         data-state="checked"
                         dir="ltr"
-                        for=":r3b:"
+                        for="_r_3b_"
                         id="checkbox:root_active"
                       >
                         <input
                           aria-invalid="false"
-                          aria-labelledby="field:::r3b:::label"
+                          aria-labelledby="field::_r_3b_::label"
                           checked=""
-                          id=":r3b:"
+                          id="_r_3b_"
                           name="root[active]"
                           style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                           type="checkbox"
@@ -1888,7 +1888,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                           data-scope="checkbox"
                           data-state="checked"
                           dir="ltr"
-                          id="field:::r3b:::label"
+                          id="field::_r_3b_::label"
                         >
                           <p>
                             active
@@ -1905,7 +1905,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                 class="rjsf-field rjsf-field-array"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r3d:::legend"
+                  aria-labelledby="fieldset::_r_3d_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -1943,7 +1943,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                 class="rjsf-field rjsf-field-string"
                               >
                                 <fieldset
-                                  aria-labelledby="fieldset:::r3e:::legend"
+                                  aria-labelledby="fieldset::_r_3e_::legend"
                                   class="fieldset__root emotion-0"
                                   data-part="root"
                                   data-scope="fieldset"
@@ -1955,7 +1955,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                       class="chakra-field__root emotion-5"
                                       data-part="root"
                                       data-scope="field"
-                                      id="field:::r3f:"
+                                      id="field::_r_3f_"
                                       role="group"
                                     >
                                       <label
@@ -1963,8 +1963,8 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                         data-part="label"
                                         data-required=""
                                         data-scope="field"
-                                        for=":r3f:"
-                                        id="field:::r3f:::label"
+                                        for="_r_3f_"
+                                        id="field::_r_3f_::label"
                                       >
                                         tags-1
                                         <span
@@ -2097,7 +2097,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                 class="rjsf-field rjsf-field-string"
                               >
                                 <fieldset
-                                  aria-labelledby="fieldset:::r3g:::legend"
+                                  aria-labelledby="fieldset::_r_3g_::legend"
                                   class="fieldset__root emotion-0"
                                   data-part="root"
                                   data-scope="fieldset"
@@ -2109,7 +2109,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                       class="chakra-field__root emotion-5"
                                       data-part="root"
                                       data-scope="field"
-                                      id="field:::r3h:"
+                                      id="field::_r_3h_"
                                       role="group"
                                     >
                                       <label
@@ -2117,8 +2117,8 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                         data-part="label"
                                         data-required=""
                                         data-scope="field"
-                                        for=":r3h:"
-                                        id="field:::r3h:::label"
+                                        for="_r_3h_"
+                                        id="field::_r_3h_::label"
                                       >
                                         tags-2
                                         <span
@@ -2534,7 +2534,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r2d:::legend"
+        aria-labelledby="fieldset::_r_2d_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -2550,7 +2550,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r2e:::legend"
+                  aria-labelledby="fieldset::_r_2e_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -2562,15 +2562,15 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r2f:"
+                      id="field::_r_2f_"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for=":r2f:"
-                        id="field:::r2f:::label"
+                        for="_r_2f_"
+                        id="field::_r_2f_::label"
                       >
                         firstName
                       </label>
@@ -2595,7 +2595,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r2g:::legend"
+                  aria-labelledby="fieldset::_r_2g_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -2607,15 +2607,15 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r2h:"
+                      id="field::_r_2h_"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for=":r2h:"
-                        id="field:::r2h:::label"
+                        for="_r_2h_"
+                        id="field::_r_2h_::label"
                       >
                         lastName
                       </label>
@@ -2640,7 +2640,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                 class="rjsf-field rjsf-field-number"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r2i:::legend"
+                  aria-labelledby="fieldset::_r_2i_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -2652,15 +2652,15 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r2j:"
+                      id="field::_r_2j_"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for=":r2j:"
-                        id="field:::r2j:::label"
+                        for="_r_2j_"
+                        id="field::_r_2j_::label"
                       >
                         age
                       </label>
@@ -2956,7 +2956,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r3p:::legend"
+        aria-labelledby="fieldset::_r_3p_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -2972,7 +2972,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                 class="rjsf-field rjsf-field-object"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r3q:::legend"
+                  aria-labelledby="fieldset::_r_3q_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -3003,7 +3003,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                           class="rjsf-field rjsf-field-string"
                         >
                           <fieldset
-                            aria-labelledby="fieldset:::r3r:::legend"
+                            aria-labelledby="fieldset::_r_3r_::legend"
                             class="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -3015,15 +3015,15 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                 class="chakra-field__root emotion-11"
                                 data-part="root"
                                 data-scope="field"
-                                id="field:::r3s:"
+                                id="field::_r_3s_"
                                 role="group"
                               >
                                 <label
                                   class="chakra-field__label emotion-12"
                                   data-part="label"
                                   data-scope="field"
-                                  for=":r3s:"
-                                  id="field:::r3s:::label"
+                                  for="_r_3s_"
+                                  id="field::_r_3s_::label"
                                 >
                                   name
                                 </label>
@@ -3048,7 +3048,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                           class="rjsf-field rjsf-field-object"
                         >
                           <fieldset
-                            aria-labelledby="fieldset:::r3t:::legend"
+                            aria-labelledby="fieldset::_r_3t_::legend"
                             class="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -3079,7 +3079,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                     class="rjsf-field rjsf-field-string"
                                   >
                                     <fieldset
-                                      aria-labelledby="fieldset:::r3u:::legend"
+                                      aria-labelledby="fieldset::_r_3u_::legend"
                                       class="fieldset__root emotion-0"
                                       data-part="root"
                                       data-scope="fieldset"
@@ -3091,15 +3091,15 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                           class="chakra-field__root emotion-11"
                                           data-part="root"
                                           data-scope="field"
-                                          id="field:::r3v:"
+                                          id="field::_r_3v_"
                                           role="group"
                                         >
                                           <label
                                             class="chakra-field__label emotion-12"
                                             data-part="label"
                                             data-scope="field"
-                                            for=":r3v:"
-                                            id="field:::r3v:::label"
+                                            for="_r_3v_"
+                                            id="field::_r_3v_::label"
                                           >
                                             street
                                           </label>
@@ -3124,7 +3124,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                     class="rjsf-field rjsf-field-string"
                                   >
                                     <fieldset
-                                      aria-labelledby="fieldset:::r40:::legend"
+                                      aria-labelledby="fieldset::_r_40_::legend"
                                       class="fieldset__root emotion-0"
                                       data-part="root"
                                       data-scope="fieldset"
@@ -3136,15 +3136,15 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                           class="chakra-field__root emotion-11"
                                           data-part="root"
                                           data-scope="field"
-                                          id="field:::r41:"
+                                          id="field::_r_41_"
                                           role="group"
                                         >
                                           <label
                                             class="chakra-field__label emotion-12"
                                             data-part="label"
                                             data-scope="field"
-                                            for=":r41:"
-                                            id="field:::r41:::label"
+                                            for="_r_41_"
+                                            id="field::_r_41_::label"
                                           >
                                             city
                                           </label>
@@ -3630,7 +3630,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r42:::legend"
+        aria-labelledby="fieldset::_r_42_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -3646,7 +3646,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r43:::legend"
+                  aria-labelledby="fieldset::_r_43_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -3658,15 +3658,15 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r44:"
+                      id="field::_r_44_"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for=":r44:"
-                        id="field:::r44:::label"
+                        for="_r_44_"
+                        id="field::_r_44_::label"
                       >
                         name
                       </label>
@@ -3691,7 +3691,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                 class="rjsf-field rjsf-field-number"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r45:::legend"
+                  aria-labelledby="fieldset::_r_45_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -3703,15 +3703,15 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r46:"
+                      id="field::_r_46_"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for=":r46:"
-                        id="field:::r46:::label"
+                        for="_r_46_"
+                        id="field::_r_46_::label"
                       >
                         count
                       </label>
@@ -3737,7 +3737,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                 class="rjsf-field rjsf-field-array"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r47:::legend"
+                  aria-labelledby="fieldset::_r_47_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -3775,7 +3775,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                 class="rjsf-field rjsf-field-string"
                               >
                                 <fieldset
-                                  aria-labelledby="fieldset:::r48:::legend"
+                                  aria-labelledby="fieldset::_r_48_::legend"
                                   class="fieldset__root emotion-0"
                                   data-part="root"
                                   data-scope="fieldset"
@@ -3787,7 +3787,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                       class="chakra-field__root emotion-5"
                                       data-part="root"
                                       data-scope="field"
-                                      id="field:::r49:"
+                                      id="field::_r_49_"
                                       role="group"
                                     >
                                       <label
@@ -3795,8 +3795,8 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                         data-part="label"
                                         data-required=""
                                         data-scope="field"
-                                        for=":r49:"
-                                        id="field:::r49:::label"
+                                        for="_r_49_"
+                                        id="field::_r_49_::label"
                                       >
                                         items-1
                                         <span
@@ -3929,7 +3929,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                 class="rjsf-field rjsf-field-string"
                               >
                                 <fieldset
-                                  aria-labelledby="fieldset:::r4a:::legend"
+                                  aria-labelledby="fieldset::_r_4a_::legend"
                                   class="fieldset__root emotion-0"
                                   data-part="root"
                                   data-scope="fieldset"
@@ -3941,7 +3941,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                       class="chakra-field__root emotion-5"
                                       data-part="root"
                                       data-scope="field"
-                                      id="field:::r4b:"
+                                      id="field::_r_4b_"
                                       role="group"
                                     >
                                       <label
@@ -3949,8 +3949,8 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                         data-part="label"
                                         data-required=""
                                         data-scope="field"
-                                        for=":r4b:"
-                                        id="field:::r4b:::label"
+                                        for="_r_4b_"
+                                        id="field::_r_4b_::label"
                                       >
                                         items-2
                                         <span
@@ -4366,7 +4366,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r3i:::legend"
+        aria-labelledby="fieldset::_r_3i_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -4382,7 +4382,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r3j:::legend"
+                  aria-labelledby="fieldset::_r_3j_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -4394,15 +4394,15 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r3k:"
+                      id="field::_r_3k_"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for=":r3k:"
-                        id="field:::r3k:::label"
+                        for="_r_3k_"
+                        id="field::_r_3k_::label"
                       >
                         firstName
                       </label>
@@ -4427,7 +4427,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r3l:::legend"
+                  aria-labelledby="fieldset::_r_3l_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -4439,15 +4439,15 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r3m:"
+                      id="field::_r_3m_"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for=":r3m:"
-                        id="field:::r3m:::label"
+                        for="_r_3m_"
+                        id="field::_r_3m_::label"
                       >
                         lastName
                       </label>
@@ -4472,7 +4472,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                 class="rjsf-field rjsf-field-number"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r3n:::legend"
+                  aria-labelledby="fieldset::_r_3n_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -4484,15 +4484,15 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r3o:"
+                      id="field::_r_3o_"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for=":r3o:"
-                        id="field:::r3o:::label"
+                        for="_r_3o_"
+                        id="field::_r_3o_::label"
                       >
                         age
                       </label>
@@ -4943,7 +4943,7 @@ exports[`object fields > additionalProperties 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r5:::legend"
+        aria-labelledby="fieldset::_r_5_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -4965,15 +4965,15 @@ exports[`object fields > additionalProperties 1`] = `
                     class="chakra-field__root emotion-5"
                     data-part="root"
                     data-scope="field"
-                    id="field:::r6:"
+                    id="field::_r_6_"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-6"
                       data-part="label"
                       data-scope="field"
-                      for=":r6:"
-                      id="field:::r6:::label"
+                      for="_r_6_"
+                      id="field::_r_6_::label"
                     >
                       foo Key
                     </label>
@@ -4992,7 +4992,7 @@ exports[`object fields > additionalProperties 1`] = `
                   class="emotion-4"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r7:::legend"
+                    aria-labelledby="fieldset::_r_7_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -5004,15 +5004,15 @@ exports[`object fields > additionalProperties 1`] = `
                         class="chakra-field__root emotion-11"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r8:"
+                        id="field::_r_8_"
                         role="group"
                       >
                         <label
                           class="chakra-field__label emotion-6"
                           data-part="label"
                           data-scope="field"
-                          for=":r8:"
-                          id="field:::r8:::label"
+                          for="_r_8_"
+                          id="field::_r_8_::label"
                         >
                           foo
                         </label>
@@ -5494,7 +5494,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::rm:::legend"
+        aria-labelledby="fieldset::_r_m_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -5516,15 +5516,15 @@ exports[`object fields > additionalProperties, array type 1`] = `
                     class="chakra-field__root emotion-5"
                     data-part="root"
                     data-scope="field"
-                    id="field:::rn:"
+                    id="field::_r_n_"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-6"
                       data-part="label"
                       data-scope="field"
-                      for=":rn:"
-                      id="field:::rn:::label"
+                      for="_r_n_"
+                      id="field::_r_n_::label"
                     >
                       foo Key
                     </label>
@@ -5543,7 +5543,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                   class="emotion-4"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::ro:::legend"
+                    aria-labelledby="fieldset::_r_o_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -6131,7 +6131,7 @@ exports[`object fields > additionalProperties, description 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::rd:::legend"
+        aria-labelledby="fieldset::_r_d_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -6154,15 +6154,15 @@ exports[`object fields > additionalProperties, description 1`] = `
                     class="chakra-field__root emotion-5"
                     data-part="root"
                     data-scope="field"
-                    id="field:::re:"
+                    id="field::_r_e_"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-6"
                       data-part="label"
                       data-scope="field"
-                      for=":re:"
-                      id="field:::re:::label"
+                      for="_r_e_"
+                      id="field::_r_e_::label"
                     >
                       foo Key
                     </label>
@@ -6181,7 +6181,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                   class="emotion-4"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::rf:::legend"
+                    aria-labelledby="fieldset::_r_f_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -6190,7 +6190,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                       class="fieldset__legend emotion-10"
                       data-part="legend"
                       data-scope="fieldset"
-                      id="fieldset:::rf:::legend"
+                      id="fieldset::_r_f_::legend"
                     >
                       <sup
                         class="emotion-11"
@@ -6206,15 +6206,15 @@ exports[`object fields > additionalProperties, description 1`] = `
                         class="chakra-field__root emotion-13"
                         data-part="root"
                         data-scope="field"
-                        id="field:::rg:"
+                        id="field::_r_g_"
                         role="group"
                       >
                         <label
                           class="chakra-field__label emotion-6"
                           data-part="label"
                           data-scope="field"
-                          for=":rg:"
-                          id="field:::rg:::label"
+                          for="_r_g_"
+                          id="field::_r_g_::label"
                         >
                           foo
                         </label>
@@ -6732,7 +6732,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r9:::legend"
+        aria-labelledby="fieldset::_r_9_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -6754,15 +6754,15 @@ exports[`object fields > additionalProperties, label off 1`] = `
                     class="chakra-field__root emotion-5"
                     data-part="root"
                     data-scope="field"
-                    id="field:::ra:"
+                    id="field::_r_a_"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-6"
                       data-part="label"
                       data-scope="field"
-                      for=":ra:"
-                      id="field:::ra:::label"
+                      for="_r_a_"
+                      id="field::_r_a_::label"
                     >
                       foo Key
                     </label>
@@ -6781,7 +6781,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
                   class="emotion-4"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::rb:::legend"
+                    aria-labelledby="fieldset::_r_b_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -6793,15 +6793,15 @@ exports[`object fields > additionalProperties, label off 1`] = `
                         class="chakra-field__root emotion-11"
                         data-part="root"
                         data-scope="field"
-                        id="field:::rc:"
+                        id="field::_r_c_"
                         role="group"
                       >
                         <label
                           class="chakra-field__label emotion-6"
                           data-part="label"
                           data-scope="field"
-                          for=":rc:"
-                          id="field:::rc:::label"
+                          for="_r_c_"
+                          id="field::_r_c_::label"
                         >
                           foo
                         </label>
@@ -7343,7 +7343,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::rh:::legend"
+        aria-labelledby="fieldset::_r_h_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -7365,15 +7365,15 @@ exports[`object fields > additionalProperties, object type 1`] = `
                     class="chakra-field__root emotion-5"
                     data-part="root"
                     data-scope="field"
-                    id="field:::ri:"
+                    id="field::_r_i_"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-6"
                       data-part="label"
                       data-scope="field"
-                      for=":ri:"
-                      id="field:::ri:::label"
+                      for="_r_i_"
+                      id="field::_r_i_::label"
                     >
                       foo Key
                     </label>
@@ -7392,7 +7392,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                   class="emotion-4"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::rj:::legend"
+                    aria-labelledby="fieldset::_r_j_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -7423,7 +7423,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                             class="rjsf-field rjsf-field-string"
                           >
                             <fieldset
-                              aria-labelledby="fieldset:::rk:::legend"
+                              aria-labelledby="fieldset::_r_k_::legend"
                               class="fieldset__root emotion-0"
                               data-part="root"
                               data-scope="fieldset"
@@ -7435,15 +7435,15 @@ exports[`object fields > additionalProperties, object type 1`] = `
                                   class="chakra-field__root emotion-17"
                                   data-part="root"
                                   data-scope="field"
-                                  id="field:::rl:"
+                                  id="field::_r_l_"
                                   role="group"
                                 >
                                   <label
                                     class="chakra-field__label emotion-6"
                                     data-part="label"
                                     data-scope="field"
-                                    for=":rl:"
-                                    id="field:::rl:::label"
+                                    for="_r_l_"
+                                    id="field::_r_l_::label"
                                   >
                                     foo
                                   </label>
@@ -7787,7 +7787,7 @@ exports[`object fields > object 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r0:::legend"
+        aria-labelledby="fieldset::_r_0_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -7803,7 +7803,7 @@ exports[`object fields > object 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r1:::legend"
+                  aria-labelledby="fieldset::_r_1_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -7815,15 +7815,15 @@ exports[`object fields > object 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r2:"
+                      id="field::_r_2_"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for=":r2:"
-                        id="field:::r2:::label"
+                        for="_r_2_"
+                        id="field::_r_2_::label"
                       >
                         A
                       </label>
@@ -7848,7 +7848,7 @@ exports[`object fields > object 1`] = `
                 class="rjsf-field rjsf-field-number"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r3:::legend"
+                  aria-labelledby="fieldset::_r_3_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -7860,15 +7860,15 @@ exports[`object fields > object 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r4:"
+                      id="field::_r_4_"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for=":r4:"
-                        id="field:::r4:::label"
+                        for="_r_4_"
+                        id="field::_r_4_::label"
                       >
                         B
                       </label>
@@ -8319,7 +8319,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::rp:::legend"
+        aria-labelledby="fieldset::_r_p_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -8341,15 +8341,15 @@ exports[`object fields > show add button and fields if additionalProperties is t
                     class="chakra-field__root emotion-5"
                     data-part="root"
                     data-scope="field"
-                    id="field:::rq:"
+                    id="field::_r_q_"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-6"
                       data-part="label"
                       data-scope="field"
-                      for=":rq:"
-                      id="field:::rq:::label"
+                      for="_r_q_"
+                      id="field::_r_q_::label"
                     >
                       additionalProperty Key
                     </label>
@@ -8368,7 +8368,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
                   class="emotion-4"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::rr:::legend"
+                    aria-labelledby="fieldset::_r_r_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -8380,15 +8380,15 @@ exports[`object fields > show add button and fields if additionalProperties is t
                         class="chakra-field__root emotion-11"
                         data-part="root"
                         data-scope="field"
-                        id="field:::rs:"
+                        id="field::_r_s_"
                         role="group"
                       >
                         <label
                           class="chakra-field__label emotion-6"
                           data-part="label"
                           data-scope="field"
-                          for=":rs:"
-                          id="field:::rs:::label"
+                          for="_r_s_"
+                          id="field::_r_s_::label"
                         >
                           additionalProperty
                         </label>
@@ -8934,7 +8934,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r12:::legend"
+        aria-labelledby="fieldset::_r_12_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -8977,15 +8977,15 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                     class="chakra-field__root emotion-9"
                     data-part="root"
                     data-scope="field"
-                    id="field:::r13:"
+                    id="field::_r_13_"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-10"
                       data-part="label"
                       data-scope="field"
-                      for=":r13:"
-                      id="field:::r13:::label"
+                      for="_r_13_"
+                      id="field::_r_13_::label"
                     >
                       foo Key
                     </label>
@@ -9004,7 +9004,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                   class="emotion-8"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r14:::legend"
+                    aria-labelledby="fieldset::_r_14_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -9016,15 +9016,15 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                         class="chakra-field__root emotion-15"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r15:"
+                        id="field::_r_15_"
                         role="group"
                       >
                         <label
                           class="chakra-field__label emotion-10"
                           data-part="label"
                           data-scope="field"
-                          for=":r15:"
-                          id="field:::r15:::label"
+                          for="_r_15_"
+                          id="field::_r_15_::label"
                         >
                           foo
                         </label>
@@ -9408,7 +9408,7 @@ exports[`object fields > with title and description > object 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::rt:::legend"
+        aria-labelledby="fieldset::_r_t_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -9445,7 +9445,7 @@ exports[`object fields > with title and description > object 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::ru:::legend"
+                  aria-labelledby="fieldset::_r_u_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -9454,7 +9454,7 @@ exports[`object fields > with title and description > object 1`] = `
                     class="fieldset__legend emotion-8"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset:::ru:::legend"
+                    id="fieldset::_r_u_::legend"
                   >
                     <sup
                       class="emotion-5"
@@ -9470,15 +9470,15 @@ exports[`object fields > with title and description > object 1`] = `
                       class="chakra-field__root emotion-11"
                       data-part="root"
                       data-scope="field"
-                      id="field:::rv:"
+                      id="field::_r_v_"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-12"
                         data-part="label"
                         data-scope="field"
-                        for=":rv:"
-                        id="field:::rv:::label"
+                        for="_r_v_"
+                        id="field::_r_v_::label"
                       >
                         A
                       </label>
@@ -9503,7 +9503,7 @@ exports[`object fields > with title and description > object 1`] = `
                 class="rjsf-field rjsf-field-number"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r10:::legend"
+                  aria-labelledby="fieldset::_r_10_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -9512,7 +9512,7 @@ exports[`object fields > with title and description > object 1`] = `
                     class="fieldset__legend emotion-8"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset:::r10:::legend"
+                    id="fieldset::_r_10_::legend"
                   >
                     <sup
                       class="emotion-5"
@@ -9528,15 +9528,15 @@ exports[`object fields > with title and description > object 1`] = `
                       class="chakra-field__root emotion-11"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r11:"
+                      id="field::_r_11_"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-12"
                         data-part="label"
                         data-scope="field"
-                        for=":r11:"
-                        id="field:::r11:::label"
+                        for="_r_11_"
+                        id="field::_r_11_::label"
                       >
                         B
                       </label>
@@ -10015,7 +10015,7 @@ exports[`object fields > with title and description > show add button and fields
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r16:::legend"
+        aria-labelledby="fieldset::_r_16_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -10058,15 +10058,15 @@ exports[`object fields > with title and description > show add button and fields
                     class="chakra-field__root emotion-9"
                     data-part="root"
                     data-scope="field"
-                    id="field:::r17:"
+                    id="field::_r_17_"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-10"
                       data-part="label"
                       data-scope="field"
-                      for=":r17:"
-                      id="field:::r17:::label"
+                      for="_r_17_"
+                      id="field::_r_17_::label"
                     >
                       additionalProperty Key
                     </label>
@@ -10085,7 +10085,7 @@ exports[`object fields > with title and description > show add button and fields
                   class="emotion-8"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r18:::legend"
+                    aria-labelledby="fieldset::_r_18_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -10097,15 +10097,15 @@ exports[`object fields > with title and description > show add button and fields
                         class="chakra-field__root emotion-15"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r19:"
+                        id="field::_r_19_"
                         role="group"
                       >
                         <label
                           class="chakra-field__label emotion-10"
                           data-part="label"
                           data-scope="field"
-                          for=":r19:"
-                          id="field:::r19:::label"
+                          for="_r_19_"
+                          id="field::_r_19_::label"
                         >
                           additionalProperty
                         </label>
@@ -10651,7 +10651,7 @@ exports[`object fields > with title and description from both > additionalProper
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r1s:::legend"
+        aria-labelledby="fieldset::_r_1s_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -10694,15 +10694,15 @@ exports[`object fields > with title and description from both > additionalProper
                     class="chakra-field__root emotion-9"
                     data-part="root"
                     data-scope="field"
-                    id="field:::r1t:"
+                    id="field::_r_1t_"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-10"
                       data-part="label"
                       data-scope="field"
-                      for=":r1t:"
-                      id="field:::r1t:::label"
+                      for="_r_1t_"
+                      id="field::_r_1t_::label"
                     >
                       foo Key
                     </label>
@@ -10721,7 +10721,7 @@ exports[`object fields > with title and description from both > additionalProper
                   class="emotion-8"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r1u:::legend"
+                    aria-labelledby="fieldset::_r_1u_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -10733,15 +10733,15 @@ exports[`object fields > with title and description from both > additionalProper
                         class="chakra-field__root emotion-15"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r1v:"
+                        id="field::_r_1v_"
                         role="group"
                       >
                         <label
                           class="chakra-field__label emotion-10"
                           data-part="label"
                           data-scope="field"
-                          for=":r1v:"
-                          id="field:::r1v:::label"
+                          for="_r_1v_"
+                          id="field::_r_1v_::label"
                         >
                           foo
                         </label>
@@ -11125,7 +11125,7 @@ exports[`object fields > with title and description from both > object 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r1n:::legend"
+        aria-labelledby="fieldset::_r_1n_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -11162,7 +11162,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r1o:::legend"
+                  aria-labelledby="fieldset::_r_1o_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -11171,7 +11171,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                     class="fieldset__legend emotion-8"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset:::r1o:::legend"
+                    id="fieldset::_r_1o_::legend"
                   >
                     <sup
                       class="emotion-5"
@@ -11187,15 +11187,15 @@ exports[`object fields > with title and description from both > object 1`] = `
                       class="chakra-field__root emotion-11"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r1p:"
+                      id="field::_r_1p_"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-12"
                         data-part="label"
                         data-scope="field"
-                        for=":r1p:"
-                        id="field:::r1p:::label"
+                        for="_r_1p_"
+                        id="field::_r_1p_::label"
                       >
                         My Item A
                       </label>
@@ -11220,7 +11220,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                 class="rjsf-field rjsf-field-number"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r1q:::legend"
+                  aria-labelledby="fieldset::_r_1q_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -11229,7 +11229,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                     class="fieldset__legend emotion-8"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset:::r1q:::legend"
+                    id="fieldset::_r_1q_::legend"
                   >
                     <sup
                       class="emotion-5"
@@ -11245,15 +11245,15 @@ exports[`object fields > with title and description from both > object 1`] = `
                       class="chakra-field__root emotion-11"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r1r:"
+                      id="field::_r_1r_"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-12"
                         data-part="label"
                         data-scope="field"
-                        for=":r1r:"
-                        id="field:::r1r:::label"
+                        for="_r_1r_"
+                        id="field::_r_1r_::label"
                       >
                         My Item B
                       </label>
@@ -11732,7 +11732,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r1f:::legend"
+        aria-labelledby="fieldset::_r_1f_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -11775,15 +11775,15 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                     class="chakra-field__root emotion-9"
                     data-part="root"
                     data-scope="field"
-                    id="field:::r1g:"
+                    id="field::_r_1g_"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-10"
                       data-part="label"
                       data-scope="field"
-                      for=":r1g:"
-                      id="field:::r1g:::label"
+                      for="_r_1g_"
+                      id="field::_r_1g_::label"
                     >
                       foo Key
                     </label>
@@ -11802,7 +11802,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                   class="emotion-8"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r1h:::legend"
+                    aria-labelledby="fieldset::_r_1h_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -11814,15 +11814,15 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                         class="chakra-field__root emotion-15"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r1i:"
+                        id="field::_r_1i_"
                         role="group"
                       >
                         <label
                           class="chakra-field__label emotion-10"
                           data-part="label"
                           data-scope="field"
-                          for=":r1i:"
-                          id="field:::r1i:::label"
+                          for="_r_1i_"
+                          id="field::_r_1i_::label"
                         >
                           foo
                         </label>
@@ -12206,7 +12206,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r1a:::legend"
+        aria-labelledby="fieldset::_r_1a_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -12243,7 +12243,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r1b:::legend"
+                  aria-labelledby="fieldset::_r_1b_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -12252,7 +12252,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                     class="fieldset__legend emotion-8"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset:::r1b:::legend"
+                    id="fieldset::_r_1b_::legend"
                   >
                     <sup
                       class="emotion-5"
@@ -12268,15 +12268,15 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                       class="chakra-field__root emotion-11"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r1c:"
+                      id="field::_r_1c_"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-12"
                         data-part="label"
                         data-scope="field"
-                        for=":r1c:"
-                        id="field:::r1c:::label"
+                        for="_r_1c_"
+                        id="field::_r_1c_::label"
                       >
                         My Item A
                       </label>
@@ -12301,7 +12301,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                 class="rjsf-field rjsf-field-number"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r1d:::legend"
+                  aria-labelledby="fieldset::_r_1d_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -12310,7 +12310,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                     class="fieldset__legend emotion-8"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset:::r1d:::legend"
+                    id="fieldset::_r_1d_::legend"
                   >
                     <sup
                       class="emotion-5"
@@ -12326,15 +12326,15 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                       class="chakra-field__root emotion-11"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r1e:"
+                      id="field::_r_1e_"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-12"
                         data-part="label"
                         data-scope="field"
-                        for=":r1e:"
-                        id="field:::r1e:::label"
+                        for="_r_1e_"
+                        id="field::_r_1e_::label"
                       >
                         My Item B
                       </label>
@@ -12813,7 +12813,7 @@ exports[`object fields > with title and description from uiSchema > show add but
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r1j:::legend"
+        aria-labelledby="fieldset::_r_1j_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -12856,15 +12856,15 @@ exports[`object fields > with title and description from uiSchema > show add but
                     class="chakra-field__root emotion-9"
                     data-part="root"
                     data-scope="field"
-                    id="field:::r1k:"
+                    id="field::_r_1k_"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-10"
                       data-part="label"
                       data-scope="field"
-                      for=":r1k:"
-                      id="field:::r1k:::label"
+                      for="_r_1k_"
+                      id="field::_r_1k_::label"
                     >
                       additionalProperty Key
                     </label>
@@ -12883,7 +12883,7 @@ exports[`object fields > with title and description from uiSchema > show add but
                   class="emotion-8"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r1l:::legend"
+                    aria-labelledby="fieldset::_r_1l_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -12895,15 +12895,15 @@ exports[`object fields > with title and description from uiSchema > show add but
                         class="chakra-field__root emotion-15"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r1m:"
+                        id="field::_r_1m_"
                         role="group"
                       >
                         <label
                           class="chakra-field__label emotion-10"
                           data-part="label"
                           data-scope="field"
-                          for=":r1m:"
-                          id="field:::r1m:::label"
+                          for="_r_1m_"
+                          id="field::_r_1m_::label"
                         >
                           additionalProperty
                         </label>
@@ -13395,7 +13395,7 @@ exports[`object fields > with title and description with global label off > addi
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r25:::legend"
+        aria-labelledby="fieldset::_r_25_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -13417,7 +13417,7 @@ exports[`object fields > with title and description with global label off > addi
                     class="chakra-field__root emotion-5"
                     data-part="root"
                     data-scope="field"
-                    id="field:::r26:"
+                    id="field::_r_26_"
                     role="group"
                   >
                     <input
@@ -13435,7 +13435,7 @@ exports[`object fields > with title and description with global label off > addi
                   class="emotion-4"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r27:::legend"
+                    aria-labelledby="fieldset::_r_27_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -13447,7 +13447,7 @@ exports[`object fields > with title and description with global label off > addi
                         class="chakra-field__root emotion-10"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r28:"
+                        id="field::_r_28_"
                         role="group"
                       >
                         <input
@@ -13758,7 +13758,7 @@ exports[`object fields > with title and description with global label off > obje
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r20:::legend"
+        aria-labelledby="fieldset::_r_20_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -13774,7 +13774,7 @@ exports[`object fields > with title and description with global label off > obje
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r21:::legend"
+                  aria-labelledby="fieldset::_r_21_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -13786,7 +13786,7 @@ exports[`object fields > with title and description with global label off > obje
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r22:"
+                      id="field::_r_22_"
                       role="group"
                     >
                       <input
@@ -13810,7 +13810,7 @@ exports[`object fields > with title and description with global label off > obje
                 class="rjsf-field rjsf-field-number"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r23:::legend"
+                  aria-labelledby="fieldset::_r_23_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -13822,7 +13822,7 @@ exports[`object fields > with title and description with global label off > obje
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r24:"
+                      id="field::_r_24_"
                       role="group"
                     >
                       <input
@@ -14246,7 +14246,7 @@ exports[`object fields > with title and description with global label off > show
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r29:::legend"
+        aria-labelledby="fieldset::_r_29_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -14268,7 +14268,7 @@ exports[`object fields > with title and description with global label off > show
                     class="chakra-field__root emotion-5"
                     data-part="root"
                     data-scope="field"
-                    id="field:::r2a:"
+                    id="field::_r_2a_"
                     role="group"
                   >
                     <input
@@ -14286,7 +14286,7 @@ exports[`object fields > with title and description with global label off > show
                   class="emotion-4"
                 >
                   <fieldset
-                    aria-labelledby="fieldset:::r2b:::legend"
+                    aria-labelledby="fieldset::_r_2b_::legend"
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -14298,7 +14298,7 @@ exports[`object fields > with title and description with global label off > show
                         class="chakra-field__root emotion-10"
                         data-part="root"
                         data-scope="field"
-                        id="field:::r2c:"
+                        id="field::_r_2c_"
                         role="group"
                       >
                         <input

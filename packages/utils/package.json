@@ -38,7 +38,7 @@
     ]
   },
   "peerDependencies": {
-    "react": ">=18"
+    "react": ">=19"
   },
   "dependencies": {
     "@x0k/json-schema-merge": "^1.0.3",

@@ -873,7 +873,7 @@ export type ArrayFieldTemplateProps<
 /** The properties of each element in the ObjectFieldTemplateProps.properties array */
 export interface ObjectFieldTemplatePropertyType {
   /** The html for the property's content */
-  content: ReactElement;
+  content: ReactElement<any>;
   /** A string representing the property name */
   name: string;
   /** A boolean value stating if the object property is disabled */

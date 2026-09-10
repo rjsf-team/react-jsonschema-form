@@ -21,15 +21,30 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - **BREAKING CHANGE:** `GridType` and `Operators` are now `as const` objects with same-named union types instead of `enum`s, so the source is valid under Node's type stripping. Values and `GridType.ROW`-style member access are unchanged; code that used a member as a type must write `typeof GridType.ROW` instead of `GridType.ROW` ([#5244](https://github.com/rjsf-team/react-jsonschema-form/pull/5244))
+- **BREAKING CHANGE** `withTheme()` now returns a plain function component instead of a `forwardRef`-wrapped one, and `FormProps['onSubmit']`'s event parameter is now typed as `SubmitEvent<any>` instead of the deprecated `FormEvent<any>`
+
+## @rjsf/chakra-ui
+
+- Converted the internal `forwardRef`-wrapped UI primitives (`Field`, `Slider`, `Alert`, `NumberInputRoot`, `Checkbox`, `Radio`, `CloseButton`, and the `Select` family) to plain function components that accept `ref` as a regular prop, now that React 19 supports this natively
+
+## @rjsf/mantine
+
+- **BREAKING CHANGE** Dropped support for `mantine` version 8; upgraded to `mantine` version 9, which requires React 19.2+
+- Fixed `ObjectFieldTemplate` and the fluid variant of `GridTemplate` rendering their root `Container` at Mantine's default constrained width (960px, centered), instead of filling the space the form was given. Both now pass Mantine's `fluid` prop
 
 ## @rjsf/react-bootstrap
 
 - Fixed `lib/index.js` being unloadable by Node: it imported `react-bootstrap/Col`-style directory subpaths and extensionless `@react-icons/all-files` paths, which only bundlers resolve. Components are now imported from `react-bootstrap` itself and icon files by their full `.js` name ([#5244](https://github.com/rjsf-team/react-jsonschema-form/pull/5244))
 
+## @rjsf/shadcn
+
+- Converted the internal `forwardRef`-wrapped `Command` and `CommandInput` components to plain function components that accept `ref` as a regular prop, now that React 19 supports this natively
+
 ## @rjsf/utils
 
 - **BREAKING CHANGE** Removed `defaultProps`-based options merging from `getWidget()`; a widget passed as a component is now returned as-is instead of being wrapped in a cached `MergedWidget`. Apply option defaults inside the widget itself instead (e.g. via destructuring). The now-unused `MergedWidget` property was also removed from the `Widget` type, and the `react-is` dependency was dropped
 - **BREAKING CHANGE:** `TranslatableString` and `AdditionalItemsHandling` are now `as const` objects with same-named union types instead of `enum`s, so the source is valid under Node's type stripping. Values (`AdditionalItemsHandling` keeps `0`, `1`, `2`) and `TranslatableString.ArrayItemTitle`-style member access are unchanged; code that used a member as a type must write `typeof TranslatableString.ArrayItemTitle`, and the numeric enum's reverse mapping (`AdditionalItemsHandling[0]`) no longer exists ([#5244](https://github.com/rjsf-team/react-jsonschema-form/pull/5244))
+- Widened `ObjectFieldTemplatePropertyType['content']` from `ReactElement` to `ReactElement<any>`, since React 19's types default a bare `ReactElement`'s props to `unknown` instead of `any`, which broke themes (e.g. `@rjsf/antd`) that read `.content.props` directly
 
 ## @rjsf/validator-ajv8
 
@@ -47,3 +62,5 @@ should change the heading of the (upcoming) version to include a major version b
 - The root and playground `package.json` now say `"type": "module"`, so the playground typechecks under `nodenext` like every published package; `scripts/get-version-tag.js` is `.cjs` since it uses `require`. The playground's `ajv`, `ajv-i18n` and `@monaco-editor/react` imports use the same Node-correct spellings as the validator tests ([#5244](https://github.com/rjsf-team/react-jsonschema-form/pull/5244))
 - **BREAKING CHANGE** Every package is now ESM-only: the CommonJS, bundled ESM and UMD builds in `dist/` and the `./dist` and `./dist/*.cjs` export paths are gone; `lib/` (per-file ESM plus declarations) is the only published output. `require()` of the packages keeps working on every supported Node version via native `require(esm)` ([#5255](https://github.com/rjsf-team/react-jsonschema-form/pull/5255), fixes [#3812](https://github.com/rjsf-team/react-jsonschema-form/issues/3812))
 - Replaced the per-package `tsc -b` emit plus `esbuild` + `rollup` bundling with a single `tsdown` run driven by one shared `tsdown.base.mts`, which emits `lib/`. The build only transpiles; typechecking is the separate root `tsc --build`, and tsc no longer emits JavaScript (the package tsconfigs are `emitDeclarationOnly`) ([#5255](https://github.com/rjsf-team/react-jsonschema-form/pull/5255))
+- **BREAKING CHANGE** Upgraded `react` and `react-dom` to 19.2+ across the repo (required by the `@rjsf/mantine` upgrade to Mantine 9) and raised every theme package's `react` peer dependency floor from `>=18` to `>=19`, matching the "React 19 is officially supported on all the themes" policy already declared in the v7 upgrade guide. Fixed the handful of type errors this surfaced from React 19's stricter types (`useRef` without a non-null initial value now returns `RefObject<T | null>`, and a bare `ReactElement`'s props default to `unknown`)
+- Fixed the playground crashing with "Cannot destructure property 'fields' of 'undefined'" on load and on every theme switch. It stored the `withTheme()`-created `Form` component directly via `useState(withTheme(...))`/`setFormComponent(withTheme(...))`; now that `withTheme()` returns a plain function instead of a `forwardRef`-wrapped object, React's `typeof` check treats a bare function passed to `useState`/a state setter as a lazy initializer/updater and calls it with no arguments. Both call sites now wrap the value in `() => withTheme(...)`

@@ -1545,8 +1545,8 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                     >
                       <label
                         cmdk-label=""
-                        for="radix-:r1m:"
-                        id="radix-:r1l:"
+                        for="radix-_r_1m_"
+                        id="radix-_r_1l_"
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
@@ -3085,8 +3085,8 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                     >
                       <label
                         cmdk-label=""
-                        for="radix-:r1r:"
-                        id="radix-:r1q:"
+                        for="radix-_r_1r_"
+                        id="radix-_r_1q_"
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
@@ -5861,8 +5861,8 @@ exports[`single fields > optional data controls > does not show optional control
                         >
                           <label
                             cmdk-label=""
-                            for="radix-:r1a:"
-                            id="radix-:r19:"
+                            for="radix-_r_1a_"
+                            id="radix-_r_19_"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
@@ -6007,8 +6007,8 @@ exports[`single fields > optional data controls > does not show optional control
                         >
                           <label
                             cmdk-label=""
-                            for="radix-:r1d:"
-                            id="radix-:r1c:"
+                            for="radix-_r_1d_"
+                            id="radix-_r_1c_"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
@@ -6945,8 +6945,8 @@ exports[`single fields > optional data controls > does not show optional control
                         >
                           <label
                             cmdk-label=""
-                            for="radix-:r1g:"
-                            id="radix-:r1f:"
+                            for="radix-_r_1g_"
+                            id="radix-_r_1f_"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
@@ -7092,8 +7092,8 @@ exports[`single fields > optional data controls > does not show optional control
                         >
                           <label
                             cmdk-label=""
-                            for="radix-:r1j:"
-                            id="radix-:r1i:"
+                            for="radix-_r_1j_"
+                            id="radix-_r_1i_"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
@@ -10926,8 +10926,8 @@ exports[`single fields > select field 1`] = `
           >
             <label
               cmdk-label=""
-              for="radix-:r2:"
-              id="radix-:r1:"
+              for="radix-_r_2_"
+              id="radix-_r_1_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
@@ -11004,8 +11004,8 @@ exports[`single fields > select field multiple choice 1`] = `
           >
             <label
               cmdk-label=""
-              for="radix-:r5:"
-              id="radix-:r4:"
+              for="radix-_r_5_"
+              id="radix-_r_4_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <div
@@ -11016,14 +11016,14 @@ exports[`single fields > select field multiple choice 1`] = `
               >
                 <input
                   aria-autocomplete="list"
-                  aria-controls="radix-:r3:"
+                  aria-controls="radix-_r_3_"
                   aria-expanded="true"
-                  aria-labelledby="radix-:r4:"
+                  aria-labelledby="radix-_r_4_"
                   autocomplete="off"
                   autocorrect="off"
                   class="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
                   cmdk-input=""
-                  id="radix-:r5:"
+                  id="radix-_r_5_"
                   placeholder="Select ..."
                   role="combobox"
                   spellcheck="false"
@@ -11076,8 +11076,8 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
           >
             <label
               cmdk-label=""
-              for="radix-:rk:"
-              id="radix-:rj:"
+              for="radix-_r_k_"
+              id="radix-_r_j_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <div
@@ -11088,14 +11088,14 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
               >
                 <input
                   aria-autocomplete="list"
-                  aria-controls="radix-:ri:"
+                  aria-controls="radix-_r_i_"
                   aria-expanded="true"
-                  aria-labelledby="radix-:rj:"
+                  aria-labelledby="radix-_r_j_"
                   autocomplete="off"
                   autocorrect="off"
                   class="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
                   cmdk-input=""
-                  id="radix-:rk:"
+                  id="radix-_r_k_"
                   placeholder="Select ..."
                   role="combobox"
                   spellcheck="false"
@@ -11309,8 +11309,8 @@ exports[`single fields > select field multiple choice formData 1`] = `
           >
             <label
               cmdk-label=""
-              for="radix-:rq:"
-              id="radix-:rp:"
+              for="radix-_r_q_"
+              id="radix-_r_p_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <div
@@ -11383,14 +11383,14 @@ exports[`single fields > select field multiple choice formData 1`] = `
                 </span>
                 <input
                   aria-autocomplete="list"
-                  aria-controls="radix-:ro:"
+                  aria-controls="radix-_r_o_"
                   aria-expanded="true"
-                  aria-labelledby="radix-:rp:"
+                  aria-labelledby="radix-_r_p_"
                   autocomplete="off"
                   autocorrect="off"
                   class="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
                   cmdk-input=""
-                  id="radix-:rq:"
+                  id="radix-_r_q_"
                   placeholder="Select ..."
                   role="combobox"
                   spellcheck="false"
@@ -11443,8 +11443,8 @@ exports[`single fields > select field multiple choice with labels 1`] = `
           >
             <label
               cmdk-label=""
-              for="radix-:r8:"
-              id="radix-:r7:"
+              for="radix-_r_8_"
+              id="radix-_r_7_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <div
@@ -11455,14 +11455,14 @@ exports[`single fields > select field multiple choice with labels 1`] = `
               >
                 <input
                   aria-autocomplete="list"
-                  aria-controls="radix-:r6:"
+                  aria-controls="radix-_r_6_"
                   aria-expanded="true"
-                  aria-labelledby="radix-:r7:"
+                  aria-labelledby="radix-_r_7_"
                   autocomplete="off"
                   autocorrect="off"
                   class="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
                   cmdk-input=""
-                  id="radix-:r8:"
+                  id="radix-_r_8_"
                   placeholder="Select ..."
                   role="combobox"
                   spellcheck="false"
@@ -11516,8 +11516,8 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
           >
             <label
               cmdk-label=""
-              for="radix-:rb:"
-              id="radix-:ra:"
+              for="radix-_r_b_"
+              id="radix-_r_a_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
@@ -11824,8 +11824,8 @@ exports[`single fields > select field single choice formData 1`] = `
           >
             <label
               cmdk-label=""
-              for="radix-:rn:"
-              id="radix-:rm:"
+              for="radix-_r_n_"
+              id="radix-_r_m_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
@@ -12023,8 +12023,8 @@ exports[`single fields > select widget with description in schema and FieldTempl
           >
             <label
               cmdk-label=""
-              for="radix-:rv:"
-              id="radix-:ru:"
+              for="radix-_r_v_"
+              id="radix-_r_u_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
@@ -12116,8 +12116,8 @@ exports[`single fields > select widget with selected oneOf option description 1`
           >
             <label
               cmdk-label=""
-              for="radix-:r12:"
-              id="radix-:r11:"
+              for="radix-_r_12_"
+              id="radix-_r_11_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
@@ -12201,8 +12201,8 @@ exports[`single fields > select widget with selected oneOf option description an
           >
             <label
               cmdk-label=""
-              for="radix-:r15:"
-              id="radix-:r14:"
+              for="radix-_r_15_"
+              id="radix-_r_14_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
