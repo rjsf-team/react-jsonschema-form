@@ -659,6 +659,8 @@ export type FieldTemplateProps<
   onKeyRenameBlur: (event: FocusEvent<HTMLInputElement>) => void;
   /** Callback used to handle the removal of the additionalProperty */
   onRemoveProperty: () => void;
+  /** The enum values from the parent schema's propertyNames, if available */
+  propertyNamesEnum?: S extends { propertyNames: { enum: infer E } } ? E : never;
 };
 
 /**
@@ -936,6 +938,8 @@ export type WrapIfAdditionalTemplateProps<
 > = RJSFBaseProps<T, S, F> & {
   /** The field or widget component instance for this field row */
   children: ReactNode;
+  /** The enum values from the parent schema's propertyNames, if available */
+  propertyNamesEnum?: S extends { propertyNames: { enum: infer E } } ? E : never;
 } & Pick<
     FieldTemplateProps<T, S, F>,
     | 'id'

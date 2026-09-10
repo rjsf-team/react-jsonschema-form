@@ -97,6 +97,8 @@ interface ObjectFieldPropertyProps<
   handleKeyRename: (oldKey: string, newKey: string) => void;
   /** Callback that handles the removal of an additionalProperties-based property with key */
   handleRemoveProperty: (keyName: string) => void;
+  /** The enum values from the parent schema's propertyNames, if available */
+  propertyNamesEnum?: S extends { propertyNames: { enum: infer E } } ? E : never;
 }
 
 /** The `ObjectFieldProperty` component is used to render the `SchemaField` for a child property of an object
@@ -205,6 +207,7 @@ function ObjectFieldPropertyFn<T = any, S extends StrictRJSFSchema = RJSFSchema,
       disabled={disabled}
       readonly={readonly}
       hideError={hideError}
+      propertyNamesEnum={props.propertyNamesEnum}
     />
   );
 }
@@ -420,6 +423,11 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       const addedByAdditionalProperties = isAdditionalPropertySchema(schema.properties?.[propertyName]);
       const fieldUiSchema = addedByAdditionalProperties ? uiSchema.additionalProperties : uiSchema[propertyName];
       const hidden = getUiOptions<T, S, F>(fieldUiSchema).widget === 'hidden';
+      const propertyNamesSchema = schema.propertyNames;
+      const propertyNamesEnum =
+        propertyNamesSchema && typeof propertyNamesSchema === 'object' && 'enum' in propertyNamesSchema
+          ? propertyNamesSchema.enum
+          : undefined;
       const content = (
         <ObjectFieldProperty<T, S, F>
           key={getStableKey(propertyName)}
@@ -440,6 +448,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
           disabled={disabled}
           readonly={readonly}
           hideError={hideError}
+          propertyNamesEnum={propertyNamesEnum as any}
         />
       );
       return {

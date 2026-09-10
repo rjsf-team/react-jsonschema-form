@@ -5,6 +5,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
@@ -101,6 +103,8 @@ interface EditorsProps {
   onThemeSelected: (theme: string, themeObj: ThemesType) => void;
   setSubtheme: Dispatch<SetStateAction<string | null>>;
   setStylesheet: Dispatch<SetStateAction<string | null>>;
+  darkMode: boolean;
+  onDarkModeToggle: (event: { formData: boolean }) => void;
 }
 
 export default function Editors({
@@ -182,6 +186,13 @@ export default function Editors({
             {themes[theme] && themes[theme].subthemes && (
               <SubthemeSelector subthemes={themes[theme].subthemes} subtheme={subtheme} select={onSubthemeSelected} />
             )}
+          </Grid>
+          <Grid size={12}>
+            <FormControlLabel
+              control={<Checkbox checked={darkMode} onChange={onDarkModeToggle} />}
+              label='Dark Mode'
+              sx={{ mt: 1 }}
+            />
           </Grid>
         </Grid>
       </AccordionSummary>

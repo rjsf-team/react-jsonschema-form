@@ -1,5 +1,6 @@
+import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
-import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString } from '@rjsf/utils';
+import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString, getWidget } from '@rjsf/utils';
 
 import { Input } from '../components/ui/input.tsx';
 import { Separator } from '../components/ui/separator.tsx';
@@ -29,12 +30,26 @@ export default function WrapIfAdditionalTemplate<
   schema,
   uiSchema,
   registry,
+  propertyNamesEnum,
 }: WrapIfAdditionalTemplateProps<T, S, F>) {
-  const { templates, translateString } = registry;
+  const { templates, translateString, widgets } = registry;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
+
+  // Use SelectWidget when propertyNamesEnum is available
+  const SelectWidget = propertyNamesEnum && propertyNamesEnum.length > 0 ? getWidget(widgets, 'SelectWidget') : null;
+  const enumOptions = propertyNamesEnum?.map((value) => ({ value, label: String(value) })) ?? [];
+
+  // Handle onBlur for SelectWidget which expects (id: string, value: any) => void
+  // but onKeyRenameBlur expects (event: FocusEvent<HTMLInputElement>) => void
+  const handleSelectBlur = useCallback(
+    (_id: string, value: any) => {
+      onKeyRenameBlur({ target: { value } } as any);
+    },
+    [onKeyRenameBlur],
+  );
 
   if (!additional) {
     return (
@@ -59,17 +74,44 @@ export default function WrapIfAdditionalTemplate<
               </label>
             )}
             <div className='pl-0.5'>
-              <Input
-                key={label}
-                required={required}
-                defaultValue={label}
-                disabled={disabled || readonly}
-                id={keyId}
-                name={keyId}
-                onBlur={!readonly ? onKeyRenameBlur : undefined}
-                type='text'
-                className='w-full border shadow-sm'
-              />
+              {SelectWidget ? (
+                <SelectWidget
+                  key={label}
+                  id={keyId}
+                  name={keyId}
+                  value={label}
+                  required={required}
+                  disabled={disabled || readonly}
+                  readonly={readonly}
+                  options={{
+                    enumOptions,
+                    enumDisabled: [],
+                  }}
+                  onBlur={handleSelectBlur}
+                  onFocus={handleSelectBlur}
+                  onChange={(value) => {
+                    onKeyRenameBlur({ target: { value } } as any);
+                  }}
+                  schema={{ type: 'string', enum: propertyNamesEnum }}
+                  as
+                  any
+                  registry={registry as any}
+                  uiSchema={uiSchema as any}
+                  label={keyLabel}
+                />
+              ) : (
+                <Input
+                  key={label}
+                  required={required}
+                  defaultValue={label}
+                  disabled={disabled || readonly}
+                  id={keyId}
+                  name={keyId}
+                  onBlur={!readonly ? onKeyRenameBlur : undefined}
+                  type='text'
+                  className='w-full border shadow-sm'
+                />
+              )}
             </div>
             {!!rawDescription && (
               <span className='text-xs font-medium text-muted-foreground'>

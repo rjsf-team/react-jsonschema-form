@@ -115,6 +115,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     required = false,
     registry,
     wasPropertyKeyModified = false,
+    propertyNamesEnum,
   } = props;
   const { schemaUtils, globalFormOptions, globalUiOptions, fields } = registry;
   const { AnyOfField: _AnyOfField, OneOfField: _OneOfField, CyclicSchemaField } = fields;
@@ -320,6 +321,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     schema,
     uiSchema,
     registry,
+    propertyNamesEnum,
   };
 
   return (

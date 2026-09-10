@@ -1,5 +1,6 @@
+import { useCallback } from 'react';
 import type { WrapIfAdditionalTemplateProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { buttonId, ADDITIONAL_PROPERTY_FLAG, TranslatableString } from '@rjsf/utils';
+import { buttonId, ADDITIONAL_PROPERTY_FLAG, TranslatableString, getWidget } from '@rjsf/utils';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.
@@ -27,16 +28,30 @@ export default function WrapIfAdditionalTemplate<
     onRemoveProperty,
     rawDescription,
     registry,
+    propertyNamesEnum,
     ...rest
   } = props;
 
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
-  const { templates, translateString } = registry;
+  const { templates, translateString, widgets } = registry;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
   const marginDesc = rawDescription ? 10 : 0;
   const margin = displayLabel ? 32 + marginDesc : 10;
+
+  // Use SelectWidget when propertyNamesEnum is available
+  const SelectWidget = propertyNamesEnum && propertyNamesEnum.length > 0 ? getWidget(widgets, 'SelectWidget') : null;
+  const enumOptions = propertyNamesEnum?.map((value) => ({ value, label: String(value) })) ?? [];
+
+  // Handle onBlur for SelectWidget which expects (id: string, value: any) => void
+  // but onKeyRenameBlur expects (event: FocusEvent<HTMLInputElement>) => void
+  const handleSelectBlur = useCallback(
+    (_id: string, value: any) => {
+      onKeyRenameBlur({ target: { value } } as any);
+    },
+    [onKeyRenameBlur],
+  );
 
   if (!additional) {
     return <div className={`flex-grow ${classNames}`}>{children}</div>;
@@ -51,15 +66,42 @@ export default function WrapIfAdditionalTemplate<
               <span className='label-text'>{keyLabel}</span>
             </label>
           )}
-          <input
-            key={label}
-            type='text'
-            className='input input-bordered'
-            id={`${id}-key`}
-            onBlur={onKeyRenameBlur}
-            defaultValue={label}
-            disabled={disabled || readonly}
-          />
+          {SelectWidget ? (
+            <SelectWidget
+              key={label}
+              id={`${id}-key`}
+              name={`${id}-key`}
+              value={label}
+              required={required}
+              disabled={disabled || readonly}
+              readonly={readonly}
+              options={{
+                enumOptions,
+                enumDisabled: [],
+              }}
+              onBlur={handleSelectBlur}
+              onFocus={handleSelectBlur}
+              onChange={(value) => {
+                onKeyRenameBlur({ target: { value } } as any);
+              }}
+              schema={{ type: 'string', enum: propertyNamesEnum }}
+              as
+              any
+              registry={registry as any}
+              uiSchema={uiSchema as any}
+              label={keyLabel}
+            />
+          ) : (
+            <input
+              key={label}
+              type='text'
+              className='input input-bordered'
+              id={`${id}-key`}
+              onBlur={onKeyRenameBlur}
+              defaultValue={label}
+              disabled={disabled || readonly}
+            />
+          )}
         </div>
         {children}
         <div className='flex self-start' style={{ marginTop: `${margin}px` }}>

@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+import { useCallback } from 'react';
 import type { GridProps } from '@mui/material/Grid';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
@@ -9,7 +10,7 @@ import type {
   StrictRJSFSchema,
   WrapIfAdditionalTemplateProps,
 } from '@rjsf/utils';
-import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString, getUiOptions } from '@rjsf/utils';
+import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString, getUiOptions, getWidget } from '@rjsf/utils';
 
 import { computeSxProps, getMuiProps } from '../util.ts';
 /** Properties available for the `rjsfSlotProps` target of the WrapIfAdditionalTemplate. */
@@ -52,8 +53,9 @@ export default function WrapIfAdditionalTemplate<
     schema,
     uiSchema,
     registry,
+    propertyNamesEnum,
   } = props;
-  const { templates, translateString } = registry;
+  const { templates, translateString, widgets } = registry;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
@@ -64,6 +66,19 @@ export default function WrapIfAdditionalTemplate<
     paddingRight: 6,
     fontWeight: 'bold',
   };
+
+  // Use SelectWidget when propertyNamesEnum is available
+  const SelectWidget = propertyNamesEnum && propertyNamesEnum.length > 0 ? getWidget(widgets, 'SelectWidget') : null;
+  const enumOptions = propertyNamesEnum?.map((value) => ({ value, label: String(value) })) ?? [];
+
+  // Handle onBlur for SelectWidget which expects (id: string, value: any) => void
+  // but onKeyRenameBlur expects (event: FocusEvent<HTMLInputElement>) => void
+  const handleSelectBlur = useCallback(
+    (_id: string, value: any) => {
+      onKeyRenameBlur({ target: { value } } as any);
+    },
+    [onKeyRenameBlur],
+  );
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { rjsfSlotProps: { wrapGridContainer, wrapKeyGridItem, wrapChildrenGridItem, wrapRemoveButtonGridItem } = {} } =
@@ -88,18 +103,45 @@ export default function WrapIfAdditionalTemplate<
       sx={computeSxProps<GridProps>({ alignItems: 'flex-start' }, wrapGridContainer)}
     >
       <Grid size={5.5} {...wrapKeyGridItem}>
-        <TextField
-          key={label}
-          fullWidth
-          required={required}
-          label={displayLabel ? keyLabel : undefined}
-          defaultValue={label}
-          disabled={disabled || readonly}
-          id={`${id}-key`}
-          name={`${id}-key`}
-          onBlur={!readonly ? onKeyRenameBlur : undefined}
-          type='text'
-        />
+        {SelectWidget ? (
+          <SelectWidget
+            key={label}
+            id={`${id}-key`}
+            name={`${id}-key`}
+            value={label}
+            required={required}
+            disabled={disabled || readonly}
+            readonly={readonly}
+            options={{
+              enumOptions,
+              enumDisabled: [],
+            }}
+            onBlur={handleSelectBlur}
+            onFocus={handleSelectBlur}
+            onChange={(value) => {
+              onKeyRenameBlur({ target: { value } } as any);
+            }}
+            schema={{ type: 'string', enum: propertyNamesEnum }}
+            as
+            any
+            registry={registry as any}
+            uiSchema={uiSchema as any}
+            label={keyLabel}
+          />
+        ) : (
+          <TextField
+            key={label}
+            fullWidth
+            required={required}
+            label={displayLabel ? keyLabel : undefined}
+            defaultValue={label}
+            disabled={disabled || readonly}
+            id={`${id}-key`}
+            name={`${id}-key`}
+            onBlur={!readonly ? onKeyRenameBlur : undefined}
+            type='text'
+          />
+        )}
       </Grid>
       <Grid size={5.5} {...wrapChildrenGridItem}>
         {children}
