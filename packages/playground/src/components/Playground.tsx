@@ -28,8 +28,34 @@ export interface PlaygroundProps {
 /** Maps the `liveSettings` drawer's `'off' | 'onChange' | 'onBlur'` radio value onto the
  * `liveValidate`/`liveOmit` prop shape `Form` actually accepts, since `Form` has no `'off'` value of its own.
  */
-function toLiveSetting(value: unknown): 'onChange' | 'onBlur' | undefined {
+export function toLiveSetting(value: unknown): 'onChange' | 'onBlur' | undefined {
   return value === 'onChange' || value === 'onBlur' ? value : undefined;
+}
+
+/** Converts a legacy boolean `liveValidate`/`liveOmit` value - `true` from a v5 shared link, `false` from a v5/v6
+ * one - into the current string value. Any other value (including `undefined`) passes through unchanged.
+ */
+function normalizeLiveFlag(value: unknown): unknown {
+  if (value === true) {
+    return 'onChange';
+  }
+  if (value === false) {
+    return 'off';
+  }
+  return value;
+}
+
+/** Normalizes `liveSettings` decoded from a shared playground URL or sample: defaults a missing object to `{}` (a
+ * shared URL predating `liveSettings` support omits it entirely) so callers never have to null-check it, and
+ * converts any legacy boolean `liveValidate`/`liveOmit` values to their current string equivalents.
+ */
+export function normalizeLiveSettings(loadedLiveSettings?: LiveSettings): LiveSettings {
+  const settings = loadedLiveSettings ?? {};
+  return {
+    ...settings,
+    liveValidate: normalizeLiveFlag(settings.liveValidate),
+    liveOmit: normalizeLiveFlag(settings.liveOmit),
+  };
 }
 
 export default function Playground({ themes, validators }: PlaygroundProps) {
@@ -134,21 +160,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       setFormData(loadedFormData);
       setExtraErrors(loadedExtraErrors);
       setShowForm(true);
-      if (loadedLiveSettings?.liveValidate === true) {
-        // Convert v5 true value to `onChange`
-        loadedLiveSettings.liveValidate = 'onChange';
-      } else if (loadedLiveSettings?.liveValidate === false) {
-        // Convert v5/v6 false value to `off`
-        loadedLiveSettings.liveValidate = 'off';
-      }
-      if (loadedLiveSettings?.liveOmit === true) {
-        // Convert v5 true value to `onChange`
-        loadedLiveSettings.liveOmit = 'onChange';
-      } else if (loadedLiveSettings?.liveOmit === false) {
-        // Convert v5/v6 false value to `off`
-        loadedLiveSettings.liveOmit = 'off';
-      }
-      setLiveSettings(loadedLiveSettings);
+      setLiveSettings(normalizeLiveSettings(loadedLiveSettings));
       if ('validator' in data && theValidator !== undefined) {
         setValidator(theValidator);
       }
