@@ -16,7 +16,19 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-# 6.9.1
+# 6.10.1
+
+## @rjsf/utils
+
+- Fixed defaults from a dependency subschema being omitted when `getDefaultFormState()` is called without form data ([#5198](https://github.com/rjsf-team/react-jsonschema-form/issues/5198))
+
+## Dev / docs / playground
+
+- Fixed the size-limit report never being posted on a pull request from a fork. The comment workflow resolved the PR from its head sha, which the base repository cannot associate with a fork's commit, so it warned and skipped — leaving a green check and no comment. The measuring job now records the PR number in its artifact, and the comment workflow looks that PR up directly, accepts it only if its head sha matches the run's trusted `workflow_run` head sha, and fails loudly rather than skipping when the PR cannot be found
+- Extended the size-limit checks to cover every released package rather than just `@rjsf/core`, `@rjsf/utils` and `@rjsf/validator-ajv8`. The checks are derived from each package's own `package.json`, so a new package or a dependency change needs no config edit; only the packages that already had budgets enforce one, the rest are measured and reported
+- Moved `size-limit` and its preset out of the root `devDependencies` into their own pnpm project under `.github/size-limit`, so they are installed only by the size-limit workflow
+
+# 6.10.0
 
 ## @rjsf/chakra-ui
 
@@ -25,11 +37,24 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Fixed defaults not being restored when returning to an `anyOf` or `oneOf` option with disjoint properties ([#3736](https://github.com/rjsf-team/react-jsonschema-form/issues/3736))
+- Added `ui:autocapitalize` support for inputs rendered by `BaseInputTemplate`, allowing mobile keyboards to apply the requested capitalization behavior ([#2187](https://github.com/rjsf-team/react-jsonschema-form/issues/2187))
+
+## @rjsf/mantine
+
+- Added `ui:autocapitalize` support for text inputs ([#2187](https://github.com/rjsf-team/react-jsonschema-form/issues/2187))
+
+## @rjsf/mui
+
+- Added `ui:autocapitalize` support for text inputs ([#2187](https://github.com/rjsf-team/react-jsonschema-form/issues/2187))
 
 ## @rjsf/utils
 
 - Fixed `sanitizeDataForNewSchema()` clearing existing arrays or preserving stale `undefined` values instead of retaining data or applying defaults for properties newly defined by the incoming schema ([#3736](https://github.com/rjsf-team/react-jsonschema-form/issues/3736))
-- Fixed defaults from a dependency subschema being omitted when `getDefaultFormState()` is called without form data ([#5198](https://github.com/rjsf-team/react-jsonschema-form/issues/5198))
+- Added `autocapitalize` UI option handling to `getInputProps()` and its public input prop types ([#2187](https://github.com/rjsf-team/react-jsonschema-form/issues/2187))
+
+## Dev / docs / playground
+
+- Documented `ui:autocapitalize`, added it to the simple playground sample, and added cross-theme regression coverage ([#2187](https://github.com/rjsf-team/react-jsonschema-form/issues/2187))
 
 ## @rjsf/validator-ajv8
 
