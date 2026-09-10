@@ -14,9 +14,8 @@
       ]
     },
     // src/index.ts in these themes exports `Form` both as a named export and
-    // as `default` (a published alias, kept until the next major). knip reports
-    // that as a duplicate export now that the build no longer names the entry in
-    // an esbuild script line, which previously masked it.
+    // as `default` (a published alias, kept until the next major), which knip
+    // reports as a duplicate export.
     "packages/chakra-ui": {
       "ignore": ["src/index.ts"],
     },
