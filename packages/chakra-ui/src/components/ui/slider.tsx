@@ -1,4 +1,4 @@
-import type { ComponentProps } from 'react';
+import type { ComponentProps, Ref } from 'react';
 import { Slider as ChakraSlider, HStack } from '@chakra-ui/react';
 
 export interface SliderProps extends ComponentProps<typeof ChakraSlider.Root> {
@@ -8,7 +8,7 @@ export interface SliderProps extends ComponentProps<typeof ChakraSlider.Root> {
 
 interface SliderMarksProps {
   marks?: (number | { value: number; label: React.ReactNode })[];
-  ref?: ComponentProps<typeof ChakraSlider.MarkerGroup>['ref'];
+  ref?: Ref<HTMLDivElement>;
 }
 
 /**

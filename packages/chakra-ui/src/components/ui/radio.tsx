@@ -1,11 +1,11 @@
-import type { ComponentProps, InputHTMLAttributes } from 'react';
+import type { InputHTMLAttributes, Ref } from 'react';
 import { RadioGroup as ChakraRadioGroup } from '@chakra-ui/react';
 
-export interface RadioProps extends Omit<ComponentProps<typeof ChakraRadioGroup.Item>, 'ref'> {
+export interface RadioProps extends ChakraRadioGroup.ItemProps {
   /** Ref for the root element of the radio; `ref` itself goes to the hidden `<input>` instead */
-  rootRef?: ComponentProps<typeof ChakraRadioGroup.Item>['ref'];
+  rootRef?: Ref<HTMLDivElement>;
   inputProps?: InputHTMLAttributes<HTMLInputElement>;
-  ref?: ComponentProps<typeof ChakraRadioGroup.ItemHiddenInput>['ref'];
+  ref?: Ref<HTMLInputElement>;
 }
 
 /**

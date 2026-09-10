@@ -1,12 +1,12 @@
-import type { ComponentProps, InputHTMLAttributes, ReactNode } from 'react';
+import type { InputHTMLAttributes, ReactNode, Ref } from 'react';
 import { Checkbox as ChakraCheckbox } from '@chakra-ui/react';
 
-export interface CheckboxProps extends Omit<ComponentProps<typeof ChakraCheckbox.Root>, 'ref'> {
+export interface CheckboxProps extends ChakraCheckbox.RootProps {
   icon?: ReactNode;
   inputProps?: InputHTMLAttributes<HTMLInputElement>;
   /** Ref for the root element of the checkbox; `ref` itself goes to the hidden `<input>` instead */
-  rootRef?: ComponentProps<typeof ChakraCheckbox.Root>['ref'];
-  ref?: ComponentProps<typeof ChakraCheckbox.HiddenInput>['ref'];
+  rootRef?: Ref<HTMLLabelElement>;
+  ref?: Ref<HTMLInputElement>;
 }
 
 /**

@@ -18,7 +18,7 @@ const SelectClearTrigger = ({ ref, ...props }: ComponentProps<typeof ChakraSelec
 
 interface SelectTriggerProps extends ChakraSelect.ControlProps {
   clearable?: boolean;
-  ref?: ComponentProps<typeof ChakraSelect.Trigger>['ref'];
+  ref?: Ref<HTMLButtonElement>;
 }
 
 /**
