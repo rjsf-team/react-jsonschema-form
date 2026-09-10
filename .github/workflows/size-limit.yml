@@ -34,7 +34,7 @@ jobs:
           echo ${{ github.event.pull_request.number }} > "$RUNNER_TEMP/pr_number"
           # size-limit measures each package's lib/. Safe to let nx cache: lib/
           # is a declared build output in nx.json, so a hit restores it to disk.
-          pnpm exec nx run-many --target=build --all
+          pnpm exec nx run-many --target=build --all --exclude=@rjsf/docs,@rjsf/playground
           # size-limit exits non-zero when a budget is exceeded but still emits
           # JSON; record the outcome and enforce it at the end so the report
           # comment is produced either way.
@@ -57,7 +57,7 @@ jobs:
             [ -f .github/size-limit/.size-limit.js ] &&
             pnpm install --frozen-lockfile --filter '!@rjsf/docs' --filter '!@rjsf/playground' &&
             pnpm install --frozen-lockfile --dir .github/size-limit --lockfile-dir "$GITHUB_WORKSPACE/.github/size-limit" &&
-            pnpm exec nx run-many --target=build --all; then
+            pnpm exec nx run-many --target=build --all --exclude=@rjsf/docs,@rjsf/playground; then
             pnpm --dir .github/size-limit exec size-limit --json > "$RUNNER_TEMP/base.json" || echo '[]' > "$RUNNER_TEMP/base.json"
           else
             echo '[]' > "$RUNNER_TEMP/base.json"
