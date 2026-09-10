@@ -18,4 +18,7 @@ export default defineConfig({
   sourcemap: true,
   // Every dependency, workspace packages included, stays an import; nothing is inlined into lib/.
   deps: { neverBundle: true },
+  // TypeScript 7 no longer ships the JS compiler API, so declarations come from its native binary. rolldown-plugin-dts
+  // infers this when TypeScript 7 is installed; naming it keeps the choice from changing with the inference rules.
+  dts: { generator: 'tsgo' },
 });
