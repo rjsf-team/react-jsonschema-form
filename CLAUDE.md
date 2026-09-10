@@ -52,7 +52,7 @@ pnpm run sanity-check
 
 CI runs lint, knip, build, typecheck, and test in that order, so run those before pushing. Per-package `tsc` misses the test and playground projects; only the root `typecheck` covers them.
 
-Individual package builds run `build:ts` (`tsc -b`, emits `lib/`) and then bundle `dist/` in three formats: `build:cjs` and `build:esm` via esbuild, `build:umd` via rollup.
+Each package build is one `tsdown -c ../../tsdown.base.mts` run: it emits per-file ESM and declarations into `lib/`, the only published output (the packages are ESM-only). It only transpiles; `pnpm run typecheck` (`tsc --build`) is the typecheck, and tsc never emits JavaScript.
 
 ## Architecture
 

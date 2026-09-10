@@ -14,7 +14,7 @@
     "knip": "knip",
     "cs-check": "nx run-many --target=cs-check",
     "cs-format": "nx run-many --target=cs-format",
-    "clean-build": "rimraf packages/*/tsconfig.tsbuildinfo && rimraf packages/*/lib && rimraf packages/*/dist && pnpm run build",
+    "clean-build": "rimraf packages/*/tsconfig.tsbuildinfo && rimraf packages/*/lib && pnpm run build",
     "build": "nx run-many --target=build",
     "build-serial": "nx run-many --target=build --parallel=1",
     "start": "echo 'use \"pnpm run build\" from main directory and then \"pnpm start\" in the playground package'",
@@ -40,7 +40,6 @@
     "@types/react-dom": "^18.3.7",
     "@vitest/coverage-v8": "^4.1.11",
     "cross-env": "^10.1.0",
-    "esbuild": "^0.28.1",
     "husky": "^9.1.7",
     "is-ci": "^4.1.0",
     "jsdom": "^30.0.1",
@@ -54,8 +53,8 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "rimraf": "^6.1.3",
-    "rollup": "^4.62.2",
-    "typescript": "^6.0.3",
+    "tsdown": "0.22.14",
+    "typescript": "^7.0.2",
     "vitest": "^4.1.11"
   },
   "workspaces": [

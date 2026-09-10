@@ -4,7 +4,7 @@
   "type": "module",
   "description": "A set of snapshot tests to be used for testing RJSF theme.",
   "scripts": {
-    "build": "tsc -b .",
+    "build": "tsdown -c ../../tsdown.base.mts",
     "cs-check": "oxfmt --check \"src/**/*.{ts,tsx,js,jsx}\"",
     "cs-format": "oxfmt \"src/**/*.{ts,tsx,js,jsx}\"",
     "lint": "oxlint src",
@@ -22,7 +22,6 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
-    "dist",
     "lib",
     "src"
   ],
@@ -63,7 +62,6 @@
   "exports": {
     ".": {
       "@rjsf/source": "./src/index.ts",
-      "types": "./lib/index.d.ts",
       "default": "./lib/index.js"
     },
     "./package.json": "./package.json",
