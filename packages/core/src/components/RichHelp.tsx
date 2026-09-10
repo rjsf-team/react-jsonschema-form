@@ -1,12 +1,9 @@
 import type { ReactElement } from 'react';
 import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
-import { getTestIds, getUiOptions } from '@rjsf/utils';
-import { Markdown } from 'markdown-to-jsx/react';
-
-const TEST_IDS = getTestIds();
+import { getTemplate, getUiOptions } from '@rjsf/utils';
 
 export interface RichHelpProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
-  /** The description text for a field, potentially containing markdown */
+  /** The help text for a field, potentially containing markdown */
   help: string | ReactElement;
   /** The uiSchema object for this base component */
   uiSchema?: UiSchema<T, S, F>;
@@ -14,26 +11,19 @@ export interface RichHelpProps<T = any, S extends StrictRJSFSchema = RJSFSchema,
   registry: Registry<T, S, F>;
 }
 
-/** Renders the given `description` in the props as
- *
- * @param props - The `RichHelpProps` for this component
- */
+/** Renders help with the registered renderer when its markdown option is enabled. */
 export default function RichHelp<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   help,
   registry,
   uiSchema = {},
 }: RichHelpProps<T, S, F>) {
-  const { globalUiOptions } = registry;
-  const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
-
-  if (uiOptions.enableMarkdownInHelp && typeof help === 'string') {
-    return (
-      <Markdown options={{ disableParsingRawHTML: true }} data-testid={TEST_IDS.markdown}>
-        {help}
-      </Markdown>
-    );
+  if (typeof help !== 'string') {
+    return help;
   }
-  return help;
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
+  if (!uiOptions.enableMarkdownInHelp) {
+    return help;
+  }
+  const MarkdownTemplate = getTemplate<'MarkdownTemplate', T, S, F>('MarkdownTemplate', registry, uiOptions);
+  return <MarkdownTemplate>{help}</MarkdownTemplate>;
 }
-
-RichHelp.TEST_IDS = TEST_IDS;

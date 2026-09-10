@@ -14,6 +14,7 @@ import { userEvent } from '@testing-library/user-event';
 
 import SchemaField from '../src/components/fields/SchemaField.tsx';
 import { generateTheme } from '../src/index.ts';
+import MarkdownTemplate from '../src/markdown.tsx';
 import { createFormComponent, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
@@ -824,9 +825,10 @@ describe('SchemaField', () => {
     };
     const descText = 'Make things **bold** or *italic*. Embed snippets of `code`.';
 
-    it('should render description with markdown', () => {
+    it('should render description with markdown when a MarkdownTemplate is registered', () => {
       const { node } = createFormComponent({
         schema,
+        templates: { MarkdownTemplate },
         uiSchema: {
           foo: {
             'ui:description': descText,
@@ -842,12 +844,13 @@ describe('SchemaField', () => {
       expect(field).toContainHTML('<code>code</code>');
     });
 
-    it('should render description without html tags', () => {
+    it('should render description as plain text without a MarkdownTemplate', () => {
       const { node } = createFormComponent({
         schema,
         uiSchema: {
           foo: {
             'ui:description': descText,
+            'ui:enableMarkdownInDescription': true,
           },
         },
       });

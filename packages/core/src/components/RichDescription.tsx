@@ -1,9 +1,6 @@
 import type { ReactElement } from 'react';
 import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
-import { getTestIds, getUiOptions } from '@rjsf/utils';
-import { Markdown } from 'markdown-to-jsx/react';
-
-const TEST_IDS = getTestIds();
+import { getTemplate, getUiOptions } from '@rjsf/utils';
 
 export interface RichDescriptionProps<
   T = any,
@@ -18,7 +15,7 @@ export interface RichDescriptionProps<
   registry: Registry<T, S, F>;
 }
 
-/** Renders the given `description` in the props as
+/** Renders a string `description` through the registered `MarkdownTemplate`; a React element is rendered as-is
  *
  * @param props - The `RichDescriptionProps` for this component
  */
@@ -27,17 +24,13 @@ export default function RichDescription<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >({ description, registry, uiSchema = {} }: RichDescriptionProps<T, S, F>) {
-  const { globalUiOptions } = registry;
-  const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
-
-  if (uiOptions.enableMarkdownInDescription && typeof description === 'string') {
-    return (
-      <Markdown options={{ disableParsingRawHTML: true }} data-testid={TEST_IDS.markdown}>
-        {description}
-      </Markdown>
-    );
+  if (typeof description !== 'string') {
+    return description;
   }
-  return description;
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
+  if (!uiOptions.enableMarkdownInDescription) {
+    return description;
+  }
+  const MarkdownTemplate = getTemplate<'MarkdownTemplate', T, S, F>('MarkdownTemplate', registry, uiOptions);
+  return <MarkdownTemplate>{description}</MarkdownTemplate>;
 }
-
-RichDescription.TEST_IDS = TEST_IDS;

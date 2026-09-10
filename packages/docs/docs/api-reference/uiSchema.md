@@ -394,10 +394,13 @@ The `ui:disabled` uiSchema directive will disable all child widgets from a given
 ### enableMarkdownInDescription
 
 The `ui:enableMarkdownInDescription` uiSchema directive enables the support of Markdown syntax within the description of
-a field.
+a field. It renders through the registered [`MarkdownTemplate`](../advanced-customization/custom-templates.md#markdowntemplate),
+whose core default is plain text, so a renderer has to be registered as well — `@rjsf/core/markdown` provides one and
+needs `markdown-to-jsx` installed.
 
 ```tsx
 import { Form } from '@rjsf/core';
+import MarkdownTemplate from '@rjsf/core/markdown';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -405,7 +408,10 @@ const schema: RJSFSchema = { type: 'string', description: '**bolded** text in th
 const uiSchema: UiSchema = {
   'ui:enableMarkdownInDescription': true,
 };
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+render(
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} templates={{ MarkdownTemplate }} />,
+  document.getElementById('app'),
+);
 ```
 
 It can also be enabled globally by setting the `enableMarkdownInDescription` option to `true` in the `ui:globalOptions`
@@ -413,6 +419,7 @@ uiSchema directive.
 
 ```tsx
 import { Form } from '@rjsf/core';
+import MarkdownTemplate from '@rjsf/core/markdown';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -423,16 +430,21 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+render(
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} templates={{ MarkdownTemplate }} />,
+  document.getElementById('app'),
+);
 ```
 
 ### enableMarkdownInHelp
 
 The `ui:enableMarkdownInHelp` uiSchema directive enables the support of Markdown syntax within the help displayed for
-a field.
+a field. Like `ui:enableMarkdownInDescription`, it renders through the registered
+[`MarkdownTemplate`](../advanced-customization/custom-templates.md#markdowntemplate) and needs a renderer registered.
 
 ```tsx
 import { Form } from '@rjsf/core';
+import MarkdownTemplate from '@rjsf/core/markdown';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -441,7 +453,10 @@ const uiSchema: UiSchema = {
   'ui:enableMarkdownInHelp': true,
   'ui:help': '**bolded** text in the help',
 };
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+render(
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} templates={{ MarkdownTemplate }} />,
+  document.getElementById('app'),
+);
 ```
 
 It can also be enabled globally by setting the `enableMarkdownInHelp` option to `true` in the `ui:globalOptions`
@@ -449,6 +464,7 @@ uiSchema directive.
 
 ```tsx
 import { Form } from '@rjsf/core';
+import MarkdownTemplate from '@rjsf/core/markdown';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -460,7 +476,10 @@ const uiSchema: UiSchema = {
   'ui:help': '**bolded** text in the help',
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+render(
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} templates={{ MarkdownTemplate }} />,
+  document.getElementById('app'),
+);
 ```
 
 ### enableOptionalDataFieldForType

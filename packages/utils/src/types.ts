@@ -354,6 +354,12 @@ export type RegistryWidgetsType<
   F extends FormContextType = any,
 > = Record<string, Widget<T, S, F>>;
 
+/** The properties that are passed to a `MarkdownTemplate` implementation */
+export interface MarkdownTemplateProps {
+  /** The markdown text to render */
+  children: string;
+}
+
 /** The set of RJSF templates that can be overridden by themes or users */
 export type TemplatesType<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = {
   /** The template to use while rendering normal or fixed array fields */
@@ -384,6 +390,11 @@ export type TemplatesType<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   FieldTemplate: ComponentType<FieldTemplateProps<T, S, F>>;
   /** The template to use to render a Grid element */
   GridTemplate: ComponentType<GridTemplateProps>;
+  /** The template to use for rendering markdown text in descriptions, help text and translatable strings. The core
+   * default renders it as plain text so no markdown library is bundled; `@rjsf/core/markdown` provides one built on
+   * `markdown-to-jsx`.
+   */
+  MarkdownTemplate: ComponentType<MarkdownTemplateProps>;
   /** The template to use while rendering a multi-schema field (i.e. anyOf, oneOf) */
   MultiSchemaFieldTemplate: ComponentType<MultiSchemaFieldTemplateProps<T, S, F>>;
   /** The template to use while rendering an object */
@@ -437,10 +448,11 @@ export type GlobalUISchemaOptions = GenericObjectType & {
    * This option allows you to change the separator between the original key name and the integer. Default is "-"
    */
   duplicateKeySuffixSeparator?: string;
-  /** Enables the displaying of description text that contains markdown
+  /** Enables the displaying of description text that contains markdown, rendered through the registered
+   * `MarkdownTemplate`
    */
   enableMarkdownInDescription?: boolean;
-  /** Enables the displaying of help text that contains markdown
+  /** Enables the displaying of help text that contains markdown, rendered through the registered `MarkdownTemplate`
    */
   enableMarkdownInHelp?: boolean;
   /** Enables the rendering of the Optional Data Field UI for specific types of schemas, either `object`, `array` or

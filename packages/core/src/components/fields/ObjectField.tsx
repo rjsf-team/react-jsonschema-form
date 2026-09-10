@@ -32,9 +32,9 @@ import {
   isObject,
   TranslatableString,
 } from '@rjsf/utils';
-import { Markdown } from 'markdown-to-jsx/react';
 
 import { ADDITIONAL_PROPERTY_KEY_REMOVE } from '../constants.ts';
+import RichDescription from '../RichDescription.tsx';
 
 /** Returns a flag indicating whether the `name` field is required in the object schema
  *
@@ -397,9 +397,14 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       return (
         <div>
           <p className='rjsf-config-error' style={{ color: 'red' }}>
-            <Markdown options={{ disableParsingRawHTML: true }}>
-              {translateString(TranslatableString.InvalidObjectField, [name || 'root', (err as Error).message])}
-            </Markdown>
+            <RichDescription
+              description={translateString(TranslatableString.InvalidObjectField, [
+                name || 'root',
+                err instanceof Error ? err.message : String(err),
+              ])}
+              registry={registry}
+              uiSchema={uiSchema}
+            />
           </p>
           <pre>{JSON.stringify(schema)}</pre>
         </div>

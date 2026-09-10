@@ -275,9 +275,6 @@ importers:
 
   packages/core:
     dependencies:
-      markdown-to-jsx:
-        specifier: ^9.8.2
-        version: 9.8.2(react@19.3.0)
       react:
         specifier: '>=19'
         version: 19.3.0
@@ -306,6 +303,9 @@ importers:
       ajv:
         specifier: ^8.20.0
         version: 8.20.0
+      markdown-to-jsx:
+        specifier: ^9.8.2
+        version: 9.8.2(react@19.3.0)
 
   packages/daisyui:
     dependencies:
@@ -705,6 +705,9 @@ importers:
       '@rjsf/validator-ajv8':
         specifier: workspace:^
         version: link:../validator-ajv8
+      markdown-to-jsx:
+        specifier: ^9.8.2
+        version: 9.8.2(react@19.3.0)
 
   packages/utils:
     dependencies:
