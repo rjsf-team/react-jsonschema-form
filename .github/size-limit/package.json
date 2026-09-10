@@ -5,10 +5,5 @@
   "devDependencies": {
     "@size-limit/preset-small-lib": "13.0.3",
     "size-limit": "13.0.3"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild"
-    ]
   }
 }

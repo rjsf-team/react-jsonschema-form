@@ -30,7 +30,7 @@ jobs:
           # docs and playground have no build:ts and pull in docusaurus and vite;
           # skipping them is the bulk of the install.
           pnpm install --frozen-lockfile --filter '!@rjsf/docs' --filter '!@rjsf/playground'
-          pnpm install --frozen-lockfile --ignore-workspace --dir .github/size-limit
+          pnpm install --frozen-lockfile --dir .github/size-limit --lockfile-dir "$GITHUB_WORKSPACE/.github/size-limit"
           echo ${{ github.event.pull_request.number }} > "$RUNNER_TEMP/pr_number"
           # size-limit measures lib/, not the cjs/esm/umd bundles, and only the
           # released packages declare build:ts. Safe to let nx cache: lib/ is a
@@ -57,7 +57,7 @@ jobs:
             git checkout -f ${{ github.event.pull_request.base.sha }} &&
             [ -f .github/size-limit/.size-limit.js ] &&
             pnpm install --frozen-lockfile --filter '!@rjsf/docs' --filter '!@rjsf/playground' &&
-            pnpm install --frozen-lockfile --ignore-workspace --dir .github/size-limit &&
+            pnpm install --frozen-lockfile --dir .github/size-limit --lockfile-dir "$GITHUB_WORKSPACE/.github/size-limit" &&
             pnpm exec nx run-many --target=build:ts --all; then
             pnpm --dir .github/size-limit exec size-limit --json > "$RUNNER_TEMP/base.json" || echo '[]' > "$RUNNER_TEMP/base.json"
           else
