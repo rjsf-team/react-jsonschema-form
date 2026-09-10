@@ -1662,25 +1662,6 @@ Any option whose `additionalProperties` is `false` is widened to `true` so that 
 
 - S[]: A new array of plain schema objects with `additionalProperties` relaxed where needed
 
-### removeOptionalEmptyObjects&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
-
-> NOTE: This function is deprecated and will be removed in a future release. The equivalent pruning behavior is now built into `omitExtraData` — use that instead.
-
-Recursively removes optional objects from the `formData` that are empty (i.e., all their fields are undefined, null, empty strings, or themselves empty optional objects).
-This solves the problem where interacting with fields inside an optional object "activates" it permanently, making the form unsubmittable when the optional object has required inner fields.
-An object property is considered "optional" when it is NOT listed in its parent schema's `required` array.
-
-#### Parameters
-
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
-- schema: S - The JSON schema describing the `formData`
-- [rootSchema]: S | undefined - The root schema, used primarily to look up `$ref`s
-- [formData]: T | undefined - The current form data to prune
-
-#### Returns
-
-- T | undefined: A new copy of `formData` with empty optional objects removed, or `undefined` if the entire formData was pruned
-
 ### retrieveSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Retrieves an expanded schema that has had all of its conditions, additional properties, references and dependencies
@@ -1781,25 +1762,6 @@ Also, any properties in the old schema that are non-existent in the new schema a
 #### Returns
 
 - T: The new form data, with all the fields uniquely associated with the old schema set to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
-
-### toPathSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
-
-> NOTE: This function is deprecated and will be removed as an exported `@rjsf/utils` function in a future release.
-
-Generates an `PathSchema` object for the `schema`, recursively
-
-#### Parameters
-
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
-- schema: S - The schema for which the `PathSchema` is desired
-- [name='']: string - The base name for the schema
-- [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
-- [formData]: T | undefined - The current formData, if any, to assist retrieving a schema
-- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
-
-#### Returns
-
-- PathSchema&lt;T> - The `PathSchema` object for the `schema`
 
 ## Schema utils creation function
 

@@ -15,7 +15,6 @@ import {
   omitExtraData,
   retrieveSchema,
   sanitizeDataForNewSchema,
-  toPathSchema,
 } from './schema/index.ts';
 import type {
   Experimental_CustomMergeAllOf,
@@ -23,7 +22,6 @@ import type {
   FormContextType,
   FoundFieldType,
   GlobalUISchemaOptions,
-  PathSchema,
   RJSFSchema,
   SchemaFieldPath,
   SchemaUtilsType,
@@ -351,26 +349,6 @@ class SchemaUtils<
       newSchema,
       oldSchema,
       data,
-      this.experimental_customMergeAllOf,
-    );
-  }
-
-  /** Generates an `PathSchema` object for the `schema`, recursively
-   *
-   * @param schema - The schema for which the display label flag is desired
-   * @param [name] - The base name for the schema
-   * @param [formData] - The current formData, if any, onto which to provide any missing defaults
-   * @returns - The `PathSchema` object for the `schema`
-   */
-  // oxlint-disable-next-line typescript/no-deprecated
-  toPathSchema(schema: S, name?: string, formData?: T): PathSchema<T> {
-    // oxlint-disable-next-line typescript/no-deprecated
-    return toPathSchema<T, S, F>(
-      this.validator,
-      schema,
-      name,
-      this.rootSchema,
-      formData,
       this.experimental_customMergeAllOf,
     );
   }

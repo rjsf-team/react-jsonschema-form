@@ -8,23 +8,18 @@ import getFromSchema from './getFromSchema.ts';
 import isFilesArray from './isFilesArray.ts';
 import isMultiSelect from './isMultiSelect.ts';
 import isSelect from './isSelect.ts';
-import omitExtraData, { getUsedFormData, getFieldNames, isValueEmpty } from './omitExtraData.ts';
+import omitExtraData, { isValueEmpty } from './omitExtraData.ts';
 import retrieveSchema, { relaxOptionsForScoring } from './retrieveSchema.ts';
 import sanitizeDataForNewSchema from './sanitizeDataForNewSchema.ts';
-import toPathSchema from './toPathSchema.ts';
 
 export {
   findFieldInSchema,
   findSelectedOptionInXxxOf,
   getDefaultFormState,
   getDisplayLabel,
-  // oxlint-disable-next-line typescript/no-deprecated
-  getFieldNames, // Exported only to prevent breaking change in core
   getClosestMatchingOption,
   getFirstMatchingOption,
   getFromSchema,
-  // oxlint-disable-next-line typescript/no-deprecated
-  getUsedFormData, // Exported only to prevent breaking change in core
   isFilesArray,
   isMultiSelect,
   isSelect,
@@ -33,6 +28,4 @@ export {
   relaxOptionsForScoring,
   retrieveSchema,
   sanitizeDataForNewSchema,
-  // oxlint-disable-next-line typescript/no-deprecated
-  toPathSchema,
 };

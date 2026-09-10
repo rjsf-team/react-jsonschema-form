@@ -68,7 +68,7 @@ export function describeRepeated(title: string, fn: (creatorFn: typeof createFor
   const formExtraPropsList: FormExtraProps[] = [
     { omitExtraData: false },
     { omitExtraData: true },
-    { omitExtraData: true, liveOmit: true },
+    { omitExtraData: true, liveOmit: 'onChange' },
     { omitExtraData: true, liveOmit: 'onBlur' },
   ];
   for (const formExtraProps of formExtraPropsList) {

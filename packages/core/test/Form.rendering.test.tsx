@@ -386,7 +386,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         templates: {
           FieldTemplate: CustomFieldTemplate,
         },
-        liveValidate: true,
+        liveValidate: 'onChange',
       }).node;
     });
 

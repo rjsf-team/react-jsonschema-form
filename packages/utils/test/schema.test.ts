@@ -12,7 +12,6 @@ import {
   omitExtraDataTest,
   retrieveSchemaTest,
   sanitizeDataForNewSchemaTest,
-  toPathSchemaTest,
 } from './schema/index.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 
@@ -32,4 +31,3 @@ isSelectTest(testValidator);
 omitExtraDataTest(testValidator);
 retrieveSchemaTest(testValidator);
 sanitizeDataForNewSchemaTest(testValidator);
-toPathSchemaTest(testValidator);

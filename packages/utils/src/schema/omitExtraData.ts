@@ -1,14 +1,11 @@
-import { NAME_KEY, RJSF_ADDITIONAL_PROPERTIES_FLAG } from '../constants.ts';
 import findSchemaDefinition from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import isObject from '../isObject.ts';
-import { getByPath, hasByPath, setByPath, toPath } from '../pathUtils.ts';
 import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
   GenericObjectType,
-  PathSchema,
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
@@ -17,81 +14,6 @@ import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import isSelect from './isSelect.ts';
 import { relaxOptionsForScoring, resolveAllReferences } from './retrieveSchema.ts';
 import shallowAllOfMerge from './shallowAllOfMerge.ts';
-
-/** Returns the `formData` with only the elements specified in the `fields` list
- *
- * @param formData - The data for the `Form`
- * @param fields - The fields to keep while filtering
- * @deprecated - To be removed as an exported `@rjsf/utils` function in a future release
- */
-export function getUsedFormData<T = any>(formData: T | undefined, fields: string[]): T | undefined {
-  // For the case of a single input form
-  if (fields.length === 0 && typeof formData !== 'object') {
-    return formData;
-  }
-
-  // Keep only the values at the given field paths; `fields` contains either dotted strings or the
-  // deep path lists produced by `getFieldNames()`
-  const data: GenericObjectType = {};
-  fields.forEach((field) => {
-    const path = Array.isArray(field) ? field : toPath(field);
-    if (hasByPath(formData, path)) {
-      setByPath(data, path, getByPath(formData, path));
-    }
-  });
-  if (Array.isArray(formData)) {
-    return Object.keys(data).map((key: string) => data[key]) as unknown as T;
-  }
-
-  return data as T;
-}
-
-/** Returns the list of field names from inspecting the `pathSchema` as well as using the `formData`
- *
- * @param pathSchema - The `PathSchema` object for the form
- * @param [formData] - The form data to use while checking for empty objects/arrays
- * @deprecated - To be removed as an exported `@rjsf/utils` function in a future release
- */
-// oxlint-disable-next-line typescript/no-deprecated
-export function getFieldNames<T = any>(pathSchema: PathSchema<T>, formData?: T): string[][] {
-  const formValueHasData = (value: unknown, isLeaf: boolean) => {
-    if (typeof value !== 'object' || value === null) {
-      return true;
-    }
-    const isEmptyValue = Array.isArray(value) ? value.length === 0 : Object.keys(value).length === 0;
-    return isEmptyValue || isLeaf;
-  };
-  const getAllPaths = (_obj: GenericObjectType, acc: string[][] = [], paths: string[][] = [[]]) => {
-    const objKeys = Object.keys(_obj);
-    objKeys.forEach((key: string) => {
-      const data = _obj[key];
-      if (typeof data === 'object') {
-        const newPaths = paths.map((path) => [...path, key]);
-        // If an object is marked with additionalProperties, all its keys are valid
-        if (data[RJSF_ADDITIONAL_PROPERTIES_FLAG] && data[NAME_KEY] !== '') {
-          acc.push(data[NAME_KEY]);
-        } else {
-          getAllPaths(data, acc, newPaths);
-        }
-      } else if (key === NAME_KEY && data !== '') {
-        paths.forEach((path) => {
-          const formValue = getByPath(formData, path);
-          const isLeaf = objKeys.length === 1;
-          // adds path to fieldNames if it points to a value or an empty object/array which is not a leaf
-          if (
-            formValueHasData(formValue, isLeaf) ||
-            (Array.isArray(formValue) && formValue.every((val: unknown) => formValueHasData(val, isLeaf)))
-          ) {
-            acc.push(path);
-          }
-        });
-      }
-    });
-    return acc;
-  };
-
-  return getAllPaths(pathSchema);
-}
 
 /** Returns true when a form value is considered empty: null/undefined/'', an empty array, or a plain
  * object whose every own value is itself empty (recursive). Scalars like `0` and `false` are not empty.

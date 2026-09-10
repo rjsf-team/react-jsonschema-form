@@ -232,7 +232,7 @@ describe('Form omitExtraData and liveOmit', () => {
       foo: 'bar',
     };
     const omitExtraData = true;
-    const liveOmit = true;
+    const liveOmit = 'onChange';
     const ref = createRef<Form>();
 
     const { node } = createFormComponent({
@@ -243,7 +243,7 @@ describe('Form omitExtraData and liveOmit', () => {
       liveOmit,
     });
 
-    const theSpy = vi.spyOn(ref.current!, 'omitExtraData').mockReturnValue({ foo: '' });
+    const theSpy = vi.spyOn(ref.current!.state.schemaUtils, 'omitExtraData').mockReturnValue({ foo: '' });
 
     await user.clear(node.querySelector('[type=text]')!);
     await user.type(node.querySelector('[type=text]')!, 'new');
@@ -272,7 +272,7 @@ describe('Form omitExtraData and liveOmit', () => {
       omitExtraData,
     });
 
-    const theSpy = vi.spyOn(ref.current!, 'omitExtraData').mockReturnValue({ foo: '' });
+    const theSpy = vi.spyOn(ref.current!.state.schemaUtils, 'omitExtraData').mockReturnValue({ foo: '' });
 
     await user.clear(node.querySelector('[type=text]')!);
     await user.type(node.querySelector('[type=text]')!, 'new');
@@ -280,9 +280,9 @@ describe('Form omitExtraData and liveOmit', () => {
     expect(theSpy).not.toHaveBeenCalled();
   });
 
-  it('should not omit data on change with omitExtraData=false and liveOmit=false', async () => {
+  it('should not omit data on change with omitExtraData=false and liveOmit unset', async () => {
     const omitExtraData = false;
-    const liveOmit = false;
+    const liveOmit = undefined;
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -310,9 +310,9 @@ describe('Form omitExtraData and liveOmit', () => {
     );
   });
 
-  it('should not omit data on change with omitExtraData=true and liveOmit=false', async () => {
+  it('should not omit data on change with omitExtraData=true and liveOmit unset', async () => {
     const omitExtraData = true;
-    const liveOmit = false;
+    const liveOmit = undefined;
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -336,7 +336,7 @@ describe('Form omitExtraData and liveOmit', () => {
 
   it('should not omit data on change with omitExtraData=false and liveOmit=true', async () => {
     const omitExtraData = false;
-    const liveOmit = true;
+    const liveOmit = 'onChange';
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -360,7 +360,7 @@ describe('Form omitExtraData and liveOmit', () => {
 
   it('should omit data on change with omitExtraData=true and liveOmit=true', async () => {
     const omitExtraData = true;
-    const liveOmit = true;
+    const liveOmit = 'onChange';
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -384,7 +384,7 @@ describe('Form omitExtraData and liveOmit', () => {
 
   it('should not omit additionalProperties on change with omitExtraData=true and liveOmit=true', async () => {
     const omitExtraData = true;
-    const liveOmit = true;
+    const liveOmit = 'onChange';
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -422,7 +422,7 @@ describe('Form omitExtraData and liveOmit', () => {
       },
       formData: { nested: { key1: 'value' } },
       omitExtraData: true,
-      liveOmit: true,
+      liveOmit: 'onChange',
     });
 
     const textNode = node.querySelector<HTMLInputElement>('#root_nested_key1-key')!;
@@ -458,7 +458,7 @@ describe('Form omitExtraData and liveOmit', () => {
       },
       formData: { lorum: '' },
       omitExtraData: true,
-      liveOmit: true,
+      liveOmit: 'onChange',
     });
 
     const textNode = node.querySelector('#root_lorem')!;
@@ -492,7 +492,7 @@ describe('Form omitExtraData and liveOmit', () => {
       },
       formData: { ipsum: '' },
       omitExtraData: true,
-      liveOmit: true,
+      liveOmit: 'onChange',
     });
 
     const textNode = node.querySelector('#root_ipsum')!;
@@ -532,7 +532,7 @@ describe('Form omitExtraData and liveOmit', () => {
       schema,
       formData,
       omitExtraData: true,
-      liveOmit: true,
+      liveOmit: 'onChange',
     });
 
     const otherPropInput = node.querySelector<HTMLInputElement>('#root_nested_otherProperty')!;
@@ -552,7 +552,7 @@ describe('Form omitExtraData and liveOmit', () => {
     );
   });
 
-  it('should keep schema errors when extraErrors set after submit and liveValidate is false', async () => {
+  it('should keep schema errors when extraErrors set after submit and liveValidate is unset', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -574,7 +574,7 @@ describe('Form omitExtraData and liveOmit', () => {
       ref: formRef,
       schema,
       onSubmit,
-      liveValidate: false,
+      liveValidate: undefined,
     };
     const { rerender, node } = createFormComponent(props);
     // forceFireEvent=true: clicking the submit button focuses it, blurring the
@@ -616,7 +616,7 @@ describe('omitExtraData on submit', () => {
       omitExtraData,
     });
 
-    const theSpy = vi.spyOn(ref.current!, 'omitExtraData').mockReturnValue({ foo: '' });
+    const theSpy = vi.spyOn(ref.current!.state.schemaUtils, 'omitExtraData').mockReturnValue({ foo: '' });
 
     await submitForm(node, user);
 
@@ -739,7 +739,7 @@ describe('omitExtraData prunes empty optional objects', () => {
       schema,
       formData: { name: 'Alice', address: { street: 'value' } },
       omitExtraData: true,
-      liveOmit: true,
+      liveOmit: 'onChange',
     });
 
     await user.clear(node.querySelector('#root_address_street')!);
@@ -852,7 +852,7 @@ describe('Async errors', () => {
     expect(formRef.current!.state.errors).toEqual([]);
   });
 
-  it('should reset when props extraErrors changes and liveValidate is false', () => {
+  it('should reset when props extraErrors changes and liveValidate is unset', () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -870,7 +870,7 @@ describe('Async errors', () => {
     const props: NoValFormProps = {
       ref: formRef,
       schema,
-      liveValidate: false,
+      liveValidate: undefined,
     };
     const { rerender } = createFormComponent({
       ...props,
@@ -1498,7 +1498,7 @@ describe('setFieldValue()', () => {
       },
       formData: {},
       ref,
-      liveValidate: true,
+      liveValidate: 'onChange',
     };
     const { onChange, node } = createFormComponent(props);
     // trigger programmatic validation and make sure an error appears.
@@ -1552,7 +1552,7 @@ describe('setFieldValue()', () => {
       },
       formData: {},
       ref,
-      liveValidate: true,
+      liveValidate: 'onChange',
     };
     const { onChange, node } = createFormComponent(props);
     // trigger programmatic validation and make sure an error appears.

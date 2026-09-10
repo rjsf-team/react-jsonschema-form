@@ -232,7 +232,7 @@ const validator = createPrecompiledValidator(precompiledValidator, schema);
 
 By default, form data are only validated when the form is submitted or when a new `formData` prop is passed to the `Form` component.
 
-You can enable live form data validation by passing a `liveValidate` prop to the `Form` component, and set it to `true`. Then, every time a value changes within the form data tree (e.g. the user entering a character in a field), a validation operation is performed, and the validation results are reflected into the form state.
+You can enable live form data validation by passing a `liveValidate` prop to the `Form` component, and set it to `'onChange'`. Then, every time a value changes within the form data tree (e.g. the user entering a character in a field), a validation operation is performed, and the validation results are reflected into the form state.
 
 Be warned that this is an expensive strategy, with possibly strong impact on performances.
 
@@ -248,7 +248,10 @@ const schema: RJSFSchema = {
 
 const formData = 'a';
 
-render(<Form schema={schema} formData={formData} validator={validator} liveValidate />, document.getElementById('app'));
+render(
+  <Form schema={schema} formData={formData} validator={validator} liveValidate='onChange' />,
+  document.getElementById('app'),
+);
 ```
 
 ## Validate form programmatically
@@ -424,7 +427,7 @@ render((
         validator={validator}
         showErrorList='top'
         formData={""}
-        liveValidate
+        liveValidate='onChange'
         templates: {{ ErrorListTemplate }} />
 ), document.getElementById("app"));
 ```

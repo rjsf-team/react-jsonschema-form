@@ -25,6 +25,13 @@ export interface PlaygroundProps {
   validators: Record<string, ValidatorType>;
 }
 
+/** Maps the `liveSettings` drawer's `'off' | 'onChange' | 'onBlur'` radio value onto the
+ * `liveValidate`/`liveOmit` prop shape `Form` actually accepts, since `Form` has no `'off'` value of its own.
+ */
+function toLiveSetting(value: unknown): 'onChange' | 'onBlur' | undefined {
+  return value === 'onChange' || value === 'onBlur' ? value : undefined;
+}
+
 export default function Playground({ themes, validators }: PlaygroundProps) {
   const [loaded, setLoaded] = useState(false);
   const [schema, setSchema] = useState<RJSFSchema>(samples.Simple.schema);
@@ -47,7 +54,8 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     noHtml5Validate: false,
     readonly: false,
     omitExtraData: false,
-    liveOmit: false,
+    liveOmit: 'off',
+    liveValidate: 'off',
     experimental_componentUpdateStrategy: 'customDeep',
     experimental_defaultFormStateBehavior: {
       arrayMinItems: 'populate',
@@ -129,10 +137,16 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       if (loadedLiveSettings?.liveValidate === true) {
         // Convert v5 true value to `onChange`
         loadedLiveSettings.liveValidate = 'onChange';
+      } else if (loadedLiveSettings?.liveValidate === false) {
+        // Convert v5/v6 false value to `off`
+        loadedLiveSettings.liveValidate = 'off';
       }
       if (loadedLiveSettings?.liveOmit === true) {
         // Convert v5 true value to `onChange`
         loadedLiveSettings.liveOmit = 'onChange';
+      } else if (loadedLiveSettings?.liveOmit === false) {
+        // Convert v5/v6 false value to `off`
+        loadedLiveSettings.liveOmit = 'off';
       }
       setLiveSettings(loadedLiveSettings);
       if ('validator' in data && theValidator !== undefined) {
@@ -237,6 +251,8 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
               <FormComponent
                 {...otherFormProps}
                 {...liveSettings}
+                liveValidate={toLiveSetting(liveSettings.liveValidate)}
+                liveOmit={toLiveSetting(liveSettings.liveOmit)}
                 extraErrors={extraErrors}
                 schema={schema}
                 uiSchema={uiSchema}

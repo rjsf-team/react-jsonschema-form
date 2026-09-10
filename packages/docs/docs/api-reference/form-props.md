@@ -287,7 +287,7 @@ NOTE: If there is a default for a field and the `formData` is unspecified, the d
 Optional enumerated flag controlling how defaults defined on multiple levels are merged together for overlapping properties, defaulting to `descendantWins`.
 
 | Flag Value       | Description                                                                                       |
-| -----------------| --------------------------------------------------------------------------------------------------|
+| ---------------- | ------------------------------------------------------------------------------------------------- |
 | `descendantWins` | The innermost (descendant) default value definition takes precedence over its ancestor's defaults |
 | `ancestorWins`   | The outermost (ancestor) default value definition takes precedence over any descendant's defaults |
 
@@ -325,7 +325,6 @@ render(
   document.getElementById('app'),
 );
 ```
-
 
 ## experimental_customMergeAllOf
 
@@ -533,24 +532,18 @@ You can also create a custom generator by implementing the `NameGeneratorFunctio
 Flag that describes when live omit will be performed. Live omit happens only when `omitExtraData` is also set to
 to `true` and the form's data is updated by the user.
 
-If no value (or `false`) is provided, then live omit will not happen. If `true` or `onChange` is provided for
-the flag, then live omit will be performed after processing of all pending changes has completed. If `onBlur`
-is provided, then live omit will be performed when a field that was updated is blurred (as a performance
-optimization).
-
-> NOTE: The `boolean` options for this flag is deprecated and will be removed in a future major release
+If no value is provided, then live omit will not happen. If `onChange` is provided for the flag, then live omit
+will be performed after processing of all pending changes has completed. If `onBlur` is provided, then live omit
+will be performed when a field that was updated is blurred (as a performance optimization).
 
 ## liveValidate
 
 Flag that describes when live validation will be performed. Live validation means that the form will perform
 validation and show any validation errors whenever the form data is updated, rather than just on submit.
 
-If no value (or `false`) is provided, then live validation will not happen. If `true` or `onChange` is provided for
-the flag, then live validation will be performed after processing of all pending changes has completed. If `onBlur`
-is provided, then live validation will be performed when a field that was updated is blurred (as a performance
-optimization).
-
-> NOTE: The `boolean` options for this flag is deprecated and will be removed in a future major release
+If no value is provided, then live validation will not happen. If `onChange` is provided for the flag, then live
+validation will be performed after processing of all pending changes has completed. If `onBlur` is provided, then
+live validation will be performed when a field that was updated is blurred (as a performance optimization).
 
 ## method
 
@@ -626,14 +619,6 @@ render(<Form schema={schema} validator={validator} onSubmit={onSubmit} />, docum
 ```
 
 > Note: If there are fields in the `formData` that are not represented in the schema, they will be retained by default. If you would like to remove those extra values on form submission, you may need to set the `omitExtraData` and/or `liveOmit` props.
-
-## removeEmptyOptionalObjects
-
-> **Deprecated**: This prop no longer has any effect and will be removed in a future release. The behavior of pruning optional empty objects is now built into [`omitExtraData`](#omitextradata) — enable that prop instead.
-
-When a JSON Schema has a required field inside an optional object, any user interaction with that optional object "activates" it. Even if the user clears all the fields within that object, the empty object property (e.g., `{ test: {} }` or `{ test: { field1: "" } }`) remains in the `formData`. Because the object contains required fields that are now empty, the form becomes unsubmittable.
-
-Previously, setting `removeEmptyOptionalObjects` to `true` caused the form to recursively prune these optional empty objects from the `formData` during `onChange`, `onBlur`, and `onSubmit`. This pruning is now performed automatically by `omitExtraData`.
 
 ## schema
 
