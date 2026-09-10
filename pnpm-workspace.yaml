@@ -2,13 +2,6 @@ packages:
   - 'packages/*'
 
 overrides:
-  # Pins every peer-resolved react/react-dom to a single version, so pnpm's peer resolution
-  # can't fork the graph into multiple react copies paired with mismatched react-dom copies
-  # (verified: without this, `pnpm why react` shows both react@19.2.8 and react@19.3.0
-  # installed, with react-dom@19.3.0 paired against react@19.2.8 in part of the tree — hooks
-  # break across that boundary since react-dom must share the exact react module instance)
-  'react': ^19.3.0
-  'react-dom': ^19.3.0
   'sockjs>uuid': ^14.0.0
   # Fixes security issues in form-data by overriding to safe version
   'form-data': ^4.0.6
