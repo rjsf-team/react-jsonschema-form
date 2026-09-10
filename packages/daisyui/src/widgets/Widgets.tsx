@@ -52,4 +52,4 @@ export function generateWidgets<
   };
 }
 
-export default generateWidgets;
+export default generateWidgets();

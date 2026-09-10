@@ -8,10 +8,7 @@
   "description": "ata-validator based validator for @rjsf/core",
   "exports": {
     ".": "./lib/index.js",
-    "./compileSchemaValidators": "./lib/compileSchemaValidators.js",
-    "./lib/compileSchemaValidators": "./lib/compileSchemaValidators.js",
-    "./lib": "./lib/index.js",
-    "./lib/*.js": "./lib/*.js"
+    "./compileSchemaValidators": "./lib/compileSchemaValidators.js"
   },
   "files": [
     "lib",

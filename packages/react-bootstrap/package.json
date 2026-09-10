@@ -7,9 +7,7 @@
   "sideEffects": false,
   "description": "React Bootstrap theme, fields and widgets for react-jsonschema-form, powered by react-bootstrap",
   "exports": {
-    ".": "./lib/index.js",
-    "./lib": "./lib/index.js",
-    "./lib/*.js": "./lib/*.js"
+    ".": "./lib/index.js"
   },
   "files": [
     "lib",

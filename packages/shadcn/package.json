@@ -7,9 +7,7 @@
   "sideEffects": false,
   "description": "shadcn theme, fields and widgets for react-jsonschema-form",
   "exports": {
-    ".": "./lib/index.js",
-    "./lib": "./lib/index.js",
-    "./lib/*.js": "./lib/*.js"
+    ".": "./lib/index.js"
   },
   "files": [
     "lib",

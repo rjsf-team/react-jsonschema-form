@@ -3,8 +3,8 @@ import { defineConfig } from 'tsdown';
 /**
  * Shared build config for every @rjsf package, run from the package directory
  * via `tsdown -c ../../tsdown.base.mts`. It emits per-file ESM and
- * declarations into lib/, mirroring src/ one-to-one so the `./lib/*.js`
- * deep-import exports keep resolving. It does not typecheck; that is the
+ * declarations into lib/, mirroring src/ one-to-one, so a bundler only pulls in
+ * the modules an import actually reaches. It does not typecheck; that is the
  * separate root `tsc --build`.
  */
 export default defineConfig({

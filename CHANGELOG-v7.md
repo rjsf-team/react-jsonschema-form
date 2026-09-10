@@ -33,6 +33,11 @@ should change the heading of the (upcoming) version to include a major version b
 - **BREAKING CHANGE** `withTheme()` now returns a plain function component instead of a `forwardRef`-wrapped one, and `FormProps['onSubmit']`'s event parameter is now typed as `SubmitEvent<any>` instead of the deprecated `FormEvent<any>`
 - **BREAKING CHANGE:** Removed deprecated `Form` APIs: the `getUsedFormData()` and `getFieldNames()` instance methods (no direct replacement), the `omitExtraData()` instance method (use `SchemaUtils.omitExtraData(schema, formData)` instead), the `removeEmptyOptionalObjects` prop (already a no-op; use `omitExtraData`, which now prunes empty optional objects itself), and `boolean` values for the `liveValidate`/`liveOmit` props (use `'onChange'` in place of `true`, or omit the prop in place of `false`). Also removed the `ui:rootFieldId` uiSchema directive; use the `Form.idPrefix` prop instead
 
+## @rjsf/daisyui
+
+- **BREAKING CHANGE:** The `Widgets` export is the generated widgets object, like every other theme, rather than an alias of `generateWidgets` ([#5265](https://github.com/rjsf-team/react-jsonschema-form/pull/5265))
+- Removed the unreferenced `src/styles.css` and `tailwind.config.js`, and with them the `tailwindcss` dependency and `daisyui` devDependency only they used; the README's Tailwind setup is unchanged ([#5265](https://github.com/rjsf-team/react-jsonschema-form/pull/5265))
+
 ## @rjsf/mantine
 
 - **BREAKING CHANGE** Dropped support for `mantine` version 8; upgraded to `mantine` version 9, which requires React 19.2+. The `react` peer dependency floor is `>=19.2`, matching what `@mantine/core`/`@mantine/hooks` 9.6.1 themselves require (their `useEffectEvent` usage needs it)
@@ -82,3 +87,4 @@ should change the heading of the (upcoming) version to include a major version b
 - The playground's `FormComponent` is now derived with `useMemo(() => withTheme(themes[theme].theme), [themes, theme])` instead of being kept in its own `useState` and manually synced with the `theme` state on every selection. Removes the duplicated state, the `react/hook-use-state` lint suppression, and structurally rules out the `useState(withTheme(...))` crash class fixed above
 - Bumped the root `@types/react` floor to `^19.2.18`: `SubmitEvent`, now part of the public `FormProps['onSubmit']` type, was only added to `@types/react` in that release — every earlier 19.2.x patch (verified 19.2.0 through 19.2.17) lacks it and fails to compile against `@rjsf/core`'s published types
 - Removed a dead assertion in `Form.props.test.tsx` that waited for React 18's "Function components cannot be given refs" warning; verified via a standalone repro that React 19 emits no such warning for this case, so the branch could never run. The two sibling React-18-only console assertions in this file were already removed
+- **BREAKING CHANGE** Every package exports only its root (`.`), plus `./compileSchemaValidators` for the validators; the `./lib` and `./lib/*.js` deep-import paths are gone. knip no longer needs the daisyui entry override that the wildcard required ([#5265](https://github.com/rjsf-team/react-jsonschema-form/pull/5265))
