@@ -523,8 +523,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               >
                                 <label
                                   cmdk-label=""
-                                  for="radix-:rh:"
-                                  id="radix-:rg:"
+                                  for="radix-_r_h_"
+                                  id="radix-_r_g_"
                                   style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                                 />
                                 <button
@@ -879,8 +879,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <label
                         cmdk-label=""
-                        for="radix-:rn:"
-                        id="radix-:rm:"
+                        for="radix-_r_n_"
+                        id="radix-_r_m_"
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
@@ -1458,8 +1458,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               >
                                 <label
                                   cmdk-label=""
-                                  for="radix-:rq:"
-                                  id="radix-:rp:"
+                                  for="radix-_r_q_"
+                                  id="radix-_r_p_"
                                   style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                                 />
                                 <button
@@ -1846,8 +1846,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <label
                         cmdk-label=""
-                        for="radix-:r10:"
-                        id="radix-:rv:"
+                        for="radix-_r_10_"
+                        id="radix-_r_v_"
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
@@ -2425,8 +2425,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               >
                                 <label
                                   cmdk-label=""
-                                  for="radix-:r13:"
-                                  id="radix-:r12:"
+                                  for="radix-_r_13_"
+                                  id="radix-_r_12_"
                                   style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                                 />
                                 <button
@@ -3227,8 +3227,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               >
                                 <label
                                   cmdk-label=""
-                                  for="radix-:r8:"
-                                  id="radix-:r7:"
+                                  for="radix-_r_8_"
+                                  id="radix-_r_7_"
                                   style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                                 />
                                 <button
@@ -3583,8 +3583,8 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <label
                         cmdk-label=""
-                        for="radix-:re:"
-                        id="radix-:rd:"
+                        for="radix-_r_e_"
+                        id="radix-_r_d_"
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
@@ -4132,8 +4132,8 @@ exports[`Three even column grid > renders person and address in three columns, n
                   >
                     <label
                       cmdk-label=""
-                      for="radix-:r5:"
-                      id="radix-:r4:"
+                      for="radix-_r_5_"
+                      id="radix-_r_4_"
                       style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                     />
                     <button
@@ -4683,8 +4683,8 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   >
                     <label
                       cmdk-label=""
-                      for="radix-:r2:"
-                      id="radix-:r1:"
+                      for="radix-_r_2_"
+                      id="radix-_r_1_"
                       style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                     />
                     <button

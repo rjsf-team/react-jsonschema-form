@@ -174,7 +174,7 @@ interface DemoFrameProps extends FrameComponentProps {
   /** override children to be ReactElement to avoid Typescript issue. In this case we don't need to worry about
    * children being of the other valid ReactNode types, undefined and string as it always contains an RJSF `Form`
    */
-  children: ReactElement;
+  children: ReactElement<any>;
   subtheme: string;
 }
 
@@ -186,7 +186,7 @@ export default function DemoFrame(props: DemoFrameProps) {
   const [container, setContainer] = useState();
   const [window, setWindow] = useState();
 
-  const instanceRef = useRef<any>();
+  const instanceRef = useRef<any>(undefined);
 
   const onContentDidMount = useCallback(() => {
     setReady(true);

@@ -1,16 +1,17 @@
-import { forwardRef, useEffect, useRef } from 'react';
+import type { ComponentProps } from 'react';
+import { useEffect, useRef } from 'react';
 import { NumberInput as ChakraNumberInput } from '@chakra-ui/react';
 
-export type NumberInputProps = ChakraNumberInput.RootProps;
+export type NumberInputProps = ComponentProps<typeof ChakraNumberInput.Root>;
 
 /**
  * NumberInput component that allows users to input numeric values.
  *
- * @param {NumberInputProps} props - The properties for the number input component.
- * @param {ReactNode} [props.children] - The content to display inside the number input.
- * @returns {JSX.Element} The rendered number input component.
+ * @param props - The properties for the number input component.
+ * @param [props.children] - The content to display inside the number input.
+ * @returns The rendered number input component.
  */
-export const NumberInputRoot = forwardRef<HTMLDivElement, NumberInputProps>((props, ref) => {
+export const NumberInputRoot = ({ ref, ...props }: NumberInputProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -28,4 +29,4 @@ export const NumberInputRoot = forwardRef<HTMLDivElement, NumberInputProps>((pro
       <ChakraNumberInput.Input ref={inputRef} />
     </ChakraNumberInput.Root>
   );
-});
+};

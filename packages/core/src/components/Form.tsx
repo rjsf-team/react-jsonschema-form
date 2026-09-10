@@ -1,4 +1,4 @@
-import type { ElementType, FormEvent, ReactNode, Ref, RefObject } from 'react';
+import type { ElementType, ReactNode, Ref, RefObject, SubmitEvent } from 'react';
 import { Component, createRef } from 'react';
 import type {
   CustomValidator,
@@ -131,7 +131,7 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * and its data are valid. It will be passed a result object having a `formData` attribute, which is the valid form
    * data you're usually after. The original event will also be passed as a second parameter
    */
-  onSubmit?: (data: IChangeEvent<T, S, F>, event: FormEvent<any>) => void;
+  onSubmit?: (data: IChangeEvent<T, S, F>, event: SubmitEvent<any>) => void;
   /** Sometimes you may want to trigger events or modify external state when a field has been touched, so you can pass
    * an `onBlur` handler, which will receive the id of the input that was blurred and the field value
    */
@@ -1245,7 +1245,7 @@ export default class Form<
    *
    * @param event - The submit HTML form event
    */
-  onSubmit = (event: FormEvent<any>) => {
+  onSubmit = (event: SubmitEvent<any>) => {
     event.preventDefault();
     if (event.target !== event.currentTarget) {
       return;

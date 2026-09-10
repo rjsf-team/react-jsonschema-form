@@ -39,7 +39,7 @@
     "@rjsf/utils": "workspace:^",
     "primeicons": ">=6.0.0",
     "primereact": ">=8.0.0",
-    "react": ">=18"
+    "react": ">=19"
   },
   "devDependencies": {
     "@rjsf/core": "workspace:^",

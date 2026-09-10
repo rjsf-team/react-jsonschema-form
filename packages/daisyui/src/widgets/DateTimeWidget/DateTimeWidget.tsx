@@ -45,7 +45,7 @@ function useDatePickerState(initialDate?: Date) {
  * @param ref - React ref to the element to monitor
  * @param callback - Function to call when a click outside is detected
  */
-function useClickOutside(ref: RefObject<HTMLDivElement>, callback: () => void) {
+function useClickOutside(ref: RefObject<HTMLDivElement | null>, callback: () => void) {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {

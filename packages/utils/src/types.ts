@@ -871,9 +871,13 @@ export type ArrayFieldTemplateProps<
 };
 
 /** The properties of each element in the ObjectFieldTemplateProps.properties array */
-export interface ObjectFieldTemplatePropertyType {
+export interface ObjectFieldTemplatePropertyType<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> {
   /** The html for the property's content */
-  content: ReactElement;
+  content: ReactElement<Pick<FieldProps<T, S, F>, 'schema' | 'uiSchema'>>;
   /** A string representing the property name */
   name: string;
   /** A boolean value stating if the object property is disabled */
@@ -893,7 +897,7 @@ export type ObjectFieldTemplateProps<
   /** A string value containing the description for the object */
   description?: string | ReactElement;
   /** An array of objects representing the properties in the object */
-  properties: ObjectFieldTemplatePropertyType[];
+  properties: ObjectFieldTemplatePropertyType<T, S, F>[];
   /** Callback to use in order to add an new additionalProperty to the object field  (to be used with
    * additionalProperties and patternProperties)
    */

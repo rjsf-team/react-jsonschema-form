@@ -41,7 +41,7 @@
     "@rjsf/core": "workspace:^",
     "@rjsf/utils": "workspace:^",
     "chakra-react-select": ">=6",
-    "react": ">=18"
+    "react": ">=19"
   },
   "publishConfig": {
     "access": "public"

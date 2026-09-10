@@ -18,7 +18,7 @@ const TWO_BUTTONS = (
   </>
 );
 const user = userEvent.setup();
-const renderErrorSuppression = setupConsoleErrorSuppression();
+setupConsoleErrorSuppression();
 
 describeRepeated('Form common: rendering', (createFormComponent) => {
   describe('Empty schema', () => {
@@ -26,9 +26,6 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(() =>
         createComponent(Form, { ref: createRef(), schema: {}, validator: undefined as unknown as ValidatorType }),
       ).toThrow('A validator is required for Form functionality to work');
-      expect(renderErrorSuppression.consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('The above error occurred in the <Form> component'),
-      );
     });
 
     it('should render a form tag', () => {

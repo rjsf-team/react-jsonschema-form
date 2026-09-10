@@ -632,6 +632,7 @@ type LayoutGridFieldComponentProps<
  *
  * @returns - One of `LayoutMultiSchemaField`, `SchemaField`, a custom render component or null, depending
  */
+// oxlint-disable-next-line typescript/promise-function-async -- ReactNode's type includes Promise for async components; this component is always synchronous
 function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: LayoutGridFieldComponentProps<T, S, F>,
 ) {

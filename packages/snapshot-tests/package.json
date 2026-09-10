@@ -34,7 +34,7 @@
     "@rjsf/utils": "workspace:^",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
-    "react": ">=18"
+    "react": ">=19"
   },
   "devDependencies": {
     "@rjsf/core": "workspace:^",

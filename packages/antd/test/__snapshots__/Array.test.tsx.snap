@@ -2839,7 +2839,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                                             name="root[2]"
                                             required=""
                                             type="checkbox"
-                                            value=""
                                           />
                                         </span>
                                       </label>

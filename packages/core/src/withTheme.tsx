@@ -1,5 +1,4 @@
-import type { ComponentType, ForwardedRef } from 'react';
-import { forwardRef } from 'react';
+import type { ComponentType } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 import type { FormProps } from './components/Form.tsx';
@@ -13,37 +12,43 @@ export type ThemeProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
   'fields' | 'templates' | 'widgets' | '_internalFormWrapper'
 >;
 
-/** A Higher-Order component that creates a wrapper around a `Form` with the overrides from the `WithThemeProps` */
+/** A Higher-Order component that creates a wrapper around a `Form` with the overrides from the `WithThemeProps`.
+ *
+ * Returns a plain function component, not a `forwardRef`-wrapped one. Don't pass the return value directly to
+ * `useState()` or a state setter (e.g. `useState(withTheme(theme))`, `setForm(withTheme(theme))`) — React treats a
+ * bare function passed there as a lazy initializer/updater and calls it immediately with no arguments, which crashes.
+ * Wrap it in a lazy initializer instead: `useState(() => withTheme(theme))`.
+ */
 export default function withTheme<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   themeProps: ThemeProps<T, S, F>,
 ): ComponentType<FormProps<T, S, F>> {
-  // @ts-expect-error TS2322 because the latest types complain about LegacyRef's string form not working with Form
-  return forwardRef<Form<T, S, F>, FormProps<T, S, F>>(
-    (
-      { fields: propFields, widgets: propWidgets, templates: propTemplates, ...directProps }: FormProps<T, S, F>,
-      ref: ForwardedRef<Form<T, S, F>>,
-    ) => {
-      const fields = { ...themeProps?.fields, ...propFields };
-      const widgets = { ...themeProps?.widgets, ...propWidgets };
-      const templates = {
-        ...themeProps?.templates,
-        ...propTemplates,
-        ButtonTemplates: {
-          ...themeProps?.templates?.ButtonTemplates,
-          ...propTemplates?.ButtonTemplates,
-        },
-      };
+  return function ThemedForm({
+    fields: propFields,
+    widgets: propWidgets,
+    templates: propTemplates,
+    ref,
+    ...directProps
+  }: FormProps<T, S, F>) {
+    const fields = { ...themeProps?.fields, ...propFields };
+    const widgets = { ...themeProps?.widgets, ...propWidgets };
+    const templates = {
+      ...themeProps?.templates,
+      ...propTemplates,
+      ButtonTemplates: {
+        ...themeProps?.templates?.ButtonTemplates,
+        ...propTemplates?.ButtonTemplates,
+      },
+    };
 
-      return (
-        <Form<T, S, F>
-          {...themeProps}
-          {...directProps}
-          fields={fields}
-          widgets={widgets}
-          templates={templates}
-          ref={ref}
-        />
-      );
-    },
-  );
+    return (
+      <Form<T, S, F>
+        {...themeProps}
+        {...directProps}
+        fields={fields}
+        widgets={widgets}
+        templates={templates}
+        ref={ref}
+      />
+    );
+  };
 }

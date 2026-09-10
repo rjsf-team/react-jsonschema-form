@@ -16,7 +16,7 @@ import {
 } from './testUtils.tsx';
 
 const user = userEvent.setup();
-const renderErrorSuppression = setupConsoleErrorSuppression();
+setupConsoleErrorSuppression();
 
 describeRepeated('Form common: form props and updates', (createFormComponent) => {
   describe('Schema and formData updates', () => {
@@ -385,14 +385,6 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
       const Component = (props: any) => <div {...props} id='test' />;
       const { node } = createFormComponent({ schema: {}, tagName: Component });
       expect(node.id).toEqual('test');
-      // React deduplicates this warning per component name — only fires on the first test iteration
-      if (renderErrorSuppression.consoleSpy.mock.calls.length > 0) {
-        expect(renderErrorSuppression.consoleSpy).toHaveBeenCalledWith(
-          expect.stringContaining('Function components cannot be given refs'),
-          expect.any(String),
-          expect.any(String),
-        );
-      }
     });
   });
 

@@ -43,7 +43,7 @@
   },
   "peerDependencies": {
     "@rjsf/utils": "workspace:^",
-    "react": ">=18"
+    "react": ">=19"
   },
   "dependencies": {
     "markdown-to-jsx": "^9.8.2"

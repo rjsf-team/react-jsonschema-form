@@ -1,7 +1,6 @@
 'use client';
 
-import type { ComponentProps, ComponentPropsWithoutRef, ElementRef } from 'react';
-import { forwardRef } from 'react';
+import type { ComponentProps } from 'react';
 import { Command as CommandPrimitive } from 'cmdk';
 import { Search } from 'lucide-react';
 
@@ -14,18 +13,16 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
  * @returns A command menu component
  */
 
-const Command = forwardRef<ElementRef<typeof CommandPrimitive>, ComponentPropsWithoutRef<typeof CommandPrimitive>>(
-  ({ className, ...props }, ref) => (
-    <CommandPrimitive
-      ref={ref}
-      data-slot='command'
-      className={cn(
-        'bg-popover text-popover-foreground flex h-full w-full flex-col overflow-hidden rounded-md',
-        className,
-      )}
-      {...props}
-    />
-  ),
+const Command = ({ className, ref, ...props }: ComponentProps<typeof CommandPrimitive>) => (
+  <CommandPrimitive
+    ref={ref}
+    data-slot='command'
+    className={cn(
+      'bg-popover text-popover-foreground flex h-full w-full flex-col overflow-hidden rounded-md',
+      className,
+    )}
+    {...props}
+  />
 );
 
 /**
@@ -74,10 +71,7 @@ function CommandDialog({
  * @param props.className - Additional CSS classes to apply
  * @returns A search input component for the command menu
  */
-const CommandInput = forwardRef<
-  ElementRef<typeof CommandPrimitive.Input>,
-  ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
->(({ className, ...props }, ref) => (
+const CommandInput = ({ className, ref, ...props }: ComponentProps<typeof CommandPrimitive.Input>) => (
   <div className='flex items-center border-b px-3' {...{ 'cmdk-input-wrapper': '' }}>
     <Search className='mr-2 h-4 w-4 shrink-0 opacity-50' />
     <CommandPrimitive.Input
@@ -89,7 +83,7 @@ const CommandInput = forwardRef<
       {...props}
     />
   </div>
-));
+);
 
 CommandInput.displayName = CommandPrimitive.Input.displayName;
 

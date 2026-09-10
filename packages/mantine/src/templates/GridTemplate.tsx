@@ -7,7 +7,7 @@ import type { GridTemplateProps } from '@rjsf/utils';
  * @param props - The GridTemplateProps, including the extra props containing the Mantine grid positioning details
  */
 export default function GridTemplate(props: GridTemplateProps) {
-  const { children, column, fluid = true, ...rest } = props;
+  const { children, column, fluid = true, gutter, gap = gutter, ...rest } = props;
 
   if (column) {
     return <Grid.Col {...rest}>{children}</Grid.Col>;
@@ -16,14 +16,16 @@ export default function GridTemplate(props: GridTemplateProps) {
   // Grid with fluid container
   if (fluid) {
     return (
-      <Container p='4' mx={0} w='100%'>
-        <Grid {...rest}>{children}</Grid>
+      <Container fluid p='4' mx={0} w='100%'>
+        <Grid gap={gap} {...rest}>
+          {children}
+        </Grid>
       </Container>
     );
   }
   // Grid without container
   return (
-    <Grid grow {...rest}>
+    <Grid grow gap={gap} {...rest}>
       {children}
     </Grid>
   );

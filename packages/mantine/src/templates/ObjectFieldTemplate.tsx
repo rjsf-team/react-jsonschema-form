@@ -52,7 +52,7 @@ export default function ObjectFieldTemplate<
   const gridVerticalSpacing = uiOptions?.gridVerticalSpacing;
 
   return (
-    <Container id={fieldPathId.$id} p={0}>
+    <Container id={fieldPathId.$id} p={0} fluid>
       {title && (
         <TitleFieldTemplate
           id={titleId(fieldPathId)}
@@ -82,7 +82,7 @@ export default function ObjectFieldTemplate<
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
         {properties
           .filter((e) => !e.hidden)
-          .map((element: ObjectFieldTemplatePropertyType) => (
+          .map((element: ObjectFieldTemplatePropertyType<T, S, F>) => (
             <Box key={element.name}>{element.content}</Box>
           ))}
       </SimpleGrid>

@@ -37,7 +37,7 @@
   "peerDependencies": {
     "@rjsf/core": "workspace:^",
     "@rjsf/utils": "workspace:^",
-    "react": ">=18",
+    "react": ">=19",
     "react-bootstrap": "^2.x"
   },
   "engineStrict": false,

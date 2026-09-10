@@ -29,7 +29,7 @@ function ObjectFieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F
       )}{' '}
       {description}
       <div className='row'>
-        {properties.map((prop: ObjectFieldTemplatePropertyType) => (
+        {properties.map((prop: ObjectFieldTemplatePropertyType<T, S, F>) => (
           <div className='col-lg-1 col-md-2 col-sm-4 col-xs-6' key={prop.content.key}>
             {prop.content}
           </div>

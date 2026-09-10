@@ -356,7 +356,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                                                 id="root_tasks_0_done"
                                                                                 name="root[tasks][0][done]"
                                                                                 type="checkbox"
-                                                                                value=""
                                                                               />
                                                                             </span>
                                                                             <span
@@ -628,7 +627,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                                                 id="root_tasks_1_done"
                                                                                 name="root[tasks][1][done]"
                                                                                 type="checkbox"
-                                                                                value=""
                                                                               />
                                                                             </span>
                                                                             <span
@@ -2400,7 +2398,6 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                                         id="root_active"
                                         name="root[active]"
                                         type="checkbox"
-                                        value=""
                                       />
                                     </span>
                                     <span
@@ -2769,7 +2766,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                                                 id="root_tasks_0_done"
                                                                                 name="root.tasks.0.done"
                                                                                 type="checkbox"
-                                                                                value=""
                                                                               />
                                                                             </span>
                                                                             <span
@@ -3041,7 +3037,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                                                 id="root_tasks_1_done"
                                                                                 name="root.tasks.1.done"
                                                                                 type="checkbox"
-                                                                                value=""
                                                                               />
                                                                             </span>
                                                                             <span
@@ -4509,7 +4504,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                                         id="root_active"
                                         name="root.active"
                                         type="checkbox"
-                                        value=""
                                       />
                                     </span>
                                     <span
@@ -4769,7 +4763,6 @@ exports[`single fields > checkbox field 1`] = `
                       id="root"
                       name="root"
                       type="checkbox"
-                      value=""
                     />
                   </span>
                 </label>
@@ -4826,7 +4819,6 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
                       id="root"
                       name="root"
                       type="checkbox"
-                      value=""
                     />
                   </span>
                   <span
@@ -4901,7 +4893,6 @@ exports[`single fields > checkbox field with label 1`] = `
                       id="root"
                       name="root"
                       type="checkbox"
-                      value=""
                     />
                   </span>
                   <span
@@ -4963,7 +4954,6 @@ exports[`single fields > checkbox field with label and description 1`] = `
                       id="root"
                       name="root"
                       type="checkbox"
-                      value=""
                     />
                   </span>
                   <span
@@ -5038,7 +5028,6 @@ exports[`single fields > checkbox field with label and rich text description 1`]
                       id="root"
                       name="root"
                       type="checkbox"
-                      value=""
                     />
                   </span>
                   <span
@@ -14325,7 +14314,6 @@ exports[`single fields > required checkbox field 1`] = `
                                         name="root_agree"
                                         required=""
                                         type="checkbox"
-                                        value=""
                                       />
                                     </span>
                                     <span
@@ -14427,7 +14415,6 @@ exports[`single fields > required checkbox field, default true 1`] = `
                                         name="root_agree"
                                         required=""
                                         type="checkbox"
-                                        value=""
                                       />
                                     </span>
                                     <span
