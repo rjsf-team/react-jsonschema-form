@@ -16,6 +16,14 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.10.1
+
+## Dev / docs / playground
+
+- Fixed the size-limit report never being posted on a pull request from a fork. The comment workflow resolved the PR from its head sha, which the base repository cannot associate with a fork's commit, so it warned and skipped — leaving a green check and no comment. The measuring job now records the PR number in its artifact, and the comment workflow looks that PR up directly, accepts it only if its head sha matches the run's trusted `workflow_run` head sha, and fails loudly rather than skipping when the PR cannot be found
+- Extended the size-limit checks to cover every released package rather than just `@rjsf/core`, `@rjsf/utils` and `@rjsf/validator-ajv8`. The checks are derived from each package's own `package.json`, so a new package or a dependency change needs no config edit; only the packages that already had budgets enforce one, the rest are measured and reported
+- Moved `size-limit` and its preset out of the root `devDependencies` into their own pnpm project under `.github/size-limit`, so they are installed only by the size-limit workflow
+
 # 6.10.0
 
 ## @rjsf/chakra-ui

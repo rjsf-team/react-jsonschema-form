@@ -22,18 +22,24 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'pnpm'
-          cache-dependency-path: 'pnpm-lock.yaml'
+          cache-dependency-path: |
+            pnpm-lock.yaml
+            .github/size-limit/pnpm-lock.yaml
       - name: Measure PR head
         run: |
-          pnpm install --frozen-lockfile
-          # Only @rjsf/core (and its workspace deps, via nx dependsOn) is built and
-          # measured. Safe to let nx cache: lib/ is a declared build output in
-          # nx.json, so a cache hit restores it to disk.
-          pnpm exec nx run-many --target=build --projects=@rjsf/core
+          # docs and playground have no build:ts and pull in docusaurus and vite;
+          # skipping them is the bulk of the install.
+          pnpm install --frozen-lockfile --filter '!@rjsf/docs' --filter '!@rjsf/playground'
+          pnpm install --frozen-lockfile --dir .github/size-limit --lockfile-dir "$GITHUB_WORKSPACE/.github/size-limit"
+          echo ${{ github.event.pull_request.number }} > "$RUNNER_TEMP/pr_number"
+          # size-limit measures lib/, not the cjs/esm/umd bundles, and only the
+          # released packages declare build:ts. Safe to let nx cache: lib/ is a
+          # declared build:ts output in nx.json, so a hit restores it to disk.
+          pnpm exec nx run-many --target=build:ts --all
           # size-limit exits non-zero when a budget is exceeded but still emits
           # JSON; record the outcome and enforce it at the end so the report
           # comment is produced either way.
-          if pnpm exec size-limit --json > "$RUNNER_TEMP/head.json"; then
+          if pnpm --dir .github/size-limit exec size-limit --json > "$RUNNER_TEMP/head.json"; then
             echo ok > "$RUNNER_TEMP/status"
           else
             echo fail > "$RUNNER_TEMP/status"
@@ -49,10 +55,11 @@ jobs:
           # this one must only touch $RUNNER_TEMP.
           if git fetch --no-tags --depth 1 origin ${{ github.event.pull_request.base.sha }} &&
             git checkout -f ${{ github.event.pull_request.base.sha }} &&
-            [ -f .size-limit.json ] &&
-            pnpm install --frozen-lockfile &&
-            pnpm exec nx run-many --target=build --projects=@rjsf/core; then
-            pnpm exec size-limit --json > "$RUNNER_TEMP/base.json" || echo '[]' > "$RUNNER_TEMP/base.json"
+            [ -f .github/size-limit/.size-limit.js ] &&
+            pnpm install --frozen-lockfile --filter '!@rjsf/docs' --filter '!@rjsf/playground' &&
+            pnpm install --frozen-lockfile --dir .github/size-limit --lockfile-dir "$GITHUB_WORKSPACE/.github/size-limit" &&
+            pnpm exec nx run-many --target=build:ts --all; then
+            pnpm --dir .github/size-limit exec size-limit --json > "$RUNNER_TEMP/base.json" || echo '[]' > "$RUNNER_TEMP/base.json"
           else
             echo '[]' > "$RUNNER_TEMP/base.json"
           fi
@@ -62,5 +69,6 @@ jobs:
           path: |
             ${{ runner.temp }}/head.json
             ${{ runner.temp }}/base.json
+            ${{ runner.temp }}/pr_number
       - name: Enforce limits
         run: test "$(cat "$RUNNER_TEMP/status")" = ok

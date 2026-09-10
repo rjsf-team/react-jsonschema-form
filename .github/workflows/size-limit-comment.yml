@@ -4,7 +4,8 @@
 # write token but only reads size numbers from the uploaded artifact and never
 # executes PR code — the markdown is rendered here, from the trusted checkout.
 # This job never fails on a budget overrun; branch protection must require the
-# "Size limit / size" job from size-limit.yml, not this one.
+# "Size limit / size" job from size-limit.yml, not this one. It does fail when it
+# cannot identify the PR to comment on — a broken handoff, not a size result.
 name: Size limit comment
 on:
   workflow_run:
@@ -14,11 +15,13 @@ permissions:
   contents: read # for the trusted checkout below
   pull-requests: write
   actions: read
-# The list-then-create/update of the sticky comment is a check-then-act race if
-# two runs for the SAME PR overlap (e.g. a double re-run); serialize per PR. A
-# repo-global group would let a burst of PRs cancel each other's pending runs
-# (GitHub keeps at most one pending run per group). No cancel-in-progress so
-# the newest run still lands its update.
+# The list-then-create/update of the sticky comment is a check-then-act race,
+# so serialize per PR branch: two quick pushes to one PR then run in order and
+# the later job's head-sha check sees the moved branch and skips. A repo-global
+# group would let a burst of PRs cancel each other's pending runs (GitHub keeps
+# at most one pending run per group). No cancel-in-progress so the newest run
+# still lands its update. head_repository is null once a fork is deleted; the
+# expression then yields an empty segment rather than failing.
 concurrency:
   group: size-limit-comment-${{ github.event.workflow_run.head_repository.full_name }}-${{ github.event.workflow_run.head_branch }}
 jobs:
@@ -45,19 +48,36 @@ jobs:
           script: |
             const { owner, repo } = context.repo;
             const headSha = context.payload.workflow_run.head_sha;
-            // Derive the PR from trusted API data, not from artifact contents.
-            const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
-              owner, repo, commit_sha: headSha,
-            });
-            const pr = prs.find((p) => p.head.sha === headSha);
+            // The artifact was written by PR code, so its PR number is trusted
+            // only once that PR is confirmed to be at this run's head sha, which
+            // comes from the workflow_run payload that fork code cannot write to.
+            const { existsSync, readFileSync } = require('fs');
+            const prNumber = existsSync('pr_number') ? Number(readFileSync('pr_number', 'utf8').trim()) : NaN;
+            if (!Number.isInteger(prNumber) || prNumber <= 0) {
+              core.setFailed(`Artifact has no PR number for ${headSha} (uploaded by an older size-limit.yml?).`);
+              return;
+            }
+            const pr = await github.rest.pulls.get({ owner, repo, pull_number: prNumber })
+              .then((r) => r.data)
+              .catch((e) => (e.status === 404 ? null : Promise.reject(e)));
             if (!pr) {
-              core.warning('No PR currently at this head SHA; skipping comment.');
+              // A broken handoff. Fail rather than skip, since a missing comment
+              // is indistinguishable from a healthy run.
+              core.setFailed(`No PR #${prNumber} for ${headSha}.`);
+              return;
+            }
+            if (pr.head.sha !== headSha) {
+              // The branch moved on (its own run will post) or the artifact named
+              // a PR it does not belong to.
+              core.info(`Skipping: PR #${prNumber} is at ${pr.head.sha}, not ${headSha}.`);
               return;
             }
             // Render the report with this repo's report.mjs (from the trusted
             // checkout); the artifact contributes only the head/base numbers.
             const { execFileSync } = require('child_process');
-            const body = execFileSync('node', ['.size-limit/report.mjs', '.'], { encoding: 'utf8' });
+            const body = execFileSync('node', ['.github/size-limit/report.mjs', '.', headSha], {
+              encoding: 'utf8',
+            });
             const marker = '<!-- size-limit-report -->';
             const comments = await github.paginate(github.rest.issues.listComments, {
               owner, repo, issue_number: pr.number, per_page: 100,
