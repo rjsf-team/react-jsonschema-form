@@ -19,6 +19,7 @@
     "build-serial": "nx run-many --target=build --parallel=1",
     "start": "echo 'use \"pnpm run build\" from main directory and then \"pnpm start\" in the playground package'",
     "pre-commit:husky": "nx run-many --parallel=1 --target=precommit",
+    "pre-commit:lockfile": "lint-staged",
     "prepare": "is-ci || husky",
     "format": "oxfmt .",
     "format-check": "oxfmt --check .",
@@ -27,6 +28,9 @@
     "update-version-tags": "git tag -f $(node scripts/get-version-tag.cjs) && git push -f origin $(node scripts/get-version-tag.cjs)",
     "nuke-build-env": "rimraf .nx && rimraf pnpm-lock.yaml",
     "sanity-check": "pnpm run lint && pnpm run knip && pnpm run build && pnpm run test"
+  },
+  "lint-staged": {
+    "pnpm-lock.yaml": "sh -c 'pnpm dedupe --check'"
   },
   "license": "Apache-2.0",
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
