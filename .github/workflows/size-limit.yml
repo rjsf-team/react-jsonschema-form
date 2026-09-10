@@ -27,15 +27,14 @@ jobs:
             .github/size-limit/pnpm-lock.yaml
       - name: Measure PR head
         run: |
-          # docs and playground have no build:ts and pull in docusaurus and vite;
+          # docs and playground ship no lib/ and pull in docusaurus and vite;
           # skipping them is the bulk of the install.
           pnpm install --frozen-lockfile --filter '!@rjsf/docs' --filter '!@rjsf/playground'
           pnpm install --frozen-lockfile --dir .github/size-limit --lockfile-dir "$GITHUB_WORKSPACE/.github/size-limit"
           echo ${{ github.event.pull_request.number }} > "$RUNNER_TEMP/pr_number"
-          # size-limit measures lib/, not the cjs/esm/umd bundles, and only the
-          # released packages declare build:ts. Safe to let nx cache: lib/ is a
-          # declared build:ts output in nx.json, so a hit restores it to disk.
-          pnpm exec nx run-many --target=build:ts --all
+          # size-limit measures each package's lib/. Safe to let nx cache: lib/
+          # is a declared build output in nx.json, so a hit restores it to disk.
+          pnpm exec nx run-many --target=build --all
           # size-limit exits non-zero when a budget is exceeded but still emits
           # JSON; record the outcome and enforce it at the end so the report
           # comment is produced either way.
@@ -58,7 +57,7 @@ jobs:
             [ -f .github/size-limit/.size-limit.js ] &&
             pnpm install --frozen-lockfile --filter '!@rjsf/docs' --filter '!@rjsf/playground' &&
             pnpm install --frozen-lockfile --dir .github/size-limit --lockfile-dir "$GITHUB_WORKSPACE/.github/size-limit" &&
-            pnpm exec nx run-many --target=build:ts --all; then
+            pnpm exec nx run-many --target=build --all; then
             pnpm --dir .github/size-limit exec size-limit --json > "$RUNNER_TEMP/base.json" || echo '[]' > "$RUNNER_TEMP/base.json"
           else
             echo '[]' > "$RUNNER_TEMP/base.json"

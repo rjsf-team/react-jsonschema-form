@@ -6,12 +6,6 @@
   },
   "extends": "nx/presets/npm.json",
   "targetDefaults": {
-    "build:ts": {
-      "dependsOn": ["^build:ts"],
-      "cache": true,
-      "//": "the tsc-only lib/ build, measured by size-limit; declaring lib/ as an output means a cache hit restores it to disk, and the tsbuildinfo keeps the next tsc -b incremental",
-      "outputs": ["{projectRoot}/lib", "{projectRoot}/tsconfig.tsbuildinfo"]
-    },
     "build": {
       "dependsOn": ["^build"],
       "cache": true,
