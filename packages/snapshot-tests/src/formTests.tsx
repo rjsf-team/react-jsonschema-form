@@ -1308,4 +1308,15 @@ export function formTests(Form: ComponentType<FormProps>) {
       });
     });
   });
+
+  test('string field with autocapitalize', () => {
+    const schema: RJSFSchema = {
+      type: 'string',
+    };
+    const uiSchema: UiSchema = {
+      'ui:autocapitalize': 'words',
+    };
+    const { asFragment } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
 }

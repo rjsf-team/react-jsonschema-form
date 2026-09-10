@@ -17365,3 +17365,68 @@ exports[`single fields > using custom tagName 1`] = `
   </div>
 </DocumentFragment>
 `;
+
+exports[`string field with autocapitalize 1`] = `
+<DocumentFragment>
+  <style
+    data-mantine-styles="true"
+  >
+    
+
+
+
+
+  </style>
+  <style
+    data-mantine-styles="classes"
+  >
+    @media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}
+  </style>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+        data-size="sm"
+      >
+        <div
+          class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
+          data-size="sm"
+          data-variant="default"
+          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
+        >
+          <input
+            aria-invalid="false"
+            autocapitalize="words"
+            class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
+            data-variant="default"
+            id="root"
+            name="root"
+            placeholder=""
+            type="text"
+          />
+        </div>
+      </div>
+    </div>
+    <button
+      class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
+      data-variant="filled"
+      style="--button-bg: var(--mantine-color-blue-filled); --button-hover: var(--mantine-color-blue-filled-hover); --button-color: var(--mantine-color-white); --button-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+      type="submit"
+    >
+      <span
+        class="m_80f1301b mantine-Button-inner"
+      >
+        <span
+          class="m_811560b9 mantine-Button-label"
+        >
+          Submit
+        </span>
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;

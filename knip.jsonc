@@ -2,9 +2,16 @@
   "$schema": "https://unpkg.com/knip@6/schema-jsonc.json",
   "workspaces": {
     ".": {
-      // .size-limit/report.mjs: invoked with `node` from
+      // .github/size-limit/report.mjs: invoked with `node` from
       // .github/workflows/size-limit-comment.yml. knip cannot follow that.
-      "entry": [".size-limit/report.mjs"],
+      // .github/size-limit/.size-limit.js: loaded by a size-limit binary that is
+      // installed in that directory's own pnpm project, so knip sees neither.
+      "entry": [".github/size-limit/report.mjs", ".github/size-limit/.size-limit.js"],
+      "ignoreBinaries": ["size-limit"],
+      "ignoreDependencies": [
+        // Required for nx publish
+        "@nx/js"
+      ]
     },
     "packages/daisyui": {
       // Every src file is resolvable through the `./lib/*.js` exports wildcard,
