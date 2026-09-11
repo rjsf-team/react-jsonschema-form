@@ -25,6 +25,7 @@ import type {
   NameGeneratorFunction,
 } from '@rjsf/utils';
 import {
+  englishStringTranslator,
   getByPath,
   setByPath,
   toPath,
@@ -54,7 +55,7 @@ import {
   ONE_OF_KEY,
 } from '@rjsf/utils';
 
-import getDefaultRegistry from '../getDefaultRegistry.ts';
+import { generateTheme } from '../Theme.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE, IS_RESET } from './constants.ts';
 
 /** The properties that are passed to the `Form` */
@@ -1241,8 +1242,8 @@ export default class Form<
     schema: S,
     schemaUtils: SchemaUtilsType<T, S, F>,
   ): Registry<T, S, F> {
-    const { translateString: customTranslateString, uiSchema = {} } = props;
-    const { fields, templates, widgets, formContext, translateString } = getDefaultRegistry<T, S, F>();
+    const { translateString = englishStringTranslator, uiSchema = {} } = props;
+    const { fields, templates, widgets } = generateTheme<T, S, F>();
     return {
       fields: { ...fields, ...props.fields },
       templates: {
@@ -1255,9 +1256,10 @@ export default class Form<
       },
       widgets: { ...widgets, ...props.widgets },
       rootSchema: schema,
-      formContext: props.formContext || formContext,
+      // `F` may be narrower than `{}`; an omitted formContext has always defaulted to an empty object regardless
+      formContext: props.formContext ?? ({} as F),
       schemaUtils,
-      translateString: customTranslateString || translateString,
+      translateString,
       globalUiOptions: uiSchema[UI_GLOBAL_OPTIONS_KEY],
       globalFormOptions: Form.getGlobalFormOptions(props),
       uiSchemaDefinitions: uiSchema[UI_DEFINITIONS_KEY] ?? {},

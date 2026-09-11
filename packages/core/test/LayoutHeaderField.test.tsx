@@ -3,7 +3,7 @@ import { ID_KEY, noop, titleId } from '@rjsf/utils';
 import { render, screen, within } from '@testing-library/react';
 
 import LayoutHeaderField from '../src/components/fields/LayoutHeaderField.tsx';
-import templates from '../src/components/templates/index.ts';
+import { generateTemplates } from '../src/components/templates/index.ts';
 
 const TEST_ID = 'test-id';
 const REQUIRED_ID = 'required-id';
@@ -51,7 +51,7 @@ describe('LayoutHeaderField', () => {
       name,
       registry: {
         templates: {
-          ...templates(),
+          ...generateTemplates(),
           TitleFieldTemplate: TestTitleField,
         },
       } as Registry,

@@ -8,28 +8,28 @@ The [types and functions](../api-reference/utility-functions.md) exported by `@r
 - `F extends FormContextType = any`: This represents the type of the `formContext`, extends the `FormContextType` type and defaults to `any`.
 
 Every other library in the `@rjsf/*` ecosystem use these same generics in their functions and React component definitions.
-For instance, in the `@rjsf/core` library the definitions of the `Form` component and the `withTheme()` and `getDefaultRegistry()` functions are as follows:
+For instance, in the `@rjsf/core` library the definitions of the `Form` component and the `withTheme()` and `generateTheme()` functions are as follows:
 
 ```ts
 export default class Form<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 > extends Component<FormProps<T, S, F>, FormState<T, S, F>> {
   // ... class implementation
 }
 
 export default function withTheme<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  themeProps: ThemeProps<T, S, F>
+  themeProps: ThemeProps<T, S, F>,
 ) {
   // ... function implementation
 }
 
-export default function getDefaultRegistry<
+export function generateTheme<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(): Omit<Registry<T, S, F>, 'schemaUtils'> {
+  F extends FormContextType = any,
+>(): Pick<Registry<T, S, F>, 'fields' | 'widgets' | 'templates'> {
   // ... function implementation
 }
 ```
@@ -140,7 +140,7 @@ const validator = customizeValidator<any, RJSFSchema, FormContext>();
 
 render(
   <Form<any, RJSFSchema, FormContext> schema={schema} validator={validator} formContext={formContext} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 

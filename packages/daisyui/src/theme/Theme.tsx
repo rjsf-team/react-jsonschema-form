@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import type { ThemeProps } from '@rjsf/core';
-import { getDefaultRegistry } from '@rjsf/core';
+import { generateFields } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 import { generateTemplates } from '../templates/Templates.tsx';
@@ -19,7 +19,7 @@ export function generateTheme<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(): ThemeProps<T, S, F> {
-  const { fields } = getDefaultRegistry<T, S, F>();
+  const fields = generateFields<T, S, F>();
   const generatedWidgets = generateWidgets<T, S, F>();
   const templates = generateTemplates<T, S, F>();
 

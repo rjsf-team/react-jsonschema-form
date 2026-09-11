@@ -294,15 +294,9 @@ Here is an example of modifying the `SelectWidget` to change the ordering of `en
 
 ```tsx
 import { WidgetProps } from '@rjsf/utils';
-import { getDefaultRegistry } from '@rjsf/core';
-import { Widgets } from '@rjsf/mui';
+import { SelectWidget } from '@rjsf/core'; // or from a theme: `const { SelectWidget } = Widgets` with `import { Widgets } from '@rjsf/mui'`
 
 import myOptionsOrderFunction from './myOptionsOrderFunction';
-
-const {
-  widgets: { SelectWidget },
-} = getDefaultRegistry(); // To get widgets from core
-// const { SelectWidget } = Widgets; // To get widgets from a theme do this
 
 function MySelectWidget(props: WidgetProps) {
   const { options } = props;
@@ -519,13 +513,9 @@ Here is an example of wrapping the `ObjectField` to tweak the `onChange` handler
 ```tsx
 import { useCallback } from 'react';
 import { FieldProps } from '@rjsf/utils';
-import { getDefaultRegistry } from '@rjsf/core';
+import { ObjectField } from '@rjsf/core';
 
 import checkBadData from './checkBadData';
-
-const {
-  fields: { ObjectField },
-} = getDefaultRegistry();
 
 function MyObjectField(props: FieldProps) {
   const { onChange } = props;

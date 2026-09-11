@@ -4,6 +4,8 @@ import AddButton from './AddButton.tsx';
 import { CopyButton, MoveDownButton, MoveUpButton, RemoveButton, ClearButton } from './IconButton.tsx';
 import SubmitButton from './SubmitButton.tsx';
 
+export { AddButton, ClearButton, CopyButton, MoveDownButton, MoveUpButton, RemoveButton, SubmitButton };
+
 function buttonTemplates<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
