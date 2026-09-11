@@ -25,6 +25,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Fixed `getInputProps()` defaulting `type: number` schemas to a native `number` input in locales whose decimal separator isn't `.`, where the browser rejects the localized value; it now defaults to a `text` input in those locales unless an explicit `inputType` is set
+- Added `resolveDefaultWidget()`, extracting the widget-name/`enumOptions` fallback logic shared by `@rjsf/core`'s `StringField` and `NumberField` so the two can no longer drift out of sync
 
 ## Dev / docs / playground
 

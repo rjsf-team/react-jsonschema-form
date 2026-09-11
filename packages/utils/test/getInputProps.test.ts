@@ -2,6 +2,10 @@ import type { RJSFSchema, UIOptionsType } from '../src/index.ts';
 import { getInputProps } from '../src/index.ts';
 
 describe('getInputProps', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   it('returns type=text when no other data is passed', () => {
     expect(getInputProps({})).toEqual({ type: 'text' });
   });
@@ -44,16 +48,14 @@ describe('getInputProps', () => {
       type: 'number',
     };
     expect(getInputProps(schema)).toEqual({ type: 'text' });
-    vi.unstubAllGlobals();
   });
-  it('returns type=number, step=any when schema has number type and an explicit inputType overrides the locale', () => {
+  it('returns type=number when schema has number type and an explicit inputType overrides the locale', () => {
     vi.stubGlobal('navigator', { languages: ['pl'] });
     const schema: RJSFSchema = {
       type: 'number',
     };
     const options: UIOptionsType = { inputType: 'number' };
     expect(getInputProps(schema, undefined, options)).toEqual({ type: 'number' });
-    vi.unstubAllGlobals();
   });
   it('returns type=number, step=1 for integer schemas regardless of the locale decimal separator', () => {
     vi.stubGlobal('navigator', { languages: ['pl'] });
@@ -61,7 +63,6 @@ describe('getInputProps', () => {
       type: 'integer',
     };
     expect(getInputProps(schema)).toEqual({ type: 'number', step: 1 });
-    vi.unstubAllGlobals();
   });
   it('returns type=number when schema has number type and we are not auto-defaulting', () => {
     const schema: RJSFSchema = {

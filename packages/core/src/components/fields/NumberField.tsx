@@ -7,7 +7,7 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { asNumber, getDecimalSeparator, getUiOptions, hasWidget, optionsList } from '@rjsf/utils';
+import { asNumber, getDecimalSeparator, getUiOptions, resolveDefaultWidget } from '@rjsf/utils';
 
 // Static matchers for standard '.' separator used during normalization inside handleChange
 const trailingCharMatcherWithPrefix = /\.([0-9]*0)*$/;
@@ -94,11 +94,7 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   if (typeof value === 'number' && separator !== '.') {
     const { schema, uiSchema } = props;
     const { schemaUtils, widgets } = registry;
-    const enumOptions = schemaUtils.isSelect(schema) ? optionsList(schema, uiSchema) : undefined;
-    let defaultWidget = enumOptions ? 'select' : 'text';
-    if (schema.format && hasWidget<T, S, F>(schema, schema.format, widgets)) {
-      defaultWidget = schema.format;
-    }
+    const { defaultWidget } = resolveDefaultWidget<T, S, F>(schema, uiSchema, schemaUtils, widgets);
     const { widget = defaultWidget } = getUiOptions(uiSchema);
 
     // Only the built-in text widget renders as a plain text input in this locale (see
