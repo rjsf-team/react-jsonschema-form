@@ -9,7 +9,7 @@ import Form from './components/Form.tsx';
  */
 export type ThemeProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = Pick<
   FormProps<T, S, F>,
-  'fields' | 'templates' | 'widgets' | '_internalFormWrapper'
+  'fields' | 'templates' | 'widgets'
 >;
 
 /** A Higher-Order component that creates a wrapper around a `Form` with the overrides from the `WithThemeProps`.
