@@ -564,7 +564,8 @@ const extraErrors: ErrorSchema = {
 render(<Form schema={schema} validator={validator} extraErrors={extraErrors} />, document.getElementById('app'));
 ```
 
-An important note is that these errors are "display only" and will not block the user from submitting the form again.
+By default, these errors also block the user from submitting the form, the same as JSON Schema validation errors.
+Set the `extraErrorsAreWarnings` prop to `true` to make them "display only" instead, so the user can still submit the form while they're the only errors shown.
 
 ### ajvOptionsOverrides
 

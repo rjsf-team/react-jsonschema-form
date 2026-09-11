@@ -1,5 +1,12 @@
 import { createRef, useEffect, useRef, useState, useCallback } from 'react';
-import type { ErrorSchema, Experimental_DefaultFormStateBehavior, FieldProps, RJSFSchema, UiSchema } from '@rjsf/utils';
+import type {
+  ErrorSchema,
+  Experimental_DefaultFormStateBehavior,
+  FieldProps,
+  RJSFSchema,
+  UiSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import { bracketNameGenerator, buttonId, dotNotationNameGenerator, optionalControlsId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
@@ -798,7 +805,7 @@ describe('Async errors', () => {
     expect(node.querySelectorAll('.error-detail li')).toHaveLength(2);
   });
 
-  it('should not block form submission', async () => {
+  it('should not block form submission when extraErrorsAreWarnings is set', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -812,9 +819,30 @@ describe('Async errors', () => {
       },
     } as unknown as ErrorSchema;
 
-    const { node, onSubmit } = createFormComponent({ schema, extraErrors });
+    const { node, onSubmit } = createFormComponent({ schema, extraErrors, extraErrorsAreWarnings: true });
     await submitForm(node, user);
     expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  it('should block form submission by default when extraErrors are present', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+      },
+    };
+
+    const extraErrors = {
+      foo: {
+        __errors: ['some error that got added as a prop'],
+      },
+    } as unknown as ErrorSchema;
+
+    const onError = vi.fn();
+    const { node, onSubmit } = createFormComponent({ schema, extraErrors, onError });
+    await submitForm(node, user);
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(onError).toHaveBeenCalled();
   });
 
   it('should reset when props extraErrors changes and noValidate is true', () => {
@@ -1286,7 +1314,7 @@ describe('validateForm()', () => {
     expect(errors).toHaveLength(0);
   });
 
-  it('Should keep non-blocking extraErrors in state when schema is valid and extraErrorsBlockSubmit is not set', () => {
+  it('Should keep non-blocking extraErrors in state when schema is valid and extraErrorsAreWarnings is set', () => {
     const formRef = createRef<Form>();
     const schema: RJSFSchema = {
       type: 'object',
@@ -1304,6 +1332,7 @@ describe('validateForm()', () => {
       schema,
       formData: { foo: 'valid' },
       extraErrors,
+      extraErrorsAreWarnings: true,
     };
     const { onError } = createFormComponent(props);
 
@@ -1320,7 +1349,7 @@ describe('validateForm()', () => {
     expect(onError).not.toHaveBeenCalled();
   });
 
-  it('Should return false and call onError when extraErrors are present with extraErrorsBlockSubmit set', () => {
+  it('Should return false and call onError when extraErrors are present by default', () => {
     const formRef = createRef<Form>();
     const schema: RJSFSchema = {
       type: 'object',
@@ -1338,7 +1367,6 @@ describe('validateForm()', () => {
       schema,
       formData: { foo: 'valid' },
       extraErrors,
-      extraErrorsBlockSubmit: true,
     };
     const { onError } = createFormComponent(props);
 
@@ -1356,7 +1384,7 @@ describe('validateForm()', () => {
     );
   });
 
-  it('Should show both schema and extraErrors in state when schema is invalid regardless of extraErrorsBlockSubmit', () => {
+  it('Should show both schema and extraErrors in state when schema is invalid regardless of extraErrorsAreWarnings', () => {
     const formRef = createRef<Form>();
     const schema: RJSFSchema = {
       type: 'object',
@@ -1375,7 +1403,7 @@ describe('validateForm()', () => {
       schema,
       formData: {},
       extraErrors,
-      // extraErrorsBlockSubmit intentionally omitted
+      extraErrorsAreWarnings: true,
     };
     createFormComponent(props);
 
@@ -1388,6 +1416,52 @@ describe('validateForm()', () => {
     const errorMessages = formRef.current!.state.errors.map((e) => e.message);
     expect(errorMessages).toContain("must have required property 'foo'");
     expect(errorMessages).toContain('async error for foo');
+  });
+
+  it('Should block submission and keep a customError raised by a widget in state', async () => {
+    const formRef = createRef<Form>();
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+      },
+    };
+
+    // See "Raising errors from within a custom widget or field" in the custom-widgets-fields docs
+    function RaisingWidget(props: WidgetProps) {
+      const { id, value, onChange } = props;
+      return (
+        <input
+          id={id}
+          value={(value as string) || ''}
+          onChange={(event) => {
+            const newValue = event.target.value;
+            const errorSchema =
+              newValue === 'bad' ? ({ __errors: ['custom widget error'] } as unknown as ErrorSchema) : undefined;
+            onChange(newValue, errorSchema, id);
+          }}
+        />
+      );
+    }
+
+    const uiSchema: UiSchema = {
+      foo: { 'ui:widget': RaisingWidget },
+    };
+
+    const { node, onError } = createFormComponent({ ref: formRef, schema, uiSchema });
+
+    const input = node.querySelector<HTMLInputElement>('#root_foo')!;
+    await user.type(input, 'bad');
+
+    act(() => {
+      expect(formRef.current!.validateForm()).toBe(false);
+    });
+
+    const errorMessages = formRef.current!.state.errors.map((e) => e.message);
+    expect(errorMessages).toContain('custom widget error');
+    expect(onError).toHaveBeenCalledWith(
+      expect.arrayContaining([expect.objectContaining({ message: 'custom widget error' })]),
+    );
   });
 
   it('Should clear extraErrors from state when extraErrors prop is removed and validateForm is called again', () => {

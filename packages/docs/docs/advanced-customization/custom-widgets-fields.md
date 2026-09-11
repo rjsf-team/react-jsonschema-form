@@ -132,7 +132,7 @@ const CustomTextWidget = function (props: WidgetProps) {
         __errors: ['Value must be "test"'],
       };
     }
-    props.onChange(value, [], raiseError, id);
+    props.onChange(value, raiseError, id);
   };
 
   return <input id={id} onChange={raiseErrorOnChange} value={value || ''} />;
