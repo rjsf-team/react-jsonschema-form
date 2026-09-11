@@ -1,5 +1,77 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`format iso-date-time 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div>
+        <label
+          class="form-label"
+          for="root"
+        />
+        <input
+          aria-describedby="root__error root__description root__help"
+          class="form-control"
+          id="root"
+          name="root"
+          placeholder=""
+          type="datetime-local"
+          value=""
+        />
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`format iso-time 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div>
+        <label
+          class="form-label"
+          for="root"
+        />
+        <input
+          aria-describedby="root__error root__description root__help"
+          class="form-control"
+          id="root"
+          name="root"
+          placeholder=""
+          type="time"
+          value=""
+        />
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
 <DocumentFragment>
   <form

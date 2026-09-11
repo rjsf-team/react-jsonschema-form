@@ -1319,4 +1319,23 @@ export function formTests(Form: ComponentType<FormProps>) {
     const { asFragment } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
     expect(asFragment()).toMatchSnapshot();
   });
+
+  // Appended at the end of the suite, rather than alongside the other `format` tests, so this doesn't shift the
+  // `useId()`-derived ids baked into every snapshot that follows it in file order.
+  test('format iso-time', async () => {
+    const schema: RJSFSchema = {
+      type: 'string',
+      format: 'iso-time',
+    };
+    const { asFragment } = render(<Form schema={schema} validator={validator} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+  test('format iso-date-time', async () => {
+    const schema: RJSFSchema = {
+      type: 'string',
+      format: 'iso-date-time',
+    };
+    const { asFragment } = render(<Form schema={schema} validator={validator} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
 }

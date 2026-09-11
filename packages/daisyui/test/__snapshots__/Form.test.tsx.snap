@@ -1,5 +1,128 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`format iso-date-time 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-string"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-string"
+      >
+        <label
+          class="label"
+          for="root"
+        >
+          <span
+            class="label-text font-medium"
+          />
+        </label>
+        <div
+          class="form-control my-4 w-full relative"
+        >
+          <div
+            class="w-full"
+          >
+            <div
+              aria-expanded="false"
+              aria-haspopup="true"
+              class="input input-bordered w-full flex items-center justify-between cursor-pointer "
+              id="root"
+              role="button"
+              tabindex="0"
+            >
+              <span
+                class="text-base-content/50"
+              />
+              <svg
+                aria-hidden="true"
+                class="svg-inline--fa fa-calendar ml-2 h-4 w-4 text-primary"
+                data-icon="calendar"
+                data-prefix="fas"
+                role="img"
+                viewBox="0 0 448 512"
+              >
+                <path
+                  d="M128 0C110.3 0 96 14.3 96 32l0 32-32 0C28.7 64 0 92.7 0 128l0 48 448 0 0-48c0-35.3-28.7-64-64-64l-32 0 0-32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 32-128 0 0-32c0-17.7-14.3-32-32-32zM0 224L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-192-448 0z"
+                  fill="currentColor"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`format iso-time 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-string"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-string"
+      >
+        <label
+          class="label"
+          for="root"
+        >
+          <span
+            class="label-text font-medium"
+          />
+        </label>
+        <div
+          class="form-control"
+        >
+          <input
+            class="input input-bordered w-full"
+            id="root"
+            type="time"
+            value=""
+          />
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
 <DocumentFragment>
   <form

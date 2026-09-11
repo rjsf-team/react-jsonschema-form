@@ -116,6 +116,20 @@ describe('getWidget()', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
+  it('should return `TimeWidget` for the `iso-time` format', () => {
+    const registry = { TimeWidget: TestWidget };
+    const TheWidget = getWidget({ type: 'string' }, 'iso-time', registry);
+    const { asFragment } = render(<TheWidget {...widgetProps} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+
+  it('should return `DateTimeWidget` for the `iso-date-time` format', () => {
+    const registry = { DateTimeWidget: TestWidget };
+    const TheWidget = getWidget({ type: 'string' }, 'iso-date-time', registry);
+    const { asFragment } = render(<TheWidget {...widgetProps} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+
   it('should not fail on correct component', () => {
     const TheWidget = getWidget(schema, TestWidgetWithDefaultOptions);
     const { asFragment } = render(<TheWidget {...widgetProps} />);

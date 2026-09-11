@@ -3086,4 +3086,36 @@ describe('AJV8Validator', () => {
       expect(validator.suppressDuplicateFiltering).toBe('all');
     });
   });
+  describe('time and date-time formats (RFC 3339 timezone requirement)', () => {
+    let validator: AJV8Validator;
+    beforeAll(() => {
+      validator = new AJV8Validator({});
+    });
+    const timeSchema: RJSFSchema = { type: 'string', format: 'time' };
+    const dateTimeSchema: RJSFSchema = { type: 'string', format: 'date-time' };
+    const isoTimeSchema: RJSFSchema = { type: 'string', format: 'iso-time' };
+    const isoDateTimeSchema: RJSFSchema = { type: 'string', format: 'iso-date-time' };
+
+    it('should accept a "time" value with a "Z" offset', () => {
+      expect(validator.isValid(timeSchema, '20:20:39Z', timeSchema)).toBe(true);
+    });
+    it('should accept a "time" value with a numeric offset', () => {
+      expect(validator.isValid(timeSchema, '20:20:39+05:30', timeSchema)).toBe(true);
+    });
+    it('should reject a "time" value with no timezone offset', () => {
+      expect(validator.isValid(timeSchema, '20:20:39', timeSchema)).toBe(false);
+    });
+    it('should accept a "date-time" value with a "Z" offset', () => {
+      expect(validator.isValid(dateTimeSchema, '2016-04-05T14:01:30.000Z', dateTimeSchema)).toBe(true);
+    });
+    it('should reject a "date-time" value with no timezone offset', () => {
+      expect(validator.isValid(dateTimeSchema, '2016-04-05T14:01:30', dateTimeSchema)).toBe(false);
+    });
+    it('should accept an "iso-time" value with no timezone offset, for backwards compatibility', () => {
+      expect(validator.isValid(isoTimeSchema, '20:20:39', isoTimeSchema)).toBe(true);
+    });
+    it('should accept an "iso-date-time" value with no timezone offset, for backwards compatibility', () => {
+      expect(validator.isValid(isoDateTimeSchema, '2016-04-05T14:01:30', isoDateTimeSchema)).toBe(true);
+    });
+  });
 });
